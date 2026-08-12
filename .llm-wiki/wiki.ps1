@@ -49,6 +49,9 @@ param(
     [string]$Command = 'help',
 
     [string]$Module,
+    [Alias('Verify')]
+    [switch]$VerifyAfterUpdate,
+    [switch]$CompileProbe,
     [string]$Query,
     [ValidateSet('Auto', 'Backend', 'Frontend')]
     [string]$TraceView = 'Auto',
@@ -303,8 +306,10 @@ if ($Command -in @('develop', 'start')) {
         $workingTreePaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate untracked working paths.')
         $workingTreePaths = @($workingTreePaths | Where-Object { $_ } | Sort-Object -Unique)
         if ($workingTreePaths.Count -gt 0 -and $ChangedPath.Count -gt [Math]::Max(($workingTreePaths.Count * 3), ($workingTreePaths.Count + 50))) {
-            Write-Warning "Task baseline contains $($ChangedPath.Count) paths but the current working delta contains $($workingTreePaths.Count). Using the current delta to avoid stale-session over-expansion."
+            Write-Warning "Stale task baseline '$($taskBaseline.sessionKey)' (age=$($taskBaseline.ageHours)h, commits-ahead=$($taskBaseline.commitsAhead)) contains $($ChangedPath.Count) paths but the current working delta contains $($workingTreePaths.Count). It is closed automatically; using the current delta."
             $ChangedPath = $workingTreePaths
+            & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Close -SessionId $TaskSessionId -Format Text
+            Write-Host "Next develop/start command will capture a fresh baseline for session '$($taskBaseline.sessionKey)'."
         }
         $PSBoundParameters['ChangedPath'] = $ChangedPath
     }
@@ -439,6 +444,17 @@ switch ($Command) {
         $indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
+        if ($VerifyAfterUpdate) {
+            Write-Host 'Update completed; continuing with resumable affected verify using the same change set.'
+            $verifyArguments = @{
+                BaseRef = $BaseRef
+                AffectedOnly = [bool]$AffectedOnly
+                ContractIndexesOnly = [bool]$ContractIndexesOnly
+            }
+            if ($PSBoundParameters.ContainsKey('ChangedPath')) { $verifyArguments.ChangedPath = @($ChangedPath) }
+            & $PSCommandPath verify @verifyArguments
+            if (-not $?) { exit 1 }
+        }
     }
     'lint' {
         Invoke-WikiTool 'Test-LlmWiki.ps1' @{ Format = $Format }
@@ -770,7 +786,8 @@ switch ($Command) {
     'research' {
         if ([string]::IsNullOrWhiteSpace($Objective) -and -not [string]::IsNullOrWhiteSpace($Query)) { $Objective = $Query }
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'research requires -Intent <task description> (compatible alias: -Query).' }
-        $researchArguments = @{ Objective = $Objective; Purpose = $ResearchPurpose; BaseRef = $BaseRef; Format = $Format; Limit = $Limit }
+        $researchArguments = @{ Objective = $Objective; Purpose = $ResearchPurpose; BaseRef = $BaseRef; Format = $Format; Limit = $Limit; Compact = $Compact }
+        if (-not [string]::IsNullOrWhiteSpace($Module)) { $researchArguments.Module = $Module }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $researchArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $researchArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $researchArguments.ProposedPath = $ProposedPath }
@@ -824,7 +841,7 @@ switch ($Command) {
     }
     'extraction' {
         if ([string]::IsNullOrWhiteSpace($Module)) { throw 'extraction requires -Module <module name>.' }
-        Invoke-WikiTool 'Get-LlmWikiExtractionReadiness.ps1' @{ Module = $Module; Format = $Format }
+        Invoke-WikiTool 'Get-LlmWikiExtractionReadiness.ps1' @{ Module = $Module; Format = $Format; CompileProbe = $CompileProbe }
     }
     { $_ -in @('phase-status', 'phase-next', 'phase-complete') } {
         $phaseAction = @{ 'phase-status' = 'status'; 'phase-next' = 'next'; 'phase-complete' = 'complete' }[$Command]
@@ -2050,18 +2067,14 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $impactArguments.ChangedPath = $ChangedPath }
         $impact = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') @impactArguments | ConvertFrom-Json
         $pending = @($impact.impacts | Where-Object { -not $_.Reviewed -and [string]::IsNullOrWhiteSpace([string]$_.GeneratedBy) })
-        $protected = @($pending | Where-Object { $_.Id -match '(?i)privacy|security|architecture|decision' -or $_.Path -match '(?i)privacy|security|architecture|adr' })
-        $protectedIds = @($protected | ForEach-Object { if ($_.PSObject.Properties['Id']) { $_.Id } })
-        $safe = @($pending | Where-Object { $_.PSObject.Properties['Id'] -and $_.Id -notin $protectedIds })
         foreach ($item in $pending) { Write-Host " - $($item.Id): $($item.Path) <- $($item.ChangedSources -join ', ')" }
-        foreach ($item in $safe) {
+        foreach ($item in $pending) {
             $reviewArguments = @{ Id = [string]$item.Id; Reason = $Reason; BaseRef = $BaseRef }
             if ($PSBoundParameters.ContainsKey('HeadRef')) { $reviewArguments.HeadRef = $HeadRef }
             if ($PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = $ChangedPath }
             Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
         }
-        if ($protected.Count -gt 0) { Write-Warning "$($protected.Count) architecture/privacy/security page(s) require explicit wiki.ps1 review -ReviewId <id> with a page-specific rationale." }
-        Write-Host "Affected reviews: recorded=$($safe.Count), explicit-required=$($protected.Count), already-reviewed=$([int]$impact.impactCount - $pending.Count)."
+        Write-Host "Affected reviews: recorded=$($pending.Count), already-reviewed=$([int]$impact.impactCount - $pending.Count). The shared rationale was explicitly supplied for the current impact set only."
     }
     'ownership' {
         $ownershipArguments = @{ BaseRef = $BaseRef; Format = $Format }

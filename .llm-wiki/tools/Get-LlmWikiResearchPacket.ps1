@@ -13,21 +13,39 @@ param(
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [ValidateRange(1, 30)]
-    [int]$Limit = 10
+    [int]$Limit = 10,
+    [string]$Module,
+    [switch]$Compact
 )
 
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+if ($Compact) { $Limit = [Math]::Min($Limit, 6) }
+$moduleScope = @()
+if (-not [string]::IsNullOrWhiteSpace($Module)) {
+    foreach ($candidate in @("FoodDiary.Application/$Module", "FoodDiary.Application.$Module")) {
+        if (Test-Path -LiteralPath (Join-Path $repositoryRoot $candidate) -PathType Container) { $moduleScope += $candidate }
+    }
+    if ($moduleScope.Count -eq 0) { throw "Research module not found: $Module" }
+    if (-not $PSBoundParameters.ContainsKey('ProposedPath')) { $ProposedPath = $moduleScope }
+}
+Write-Host "Research [1/3]: classify and scan current sources$(if ($Module) { " for module $Module" } else { '' })..."
 . (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
 $queryCacheEntry = $null
-if ($Format -eq 'Json') {
-    $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
-        Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
-        ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit
+$queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
+    Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
+    ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; Compact = [bool]$Compact
+}
+$cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry
+if ($null -ne $cachedResearch) {
+    if ($Format -eq 'Json') { Write-Output $cachedResearch } else {
+        $cached = $cachedResearch | ConvertFrom-Json
+        Write-Host "Research cache hit: $($cached.workflow.profile), confidence=$($cached.workflow.confidence), grounded=$(@($cached.discovery.groundedPaths).Count)."
+        foreach ($item in @($cached.discovery.implementationFiles | Select-Object -First 5)) { Write-Host "  Source: $($item.path) (score=$($item.score), $($item.provenance))" }
+        Write-Host "Next: $($cached.nextAction)"
     }
-    $cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry
-    if ($null -ne $cachedResearch) { Write-Output $cachedResearch; exit 0 }
+    exit 0
 }
 $common = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
@@ -64,6 +82,7 @@ $contextQuery = @($Objective; $expandedTerms) -join ' '
 $contextArguments = @{ Query = $contextQuery; Format = 'Json'; Limit = $Limit }
 if ($scopePaths.Count -gt 0) { $contextArguments.ScopePath = $scopePaths }
 $context = & (Join-Path $PSScriptRoot 'Find-LlmWikiContext.ps1') @contextArguments | ConvertFrom-Json
+Write-Host 'Research [2/3]: current-source context ready.'
 $contextHttpClients = if ($context.PSObject.Properties['httpClients']) { @($context.httpClients) } else { @() }
 $contextHostedServices = if ($context.PSObject.Properties['hostedServices']) { @($context.hostedServices) } else { @() }
 $contextWebhooks = if ($context.PSObject.Properties['webhooks']) { @($context.webhooks) } else { @() }
@@ -77,11 +96,16 @@ $precedentScopeCandidates = $scopePaths +
     @(Get-ObjectPropertyValues @($context.symbols) 'path' | Select-Object -First $Limit) +
     @(Get-ObjectPropertyValues @($context.frontendSymbols) 'path' | Select-Object -First $Limit)
 $precedentScopePaths = @($precedentScopeCandidates | Where-Object { $_ } | Sort-Object -Unique)
-$precedents = & (Join-Path $PSScriptRoot 'Get-LlmWikiGitPrecedents.ps1') `
-    -Objective $Objective `
-    -ScopePath $precedentScopePaths `
-    -Limit ([Math]::Min($Limit, 8)) `
-    -Format Json | ConvertFrom-Json
+$precedents = if ($Compact) {
+    [pscustomobject]@{ precedents = @(); confidence = 'deferred'; authority = 'Historical precedent analysis was deferred by compact research.' }
+} else {
+    Write-Host 'Research [3/3]: scan bounded Git precedents...'
+    & (Join-Path $PSScriptRoot 'Get-LlmWikiGitPrecedents.ps1') `
+        -Objective $Objective `
+        -ScopePath $precedentScopePaths `
+        -Limit ([Math]::Min($Limit, 8)) `
+        -Format Json | ConvertFrom-Json
+}
 
 $failureKnowledgePath = Join-Path (Split-Path -Parent $PSScriptRoot) 'knowledge/failures.json'
 $failureKnowledge = Get-Content -LiteralPath $failureKnowledgePath -Raw | ConvertFrom-Json
@@ -253,9 +277,9 @@ $result = [pscustomobject][ordered]@{
     }
 }
 
+$resultJson = $result | ConvertTo-Json -Depth 12
+Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $resultJson
 if ($Format -eq 'Json') {
-    $resultJson = $result | ConvertTo-Json -Depth 12
-    Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $resultJson
     Write-Output $resultJson
     exit 0
 }

@@ -44,6 +44,9 @@ try {
     Assert-Baseline (@($committedDelta.changedPaths) -contains 'pre-existing.txt') 'Task delta lost the post-baseline dirty edit after a task commit.'
     $isolatedBaseline = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Status -RepositoryRoot $fixtureRoot -SessionId 'fixture-b'
     Assert-Baseline ($isolatedBaseline.baselinePath -cne $committedDelta.baselinePath) 'Independent sessions shared a task baseline path.'
+    Assert-Baseline ($committedDelta.commitsAhead -ge 1 -and $committedDelta.ageHours -ge 0) 'Task baseline did not expose its age and commit distance.'
+    $closed = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Close -RepositoryRoot $fixtureRoot -SessionId 'fixture-a'
+    Assert-Baseline ($closed.closed -and -not (Test-Path -LiteralPath $committedDelta.baselinePath)) 'Task baseline close did not retire the stale session state.'
 } finally {
     if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
 }

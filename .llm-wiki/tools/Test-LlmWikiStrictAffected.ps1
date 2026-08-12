@@ -98,6 +98,15 @@ if ($facadeText -notmatch 'Repair verify \[0/3\]' -or $facadeText -notmatch 'Tes
 if ($facadeText -notmatch 'Wiki verify mode: bounded affected/resumable' -or $verifyBody -notmatch 'AffectedOnly = \$true') {
     throw 'Ordinary verify is not an affected/resumable gate by default.'
 }
+if ($facadeText -notmatch 'VerifyAfterUpdate' -or $facadeText -notmatch 'Update completed; continuing with resumable affected verify') {
+    throw 'Update facade does not expose the one-command affected update and resumable verify flow.'
+}
+if ($facadeText -notmatch 'Stale task baseline' -or $facadeText -notmatch '-Action Close') {
+    throw 'Facade does not retire stale task baselines with observable age and session context.'
+}
+if ($facadeText -notmatch "'review-affected'" -or $facadeText -notmatch 'The shared rationale was explicitly supplied for the current impact set only') {
+    throw 'Facade does not expose one explicit rationale for the current pending source-impact set.'
+}
 if ($facadeText -notmatch "ValidateSet\('All', 'Backend', 'Frontend'\)" -or $verifyBody -notmatch 'Area = \$Area') {
     throw 'Wiki verify does not expose independently diagnosable Backend and Frontend areas.'
 }

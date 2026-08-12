@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Capture', 'ChangedPaths', 'Status')]
+    [ValidateSet('Capture', 'ChangedPaths', 'Status', 'Close')]
     [string]$Action,
     [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path,
     [string]$SessionId,
@@ -52,7 +52,11 @@ $sessionKey = if ([string]::IsNullOrWhiteSpace($SessionId)) { 'default' } else {
 }
 $baselinePath = Join-Path $stateDirectory "task-baseline-$sessionKey.json"
 
-if ($Action -eq 'Capture') {
+if ($Action -eq 'Close') {
+    $wasAvailable = Test-Path -LiteralPath $baselinePath -PathType Leaf
+    if ($wasAvailable) { Remove-Item -LiteralPath $baselinePath -Force }
+    $result = [pscustomobject]@{ available = $false; closed = $wasAvailable; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @(); excludedChangedPaths = @(); ageHours = 0; commitsAhead = 0 }
+} elseif ($Action -eq 'Capture') {
     $head = (Invoke-Git @('rev-parse', 'HEAD') | Select-Object -First 1)
     $initialPaths = @(Get-ChangedPaths 'HEAD')
     $fingerprints = [ordered]@{}
@@ -66,9 +70,9 @@ if ($Action -eq 'Capture') {
     }
     $null = New-Item -ItemType Directory -Path $stateDirectory -Force
     $baseline | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $baselinePath -Encoding utf8
-    $result = [pscustomobject]@{ available = $true; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $head; initialChangedPaths = $initialPaths; changedPaths = @(); excludedChangedPaths = $initialPaths }
+    $result = [pscustomobject]@{ available = $true; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $head; initialChangedPaths = $initialPaths; changedPaths = @(); excludedChangedPaths = $initialPaths; capturedAtUtc = $baseline.capturedAtUtc; ageHours = 0; commitsAhead = 0 }
 } elseif (-not (Test-Path -LiteralPath $baselinePath -PathType Leaf)) {
-    $result = [pscustomobject]@{ available = $false; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @(); excludedChangedPaths = @() }
+    $result = [pscustomobject]@{ available = $false; sessionKey = $sessionKey; baselinePath = $baselinePath; head = $null; initialChangedPaths = @(); changedPaths = @(); excludedChangedPaths = @(); ageHours = 0; commitsAhead = 0 }
 } else {
     $baseline = Get-Content -LiteralPath $baselinePath -Raw | ConvertFrom-Json
     $currentPaths = @(Get-ChangedPaths ([string]$baseline.head))
@@ -79,6 +83,8 @@ if ($Action -eq 'Capture') {
             $delta.Add($path)
         }
     }
+    $capturedAt = [DateTimeOffset]::Parse([string]$baseline.capturedAtUtc)
+    $commitsAheadOutput = @(Invoke-Git @('rev-list', '--count', "$([string]$baseline.head)..HEAD"))
     $result = [pscustomobject]@{
         available = $true
         sessionKey = $sessionKey
@@ -87,6 +93,9 @@ if ($Action -eq 'Capture') {
         initialChangedPaths = @($baseline.initialChangedPaths)
         changedPaths = @($delta)
         excludedChangedPaths = @($currentPaths | Where-Object { $_ -notin $delta })
+        capturedAtUtc = [string]$baseline.capturedAtUtc
+        ageHours = [Math]::Round(([DateTimeOffset]::UtcNow - $capturedAt).TotalHours, 1)
+        commitsAhead = [int]($commitsAheadOutput | Select-Object -First 1)
     }
 }
 
@@ -94,8 +103,9 @@ switch ($Format) {
     'Json' { $result | ConvertTo-Json -Depth 5 }
     'Text' {
         if (-not $result.available) { Write-Host 'LLM Wiki task baseline: not captured.' }
-        elseif ($Action -eq 'Capture') { Write-Host "LLM Wiki task baseline captured: $(@($result.initialChangedPaths).Count) pre-existing changed path(s)." }
-        else { Write-Host "LLM Wiki task delta: $(@($result.changedPaths).Count) path(s) changed since develop; $(@($result.excludedChangedPaths).Count) pre-existing workspace path(s) remain excluded." }
+        elseif ($Action -eq 'Capture') { Write-Host "LLM Wiki task baseline captured: session=$sessionKey, $(@($result.initialChangedPaths).Count) pre-existing changed path(s)." }
+        elseif ($Action -eq 'Close') { Write-Host "LLM Wiki task baseline closed: session=$sessionKey, existed=$($result.closed)." }
+        else { Write-Host "LLM Wiki task delta: session=$sessionKey, age=$($result.ageHours)h, commits-ahead=$($result.commitsAhead), $(@($result.changedPaths).Count) changed, $(@($result.excludedChangedPaths).Count) excluded." }
     }
     default { return $result }
 }

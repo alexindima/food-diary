@@ -6,6 +6,7 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiDiffContext.ps1
   - .llm-wiki/tools/Get-LlmWikiImpact.ps1
   - .llm-wiki/tools/Add-LlmWikiSourceReview.ps1
+  - .llm-wiki/wiki.ps1
   - AGENTS.md
 ---
 
@@ -57,6 +58,18 @@ no textual update, record that decision instead of adding a mechanical note:
 The receipt stores the page and changed-source SHA-256 hashes. Freshness accepts
 it only while those hashes still match; a later source or page edit
 automatically requires a new review.
+
+When every pending page shares one evidence-based rationale, review only the
+current affected set in one call:
+
+```powershell
+./.llm-wiki/wiki.ps1 review-affected `
+  -Reason "Dietologist ownership moved without changing the documented contract."
+```
+
+The command recomputes the current impact set and records the supplied rationale
+only for still-pending pages. Pass an ID array to `review` when different pages
+need different explanations.
 
 The receipt ledger is append-only review evidence. Adding a receipt records a
 decision; it does not by itself change the review workflow documented here.

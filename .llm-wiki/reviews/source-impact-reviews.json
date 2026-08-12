@@ -522,14 +522,14 @@
                         "pageSha256":  "59bec3d0957b927fdfd24028e580354343b8be5922bbcb679bfd5126c70d8a91",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1",
-                                            "sha256":  "7d8919135ada1347388a49305e7d5fd3006ed54019087d735345d99ef8b679b9"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+                                            "sha256":  "dbb7de33a0df1e51f58579976c4e2b42b0630870f069bec05a75611bf9a56e4d"
                                         }
                                     ],
-                        "reason":  "Git precedent fields now accept the current hash schema and legacy commit schema; solution ranking, evidence rules, and decision guidance are unchanged.",
+                        "reason":  "Reviewed the compact research, combined update/verify facade, baseline lifecycle, and batch-review changes against current workflow pages; no additional narrative changes are required beyond adaptive-development and review-diff.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3bc6dfee586376e754323775bd37890bcc7006cb",
-                        "reviewedAtUtc":  "2026-08-12T17:20:05.6349796Z"
+                        "gitHead":  "2eec73d92f25d2ddb2b777c334386ac08965396b",
+                        "reviewedAtUtc":  "2026-08-12T20:39:01.0983878Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -652,17 +652,21 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "4b700f452947b76c2dd708ab5978289650c76c32a49e06ea6356812757e73cd8",
+                        "pageSha256":  "19b2949cb82545c8d7acd6132793142a6883eb04496cb452e00ac052c3dce296",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "07dfd64a32424bdd6bdc08421879b8a65cc509466742f0b7f9ae342d14264a3e"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
+                                            "sha256":  "3f6de01faf51fb5937aa84f126d73ede88c6ea879d6714d25d36e208c72c0803"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "9e770f6036cfe8016526271c6d596c0034b4739c8ac8e03f840c46daa35ffdc1"
                                         }
                                     ],
-                        "reason":  "Reviewed focused knowledge-isolation regression routing for migration and learning result shapes; full CI smoke remains unchanged.",
+                        "reason":  "Reviewed the final named-splat fix for update-to-verify handoff against index-pipeline and task-dispatch contracts; the facade now preserves the exact affected path array without changing either workflow contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "681462b330264144002d61b60b77c14d0d0a4fea",
-                        "reviewedAtUtc":  "2026-08-12T14:53:54.1214972Z"
+                        "gitHead":  "2eec73d92f25d2ddb2b777c334386ac08965396b",
+                        "reviewedAtUtc":  "2026-08-12T20:41:47.0346971Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -686,13 +690,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "7d3aaf139206424195e0778eafba6fa45ff4888a74589af0b1928cda9418be16"
+                                            "sha256":  "dbb7de33a0df1e51f58579976c4e2b42b0630870f069bec05a75611bf9a56e4d"
                                         }
                                     ],
-                        "reason":  "Research now separates and explains confidence dimensions; integration discovery inputs, boundary classification, and scan output are unchanged.",
+                        "reason":  "Reviewed the compact research, combined update/verify facade, baseline lifecycle, and batch-review changes against current workflow pages; no additional narrative changes are required beyond adaptive-development and review-diff.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "57c4358ea2e1c3721868aedeea36f1865e7a6e31",
-                        "reviewedAtUtc":  "2026-08-12T02:08:56.5384214Z"
+                        "gitHead":  "2eec73d92f25d2ddb2b777c334386ac08965396b",
+                        "reviewedAtUtc":  "2026-08-12T20:39:01.5815180Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -1027,13 +1031,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "90c430c810ee744751465728956f2fe9ee01b5ac9ff8709b61ec184a2aeb41cf"
+                                            "sha256":  "9e770f6036cfe8016526271c6d596c0034b4739c8ac8e03f840c46daa35ffdc1"
                                         }
                                     ],
-                        "reason":  "Facade edits are limited to verify and smoke orchestration; task dispatch, lease, receipt, reconciliation, and snapshot behavior are unchanged.",
+                        "reason":  "Reviewed the final named-splat fix for update-to-verify handoff against index-pipeline and task-dispatch contracts; the facade now preserves the exact affected path array without changing either workflow contract.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3bc6dfee586376e754323775bd37890bcc7006cb",
-                        "reviewedAtUtc":  "2026-08-12T17:20:06.7178816Z"
+                        "gitHead":  "2eec73d92f25d2ddb2b777c334386ac08965396b",
+                        "reviewedAtUtc":  "2026-08-12T20:41:47.3289094Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",

@@ -15,4 +15,14 @@ if ($research.workflow.confidenceDimensions.implementationScope -ne 'not-require
 if (@($research.workflow.confidenceReasons).Count -lt 3) { throw 'Research confidence does not explain each dimension.' }
 if ($research.readiness.designCheckpoint -ne 'not-required') { throw 'Read-only assessment incorrectly requires a design checkpoint.' }
 
+$compact = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
+    -Objective 'Extract Dietologist application module into a separate project' `
+    -Module Dietologist `
+    -Compact `
+    -Purpose Assessment `
+    -Limit 6 `
+    -Format Json | ConvertFrom-Json
+if (@($compact.discovery.groundedPaths | Where-Object { $_ -match 'Dietologist' }).Count -eq 0) { throw 'Compact module research did not stay grounded in the selected module.' }
+if (@($compact.precedents).Count -ne 0) { throw 'Compact research unexpectedly ran historical precedent analysis.' }
+
 Write-Host 'LLM Wiki research confidence tests passed.'

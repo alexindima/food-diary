@@ -16,6 +16,8 @@ sources:
   - .llm-wiki/tools/Start-LlmWikiDevelopment.ps1
   - .llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1
   - .llm-wiki/tools/Get-LlmWikiResearchPacket.ps1
+  - .llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1
+  - .llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1
   - .llm-wiki/tools/Get-LlmWikiGitPrecedents.ps1
   - .llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1
   - .llm-wiki/tools/Manage-LlmWikiAdaptiveSession.ps1
@@ -44,6 +46,28 @@ For a non-trivial feature, prefer `./.llm-wiki/wiki.ps1 start -Intent <task> [-P
 Use `develop` as the read-oriented classifier when automatic workspace creation is not wanted.
 
 Read-oriented facade commands run under a shared index lock and byte-preserving guard for compiled Wiki, knowledge, and review files. An unexpected write is reverted and reported as a tool defect. When `-PlannedPath` is explicit, research and planning use that scope instead of inheriting an unrelated session baseline.
+
+For physical module extraction, use bounded source research and a compile proof:
+
+```powershell
+./.llm-wiki/wiki.ps1 research -Intent 'Extract Dietologist application module' -Module Dietologist -Compact
+./.llm-wiki/wiki.ps1 extraction -Module Dietologist -CompileProbe
+```
+
+Compact module research scopes discovery to current module sources, prints
+phase progress, reuses the content-addressed research cache, and defers Git
+history. Extraction readiness scans core Application namespace and public-type
+references, static helpers, mediator types, DI registrations, the executable
+module dependency graph, and available extracted project references. The
+compile probe creates an ignored temporary SDK project from the module sources,
+builds it with inferred references, reports compiler diagnostics, and removes
+the fixture. A requested compile probe must pass before the module is reported
+ready.
+
+A baseline reports its session ID, age, and commit distance. When its accumulated
+path set is clearly unrelated to the much smaller current worktree delta, the
+facade closes it automatically, uses the safe current delta, and lets the next
+`develop` or `start` capture a fresh task baseline.
 
 Use one entrypoint before a non-trivial bug or feature:
 
