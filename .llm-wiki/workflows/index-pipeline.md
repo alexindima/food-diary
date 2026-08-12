@@ -26,6 +26,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1
   - .llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1
   - .llm-wiki/tools/LlmWikiIndexCache.ps1
+  - .llm-wiki/tools/LlmWikiIndexTiming.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
   - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1
@@ -81,6 +82,12 @@ The default concurrency is four processes and can be changed for constrained env
 ./.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -MaxConcurrency 2
 ./.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -MaxConcurrency 4
 ```
+
+The forecast uses the rolling median from the last five successful local runs
+of each generator and calculates the staged parallel critical path rather than
+summing every generator. Timings are machine-local under `.git/llm-wiki`; when
+history is missing, static cold estimates are used. Output reports a range, the
+sample basis, and the slowest sampled generator.
 
 During iteration, select only indexes affected by the current diff:
 

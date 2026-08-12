@@ -23,6 +23,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiGeneratedArtifacts.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiIndexTiming.ps1')
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
@@ -219,12 +220,6 @@ $coldCostSeconds = @{
     'Build-LlmWikiModulePages.ps1' = 15
     'Build-LlmWikiArchitectureHealthIndex.ps1' = 10
 }
-$estimatedColdSeconds = (@($selectedToolNames | ForEach-Object { if ($coldCostSeconds.ContainsKey($_)) { [int]$coldCostSeconds[$_] } else { 5 } }) | Measure-Object -Sum).Sum
-if ($null -eq $estimatedColdSeconds) { $estimatedColdSeconds = 0 }
-Write-Host "LLM Wiki index forecast: ~$estimatedColdSeconds cold second(s) for $(@($selectedToolNames).Count) generator(s); cache/no-op suppression can reduce this."
-if (-not $RequiredOnly -and 'Build-LlmWikiQualityIndex.ps1' -in $selectedToolNames) {
-    Write-Host 'Iteration hint: use update -AffectedOnly -ContractIndexesOnly while editing; run the full affected update once before handoff.'
-}
 if ($Area -eq 'Backend') {
     $selectedToolNames = @($selectedToolNames | Where-Object { $_ -notin @(
         'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1',
@@ -236,6 +231,54 @@ if ($Area -eq 'Backend') {
         'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1'
     ) })
     Write-Host "LLM Wiki verification area: Frontend ($($selectedToolNames.Count) generator(s)); backend freshness is intentionally not evaluated."
+}
+$stages = @(
+    [pscustomobject]@{
+        name = 'source indexes'
+        tools = @(
+            'Build-LlmWikiCatalog.ps1', 'Build-LlmWikiSymbolIndex.ps1', 'Build-LlmWikiFrontendIndex.ps1',
+            'Build-LlmWikiFrontendContractIndex.ps1', 'Build-LlmWikiDomainDataIndex.ps1',
+            'Build-LlmWikiConfigurationIndex.ps1', 'Build-LlmWikiRuntimeTopology.ps1',
+            'Build-LlmWikiSensitiveDataIndex.ps1'
+        )
+    }
+    [pscustomobject]@{
+        name = 'derived indexes'
+        tools = @('Build-LlmWikiBackendContractIndex.ps1', 'Build-LlmWikiQualityIndex.ps1', 'Build-LlmWikiModulePages.ps1')
+    }
+    [pscustomobject]@{ name = 'architecture health'; tools = @('Build-LlmWikiArchitectureHealthIndex.ps1') }
+)
+$timingMode = if ($Check) { 'check' } else { 'update' }
+$timingStats = @(Get-LlmWikiIndexTimingStats -RepositoryRoot $repositoryRoot -Mode $timingMode)
+$timingByTool = @{}
+foreach ($stat in $timingStats) { $timingByTool[[string]$stat.tool] = $stat }
+$forecastStageSeconds = [Collections.Generic.List[double]]::new()
+$forecastSamples = [Collections.Generic.List[int]]::new()
+foreach ($stage in $stages) {
+    $stageTools = @($stage.tools | Where-Object { $_ -in $selectedToolNames })
+    for ($offset = 0; $offset -lt $stageTools.Count; $offset += $MaxConcurrency) {
+        $last = [Math]::Min($offset + $MaxConcurrency - 1, $stageTools.Count - 1)
+        $batch = @($stageTools[$offset..$last] | ForEach-Object {
+            if ($timingByTool.ContainsKey($_)) {
+                $forecastSamples.Add([int]$timingByTool[$_].sampleCount)
+                [double]$timingByTool[$_].medianSeconds
+            } elseif ($coldCostSeconds.ContainsKey($_)) { [double]$coldCostSeconds[$_] } else { 5.0 }
+        })
+        if ($batch.Count -gt 0) { $forecastStageSeconds.Add([double](($batch | Measure-Object -Maximum).Maximum)) }
+    }
+}
+$estimatedColdSeconds = [Math]::Round([double](($forecastStageSeconds | Measure-Object -Sum).Sum))
+$sampledToolCount = @($selectedToolNames | Where-Object { $timingByTool.ContainsKey($_) }).Count
+$rangeLow = [Math]::Max(0, [Math]::Floor($estimatedColdSeconds * 0.85))
+$rangeHigh = [Math]::Ceiling($estimatedColdSeconds * 1.15)
+$sampleLabel = if ($sampledToolCount -eq 0) { 'static cold estimates' } else { "last up to 5 local runs for $sampledToolCount/$(@($selectedToolNames).Count) generators" }
+Write-Host "LLM Wiki index forecast: ${rangeLow}-${rangeHigh}s for $(@($selectedToolNames).Count) generator(s), based on $sampleLabel."
+if ($sampledToolCount -gt 0) {
+    $slowest = @($selectedToolNames | Where-Object { $timingByTool.ContainsKey($_) } | Sort-Object { -[double]$timingByTool[$_].medianSeconds } | Select-Object -First 1)
+    if ($slowest.Count -gt 0) { Write-Host "Slowest local median: $($slowest[0]) ~$($timingByTool[$slowest[0]].medianSeconds)s ($($timingByTool[$slowest[0]].sampleCount) sample(s))." }
+}
+if (-not $RequiredOnly -and 'Build-LlmWikiQualityIndex.ps1' -in $selectedToolNames) {
+    Write-Host 'Iteration hint: use update -AffectedOnly -ContractIndexesOnly while editing; run the full affected update once before handoff.'
 }
 if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
@@ -252,34 +295,6 @@ if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
         } catch { Write-Verbose "Ignoring invalid affected pipeline receipt: $($_.Exception.Message)" }
     }
 }
-
-$stages = @(
-    [pscustomobject]@{
-        name = 'source indexes'
-        tools = @(
-            'Build-LlmWikiCatalog.ps1'
-            'Build-LlmWikiSymbolIndex.ps1'
-            'Build-LlmWikiFrontendIndex.ps1'
-            'Build-LlmWikiFrontendContractIndex.ps1'
-            'Build-LlmWikiDomainDataIndex.ps1'
-            'Build-LlmWikiConfigurationIndex.ps1'
-            'Build-LlmWikiRuntimeTopology.ps1'
-            'Build-LlmWikiSensitiveDataIndex.ps1'
-        )
-    }
-    [pscustomobject]@{
-        name = 'derived indexes'
-        tools = @(
-            'Build-LlmWikiBackendContractIndex.ps1'
-            'Build-LlmWikiQualityIndex.ps1'
-            'Build-LlmWikiModulePages.ps1'
-        )
-    }
-    [pscustomobject]@{
-        name = 'architecture health'
-        tools = @('Build-LlmWikiArchitectureHealthIndex.ps1')
-    }
-)
 
 function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$CheckMode) {
     $workers = [System.Collections.Generic.List[object]]::new()
@@ -326,6 +341,8 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
         Write-Host " - $($worker.tool): $([Math]::Round($worker.stopwatch.Elapsed.TotalSeconds, 2))s"
         if (-not $worker.process.HasExited -or $worker.process.ExitCode -ne 0) {
             $failed.Add("$($worker.tool) (exit=$($worker.process.ExitCode))")
+        } else {
+            $script:completedToolTimings.Add([pscustomobject]@{ tool = $worker.tool; durationSeconds = $worker.stopwatch.Elapsed.TotalSeconds })
         }
         $worker.process.Dispose()
     }
@@ -359,6 +376,7 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
 }
 
 $pipelineStopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+$script:completedToolTimings = [Collections.Generic.List[object]]::new()
 $updateLock = $null
 $transactionRoot = $null
 $generatedRoot = Join-Path $repositoryRoot '.llm-wiki/generated'
@@ -426,6 +444,7 @@ try {
     }
 }
 $pipelineStopwatch.Stop()
+Add-LlmWikiIndexTimings -RepositoryRoot $repositoryRoot -Mode $timingMode -Timings @($script:completedToolTimings)
 if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $finalPipelineCacheState.receiptPath) -Force
