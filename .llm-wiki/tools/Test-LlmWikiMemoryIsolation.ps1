@@ -15,6 +15,23 @@ if ($smokeEntries.Count -gt 0) {
 $sandboxDirectory = Join-Path $repositoryRoot '.artifacts/llm-wiki/memory-isolation-smoke'
 $sandboxPath = Join-Path $sandboxDirectory 'memories.json'
 $previousOverride = $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH
+function Get-TestEventHash([object]$Event) {
+    $payload = [pscustomobject][ordered]@{
+        schemaVersion = $Event.schemaVersion
+        sequence = $Event.sequence
+        kind = $Event.kind
+        id = $Event.id
+        createdAtUtc = $Event.createdAtUtc
+        previousHash = $Event.previousHash
+        memory = $Event.memory
+        targetId = $Event.targetId
+        reason = $Event.reason
+    }
+    $json = ConvertTo-Json -InputObject $payload -Depth 30 -Compress
+    $bytes = [Text.Encoding]::UTF8.GetBytes($json)
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { return ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
+}
 try {
     New-Item -ItemType Directory -Path $sandboxDirectory -Force | Out-Null
     [IO.File]::WriteAllText(
@@ -25,6 +42,29 @@ try {
     $verification = & (Join-Path $PSScriptRoot 'Manage-LlmWikiMemory.ps1') verify -Format Json | ConvertFrom-Json
     if (-not $verification.valid -or $verification.totalCount -ne 0) {
         throw 'Isolated durable-memory registry did not validate as empty.'
+    }
+
+    $unknownEvent = [pscustomobject][ordered]@{
+        schemaVersion = 1
+        sequence = 1
+        kind = 'legacy'
+        id = ''
+        createdAtUtc = '2026-01-01T00:00:00.0000000Z'
+        previousHash = ''
+        memory = $null
+        targetId = ''
+        reason = ''
+        eventHash = ''
+    }
+    $unknownEvent.eventHash = Get-TestEventHash $unknownEvent
+    [IO.File]::WriteAllText(
+        $sandboxPath,
+        (([pscustomobject][ordered]@{ schemaVersion = 1; events = @($unknownEvent) } | ConvertTo-Json -Depth 30) + [Environment]::NewLine),
+        [Text.UTF8Encoding]::new($false))
+    $singleIssueVerification = & (Join-Path $PSScriptRoot 'Manage-LlmWikiMemory.ps1') verify -Format Json | ConvertFrom-Json
+    if ($singleIssueVerification.valid -or @($singleIssueVerification.issues).Count -ne 1 -or
+        [string]$singleIssueVerification.issues[0] -notmatch 'Unknown memory event kind') {
+        throw 'Durable-memory verification did not preserve a single registry issue as a collection.'
     }
 
     $unsafeOverrideRejected = $false

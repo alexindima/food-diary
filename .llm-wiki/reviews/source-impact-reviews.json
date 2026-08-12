@@ -330,14 +330,14 @@
                         "pageSha256":  "c6ad719eb6441142cdea59a921180a1c64d63b5c3143b6d0ac37ccf2df185fda",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
-                                            "sha256":  "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
+                                            "sha256":  "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
                                         }
                                     ],
-                        "reason":  "Reviewed safe metrics aggregation for empty, invalid, single, and multiple context feedback receipt sets.",
+                        "reason":  "Reviewed null/scalar-safe durable-memory collection handling used by context bundles; retrieval semantics are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "866a5578a309c7615014cab797ce2e9ae9822c39",
-                        "reviewedAtUtc":  "2026-08-12T13:19:41.3475664Z"
+                        "gitHead":  "2916c8e6376a62c97a4666b0e62e4f73565b6807",
+                        "reviewedAtUtc":  "2026-08-12T13:50:54.1244263Z"
                     },
                     {
                         "pageId":  "workflow-controlled-learning-promotion",
@@ -450,14 +450,14 @@
                         "pageSha256":  "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
-                                            "sha256":  "e203a5aef1a161ba884d4f632842cd6831546fc18537212634186c6b9c3d7f61"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
+                                            "sha256":  "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
                                         }
                                     ],
-                        "reason":  "Reviewed immutable task-base pinning, legacy workspace migration, scalar-safe validation, and governed lifecycle regression; the documented workflow remains accurate.",
+                        "reason":  "Reviewed empty and single-event registry hardening plus focused memory regression coverage; hash-chain validation remains strict.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
-                        "reviewedAtUtc":  "2026-08-12T05:06:52.2152782Z"
+                        "gitHead":  "2916c8e6376a62c97a4666b0e62e4f73565b6807",
+                        "reviewedAtUtc":  "2026-08-12T13:50:57.2573166Z"
                     },
                     {
                         "pageId":  "workflow-failure-prediction",
@@ -526,13 +526,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "6cebfb79d3736961c9fd7e6ff28f83c372b9ccb9a5c9a0d49060c89546d56950"
+                                            "sha256":  "4c82dcbb7c116fa049321a33f6f09073ca729e44c4c8e7745b06d591341de6d9"
                                         }
                                     ],
-                        "reason":  "Reviewed affected-smoke routing for the focused evidence-lineage regression; only the governed-delivery test selection is expanded.",
+                        "reason":  "Reviewed dedicated memory affected-smoke routing; memory-only changes no longer require the monolithic full-tools smoke.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "009e677aa8c7d6f4b4cbec20e302b47165a8b316",
-                        "reviewedAtUtc":  "2026-08-12T13:32:29.3446944Z"
+                        "gitHead":  "2916c8e6376a62c97a4666b0e62e4f73565b6807",
+                        "reviewedAtUtc":  "2026-08-12T13:51:00.5122408Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",

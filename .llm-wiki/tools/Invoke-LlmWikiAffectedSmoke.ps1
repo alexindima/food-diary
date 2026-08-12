@@ -75,6 +75,8 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('contract-consumers')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiLearningPromotion|Manage-LlmWikiLearningExperiment|Manage-LlmWikiEvalPromotion|Manage-LlmWikiLearningHealth|Test-LlmWikiKnowledgeIsolation)\.ps1$') {
         $null = $smokeGroups.Add('knowledge-isolation')
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiMemory|Test-LlmWikiMemoryIsolation)\.ps1$') {
+        $null = $smokeGroups.Add('memory')
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiContext|Manage-LlmWikiContextBundle)\.ps1$') {
         $null = $smokeGroups.Add('context-bundle')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiContextFeedback|Test-LlmWikiContextFeedbackMetrics)\.ps1$') {
@@ -227,6 +229,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'knowledge-isolation' {
             & (Join-Path $toolsRoot 'Test-LlmWikiKnowledgeIsolation.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'memory' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiMemoryIsolation.ps1')
             if (-not $?) { exit 1 }
         }
         'context-bundle' {

@@ -166,7 +166,7 @@ if ($Action -eq 'promote') {
     if ($null -eq $entry -or $entry.type -notin @('decision', 'learning')) { throw 'Only an existing decision or learning journal entry can be promoted.' }
     if ([string]::IsNullOrWhiteSpace([string]$entry.rationale)) { throw 'The source journal entry must include rationale.' }
     $packet = Get-Content -LiteralPath (Join-Path $repositoryRoot "$workspace/change-packet.json") -Raw | ConvertFrom-Json
-    $scope = if (@($ScopePath).Count -gt 0) { @($ScopePath) } else { @($packet.diff.changedPaths | ForEach-Object { '^' + [regex]::Escape([string]$_) + '$' }) }
+    $scope = @(if (@($ScopePath).Count -gt 0) { @($ScopePath) } else { @($packet.diff.changedPaths | ForEach-Object { '^' + [regex]::Escape([string]$_) + '$' }) })
     if ($scope.Count -eq 0) { throw 'promote requires scope paths or a task with changed paths.' }
     foreach ($pattern in $scope) { try { $null = [regex]::new($pattern) } catch { throw "Invalid scope regex '$pattern'." } }
     if (@($Evidence).Count -eq 0) { throw 'promote requires at least one -Evidence item.' }
@@ -201,7 +201,7 @@ if ($Action -eq 'promote') {
     $result = [pscustomobject][ordered]@{ action = 'promote'; valid = $true; memory = (Get-View $registry | Where-Object id -eq $memoryId); eventHash = $event.eventHash }
 } elseif ($Action -eq 'candidates') {
     $workspace = Normalize-Workspace $WorkspacePath
-    $issues = Test-Registry $registry
+    $issues = @(Test-Registry $registry)
     $journal = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') show -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     $evidenceArtifact = Get-Content -LiteralPath (Join-Path $repositoryRoot "$workspace/evidence.json") -Raw | ConvertFrom-Json
     $availableEvidence = @(
@@ -233,7 +233,7 @@ if ($Action -eq 'promote') {
         totalCount = $candidates.Count; eligibleCount = @($candidates | Where-Object eligible).Count
         duplicateCandidateCount = @($candidates | Where-Object { @($_.duplicateMatches).Count -gt 0 }).Count
         minimumCandidateScore = [int]$memoryPolicy.minimumCandidateScore
-        registryFingerprint = Get-Hash @($registry.events.eventHash)
+        registryFingerprint = Get-Hash @($registry.events | ForEach-Object { [string]$_.eventHash })
         issues = @($issues); candidates = $candidates
     }
 } elseif ($Action -eq 'supersede') {
@@ -252,7 +252,7 @@ if ($Action -eq 'promote') {
     Write-Registry $registry
     $result = [pscustomobject][ordered]@{ action = 'supersede'; valid = $true; id = $Id; eventHash = $event.eventHash }
 } else {
-    $issues = Test-Registry $registry
+    $issues = @(Test-Registry $registry)
     $view = Get-View $registry
     if ($Action -eq 'show') {
         if ([string]::IsNullOrWhiteSpace($Id)) { throw 'show requires -Id.' }
@@ -273,7 +273,7 @@ if ($Action -eq 'promote') {
         activeCount = @($view | Where-Object state -eq 'active').Count
         staleCount = @($view | Where-Object state -eq 'stale').Count
         supersededCount = @($view | Where-Object state -eq 'superseded').Count
-        registryFingerprint = Get-Hash @($registry.events.eventHash)
+        registryFingerprint = Get-Hash @($registry.events | ForEach-Object { [string]$_.eventHash })
         issues = @($issues); memories = @($view)
     }
 }
