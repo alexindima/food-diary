@@ -16,6 +16,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Users.Services;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -44,7 +45,13 @@ public sealed partial class AuthenticationCommandHandlerTests {
         StubUserRepository userRepository,
         StubTelegramAuthValidator? telegramAuthValidator = null,
         StubTelegramAssertionReplayGuard? replayGuard = null) =>
-        new(userRepository, userRepository, telegramAuthValidator ?? new StubTelegramAuthValidator(), replayGuard ?? new StubTelegramAssertionReplayGuard());
+        new(
+            CreateUserAuthenticationIdentityService(userRepository),
+            telegramAuthValidator ?? new StubTelegramAuthValidator(),
+            replayGuard ?? new StubTelegramAssertionReplayGuard());
+
+    private static UserAuthenticationIdentityService CreateUserAuthenticationIdentityService(StubUserRepository userRepository) =>
+        new(userRepository, userRepository, userRepository);
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramAssertionReplayGuard(bool consume = true) : ITelegramAssertionReplayGuard {
@@ -58,6 +65,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             IAuthenticationUserLookupService,
             IAuthenticationUserMutationService,
             IAuthenticationUserRegistrationService,
+            IGoogleIdentityUserDirectoryService,
             IUserContextService {
         private readonly List<User> _users = user is null ? [.. otherUsers] : [user, .. otherUsers];
 
@@ -295,7 +303,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         User user,
         StubEmailSender sender) =>
         new(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             new StubPasswordHasher(),
             sender,
             new StubDateTimeProvider());

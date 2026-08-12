@@ -83,15 +83,15 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent
-- Public contract files: 44
+- Public contract files: 46
 - Observed external consumer groups: 35
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 44
-- Interfaces: 20
-- DTO/read-model/projection types: 22
+- Public contract types: 46
+- Interfaces: 21
+- DTO/read-model/projection types: 23
 - Enums: 1
 - Exported repository-shaped contracts: 5
 - Contracts referencing domain entities: 4
@@ -101,6 +101,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `interface IUserAdminReadModelRepository`
 - `interface IUserAdminReadRepository`
 - `interface IUserAiProfileReadService`
+- `interface IUserAuthenticationIdentityService`
 - `interface IUserCleanupService`
 - `interface IUserCurrentWaistProvider`
 - `interface IUserCurrentWeightProvider`
@@ -124,22 +125,20 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `record ProfileOverviewModel`
 - `record ProfileWebPushSubscriptionModel`
 - `record UserAdminReadModel`
-- `record UserAiProfileModel`
-- ... 14 more type(s)
+- ... 16 more type(s)
 
 ## Extraction Readiness
 
 - Abstraction-owned profile-read consumers: 12 across 5 group(s)
-- Implementation-owned IUserContextService consumers: 18 across 5 group(s)
+- Implementation-owned IUserContextService consumers: 15 across 4 group(s)
 - Consumers receiving the User aggregate: 0
-- Consumers with aggregate mutation access: 14
+- Consumers with aggregate mutation access: 11
 - Composition registrations: 1
 - Remaining blocker classes: 2
 - Extraction readiness: partial; migrate legacy aggregate/mutation consumers
 
 | Consumer | Contract | Owning assembly | Methods/data | Access | Extraction |
 | --- | --- | --- | --- | --- | --- |
-| Authentication | IUserContextService | FoodDiary.Application | UpdateUserAsync => Task | mutation | migration-required |
 | FoodDiary.Application | IUserContextService | FoodDiary.Application | constructor/registration only => inherited or unresolved | narrow-read-or-access | migration-required |
 | Notifications | IUserContextService | FoodDiary.Application | EnsureCanAccessAsync, GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation | migration-required |
 | Users | IUserContextService | FoodDiary.Application | GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation, narrow-read-or-access | migration-required |

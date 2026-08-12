@@ -164,7 +164,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ResendEmailVerificationHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new ResendEmailVerificationCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
             new StubPasswordHasher(),
             new StubEmailSender(),
             new StubDateTimeProvider());
@@ -207,7 +207,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ResendEmailVerificationHandler_WithMissingUser_ReturnsInvalidToken() {
         var handler = new ResendEmailVerificationCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
             new StubPasswordHasher(),
             new StubEmailSender(),
             new StubDateTimeProvider());

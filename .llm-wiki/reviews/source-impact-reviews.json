@@ -38,13 +38,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "90535f04d319fffae38f45a0a1c0827b04c1bca020e7130ec24dcef26be99401"
+                                            "sha256":  "b89aee0eacc759b5e91342633325101692fa2d713d7536f8ee6d32c3931486f4"
                                         }
                                     ],
-                        "reason":  "Dietologist now consumes Users through a narrow identity/display/role projection and separate access capability; ownership and authorization remain unchanged.",
+                        "reason":  "Reviewed Users-owned authentication identity capability and Authentication-to-Users boundary documentation.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f72054060c2a6bcaa7bd4dc0314a7aec4af00ac",
-                        "reviewedAtUtc":  "2026-08-12T01:32:47.8821596Z"
+                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
+                        "reviewedAtUtc":  "2026-08-12T03:16:18.7262776Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -279,13 +279,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "1633058bb977e6d76acb1176bc3e948c135b46f5181dc429f292a9ea80c19ef0"
+                                            "sha256":  "2fb58a8fdbb477f815d261d149e361eef2a3e0afba919618202eec390e5e7bae"
                                         }
                                     ],
-                        "reason":  "The regenerated contract index confirms Dietologist no longer consumes IUserContextService or the User aggregate and aggregate blockers are zero.",
+                        "reason":  "Reviewed new in-process Users contract, consumers, nullability, and aggregate isolation.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f72054060c2a6bcaa7bd4dc0314a7aec4af00ac",
-                        "reviewedAtUtc":  "2026-08-12T01:32:49.1608530Z"
+                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
+                        "reviewedAtUtc":  "2026-08-12T03:16:21.0040922Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -610,13 +610,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "9b63fdd2f28b55b57b46f529831ae8d28b9c5bcf9f5d5dc80e8d399697cf78d0"
+                                            "sha256":  "a0d247344af24e4dbf15b8000bd5d47c53c7bb37fb8d54ebd9c3c17a5042681b"
                                         }
                                     ],
-                        "reason":  "The Dietologist projection contains only identity, display, language, and role fields required by invitation, comment, and notification flows; no provider sharing or retention changed.",
+                        "reason":  "Reviewed identity and email verification data minimization; no new logging, storage category, or provider sharing.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f72054060c2a6bcaa7bd4dc0314a7aec4af00ac",
-                        "reviewedAtUtc":  "2026-08-12T01:32:50.8517278Z"
+                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
+                        "reviewedAtUtc":  "2026-08-12T03:16:23.0954242Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -659,19 +659,23 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "927ac86132c0ba44a9c4d960416892bc2c6cbdc885a83998bb01c0b977aab543"
+                                            "sha256":  "af78d4518f3c512f9ba8408c6b9b080e92ee4ee0bb49d79a20a1c64edb7a6635"
                                         }
                                     ],
-                        "reason":  "Focused Dietologist and Users tests, the full Application suite, and all architecture tests passed after the boundary migration.",
+                        "reason":  "Reviewed focused behavior coverage, architecture guardrail, and extraction readiness delta.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0f72054060c2a6bcaa7bd4dc0314a7aec4af00ac",
-                        "reviewedAtUtc":  "2026-08-12T01:32:52.1915441Z"
+                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
+                        "reviewedAtUtc":  "2026-08-12T03:16:25.1858961Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
                         "pagePath":  ".llm-wiki/workflows/release-readiness.md",
                         "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
+                                        },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
                                             "sha256":  "ce590751a3075fdbb97221274ba29b64adfdba1c2ff1b9d6603f23dfff6c8f8b"
@@ -681,10 +685,10 @@
                                             "sha256":  "8c52edd04363ae86b381d35834f5eaf18d5e20915af123238c7dece7063e0b2e"
                                         }
                                     ],
-                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
+                        "reason":  "Reviewed in-process DI registration and compatibility; no migration, configuration, or deployment ordering change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:47:08.4304102Z"
+                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
+                        "reviewedAtUtc":  "2026-08-12T03:16:27.3399482Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -707,6 +711,10 @@
                         "pageSha256":  "249ac686153517f2268ed4ad80018e78759bf60fa80a0c886019bbfe99fa07e7",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
                                             "sha256":  "ce590751a3075fdbb97221274ba29b64adfdba1c2ff1b9d6603f23dfff6c8f8b"
                                         },
@@ -715,10 +723,10 @@
                                             "sha256":  "df0c2d9358a09fec190034903c153c4af414e42655a76dd58685329011b12e11"
                                         }
                                     ],
-                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
+                        "reason":  "Reviewed required security, observability, ADR, rollout, quality, privacy, and in-process contract obligations.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:47:09.1244528Z"
+                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
+                        "reviewedAtUtc":  "2026-08-12T03:16:29.4109081Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",

@@ -83,6 +83,31 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void MigratedAuthenticationIdentityHandlers_DoNotDependOnUsersAggregateAccess() {
+        string[] handlerPaths = [
+            "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+        ];
+        string[] forbiddenReferences = [
+            "FoodDiary.Domain.Entities.Users",
+            "IAuthenticationUserMutationService",
+            "IUserContextService",
+        ];
+
+        string[] violations = [.. handlerPaths
+            .Select(path => Path.Combine(ArchitectureTestPaths.RepositoryRoot, path.Replace('/', Path.DirectorySeparatorChar)))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, line, index }))
+            .SelectMany(entry => forbiddenReferences
+                .Where(entry.line.Contains)
+                .Select(reference => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references {reference}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
     private static readonly HashSet<string> ApprovedFastingApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Fasting",

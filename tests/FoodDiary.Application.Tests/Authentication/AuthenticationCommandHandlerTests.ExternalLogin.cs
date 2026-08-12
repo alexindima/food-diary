@@ -8,10 +8,7 @@ using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FluentValidation.TestHelper;
-using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -145,8 +142,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("link-google@example.com", "secret");
         var repository = new StubUserRepository(user);
         var handler = new LinkGoogleCommandHandler(
-            repository,
-            repository,
+            CreateUserAuthenticationIdentityService(repository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
 
         Result<UserModel> result =
@@ -162,8 +158,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("link-google@example.com", "secret");
         var repository = new StubUserRepository(user);
         var handler = new LinkGoogleCommandHandler(
-            repository,
-            repository,
+            CreateUserAuthenticationIdentityService(repository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, "other@example.com", "Alex", "User", "en")));
 
         Result<UserModel> result =
@@ -181,8 +176,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         identityOwner.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
         var repository = new StubUserRepository(user, identityOwner);
         var handler = new LinkGoogleCommandHandler(
-            repository,
-            repository,
+            CreateUserAuthenticationIdentityService(repository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
 
         Result<UserModel> result =
@@ -199,8 +193,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
         var repository = new StubUserRepository(user);
         var handler = new LinkGoogleCommandHandler(
-            repository,
-            repository,
+            CreateUserAuthenticationIdentityService(repository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
 
         Result<UserModel> result =
@@ -215,8 +208,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.LinkGoogleIdentity(GoogleIssuer, "existing-subject");
         var repository = new StubUserRepository(user);
         var handler = new LinkGoogleCommandHandler(
-            repository,
-            repository,
+            CreateUserAuthenticationIdentityService(repository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")));
 
         Result<UserModel> result =
@@ -231,8 +223,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task LinkGoogleHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var repository = new StubUserRepository();
         var handler = new LinkGoogleCommandHandler(
-            repository,
-            repository,
+            CreateUserAuthenticationIdentityService(repository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(
                 GoogleIssuer,
                 GoogleSubject,
@@ -251,8 +242,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task LinkGoogleHandler_WhenCredentialValidationFails_ReturnsFailure() {
         var repository = new StubUserRepository();
         var handler = new LinkGoogleCommandHandler(
-            repository,
-            repository,
+            CreateUserAuthenticationIdentityService(repository),
             new StubGoogleTokenValidator(
                 new GoogleIdentityPayload(
                     GoogleIssuer,
@@ -271,13 +261,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
     [Fact]
     public async Task LinkGoogleHandler_WhenUserAccessFails_ReturnsFailure() {
-        IUserContextService contextService = Substitute.For<IUserContextService>();
-        contextService
-            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
+        var repository = new StubUserRepository();
         var handler = new LinkGoogleCommandHandler(
-            contextService,
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(repository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(
                 GoogleIssuer,
                 GoogleSubject,
