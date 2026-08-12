@@ -13,6 +13,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'Format-LlmWikiLearningResults.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $knowledgeRoot = if ([string]::IsNullOrWhiteSpace($env:LLM_WIKI_TEST_KNOWLEDGE_ROOT)) {
@@ -27,20 +28,62 @@ $registryPath = Join-Path $knowledgeRoot 'learning-promotions.json'
 $policy = Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json
 $promotionPolicy = $policy.scheduler.learningPromotion
 
-function Get-Hash([object]$Value) {
+function Get-RawHash([object]$Value) {
     $json = ConvertTo-Json -InputObject $Value -Depth 40 -Compress
     if ($null -eq $json) { $json = 'null' }
     $bytes = [Text.Encoding]::UTF8.GetBytes($json)
     $sha = [Security.Cryptography.SHA256]::Create()
     try { ([BitConverter]::ToString($sha.ComputeHash($bytes)) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
+function Get-StableHash([object]$Value) {
+    # Hash the same JSON-compatible shape that a later process will read.
+    # A recursive PowerShell normalizer is subtly affected by pipeline
+    # enumeration (especially empty and singleton arrays), while a JSON
+    # round-trip gives us one stable persistence boundary for every action.
+    $json = ConvertTo-Json -InputObject $Value -Depth 50 -Compress
+    if ($null -eq $json) { $json = 'null' }
+    Get-RawHash ($json | ConvertFrom-Json)
+}
+function Get-Hash([object]$Value) { Get-RawHash $Value }
 function Read-Registry {
     $registry = Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
     if ($registry.schemaVersion -ne 1 -or $null -eq $registry.events) { throw 'Unsupported learning-promotion registry schema.' }
     $registry
 }
 function Write-Registry([object]$Registry) {
-    [IO.File]::WriteAllText($registryPath, (($Registry | ConvertTo-Json -Depth 50) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    # Seal the exact JSON representation that subsequent processes will read.
+    # PowerShell's JSON round-trip can change nested numeric/date CLR types; hashing
+    # the pre-serialization objects would therefore produce a chain that fails on
+    # the next invocation even though the persisted data is semantically unchanged.
+    $temporaryRegistryPath = "$registryPath.$PID.writing"
+    try {
+        $persisted = $Registry
+        $stable = $false
+        foreach ($attempt in 1..3) {
+            $persisted = ($persisted | ConvertTo-Json -Depth 50 -Compress) | ConvertFrom-Json
+            $persisted | Add-Member -NotePropertyName hashSchemaVersion -NotePropertyValue 2 -Force
+            Update-LegacyDerivedSnapshots $persisted
+            $previousHash = ''
+            foreach ($event in @($persisted.events)) {
+                $event.previousHash = $previousHash
+                $event.eventHash = Get-StableHash (Get-EventPayload $event)
+                $previousHash = [string]$event.eventHash
+            }
+            [IO.File]::WriteAllText($temporaryRegistryPath, (($persisted | ConvertTo-Json -Depth 50) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+            $roundTripped = Get-Content -LiteralPath $temporaryRegistryPath -Raw | ConvertFrom-Json
+            $issues = @(Test-Registry $roundTripped)
+            if ($issues.Count -eq 0) {
+                $persisted = $roundTripped
+                $stable = $true
+                break
+            }
+            $persisted = $roundTripped
+        }
+        if (-not $stable) { throw "Refusing to persist an unstable learning-promotion registry: $($issues -join ' ')" }
+        Move-Item -LiteralPath $temporaryRegistryPath -Destination $registryPath -Force
+    } finally {
+        Remove-Item -LiteralPath $temporaryRegistryPath -Force -ErrorAction SilentlyContinue
+    }
 }
 function Get-EventPayload([object]$Event) {
     [pscustomobject][ordered]@{
@@ -50,6 +93,20 @@ function Get-EventPayload([object]$Event) {
         id = [string]$Event.id
         createdAtUtc = ([DateTimeOffset]$Event.createdAtUtc).ToUniversalTime().ToString('o')
         previousHash = [string]$Event.previousHash
+        observation = $Event.observation
+        decision = $Event.decision
+        targetId = $Event.targetId
+        reason = $Event.reason
+    }
+}
+function Get-LegacyEventPayload([object]$Event) {
+    [pscustomobject][ordered]@{
+        schemaVersion = $Event.schemaVersion
+        sequence = $Event.sequence
+        kind = $Event.kind
+        id = $Event.id
+        createdAtUtc = $Event.createdAtUtc
+        previousHash = $Event.previousHash
         observation = $Event.observation
         decision = $Event.decision
         targetId = $Event.targetId
@@ -76,7 +133,7 @@ function Add-Event([object]$Registry, [string]$Kind, [string]$CandidateId, [obje
         reason = $EventReason
         eventHash = ''
     }
-    $event.eventHash = Get-Hash (Get-EventPayload $event)
+    $event.eventHash = Get-StableHash (Get-EventPayload $event)
     $Registry.events = @($Registry.events) + $event
     # Property assignments can leak values into a PowerShell function's output
     # pipeline. Return exactly the event object so callers never append a hash
@@ -144,8 +201,8 @@ function Get-View([object]$Registry) {
     }
     @($byId.Values | ForEach-Object {
         $item = $_
-        $tasks = @($item.observations.workspace | Sort-Object -Unique)
-        $evidence = @($item.observations.evidence | Where-Object { $_ } | Sort-Object -Unique | Select-Object -First ([int]$promotionPolicy.maximumEvidenceItems))
+        $tasks = @($item.observations | ForEach-Object { [string]$_.workspace } | Where-Object { $_ } | Sort-Object -Unique)
+        $evidence = @($item.observations | ForEach-Object { @($_.evidence) } | Where-Object { $_ } | Sort-Object -Unique | Select-Object -First ([int]$promotionPolicy.maximumEvidenceItems))
         $scores = @($item.observations | ForEach-Object { [double]$_.score })
         $average = if ($scores.Count -eq 0) { 0 } else { [Math]::Round([double](($scores | Measure-Object -Average).Average), 2) }
         [pscustomobject][ordered]@{
@@ -177,10 +234,10 @@ function Get-View([object]$Registry) {
 }
 function Get-Application([object]$Candidate) {
     $observations = @($Candidate.observations)
-    $scopePaths = @($observations.changedPaths | Where-Object { $_ } | Sort-Object -Unique | ForEach-Object {
+    $scopePaths = @($observations | ForEach-Object { @($_.changedPaths) } | Where-Object { $_ } | Sort-Object -Unique | ForEach-Object {
         '^' + [regex]::Escape([string]$_) + '$'
     })
-    $subjectIds = @($observations.subjectIds | Where-Object { $_ } | Sort-Object -Unique)
+    $subjectIds = @($observations | ForEach-Object { @($_.subjectIds) } | Where-Object { $_ } | Sort-Object -Unique)
     $recommendedValues = @($observations | ForEach-Object {
         if ($null -ne $_.data -and [double]$_.data.recommendedSeconds -gt 0) { [double]$_.data.recommendedSeconds }
     })
@@ -195,7 +252,7 @@ function Get-Application([object]$Candidate) {
         distinctTaskCount = [int]$Candidate.distinctTaskCount
         averageScore = [double]$Candidate.averageScore
         evidence = @($Candidate.evidence)
-        evidenceHash = Get-Hash @($Candidate.evidence)
+        evidenceHash = Get-StableHash @($Candidate.evidence)
     }
 }
 function Test-Registry([object]$Registry) {
@@ -210,7 +267,7 @@ function Test-Registry([object]$Registry) {
         $sequence++
         if ([int]$event.sequence -ne $sequence) { $issues.Add("Event sequence is invalid at $sequence.") }
         if ([string]$event.previousHash -cne $previous) { $issues.Add("Event $sequence has invalid previousHash.") }
-        if ([string]$event.eventHash -cne (Get-Hash (Get-EventPayload $event))) { $issues.Add("Event $sequence has invalid eventHash.") }
+        if ([string]$event.eventHash -cne (Get-StableHash (Get-EventPayload $event))) { $issues.Add("Event $sequence has invalid eventHash.") }
         if ($event.kind -eq 'observed') {
             if ([string]$event.id -ne (Get-CandidateId $event.observation)) { $issues.Add("Observation $sequence has an invalid candidate id.") }
             $known.Add([string]$event.id) | Out-Null
@@ -230,7 +287,7 @@ function Test-Registry([object]$Registry) {
             $decided[[string]$event.id] = $event.kind
             if ([string]::IsNullOrWhiteSpace([string]$event.reason)) { $issues.Add("Decision $sequence has no reason.") }
             $observations = @($observationsByCandidate[[string]$event.id])
-            $distinctTaskCount = @($observations.workspace | Sort-Object -Unique).Count
+            $distinctTaskCount = @($observations | ForEach-Object { [string]$_.workspace } | Where-Object { $_ } | Sort-Object -Unique).Count
             $averageScore = if ($observations.Count -eq 0) { 0 } else {
                 [Math]::Round([double](($observations.score | Measure-Object -Average).Average), 2)
             }
@@ -239,7 +296,7 @@ function Test-Registry([object]$Registry) {
             if ([string]$event.decision.target -cne $expectedTarget) { $issues.Add("Decision $sequence has an invalid target snapshot.") }
             if ([int]$event.decision.distinctTaskCount -ne $distinctTaskCount) { $issues.Add("Decision $sequence has an invalid task-count snapshot.") }
             if ([double]$event.decision.averageScore -ne $averageScore) { $issues.Add("Decision $sequence has an invalid score snapshot.") }
-            if ([string]$event.decision.evidenceHash -cne (Get-Hash $evidence)) { $issues.Add("Decision $sequence has an invalid evidence snapshot.") }
+            if ([string]$event.decision.evidenceHash -cne (Get-StableHash $evidence)) { $issues.Add("Decision $sequence has an invalid evidence snapshot.") }
             if (
                 $event.kind -eq 'approved' -and (
                     $distinctTaskCount -lt [int]$promotionPolicy.minimumDistinctTasks -or
@@ -258,7 +315,7 @@ function Test-Registry([object]$Registry) {
                 $issues.Add("Application $sequence did not target an approved, unapplied candidate.")
             } else {
                 $expectedApplication = Get-Application $candidate
-                if ((Get-Hash $event.decision) -cne (Get-Hash $expectedApplication)) { $issues.Add("Application $sequence has an invalid materialization snapshot.") }
+                if ((Get-StableHash $event.decision) -cne (Get-StableHash $expectedApplication)) { $issues.Add("Application $sequence has an invalid materialization snapshot.") }
                 if ($event.decision.target -eq 'durable-memory' -and @($event.decision.scopePaths).Count -eq 0) { $issues.Add("Application $sequence has no durable-memory scope.") }
                 if ($event.decision.target -eq 'verification-calibration' -and (@($event.decision.subjectIds).Count -eq 0 -or [double]$event.decision.recommendedSeconds -le 0)) {
                     $issues.Add("Application $sequence has no usable verification calibration.")
@@ -269,7 +326,7 @@ function Test-Registry([object]$Registry) {
             if (-not $known.Contains([string]$event.targetId)) { $issues.Add("Rollback $sequence targets an unknown candidate.") }
             $candidate = Get-View ([pscustomobject]@{ schemaVersion = 1; events = @($Registry.events | Select-Object -First ($sequence - 1)) }) | Where-Object id -eq $event.targetId
             if ($null -eq $candidate -or $candidate.materialization -ne 'applied') { $issues.Add("Rollback $sequence did not target an applied candidate.") }
-            if ($null -eq $event.decision -or (Get-Hash $event.decision) -cne (Get-Hash $candidate.application)) { $issues.Add("Rollback $sequence has an invalid application snapshot.") }
+            if ($null -eq $event.decision -or (Get-StableHash $event.decision) -cne (Get-StableHash $candidate.application)) { $issues.Add("Rollback $sequence has an invalid application snapshot.") }
             if ([string]::IsNullOrWhiteSpace([string]$event.reason)) { $issues.Add("Rollback $sequence has no reason.") }
         } else {
             $issues.Add("Unknown learning-promotion event kind '$($event.kind)'.")
@@ -301,7 +358,7 @@ function Initialize-LegacyHashChain([object]$Registry) {
         } else {
             $event | Add-Member -NotePropertyName previousHash -NotePropertyValue $previousHash
         }
-        $eventHash = Get-Hash (Get-EventPayload $event)
+        $eventHash = Get-StableHash (Get-EventPayload $event)
         if ($event.PSObject.Properties['eventHash']) {
             $event.eventHash = $eventHash
         } else {
@@ -312,10 +369,77 @@ function Initialize-LegacyHashChain([object]$Registry) {
     $true
 }
 
+function Test-LegacyHashChain([object]$Registry) {
+    $previousHash = ''
+    foreach ($event in @($Registry.events)) {
+        if ([string]$event.previousHash -cne $previousHash) { return $false }
+        if ([string]$event.eventHash -cne (Get-RawHash (Get-LegacyEventPayload $event))) { return $false }
+        $previousHash = [string]$event.eventHash
+    }
+    $true
+}
+
+function Update-LegacyDerivedSnapshots([object]$Registry) {
+    $events = @($Registry.events)
+    for ($index = 0; $index -lt $events.Count; $index++) {
+        $event = $events[$index]
+        $priorRegistry = [pscustomobject]@{ schemaVersion = 1; events = @($events | Select-Object -First $index) }
+        if ($event.kind -in @('approved', 'rejected')) {
+            $candidate = Get-View $priorRegistry | Where-Object id -eq $event.id | Select-Object -First 1
+            if ($null -eq $candidate) { throw "Legacy decision $($index + 1) targets an unknown candidate." }
+            $event.decision = [pscustomobject][ordered]@{
+                target = [string]$candidate.target
+                distinctTaskCount = [int]$candidate.distinctTaskCount
+                averageScore = [double]$candidate.averageScore
+                evidenceHash = Get-StableHash @($candidate.evidence)
+            }
+        } elseif ($event.kind -eq 'applied') {
+            $candidate = Get-View $priorRegistry | Where-Object id -eq $event.id | Select-Object -First 1
+            if ($null -eq $candidate -or $candidate.decision -ne 'approved') { throw "Legacy application $($index + 1) does not target an approved candidate." }
+            $event.decision = Get-Application $candidate
+        } elseif ($event.kind -eq 'rolled-back') {
+            $candidate = Get-View $priorRegistry | Where-Object id -eq $event.targetId | Select-Object -First 1
+            if ($null -eq $candidate -or $candidate.materialization -ne 'applied') { throw "Legacy rollback $($index + 1) does not target an applied candidate." }
+            $event.decision = $candidate.application
+        }
+    }
+}
+
+function Convert-LegacyRegistry([object]$Registry) {
+    $events = @($Registry.events)
+    if ($events.Count -eq 0) {
+        $Registry | Add-Member -NotePropertyName hashSchemaVersion -NotePropertyValue 2 -Force
+        return $true
+    }
+    $hashedCount = @($events | Where-Object { $_.PSObject.Properties['eventHash'] -and -not [string]::IsNullOrWhiteSpace([string]$_.eventHash) }).Count
+    if ($hashedCount -eq 0) {
+        $null = Initialize-LegacyHashChain $Registry
+    } elseif ($hashedCount -ne $events.Count) {
+        throw "Learning-promotion registry has a partially hashed event chain ($hashedCount/$($events.Count)); restore it from a trusted copy instead of migrating it."
+    } elseif (-not (Test-LegacyHashChain $Registry)) {
+        throw 'Learning-promotion legacy registry hash chain is invalid; restore it from a trusted copy instead of migrating it.'
+    }
+    Update-LegacyDerivedSnapshots $Registry
+    $previousHash = ''
+    foreach ($event in @($Registry.events)) {
+        $event.previousHash = $previousHash
+        $event.eventHash = Get-StableHash (Get-EventPayload $event)
+        $previousHash = [string]$event.eventHash
+    }
+    $Registry | Add-Member -NotePropertyName hashSchemaVersion -NotePropertyValue 2 -Force
+    $true
+}
+
 $registry = Read-Registry
-$legacyHashChainMigrated = Initialize-LegacyHashChain $registry
+$legacyHashChainMigrated = if (-not $registry.PSObject.Properties['hashSchemaVersion']) {
+    Convert-LegacyRegistry $registry
+} elseif ([int]$registry.hashSchemaVersion -eq 2) {
+    $false
+} else {
+    throw "Unsupported learning-promotion hash schema version: $($registry.hashSchemaVersion)"
+}
 $registryIssues = @(Test-Registry $registry)
-if ($registryIssues.Count -gt 0) {
+if ($registryIssues.Count -gt 0 -and ($FailOnInvalid -or $Action -notin @('verify', 'list', 'show', 'candidates'))) {
     throw "Learning-promotion registry is invalid: $($registryIssues -join ' ')"
 }
 if ($legacyHashChainMigrated) {
@@ -359,7 +483,7 @@ if ($Action -eq 'observe') {
             tags = @($candidate.suggestedTags)
             data = $candidate.data
             changedPaths = @($packet.diff.changedPaths)
-            subjectIds = @($candidate.evidence | Where-Object { $_ -in @($evidenceBundle.checks.id) } | Sort-Object -Unique)
+            subjectIds = @($candidate.evidence | Where-Object { $_ -in @($evidenceBundle.checks | ForEach-Object { [string]$_.id }) } | Sort-Object -Unique)
         }
         $event = Add-Event $registry 'observed' (Get-CandidateId $candidate) $observation $null '' '' $now
         $added.Add($event)
@@ -382,7 +506,7 @@ if ($Action -eq 'observe') {
         target = [string]$candidate.target
         distinctTaskCount = [int]$candidate.distinctTaskCount
         averageScore = [double]$candidate.averageScore
-        evidenceHash = Get-Hash @($candidate.evidence)
+        evidenceHash = Get-StableHash @($candidate.evidence)
     }
     $event = Add-Event $registry $(if ($Action -eq 'approve') { 'approved' } else { 'rejected' }) $Id $null $decision '' $Reason $now
     $issues = @(Test-Registry $registry)
@@ -468,10 +592,5 @@ if ($Action -eq 'observe') {
 }
 if ($FailOnInvalid -and -not $result.valid) { throw "Learning-promotion registry is invalid: $(@($result.issues) -join ' ')" }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 50 } else {
-    Write-Host "Learning promotion: action=$Action, valid=$($result.valid)"
-    if ($result.PSObject.Properties['addedCount']) { Write-Host "Observed=$($result.addedCount)" }
-    foreach ($candidate in @($result.candidates | Where-Object { $null -ne $_ })) {
-        Write-Host " - [$($candidate.decision)/$($candidate.materialization)] $($candidate.id): tasks=$($candidate.distinctTaskCount), score=$($candidate.averageScore), eligible=$($candidate.eligible), target=$($candidate.target)"
-    }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    Write-LlmWikiLearningPromotionResult $result
 }

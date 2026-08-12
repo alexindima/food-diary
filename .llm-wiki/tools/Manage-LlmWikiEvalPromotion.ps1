@@ -13,6 +13,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'Format-LlmWikiLearningResults.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $knowledgeRoot = if ([string]::IsNullOrWhiteSpace($env:LLM_WIKI_TEST_KNOWLEDGE_ROOT)) {
@@ -286,9 +287,5 @@ if ($Action -eq 'observe') {
 }
 if ($FailOnInvalid -and -not $result.valid) { throw "Eval-promotion registry is invalid: $(@($result.issues) -join ' ')" }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 50 } else {
-    Write-Host "Eval promotion: action=$Action, valid=$($result.valid)"
-    foreach ($candidate in @($result.candidates | Where-Object { $null -ne $_ })) {
-        Write-Host " - $($candidate.id): decision=$($candidate.decision), materialization=$($candidate.materialization), signals=$(@($candidate.signals).Count)"
-    }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    Write-LlmWikiEvalPromotionResult $result
 }

@@ -375,14 +375,22 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
-                                            "sha256":  "bcb5da42c93ff7837fbf33ec9c50b89145c6487fab6f82ea97d61d3bd08cc110"
+                                            "path":  ".llm-wiki/knowledge/learning-promotions.json",
+                                            "sha256":  "7c4d449e9443dd07872fc64622b63c5ee236d2abe24e660ed4c228aa8a14df70"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
+                                            "sha256":  "996a9c5fdbf6b674ed1ce15f03531ea956b91f91766bd8369d11c72419c6074d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
+                                            "sha256":  "b373c3c4fb7e20a4529005a06e4643b6e2ffd44f0b185ecb6199072564abcd87"
                                         }
                                     ],
-                        "reason":  "Reviewed action-aware learning-experiment text formatting; registry mutations and learning lifecycle semantics are unchanged.",
+                        "reason":  "Reviewed the versioned hash-chain migration, persisted JSON hashing, strict corruption handling, and action-safe formatters. The documented governed promotion workflow remains current; changes harden storage compatibility and verification without changing its public lifecycle.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a3fdd12ec9a1508fee0e8edbde837563bc10aaae",
-                        "reviewedAtUtc":  "2026-08-12T14:34:29.4045312Z"
+                        "gitHead":  "681462b330264144002d61b60b77c14d0d0a4fea",
+                        "reviewedAtUtc":  "2026-08-12T16:10:52.0876353Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -556,13 +564,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "1f4a5275a1943a73e167f77538a48ce18a7f2146cc60e8e420ff78590ac85edc"
+                                            "sha256":  "07dfd64a32424bdd6bdc08421879b8a65cc509466742f0b7f9ae342d14264a3e"
                                         }
                                     ],
-                        "reason":  "Reviewed focused knowledge-isolation formatter regression routing; affected verification remains strict without invoking unrelated full-tools scenarios.",
+                        "reason":  "Reviewed focused knowledge-isolation regression routing for migration and learning result shapes; full CI smoke remains unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a3fdd12ec9a1508fee0e8edbde837563bc10aaae",
-                        "reviewedAtUtc":  "2026-08-12T14:34:32.4741910Z"
+                        "gitHead":  "681462b330264144002d61b60b77c14d0d0a4fea",
+                        "reviewedAtUtc":  "2026-08-12T14:53:54.1214972Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -600,18 +608,14 @@
                         "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
-                                            "sha256":  "87a2bc5f65c33fe55d63035ec361d2c978ac7128e1a5e2b8b606d0c145747566"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
-                                            "sha256":  "ac92bc2490ebe58ba1c98e4cfef62a3816b3b1cdd6b4a6e58f321ff177eb2e29"
+                                            "sha256":  "13e4c6052b365688000c6a90260308027d84d50b868ead24185f60cbbe5c598e"
                                         }
                                     ],
-                        "reason":  "Reviewed compatibility for promoted cases with omitted optional fields and empty policy collections.",
+                        "reason":  "Reviewed action-aware eval-promotion text formatting; eval registry and promotion semantics are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
-                        "reviewedAtUtc":  "2026-08-12T11:38:12.8035975Z"
+                        "gitHead":  "681462b330264144002d61b60b77c14d0d0a4fea",
+                        "reviewedAtUtc":  "2026-08-12T14:53:56.9490514Z"
                     },
                     {
                         "pageId":  "workflow-model-routing",

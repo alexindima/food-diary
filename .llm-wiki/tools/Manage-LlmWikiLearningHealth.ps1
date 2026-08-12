@@ -13,6 +13,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'Format-LlmWikiLearningResults.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $knowledgeRoot = if ([string]::IsNullOrWhiteSpace($env:LLM_WIKI_TEST_KNOWLEDGE_ROOT)) {
@@ -274,9 +275,5 @@ if ($Action -eq 'observe') {
 }
 if ($FailOnInvalid -and -not $result.valid) { throw "Learning-health registry is invalid: $(@($result.issues) -join ' ')" }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 50 } else {
-    Write-Host "Learning health: action=$Action, valid=$($result.valid)"
-    foreach ($item in @($result.health | Where-Object { $null -ne $_ })) {
-        Write-Host " - $($item.id): verdict=$($item.recommendation.effectiveVerdict), samples=$($item.recommendation.sampleCount), degraded=$($item.recommendation.degradationPercent)%"
-    }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    Write-LlmWikiLearningHealthResult $result
 }
