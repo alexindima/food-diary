@@ -69,6 +69,16 @@ $selectedCases = @(
     }
 )
 foreach ($case in $selectedCases) {
+    $expectedPlanPhases = @(if ($case.PSObject.Properties['expectedPlanPhases']) { @($case.expectedPlanPhases) })
+    $expectedAdaptiveProfile = if ($case.PSObject.Properties['expectedAdaptiveProfile']) { [string]$case.expectedAdaptiveProfile } else { '' }
+    $adaptiveObjective = if ($case.PSObject.Properties['adaptiveObjective']) { [string]$case.adaptiveObjective } else { '' }
+    $expectedAdaptiveStages = @(if ($case.PSObject.Properties['expectedAdaptiveStages']) { @($case.expectedAdaptiveStages) })
+    $unexpectedAdaptiveStages = @(if ($case.PSObject.Properties['unexpectedAdaptiveStages']) { @($case.unexpectedAdaptiveStages) })
+    $traceQuery = if ($case.PSObject.Properties['traceQuery']) { [string]$case.traceQuery } else { '' }
+    $expectedTraceRequests = @(if ($case.PSObject.Properties['expectedTraceRequests']) { @($case.expectedTraceRequests) })
+    $privacyQuery = if ($case.PSObject.Properties['privacyQuery']) { [string]$case.privacyQuery } else { '' }
+    $privacyCategory = if ($case.PSObject.Properties['privacyCategory']) { [string]$case.privacyCategory } else { '' }
+    $expectedPrivacyFields = @(if ($case.PSObject.Properties['expectedPrivacyFields']) { @($case.expectedPrivacyFields) })
     $diffJson = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') `
         -ChangedPath @($case.changedPaths) `
         -Format Json
@@ -77,19 +87,28 @@ foreach ($case in $selectedCases) {
         -Format Json
     $diff = $diffJson | ConvertFrom-Json
     $policy = $policyJson | ConvertFrom-Json
+    $moduleNames = @(@($diff.modules) | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['name']) { [string]$_.name } })
+    $scopeNames = @($diff.scopes)
+    $matchedRuleIds = @(@($policy.matchedRules) | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } })
+    $requiredCheckIds = @(@($policy.requiredChecks) | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } })
+    $violationRules = @(
+        @($policy.violations) |
+            ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['rule']) { [string]$_.rule } } |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) }
+    )
 
-    Test-ExpectedSet $case.id 'module' @($case.expectedModules) @($diff.modules.name)
-    Test-ExpectedSet $case.id 'scope' @($case.expectedScopes) @($diff.scopes)
-    Test-ExpectedSet $case.id 'rule' @($case.expectedRules) @($policy.matchedRules.id)
-    Test-ExpectedSet $case.id 'check' @($case.expectedChecks) @($policy.requiredChecks.id)
-    Test-ExpectedSet $case.id 'violation rule' @($case.expectedViolationRules) @($policy.violations.rule)
-    if ($null -ne $case.expectedPlanPhases) {
+    Test-ExpectedSet $case.id 'module' @($case.expectedModules) $moduleNames
+    Test-ExpectedSet $case.id 'scope' @($case.expectedScopes) $scopeNames
+    Test-ExpectedSet $case.id 'rule' @($case.expectedRules) $matchedRuleIds
+    Test-ExpectedSet $case.id 'check' @($case.expectedChecks) $requiredCheckIds
+    Test-ExpectedSet $case.id 'violation rule' @($case.expectedViolationRules) $violationRules
+    if ($expectedPlanPhases.Count -gt 0) {
         $planJson = & (Join-Path $PSScriptRoot 'Get-LlmWikiImplementationPlan.ps1') `
             -ChangedPath @($case.changedPaths) `
             -Objective "Eval: $($case.id)" `
             -Format Json
         $implementationPlan = $planJson | ConvertFrom-Json
-        Test-ExpectedSet $case.id 'implementation phase' @($case.expectedPlanPhases) @($implementationPlan.phases.id)
+        Test-ExpectedSet $case.id 'implementation phase' $expectedPlanPhases @($implementationPlan.phases.id)
         $assertions++
         $orders = @($implementationPlan.phases.order)
         if (($orders -join ',') -eq ((1..$orders.Count) -join ',')) {
@@ -98,20 +117,20 @@ foreach ($case in $selectedCases) {
             $failures.Add("$($case.id): implementation phases are not sequentially ordered")
         }
     }
-    if (-not [string]::IsNullOrWhiteSpace([string]$case.expectedAdaptiveProfile)) {
+    if (-not [string]::IsNullOrWhiteSpace($expectedAdaptiveProfile)) {
         $adaptiveJson = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
-            -Objective ([string]$case.adaptiveObjective) `
+            -Objective $adaptiveObjective `
             -ChangedPath @($case.changedPaths) `
             -Format Json
         $adaptive = $adaptiveJson | ConvertFrom-Json
         $assertions++
-        if ([string]$adaptive.profile -eq [string]$case.expectedAdaptiveProfile) {
+        if ([string]$adaptive.profile -eq $expectedAdaptiveProfile) {
             $passedAssertions++
         } else {
-            $failures.Add("$($case.id): expected adaptive profile '$($case.expectedAdaptiveProfile)', got '$($adaptive.profile)'")
+            $failures.Add("$($case.id): expected adaptive profile '$expectedAdaptiveProfile', got '$($adaptive.profile)'")
         }
-        Test-ExpectedSet $case.id 'adaptive stage' @($case.expectedAdaptiveStages) @($adaptive.stages.id)
-        foreach ($unexpectedStage in @($case.unexpectedAdaptiveStages)) {
+        Test-ExpectedSet $case.id 'adaptive stage' $expectedAdaptiveStages @($adaptive.stages.id)
+        foreach ($unexpectedStage in $unexpectedAdaptiveStages) {
             $assertions++
             if (@($adaptive.stages.id) -notcontains $unexpectedStage) {
                 $passedAssertions++
@@ -120,39 +139,40 @@ foreach ($case in $selectedCases) {
             }
         }
     }
-    if (-not [string]::IsNullOrWhiteSpace([string]$case.traceQuery)) {
+    if (-not [string]::IsNullOrWhiteSpace($traceQuery)) {
         $traceJson = & (Join-Path $PSScriptRoot 'Find-LlmWikiTrace.ps1') `
-            -Query ([string]$case.traceQuery) `
+            -Query $traceQuery `
             -Format Json
-        $trace = @($traceJson | ConvertFrom-Json)
-        Test-ExpectedSet $case.id 'trace request' @($case.expectedTraceRequests) @($trace.request)
+        $trace = @($traceJson | ConvertFrom-Json | ForEach-Object { $_ })
+        $traceRequests = @($trace | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['request']) { [string]$_.request } })
+        Test-ExpectedSet $case.id 'trace request' $expectedTraceRequests $traceRequests
     }
-    if (-not [string]::IsNullOrWhiteSpace([string]$case.privacyQuery)) {
+    if (-not [string]::IsNullOrWhiteSpace($privacyQuery)) {
         $privacyArguments = @{
-            Query = [string]$case.privacyQuery
+            Query = $privacyQuery
             Format = 'Json'
         }
-        if (-not [string]::IsNullOrWhiteSpace([string]$case.privacyCategory)) {
-            $privacyArguments.Category = [string]$case.privacyCategory
+        if (-not [string]::IsNullOrWhiteSpace($privacyCategory)) {
+            $privacyArguments.Category = $privacyCategory
         }
         $privacyJson = & (Join-Path $PSScriptRoot 'Find-LlmWikiSensitiveData.ps1') @privacyArguments
         $privacy = $privacyJson | ConvertFrom-Json
         $privacyFields = @($privacy.items | ForEach-Object { "$($_.category):$($_.name)" })
-        Test-ExpectedSet $case.id 'privacy field' @($case.expectedPrivacyFields) $privacyFields
+        Test-ExpectedSet $case.id 'privacy field' $expectedPrivacyFields $privacyFields
     }
 
     $assertions++
-    $unexpectedViolations = @($policy.violations | Where-Object {
-        @($case.expectedViolationRules) -notcontains $_.rule
+    $unexpectedViolationRules = @($violationRules | Where-Object {
+        @($case.expectedViolationRules) -notcontains $_
     })
-    if ($unexpectedViolations.Count -eq 0) {
+    if ($unexpectedViolationRules.Count -eq 0) {
         $passedAssertions++
     } else {
-        $failures.Add("$($case.id): unexpected violation(s): $($unexpectedViolations.rule -join ', ')")
+        $failures.Add("$($case.id): unexpected violation(s): $($unexpectedViolationRules -join ', ')")
     }
 
     if ($Detailed) {
-        Write-Host " - $($case.id): modules=$(@($diff.modules.name) -join ','), rules=$(@($policy.matchedRules.id) -join ','), violations=$(@($policy.violations.rule) -join ',')"
+        Write-Host " - $($case.id): modules=$($moduleNames -join ','), rules=$($matchedRuleIds -join ','), violations=$($violationRules -join ',')"
     }
 }
 

@@ -182,7 +182,12 @@ function New-Observation([string]$Workspace) {
         expectedScopes = @($diff.scopes | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
         expectedRules = @($changePolicy.matchedRules.id | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
         expectedChecks = @($changePolicy.requiredChecks.id | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
-        expectedViolationRules = @($changePolicy.violations.rule | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
+        expectedViolationRules = @(
+            @($changePolicy.violations) |
+                ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['rule']) { [string]$_.rule } } |
+                Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+                Sort-Object -Unique
+        )
     }
     [pscustomobject][ordered]@{
         workspace = $normalized
@@ -201,7 +206,10 @@ function Test-CaseExecution([object]$Case) {
     $actual = @{
         expectedModules = @($diff.modules.name); expectedScopes = @($diff.scopes)
         expectedRules = @($changePolicy.matchedRules.id); expectedChecks = @($changePolicy.requiredChecks.id)
-        expectedViolationRules = @($changePolicy.violations.rule)
+        expectedViolationRules = @(
+            @($changePolicy.violations) |
+                ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['rule']) { [string]$_.rule } }
+        )
     }
     $missing = [Collections.Generic.List[string]]::new()
     foreach ($field in $actual.Keys) {

@@ -39,7 +39,10 @@ function Get-BytesHash([byte[]]$Bytes) {
 
 try {
     try {
-        $readLock = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::Read)
+        # Read-only Wiki calls can be nested (for example full-tools -> task contract
+        # validation -> diff context). Share both read and write access between readers;
+        # an updater still requests FileShare.None and therefore remains mutually exclusive.
+        $readLock = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::ReadWrite)
     } catch {
         throw 'A Wiki index update is running. Wait for it to finish before starting read-only research.'
     }

@@ -513,13 +513,20 @@ switch ($Command) {
         $smokeStages = @(@($smokePlan.groups) | ForEach-Object {
             $groupName = [string]$_
             $stageName = "affected smoke: $groupName"
-            $script:verifyStageExpectedSeconds[$stageName] = 60
+            $isFullToolsGroup = $groupName -eq 'full-tools'
+            $script:verifyStageExpectedSeconds[$stageName] = $(if ($isFullToolsGroup) { 330 } else { 60 })
             $groupArguments = @{} + $affectedSmokeArguments
             if ($groupArguments.ContainsKey('ChangedPath')) {
                 $groupArguments.ChangedPath = @($groupArguments.ChangedPath | Where-Object { $_ -match '^\.llm-wiki/(?:tools|policies|workflows|evals)/|^\.llm-wiki/wiki\.ps1$' })
             }
             $groupArguments.Group = @($groupName)
-            [pscustomobject]@{ Name = $stageName; Tool = 'Invoke-LlmWikiAffectedSmoke.ps1'; Arguments = $groupArguments; Timeout = 300; Standalone = "./.llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1 -Group $groupName" }
+            [pscustomobject]@{
+                Name = $stageName
+                Tool = 'Invoke-LlmWikiAffectedSmoke.ps1'
+                Arguments = $groupArguments
+                Timeout = $(if ($isFullToolsGroup) { 600 } else { 300 })
+                Standalone = "./.llm-wiki/wiki.ps1 verify -Stage '$stageName'"
+            }
         })
         $stages = @(
             [pscustomobject]@{ Name = 'workspace policy'; Tool = 'Get-LlmWikiWorkspacePolicy.ps1'; Arguments = @{ Action = 'validate'; FailOnInvalid = $true }; Timeout = 60; Standalone = './.llm-wiki/wiki.ps1 workspace-policy' }

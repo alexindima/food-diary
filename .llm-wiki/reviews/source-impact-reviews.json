@@ -127,18 +127,14 @@
                         "pageSha256":  "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "e11d90f5959638f46818001c99aa79eb2ac669fd3dc419036028697399f6f8af"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "d25cb3fa394cb5a240aa51b810c3c3d60fdf47152e2d2e7b1010cbdc980d3c57"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
+                                            "sha256":  "87a2bc5f65c33fe55d63035ec361d2c978ac7128e1a5e2b8b606d0c145747566"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed optional-field normalization for static and promoted eval cases; expectations remain strict when declared.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:05.5988479Z"
+                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
+                        "reviewedAtUtc":  "2026-08-12T11:38:10.4236087Z"
                     },
                     {
                         "pageId":  "workflow.evidence-bundle",
@@ -234,17 +230,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-                                            "sha256":  "916db7fb6a12a816066f2436cfdc916574838539bd70ffb9fd3456432bae6179"
+                                            "sha256":  "8d980c4d6e8a270343626b3559f8374d51f0f4a1f476b26359c2bad9874e6c6f"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-                                            "sha256":  "b73a9dcf0dc846fd2167ba58089e7927565deb5a3c801c9f36063f9ca885e3e0"
+                                            "sha256":  "6ef3f2430269576ff23262ef8e324a057035bc76cdcfe29b1e695c36bb3edf76"
                                         }
                                     ],
-                        "reason":  "Reviewed read-only execution hardening: existing dirty worktree files are preserved without changing adaptive workflow semantics.",
+                        "reason":  "Reviewed nested read-only lock sharing and dirty-worktree preservation; adaptive command semantics are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f00d41b9f73ab1fe9232893208ceaf92e827d3a",
-                        "reviewedAtUtc":  "2026-08-12T10:43:37.8236722Z"
+                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
+                        "reviewedAtUtc":  "2026-08-12T11:38:09.4456403Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -537,14 +533,14 @@
                         "pageSha256":  "4b700f452947b76c2dd708ab5978289650c76c32a49e06ea6356812757e73cd8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "9d9b06055a6a277ac5b7c4a71ce7ef7f060a3f83fb57c2eccdd784ffc5973acd"
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "3196cd63340ac4d76b5af5c48ec24b67f3d02d3705c5d381b0307bab77340e61"
                                         }
                                     ],
-                        "reason":  "Reviewed affected-smoke isolation: full-tools now runs through the read-only guard without changing index selection or publication semantics.",
+                        "reason":  "Reviewed full-tools timeout and resumable standalone command; index update mutual exclusion remains unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f00d41b9f73ab1fe9232893208ceaf92e827d3a",
-                        "reviewedAtUtc":  "2026-08-12T10:43:38.7903276Z"
+                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
+                        "reviewedAtUtc":  "2026-08-12T11:38:11.5835731Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -582,14 +578,18 @@
                         "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
-                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
+                                            "sha256":  "87a2bc5f65c33fe55d63035ec361d2c978ac7128e1a5e2b8b606d0c145747566"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
+                                            "sha256":  "ac92bc2490ebe58ba1c98e4cfef62a3816b3b1cdd6b4a6e58f321ff177eb2e29"
                                         }
                                     ],
-                        "reason":  "Reviewed current and legacy impact-simulation receipt compatibility plus optional retrospective fields; workflow guidance remains accurate.",
+                        "reason":  "Reviewed compatibility for promoted cases with omitted optional fields and empty policy collections.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8f6e68336eb71c2692fb7cc120d69bc421a14aff",
-                        "reviewedAtUtc":  "2026-08-12T10:39:45.0935654Z"
+                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
+                        "reviewedAtUtc":  "2026-08-12T11:38:12.8035975Z"
                     },
                     {
                         "pageId":  "workflow-model-routing",
@@ -873,13 +873,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "4ccd4e314e2aafcfeea44649132adde005b06ca6448038cbae60f69cbe3c6446"
+                                            "sha256":  "3196cd63340ac4d76b5af5c48ec24b67f3d02d3705c5d381b0307bab77340e61"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Reviewed verify-stage timeout/reporting change; dispatch receipt behavior is unaffected.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:48.1429732Z"
+                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
+                        "reviewedAtUtc":  "2026-08-12T11:38:13.9112572Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
