@@ -14,6 +14,8 @@ internal sealed class UserContextService(
     IUserProfileReadService,
     ICurrentUserAccessService,
     IUserAiProfileReadService,
+    IUserDashboardProfileReadService,
+    IUserGamificationProfileReadService,
     IUserHydrationProfileReadService,
     IUserTdeeProfileReadService,
     IUserWeeklyCheckInProfileReadService {
@@ -47,6 +49,40 @@ internal sealed class UserContextService(
             user.Language,
             user.AiInputTokenLimit,
             user.AiOutputTokenLimit));
+    }
+
+    public async Task<Result<UserDashboardProfileModel>> GetDashboardProfileAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<UserDashboardProfileModel>(userResult.Error);
+        }
+
+        User user = userResult.Value;
+        return Result.Success(new UserDashboardProfileModel(
+            user.Id.Value,
+            user.Email,
+            user.Language,
+            user.DashboardLayoutJson,
+            user.DesiredWeight,
+            user.DesiredWaist,
+            user.HydrationGoal,
+            user.WaterGoal,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            CreateCalorieSchedule(user)));
+    }
+
+    public async Task<Result<UserGamificationProfileModel>> GetGamificationProfileAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        return userResult.IsFailure
+            ? Result.Failure<UserGamificationProfileModel>(userResult.Error)
+            : Result.Success(new UserGamificationProfileModel(CreateCalorieSchedule(userResult.Value)));
     }
 
     public async Task<Result<UserHydrationProfileModel>> GetHydrationProfileAsync(
@@ -83,6 +119,18 @@ internal sealed class UserContextService(
             ? Result.Failure<UserWeeklyCheckInProfileModel>(userResult.Error)
             : Result.Success(new UserWeeklyCheckInProfileModel(userResult.Value.DailyCalorieTarget));
     }
+
+    private static FoodDiary.Domain.ValueObjects.UserCalorieSchedule CreateCalorieSchedule(User user) =>
+        new(
+            user.DailyCalorieTarget,
+            user.CalorieCyclingEnabled,
+            user.MondayCalories,
+            user.TuesdayCalories,
+            user.WednesdayCalories,
+            user.ThursdayCalories,
+            user.FridayCalories,
+            user.SaturdayCalories,
+            user.SundayCalories);
 
     public async Task<Result<UserModel>> GetUserAsync(UserId userId, CancellationToken cancellationToken) {
         Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);

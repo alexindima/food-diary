@@ -3,6 +3,8 @@ using FluentValidation.Results;
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
@@ -20,7 +22,6 @@ using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Application.WaistEntries.Services;
 using FoodDiary.Application.WeightEntries.Services;
 using FoodDiary.Application.Statistics.Models;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -448,23 +449,37 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
-    public async Task DashboardUserContextService_ForwardsAccessibleUserRequest() {
+    public async Task DashboardUserContextService_ProjectsAccessibleDashboardProfile() {
         var user = User.Create("dashboard-context@example.com", "hash");
-        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        ICurrentUserAccessService accessService = Substitute.For<ICurrentUserAccessService>();
+        IUserDashboardProfileReadService profileReadService = Substitute.For<IUserDashboardProfileReadService>();
         using var cts = new CancellationTokenSource();
         UserId? capturedUserId = null;
         CancellationToken capturedCancellationToken = default;
-        userContextService
-            .GetAccessibleUserAsync(
+        profileReadService
+            .GetDashboardProfileAsync(
                 Arg.Do<UserId>(userId => capturedUserId = userId),
                 Arg.Do<CancellationToken>(cancellationToken => capturedCancellationToken = cancellationToken))
-            .Returns(Task.FromResult(Result.Success(user)));
-        var service = new DashboardUserContextService(userContextService);
+            .Returns(Task.FromResult(Result.Success(new UserDashboardProfileModel(
+                user.Id.Value, user.Email, user.Language, user.DashboardLayoutJson,
+                user.DesiredWeight, user.DesiredWaist, user.HydrationGoal, user.WaterGoal,
+                user.ProteinTarget, user.FatTarget, user.CarbTarget, user.FiberTarget,
+                new UserCalorieSchedule(
+                    DailyCalorieTarget: user.DailyCalorieTarget,
+                    CalorieCyclingEnabled: false,
+                    MondayCalories: null,
+                    TuesdayCalories: null,
+                    WednesdayCalories: null,
+                    ThursdayCalories: null,
+                    FridayCalories: null,
+                    SaturdayCalories: null,
+                    SundayCalories: null)))));
+        var service = new DashboardUserContextService(accessService, profileReadService);
 
-        Result<User> result = await service.GetAccessibleUserAsync(user.Id, cts.Token);
+        Result<DashboardUserContextModel> result = await service.GetAccessibleDashboardUserAsync(user.Id, cts.Token);
 
         ResultAssert.Success(result);
-        Assert.Same(user, result.Value);
+        Assert.Equal(user.Email, result.Value.Email);
         Assert.Equal(user.Id, capturedUserId);
         Assert.Equal(cts.Token, capturedCancellationToken);
     }
@@ -506,12 +521,34 @@ public class DashboardFeatureTests {
     private static IDashboardUserContextService CreateUserRepository(User? user) {
         IDashboardUserContextService repository = Substitute.For<IDashboardUserContextService>();
         repository
-            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetAccessibleDashboardUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
                 return Task.FromResult(user is not null && user.Id == id
-                    ? Result.Success(user)
-                    : Result.Failure<User>(Errors.Authentication.InvalidToken));
+                    ? Result.Success(new DashboardUserContextModel(
+                        user.Id.Value,
+                        user.Email,
+                        user.Language,
+                        user.DashboardLayoutJson,
+                        user.DesiredWeight,
+                        user.DesiredWaist,
+                        user.HydrationGoal,
+                        user.WaterGoal,
+                        user.ProteinTarget,
+                        user.FatTarget,
+                        user.CarbTarget,
+                        user.FiberTarget,
+                        new UserCalorieSchedule(
+                            user.DailyCalorieTarget,
+                            user.CalorieCyclingEnabled,
+                            user.MondayCalories,
+                            user.TuesdayCalories,
+                            user.WednesdayCalories,
+                            user.ThursdayCalories,
+                            user.FridayCalories,
+                            user.SaturdayCalories,
+                            user.SundayCalories)))
+                    : Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
             });
         repository
             .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())

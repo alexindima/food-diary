@@ -4,9 +4,9 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Dashboard.Common;
+using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 
@@ -22,8 +22,8 @@ public sealed class SendDashboardTestEmailCommandHandler(
             return UserIdParser.ToFailure(userIdResult);
         }
 
-        Result<User> userResult = await dashboardUserContextService
-            .GetAccessibleUserAsync(userIdResult.Value, cancellationToken)
+        Result<DashboardUserContextModel> userResult = await dashboardUserContextService
+            .GetAccessibleDashboardUserAsync(userIdResult.Value, cancellationToken)
             .ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure(userResult.Error);

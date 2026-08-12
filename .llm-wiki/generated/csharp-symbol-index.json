@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3108,
-                    "symbols":  3148,
+                    "sourceFiles":  3112,
+                    "symbols":  3152,
                     "interfaceImplementationLinks":  233,
                     "dependencyInjectionRegistrations":  232,
                     "kinds":  {
                                   "class":  1588,
                                   "enum":  48,
-                                  "interface":  413,
-                                  "record":  986,
+                                  "interface":  415,
+                                  "record":  988,
                                   "record struct":  113
                               },
                     "roles":  {
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1113,
+                                  "Other":  1115,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -40,7 +40,7 @@
                                   "Repository":  105,
                                   "Request":  124,
                                   "Response":  171,
-                                  "Service":  264,
+                                  "Service":  266,
                                   "Validator":  180,
                                   "ValueObject":  123,
                                   "WriteRepository":  47
@@ -3513,11 +3513,25 @@
                         "line":  4
                     },
                     {
+                        "name":  "IUserDashboardProfileReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "IUserDirectoryService",
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserDirectoryService.cs",
                         "line":  5
+                    },
+                    {
+                        "name":  "IUserGamificationProfileReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs",
+                        "line":  6
                     },
                     {
                         "name":  "IUserHydrationProfileReadService",
@@ -3653,6 +3667,13 @@
                         "line":  4
                     },
                     {
+                        "name":  "UserDashboardProfileModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "UserDesiredWaistModel",
                         "kind":  "record",
                         "role":  "Other",
@@ -3665,6 +3686,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWeightModel.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "UserGamificationProfileModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserGamificationProfileModel.cs",
+                        "line":  4
                     },
                     {
                         "name":  "UserHydrationProfileModel",
@@ -6751,7 +6779,7 @@
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Dashboard/Common/IDashboardUserContextService.cs",
-                        "line":  9
+                        "line":  7
                     },
                     {
                         "name":  "DailyCaloriesModel",
@@ -6912,7 +6940,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Dashboard/Services/DashboardUserContextService.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "IDashboardSectionDataLoader",
@@ -8977,7 +9005,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Gamification/Services/GamificationUserProfileService.cs",
-                        "line":  8
+                        "line":  9
                     },
                     {
                         "name":  "CreateHydrationEntryCommand",
@@ -24199,7 +24227,7 @@
                                                  "implementation":  "ProfileOverviewReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  43
+                                                 "line":  45
                                              },
                                              {
                                                  "service":  "IImageAssetAccessService",

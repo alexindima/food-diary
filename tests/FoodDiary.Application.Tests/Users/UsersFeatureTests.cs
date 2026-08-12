@@ -1072,6 +1072,10 @@ public partial class UsersFeatureTests {
         UserTdeeProfileModel tdee = ResultAssert.Success(await service.GetTdeeProfileAsync(user.Id, CancellationToken.None));
         UserWeeklyCheckInProfileModel weeklyCheckIn = ResultAssert.Success(
             await service.GetWeeklyCheckInProfileAsync(user.Id, CancellationToken.None));
+        UserDashboardProfileModel dashboard = ResultAssert.Success(
+            await service.GetDashboardProfileAsync(user.Id, CancellationToken.None));
+        UserGamificationProfileModel gamification = ResultAssert.Success(
+            await service.GetGamificationProfileAsync(user.Id, CancellationToken.None));
 
         Assert.Multiple(
             () => Assert.Equal(user.Id, ai.UserId),
@@ -1084,7 +1088,11 @@ public partial class UsersFeatureTests {
             () => Assert.Equal(user.Weight, tdee.Weight),
             () => Assert.Equal(user.DesiredWeight, tdee.DesiredWeight),
             () => Assert.Equal(user.DailyCalorieTarget, tdee.DailyCalorieTarget),
-            () => Assert.Equal(user.DailyCalorieTarget, weeklyCheckIn.DailyCalorieTarget));
+            () => Assert.Equal(user.DailyCalorieTarget, weeklyCheckIn.DailyCalorieTarget),
+            () => Assert.Equal(user.Email, dashboard.Email),
+            () => Assert.Equal(user.DashboardLayoutJson, dashboard.DashboardLayoutJson),
+            () => Assert.Equal(user.DailyCalorieTarget, dashboard.CalorieSchedule.GetTargetForDate(DateTime.UtcNow)),
+            () => Assert.Equal(user.DailyCalorieTarget, gamification.CalorieSchedule.GetTargetForDate(DateTime.UtcNow)));
     }
 
     private static IUserContextService CreateAccessCheckedFailingUserContext(UserId userId) {

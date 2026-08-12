@@ -612,10 +612,10 @@ public sealed class DashboardSnapshotBuilderTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class AccessibleUserContextService(User user) : IDashboardUserContextService {
-        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
+        public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken) =>
             Task.FromResult(user.Id == userId
-                ? Result.Success(user)
-                : Result.Failure<User>(Errors.Authentication.InvalidToken));
+                ? Result.Success(ToDashboardUserContext(user))
+                : Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
 
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<Error?>(user.Id == userId ? null : Errors.Authentication.InvalidToken);
@@ -764,12 +764,37 @@ public sealed class DashboardSnapshotBuilderTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class MissingUserContextService : IDashboardUserContextService {
-        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
-            Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken));
+        public Task<Result<DashboardUserContextModel>> GetAccessibleDashboardUserAsync(UserId userId, CancellationToken cancellationToken) =>
+            Task.FromResult(Result.Failure<DashboardUserContextModel>(Errors.Authentication.InvalidToken));
 
         public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<Error?>(Errors.Authentication.InvalidToken);
     }
+
+    private static DashboardUserContextModel ToDashboardUserContext(User user) =>
+        new(
+            user.Id.Value,
+            user.Email,
+            user.Language,
+            user.DashboardLayoutJson,
+            user.DesiredWeight,
+            user.DesiredWaist,
+            user.HydrationGoal,
+            user.WaterGoal,
+            user.ProteinTarget,
+            user.FatTarget,
+            user.CarbTarget,
+            user.FiberTarget,
+            new UserCalorieSchedule(
+                user.DailyCalorieTarget,
+                user.CalorieCyclingEnabled,
+                user.MondayCalories,
+                user.TuesdayCalories,
+                user.WednesdayCalories,
+                user.ThursdayCalories,
+                user.FridayCalories,
+                user.SaturdayCalories,
+                user.SundayCalories));
 
     [ExcludeFromCodeCoverage]
     private sealed class StubWeightEntryRepository : IWeightEntryRepository {

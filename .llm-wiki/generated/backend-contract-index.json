@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1028,
+                    "contracts":  1030,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7122,
-                    "productionConsumerEdges":  4351,
-                    "testConsumerEdges":  2771,
-                    "consumedContracts":  1028,
+                    "consumerEdges":  7128,
+                    "productionConsumerEdges":  4356,
+                    "testConsumerEdges":  2772,
+                    "consumedContracts":  1030,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -12111,6 +12111,22 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "IUserDashboardProfileReadService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "IUserDirectoryService",
                           "roles":  [
                                         "Service"
@@ -12123,6 +12139,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application.Abstractions/Users/Common/IUserDirectoryService.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IUserGamificationProfileReadService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -50742,6 +50774,19 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardUserContextService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/DependencyInjection.Identity.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -52708,6 +52753,19 @@
                               "consumerPath":  "tests/FoodDiary.Application.Tests/DailyAdvices/DailyAdvicesFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  4
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "ICurrentUserAccessService",
@@ -85685,19 +85743,6 @@
                                                       "FoodDiary.Application/Users/Common/IUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardUserContextService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/DependencyInjection.Identity.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -85816,19 +85861,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserContextService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Gamification/Services/GamificationUserProfileService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -86062,19 +86094,6 @@
                                                       "FoodDiary.Application/Users/Common/IUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/AttentionSignalTests.cs",
                               "isTest":  true,
                               "referenceCount":  9
@@ -86156,19 +86175,6 @@
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Dietologist/RecommendationTemplateHandlerTests.cs",
                               "isTest":  true,
                               "referenceCount":  6
-                          },
-                          {
-                              "contract":  "IUserContextService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Users/Common/IUserContextService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  5
                           },
                           {
                               "contract":  "IUserContextService",
@@ -86364,6 +86370,58 @@
                               "consumerPath":  "FoodDiary.Infrastructure/Persistence/Users/UserCurrentWeightProvider.cs",
                               "isTest":  false,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDashboardProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardUserContextService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDashboardProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Identity.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDashboardProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Common/UserContextService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserDashboardProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserDashboardProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IUserDirectoryService",
@@ -86611,6 +86669,58 @@
                               "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/Services/WebPushNotificationSenderTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserGamificationProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Identity.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserGamificationProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Gamification/Services/GamificationUserProfileService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserGamificationProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Users/Common/UserContextService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserGamificationProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  5
                           },
                           {
                               "contract":  "IUserHydrationProfileReadService",

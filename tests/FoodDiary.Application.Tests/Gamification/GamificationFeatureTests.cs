@@ -11,8 +11,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Tests.Gamification;
 
@@ -147,8 +148,8 @@ public class GamificationFeatureTests {
     public async Task GamificationUserProfileService_WithAccessibleUser_ReturnsProfile() {
         var user = User.Create("profile@example.com", "hashed");
         user.UpdateGoals(dailyCalorieTarget: 2100);
-        IUserContextService userContextService = CreateUserContextService(user);
-        var service = new GamificationUserProfileService(userContextService);
+        IUserGamificationProfileReadService profileReadService = CreateGamificationProfileReadService(user);
+        var service = new GamificationUserProfileService(profileReadService);
 
         Result<IGamificationUserProfile> result = await service.GetAsync(user.Id, CancellationToken.None);
 
@@ -158,8 +159,8 @@ public class GamificationFeatureTests {
 
     [Fact]
     public async Task GamificationUserProfileService_WithMissingUser_ReturnsInvalidToken() {
-        IUserContextService userContextService = CreateUserContextService(user: null);
-        var service = new GamificationUserProfileService(userContextService);
+        IUserGamificationProfileReadService profileReadService = CreateGamificationProfileReadService(user: null);
+        var service = new GamificationUserProfileService(profileReadService);
 
         Result<IGamificationUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 
@@ -220,15 +221,18 @@ public class GamificationFeatureTests {
     private static DashboardStatisticsBucketReadModel CreateStatisticsBucket(DateTime date, double totalCalories) =>
         new(date, date.AddDays(1), totalCalories, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0);
 
-    private static IUserContextService CreateUserContextService(User? user) {
-        IUserContextService service = Substitute.For<IUserContextService>();
+    private static IUserGamificationProfileReadService CreateGamificationProfileReadService(User? user) {
+        IUserGamificationProfileReadService service = Substitute.For<IUserGamificationProfileReadService>();
         service
-            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetGamificationProfileAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
                 return Task.FromResult(user is not null && user.Id == userId
-                    ? Result.Success(user)
-                    : Result.Failure<User>(Errors.Authentication.InvalidToken));
+                    ? Result.Success(new UserGamificationProfileModel(new UserCalorieSchedule(
+                        user.DailyCalorieTarget, user.CalorieCyclingEnabled,
+                        user.MondayCalories, user.TuesdayCalories, user.WednesdayCalories,
+                        user.ThursdayCalories, user.FridayCalories, user.SaturdayCalories, user.SundayCalories)))
+                    : Result.Failure<UserGamificationProfileModel>(Errors.Authentication.InvalidToken));
             });
         return service;
     }

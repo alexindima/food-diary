@@ -6,10 +6,10 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1403,
+                    "candidateFields":  1409,
                     "credential":  146,
-                    "identity":  140,
-                    "health":  621,
+                    "identity":  141,
+                    "health":  626,
                     "financial":  199,
                     "privateContent":  297,
                     "boundaryFiles":  179,
@@ -3113,6 +3113,34 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "HydrationGoal",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CalorieSchedule",
+                       "type":  "UserCalorieSchedule",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
                        "name":  "DesiredWaist",
                        "type":  "double?",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWaistModel.cs",
@@ -3124,6 +3152,13 @@
                        "type":  "double?",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDesiredWeightModel.cs",
                        "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CalorieSchedule",
+                       "type":  "UserCalorieSchedule",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserGamificationProfileModel.cs",
+                       "line":  5
                    },
                    {
                        "category":  "health",
@@ -6995,6 +7030,13 @@
                        "type":  "bool",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
                        "line":  49
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
+                       "line":  7
                    },
                    {
                        "category":  "identity",

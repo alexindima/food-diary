@@ -34,17 +34,17 @@
                     {
                         "pageId":  "module.primary-backend",
                         "pagePath":  ".llm-wiki/modules/primary-backend.md",
-                        "pageSha256":  "eef6d06f24e7641eacbe6dd9ffad96bf3af2c508635e7b04cc9bb1f6a2ecbe72",
+                        "pageSha256":  "8513486fc92e9236d116ce0c4eeaf7ba511ab53761f517bcc26e58464a249fa1",
                         "sources":  [
                                         {
-                                            "path":  "FoodDiary.Web.Api/AGENTS.md",
-                                            "sha256":  "d6254348357bbb0eb69d16763edf177b94dcba1b942577b4c1816a014dcaae9a"
+                                            "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+                                            "sha256":  "520a39d1429d8fbdf89837096360e173f5b4350abadd991c3fde20db00ba26a5"
                                         }
                                     ],
-                        "reason":  "Reviewed after documenting fluent IServiceCollection composition; module ownership and architecture remain unchanged.",
+                        "reason":  "Dashboard and Gamification now consume narrow Users projections; ownership guidance was updated and verified against implementation and architecture tests.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:45:01.0864531Z"
+                        "gitHead":  "bac97b16dde146849cc323ac975df7734d2fe440",
+                        "reviewedAtUtc":  "2026-08-12T00:17:26.5148579Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -267,13 +267,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "492f80435f23ad98cc21fb1e670da7540dfb4b5016244d2dbb6502fe480fa9ec"
+                                            "sha256":  "f87920aaa52ed515dd69bac732083dff58465adc179c46a192be33972db397fd"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated backend contract index after adding the internal achievement metric snapshot and achievement-owned abstractions; no HTTP or cross-service contract changed.",
+                        "reason":  "Generated backend contract index reflects two fewer aggregate blockers after Dashboard and Gamification migration.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "78f81b90e4a22ce4693aa8644a3e73126bc7817f",
-                        "reviewedAtUtc":  "2026-08-09T23:03:06.3539886Z"
+                        "gitHead":  "bac97b16dde146849cc323ac975df7734d2fe440",
+                        "reviewedAtUtc":  "2026-08-12T00:17:27.5105161Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -619,13 +619,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "d67f6805b6607ee52f2d8f51a422afa06ba971efb3f1d5a95f6a0bd4beeea739"
+                                            "sha256":  "0727089b1c73880ad1dc5e63366de0ba03fae30ce09fa6d5cfaa7333e7219f46"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "New projections contain only fields required by their direct in-process consumers; existing authorization remains separate and unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:57.4959948Z"
+                        "gitHead":  "bac97b16dde146849cc323ac975df7734d2fe440",
+                        "reviewedAtUtc":  "2026-08-12T00:17:28.6673015Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -668,13 +668,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "2ec45e8fddd8ec9b403916d0006f8c6903d057f1714c3ed48b163b7bd56ad559"
+                                            "sha256":  "e5250d8c0749d871e5819bffd2611333ebce950fc2be3bb9a68aade6ba639095"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated indexes and dependent guidance for this frontend-only fasting presentation change; component contracts, architecture boundaries, feature trace, and focused quality risks remain valid.",
+                        "reason":  "Focused Dashboard, Gamification and Users tests plus the full Application and Architecture suites passed.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8e2e1834fc0fb828f81b9a5aa71d19d08b9d141",
-                        "reviewedAtUtc":  "2026-08-11T21:38:26.3954831Z"
+                        "gitHead":  "bac97b16dde146849cc323ac975df7734d2fe440",
+                        "reviewedAtUtc":  "2026-08-12T00:17:29.7169668Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
