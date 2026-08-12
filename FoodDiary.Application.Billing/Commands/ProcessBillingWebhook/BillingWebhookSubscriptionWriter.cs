@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Billing;
-using User = FoodDiary.Domain.Entities.Users.User;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
@@ -24,10 +24,10 @@ public sealed class BillingWebhookSubscriptionWriter(
         string provider,
         BillingWebhookEventModel webhookEvent,
         BillingSubscription? subscription,
-        User user,
+        UserBillingProfileModel user,
         CancellationToken cancellationToken) {
         BillingSubscription currentSubscription = subscription ?? BillingSubscription.CreatePending(
-            user.Id,
+            user.UserId,
             provider,
             webhookEvent.ExternalCustomerId,
             webhookEvent.ExternalPriceId,

@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Ai, Authentication, ContentReports, Email, Gamification, Lessons, Users
+- Business-module dependencies: Ai, Authentication, ContentReports, Email, Gamification, Lessons
 - Abstraction-contract dependencies: Ai, Audit, Authentication, ContentReports, Email, Lessons, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api

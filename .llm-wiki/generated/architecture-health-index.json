@@ -1,13 +1,13 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  63,
+                    "productionProjectEdges":  71,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
                     "backendBusinessModules":  41,
-                    "moduleHotspotReviewCandidates":  2,
+                    "moduleHotspotReviewCandidates":  1,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  149,
@@ -29,85 +29,78 @@
                          ],
     "moduleHotspots":  [
                            {
-                               "module":  "Users",
-                               "fanIn":  33,
-                               "fanOut":  1,
-                               "level":  "review-candidate",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Dashboard",
                                "fanIn":  1,
-                               "fanOut":  11,
+                               "fanOut":  10,
                                "level":  "review-candidate",
                                "role":  "read-composer"
                            },
                            {
                                "module":  "Consumptions",
                                "fanIn":  7,
-                               "fanOut":  3,
+                               "fanOut":  2,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Admin",
                                "fanIn":  0,
-                               "fanOut":  7,
+                               "fanOut":  6,
                                "level":  "informational",
                                "role":  "orchestrator"
                            },
                            {
                                "module":  "Notifications",
                                "fanIn":  5,
-                               "fanOut":  1,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Products",
                                "fanIn":  0,
-                               "fanOut":  6,
+                               "fanOut":  5,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Authentication",
                                "fanIn":  2,
-                               "fanOut":  3,
+                               "fanOut":  2,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Recipes",
                                "fanIn":  0,
-                               "fanOut":  5,
+                               "fanOut":  4,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
                                "module":  "WeeklyCheckIn",
                                "fanIn":  0,
-                               "fanOut":  5,
+                               "fanOut":  4,
                                "level":  "informational",
                                "role":  "read-composer"
                            },
                            {
                                "module":  "WeightEntries",
                                "fanIn":  4,
-                               "fanOut":  1,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Dietologist",
                                "fanIn":  0,
-                               "fanOut":  4,
+                               "fanOut":  3,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Images",
-                               "fanIn":  4,
+                               "fanIn":  3,
                                "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
@@ -115,98 +108,28 @@
                            {
                                "module":  "Statistics",
                                "fanIn":  1,
-                               "fanOut":  3,
+                               "fanOut":  2,
                                "level":  "informational",
                                "role":  "read-composer"
                            },
                            {
                                "module":  "Tdee",
                                "fanIn":  1,
-                               "fanOut":  3,
+                               "fanOut":  2,
                                "level":  "informational",
                                "role":  "read-composer"
                            },
                            {
                                "module":  "WaistEntries",
                                "fanIn":  3,
-                               "fanOut":  1,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Cycles",
                                "fanIn":  2,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Exercises",
-                               "fanIn":  2,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Export",
-                               "fanIn":  0,
-                               "fanOut":  3,
-                               "level":  "informational",
-                               "role":  "read-composer"
-                           },
-                           {
-                               "module":  "Fasting",
-                               "fanIn":  1,
-                               "fanOut":  2,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Gamification",
-                               "fanIn":  1,
-                               "fanOut":  2,
-                               "level":  "informational",
-                               "role":  "read-composer"
-                           },
-                           {
-                               "module":  "Hydration",
-                               "fanIn":  2,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Usda",
-                               "fanIn":  1,
-                               "fanOut":  2,
-                               "level":  "informational",
-                               "role":  "adapter"
-                           },
-                           {
-                               "module":  "WeeklyGoals",
-                               "fanIn":  0,
-                               "fanOut":  3,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Ai",
-                               "fanIn":  1,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "orchestrator"
-                           },
-                           {
-                               "module":  "ContentReports",
-                               "fanIn":  1,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "DailyAdvices",
-                               "fanIn":  1,
-                               "fanOut":  1,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -218,37 +141,37 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "FavoriteMeals",
+                               "module":  "Exercises",
+                               "fanIn":  2,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Export",
                                "fanIn":  0,
                                "fanOut":  2,
                                "level":  "informational",
-                               "role":  "aggregate-owner"
+                               "role":  "read-composer"
                            },
                            {
-                               "module":  "FavoriteProducts",
+                               "module":  "Fasting",
                                "fanIn":  1,
                                "fanOut":  1,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "FavoriteRecipes",
+                               "module":  "Gamification",
                                "fanIn":  1,
                                "fanOut":  1,
                                "level":  "informational",
-                               "role":  "aggregate-owner"
+                               "role":  "read-composer"
                            },
                            {
-                               "module":  "Lessons",
-                               "fanIn":  1,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "MealPlans",
-                               "fanIn":  0,
-                               "fanOut":  2,
+                               "module":  "Hydration",
+                               "fanIn":  2,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -267,15 +190,71 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "RecipeComments",
+                               "module":  "Usda",
+                               "fanIn":  1,
+                               "fanOut":  1,
+                               "level":  "informational",
+                               "role":  "adapter"
+                           },
+                           {
+                               "module":  "WeeklyGoals",
                                "fanIn":  0,
                                "fanOut":  2,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "ShoppingLists",
+                               "module":  "Ai",
                                "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "orchestrator"
+                           },
+                           {
+                               "module":  "ContentReports",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "DailyAdvices",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "FavoriteMeals",
+                               "fanIn":  0,
+                               "fanOut":  1,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "FavoriteProducts",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "FavoriteRecipes",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Lessons",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "MealPlans",
+                               "fanIn":  0,
                                "fanOut":  1,
                                "level":  "informational",
                                "role":  "aggregate-owner"
@@ -288,16 +267,37 @@
                                "role":  "adapter"
                            },
                            {
-                               "module":  "RecipeLikes",
+                               "module":  "RecipeComments",
                                "fanIn":  0,
                                "fanOut":  1,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
+                               "module":  "ShoppingLists",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "RecipeLikes",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Users",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
                                "module":  "Wearables",
                                "fanIn":  0,
-                               "fanOut":  1,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            }
@@ -5668,7 +5668,7 @@
                                                  {
                                                      "name":  "GetProfileOverviewQueryValidator",
                                                      "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
+                                                     "path":  "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

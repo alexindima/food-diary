@@ -16,13 +16,11 @@ namespace FoodDiary.Application;
 
 public static partial class DependencyInjection {
     private static void AddAdministrationModules(this IServiceCollection services) {
-        services.AddScoped<IAdminImpersonationUserService, AdminImpersonationUserService>();
         services.AddScoped<IAdminAiUsageReadService, AdminAiUsageReadService>();
         services.AddScoped<IAdminAuditReadService, AdminAuditReadService>();
         services.AddScoped<IAdminBillingReadService, AdminBillingReadService>();
         services.AddScoped<IAdminContentReadService, AdminContentReadService>();
         services.AddScoped<IAdminDashboardReadService, AdminDashboardReadService>();
-        services.AddScoped<IAdminUserManagementService, AdminUserManagementService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAdminUserLoginReadService, AdminUserLoginReadService>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();

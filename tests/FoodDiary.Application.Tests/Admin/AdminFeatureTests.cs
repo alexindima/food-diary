@@ -21,7 +21,8 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Users.Services;
+using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Models;
 using FoodDiary.Application.Abstractions.Lessons.Common;
@@ -40,70 +41,6 @@ namespace FoodDiary.Application.Tests.Admin;
 
 [ExcludeFromCodeCoverage]
 public partial class AdminFeatureTests {
-    [Fact]
-    public async Task AdminImpersonationUserService_ForwardsGetById() {
-        var user = User.Create("admin-impersonation-service@example.com", "hash");
-        IUserLookupRepository repository = Substitute.For<IUserLookupRepository>();
-        using var cts = new CancellationTokenSource();
-        UserId? capturedUserId = null;
-        CancellationToken capturedCancellationToken = default;
-        repository
-            .GetByIdAsync(
-                Arg.Do<UserId>(userId => capturedUserId = userId),
-                Arg.Do<CancellationToken>(cancellationToken => capturedCancellationToken = cancellationToken))
-            .Returns(Task.FromResult<User?>(user));
-        var service = new AdminImpersonationUserService(repository);
-
-        User? result = await service.GetByIdAsync(user.Id, cts.Token);
-
-        Assert.Same(user, result);
-        Assert.Equal(user.Id, capturedUserId);
-        Assert.Equal(cts.Token, capturedCancellationToken);
-    }
-
-    [Fact]
-    public async Task AdminUserManagementService_ForwardsLookupRolesAndUpdate() {
-        var user = User.Create("admin-management-service@example.com", "hash");
-        var role = Role.Create("Premium");
-        IUserAdministrationService userAdministrationService = Substitute.For<IUserAdministrationService>();
-        using var cts = new CancellationTokenSource();
-        userAdministrationService
-            .GetByIdIncludingDeletedAsync(user.Id, cts.Token)
-            .Returns(Task.FromResult<User?>(user));
-        userAdministrationService
-            .GetRolesByNamesAsync(Arg.Is<IReadOnlyList<string>>(names => names!.Count == 1 && names[0] == "Premium"), cts.Token)
-            .Returns(Task.FromResult<IReadOnlyList<Role>>([role]));
-        var service = new AdminUserManagementService(userAdministrationService);
-
-        User? loadedUser = await service.GetByIdIncludingDeletedAsync(user.Id, cts.Token);
-        IReadOnlyList<Role> roles = await service.GetRolesByNamesAsync(["Premium"], cts.Token);
-        await service.UpdateAsync(user, [], cts.Token);
-
-        Assert.Same(user, loadedUser);
-        Assert.Equal(role, Assert.Single(roles));
-        await userAdministrationService.Received(1).UpdateAsync(
-            user,
-            Arg.Is<IReadOnlyCollection<UserRoleAuditEvent>>(events => events!.Count == 0),
-            cts.Token);
-    }
-
-    [Fact]
-    public async Task AdminUserManagementService_ForwardsEmailLookupAndAdd() {
-        var user = User.Create("admin-management-add@example.com", "hash");
-        IUserAdministrationService userAdministrationService = Substitute.For<IUserAdministrationService>();
-        userAdministrationService
-            .GetByEmailIncludingDeletedAsync(user.Email, Arg.Any<CancellationToken>())
-            .Returns(user);
-        userAdministrationService.AddAsync(user, Arg.Any<CancellationToken>()).Returns(user);
-        var service = new AdminUserManagementService(userAdministrationService);
-
-        User? loadedUser = await service.GetByEmailIncludingDeletedAsync(user.Email, CancellationToken.None);
-        User addedUser = await service.AddAsync(user, CancellationToken.None);
-
-        Assert.Same(user, loadedUser);
-        Assert.Same(user, addedUser);
-    }
-
     [Fact]
     public async Task StartAdminImpersonationHandler_WithInactiveActor_ReturnsForbidden() {
         User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
@@ -498,17 +435,29 @@ public partial class AdminFeatureTests {
     }
 
     private static UpdateAdminUserCommandHandler CreateUpdateAdminUserHandler(InMemoryUserRepository userRepository) =>
-        new(userRepository, new NullAuditLogger(), new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
+        new(
+            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
+            new NullAuditLogger(),
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
     private static StartAdminImpersonationCommandHandler CreateStartImpersonationHandler(
         User actor,
         User target,
         RecordingImpersonationSessionRepository? sessionRepository = null) =>
-        new(
+        CreateStartImpersonationHandler(
             new MultipleUserRepository([actor, target]),
             sessionRepository ?? new RecordingImpersonationSessionRepository(),
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
+
+    private static StartAdminImpersonationCommandHandler CreateStartImpersonationHandler(
+        MultipleUserRepository repository,
+        RecordingImpersonationSessionRepository sessionRepository,
+        FixedDateTimeProvider dateTimeProvider) =>
+        new(
+            new UserAuthenticationIdentityService(repository, repository, repository, new PrefixPasswordHasher()),
+            sessionRepository,
             new StubJwtTokenGenerator(),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)),
+            dateTimeProvider,
             new NullAuditLogger());
 
     [ExcludeFromCodeCoverage]
@@ -518,7 +467,8 @@ public partial class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles) : IUserRepository, IAdminUserReadService, IAdminUserManagementService {
+    private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles)
+        : IUserRepository, IUserRoleCatalogService, IAdminUserReadService {
         private readonly Dictionary<string, Role> _roles = availableRoles.ToDictionary(
             name => name,
             name => user.UserRoles
@@ -539,7 +489,7 @@ public partial class AdminFeatureTests {
         public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == userId ? user : null);
 
         async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
-            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminModel();
+            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminReadModel().ToAdminModel();
 
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
@@ -584,6 +534,9 @@ public partial class AdminFeatureTests {
             return Task.FromResult<IReadOnlyList<Role>>(found);
         }
 
+        public Task<IReadOnlyList<Role>> EnsureRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
+            GetRolesByNamesAsync(names, cancellationToken);
+
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
@@ -610,12 +563,15 @@ public partial class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class MultipleUserRepository(IReadOnlyList<User> users) : IUserRepository, IAdminImpersonationUserService {
+    private sealed class MultipleUserRepository(IReadOnlyList<User> users) : IUserRepository, IUserGoogleIdentityRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(users.FirstOrDefault(user => user.Id == userId));
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(users.FirstOrDefault(user => user.Id == id));
+        public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(null);
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) =>
@@ -732,7 +688,7 @@ public partial class AdminFeatureTests {
                 premiumUsers,
                 deletedUsers,
                 pendingReportsCount,
-                [.. recentUsers.Select(AdminUserMappings.ToAdminModel)]);
+                [.. recentUsers.Select(user => user.ToAdminReadModel().ToAdminModel())]);
         }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -740,7 +696,7 @@ public partial class AdminFeatureTests {
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
-            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminModel();
+            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminReadModel().ToAdminModel();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();

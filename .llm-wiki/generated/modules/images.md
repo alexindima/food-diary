@@ -17,7 +17,7 @@ sources:
 - Origin: module-graph
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
-- Business-module consumers: Consumptions, Products, Recipes, Users
+- Business-module consumers: Consumptions, Products, Recipes
 - Host/adapter consumers: FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -45,7 +45,7 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
 - Public contract files: 12
-- Observed external consumer groups: 7
+- Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

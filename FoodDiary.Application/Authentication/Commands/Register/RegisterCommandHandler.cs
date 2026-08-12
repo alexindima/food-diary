@@ -1,70 +1,52 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
 public sealed class RegisterCommandHandler(
-    IAuthenticationUserRegistrationService userRegistrationService,
-    IPasswordHasher passwordHasher,
+    IUserAuthenticationRegistrationService userRegistrationService,
     IEmailSender emailSender,
     TimeProvider dateTimeProvider,
     IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<RegisterCommand, Result<AuthenticationModel>> {
 
     public async Task<Result<AuthenticationModel>> Handle(RegisterCommand command, CancellationToken cancellationToken) {
-        User? existingUser = await userRegistrationService
-            .GetByEmailIncludingDeletedAsync(command.Email, cancellationToken)
+        string emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        Result<UserAuthenticationPrincipalModel> registrationResult = await userRegistrationService
+            .RegisterAsync(
+                new UserRegistrationModel(
+                    command.Email,
+                    command.Password,
+                    command.Language,
+                    emailToken,
+                    nowUtc.AddHours(24),
+                    nowUtc),
+                cancellationToken)
             .ConfigureAwait(false);
-
-        if (existingUser is not null) {
-            return Result.Failure<AuthenticationModel>(
-                existingUser.DeletedAt is not null
-                    ? Errors.Authentication.AccountDeleted
-                    : EmailAlreadyExists);
+        if (registrationResult.IsFailure) {
+            return Result.Failure<AuthenticationModel>(registrationResult.Error);
         }
 
-        string hashedPassword = passwordHasher.Hash(command.Password);
-        var user = User.Create(command.Email, hashedPassword);
-        string normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
-        user.UpdateGoals(new UserGoalUpdate(
-            DailyCalorieTarget: 2000,
-            ProteinTarget: 150,
-            FatTarget: 65,
-            CarbTarget: 200,
-            FiberTarget: 28,
-            WaterGoal: 2000));
-        user.SetLanguage(normalizedLanguage);
+        UserAuthenticationPrincipalModel principal = registrationResult.Value;
+        IssuedAuthenticationTokens tokens = await authenticationTokenService
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
+            .ConfigureAwait(false);
 
-        user = await userRegistrationService.AddAsync(user, cancellationToken).ConfigureAwait(false);
-
-        string emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
-        string emailTokenHash = passwordHasher.Hash(emailToken);
-        user.SetEmailConfirmationToken(new UserTokenIssue(
-            TokenHash: emailTokenHash,
-            ExpiresAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(24),
-            IssuedAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime));
-
-        IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
-
-        EmailVerificationMessage message = new(user.Email, user.Id.Value.ToString(), emailToken, user.Language, command.ClientOrigin);
+        EmailVerificationMessage message = new(
+            principal.Email,
+            principal.UserId.Value.ToString(),
+            emailToken,
+            principal.User.Language,
+            command.ClientOrigin);
         await emailSender.SendEmailVerificationAsync(message, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(user.ToAuthenticationModel(tokens));
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
     }
-
-    private static Error EmailAlreadyExists => new(
-        "Validation.Conflict",
-        "User with this email already exists.",
-        Kind: ErrorKind.Conflict,
-        Details: new Dictionary<string, string[]>(StringComparer.Ordinal) {
-            [nameof(RegisterCommand.Email)] = ["User with this email already exists."],
-        });
 }

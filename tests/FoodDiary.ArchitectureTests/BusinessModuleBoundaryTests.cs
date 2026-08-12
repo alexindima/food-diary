@@ -87,12 +87,19 @@ public sealed class BusinessModuleBoundaryTests {
     public void MigratedAuthenticationIdentityHandlers_DoNotDependOnUsersAggregateAccess() {
         string[] handlerPaths = [
             "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
         ];
         string[] forbiddenReferences = [
@@ -137,6 +144,86 @@ public sealed class BusinessModuleBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void AdminUserMutationHandlers_DoNotDependOnUsersAggregateAccess() {
+        string[] handlerPaths = [
+            "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
+            "FoodDiary.Application/Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
+            "FoodDiary.Application/Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
+            "FoodDiary.Application/Admin/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
+        ];
+        string[] forbiddenReferences = [
+            "FoodDiary.Domain.Entities.Users",
+            "IAdminImpersonationUserService",
+            "IAdminUserManagementService",
+            "IUserAdministrationService",
+        ];
+
+        string[] violations = FindReferences(handlerPaths, forbiddenReferences);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void NotificationsModule_DoesNotDependOnUsersAggregateAccess() {
+        string notificationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Notifications");
+        string[] forbiddenReferences = [
+            "FoodDiary.Domain.Entities.Users",
+            "INotificationUserAccessService",
+            "IUserLookupRepository",
+            "IUserWriteRepository",
+        ];
+        string[] violations = FindReferences(
+            SourceScanner.SourceFiles(notificationsRoot)
+                .Select(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)),
+            forbiddenReferences);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void BillingModule_DoesNotDependOnUsersAggregateAccess() {
+        string billingRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Billing");
+        string[] forbiddenReferences = [
+            "FoodDiary.Domain.Entities.Users",
+            "IBillingUserLookupService",
+            "IUserLookupRepository",
+            "IUserWriteRepository",
+        ];
+        string[] violations = FindReferences(
+            SourceScanner.SourceFiles(billingRoot)
+                .Select(path => Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)),
+            forbiddenReferences);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void OtherApplicationModules_DoNotReferenceInternalUsersNamespace() {
+        string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
+        string usersRoot = Path.Combine(applicationRoot, "Users");
+        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+            .Where(path => !path.StartsWith(usersRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, line, index }))
+            .Where(static entry => entry.line.Contains("FoodDiary.Application.Users.", StringComparison.Ordinal))
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references internal Users implementation namespace")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    private static string[] FindReferences(IEnumerable<string> relativePaths, IReadOnlyCollection<string> references) =>
+        [.. relativePaths
+            .Select(path => Path.Combine(ArchitectureTestPaths.RepositoryRoot, path.Replace('/', Path.DirectorySeparatorChar)))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, line, index }))
+            .SelectMany(entry => references
+                .Where(entry.line.Contains)
+                .Select(reference => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references {reference}"))
+            .Order(StringComparer.Ordinal)];
+
     private static readonly HashSet<string> ApprovedFastingApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Fasting",
@@ -161,7 +248,7 @@ public sealed class BusinessModuleBoundaryTests {
     private static readonly HashSet<string> ApprovedBillingApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Billing",
         "FoodDiary.Application.Abstractions.Common",
-        "FoodDiary.Application.Abstractions.Users.Common",
+        "FoodDiary.Application.Abstractions.Users",
         "FoodDiary.Application.Billing",
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Marketing.Common",
@@ -733,7 +820,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Users-owned repository; use IUserDirectoryService or a Users-owned mutation capability")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Users-owned repository; use a narrow Users-owned capability")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);

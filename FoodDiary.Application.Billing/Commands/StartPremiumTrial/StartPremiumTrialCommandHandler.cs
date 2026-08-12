@@ -1,13 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Billing.Commands.StartPremiumTrial;
@@ -32,24 +31,30 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingOverviewModel>(userResult.Error);
         }
 
-        User user = userResult.Value;
+        UserBillingProfileModel user = userResult.Value;
         BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user.HasRole(RoleNames.Premium) || IsPaidPremiumActive(subscription)) {
+        if (user.HasPaidPremium || IsPaidPremiumActive(subscription)) {
             return Result.Failure<BillingOverviewModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
 
-        if (user.HasUsedPremiumTrial()) {
+        if (user.PremiumTrialStartedAtUtc is not null || user.PremiumTrialEndsAtUtc is not null) {
             return Result.Failure<BillingOverviewModel>(Errors.Billing.TrialAlreadyUsed);
         }
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        user.StartPremiumTrial(nowUtc, TrialDuration);
-        await billingUserContextService.UpdateUserAsync(user, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> startedTrialResult = await billingUserContextService
+            .StartPremiumTrialAsync(userId, nowUtc, TrialDuration, cancellationToken)
+            .ConfigureAwait(false);
+        if (startedTrialResult.IsFailure) {
+            return Result.Failure<BillingOverviewModel>(startedTrialResult.Error);
+        }
+
+        UserBillingProfileModel updatedUser = startedTrialResult.Value;
 
         BillingPublicConfigModel publicConfig = billingPublicConfigProvider.GetPublicConfig();
         return Result.Success(new BillingOverviewModel(
@@ -57,14 +62,14 @@ public sealed class StartPremiumTrialCommandHandler(
             "trialing",
             Plan: null,
             SubscriptionProvider: null,
-            user.PremiumTrialStartedAtUtc,
-            user.PremiumTrialEndsAtUtc,
+            updatedUser.PremiumTrialStartedAtUtc,
+            updatedUser.PremiumTrialEndsAtUtc,
             NextBillingAttemptUtc: null,
             CancelAtPeriodEnd: false,
             RenewalEnabled: false,
             ManageBillingAvailable: false,
-            user.PremiumTrialStartedAtUtc,
-            user.PremiumTrialEndsAtUtc,
+            updatedUser.PremiumTrialStartedAtUtc,
+            updatedUser.PremiumTrialEndsAtUtc,
             PremiumTrialActive: true,
             PremiumTrialUsed: true,
             CanStartPremiumTrial: false,

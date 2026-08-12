@@ -1,10 +1,10 @@
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Services;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;

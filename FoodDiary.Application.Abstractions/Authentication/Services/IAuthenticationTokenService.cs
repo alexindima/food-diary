@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Abstractions.Authentication.Services;
 
@@ -12,11 +11,4 @@ public interface IAuthenticationTokenService {
         bool rememberMe = false,
         Guid? refreshSessionId = null);
 
-    Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
-        User user,
-        CancellationToken cancellationToken,
-        AuthenticationClientContext? clientContext = null,
-        bool rememberMe = false,
-        Guid? refreshSessionId = null);
-    string IssueAccessToken(User user);
 }

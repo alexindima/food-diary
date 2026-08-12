@@ -1,19 +1,20 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Models;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 
 public sealed class AdminSsoStartCommandHandler(
     IAdminSsoService adminSsoService,
-    IAuthenticationUserLookupService userLookupService)
+    IUserAuthenticationIdentityService userIdentityService,
+    TimeProvider dateTimeProvider)
     : ICommandHandler<AdminSsoStartCommand, Result<AdminSsoStartModel>> {
     public async Task<Result<AdminSsoStartModel>> Handle(
         AdminSsoStartCommand command,
@@ -26,13 +27,20 @@ public sealed class AdminSsoStartCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        User? user = await userLookupService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
-        if (accessError is not null) {
-            return Result.Failure<AdminSsoStartModel>(accessError);
+        Result<UserAuthenticationPrincipalModel> principalResult = await userIdentityService
+            .GetAuthenticationPrincipalAsync(
+                userId,
+                dateTimeProvider.GetUtcNow().UtcDateTime,
+                cancellationToken)
+            .ConfigureAwait(false);
+        if (principalResult.IsFailure) {
+            Error error = string.Equals(principalResult.Error.Code, "User.NotFound", StringComparison.Ordinal)
+                ? Errors.Authentication.InvalidCredentials
+                : principalResult.Error;
+            return Result.Failure<AdminSsoStartModel>(error);
         }
 
-        if (!user!.HasRole(RoleNames.Admin)) {
+        if (!principalResult.Value.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
             return Result.Failure<AdminSsoStartModel>(Errors.Authentication.AdminSsoForbidden);
         }
 

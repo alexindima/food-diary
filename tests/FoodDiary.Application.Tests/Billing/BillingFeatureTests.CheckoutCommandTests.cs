@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
@@ -161,7 +162,7 @@ public partial class BillingFeatureTests {
             .Returns(Task.FromResult<Error?>(null));
         userContextService
             .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+            .Returns(Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)));
         var handler = new CreateCheckoutSessionCommandHandler(
             userContextService,
             new InMemoryBillingSubscriptionRepository(),

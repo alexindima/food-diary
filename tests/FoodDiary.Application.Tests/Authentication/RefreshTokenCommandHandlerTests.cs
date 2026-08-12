@@ -300,7 +300,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository(User user)
-        : IUserRepository, IAuthenticationUserLookupService, IGoogleIdentityUserDirectoryService {
+        : IUserRepository, IUserGoogleIdentityRepository {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(
@@ -419,14 +419,6 @@ public sealed class RefreshTokenCommandHandlerTests {
             return Task.FromResult(new IssuedAuthenticationTokens("new-access-token", "new-refresh-token"));
         }
 
-        public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
-            User user,
-            CancellationToken cancellationToken,
-            AuthenticationClientContext? clientContext = null,
-            bool rememberMe = false,
-            Guid? refreshSessionId = null) => throw new NotSupportedException();
-
-        public string IssueAccessToken(User user) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
-using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.WeeklyGoals.Common;
 using FoodDiary.Application.WeeklyGoals.Models;
 using FoodDiary.Domain.Entities.WeeklyGoals;
@@ -13,7 +13,7 @@ namespace FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
 public sealed class UpsertWeeklyGoalCommandHandler(
     IWeeklyGoalRepository goalRepository,
     WeeklyGoalProgressReader progressReader,
-    IUserContextService userContextService,
+    ICurrentUserAccessService userContextService,
     TimeProvider timeProvider)
     : ICommandHandler<UpsertWeeklyGoalCommand, Result<WeeklyGoalModel>> {
     public async Task<Result<WeeklyGoalModel>> Handle(UpsertWeeklyGoalCommand command, CancellationToken cancellationToken) {

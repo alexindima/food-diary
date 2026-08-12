@@ -95,7 +95,7 @@ public sealed class BillingWebhookEventProcessor(
 
         await billingWebhookPaymentRecorder.AddIfPresentAsync(
             updatedSubscription,
-            context.User.Id,
+            context.User.UserId,
             provider,
             webhookEvent,
             cancellationToken).ConfigureAwait(false);

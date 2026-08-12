@@ -1,23 +1,26 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Notifications.Services;
 
 public sealed class WebPushDeliveryAudienceService(
     IWebPushSubscriptionReadRepository subscriptionReadRepository,
     IWebPushSubscriptionWriteRepository subscriptionWriteRepository,
-    IUserDirectoryService userDirectoryService) : IWebPushDeliveryAudienceService {
+    IUserNotificationProfileService userProfileService) : IWebPushDeliveryAudienceService {
     public async Task<IReadOnlyList<WebPushDeliverySubscription>> GetActiveAudienceAsync(
         UserId userId,
         string notificationType,
         DateTime utcNow,
         CancellationToken cancellationToken) {
-        User? user = await userDirectoryService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user?.PushNotificationsEnabled != true || !IsCategoryEnabled(user, notificationType)) {
+        Result<UserNotificationProfileModel> profileResult = await userProfileService
+            .GetAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (profileResult.IsFailure || !profileResult.Value.PushNotificationsEnabled || !IsCategoryEnabled(profileResult.Value, notificationType)) {
             return [];
         }
 
@@ -57,7 +60,7 @@ public sealed class WebPushDeliveryAudienceService(
         }
     }
 
-    internal static bool IsCategoryEnabled(User user, string notificationType) {
+    internal static bool IsCategoryEnabled(UserNotificationProfileModel user, string notificationType) {
         return notificationType switch {
             NotificationTypes.FastingCompleted => user.FastingPushNotificationsEnabled,
             NotificationTypes.EatingWindowStarted => user.FastingPushNotificationsEnabled,

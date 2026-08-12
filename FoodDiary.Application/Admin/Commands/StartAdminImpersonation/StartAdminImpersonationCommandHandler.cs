@@ -1,22 +1,21 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Results;
-using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 
 public sealed class StartAdminImpersonationCommandHandler(
-    IAdminImpersonationUserService userService,
+    IUserAuthenticationIdentityService userIdentityService,
     IAdminImpersonationSessionWriteRepository sessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
     TimeProvider dateTimeProvider,
@@ -33,24 +32,24 @@ public sealed class StartAdminImpersonationCommandHandler(
         string reason = command.Reason.Trim();
         UserId actorUserId = userIdsResult.Value.ActorUserId;
         UserId targetUserId = userIdsResult.Value.TargetUserId;
-        Result<User> actorResult = await LoadActorAsync(actorUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> actorResult = await LoadActorAsync(actorUserId, cancellationToken).ConfigureAwait(false);
         if (actorResult.IsFailure) {
             return Result.Failure<AdminImpersonationStartModel>(actorResult.Error);
         }
 
-        Result<User> targetResult = await LoadTargetAsync(targetUserId, command.TargetUserId, cancellationToken).ConfigureAwait(false);
+        Result<UserAuthenticationPrincipalModel> targetResult = await LoadTargetAsync(targetUserId, command.TargetUserId, cancellationToken).ConfigureAwait(false);
         if (targetResult.IsFailure) {
             return Result.Failure<AdminImpersonationStartModel>(targetResult.Error);
         }
 
-        User target = targetResult.Value;
+        UserAuthenticationPrincipalModel target = targetResult.Value;
         string token = GenerateToken(target, actorUserId, reason);
-        await StartSessionAsync(command, actorUserId, target.Id, reason, cancellationToken).ConfigureAwait(false);
+        await StartSessionAsync(command, actorUserId, target.UserId, reason, cancellationToken).ConfigureAwait(false);
         LogStart(actorUserId, target, reason);
 
         return Result.Success(new AdminImpersonationStartModel(
             token,
-            target.Id.Value,
+            target.UserId.Value,
             target.Email,
             actorUserId.Value,
             reason));
@@ -81,39 +80,42 @@ public sealed class StartAdminImpersonationCommandHandler(
         return Result.Success(new ImpersonationUserIds(actorUserIdResult.Value, targetUserIdResult.Value));
     }
 
-    private async Task<Result<User>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
-        User? actor = await userService.GetByIdAsync(actorUserId, cancellationToken).ConfigureAwait(false);
-        if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(actor) is not null
-            || actor?.HasRole(RoleNames.Admin) != true) {
-            return Result.Failure<User>(Errors.Authentication.ImpersonationForbidden);
+    private async Task<Result<UserAuthenticationPrincipalModel>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
+        Result<UserAuthenticationPrincipalModel> result = await userIdentityService
+            .GetAuthenticationPrincipalAsync(actorUserId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .ConfigureAwait(false);
+        if (result.IsFailure || !result.Value.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
+            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.ImpersonationForbidden);
         }
 
-        return Result.Success(actor);
+        return result;
     }
 
-    private async Task<Result<User>> LoadTargetAsync(
+    private async Task<Result<UserAuthenticationPrincipalModel>> LoadTargetAsync(
         UserId targetUserId,
         Guid targetId,
         CancellationToken cancellationToken) {
-        User? target = await userService.GetByIdAsync(targetUserId, cancellationToken).ConfigureAwait(false);
-        if (target is null) {
-            return Result.Failure<User>(Errors.User.NotFound(targetId));
+        Result<UserAuthenticationPrincipalModel> result = await userIdentityService
+            .GetAuthenticationPrincipalAsync(targetUserId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .ConfigureAwait(false);
+        if (result.IsFailure) {
+            return string.Equals(result.Error.Code, "User.NotFound", StringComparison.Ordinal)
+                ? Result.Failure<UserAuthenticationPrincipalModel>(Errors.User.NotFound(targetId))
+                : Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.ImpersonationForbidden);
         }
 
-        if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(target) is not null
-            || target.HasRole(RoleNames.Admin)) {
-            return Result.Failure<User>(Errors.Authentication.ImpersonationForbidden);
+        if (result.Value.Roles.Contains(RoleNames.Admin, StringComparer.Ordinal)) {
+            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.ImpersonationForbidden);
         }
 
-        return Result.Success(target);
+        return result;
     }
 
-    private string GenerateToken(User target, UserId actorUserId, string reason) {
-        string[] roles = [.. target.GetRoleNames()];
+    private string GenerateToken(UserAuthenticationPrincipalModel target, UserId actorUserId, string reason) {
         return jwtTokenGenerator.GenerateAccessToken(
-            target.Id,
+            target.UserId,
             target.Email,
-            roles,
+            target.Roles,
             new JwtImpersonationContext(actorUserId, reason));
     }
 
@@ -133,12 +135,12 @@ public sealed class StartAdminImpersonationCommandHandler(
         await sessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
     }
 
-    private void LogStart(UserId actorUserId, User target, string reason) {
+    private void LogStart(UserId actorUserId, UserAuthenticationPrincipalModel target, string reason) {
         auditLogger.Log(
             "admin.user.impersonation.start",
             actorUserId,
             "User",
-            target.Id.Value.ToString(),
+            target.UserId.Value.ToString(),
             $"targetEmail={target.Email} reason={reason}");
     }
 }

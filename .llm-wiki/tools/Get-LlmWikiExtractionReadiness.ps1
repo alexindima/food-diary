@@ -8,10 +8,18 @@ param(
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
-if (-not (Test-Path -LiteralPath (Join-Path $repositoryRoot "FoodDiary.Application/$Module") -PathType Container)) { throw "Application module not found: $Module" }
+$folderModulePath = Join-Path $repositoryRoot "FoodDiary.Application/$Module"
+$extractedModulePath = Join-Path $repositoryRoot "FoodDiary.Application.$Module"
+if (-not (Test-Path -LiteralPath $folderModulePath -PathType Container) -and
+    -not (Test-Path -LiteralPath $extractedModulePath -PathType Container)) {
+    throw "Application module not found: $Module"
+}
 $aggregateName = if ($Module -eq 'Users') { 'User' } else { $Module.TrimEnd('s') }
 $sourcePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs') -FailureMessage 'Unable to enumerate C# sources for extraction readiness.')
-$sourcePaths = @($sourcePaths | Where-Object { $IncludeTests -or $_ -notmatch '(^|/)tests?/|\.Tests?/' } | Sort-Object -Unique)
+$sourcePaths = @($sourcePaths |
+    Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) -PathType Leaf } |
+    Where-Object { $IncludeTests -or $_ -notmatch '(^|/)tests?/|\.Tests?/' } |
+    Sort-Object -Unique)
 
 $contracts = [Collections.Generic.List[object]]::new()
 foreach ($path in $sourcePaths) {
@@ -46,6 +54,7 @@ do {
 
 function Get-ConsumerModule([string]$Path) {
     if ($Path -match '^FoodDiary\.Application(?:\.Abstractions)?/([^/]+)/') { return $Matches[1] }
+    if ($Path -match '^FoodDiary\.Application\.([^/]+)/') { return $Matches[1] }
     return ($Path -split '/')[0]
 }
 $leaks = [Collections.Generic.List[object]]::new()
@@ -72,8 +81,17 @@ foreach ($contract in $contracts | Where-Object { $leakingNames.Contains($_.name
 }
 
 $context = & (Join-Path $PSScriptRoot 'Get-LlmWikiContractConsumers.ps1') -Contract IUserContextService -Format Json | ConvertFrom-Json
-$productionLeaks = @($leaks | Where-Object { -not $_.compositionOnly })
-$mutationConsumers = @($context.consumers | Where-Object { $_.access -eq 'mutation' -and -not $_.compositionRegistration })
+$productionLeaks = @($leaks | Where-Object {
+    -not $_.compositionOnly -and
+    $_.consumerPath -notmatch '(^|/)tests?/|\.Tests?/' -and
+    $_.consumerModule -ne $Module -and
+    $_.consumerPath -notmatch "^FoodDiary\.Infrastructure/Persistence/$Module/"
+})
+$mutationConsumers = @($context.consumers | Where-Object {
+    $_.access -eq 'mutation' -and
+    -not $_.compositionRegistration -and
+    $_.consumer -ne $Module
+})
 $blockers = [Collections.Generic.List[string]]::new()
 if ($productionLeaks.Count -gt 0) { $blockers.Add("$($productionLeaks.Count) production path(s) expose the $aggregateName aggregate through direct or transitive contracts.") }
 if ($mutationConsumers.Count -gt 0) { $blockers.Add("$($mutationConsumers.Count) IUserContextService mutation consumer(s) still require a narrow mutation capability.") }
@@ -86,7 +104,7 @@ $projections = @($productionLeaks | Where-Object { (@($_.usedProperties).Count -
 } })
 $result = [pscustomobject]@{
     schemaVersion = 1; module = $Module; ownedAggregate = $aggregateName
-    contractReadiness = [pscustomobject]@{ contract = 'IUserContextService'; aggregateBlockers = [int]$context.readiness.aggregateConsumers; mutationBlockers = [int]$context.readiness.mutationConsumers; aggregateReady = [int]$context.readiness.aggregateConsumers -eq 0 }
+    contractReadiness = [pscustomobject]@{ contract = 'IUserContextService'; aggregateBlockers = [int]$context.readiness.aggregateConsumers; mutationBlockers = $mutationConsumers.Count; aggregateReady = [int]$context.readiness.aggregateConsumers -eq 0 }
     moduleReadiness = [pscustomobject]@{ ready = $blockers.Count -eq 0; blockers = @($blockers); aggregateLeakPaths = $productionLeaks.Count; leakingContracts = @($leakingNames | Sort-Object) }
     leaks = @($leaks)
     categories = [pscustomobject]@{ directOrWrapper = @($leaks | Where-Object kind -eq 'direct-or-wrapper-aggregate').Count; repositoryOrDirectory = @($leaks | Where-Object kind -eq 'repository-or-directory').Count; transitiveWrapper = @($leaks | Where-Object kind -eq 'transitive-wrapper').Count; test = @($leaks | Where-Object { $_.consumerPath -match '(^|/)tests?/|\.Tests?/' }).Count; compositionOnly = @($leaks | Where-Object compositionOnly).Count }
@@ -98,7 +116,7 @@ Write-Host "Contract readiness: IUserContextService aggregate blockers=$($result
 Write-Host "Module readiness: $(if ($result.moduleReadiness.ready) { 'ready' } else { 'not ready' })"
 foreach ($blocker in $result.moduleReadiness.blockers) { Write-Host "BLOCKER: $blocker" }
 Write-Host "Leaks: direct/wrapper=$($result.categories.directOrWrapper), repository/directory=$($result.categories.repositoryOrDirectory), transitive=$($result.categories.transitiveWrapper), tests=$($result.categories.test), composition=$($result.categories.compositionOnly)"
-foreach ($contractGroup in @($result.leaks | Where-Object { -not $_.compositionOnly } | Group-Object contract | Sort-Object @{ Expression = 'Count'; Descending = $true }, Name)) {
+foreach ($contractGroup in @($productionLeaks | Group-Object contract | Sort-Object @{ Expression = 'Count'; Descending = $true }, Name)) {
     $modules = @($contractGroup.Group.consumerModule | Sort-Object -Unique)
     Write-Host "- $($contractGroup.Name): $($contractGroup.Count) production path(s), modules=$($modules -join ', ')"
 }

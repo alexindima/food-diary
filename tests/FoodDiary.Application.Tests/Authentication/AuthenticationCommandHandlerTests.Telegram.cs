@@ -111,7 +111,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task TelegramVerifyHandler_WhenInitDataInvalid_ReturnsFailure() {
         var handler = new TelegramVerifyCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
+            new StubDateTimeProvider(),
             new StubTelegramAuthValidator(validateFailure: true),
             new StubTelegramAssertionReplayGuard(),
             new StubAuthenticationTokenService());
@@ -125,7 +126,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task TelegramVerifyHandler_WhenTelegramUserIsNotLinked_ReturnsFailure() {
         var handler = new TelegramVerifyCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
+            new StubDateTimeProvider(),
             new StubTelegramAuthValidator(),
             new StubTelegramAssertionReplayGuard(),
             new StubAuthenticationTokenService());
@@ -142,7 +144,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.LinkTelegram(123456);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new TelegramVerifyCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
             new StubTelegramAuthValidator(),
             new StubTelegramAssertionReplayGuard(),
             tokenService);
@@ -151,7 +154,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
         ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
-        Assert.Equal(user, tokenService.LastUser);
+        Assert.Null(tokenService.LastUser);
+        Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
     }
 
     [Fact]
@@ -160,7 +164,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.LinkTelegram(123456);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new TelegramVerifyCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
             new StubTelegramAuthValidator(),
             new StubTelegramAssertionReplayGuard(consume: false),
             tokenService);
@@ -177,7 +182,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task TelegramLoginWidgetHandler_WhenWidgetDataInvalid_ReturnsFailure() {
         var handler = new TelegramLoginWidgetCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
+            new StubDateTimeProvider(),
             new StubTelegramLoginWidgetValidator(validateFailure: true),
             new StubTelegramAssertionReplayGuard(),
             new StubAuthenticationTokenService());
@@ -193,7 +199,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task TelegramLoginWidgetHandler_WhenTelegramUserIsNotLinked_ReturnsFailure() {
         var handler = new TelegramLoginWidgetCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
+            new StubDateTimeProvider(),
             new StubTelegramLoginWidgetValidator(),
             new StubTelegramAssertionReplayGuard(),
             new StubAuthenticationTokenService());
@@ -212,7 +219,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.LinkTelegram(123456);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new TelegramLoginWidgetCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
             new StubTelegramLoginWidgetValidator(),
             new StubTelegramAssertionReplayGuard(),
             tokenService);
@@ -223,7 +231,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
         ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
-        Assert.Equal(user, tokenService.LastUser);
+        Assert.Null(tokenService.LastUser);
+        Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
     }
 
     [Fact]
@@ -232,7 +241,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.LinkTelegram(123456);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new TelegramLoginWidgetCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
             new StubTelegramLoginWidgetValidator(),
             new StubTelegramAssertionReplayGuard(consume: false),
             tokenService);
@@ -256,7 +266,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task TelegramBotAuthHandler_WhenTelegramUserIsNotLinked_ReturnsFailure() {
         var handler = new TelegramBotAuthCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
+            new StubDateTimeProvider(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
@@ -271,13 +282,15 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.LinkTelegram(123456);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new TelegramBotAuthCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
             tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
-        Assert.Equal(user, tokenService.LastUser);
+        Assert.Null(tokenService.LastUser);
+        Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
     }
 }

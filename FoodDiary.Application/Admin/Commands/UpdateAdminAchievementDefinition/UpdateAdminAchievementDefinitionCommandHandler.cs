@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Results;

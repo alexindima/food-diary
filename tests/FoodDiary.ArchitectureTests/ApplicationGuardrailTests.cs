@@ -400,7 +400,6 @@ public sealed class ApplicationGuardrailTests {
             "EnumValueParser.cs",
             "OptionalEntityIdValidator.cs",
             "RequiredIdParser.cs",
-            "UserIdParser.cs",
         ];
 
         string?[] actualFiles = [.. Directory.GetFiles(validationRoot, "*.cs", SearchOption.TopDirectoryOnly)
@@ -408,6 +407,19 @@ public sealed class ApplicationGuardrailTests {
             .Order(StringComparer.Ordinal)];
 
         Assert.Equal(allowedFiles, actualFiles);
+    }
+
+    [Fact]
+    public void UserIdParser_LivesInApplicationAbstractions() {
+        string root = GetRepositoryRoot();
+        string parserPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "Common",
+            "Validation",
+            "UserIdParser.cs");
+
+        Assert.True(File.Exists(parserPath));
     }
 
     [Fact]
@@ -1156,21 +1168,21 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableAuthUrl", "GetWearableAuthUrlQueryHandler.cs"),
             Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableConnections", "GetWearableConnectionsQueryHandler.cs"),
             Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
             Path.Combine(applicationRoot, "Ai", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
             Path.Combine(applicationRoot, "Consumptions", "Commands", "DeleteConsumption", "DeleteConsumptionCommandHandler.cs"),
             Path.Combine(applicationRoot, "Consumptions", "Queries", "GetConsumptionById", "GetConsumptionByIdQueryHandler.cs"),
@@ -1959,7 +1971,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void UserQueries_UseProfileReadServiceModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
-        string userQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Queries");
+        string userQueriesRoot = Path.Combine(root, "FoodDiary.Application.Users", "Queries");
         string[] userQueryFiles = [.. SourceScanner.SourceFiles(userQueriesRoot)];
 
         string[] violations = [
@@ -1979,8 +1991,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Users",
+            "FoodDiary.Application.Users",
             "Services",
             "ProfileOverviewReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1999,8 +2010,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Users",
+            "FoodDiary.Application.Users",
             "Services",
             "ProfileOverviewReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -2034,7 +2044,7 @@ public sealed class ApplicationGuardrailTests {
     public void DietologistReadServices_UseReadModelsInsteadOfDietologistAggregates() {
         string root = GetRepositoryRoot();
         string dietologistServicesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Services");
-        string userServicesRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Services");
+        string userServicesRoot = Path.Combine(root, "FoodDiary.Application.Users", "Services");
         string[] readServiceFiles = [
             Path.Combine(dietologistServicesRoot, "DietologistInvitationReadService.cs"),
             Path.Combine(dietologistServicesRoot, "DietologistClientReadService.cs"),
@@ -3022,7 +3032,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void UsersSlice_DoesNotRegrowStandaloneCurrentUserAccessService() {
         string root = GetRepositoryRoot();
-        string usersCommonRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Common");
+        string usersCommonRoot = Path.Combine(root, "FoodDiary.Application.Users", "Common");
         string servicePath = Path.Combine(usersCommonRoot, "CurrentUserAccessService.cs");
 
         Assert.False(File.Exists(servicePath), "UserContextService should remain the single current-user access implementation.");
@@ -3049,12 +3059,10 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void BillingSlice_UsesCurrentUserAccessPolicyOnlyThroughBillingUserLookupService() {
+    public void BillingSlice_DoesNotUseCurrentUserAccessPolicyDirectly() {
         string root = GetRepositoryRoot();
         string billingRoot = Path.Combine(root, "FoodDiary.Application.Billing");
-        string allowedPath = Path.Combine(billingRoot, "Services", "BillingUserLookupService.cs");
-        string[] billingFiles = [.. SourceScanner.SourceFiles(billingRoot)
-            .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
+        string[] billingFiles = [.. SourceScanner.SourceFiles(billingRoot)];
 
         string[] violations = FindReferencesInFiles(root, billingFiles, "CurrentUserAccessPolicy");
 
@@ -3073,7 +3081,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void BillingUserContextService_DelegatesUserAccessToFocusedServices() {
+    public void BillingUserContextService_DelegatesUserAccessToUsersCapability() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
@@ -3082,9 +3090,10 @@ public sealed class ApplicationGuardrailTests {
             "BillingUserContextService.cs");
         string source = File.ReadAllText(servicePath);
 
-        Assert.Contains("IUserDirectoryService", source, StringComparison.Ordinal);
-        Assert.Contains("IUserWriteRepository", source, StringComparison.Ordinal);
-        Assert.Contains("IBillingUserLookupService", source, StringComparison.Ordinal);
+        Assert.Contains("IUserBillingService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IUserLookupRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IUserWriteRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("FoodDiary.Domain.Entities.Users", source, StringComparison.Ordinal);
         Assert.DoesNotContain("IUserRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("CurrentUserAccessPolicy", source, StringComparison.Ordinal);
     }
@@ -3119,21 +3128,21 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
         ];
 
         string[] violations = FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy");

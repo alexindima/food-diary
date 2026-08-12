@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;

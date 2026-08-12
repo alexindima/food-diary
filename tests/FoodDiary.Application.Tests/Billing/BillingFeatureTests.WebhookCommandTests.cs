@@ -95,7 +95,6 @@ public partial class BillingFeatureTests {
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
                 subscriptionRepository,
-                userRepository,
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
                 new NoOpMarketingConversionRecorder(),
                 dateTimeProvider),
@@ -172,7 +171,6 @@ public partial class BillingFeatureTests {
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
                 subscriptionRepository,
-                userRepository,
                 billingAccessService,
                 new NoOpMarketingConversionRecorder(),
                 dateTimeProvider),
@@ -220,7 +218,6 @@ public partial class BillingFeatureTests {
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
                 subscriptionRepository,
-                userRepository,
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
                 new NoOpMarketingConversionRecorder(),
                 dateTimeProvider),
@@ -582,7 +579,6 @@ public partial class BillingFeatureTests {
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
                 subscriptionRepository,
-                userRepository,
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
                 new NoOpMarketingConversionRecorder(),
                 dateTimeProvider),
@@ -736,7 +732,6 @@ public partial class BillingFeatureTests {
             new BillingWebhookPaymentRecorder(paymentRepository),
             new BillingWebhookPremiumRoleSyncer(
                 subscriptionRepository,
-                userRepository,
                 new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
                 new NoOpMarketingConversionRecorder(),
                 dateTimeProvider),

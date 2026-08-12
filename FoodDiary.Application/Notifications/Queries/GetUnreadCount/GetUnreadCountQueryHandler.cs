@@ -1,7 +1,7 @@
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Queries.GetUnreadCount;
@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 public sealed class GetUnreadCountQueryHandler(
     INotificationFeedReadService notificationFeedReadService,
     INotificationUserContextService notificationUserContextService,
-    INotificationUserAccessService notificationUserAccessService)
+    ICurrentUserAccessService notificationUserAccessService)
     : IQueryHandler<GetUnreadCountQuery, Result<int>> {
     public async Task<Result<int>> Handle(GetUnreadCountQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(

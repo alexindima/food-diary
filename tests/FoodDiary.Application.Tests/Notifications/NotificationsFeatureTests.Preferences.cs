@@ -8,6 +8,8 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 
 namespace FoodDiary.Application.Tests.Notifications;
 
@@ -105,7 +107,7 @@ public partial class NotificationsFeatureTests {
             .UpdateAsync(user.Id, Arg.Any<UserPreferenceUpdate>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<NotificationPreferencesUpdateResult>(error)));
         RecordingAuditLogger auditLogger = new();
-        var handler = new UpdateNotificationPreferencesCommandHandler(preferencesService, auditLogger, Substitute.For<INotificationUserAccessService>());
+        var handler = new UpdateNotificationPreferencesCommandHandler(preferencesService, auditLogger, Substitute.For<ICurrentUserAccessService>());
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
@@ -124,7 +126,7 @@ public partial class NotificationsFeatureTests {
         preferencesService
             .GetAsync(userId, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(Result.Failure<NotificationPreferencesModel>(error)));
-        INotificationUserAccessService accessService = Substitute.For<INotificationUserAccessService>();
+        ICurrentUserAccessService accessService = Substitute.For<ICurrentUserAccessService>();
         accessService.EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>()).Returns(Task.FromResult<Error?>(null));
         RecordingAuditLogger auditLogger = new();
         var handler = new UpdateNotificationPreferencesCommandHandler(preferencesService, auditLogger, accessService);
@@ -141,11 +143,11 @@ public partial class NotificationsFeatureTests {
 
     [Fact]
     public async Task NotificationPreferencesService_UpdateAsync_WhenUserMissing_ReturnsAccessFailure() {
-        INotificationUserAccessService userAccessService = Substitute.For<INotificationUserAccessService>();
-        userAccessService
-            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
-        var service = new NotificationPreferencesService(userAccessService);
+        IUserNotificationProfileService userProfileService = Substitute.For<IUserNotificationProfileService>();
+        userProfileService
+            .UpdatePreferencesAsync(Arg.Any<UserId>(), Arg.Any<UserPreferenceUpdate>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<UserNotificationProfileModel>(Errors.Authentication.InvalidToken)));
+        var service = new NotificationPreferencesService(userProfileService);
 
         Result<NotificationPreferencesUpdateResult> result = await service.UpdateAsync(
             UserId.New(),
@@ -163,11 +165,11 @@ public partial class NotificationsFeatureTests {
 
     [Fact]
     public async Task NotificationPreferencesService_GetAsync_WhenUserMissing_ReturnsAccessFailure() {
-        INotificationUserAccessService userAccessService = Substitute.For<INotificationUserAccessService>();
-        userAccessService
-            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
-        var service = new NotificationPreferencesService(userAccessService);
+        IUserNotificationProfileService userProfileService = Substitute.For<IUserNotificationProfileService>();
+        userProfileService
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<UserNotificationProfileModel>(Errors.Authentication.InvalidToken)));
+        var service = new NotificationPreferencesService(userProfileService);
 
         Result<NotificationPreferencesModel> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 

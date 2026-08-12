@@ -1,15 +1,15 @@
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 
 public sealed class GetNotificationPreferencesQueryHandler(
     INotificationPreferencesService notificationPreferencesService,
-    INotificationUserAccessService notificationUserAccessService)
+    ICurrentUserAccessService notificationUserAccessService)
     : IQueryHandler<GetNotificationPreferencesQuery, Result<NotificationPreferencesModel>> {
     public async Task<Result<NotificationPreferencesModel>> Handle(
         GetNotificationPreferencesQuery query,

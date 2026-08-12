@@ -9,9 +9,20 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $escapedContract = [regex]::Escape($Contract)
-$searchMatches = @(& git -C $repositoryRoot grep -n -E "\b$escapedContract\b" -- '*.cs')
-if ($LASTEXITCODE -notin @(0, 1)) { throw "Unable to search consumers of $Contract." }
+$sourcePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs') -FailureMessage "Unable to search consumers of $Contract.")
+$searchMatches = @(
+    foreach ($path in $sourcePaths | Sort-Object -Unique) {
+        $absolutePath = Join-Path $repositoryRoot $path
+        if (-not (Test-Path -LiteralPath $absolutePath -PathType Leaf)) { continue }
+        $lineNumber = 0
+        foreach ($line in [IO.File]::ReadLines($absolutePath)) {
+            $lineNumber++
+            if ($line -match "\b$escapedContract\b") { "$path`:$lineNumber`:$line" }
+        }
+    }
+)
 
 $declaration = @($searchMatches | Where-Object { $_ -match "\b(interface|class|record)\s+$escapedContract\b" } | Select-Object -First 1)
 $declarationPath = if ($declaration) { ($declaration -split ':', 3)[0].Replace('\', '/') } else { $null }
@@ -23,6 +34,7 @@ $methodDefinitions = @([regex]::Matches($declarationText, '(?m)^\s*(?<return>[^\
 
 function Get-ModuleName([string]$Path) {
     if ($Path -match '^FoodDiary\.Application/([^/]+)/') { return $Matches[1] }
+    if ($Path -match '^FoodDiary\.Application\.([^/]+)/') { return $Matches[1] }
     if ($Path -match '^([^/]+)/') { return $Matches[1] }
     return 'root'
 }

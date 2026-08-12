@@ -1,5 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Export.Models;
 
 namespace FoodDiary.Application.Export.Queries.ExportCycle;

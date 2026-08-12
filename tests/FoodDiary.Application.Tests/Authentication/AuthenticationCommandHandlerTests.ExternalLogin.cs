@@ -21,13 +21,13 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var tokenService = new StubAuthenticationTokenService();
         var notificationRepository = new StubNotificationRepository();
         var handler = new GoogleLoginCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(
                 new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, "google@example.com", "Alex", "User", "en"),
                 validateFailure: true),
-            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
             tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("bad-credential"), CancellationToken.None);
@@ -45,11 +45,11 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var tokenService = new StubAuthenticationTokenService();
         var notificationRepository = new StubNotificationRepository();
         var handler = new GoogleLoginCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
-            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
             tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
@@ -65,11 +65,11 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("google-password@example.com", "secret", hasPassword: true);
         var notificationRepository = new StubNotificationRepository();
         var handler = new GoogleLoginCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
-            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
@@ -83,11 +83,11 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task GoogleLoginHandler_ForGoogleOnlyAccount_CreatesPasswordSetupNotification() {
         var notificationRepository = new StubNotificationRepository();
         var handler = new GoogleLoginCommandHandler(
-            new StubUserRepository(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, "google@example.com", "Alex", "User", "en")),
-            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
@@ -105,11 +105,11 @@ public sealed partial class AuthenticationCommandHandlerTests {
         Notification existingNotification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, $"password-setup:{user.Id.Value}");
         var notificationRepository = new StubNotificationRepository(existingNotification);
         var handler = new GoogleLoginCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, "google@example.com", "Alex", "User", "en")),
-            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
@@ -124,11 +124,11 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.LinkGoogleIdentity(GoogleIssuer, GoogleSubject);
         var notificationRepository = new StubNotificationRepository();
         var handler = new GoogleLoginCommandHandler(
-            new StubUserRepository(user),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
             notificationRepository,
             new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(GoogleIssuer, GoogleSubject, user.Email, "Alex", "User", "en")),
-            new StubPasswordHasher(),
+            new StubDateTimeProvider(),
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);

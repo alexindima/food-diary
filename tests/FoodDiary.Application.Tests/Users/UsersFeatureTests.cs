@@ -103,7 +103,7 @@ public partial class UsersFeatureTests {
 
         UserModel model = user.ToModel();
         var goals = user.ToGoalsModel();
-        AdminUserModel adminModel = user.ToAdminModel();
+        AdminUserModel adminModel = user.ToAdminReadModel().ToAdminModel();
 
         Assert.Equal("mapped", model.Username);
         Assert.Equal("ru", model.Language);

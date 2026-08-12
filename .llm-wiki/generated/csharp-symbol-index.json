@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3121,
-                    "symbols":  3161,
-                    "interfaceImplementationLinks":  234,
-                    "dependencyInjectionRegistrations":  233,
+                    "sourceFiles":  3120,
+                    "symbols":  3159,
+                    "interfaceImplementationLinks":  230,
+                    "dependencyInjectionRegistrations":  229,
                     "kinds":  {
-                                  "class":  1589,
+                                  "class":  1585,
                                   "enum":  49,
-                                  "interface":  417,
-                                  "record":  993,
+                                  "interface":  412,
+                                  "record":  1000,
                                   "record struct":  113
                               },
                     "roles":  {
@@ -32,15 +32,15 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1121,
+                                  "Other":  1128,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
                                   "ReadRepository":  50,
-                                  "Repository":  105,
+                                  "Repository":  106,
                                   "Request":  124,
                                   "Response":  171,
-                                  "Service":  269,
+                                  "Service":  259,
                                   "Validator":  180,
                                   "ValueObject":  123,
                                   "WriteRepository":  47
@@ -622,13 +622,6 @@
                         "line":  2
                     },
                     {
-                        "name":  "IGoogleIdentityUserDirectoryService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IGoogleIdentityUserDirectoryService.cs",
-                        "line":  4
-                    },
-                    {
                         "name":  "IPasswordHasher",
                         "kind":  "interface",
                         "role":  "Other",
@@ -724,7 +717,7 @@
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
-                        "line":  6
+                        "line":  5
                     },
                     {
                         "name":  "IssuedAuthenticationTokens",
@@ -951,10 +944,45 @@
                         "line":  10
                     },
                     {
+                        "name":  "ICommand",
+                        "kind":  "interface",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ICommandHandler",
+                        "kind":  "interface",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IQuery",
+                        "kind":  "interface",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IQueryHandler",
+                        "kind":  "interface",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "ITransactionalCommand",
                         "kind":  "interface",
                         "role":  "Command",
                         "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ITransactionalCommand.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "IUserRequest",
+                        "kind":  "interface",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs",
                         "line":  2
                     },
                     {
@@ -1411,6 +1439,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.WeightEntry.cs",
                         "line":  8
+                    },
+                    {
+                        "name":  "UserIdParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Validation/UserIdParser.cs",
+                        "line":  6
                     },
                     {
                         "name":  "ConsumptionErrors",
@@ -3464,10 +3499,45 @@
                         "line":  2
                     },
                     {
+                        "name":  "CurrentUserAccessResolver",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/CurrentUserAccessResolver.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "ICurrentUserAccessService",
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IProfileDietologistReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IProfileDietologistReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IProfileNotificationReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IProfileNotificationReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IUserAdministrationMutationService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationMutationService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IUserAdministrationReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationReadService.cs",
                         "line":  5
                     },
                     {
@@ -3496,6 +3566,20 @@
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IUserAuthenticationRegistrationService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationRegistrationService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IUserBillingService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserBillingService.cs",
                         "line":  6
                     },
                     {
@@ -3534,18 +3618,18 @@
                         "line":  6
                     },
                     {
-                        "name":  "IUserDirectoryService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserDirectoryService.cs",
-                        "line":  5
-                    },
-                    {
                         "name":  "IUserGamificationProfileReadService",
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserGamificationProfileReadService.cs",
                         "line":  6
+                    },
+                    {
+                        "name":  "IUserGoogleIdentityRepository",
+                        "kind":  "interface",
+                        "role":  "Repository",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserGoogleIdentityRepository.cs",
+                        "line":  4
                     },
                     {
                         "name":  "IUserHydrationProfileReadService",
@@ -3559,7 +3643,14 @@
                         "kind":  "interface",
                         "role":  "LookupRepository",
                         "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserLookupRepository.cs",
-                        "line":  2
+                        "line":  5
+                    },
+                    {
+                        "name":  "IUserNotificationProfileService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserNotificationProfileService.cs",
+                        "line":  7
                     },
                     {
                         "name":  "IUserProfileReadService",
@@ -3667,11 +3758,25 @@
                         "line":  2
                     },
                     {
+                        "name":  "UserAdminCreateModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "UserAdminReadModel",
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
                         "line":  6
+                    },
+                    {
+                        "name":  "UserAdminUpdateModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminUpdateModel.cs",
+                        "line":  4
                     },
                     {
                         "name":  "UserAiProfileModel",
@@ -3685,6 +3790,13 @@
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAuthenticationPrincipalModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UserBillingProfileModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserBillingProfileModel.cs",
                         "line":  4
                     },
                     {
@@ -3730,10 +3842,24 @@
                         "line":  4
                     },
                     {
+                        "name":  "UserGoogleAuthenticationModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserGoogleAuthenticationModel.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "UserHydrationProfileModel",
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Users/Models/UserHydrationProfileModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserInitialAdminBootstrapModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserInitialAdminBootstrapModel.cs",
                         "line":  2
                     },
                     {
@@ -3749,6 +3875,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "UserNotificationProfileModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
+                        "line":  4
                     },
                     {
                         "name":  "UserPasswordResetDeliveryModel",
@@ -3769,6 +3902,13 @@
                         "kind":  "enum",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetIssueStatus.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserRegistrationModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
                         "line":  2
                     },
                     {
@@ -4028,7 +4168,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application.Billing/Commands/CreateCheckoutSession/CreateCheckoutSessionCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "CreateCheckoutSessionCommandValidator",
@@ -4049,7 +4189,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application.Billing/Commands/CreatePortalSession/CreatePortalSessionCommandHandler.cs",
-                        "line":  11
+                        "line":  12
                     },
                     {
                         "name":  "BillingWebhookContextResolver",
@@ -4084,7 +4224,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookPremiumRoleSyncer.cs",
-                        "line":  9
+                        "line":  8
                     },
                     {
                         "name":  "BillingWebhookProcessingContext",
@@ -4140,7 +4280,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application.Billing/Commands/StartPremiumTrial/StartPremiumTrialCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "BillingCurrentUserAccessResolver",
@@ -4169,13 +4309,6 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Billing/Common/IBillingUserContextService.cs",
                         "line":  8
-                    },
-                    {
-                        "name":  "IBillingUserLookupService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application.Billing/Common/IBillingUserLookupService.cs",
-                        "line":  5
                     },
                     {
                         "name":  "IBillingWebhookInboxService",
@@ -4238,7 +4371,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Billing/Services/BillingAccessService.cs",
-                        "line":  8
+                        "line":  7
                     },
                     {
                         "name":  "BillingOverviewReadService",
@@ -4259,14 +4392,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Billing/Services/BillingUserContextService.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "BillingUserLookupService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application.Billing/Services/BillingUserLookupService.cs",
-                        "line":  7
+                        "line":  9
                     },
                     {
                         "name":  "BillingWebhookInboxService",
@@ -4374,6 +4500,468 @@
                         "line":  6
                     },
                     {
+                        "name":  "AcceptAiConsentCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "AcceptAiConsentCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "ChangePasswordCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "ChangePasswordCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "ChangePasswordCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DeleteUserCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeleteUserCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "DeleteUserCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Commands/DeleteUser/DeleteUserCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "RevokeAiConsentCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/RevokeAiConsent/RevokeAiConsentCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "RevokeAiConsentCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/RevokeAiConsent/RevokeAiConsentCommandHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "SetPasswordCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "SetPasswordCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "SetPasswordCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpdateDesiredWaistCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateDesiredWaistCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UpdateDesiredWaistCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateDesiredWeightCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateDesiredWeightCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UpdateDesiredWeightCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateGoalsCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateGoalsCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "UpdateGoalsCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommandValidator.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "UpdateUserCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateUserCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+                        "line":  16
+                    },
+                    {
+                        "name":  "UpdateUserCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpdateUserAppearanceCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateUserAppearanceCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "UpdateUserAppearanceCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CurrentUserAccessPolicy",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Users/Common/CurrentUserAccessPolicy.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IProfileOverviewReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Common/IProfileOverviewReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IUserContextService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Common/IUserContextService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "IUserIdentityMutationService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Common/IUserIdentityMutationService.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UserAppearancePreferences",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Users/Common/UserAppearancePreferences.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserAppearancePreferencesParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Users/Common/UserAppearancePreferencesParser.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UserContextService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Common/UserContextService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UserInputParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Users/Common/UserInputParser.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UserPreferenceCodeParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Users/Common/UserPreferenceCodeParser.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "UserMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Users/Mappings/UserMappings.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetDesiredWaistQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetDesiredWaistQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetDesiredWaistQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetDesiredWeightQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetDesiredWeightQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetDesiredWeightQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Queries/GetDesiredWeight/GetDesiredWeightQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetProfileOverviewQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetProfileOverviewQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetProfileOverviewQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetUserByIdQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetUserByIdQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetUserByIdQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Queries/GetUserById/GetUserByIdQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetUserGoalsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetUserGoalsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetUserGoalsQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Users/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetWaistGoalHistoryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWaistGoalHistoryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetWeightGoalHistoryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWeightGoalHistoryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "ProfileOverviewReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Services/ProfileOverviewReadService.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "UserAdministrationMutationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Services/UserAdministrationMutationService.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "UserAdministrationReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Services/UserAdministrationReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UserAuthenticationIdentityService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Services/UserAuthenticationIdentityService.cs",
+                        "line":  15
+                    },
+                    {
+                        "name":  "UserAuthenticationRegistrationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Services/UserAuthenticationRegistrationService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UserBillingService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Services/UserBillingService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UserIdentityMutationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Services/UserIdentityMutationService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UserNotificationProfileService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Users/Services/UserNotificationProfileService.cs",
+                        "line":  10
+                    },
+                    {
                         "name":  "CreateAdminAchievementDefinitionCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -4427,7 +5015,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-                        "line":  17
+                        "line":  15
                     },
                     {
                         "name":  "CreateAdminUserCommandValidator",
@@ -4581,7 +5169,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-                        "line":  17
+                        "line":  16
                     },
                     {
                         "name":  "StartAdminImpersonationCommandValidator",
@@ -4644,7 +5232,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
-                        "line":  16
+                        "line":  14
                     },
                     {
                         "name":  "UpdateAdminUserCommandValidator",
@@ -4738,25 +5326,11 @@
                         "line":  5
                     },
                     {
-                        "name":  "IAdminImpersonationUserService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Admin/Common/IAdminImpersonationUserService.cs",
-                        "line":  5
-                    },
-                    {
                         "name":  "IAdminUserLoginReadService",
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Admin/Common/IAdminUserLoginReadService.cs",
                         "line":  6
-                    },
-                    {
-                        "name":  "IAdminUserManagementService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Admin/Common/IAdminUserManagementService.cs",
-                        "line":  5
                     },
                     {
                         "name":  "IAdminUserReadService",
@@ -4798,7 +5372,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Admin/Mappings/AdminUserMappings.cs",
-                        "line":  6
+                        "line":  5
                     },
                     {
                         "name":  "AdminAiPromptModel",
@@ -5256,13 +5830,6 @@
                         "line":  8
                     },
                     {
-                        "name":  "AdminImpersonationUserService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Admin/Services/AdminImpersonationUserService.cs",
-                        "line":  7
-                    },
-                    {
                         "name":  "AdminUserLoginReadService",
                         "kind":  "class",
                         "role":  "Service",
@@ -5270,18 +5837,11 @@
                         "line":  9
                     },
                     {
-                        "name":  "AdminUserManagementService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Admin/Services/AdminUserManagementService.cs",
-                        "line":  7
-                    },
-                    {
                         "name":  "AdminUserReadService",
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Admin/Services/AdminUserReadService.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "AnalyzeFoodImageCommand",
@@ -5295,7 +5855,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-                        "line":  13
+                        "line":  14
                     },
                     {
                         "name":  "AnalyzeFoodImageCommandValidator",
@@ -5337,7 +5897,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "ParseFoodTextCommandValidator",
@@ -5456,7 +6016,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "AdminSsoExchangeCommandValidator",
@@ -5554,7 +6114,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-                        "line":  17
+                        "line":  13
                     },
                     {
                         "name":  "GoogleLoginCommandValidator",
@@ -5659,7 +6219,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandHandler.cs",
-                        "line":  13
+                        "line":  11
                     },
                     {
                         "name":  "RegisterCommandValidator",
@@ -5743,7 +6303,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
-                        "line":  11
+                        "line":  9
                     },
                     {
                         "name":  "TelegramBotAuthCommandValidator",
@@ -5764,7 +6324,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "TelegramLoginWidgetCommandValidator",
@@ -5785,7 +6345,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "TelegramVerifyCommandValidator",
@@ -5816,13 +6376,6 @@
                         "line":  4
                     },
                     {
-                        "name":  "AuthenticationUserAccessPolicy",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Common/AuthenticationUserAccessPolicy.cs",
-                        "line":  6
-                    },
-                    {
                         "name":  "IAuthenticationLoginEventCleanupService",
                         "kind":  "interface",
                         "role":  "Service",
@@ -5834,27 +6387,6 @@
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Authentication/Common/IAuthenticationLoginEventReadService.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IAuthenticationUserLookupService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Common/IAuthenticationUserLookupService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IAuthenticationUserMutationService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Common/IAuthenticationUserMutationService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IAuthenticationUserRegistrationService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Common/IAuthenticationUserRegistrationService.cs",
                         "line":  4
                     },
                     {
@@ -5870,13 +6402,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Authentication/Common/SecurityTokenGenerator.cs",
                         "line":  5
-                    },
-                    {
-                        "name":  "AuthenticationMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Mappings/AuthenticationMappings.cs",
-                        "line":  7
                     },
                     {
                         "name":  "AdminSsoStartModel",
@@ -5911,28 +6436,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Authentication/Services/AuthenticationTokenService.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "AuthenticationUserLookupService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Services/AuthenticationUserLookupService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "AuthenticationUserMutationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Services/AuthenticationUserMutationService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "AuthenticationUserRegistrationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Services/AuthenticationUserRegistrationService.cs",
-                        "line":  7
+                        "line":  12
                     },
                     {
                         "name":  "EmailSender",
@@ -5946,7 +6450,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Authentication/Services/InitialAdminBootstrapService.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "ParsedUserAgent",
@@ -5960,41 +6464,6 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Authentication/Services/UserAgents/UserAgentParser.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ICommand",
-                        "kind":  "interface",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Common/Abstractions/Messaging/ICommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ICommandHandler",
-                        "kind":  "interface",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Common/Abstractions/Messaging/ICommandHandler.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IQuery",
-                        "kind":  "interface",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Common/Abstractions/Messaging/IQuery.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IQueryHandler",
-                        "kind":  "interface",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Common/Abstractions/Messaging/IQueryHandler.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IUserRequest",
-                        "kind":  "interface",
-                        "role":  "Request",
-                        "path":  "FoodDiary.Application/Common/Abstractions/Messaging/IUserRequest.cs",
                         "line":  2
                     },
                     {
@@ -6068,13 +6537,6 @@
                         "line":  5
                     },
                     {
-                        "name":  "UserIdParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Validation/UserIdParser.cs",
-                        "line":  6
-                    },
-                    {
                         "name":  "CreateConsumptionCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -6121,7 +6583,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Consumptions/Commands/DeleteConsumption/DeleteConsumptionCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "RepeatMealCommand",
@@ -6338,7 +6800,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionById/GetConsumptionByIdQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetConsumptionsQuery",
@@ -6352,7 +6814,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptions/GetConsumptionsQueryHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "GetConsumptionsOverviewQuery",
@@ -6366,7 +6828,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionsOverview/GetConsumptionsOverviewQueryHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "GetConsumptionsOverviewQueryValidator",
@@ -6492,7 +6954,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/ContentReports/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "CreateContentReportCommandValidator",
@@ -6569,7 +7031,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "CreateCycleCommandValidator",
@@ -6611,7 +7073,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "UpsertCycleDayCommandValidator",
@@ -6632,7 +7094,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
-                        "line":  16
+                        "line":  15
                     },
                     {
                         "name":  "UpsertCycleFactorCommandValidator",
@@ -6723,7 +7185,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Cycles/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetCycleNutritionSummaryQuery",
@@ -6737,7 +7199,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetCycleNutritionSummaryQueryValidator",
@@ -6786,7 +7248,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetDailyAdviceQueryValidator",
@@ -7059,7 +7521,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                        "line":  13
+                        "line":  11
                     },
                     {
                         "name":  "DependencyInjection",
@@ -7094,7 +7556,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
-                        "line":  18
+                        "line":  17
                     },
                     {
                         "name":  "AcceptInvitationCommandValidator",
@@ -7115,7 +7577,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
-                        "line":  17
+                        "line":  16
                     },
                     {
                         "name":  "ArchiveRecommendationTemplateCommand",
@@ -7129,7 +7591,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "BulkCreateRecommendationsCommand",
@@ -7143,7 +7605,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "BulkCreateRecommendationsCommandValidator",
@@ -7164,7 +7626,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
-                        "line":  16
+                        "line":  15
                     },
                     {
                         "name":  "ChangeClientTaskStatusCommand",
@@ -7178,7 +7640,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
-                        "line":  17
+                        "line":  16
                     },
                     {
                         "name":  "ChangeClientTaskStatusCommandValidator",
@@ -7199,7 +7661,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "CreateClientTaskCommandValidator",
@@ -7241,7 +7703,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-                        "line":  19
+                        "line":  18
                     },
                     {
                         "name":  "CreateRecommendationCommentCommandValidator",
@@ -7262,7 +7724,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "CreateRecommendationTemplateCommandValidator",
@@ -7311,7 +7773,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/DisconnectDietologist/DisconnectDietologistCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "InviteDietologistCommand",
@@ -7360,7 +7822,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "SetAttentionSignalStateCommand",
@@ -7374,7 +7836,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "SetAttentionSignalStateCommandValidator",
@@ -7395,7 +7857,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "UpdateRecommendationTemplateCommand",
@@ -7409,7 +7871,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "UpdateRecommendationTemplateCommandValidator",
@@ -7619,7 +8081,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "GetClientDashboardQuery",
@@ -7633,7 +8095,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetClientDashboard/GetClientDashboardQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetClientGoalsQuery",
@@ -7647,7 +8109,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetClientTasksForDietologistQuery",
@@ -7661,7 +8123,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "GetInvitationByTokenQuery",
@@ -7675,7 +8137,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetInvitationForCurrentUserQuery",
@@ -7689,7 +8151,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetMyClientsQuery",
@@ -7703,7 +8165,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetMyClientTasksQuery",
@@ -7717,7 +8179,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetMyDietologistQuery",
@@ -7731,7 +8193,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetMyDietologist/GetMyDietologistQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetMyDietologistRelationshipQuery",
@@ -7745,7 +8207,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetMyRecommendationsQuery",
@@ -7759,7 +8221,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetMyRecommendations/GetMyRecommendationsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetRecommendationCommentsQuery",
@@ -7773,7 +8235,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetRecommendationsForClientQuery",
@@ -7787,7 +8249,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "SearchRecommendationTemplatesQuery",
@@ -7801,7 +8263,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "ClientTaskDueReminderProcessor",
@@ -7815,7 +8277,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Dietologist/Services/DietologistClientReadService.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "DietologistEmailSender",
@@ -7829,14 +8291,14 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Dietologist/Services/DietologistInvitationReadService.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "DietologistRecommendationReadService",
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Dietologist/Services/DietologistRecommendationReadService.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "DietologistUserContextService",
@@ -7913,7 +8375,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "CreateExerciseEntryCommandValidator",
@@ -7948,7 +8410,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "IExerciseEntryReadService",
@@ -7983,7 +8445,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetExerciseEntriesQueryValidator",
@@ -8025,7 +8487,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "ExportCycleQueryValidator",
@@ -8046,7 +8508,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "ExportDiaryQueryValidator",
@@ -8249,7 +8711,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Fasting/Common/FastingCurrentUserResolver.cs",
-                        "line":  9
+                        "line":  8
                     },
                     {
                         "name":  "IFastingReadService",
@@ -8340,7 +8802,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetCurrentFastingQueryValidator",
@@ -8361,7 +8823,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "GetFastingHistoryQueryValidator",
@@ -8382,7 +8844,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetFastingInsightsQueryValidator",
@@ -8403,7 +8865,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetFastingOverviewQueryValidator",
@@ -8424,7 +8886,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetFastingStatsQueryValidator",
@@ -8704,7 +9166,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "IsMealFavoriteQuery",
@@ -8718,7 +9180,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "FavoriteMealReadService",
@@ -8816,7 +9278,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "IsProductFavoriteQuery",
@@ -8830,7 +9292,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "FavoriteProductReadService",
@@ -8907,7 +9369,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "IsRecipeFavoriteQuery",
@@ -8921,7 +9383,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "FavoriteRecipeReadService",
@@ -9019,7 +9481,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Gamification/Queries/GetGamification/GetGamificationQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "AchievementAwardService",
@@ -9075,7 +9537,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "CreateHydrationEntryCommandValidator",
@@ -9166,7 +9628,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetHydrationDailyTotalQueryValidator",
@@ -9187,7 +9649,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "GetHydrationEntriesQueryValidator",
@@ -9229,7 +9691,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-                        "line":  10
+                        "line":  11
                     },
                     {
                         "name":  "GetImageUploadUrlCommand",
@@ -9299,7 +9761,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "ILessonAdministrationReadService",
@@ -9369,7 +9831,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetLessonsQuery",
@@ -9383,7 +9845,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "GetLessonsQueryValidator",
@@ -9425,7 +9887,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "AdoptMealPlanCommandValidator",
@@ -9446,7 +9908,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "GenerateShoppingListCommandValidator",
@@ -9509,7 +9971,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetMealPlanByIdQueryValidator",
@@ -9530,7 +9992,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetMealPlansQueryValidator",
@@ -9572,7 +10034,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "MarkNotificationReadCommand",
@@ -9600,7 +10062,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "ScheduleTestNotificationCommand",
@@ -9614,7 +10076,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "ScheduleTestNotificationCommandValidator",
@@ -9656,7 +10118,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "UpsertWebPushSubscriptionCommandValidator",
@@ -9677,13 +10139,6 @@
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Notifications/Common/INotificationPreferencesService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "INotificationUserAccessService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Common/INotificationUserAccessService.cs",
                         "line":  7
                     },
                     {
@@ -9852,7 +10307,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "NotificationCleanupService",
@@ -9880,21 +10335,14 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Notifications/Services/NotificationPreferencesService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "NotificationUserAccessService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Services/NotificationUserAccessService.cs",
-                        "line":  8
+                        "line":  10
                     },
                     {
                         "name":  "NotificationUserContextService",
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Notifications/Services/NotificationUserContextService.cs",
-                        "line":  7
+                        "line":  8
                     },
                     {
                         "name":  "NotificationWriter",
@@ -9915,7 +10363,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Notifications/Services/WebPushDeliveryAudienceService.cs",
-                        "line":  9
+                        "line":  10
                     },
                     {
                         "name":  "WebPushSubscriptionReadService",
@@ -10013,7 +10461,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "CreateProductValues",
@@ -10202,7 +10650,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "GetProductByIdQueryValidator",
@@ -10223,7 +10671,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "GetProductsQueryValidator",
@@ -10244,7 +10692,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                        "line":  18
+                        "line":  17
                     },
                     {
                         "name":  "GetProductsOverviewQueryValidator",
@@ -10265,7 +10713,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetRecentProductsQueryValidator",
@@ -10335,7 +10783,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-                        "line":  16
+                        "line":  15
                     },
                     {
                         "name":  "CreateRecipeCommentCommandValidator",
@@ -10356,7 +10804,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "UpdateRecipeCommentCommand",
@@ -10370,7 +10818,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "IRecipeCommentReadService",
@@ -10398,7 +10846,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "RecipeCommentReadService",
@@ -10419,7 +10867,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "IRecipeLikeReadService",
@@ -10447,7 +10895,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "RecipeLikeReadService",
@@ -10699,7 +11147,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetRecentRecipesQueryValidator",
@@ -10720,7 +11168,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "GetRecipeByIdQueryValidator",
@@ -10741,7 +11189,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "GetRecipesQueryValidator",
@@ -10762,7 +11210,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-                        "line":  16
+                        "line":  15
                     },
                     {
                         "name":  "GetRecipesOverviewQueryValidator",
@@ -10839,7 +11287,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "CreateShoppingListCommandValidator",
@@ -10881,7 +11329,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
-                        "line":  16
+                        "line":  15
                     },
                     {
                         "name":  "UpdateShoppingListCommandValidator",
@@ -10979,7 +11427,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "GetCurrentShoppingListQueryValidator",
@@ -11000,7 +11448,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetShoppingListByIdQueryValidator",
@@ -11021,7 +11469,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetShoppingListsQueryValidator",
@@ -11084,7 +11532,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "GetStatisticsQueryValidator",
@@ -11105,7 +11553,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
-                        "line":  17
+                        "line":  16
                     },
                     {
                         "name":  "GetStatisticsSummaryQueryValidator",
@@ -11154,7 +11602,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-                        "line":  17
+                        "line":  16
                     },
                     {
                         "name":  "GetTdeeInsightQueryValidator",
@@ -11196,7 +11644,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "UnlinkProductFromUsdaFoodCommand",
@@ -11210,7 +11658,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "IUsdaFoodReadService",
@@ -11245,7 +11693,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetMicronutrientsQuery",
@@ -11304,468 +11752,6 @@
                         "line":  6
                     },
                     {
-                        "name":  "AcceptAiConsentCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "AcceptAiConsentCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "ChangePasswordCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/ChangePassword/ChangePasswordCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ChangePasswordCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/ChangePassword/ChangePasswordCommandHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "ChangePasswordCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Commands/ChangePassword/ChangePasswordCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "DeleteUserCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/DeleteUser/DeleteUserCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeleteUserCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/DeleteUser/DeleteUserCommandHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "DeleteUserCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Commands/DeleteUser/DeleteUserCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "RevokeAiConsentCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/RevokeAiConsent/RevokeAiConsentCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "RevokeAiConsentCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/RevokeAiConsent/RevokeAiConsentCommandHandler.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "SetPasswordCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/SetPassword/SetPasswordCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "SetPasswordCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/SetPassword/SetPasswordCommandHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "SetPasswordCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Commands/SetPassword/SetPasswordCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpdateDesiredWaistCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateDesiredWaistCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "UpdateDesiredWaistCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateDesiredWeightCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateDesiredWeightCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "UpdateDesiredWeightCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommandValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateGoalsCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateGoalsCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateGoals/UpdateGoalsCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "UpdateGoalsCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateGoals/UpdateGoalsCommandValidator.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "UpdateUserCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateUserCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                        "line":  17
-                    },
-                    {
-                        "name":  "UpdateUserCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpdateUserAppearanceCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateUserAppearanceCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "UpdateUserAppearanceCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CurrentUserAccessPolicy",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Common/CurrentUserAccessPolicy.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CurrentUserAccessResolver",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Common/CurrentUserAccessResolver.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "IProfileDietologistReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/IProfileDietologistReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IProfileNotificationReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/IProfileNotificationReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IProfileOverviewReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/IProfileOverviewReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IUserAdministrationReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/IUserAdministrationReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IUserAdministrationService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/IUserAdministrationService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IUserContextService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/IUserContextService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "IUserIdentityMutationService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/IUserIdentityMutationService.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UserAppearancePreferences",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Common/UserAppearancePreferences.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "UserAppearancePreferencesParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Common/UserAppearancePreferencesParser.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UserContextService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Common/UserContextService.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "UserPreferenceCodeParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Common/UserPreferenceCodeParser.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UserMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Users/Mappings/UserMappings.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetDesiredWaistQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Users/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetDesiredWaistQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Users/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetDesiredWaistQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Queries/GetDesiredWaist/GetDesiredWaistQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetDesiredWeightQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Users/Queries/GetDesiredWeight/GetDesiredWeightQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetDesiredWeightQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Users/Queries/GetDesiredWeight/GetDesiredWeightQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetDesiredWeightQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Queries/GetDesiredWeight/GetDesiredWeightQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetProfileOverviewQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Users/Queries/GetProfileOverview/GetProfileOverviewQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetProfileOverviewQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Users/Queries/GetProfileOverview/GetProfileOverviewQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetProfileOverviewQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Queries/GetProfileOverview/GetProfileOverviewQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetUserByIdQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Users/Queries/GetUserById/GetUserByIdQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetUserByIdQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Users/Queries/GetUserById/GetUserByIdQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetUserByIdQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Queries/GetUserById/GetUserByIdQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetUserGoalsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Users/Queries/GetUserGoals/GetUserGoalsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetUserGoalsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Users/Queries/GetUserGoals/GetUserGoalsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetUserGoalsQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Users/Queries/GetUserGoals/GetUserGoalsQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetWaistGoalHistoryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWaistGoalHistoryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Users/Queries/GetWaistGoalHistory/GetWaistGoalHistoryQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetWeightGoalHistoryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWeightGoalHistoryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "ProfileOverviewReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Services/ProfileOverviewReadService.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "UserAdministrationReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Services/UserAdministrationReadService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "UserAdministrationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Services/UserAdministrationService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "UserAuthenticationIdentityService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Services/UserAuthenticationIdentityService.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "UserIdentityMutationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Users/Services/UserIdentityMutationService.cs",
-                        "line":  6
-                    },
-                    {
                         "name":  "CreateWaistEntryCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -11777,7 +11763,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "CreateWaistEntryCommandValidator",
@@ -11875,7 +11861,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetLatestWaistEntryQueryValidator",
@@ -11896,7 +11882,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "GetWaistEntriesQueryValidator",
@@ -11917,7 +11903,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "GetWaistSummariesQuery",
@@ -11931,7 +11917,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetWaistSummariesQueryValidator",
@@ -11959,7 +11945,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "DisconnectWearableCommand",
@@ -11973,7 +11959,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "SyncWearableDataCommand",
@@ -11987,7 +11973,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-                        "line":  14
+                        "line":  13
                     },
                     {
                         "name":  "IWearableReadService",
@@ -12015,7 +12001,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetWearableConnectionsQuery",
@@ -12029,7 +12015,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetWearableDailySummaryQuery",
@@ -12043,7 +12029,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "WearableReadService",
@@ -12225,7 +12211,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "CreateWeightEntryCommandValidator",
@@ -12323,7 +12309,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "GetLatestWeightEntryQueryValidator",
@@ -12344,7 +12330,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "GetWeightEntriesQueryValidator",
@@ -12365,7 +12351,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "GetWeightSummariesQuery",
@@ -12379,7 +12365,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "GetWeightSummariesQueryValidator",
@@ -15837,7 +15823,7 @@
                         "kind":  "class",
                         "role":  "Repository",
                         "path":  "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "UserRoleCatalogService",
@@ -16061,7 +16047,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  330
+                        "line":  332
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16418,7 +16404,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  40
+                        "line":  42
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20205,7 +20191,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  17
+                        "line":  18
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22275,13 +22261,6 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
-                                         "interface":  "IAdminImpersonationUserService",
-                                         "interfacePath":  "FoodDiary.Application/Admin/Common/IAdminImpersonationUserService.cs",
-                                         "implementation":  "AdminImpersonationUserService",
-                                         "implementationPath":  "FoodDiary.Application/Admin/Services/AdminImpersonationUserService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
                                          "interface":  "IAdminSsoService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Authentication/Abstractions/IAdminSsoService.cs",
                                          "implementation":  "AdminSsoService",
@@ -22293,13 +22272,6 @@
                                          "interfacePath":  "FoodDiary.Application/Admin/Common/IAdminUserLoginReadService.cs",
                                          "implementation":  "AdminUserLoginReadService",
                                          "implementationPath":  "FoodDiary.Application/Admin/Services/AdminUserLoginReadService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
-                                         "interface":  "IAdminUserManagementService",
-                                         "interfacePath":  "FoodDiary.Application/Admin/Common/IAdminUserManagementService.cs",
-                                         "implementation":  "AdminUserManagementService",
-                                         "implementationPath":  "FoodDiary.Application/Admin/Services/AdminUserManagementService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22387,27 +22359,6 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
-                                         "interface":  "IAuthenticationUserLookupService",
-                                         "interfacePath":  "FoodDiary.Application/Authentication/Common/IAuthenticationUserLookupService.cs",
-                                         "implementation":  "AuthenticationUserLookupService",
-                                         "implementationPath":  "FoodDiary.Application/Authentication/Services/AuthenticationUserLookupService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
-                                         "interface":  "IAuthenticationUserMutationService",
-                                         "interfacePath":  "FoodDiary.Application/Authentication/Common/IAuthenticationUserMutationService.cs",
-                                         "implementation":  "AuthenticationUserMutationService",
-                                         "implementationPath":  "FoodDiary.Application/Authentication/Services/AuthenticationUserMutationService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
-                                         "interface":  "IAuthenticationUserRegistrationService",
-                                         "interfacePath":  "FoodDiary.Application/Authentication/Common/IAuthenticationUserRegistrationService.cs",
-                                         "implementation":  "AuthenticationUserRegistrationService",
-                                         "implementationPath":  "FoodDiary.Application/Authentication/Services/AuthenticationUserRegistrationService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
                                          "interface":  "IBillingOverviewReadService",
                                          "interfacePath":  "FoodDiary.Application.Billing/Common/IBillingOverviewReadService.cs",
                                          "implementation":  "BillingOverviewReadService",
@@ -22447,13 +22398,6 @@
                                          "interfacePath":  "FoodDiary.Application.Billing/Common/IBillingUserContextService.cs",
                                          "implementation":  "BillingUserContextService",
                                          "implementationPath":  "FoodDiary.Application.Billing/Services/BillingUserContextService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
-                                         "interface":  "IBillingUserLookupService",
-                                         "interfacePath":  "FoodDiary.Application.Billing/Common/IBillingUserLookupService.cs",
-                                         "implementation":  "BillingUserLookupService",
-                                         "implementationPath":  "FoodDiary.Application.Billing/Services/BillingUserLookupService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23241,13 +23185,6 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
-                                         "interface":  "INotificationUserAccessService",
-                                         "interfacePath":  "FoodDiary.Application/Notifications/Common/INotificationUserAccessService.cs",
-                                         "implementation":  "NotificationUserAccessService",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/NotificationUserAccessService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
                                          "interface":  "INotificationUserContextService",
                                          "interfacePath":  "FoodDiary.Application/Notifications/Common/INotificationUserContextService.cs",
                                          "implementation":  "NotificationUserContextService",
@@ -23361,9 +23298,9 @@
                                      },
                                      {
                                          "interface":  "IProfileOverviewReadService",
-                                         "interfacePath":  "FoodDiary.Application/Users/Common/IProfileOverviewReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Users/Common/IProfileOverviewReadService.cs",
                                          "implementation":  "ProfileOverviewReadService",
-                                         "implementationPath":  "FoodDiary.Application/Users/Services/ProfileOverviewReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Users/Services/ProfileOverviewReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23598,17 +23535,17 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
-                                         "interface":  "IUserAdministrationReadService",
-                                         "interfacePath":  "FoodDiary.Application/Users/Common/IUserAdministrationReadService.cs",
-                                         "implementation":  "UserAdministrationReadService",
-                                         "implementationPath":  "FoodDiary.Application/Users/Services/UserAdministrationReadService.cs",
+                                         "interface":  "IUserAdministrationMutationService",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationMutationService.cs",
+                                         "implementation":  "UserAdministrationMutationService",
+                                         "implementationPath":  "FoodDiary.Application.Users/Services/UserAdministrationMutationService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
-                                         "interface":  "IUserAdministrationService",
-                                         "interfacePath":  "FoodDiary.Application/Users/Common/IUserAdministrationService.cs",
-                                         "implementation":  "UserAdministrationService",
-                                         "implementationPath":  "FoodDiary.Application/Users/Services/UserAdministrationService.cs",
+                                         "interface":  "IUserAdministrationReadService",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Users/Common/IUserAdministrationReadService.cs",
+                                         "implementation":  "UserAdministrationReadService",
+                                         "implementationPath":  "FoodDiary.Application.Users/Services/UserAdministrationReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23622,7 +23559,21 @@
                                          "interface":  "IUserAuthenticationIdentityService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs",
                                          "implementation":  "UserAuthenticationIdentityService",
-                                         "implementationPath":  "FoodDiary.Application/Users/Services/UserAuthenticationIdentityService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Users/Services/UserAuthenticationIdentityService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IUserAuthenticationRegistrationService",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationRegistrationService.cs",
+                                         "implementation":  "UserAuthenticationRegistrationService",
+                                         "implementationPath":  "FoodDiary.Application.Users/Services/UserAuthenticationRegistrationService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IUserBillingService",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Users/Common/IUserBillingService.cs",
+                                         "implementation":  "UserBillingService",
+                                         "implementationPath":  "FoodDiary.Application.Users/Services/UserBillingService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23634,9 +23585,9 @@
                                      },
                                      {
                                          "interface":  "IUserContextService",
-                                         "interfacePath":  "FoodDiary.Application/Users/Common/IUserContextService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Users/Common/IUserContextService.cs",
                                          "implementation":  "UserContextService",
-                                         "implementationPath":  "FoodDiary.Application/Users/Common/UserContextService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Users/Common/UserContextService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23655,9 +23606,9 @@
                                      },
                                      {
                                          "interface":  "IUserIdentityMutationService",
-                                         "interfacePath":  "FoodDiary.Application/Users/Common/IUserIdentityMutationService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Users/Common/IUserIdentityMutationService.cs",
                                          "implementation":  "UserIdentityMutationService",
-                                         "implementationPath":  "FoodDiary.Application/Users/Services/UserIdentityMutationService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Users/Services/UserIdentityMutationService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23665,6 +23616,13 @@
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Authentication/Common/IUserLoginEventRepository.cs",
                                          "implementation":  "UserLoginEventRepository",
                                          "implementationPath":  "FoodDiary.Infrastructure/Persistence/Users/UserLoginEventRepository.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IUserNotificationProfileService",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Users/Common/IUserNotificationProfileService.cs",
+                                         "implementation":  "UserNotificationProfileService",
+                                         "implementationPath":  "FoodDiary.Application.Users/Services/UserNotificationProfileService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23838,18 +23796,11 @@
                                                  "line":  19
                                              },
                                              {
-                                                 "service":  "IBillingUserLookupService",
-                                                 "implementation":  "BillingUserLookupService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application.Billing/DependencyInjection.cs",
-                                                 "line":  20
-                                             },
-                                             {
                                                  "service":  "IBillingWebhookInboxService",
                                                  "implementation":  "BillingWebhookInboxService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application.Billing/DependencyInjection.cs",
-                                                 "line":  27
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IMarketingAttributionCleanupService",
@@ -23866,151 +23817,193 @@
                                                  "line":  19
                                              },
                                              {
-                                                 "service":  "IAdminImpersonationUserService",
-                                                 "implementation":  "AdminImpersonationUserService",
+                                                 "service":  "IUserAdministrationMutationService",
+                                                 "implementation":  "UserAdministrationMutationService",
                                                  "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
+                                                 "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
+                                                 "line":  16
+                                             },
+                                             {
+                                                 "service":  "IUserAdministrationReadService",
+                                                 "implementation":  "UserAdministrationReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
+                                                 "service":  "IUserIdentityMutationService",
+                                                 "implementation":  "UserIdentityMutationService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
+                                                 "line":  18
+                                             },
+                                             {
+                                                 "service":  "IUserAuthenticationIdentityService",
+                                                 "implementation":  "UserAuthenticationIdentityService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
                                                  "line":  19
+                                             },
+                                             {
+                                                 "service":  "IUserAuthenticationRegistrationService",
+                                                 "implementation":  "UserAuthenticationRegistrationService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
+                                                 "line":  20
+                                             },
+                                             {
+                                                 "service":  "IUserBillingService",
+                                                 "implementation":  "UserBillingService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
+                                                 "line":  21
+                                             },
+                                             {
+                                                 "service":  "IUserNotificationProfileService",
+                                                 "implementation":  "UserNotificationProfileService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
+                                                 "line":  22
+                                             },
+                                             {
+                                                 "service":  "IProfileOverviewReadService",
+                                                 "implementation":  "ProfileOverviewReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IAdminAiUsageReadService",
                                                  "implementation":  "AdminAiUsageReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  20
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IAdminAuditReadService",
                                                  "implementation":  "AdminAuditReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  21
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IAdminBillingReadService",
                                                  "implementation":  "AdminBillingReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  22
+                                                 "line":  21
                                              },
                                              {
                                                  "service":  "IAdminContentReadService",
                                                  "implementation":  "AdminContentReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  23
+                                                 "line":  22
                                              },
                                              {
                                                  "service":  "IAdminDashboardReadService",
                                                  "implementation":  "AdminDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  24
-                                             },
-                                             {
-                                                 "service":  "IAdminUserManagementService",
-                                                 "implementation":  "AdminUserManagementService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  25
+                                                 "line":  23
                                              },
                                              {
                                                  "service":  "IAdminUserReadService",
                                                  "implementation":  "AdminUserReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  26
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IAdminUserLoginReadService",
                                                  "implementation":  "AdminUserLoginReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  27
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "IAiUserContextService",
                                                  "implementation":  "AiUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  28
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IAiAdministrationReadService",
                                                  "implementation":  "AiAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  29
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IAiPromptAdministrationService",
                                                  "implementation":  "AiPromptAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  30
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "IUserAiUsageSummaryReadService",
                                                  "implementation":  "UserAiUsageSummaryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  31
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "IContentReportAdministrationService",
                                                  "implementation":  "ContentReportAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  32
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "IContentReportAdministrationReadService",
                                                  "implementation":  "ContentReportAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  33
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "IDailyAdviceReadService",
                                                  "implementation":  "DailyAdviceReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  34
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "IEmailTemplateAdministrationService",
                                                  "implementation":  "EmailTemplateAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  35
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IEmailTemplateAdministrationReadService",
                                                  "implementation":  "EmailTemplateAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  36
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "ILessonReadService",
                                                  "implementation":  "LessonReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  37
+                                                 "line":  35
                                              },
                                              {
                                                  "service":  "ILessonAdministrationService",
                                                  "implementation":  "LessonAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  38
+                                                 "line":  36
                                              },
                                              {
                                                  "service":  "ILessonAdministrationReadService",
                                                  "implementation":  "LessonAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  39
+                                                 "line":  37
                                              },
                                              {
                                                  "service":  "IPostCommitActionQueue",
@@ -24174,137 +24167,81 @@
                                                  "line":  58
                                              },
                                              {
-                                                 "service":  "IAuthenticationUserLookupService",
-                                                 "implementation":  "AuthenticationUserLookupService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  16
-                                             },
-                                             {
                                                  "service":  "IAuthenticationLoginEventCleanupService",
                                                  "implementation":  "AuthenticationLoginEventCleanupService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  17
+                                                 "line":  14
                                              },
                                              {
                                                  "service":  "IAuthenticationLoginEventReadService",
                                                  "implementation":  "AuthenticationLoginEventReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  18
-                                             },
-                                             {
-                                                 "service":  "IAuthenticationUserMutationService",
-                                                 "implementation":  "AuthenticationUserMutationService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  19
-                                             },
-                                             {
-                                                 "service":  "IAuthenticationUserRegistrationService",
-                                                 "implementation":  "AuthenticationUserRegistrationService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  20
+                                                 "line":  15
                                              },
                                              {
                                                  "service":  "IAuthenticationTokenService",
                                                  "implementation":  "AuthenticationTokenService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  21
+                                                 "line":  16
                                              },
                                              {
                                                  "service":  "IInitialAdminBootstrapService",
                                                  "implementation":  "InitialAdminBootstrapService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  22
-                                             },
-                                             {
-                                                 "service":  "IUserAdministrationService",
-                                                 "implementation":  "UserAdministrationService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  23
-                                             },
-                                             {
-                                                 "service":  "IUserAdministrationReadService",
-                                                 "implementation":  "UserAdministrationReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  24
-                                             },
-                                             {
-                                                 "service":  "IUserIdentityMutationService",
-                                                 "implementation":  "UserIdentityMutationService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  25
-                                             },
-                                             {
-                                                 "service":  "IUserAuthenticationIdentityService",
-                                                 "implementation":  "UserAuthenticationIdentityService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  26
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IDietologistClientReadService",
                                                  "implementation":  "DietologistClientReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  27
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IDietologistInvitationReadService",
                                                  "implementation":  "DietologistInvitationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  28
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IDietologistRecommendationReadService",
                                                  "implementation":  "DietologistRecommendationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  31
+                                                 "line":  22
                                              },
                                              {
                                                  "service":  "IRecommendationDiscussionReadService",
                                                  "implementation":  "RecommendationDiscussionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  32
+                                                 "line":  23
                                              },
                                              {
                                                  "service":  "IRecommendationTemplateReadService",
                                                  "implementation":  "RecommendationTemplateReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  33
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IDietologistUserLookupService",
                                                  "implementation":  "DietologistUserLookupService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  34
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "IDietologistUserContextService",
                                                  "implementation":  "DietologistUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  35
-                                             },
-                                             {
-                                                 "service":  "IProfileOverviewReadService",
-                                                 "implementation":  "ProfileOverviewReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  47
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IImageAssetAccessService",
@@ -24335,81 +24272,74 @@
                                                  "line":  22
                                              },
                                              {
-                                                 "service":  "INotificationUserAccessService",
-                                                 "implementation":  "NotificationUserAccessService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  25
-                                             },
-                                             {
                                                  "service":  "INotificationPreferencesService",
                                                  "implementation":  "NotificationPreferencesService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  26
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "INotificationFeedReadService",
                                                  "implementation":  "NotificationFeedReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  27
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IWebPushSubscriptionReadService",
                                                  "implementation":  "WebPushSubscriptionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  28
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IWebPushDeliveryAudienceService",
                                                  "implementation":  "WebPushDeliveryAudienceService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  31
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "INotificationUserContextService",
                                                  "implementation":  "NotificationUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  32
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "INotificationWriter",
                                                  "implementation":  "NotificationWriter",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  33
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "ITestNotificationDeliveryDispatcher",
                                                  "implementation":  "TestNotificationDeliveryDispatcher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  34
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IOpenAiFoodService",
                                                  "implementation":  "OpenAiFoodService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  35
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IEmailSender",
                                                  "implementation":  "EmailSender",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  36
+                                                 "line":  35
                                              },
                                              {
                                                  "service":  "IDietologistEmailSender",
                                                  "implementation":  "DietologistEmailSender",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  37
+                                                 "line":  36
                                              },
                                              {
                                                  "service":  "ICycleReadService",
@@ -25109,70 +25039,70 @@
                                                  "implementation":  "UserRoleCatalogService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  20
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IUserRoleMembershipService",
                                                  "implementation":  "UserRoleMembershipService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  21
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IUserCurrentWeightProvider",
                                                  "implementation":  "UserCurrentWeightProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  22
+                                                 "line":  21
                                              },
                                              {
                                                  "service":  "IUserCurrentWaistProvider",
                                                  "implementation":  "UserCurrentWaistProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  23
+                                                 "line":  22
                                              },
                                              {
                                                  "service":  "IUserLoginEventRepository",
                                                  "implementation":  "UserLoginEventRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  25
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IRefreshTokenSessionRepository",
                                                  "implementation":  "RefreshTokenSessionRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  29
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "IAdminBillingRepository",
                                                  "implementation":  "AdminBillingRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  33
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "IAdminImpersonationSessionRepository",
                                                  "implementation":  "AdminImpersonationSessionRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  35
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IAdminUserRoleAuditRepository",
                                                  "implementation":  "AdminUserRoleAuditRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  38
+                                                 "line":  37
                                              },
                                              {
                                                  "service":  "IEmailTemplateRepository",
                                                  "implementation":  "EmailTemplateRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
-                                                 "line":  40
+                                                 "line":  39
                                              },
                                              {
                                                  "service":  "IWearableConnectionRepository",
@@ -25207,14 +25137,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  60
+                                                 "line":  62
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  61
+                                                 "line":  63
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25305,7 +25235,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  32
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25361,35 +25291,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  28
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  40
+                                                 "line":  42
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  41
+                                                 "line":  43
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  42
+                                                 "line":  44
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  65
+                                                 "line":  67
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

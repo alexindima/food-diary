@@ -317,7 +317,7 @@ public partial class BillingFeatureTests {
             subscriptionRepository,
             new FixedDateTimeProvider(Now));
 
-        await service.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium: false, CancellationToken.None);
+        await service.EnsurePremiumRoleAsync(CreateBillingProfile(user), subscription, shouldHavePremium: false, CancellationToken.None);
 
         Assert.False(subscription.PremiumRoleManagedByBilling);
         Assert.Equal(1, subscriptionRepository.UpdateCount);
@@ -340,7 +340,7 @@ public partial class BillingFeatureTests {
             subscriptionRepository,
             new FixedDateTimeProvider(Now));
 
-        await service.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium: true, CancellationToken.None);
+        await service.EnsurePremiumRoleAsync(CreateBillingProfile(user), subscription, shouldHavePremium: true, CancellationToken.None);
 
         Assert.True(user.HasRole(RoleNames.Premium));
         Assert.True(subscription.PremiumRoleManagedByBilling);

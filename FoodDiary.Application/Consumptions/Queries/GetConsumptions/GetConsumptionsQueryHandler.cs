@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Time;
@@ -7,7 +7,6 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Enums;
 

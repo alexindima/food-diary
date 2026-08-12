@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Authentication, Dashboard, Notifications, Users
+- Business-module dependencies: Authentication, Dashboard, Notifications
 - Abstraction-contract dependencies: Audit, Authentication, Email, Notifications, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api

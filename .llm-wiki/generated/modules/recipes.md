@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: FavoriteRecipes, Images, Nutrition, RecentItems, Users
+- Business-module dependencies: FavoriteRecipes, Images, Nutrition, RecentItems
 - Abstraction-contract dependencies: Images, Products, RecentItems, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Presentation.Api

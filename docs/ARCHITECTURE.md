@@ -77,7 +77,7 @@ Business-module ownership inside the primary backend is defined in `docs/backend
 
 Application service composition follows the same ownership model. Root `FoodDiary.Application/DependencyInjection.cs` contains mediator/validation/cross-cutting bootstrap and delegates registrations for the features that remain in the core assembly to module-area partials (`Administration`, `Identity`, `Food`, `Tracking`, and `Notifications`). Executable composition roots register extracted modules explicitly. Architecture tests prevent feature registrations from regrowing in the root aggregator.
 
-`FoodDiary.Application.Billing` and `FoodDiary.Application.Marketing` are physically extracted modules. They reference application-facing abstractions, domain where required, and the shared mediator, never the core `FoodDiary.Application` assembly. Transactional commands shared by extracted modules implement the abstraction-level `ITransactionalCommand` marker so the core command transaction pipeline remains applicable without reversing the project dependency.
+`FoodDiary.Application.Billing`, `FoodDiary.Application.Marketing`, and `FoodDiary.Application.Users` are physically extracted modules. They reference application-facing abstractions, domain where required, and the shared mediator, never the core `FoodDiary.Application` assembly. Shared command/query contracts and the `ITransactionalCommand` marker live in `FoodDiary.Application.Abstractions`, so the core mediator pipeline remains applicable without reversing project dependencies.
 
 Application read paths should use the narrowest contract that matches the behavior:
 - `*ReadModelRepository` for projection reads, counters, summaries, and API/UI read models.

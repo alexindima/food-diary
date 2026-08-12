@@ -13,9 +13,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task RegisterHandler_CreatesUserIssuesTokensAndSendsVerificationEmail() {
         var sender = new StubEmailSender();
         var tokens = new StubAuthenticationTokenService();
+        var repository = new StubUserRepository();
         var handler = new RegisterCommandHandler(
-            new StubUserRepository(),
-            new StubPasswordHasher(),
+            CreateUserAuthenticationRegistrationService(repository),
             sender,
             new StubDateTimeProvider(),
             tokens);
@@ -29,8 +29,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
         Assert.Equal("refresh", result.Value.RefreshToken);
         Assert.Equal("new@example.com", sender.LastEmailVerification?.ToEmail);
         Assert.Equal("https://client.test", sender.LastEmailVerification?.ClientOrigin);
-        Assert.Equal("ru", tokens.LastUser?.Language);
-        Assert.NotNull(tokens.LastUser?.EmailConfirmationTokenHash);
+        Assert.Null(tokens.LastUser);
+        Assert.Equal("ru", tokens.LastPrincipal?.User.Language);
+        User registeredUser = Assert.Single(repository.Users);
+        Assert.NotNull(registeredUser.EmailConfirmationTokenHash);
     }
 
     [Fact]
@@ -39,8 +41,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var repository = new StubUserRepository(existingUser);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new RegisterCommandHandler(
-            repository,
-            new StubPasswordHasher(),
+            CreateUserAuthenticationRegistrationService(repository),
             new StubEmailSender(),
             new StubDateTimeProvider(),
             tokenService);
@@ -53,6 +54,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         Assert.Equal("Validation.Conflict", result.Error.Code);
         Assert.Equal(0, repository.AddCallCount);
         Assert.Null(tokenService.LastUser);
+        Assert.Null(tokenService.LastPrincipal);
     }
 
     [Fact]
@@ -62,8 +64,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var repository = new StubUserRepository(deletedUser);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new RegisterCommandHandler(
-            repository,
-            new StubPasswordHasher(),
+            CreateUserAuthenticationRegistrationService(repository),
             new StubEmailSender(),
             new StubDateTimeProvider(),
             tokenService);
@@ -76,13 +77,13 @@ public sealed partial class AuthenticationCommandHandlerTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Equal(0, repository.AddCallCount);
         Assert.Null(tokenService.LastUser);
+        Assert.Null(tokenService.LastPrincipal);
     }
 
     [Fact]
     public async Task RegisterHandler_WhenVerificationEmailEnqueueFails_Throws() {
         var handler = new RegisterCommandHandler(
-            new StubUserRepository(),
-            new StubPasswordHasher(),
+            CreateUserAuthenticationRegistrationService(new StubUserRepository()),
             new StubEmailSender(throwOnEmailVerification: true),
             new StubDateTimeProvider(),
             new StubAuthenticationTokenService());

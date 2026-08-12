@@ -1,18 +1,18 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Models;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Services;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 
 public sealed class TelegramLoginWidgetCommandHandler(
-    IAuthenticationUserLookupService userLookupService,
+    IUserAuthenticationIdentityService userIdentityService,
+    TimeProvider dateTimeProvider,
     ITelegramLoginWidgetValidator telegramLoginWidgetValidator,
     ITelegramAssertionReplayGuard replayGuard,
     IAuthenticationTokenService authenticationTokenService) : ICommandHandler<TelegramLoginWidgetCommand, Result<AuthenticationModel>> {
@@ -38,14 +38,20 @@ public sealed class TelegramLoginWidgetCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.TelegramAssertionAlreadyUsed);
         }
 
-        User? user = await userLookupService.GetByTelegramUserIdAsync(validationResult.Value.UserId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
-        if (accessError is not null) {
-            return Result.Failure<AuthenticationModel>(user is null ? Errors.Authentication.TelegramNotLinked : accessError);
+        Result<UserAuthenticationPrincipalModel> authenticationResult = await userIdentityService
+            .AuthenticateTelegramAsync(
+                validationResult.Value.UserId,
+                dateTimeProvider.GetUtcNow().UtcDateTime,
+                cancellationToken)
+            .ConfigureAwait(false);
+        if (authenticationResult.IsFailure) {
+            return Result.Failure<AuthenticationModel>(authenticationResult.Error);
         }
 
-        User currentUser = user!;
-        IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
-        return Result.Success(currentUser.ToAuthenticationModel(tokens));
+        UserAuthenticationPrincipalModel principal = authenticationResult.Value;
+        IssuedAuthenticationTokens tokens = await authenticationTokenService
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext)
+            .ConfigureAwait(false);
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
     }
 }

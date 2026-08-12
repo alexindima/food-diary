@@ -1,4 +1,6 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
 using FoodDiary.Application.Notifications.Services;
@@ -7,6 +9,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Integrations.Services;
+using FoodDiary.Results;
 using Microsoft.Extensions.Logging.Abstractions;
 using WebPush;
 using WebPushOptions = FoodDiary.Integrations.Options.WebPushOptions;
@@ -256,7 +259,7 @@ public sealed class WebPushNotificationSenderTests {
             FastingPushNotificationsEnabled: fastingEnabled,
             SocialPushNotificationsEnabled: socialEnabled));
 
-        bool result = InvokeAudiencePrivateStatic<bool>("IsCategoryEnabled", user, notificationType);
+        bool result = InvokeAudiencePrivateStatic<bool>("IsCategoryEnabled", ToNotificationProfile(user), notificationType);
 
         Assert.Equal(expected, result);
     }
@@ -390,28 +393,38 @@ public sealed class WebPushNotificationSenderTests {
     private static WebPushDeliveryAudienceService CreateAudienceService(
         IWebPushSubscriptionRepository subscriptionRepository,
         IUserRepository userRepository) =>
-        new(subscriptionRepository, subscriptionRepository, new UserDirectoryAdapter(userRepository));
+        new(subscriptionRepository, subscriptionRepository, new UserNotificationProfileAdapter(userRepository));
 
     [ExcludeFromCodeCoverage]
-    private sealed class UserDirectoryAdapter(IUserRepository repository) : IUserDirectoryService {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
-            repository.GetByEmailAsync(email, cancellationToken);
+    private sealed class UserNotificationProfileAdapter(IUserRepository repository) : IUserNotificationProfileService {
+        public async Task<Result<UserNotificationProfileModel>> GetAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            User? user = await repository.GetByIdAsync(userId, cancellationToken);
+            if (user is null) {
+                return Result.Failure<UserNotificationProfileModel>(Errors.Authentication.InvalidToken);
+            }
 
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-            repository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+            return Result.Success(ToNotificationProfile(user));
+        }
 
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-            repository.GetByIdAsync(id, cancellationToken);
-
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
-            repository.GetByIdIncludingDeletedAsync(id, cancellationToken);
-
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
-            repository.GetByTelegramUserIdAsync(telegramUserId, cancellationToken);
-
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
-            repository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
+        public Task<Result<UserNotificationProfileModel>> UpdatePreferencesAsync(
+            UserId userId,
+            UserPreferenceUpdate update,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
+
+    private static UserNotificationProfileModel ToNotificationProfile(User user) =>
+        new(
+            user.Id,
+            user.HasPassword,
+            user.Language,
+            user.PushNotificationsEnabled,
+            user.FastingPushNotificationsEnabled,
+            user.SocialPushNotificationsEnabled,
+            user.FastingCheckInReminderHours,
+            user.FastingCheckInFollowUpReminderHours);
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingSubscriptionRepository(IEnumerable<WebPushSubscription>? subscriptions = null) : IWebPushSubscriptionRepository {

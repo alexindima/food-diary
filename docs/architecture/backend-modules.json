@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 39,
-    "extractedModules": 2,
+    "folderModules": 38,
+    "extractedModules": 3,
     "totalModules": 41
   },
   "analysis": {
@@ -376,7 +376,7 @@
     },
     "Users": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
+      "physicalIsolation": "assembly",
       "enforcement": "explicit-boundary-tests",
       "ownedEntities": [
         "User",

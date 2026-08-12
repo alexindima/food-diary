@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  61,
+                    "dotnetProjects":  62,
                     "testProjects":  29,
                     "frontendProjects":  4,
                     "applicationModules":  39,
-                    "extractedApplicationModules":  2,
-                    "backendBusinessModules":  41,
+                    "extractedApplicationModules":  3,
+                    "backendBusinessModules":  42,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  43,
+                    "agentGuides":  44,
                     "documentationPages":  43
                 },
     "dotnet":  {
@@ -59,6 +59,7 @@
                                         "projectReferences":  [
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj",
                                                                   "Shared/FoodDiary.Domain.Primitives/FoodDiary.Domain.Primitives.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
                                                                   "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
                                                               ],
                                         "packageReferences":  [
@@ -110,6 +111,36 @@
                                                                   "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
                                                               ],
                                         "packageReferences":  [
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
+                                        "name":  "FoodDiary.Application.Users",
+                                        "assemblyName":  "FoodDiary.Application.Users",
+                                        "path":  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "FluentValidation",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "FluentValidation.DependencyInjectionExtensions",
+                                                                      "version":  null
+                                                                  },
                                                                   {
                                                                       "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
                                                                       "version":  null
@@ -270,6 +301,7 @@
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
+                                                                  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
                                                               ],
@@ -360,6 +392,7 @@
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
+                                                                  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
                                                                   "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
@@ -421,6 +454,7 @@
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
+                                                                  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj"
                                                               ],
                                         "packageReferences":  [
@@ -488,6 +522,7 @@
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
+                                                                  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
                                                                   "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
@@ -1536,6 +1571,7 @@
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
+                                                                  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj"
                                                               ],
@@ -2239,48 +2275,45 @@
                                                         "ContentReports",
                                                         "Email",
                                                         "Gamification",
-                                                        "Lessons",
-                                                        "Users"
+                                                        "Lessons"
                                                     ]
                                },
                                {
                                    "name":  "Ai",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "Authentication",
                                    "dependencies":  [
                                                         "Email",
-                                                        "Notifications",
-                                                        "Users"
+                                                        "Notifications"
                                                     ]
                                },
                                {
                                    "name":  "Consumptions",
                                    "dependencies":  [
                                                         "Images",
-                                                        "Nutrition",
-                                                        "Users"
+                                                        "Nutrition"
                                                     ]
                                },
                                {
                                    "name":  "ContentReports",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "Cycles",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "DailyAdvices",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
@@ -2294,7 +2327,6 @@
                                                         "Hydration",
                                                         "Statistics",
                                                         "Tdee",
-                                                        "Users",
                                                         "WaistEntries",
                                                         "WeightEntries"
                                                     ]
@@ -2304,8 +2336,7 @@
                                    "dependencies":  [
                                                         "Authentication",
                                                         "Dashboard",
-                                                        "Notifications",
-                                                        "Users"
+                                                        "Notifications"
                                                     ]
                                },
                                {
@@ -2317,54 +2348,50 @@
                                {
                                    "name":  "Exercises",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "Export",
                                    "dependencies":  [
                                                         "Consumptions",
-                                                        "Cycles",
-                                                        "Users"
+                                                        "Cycles"
                                                     ]
                                },
                                {
                                    "name":  "Fasting",
                                    "dependencies":  [
-                                                        "Notifications",
-                                                        "Users"
+                                                        "Notifications"
                                                     ]
                                },
                                {
                                    "name":  "FavoriteMeals",
                                    "dependencies":  [
-                                                        "Consumptions",
-                                                        "Users"
+                                                        "Consumptions"
                                                     ]
                                },
                                {
                                    "name":  "FavoriteProducts",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "FavoriteRecipes",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "Gamification",
                                    "dependencies":  [
-                                                        "Consumptions",
-                                                        "Users"
+                                                        "Consumptions"
                                                     ]
                                },
                                {
                                    "name":  "Hydration",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
@@ -2376,20 +2403,19 @@
                                {
                                    "name":  "Lessons",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "MealPlans",
                                    "dependencies":  [
-                                                        "ShoppingLists",
-                                                        "Users"
+                                                        "ShoppingLists"
                                                     ]
                                },
                                {
                                    "name":  "Notifications",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
@@ -2411,8 +2437,7 @@
                                                         "Images",
                                                         "OpenFoodFacts",
                                                         "RecentItems",
-                                                        "Usda",
-                                                        "Users"
+                                                        "Usda"
                                                     ]
                                },
                                {
@@ -2424,14 +2449,13 @@
                                {
                                    "name":  "RecipeComments",
                                    "dependencies":  [
-                                                        "Notifications",
-                                                        "Users"
+                                                        "Notifications"
                                                     ]
                                },
                                {
                                    "name":  "RecipeLikes",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
@@ -2440,20 +2464,18 @@
                                                         "FavoriteRecipes",
                                                         "Images",
                                                         "Nutrition",
-                                                        "RecentItems",
-                                                        "Users"
+                                                        "RecentItems"
                                                     ]
                                },
                                {
                                    "name":  "ShoppingLists",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "Statistics",
                                    "dependencies":  [
-                                                        "Users",
                                                         "WaistEntries",
                                                         "WeightEntries"
                                                     ]
@@ -2462,33 +2484,31 @@
                                    "name":  "Tdee",
                                    "dependencies":  [
                                                         "Exercises",
-                                                        "Users",
                                                         "WeightEntries"
                                                     ]
                                },
                                {
                                    "name":  "Usda",
                                    "dependencies":  [
-                                                        "Consumptions",
-                                                        "Users"
+                                                        "Consumptions"
                                                     ]
                                },
                                {
                                    "name":  "Users",
                                    "dependencies":  [
-                                                        "Images"
+
                                                     ]
                                },
                                {
                                    "name":  "WaistEntries",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
                                    "name":  "Wearables",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                },
                                {
@@ -2496,7 +2516,6 @@
                                    "dependencies":  [
                                                         "Consumptions",
                                                         "Hydration",
-                                                        "Users",
                                                         "WaistEntries",
                                                         "WeightEntries"
                                                     ]
@@ -2505,14 +2524,13 @@
                                    "name":  "WeeklyGoals",
                                    "dependencies":  [
                                                         "Consumptions",
-                                                        "Notifications",
-                                                        "Users"
+                                                        "Notifications"
                                                     ]
                                },
                                {
                                    "name":  "WeightEntries",
                                    "dependencies":  [
-                                                        "Users"
+
                                                     ]
                                }
                            ],
@@ -2524,6 +2542,10 @@
                                         {
                                             "name":  "Marketing",
                                             "project":  "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj"
+                                        },
+                                        {
+                                            "name":  "Users",
+                                            "project":  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj"
                                         }
                                     ],
     "http":  {
@@ -4488,6 +4510,7 @@
                                                  "FoodDiary.Application.Abstractions/AGENTS.md",
                                                  "FoodDiary.Application.Billing/AGENTS.md",
                                                  "FoodDiary.Application.Marketing/AGENTS.md",
+                                                 "FoodDiary.Application.Users/AGENTS.md",
                                                  "FoodDiary.Application/AGENTS.md",
                                                  "FoodDiary.Domain/AGENTS.md",
                                                  "FoodDiary.Infrastructure/AGENTS.md",

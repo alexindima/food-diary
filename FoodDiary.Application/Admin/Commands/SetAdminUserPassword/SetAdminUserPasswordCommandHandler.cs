@@ -1,16 +1,15 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Admin.Commands.SetAdminUserPassword;
 
 public sealed class SetAdminUserPasswordCommandHandler(
-    IAdminUserManagementService userManagementService,
-    IPasswordHasher passwordHasher,
+    IUserAdministrationMutationService userManagementService,
     IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
     TimeProvider dateTimeProvider)
     : ICommandHandler<SetAdminUserPasswordCommand, Result> {
@@ -22,18 +21,15 @@ public sealed class SetAdminUserPasswordCommandHandler(
             return Result.Failure(userIdResult.Error);
         }
 
-        Domain.Entities.Users.User? user = await userManagementService
-            .GetByIdIncludingDeletedAsync(userIdResult.Value, cancellationToken)
+        Result passwordResult = await userManagementService
+            .SetPasswordAsync(userIdResult.Value, command.NewPassword, cancellationToken)
             .ConfigureAwait(false);
-        if (user is null) {
-            return Result.Failure(Errors.User.NotFound(command.UserId));
+        if (passwordResult.IsFailure) {
+            return passwordResult;
         }
 
-        user.UpdatePassword(passwordHasher.Hash(command.NewPassword));
-
-        await userManagementService.UpdateAsync(user, [], cancellationToken).ConfigureAwait(false);
         await refreshTokenSessionRepository
-            .RevokeAllAsync(user.Id, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .RevokeAllAsync(userIdResult.Value, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
             .ConfigureAwait(false);
 
         return Result.Success();

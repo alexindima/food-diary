@@ -7,6 +7,7 @@ using FoodDiary.Results;
 using FluentValidation.Results;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Users.Services;
 
 namespace FoodDiary.Application.Tests.Admin;
 
@@ -27,8 +28,7 @@ public partial class AdminFeatureTests {
         User user = CreateUserWithRoles("password-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         var handler = new SetAdminUserPasswordCommandHandler(
-            userRepository,
-            new PrefixPasswordHasher(),
+            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
             TimeProvider.System);
 
@@ -47,8 +47,7 @@ public partial class AdminFeatureTests {
         var user = User.Create("google-user@example.com", "placeholder-hash", hasPassword: false);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         var handler = new SetAdminUserPasswordCommandHandler(
-            userRepository,
-            new PrefixPasswordHasher(),
+            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
             TimeProvider.System);
 
@@ -67,8 +66,7 @@ public partial class AdminFeatureTests {
         User user = CreateUserWithRoles("password-empty-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         var handler = new SetAdminUserPasswordCommandHandler(
-            userRepository,
-            new PrefixPasswordHasher(),
+            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
             TimeProvider.System);
 
@@ -86,8 +84,7 @@ public partial class AdminFeatureTests {
         User user = CreateUserWithRoles("password-missing-user@example.com", []);
         var userRepository = new InMemoryUserRepository(user, availableRoles: []);
         var handler = new SetAdminUserPasswordCommandHandler(
-            userRepository,
-            new PrefixPasswordHasher(),
+            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             Substitute.For<IRefreshTokenSessionWriteRepository>(),
             TimeProvider.System);
 
@@ -487,7 +484,7 @@ public partial class AdminFeatureTests {
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
         var handler = new UpdateAdminUserCommandHandler(
-            userRepository,
+            new UserAdministrationMutationService(userRepository, userRepository, userRepository, new PrefixPasswordHasher()),
             new NullAuditLogger(),
             new FixedDateTimeProvider(timestamp));
 

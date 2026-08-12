@@ -1,6 +1,6 @@
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Common;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Email.Common;
 using FoodDiary.Application.Admin.Models;

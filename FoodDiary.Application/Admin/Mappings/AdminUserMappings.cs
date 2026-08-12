@@ -1,67 +1,9 @@
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Admin.Mappings;
 
 public static class AdminUserMappings {
-    public static AdminUserModel ToAdminModel(this User user) {
-        string[] roles = [.. user.GetRoleNames()];
-
-        return new AdminUserModel(
-            user.Id.Value,
-            user.Email,
-            user.HasPassword,
-            user.Username,
-            user.FirstName,
-            user.LastName,
-            user.BirthDate,
-            user.Gender,
-            user.Weight,
-            user.DesiredWeight,
-            user.DesiredWaist,
-            user.Height,
-            user.ActivityLevel.ToString(),
-            user.DailyCalorieTarget,
-            user.ProteinTarget,
-            user.FatTarget,
-            user.CarbTarget,
-            user.FiberTarget,
-            user.StepGoal,
-            user.WaterGoal,
-            user.HydrationGoal,
-            user.CalorieCyclingEnabled,
-            user.MondayCalories,
-            user.TuesdayCalories,
-            user.WednesdayCalories,
-            user.ThursdayCalories,
-            user.FridayCalories,
-            user.SaturdayCalories,
-            user.SundayCalories,
-            user.ProfileImage,
-            user.ProfileImageAssetId?.Value,
-            user.DashboardLayoutJson,
-            user.Language,
-            user.Theme,
-            user.UiStyle,
-            user.PushNotificationsEnabled,
-            user.FastingPushNotificationsEnabled,
-            user.SocialPushNotificationsEnabled,
-            user.FastingCheckInReminderHours,
-            user.FastingCheckInFollowUpReminderHours,
-            user.TelegramUserId,
-            user.IsActive,
-            user.IsEmailConfirmed,
-            user.CreatedOnUtc,
-            user.DeletedAt,
-            user.LastLoginAtUtc,
-            roles,
-            user.AiInputTokenLimit,
-            user.AiOutputTokenLimit,
-            user.AiConsentAcceptedAt,
-            user.MustChangePassword);
-    }
-
     public static AdminUserModel ToAdminModel(this UserAdminReadModel user) =>
         new(
             user.Id,

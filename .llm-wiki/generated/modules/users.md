@@ -15,16 +15,15 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Images
-- Abstraction-contract dependencies: Authentication, Images
-- Business-module consumers: Admin, Ai, Authentication, Consumptions, ContentReports, Cycles, DailyAdvices, Dashboard, Dietologist, Exercises, Export, Fasting, FavoriteMeals, FavoriteProducts, FavoriteRecipes, Gamification, Hydration, Lessons, MealPlans, Notifications, Products, RecipeComments, RecipeLikes, Recipes, ShoppingLists, Statistics, Tdee, Usda, WaistEntries, Wearables, WeeklyCheckIn, WeeklyGoals, WeightEntries
-- Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api
+- Business-module dependencies: none observed
+- Abstraction-contract dependencies: none observed
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Users`
-- `FoodDiary.Application/Users`
 - `FoodDiary.Domain/Entities/Users`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Users`
 - `FoodDiary.Infrastructure/Persistence/Users`
@@ -80,69 +79,66 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
+- Physical isolation: assembly
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent
-- Public contract files: 50
-- Observed external consumer groups: 35
+- Public contract files: 65
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 50
-- Interfaces: 21
-- DTO/read-model/projection types: 26
+- Public contract types: 65
+- Interfaces: 28
+- DTO/read-model/projection types: 33
 - Enums: 2
-- Exported repository-shaped contracts: 5
-- Contracts referencing domain entities: 4
+- Exported repository-shaped contracts: 6
+- Contracts referencing domain entities: 5
+- `class CurrentUserAccessResolver`
 - `class UserErrors`
 - `enum UserAccountStatusFilter`
 - `enum UserPasswordResetIssueStatus`
 - `interface ICurrentUserAccessService`
+- `interface IProfileDietologistReadService`
+- `interface IProfileNotificationReadService`
+- `interface IUserAdministrationMutationService`
+- `interface IUserAdministrationReadService`
 - `interface IUserAdminReadModelRepository`
 - `interface IUserAdminReadRepository`
 - `interface IUserAiProfileReadService`
 - `interface IUserAuthenticationIdentityService`
+- `interface IUserAuthenticationRegistrationService`
+- `interface IUserBillingService`
 - `interface IUserCleanupService`
 - `interface IUserCurrentWaistProvider`
 - `interface IUserCurrentWeightProvider`
 - `interface IUserDashboardProfileReadService`
 - `interface IUserDietologistProfileReadService`
-- `interface IUserDirectoryService`
 - `interface IUserGamificationProfileReadService`
+- `interface IUserGoogleIdentityRepository`
 - `interface IUserHydrationProfileReadService`
 - `interface IUserLookupRepository`
+- `interface IUserNotificationProfileService`
 - `interface IUserProfileReadService`
 - `interface IUserRepository`
 - `interface IUserRoleCatalogService`
 - `interface IUserRoleMembershipService`
 - `interface IUserTdeeProfileReadService`
-- `interface IUserWeeklyCheckInProfileReadService`
-- `interface IUserWriteRepository`
-- `record DashboardLayoutModel`
-- `record GoalsModel`
-- `record ProfileDietologistPermissionsModel`
-- `record ProfileDietologistRelationshipModel`
-- `record ProfileOverviewModel`
-- `record ProfileWebPushSubscriptionModel`
-- ... 20 more type(s)
+- ... 35 more type(s)
 
 ## Extraction Readiness
 
-- Abstraction-owned profile-read consumers: 12 across 5 group(s)
-- Implementation-owned IUserContextService consumers: 15 across 4 group(s)
+- Abstraction-owned profile-read consumers: 12 across 4 group(s)
+- Implementation-owned IUserContextService consumers: 12 across 1 group(s)
 - Consumers receiving the User aggregate: 0
-- Consumers with aggregate mutation access: 11
+- Consumers with aggregate mutation access: 10
 - Composition registrations: 1
 - Remaining blocker classes: 2
 - Extraction readiness: partial; migrate legacy aggregate/mutation consumers
 
 | Consumer | Contract | Owning assembly | Methods/data | Access | Extraction |
 | --- | --- | --- | --- | --- | --- |
-| FoodDiary.Application | IUserContextService | FoodDiary.Application | constructor/registration only => inherited or unresolved | narrow-read-or-access | migration-required |
-| Notifications | IUserContextService | FoodDiary.Application | EnsureCanAccessAsync, GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation | migration-required |
-| Users | IUserContextService | FoodDiary.Application | GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation, narrow-read-or-access | migration-required |
-| WeeklyGoals | IUserContextService | FoodDiary.Application | constructor/registration only => inherited or unresolved | narrow-read-or-access | migration-required |
+| Users | IUserContextService | FoodDiary.Application.Users | GetAccessibleUserAsync, UpdateUserAsync => Task, Task<Result<User>> | mutation, narrow-read-or-access | migration-required |
 
 ## Focused Tests
 
@@ -154,8 +150,10 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/HistoryProfileCoverageTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UpdateUserCommandHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserApplicationServiceDelegationTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserBillingServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsersModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsersPasswordControllerTests.cs`
 

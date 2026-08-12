@@ -1,8 +1,7 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Billing.Services;
 
@@ -11,12 +10,11 @@ public sealed class BillingAccessService(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     TimeProvider dateTimeProvider) {
     public async Task EnsurePremiumRoleAsync(
-        User user,
+        UserBillingProfileModel user,
         BillingSubscription subscription,
         bool shouldHavePremium,
         CancellationToken cancellationToken) {
-        var currentRoles = user.GetRoleNames().ToList();
-        bool hasPremium = currentRoles.Contains(RoleNames.Premium, StringComparer.Ordinal);
+        bool hasPremium = user.HasPaidPremium;
         if (hasPremium == shouldHavePremium) {
             if (shouldHavePremium && !subscription.PremiumRoleManagedByBilling) {
                 return;
@@ -33,7 +31,7 @@ public sealed class BillingAccessService(
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         if (shouldHavePremium) {
-            await billingUserContextService.EnsurePremiumRoleAsync(user, cancellationToken).ConfigureAwait(false);
+            await billingUserContextService.EnsurePremiumRoleAsync(user.UserId, cancellationToken).ConfigureAwait(false);
             subscription.MarkPremiumRoleManagedByBilling(value: true, nowUtc);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         } else {
@@ -41,7 +39,7 @@ public sealed class BillingAccessService(
                 return;
             }
 
-            await billingUserContextService.RemovePremiumRoleAsync(user, cancellationToken).ConfigureAwait(false);
+            await billingUserContextService.RemovePremiumRoleAsync(user.UserId, cancellationToken).ConfigureAwait(false);
             subscription.MarkPremiumRoleManagedByBilling(value: false, nowUtc);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         }

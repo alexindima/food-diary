@@ -2,13 +2,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 using System.Runtime.CompilerServices;
 
 namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
@@ -35,14 +34,14 @@ public sealed class CreateCheckoutSessionCommandHandler(
             ? NoopAsyncDisposable.Instance
             : await billingCheckoutLock.AcquireAsync(userId.Value, cancellationToken).ConfigureAwait(false);
         await using ConfiguredAsyncDisposable checkoutLock = lockHandle.ConfigureAwait(false);
-        Result<User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(userResult.Error);
         }
 
-        User user = userResult.Value;
+        UserBillingProfileModel user = userResult.Value;
         BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
+        if (user.HasPaidPremium || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
 

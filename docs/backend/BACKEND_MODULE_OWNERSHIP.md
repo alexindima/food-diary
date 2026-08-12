@@ -35,8 +35,8 @@ This map covers the governed business owners and composed read modules in the pr
 
 | Module | Owns aggregates/data | Public application surface | Approved collaborators |
 | --- | --- | --- | --- |
-| Users | user profile/lifecycle, credentials stored on User, roles and role audit | `IUserDirectoryService`, `IUserProfileReadService`, current-user access, role membership, administration and identity mutation capabilities | Images, Notifications/Profile composition, Dietologist relationship projection |
-| Authentication | login/register/restore workflows, refresh sessions and login events | authentication commands, token/session lifecycle | Users directory/mutation capabilities, Email, Notifications, external identity validators |
+| Users | user profile/lifecycle, credentials stored on User, roles and role audit | narrow profile, authentication, administration, notification and billing capabilities; current-user access; role membership | Images, Notifications/Profile composition, Dietologist relationship projection |
+| Authentication | login/register/restore workflows, refresh sessions and login events | authentication commands, token/session lifecycle | Users authentication capabilities, Email, Notifications, external identity validators |
 | Consumption Diary | `Meal`, meal items, AI sessions and consumption mutations | consumption commands, `IConsumptionReadService`, specialized activity/nutrition/export projections | Products/Recipes lookup APIs, Users, Images, FavoriteMeals, RecentItems, Nutrition |
 | RecentItems | recent product/recipe usage ordering | `IRecentItemUsageReadService`, `IRecentItemUsageRecorder` | Products and Recipes consume usage ordering; Consumption Diary records usage |
 | Products | products and product overview/search projections | product commands, `IProductLookupService`, `IProductOverviewReadService` | Users, Images, FavoriteProducts, RecentItems, external food sources |
@@ -118,17 +118,19 @@ When changing a module boundary:
 5. Update this map and an ADR when ownership or allowed dependency direction changes.
 6. Add or extend an architecture test before migrating the next module.
 
-## Users extraction readiness boundary
+## Users assembly boundary
 
 Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates. Cross-module profile reads use `IUserProfileReadService` and projection models from `FoodDiary.Application.Abstractions/Users`; consumers must not depend on `FoodDiary.Application.Users.Models`.
 
-The aggregate-oriented `IUserContextService` remains internal to the Users application module for the current migration stage. New cross-module consumers must prefer `ICurrentUserAccessService`, `IUserProfileReadService` or another narrow abstraction-level capability instead of acquiring `IUserContextService` or a Users repository. Existing aggregate consumers are migration candidates and must not be treated as precedent for new dependencies.
+The aggregate-oriented `IUserContextService` remains internal to the Users application module. Cross-module consumers use `ICurrentUserAccessService`, `IUserProfileReadService` or another narrow abstraction-level capability instead of acquiring `IUserContextService` or a Users repository. `CurrentUserAccessResolver`, `UserIdParser` and the profile-composition ports also live in `FoodDiary.Application.Abstractions`, so ordinary application modules no longer need the Users implementation namespace merely to validate an acting user.
 
 AI, Dashboard, Dietologist, Gamification, Hydration, TDEE and Weekly Check-In use dedicated projection contracts from `FoodDiary.Application.Abstractions/Users`. Their application services receive only the fields required by their calculation or display behavior; they do not receive the `User` aggregate. Dashboard, Dietologist and Weekly Check-In perform access validation through `ICurrentUserAccessService`; Gamification receives only the immutable calorie schedule required by its calculations. Dietologist receives identity/display fields and role membership through `UserDietologistProfileModel`, including its lookup and notification flows.
 
-This separation is an extraction prerequisite: a future `FoodDiary.Application.Users` assembly must be able to implement the abstraction-level profile contract without forcing read consumers to reference the Users implementation assembly.
+The Users application implementation now lives in the dedicated `FoodDiary.Application.Users` assembly. Executable hosts register it through `AddUsersModule()`, while other application modules continue to depend only on abstraction-level capabilities and projection models.
 
-Authentication delegates password authentication, successful-authentication recording, account restoration, Google and Telegram identity linking, email-verification token issuance/completion and password-reset issuance/completion to `IUserAuthenticationIdentityService`. Authentication remains responsible for validating provider assertions, replay protection, raw token generation and session/JWT issuance, while Users owns identity uniqueness checks, credential hashing, credential verification, one-time-token validation and aggregate mutation. Migrated handlers receive only results, `UserModel`, delivery data or `UserAuthenticationPrincipalModel`; they never acquire the `User` aggregate.
+Authentication delegates password authentication, successful-authentication recording, account restoration, Google and Telegram authentication/linking, email-verification token issuance/completion and password-reset issuance/completion to `IUserAuthenticationIdentityService`. Registration and initial-admin bootstrap use `IUserAuthenticationRegistrationService`. Authentication remains responsible for validating provider assertions, replay protection, raw token generation and session/JWT issuance, while Users owns identity uniqueness checks, credential hashing, credential verification, one-time-token validation and aggregate mutation. Authentication handlers receive only results, `UserModel`, delivery data or `UserAuthenticationPrincipalModel`; they never acquire the `User` aggregate.
+
+Admin reads and mutations use `IUserAdministrationReadService` and `IUserAdministrationMutationService`; impersonation obtains only `UserAuthenticationPrincipalModel`. Notifications uses `IUserNotificationProfileService` for preference/context projections and mutations. Billing uses `IUserBillingService` for an immutable billing profile plus trial and Premium-role operations. These boundaries keep aggregate mutation inside Users and are protected by architecture tests.
 
 ## Notifications boundary
 
@@ -151,7 +153,7 @@ Current producers include Fasting, Dietologist, Authentication and RecipeComment
 
 ### Approved dependencies and adapters
 
-Notifications Application may depend on Users `Common` access contracts to resolve and validate the notification owner. JobManager may invoke cleanup and web-push outbox processor contracts. Presentation may implement live `INotificationPusher` and test scheduling adapters. Resources implements notification text rendering. None of those adapters owns notification state.
+Notifications Application may depend on abstraction-level Users access contracts to resolve and validate the notification owner. User preferences and notification context are obtained through `IUserNotificationProfileService`; Notifications never loads the `User` aggregate. JobManager may invoke cleanup and web-push outbox processor contracts. Presentation may implement live `INotificationPusher` and test scheduling adapters. Resources implements notification text rendering. None of those adapters owns notification state.
 
 Web-push delivery uses `IWebPushDeliveryAudienceService`. Notifications resolves user preferences, selects active subscriptions, prunes expired entries and removes provider-rejected subscriptions; the Integrations provider adapter receives only delivery-ready endpoint material. Presentation test scheduling refreshes clients through `INotificationClientRefreshService`, never through notification repositories or direct pusher orchestration.
 
@@ -187,7 +189,7 @@ Webhook and renewal workflows use `IBillingTransactionRunner` as a narrow explic
 
 ### Approved collaborators
 
-Billing may use Users access/role contracts to resolve accounts and synchronize premium membership. Premium role transitions emit through the Billing-owned `IBillingMarketingConversionRecorder` port, implemented by the extracted Marketing module. New collaborators require an intentional ownership-map and guardrail update.
+Billing uses `IUserBillingService` to resolve a billing-specific account projection, start the application trial and synchronize Premium membership without loading or mutating the `User` aggregate. Premium role transitions emit through the Billing-owned `IBillingMarketingConversionRecorder` port, implemented by the extracted Marketing module. New collaborators require an intentional ownership-map and guardrail update.
 
 ## Products and Recipes boundaries
 
@@ -240,17 +242,18 @@ Users and Authentication are separate collaborating modules around one identity 
 
 Other modules must not acquire `IUserRepository`, `IUserLookupRepository` or `IUserWriteRepository`. Instead they use intent-specific APIs:
 
-- `IUserDirectoryService` for lookup by stable identity keys;
-- `ICurrentUserAccessService`/feature-specific context services for active-user access;
+- `ICurrentUserAccessService` and feature-specific projection services for active-user access;
 - `IUserRoleMembershipService` for role membership changes;
-- `IUserAdministrationService` for privileged administration workflows;
-- `IUserAuthenticationIdentityService` for password authentication, account restoration, credential-token workflows and external-identity linking.
+- `IUserAdministrationReadService` and `IUserAdministrationMutationService` for privileged administration workflows;
+- `IUserAuthenticationIdentityService` and `IUserAuthenticationRegistrationService` for authentication, registration, account restoration, credential-token workflows and external identities;
+- `IUserNotificationProfileService` for notification preferences/context;
+- `IUserBillingService` for billing identity, trial state and Premium-role operations.
 
-The directory currently returns the User domain model because several established workflows need identity and profile data. This is still a semantic module boundary, but future consumers that need only a small snapshot should prefer a projection-specific contract.
+The public cross-module capabilities return projection models rather than the `User` aggregate. Aggregate-oriented lookup/write contracts remain persistence ports for Users implementations and adapters, not APIs for neighboring application modules.
 
 ### Authentication boundary
 
-Authentication orchestrates credentials, external identity validation, token issuance, email verification/reset and refresh-session lifecycle. Migrated handlers do not acquire Users repositories or the `User` aggregate: password authentication, restoration and identity mutation flow through `IUserAuthenticationIdentityService`, which returns narrow projections for token issuance. Registration and remaining legacy authentication flows are migrated incrementally under the same boundary rule.
+Authentication orchestrates credentials, external identity validation, token issuance, email verification/reset and refresh-session lifecycle. Its handlers do not acquire Users repositories or the `User` aggregate: password authentication, registration, restoration and identity mutation flow through Users capabilities that return narrow projections for token issuance.
 
 Refresh sessions and login events remain Authentication-owned persistence contracts. Password hashing, JWT generation, Telegram/Google verification and SSO are adapters behind Authentication abstractions.
 

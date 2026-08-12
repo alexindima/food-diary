@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Email, Notifications, Users
+- Business-module dependencies: Email, Notifications
 - Abstraction-contract dependencies: Email, Notifications, Users
 - Business-module consumers: Admin, Dietologist
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
@@ -37,24 +37,23 @@ No literal attribute-routed controller was associated with this module.
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 32
+- Public contract files: 31
 - Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 32
-- Interfaces: 17
+- Public contract types: 31
+- Interfaces: 16
 - DTO/read-model/projection types: 2
 - Enums: 0
 - Exported repository-shaped contracts: 6
-- Contracts referencing domain entities: 5
+- Contracts referencing domain entities: 3
 - `class JwtImpersonationClaimNames`
 - `interface IAdminSsoService`
 - `interface IAuthenticationTokenService`
 - `interface IEmailSender`
 - `interface IEmailTemplateProvider`
-- `interface IGoogleIdentityUserDirectoryService`
 - `interface IGoogleTokenValidator`
 - `interface IJwtTokenGenerator`
 - `interface IPasswordHasher`
@@ -79,7 +78,8 @@ No literal attribute-routed controller was associated with this module.
 - `record TelegramInitData`
 - `record TelegramLoginWidgetData`
 - `record TestEmailMessage`
-- ... 2 more type(s)
+- `record UserLoginDeviceSummaryModel`
+- ... 1 more type(s)
 
 ## Focused Tests
 
@@ -94,7 +94,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Telegram.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationUserAccessPolicyTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/AuthenticationValidatorsTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/BootstrapInitialAdminCommandHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Authentication/EmailSenderTests.cs`

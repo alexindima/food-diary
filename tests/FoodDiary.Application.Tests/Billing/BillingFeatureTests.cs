@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Application.Billing.Queries.GetBillingOverview;
@@ -116,7 +117,6 @@ public partial class BillingFeatureTests {
         var paymentRecorder = new BillingWebhookPaymentRecorder(paymentRepository);
         var premiumRoleSyncer = new BillingWebhookPremiumRoleSyncer(
             subscriptionRepository,
-            userRepository,
             billingAccessService,
             marketingConversionRecorder ?? new NoOpMarketingConversionRecorder(),
             dateTimeProvider);
@@ -141,6 +141,16 @@ public partial class BillingFeatureTests {
         user.ReplaceRoles([Role.Create(RoleNames.Premium)]);
         return user;
     }
+
+    private static UserBillingProfileModel CreateBillingProfile(User user) =>
+        new(
+            user.Id,
+            user.Email,
+            user.IsActive,
+            user.DeletedAt is not null,
+            user.HasRole(RoleNames.Premium),
+            user.PremiumTrialStartedAtUtc,
+            user.PremiumTrialEndsAtUtc);
 
     private static BillingSubscription CreateSubscriptionSnapshot(
         User user,
@@ -240,7 +250,8 @@ public partial class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IUserContextService, IBillingUserContextService, IBillingUserLookupService {
+    private sealed class FakeUserRepository(params User[] users)
+        : IUserRepository, IUserContextService, IUserBillingService, IBillingUserContextService {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
@@ -283,14 +294,56 @@ public partial class BillingFeatureTests {
                     user.PremiumTrialEndsAtUtc)));
         }
 
-        public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
-            GetByIdIncludingDeletedAsync(userId, cancellationToken);
+        public Task<Result<UserBillingProfileModel>> GetAccessibleProfileAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            return Task.FromResult(user is null
+                ? Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)
+                : Result.Success(ToBillingProfile(user)));
+        }
 
-        public Task<bool> CanAccessUserAsync(User user, CancellationToken cancellationToken) =>
-            Task.FromResult(IsAccessible(user));
+        public async Task<UserBillingProfileModel?> GetProfileIncludingDeletedAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            User? user = await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user is null ? null : ToBillingProfile(user);
+        }
 
-        public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) {
+        Task<Result<UserBillingProfileModel>> IBillingUserContextService.GetAccessibleUserAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            return Task.FromResult(user is null
+                ? Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)
+                : Result.Success(ToBillingProfile(user)));
+        }
+
+        public async Task<UserBillingProfileModel?> GetUserIncludingDeletedAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            User? user = await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user is null ? null : ToBillingProfile(user);
+        }
+
+        public Task<Result<UserBillingProfileModel>> StartPremiumTrialAsync(
+            UserId userId,
+            DateTime startedAtUtc,
+            TimeSpan duration,
+            CancellationToken cancellationToken = default) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            if (user is null) {
+                return Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken));
+            }
+
+            user.StartPremiumTrial(startedAtUtc, duration);
+            UpdateCount++;
+            return Task.FromResult(Result.Success(ToBillingProfile(user)));
+        }
+
+        public Task EnsurePremiumRoleAsync(UserId userId, CancellationToken cancellationToken = default) {
             RoleMembershipWriteCount++;
+            User user = _users.Single(candidate => candidate.Id == userId);
             if (!user.HasRole(RoleNames.Premium)) {
                 user.ReplaceRoles([.. user.UserRoles.Select(userRole => userRole.Role), _premiumRole]);
             }
@@ -298,8 +351,9 @@ public partial class BillingFeatureTests {
             return Task.CompletedTask;
         }
 
-        public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) {
+        public Task RemovePremiumRoleAsync(UserId userId, CancellationToken cancellationToken = default) {
             RoleMembershipWriteCount++;
+            User user = _users.Single(candidate => candidate.Id == userId);
             if (user.HasRole(RoleNames.Premium)) {
                 user.ReplaceRoles([
                     .. user.UserRoles
@@ -357,6 +411,16 @@ public partial class BillingFeatureTests {
         }
 
         private static bool IsAccessible(User user) => user is { IsActive: true, DeletedAt: null };
+
+        private static UserBillingProfileModel ToBillingProfile(User user) =>
+            new(
+                user.Id,
+                user.Email,
+                user.IsActive,
+                user.DeletedAt is not null,
+                user.HasRole(RoleNames.Premium),
+                user.PremiumTrialStartedAtUtc,
+                user.PremiumTrialEndsAtUtc);
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -8,7 +9,6 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Globalization;
@@ -14,7 +14,7 @@ namespace FoodDiary.Application.Notifications.Commands.UpdateNotificationPrefere
 public sealed class UpdateNotificationPreferencesCommandHandler(
     INotificationPreferencesService notificationPreferencesService,
     IAuditLogger auditLogger,
-    INotificationUserAccessService notificationUserAccessService)
+    ICurrentUserAccessService notificationUserAccessService)
     : ICommandHandler<UpdateNotificationPreferencesCommand, Result<NotificationPreferencesModel>> {
     public async Task<Result<NotificationPreferencesModel>> Handle(
         UpdateNotificationPreferencesCommand command,

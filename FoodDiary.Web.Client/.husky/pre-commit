@@ -104,7 +104,9 @@ if [ -n "$WIKI_INDEX_INPUT_FILES" ]; then
     echo "PowerShell is required for the LLM Wiki index freshness check."
     exit 1
   fi
-  hook_run "LLM Wiki affected index freshness" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ReuseUnchangedChecks -ChangedPath "$WIKI_INDEX_INPUT_FILES" || exit 1
+  # Let the pipeline read the Git delta itself. Passing the complete staged path
+  # list can exceed Windows' process argument limit during large refactors.
+  hook_run "LLM Wiki affected index freshness" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ReuseUnchangedChecks || exit 1
 else
   hook_step_skip "LLM Wiki affected index freshness" "no compiled-index inputs changed"
 fi
@@ -116,7 +118,15 @@ if [ "$HAS_CS" -gt 0 ]; then
 
   STAGED_CS_FILES=$(echo "$STAGED_FILES" | grep '\.cs$' | tr '\n' ',' | sed 's/,$//')
   hook_step_start "dotnet format check on staged C# files"
-  if dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES"; then
+  STAGED_CS_FILES_LENGTH=$(printf '%s' "$STAGED_CS_FILES" | wc -c)
+  if [ "$STAGED_CS_FILES_LENGTH" -gt 24000 ]; then
+    dotnet format FoodDiary.slnx --verify-no-changes --no-restore
+    FORMAT_STATUS=$?
+  else
+    dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES"
+    FORMAT_STATUS=$?
+  fi
+  if [ "$FORMAT_STATUS" -eq 0 ]; then
     hook_step_done
   else
     hook_step_fail

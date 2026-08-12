@@ -19,9 +19,15 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Mediator",
             ],
+            ["FoodDiary.Application.Users"] = [
+                "FoodDiary.Application.Abstractions",
+                "FoodDiary.Domain",
+                "FoodDiary.Mediator",
+            ],
             ["FoodDiary.Application.Abstractions"] = [
                 "FoodDiary.Domain",
                 "FoodDiary.Domain.Primitives",
+                "FoodDiary.Mediator",
                 "FoodDiary.Results",
             ],
             ["FoodDiary.Domain"] = [
@@ -36,6 +42,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
+                "FoodDiary.Application.Users",
                 "FoodDiary.Infrastructure",
             ],
             ["FoodDiary.Integrations"] = [
@@ -48,6 +55,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
+                "FoodDiary.Application.Users",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
                 "FoodDiary.Resources",
@@ -106,6 +114,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
+                "FoodDiary.Application.Users",
             ],
             ["FoodDiary.Domain.Primitives"] = [],
             ["FoodDiary.Resources"] = [
@@ -117,6 +126,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
+                "FoodDiary.Application.Users",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
                 "FoodDiary.Presentation.Api",
@@ -133,6 +143,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.Marketing",
+                "FoodDiary.Application.Users",
                 "FoodDiary.Domain",
             ],
             ["FoodDiary.ArchitectureTests"] = [

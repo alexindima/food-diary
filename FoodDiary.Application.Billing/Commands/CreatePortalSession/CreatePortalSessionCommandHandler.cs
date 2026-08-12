@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Mediator;
 using FoodDiary.Results;
@@ -26,7 +27,7 @@ public sealed class CreatePortalSessionCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<Domain.Entities.Users.User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        Result<UserBillingProfileModel> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
         if (userResult.IsFailure) {
             return Result.Failure<BillingPortalSessionModel>(userResult.Error);
         }

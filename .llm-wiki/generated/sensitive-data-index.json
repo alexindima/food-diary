@@ -6,10 +6,10 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1414,
-                    "credential":  147,
-                    "identity":  145,
-                    "health":  626,
+                    "candidateFields":  1430,
+                    "credential":  152,
+                    "identity":  153,
+                    "health":  629,
                     "financial":  199,
                     "privateContent":  297,
                     "boundaryFiles":  179,
@@ -75,6 +75,20 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "TemporaryPassword",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "RequirePasswordChange",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "HasPassword",
                        "type":  "bool",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
@@ -96,6 +110,27 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "HasPassword",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Password",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "EmailVerificationToken",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "AccessToken",
                        "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Wearables/Models/WearableTokenResult.cs",
@@ -114,6 +149,27 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Billing/Models/BillingOverviewModel.cs",
                        "line":  20
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "CurrentPassword",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "NewPassword",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "NewPassword",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
+                       "line":  8
                    },
                    {
                        "category":  "credential",
@@ -289,27 +345,6 @@
                        "type":  "int,",
                        "path":  "FoodDiary.Application/RecentItems/Common/RecentItemOverviewLoader.cs",
                        "line":  9
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "CurrentPassword",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Users/Commands/ChangePassword/ChangePasswordCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "NewPassword",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Users/Commands/ChangePassword/ChangePasswordCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "NewPassword",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Users/Commands/SetPassword/SetPasswordCommand.cs",
-                       "line":  8
                    },
                    {
                        "category":  "credential",
@@ -582,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  51
+                       "line":  52
                    },
                    {
                        "category":  "credential",
@@ -1569,14 +1604,14 @@
                        "name":  "TotalAmount",
                        "type":  "double",
                        "path":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-                       "line":  140
+                       "line":  139
                    },
                    {
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
                        "path":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-                       "line":  151
+                       "line":  150
                    },
                    {
                        "category":  "financial",
@@ -3267,6 +3302,27 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "FastingPushNotificationsEnabled",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingCheckInReminderHours",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingCheckInFollowUpReminderHours",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationProfileModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
                        "name":  "EstimatedTdee",
                        "type":  "double?",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserTdeeProfileModel.cs",
@@ -3355,6 +3411,111 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
                        "line":  3
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "BirthDate",
+                       "type":  "DateTime?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Gender",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ActivityLevel",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "HydrationGoal",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingPushNotificationsEnabled",
+                       "type":  "bool?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                       "line":  23
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ActivityLevel",
+                       "type":  "ActivityLevel?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+                       "line":  25
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Gender",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+                       "line":  29
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ActivityLevel",
+                       "type":  "ActivityLevel?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+                       "line":  35
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Gender",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+                       "line":  39
                    },
                    {
                        "category":  "health",
@@ -4166,21 +4327,21 @@
                        "name":  "CaloriesFrom",
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  32
+                       "line":  31
                    },
                    {
                        "category":  "health",
                        "name":  "CaloriesTo",
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  33
+                       "line":  32
                    },
                    {
                        "category":  "health",
                        "name":  "CaloriesTo",
                        "type":  "CaloriesFrom,",
                        "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  36
+                       "line":  35
                    },
                    {
                        "category":  "health",
@@ -4363,111 +4524,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application/Tdee/Services/TdeeCalculator.cs",
                        "line":  174
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWaist",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateDesiredWeight/UpdateDesiredWeightCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWaist",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateGoals/UpdateGoalsCommand.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "BirthDate",
-                       "type":  "DateTime?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Gender",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Height",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ActivityLevel",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "HydrationGoal",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingPushNotificationsEnabled",
-                       "type":  "bool?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                       "line":  23
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ActivityLevel",
-                       "type":  "ActivityLevel?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                       "line":  26
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Gender",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                       "line":  30
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ActivityLevel",
-                       "type":  "ActivityLevel?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                       "line":  36
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Gender",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                       "line":  40
                    },
                    {
                        "category":  "health",
@@ -7021,6 +7077,20 @@
                        "category":  "identity",
                        "name":  "Email",
                        "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "IsEmailConfirmed",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminCreateModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
                        "line":  8
                    },
@@ -7040,9 +7110,23 @@
                    },
                    {
                        "category":  "identity",
+                       "name":  "IsEmailConfirmed",
+                       "type":  "bool?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminUpdateModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "identity",
                        "name":  "Email",
                        "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAuthenticationPrincipalModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserBillingProfileModel.cs",
                        "line":  7
                    },
                    {
@@ -7070,6 +7154,20 @@
                        "category":  "identity",
                        "name":  "Email",
                        "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserGoogleAuthenticationModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserInitialAdminBootstrapModel.cs",
+                       "line":  3
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
                        "line":  8
                    },
@@ -7086,6 +7184,20 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetDeliveryModel.cs",
                        "line":  5
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "EmailVerificationExpiresAtUtc",
+                       "type":  "DateTime",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserRegistrationModel.cs",
+                       "line":  8
                    },
                    {
                        "category":  "identity",
@@ -8125,6 +8237,20 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "ProfileImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
+                       "line":  26
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ProfileImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
+                       "line":  30
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "PromptText",
                        "type":  "string",
                        "path":  "FoodDiary.Application/Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
@@ -8773,20 +8899,6 @@
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application/Recipes/Models/RecipeStepModel.cs",
                        "line":  9
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ProfileImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommand.cs",
-                       "line":  26
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ProfileImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                       "line":  31
                    },
                    {
                        "category":  "privateContent",

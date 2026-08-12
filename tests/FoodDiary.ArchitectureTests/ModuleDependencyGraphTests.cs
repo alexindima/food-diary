@@ -53,17 +53,26 @@ public sealed class ModuleDependencyGraphTests {
 
     private static IReadOnlyDictionary<string, string[]> ReadActualGraph() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string[] modules = [.. Directory.GetDirectories(applicationRoot)
+        var declaredModules = LoadManifest().Modules.Keys.ToHashSet(StringComparer.Ordinal);
+        string[] folderModules = [.. Directory.GetDirectories(applicationRoot)
             .Select(Path.GetFileName)
             .OfType<string>()
             .Where(name => name is not ("bin" or "obj" or "Common"))
             .Where(name => Directory.EnumerateFiles(Path.Combine(applicationRoot, name), "*.cs", SearchOption.AllDirectories).Any())
             .Order(StringComparer.Ordinal)];
+        string[] extractedModules = [.. Directory.GetDirectories(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
+            .SelectMany(directory => Directory.GetFiles(directory, "FoodDiary.Application.*.csproj", SearchOption.TopDirectoryOnly))
+            .Select(path => Path.GetFileNameWithoutExtension(path)["FoodDiary.Application.".Length..])
+            .Where(declaredModules.Contains)
+            .Order(StringComparer.Ordinal)];
+        string[] modules = [.. folderModules.Concat(extractedModules).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)];
         HashSet<string> moduleSet = modules.ToHashSet(StringComparer.Ordinal);
 
         return modules.ToDictionary(
             static module => module,
-            module => SourceScanner.SourceFiles(Path.Combine(applicationRoot, module))
+            module => SourceScanner.SourceFiles(Directory.Exists(Path.Combine(applicationRoot, module))
+                    ? Path.Combine(applicationRoot, module)
+                    : Path.Combine(ArchitectureTestPaths.RepositoryRoot, $"FoodDiary.Application.{module}"))
                 .SelectMany(ReadReferencedApplicationModules)
                 .Where(dependency => moduleSet.Contains(dependency) && !dependency.Equals(module, StringComparison.Ordinal))
                 .Distinct(StringComparer.Ordinal)

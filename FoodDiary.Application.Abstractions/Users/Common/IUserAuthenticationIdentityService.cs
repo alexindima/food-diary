@@ -18,6 +18,16 @@ public interface IUserAuthenticationIdentityService {
         DateTime completedAtUtc,
         CancellationToken cancellationToken = default);
 
+    Task<Result<UserAuthenticationPrincipalModel>> AuthenticateGoogleAsync(
+        UserGoogleAuthenticationModel identity,
+        DateTime authenticatedAtUtc,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<UserAuthenticationPrincipalModel>> AuthenticateTelegramAsync(
+        long telegramUserId,
+        DateTime authenticatedAtUtc,
+        CancellationToken cancellationToken = default);
+
     Task<UserPasswordResetIssueModel> IssuePasswordResetAsync(
         string email,
         string token,
@@ -47,6 +57,11 @@ public interface IUserAuthenticationIdentityService {
     Task<Result<UserAuthenticationPrincipalModel>> RecordAuthenticationAsync(
         UserId userId,
         DateTime authenticatedAtUtc,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<UserAuthenticationPrincipalModel>> GetAuthenticationPrincipalAsync(
+        UserId userId,
+        DateTime evaluatedAtUtc,
         CancellationToken cancellationToken = default);
 
     Task<Result<UserAuthenticationPrincipalModel>> RestoreAccountAsync(

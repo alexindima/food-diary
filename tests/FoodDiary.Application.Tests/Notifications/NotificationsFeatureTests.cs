@@ -6,6 +6,7 @@ using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -263,13 +264,18 @@ public partial class NotificationsFeatureTests {
     }
 
     private static INotificationPreferencesService CreateNotificationPreferencesService(User user) =>
-        new NotificationPreferencesService(new SingleUserRepository(user));
+        new NotificationPreferencesService(CreateNotificationProfileService(user));
 
     private static INotificationUserContextService CreateNotificationUserContextService(User user) =>
-        new NotificationUserContextService(new SingleUserRepository(user));
+        new NotificationUserContextService(CreateNotificationProfileService(user));
 
-    private static INotificationUserAccessService CreateNotificationUserAccessService(User user) =>
+    private static ICurrentUserAccessService CreateNotificationUserAccessService(User user) =>
         new SingleUserRepository(user);
+
+    private static IUserNotificationProfileService CreateNotificationProfileService(User user) {
+        var repository = new SingleUserRepository(user);
+        return new UserNotificationProfileService(repository, repository);
+    }
 
     private static INotificationFeedReadService CreateNotificationFeedReadService(
         INotificationRepository notificationRepository,
@@ -281,7 +287,7 @@ public partial class NotificationsFeatureTests {
         new WebPushSubscriptionReadService(webPushSubscriptionRepository);
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository, INotificationUserAccessService {
+    private sealed class SingleUserRepository(User user) : IUserRepository, ICurrentUserAccessService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
@@ -313,8 +319,6 @@ public partial class NotificationsFeatureTests {
         public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-        public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
-            UpdateAsync(user, cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

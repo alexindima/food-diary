@@ -15,8 +15,8 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Consumptions, Notifications, Users
-- Abstraction-contract dependencies: Notifications
+- Business-module dependencies: Consumptions, Notifications
+- Abstraction-contract dependencies: Notifications, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.

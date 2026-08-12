@@ -12,8 +12,7 @@ public static partial class DependencyInjection {
         services.AddScoped<UserRepository>();
         services.AddScoped<IUserRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<UserRepository>());
-        services.AddScoped<IUserDirectoryService>(static provider => provider.GetRequiredService<UserRepository>());
-        services.AddScoped<IGoogleIdentityUserDirectoryService>(static provider => provider.GetRequiredService<UserRepository>());
+        services.AddScoped<IUserGoogleIdentityRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserAdminReadRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserAdminReadModelRepository>(static provider => provider.GetRequiredService<UserRepository>());
         services.AddScoped<IUserWriteRepository>(static provider => provider.GetRequiredService<UserRepository>());

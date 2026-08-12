@@ -54,6 +54,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
     private static UserAuthenticationIdentityService CreateUserAuthenticationIdentityService(StubUserRepository userRepository) =>
         new(userRepository, userRepository, userRepository, new StubPasswordHasher());
 
+    private static UserAuthenticationRegistrationService CreateUserAuthenticationRegistrationService(StubUserRepository userRepository) =>
+        new(userRepository, userRepository, userRepository, new StubPasswordHasher());
+
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramAssertionReplayGuard(bool consume = true) : ITelegramAssertionReplayGuard {
         public Task<bool> TryConsumeAsync(string signedAssertion, DateTime expiresAtUtc, CancellationToken cancellationToken = default) =>
@@ -63,14 +66,13 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user = null, params User[] otherUsers)
         : IUserRepository,
-            IAuthenticationUserLookupService,
-            IAuthenticationUserMutationService,
-            IAuthenticationUserRegistrationService,
-            IGoogleIdentityUserDirectoryService,
+            IUserGoogleIdentityRepository,
+            IUserRoleCatalogService,
             IUserContextService {
         private readonly List<User> _users = user is null ? [.. otherUsers] : [user, .. otherUsers];
 
         public int AddCallCount { get; private set; }
+        public IReadOnlyCollection<User> Users => _users;
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
@@ -81,7 +83,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
                 string.Equals(candidate.GoogleSubject, subject, StringComparison.Ordinal)));
         public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(_users.FirstOrDefault(candidate => candidate is { IsActive: true, DeletedAt: null } && candidate.Id == userId));
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
+            Task.FromResult<User?>(_users.FirstOrDefault(candidate => candidate.Id == id));
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
             Task.FromResult<User?>(_users.FirstOrDefault(candidate =>
                 candidate is { IsActive: true, DeletedAt: null, TelegramUserId: not null } &&
@@ -123,23 +126,6 @@ public sealed partial class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class DirectUserByIdRepository(User? user = null)
-        : IUserRepository, IAuthenticationUserLookupService, IAuthenticationUserMutationService {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByGoogleIdentityIncludingDeletedAsync(string issuer, string subject, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user?.Id == userId ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
-    }
-
-    [ExcludeFromCodeCoverage]
     private sealed class StubPasswordHasher : IPasswordHasher {
         public string Hash(string password) => password;
 
@@ -153,7 +139,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubAuthenticationTokenService : IAuthenticationTokenService {
-        public User? LastUser { get; private set; }
+        public User? LastUser => null;
         public UserAuthenticationPrincipalModel? LastPrincipal { get; private set; }
         public AuthenticationClientContext? LastClientContext { get; private set; }
         public bool LastRememberMe { get; private set; }
@@ -170,17 +156,6 @@ public sealed partial class AuthenticationCommandHandlerTests {
             return Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
         }
 
-        public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
-            User user,
-            CancellationToken cancellationToken,
-            AuthenticationClientContext? clientContext = null,
-            bool rememberMe = false,
-            Guid? refreshSessionId = null) {
-            LastUser = user;
-            return Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
-        }
-
-        public string IssueAccessToken(User user) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

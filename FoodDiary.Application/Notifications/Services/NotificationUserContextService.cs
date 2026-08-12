@@ -1,18 +1,19 @@
 using FoodDiary.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Services;
 
-public sealed class NotificationUserContextService(INotificationUserAccessService notificationUserAccessService) : INotificationUserContextService {
+public sealed class NotificationUserContextService(IUserNotificationProfileService userProfileService) : INotificationUserContextService {
     public async Task<Result<NotificationUserContext>> GetAsync(UserId userId, CancellationToken cancellationToken = default) {
-        Result<User> userResult = await notificationUserAccessService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<NotificationUserContext>(userResult.Error);
+        Result<UserNotificationProfileModel> result = await userProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (result.IsFailure) {
+            return Result.Failure<NotificationUserContext>(result.Error);
         }
 
-        User user = userResult.Value;
-        return Result.Success(new NotificationUserContext(user.Id, user.HasPassword, user.Language));
+        UserNotificationProfileModel user = result.Value;
+        return Result.Success(new NotificationUserContext(user.UserId, user.HasPassword, user.Language));
     }
 }

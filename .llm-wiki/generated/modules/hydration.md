@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Users
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: Dashboard, WeeklyCheckIn
 - Host/adapter consumers: FoodDiary.Presentation.Api

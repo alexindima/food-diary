@@ -1,18 +1,16 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Services.UserAgents;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Services;
 
 public sealed class AuthenticationTokenService(
-    IAuthenticationUserMutationService userMutationService,
     IUserLoginEventWriteRepository userLoginEventRepository,
     IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
@@ -48,58 +46,6 @@ public sealed class AuthenticationTokenService(
             nowUtc,
             cancellationToken).ConfigureAwait(false);
         return new IssuedAuthenticationTokens(accessToken, refreshToken);
-    }
-
-    public async Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
-        User user,
-        CancellationToken cancellationToken,
-        AuthenticationClientContext? clientContext = null,
-        bool rememberMe = false,
-        Guid? refreshSessionId = null) {
-        string[] roles = GetRoles(user);
-        string accessToken = jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles, ResolveAccessTokenCapUtc(user));
-        Guid resolvedRefreshSessionId = refreshSessionId ?? Guid.NewGuid();
-        string refreshToken = jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles, rememberMe, resolvedRefreshSessionId);
-        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-
-        string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
-        user.RecordAuthenticationActivity(nowUtc);
-        await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
-        await PersistAuthenticationArtifactsAsync(
-            user.Id,
-            hashedRefreshToken,
-            rememberMe,
-            resolvedRefreshSessionId,
-            refreshSessionId,
-            clientContext,
-            nowUtc,
-            cancellationToken).ConfigureAwait(false);
-
-        return new IssuedAuthenticationTokens(accessToken, refreshToken);
-    }
-
-    public string IssueAccessToken(User user) {
-        string[] roles = GetRoles(user);
-        return jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles, ResolveAccessTokenCapUtc(user));
-    }
-
-    private string[] GetRoles(User user) {
-        var roles = user.GetRoleNames().ToList();
-        if (user.HasActivePremiumTrial(dateTimeProvider.GetUtcNow().UtcDateTime) &&
-            !roles.Contains(RoleNames.Premium, StringComparer.Ordinal)) {
-            roles.Add(RoleNames.Premium);
-        }
-
-        return [.. roles];
-    }
-
-    private DateTime? ResolveAccessTokenCapUtc(User user) {
-        if (user.HasRole(RoleNames.Premium) ||
-            !user.HasActivePremiumTrial(dateTimeProvider.GetUtcNow().UtcDateTime)) {
-            return null;
-        }
-
-        return user.PremiumTrialEndsAtUtc;
     }
 
     private async Task PersistAuthenticationArtifactsAsync(

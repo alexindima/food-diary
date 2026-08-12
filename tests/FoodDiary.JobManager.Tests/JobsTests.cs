@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
@@ -1509,15 +1510,15 @@ public sealed class JobsTests {
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user => IsAccessible(user) && user.Id == id));
 
-        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+        public Task<Result<UserBillingProfileModel>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
             User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
             return Task.FromResult(user is null
-                ? Result.Failure<User>(Errors.Authentication.InvalidToken)
-                : Result.Success(user));
+                ? Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken)
+                : Result.Success(ToBillingProfile(user)));
         }
 
         public async Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
-            Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            Result<UserBillingProfileModel> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
             return result.IsFailure ? result.Error : null;
         }
 
@@ -1533,13 +1534,27 @@ public sealed class JobsTests {
                     user.PremiumTrialEndsAtUtc)));
         }
 
-        public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
-            GetByIdIncludingDeletedAsync(userId, cancellationToken);
+        public async Task<UserBillingProfileModel?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user is null ? null : ToBillingProfile(user);
+        }
 
-        public Task<bool> CanAccessUserAsync(User user, CancellationToken cancellationToken) =>
-            Task.FromResult(IsAccessible(user));
+        public Task<Result<UserBillingProfileModel>> StartPremiumTrialAsync(
+            UserId userId,
+            DateTime startedAtUtc,
+            TimeSpan duration,
+            CancellationToken cancellationToken) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            if (user is null) {
+                return Task.FromResult(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken));
+            }
 
-        public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) {
+            user.StartPremiumTrial(startedAtUtc, duration);
+            return Task.FromResult(Result.Success(ToBillingProfile(user)));
+        }
+
+        public Task EnsurePremiumRoleAsync(UserId userId, CancellationToken cancellationToken) {
+            User user = _users.Single(candidate => candidate.Id == userId);
             if (!user.HasRole(RoleNames.Premium)) {
                 user.ReplaceRoles([.. user.UserRoles.Select(userRole => userRole.Role), _premiumRole]);
             }
@@ -1547,7 +1562,8 @@ public sealed class JobsTests {
             return Task.CompletedTask;
         }
 
-        public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) {
+        public Task RemovePremiumRoleAsync(UserId userId, CancellationToken cancellationToken) {
+            User user = _users.Single(candidate => candidate.Id == userId);
             if (user.HasRole(RoleNames.Premium)) {
                 user.ReplaceRoles([
                     .. user.UserRoles
@@ -1558,9 +1574,6 @@ public sealed class JobsTests {
 
             return Task.CompletedTask;
         }
-
-        public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
-            UpdateAsync(user, cancellationToken);
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user => user.Id == id));
@@ -1602,6 +1615,16 @@ public sealed class JobsTests {
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         private static bool IsAccessible(User user) => user is { IsActive: true, DeletedAt: null };
+
+        private static UserBillingProfileModel ToBillingProfile(User user) =>
+            new(
+                user.Id,
+                user.Email,
+                user.IsActive,
+                user.DeletedAt is not null,
+                user.HasRole(RoleNames.Premium),
+                user.PremiumTrialStartedAtUtc,
+                user.PremiumTrialEndsAtUtc);
     }
 
     [ExcludeFromCodeCoverage]

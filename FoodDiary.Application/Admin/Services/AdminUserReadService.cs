@@ -4,12 +4,10 @@ using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Admin.Services;
 
 internal sealed class AdminUserReadService(
-    IUserDirectoryService userLookupRepository,
     IUserAdministrationReadService userAdministrationReadService) : IAdminUserReadService {
     public async Task<AdminUserModel?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) {
         UserAdminReadModel? user = await userAdministrationReadService
@@ -51,5 +49,5 @@ internal sealed class AdminUserReadService(
     }
 
     public async Task<bool> ExistsIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        await userLookupRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false) is not null;
+        await userAdministrationReadService.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false) is not null;
 }

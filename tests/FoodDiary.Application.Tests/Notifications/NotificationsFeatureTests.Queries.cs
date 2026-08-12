@@ -1,5 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
 using FoodDiary.Application.Notifications.Services;
@@ -86,11 +88,11 @@ public partial class NotificationsFeatureTests {
 
     [Fact]
     public async Task NotificationUserContextService_WhenUserMissing_ReturnsAccessFailure() {
-        INotificationUserAccessService userAccessService = Substitute.For<INotificationUserAccessService>();
-        userAccessService
-            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
-        var service = new NotificationUserContextService(userAccessService);
+        IUserNotificationProfileService userProfileService = Substitute.For<IUserNotificationProfileService>();
+        userProfileService
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<UserNotificationProfileModel>(Errors.Authentication.InvalidToken)));
+        var service = new NotificationUserContextService(userProfileService);
 
         Result<NotificationUserContext> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 

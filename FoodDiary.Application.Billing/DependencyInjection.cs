@@ -17,7 +17,6 @@ public static class DependencyInjection {
         services.AddScoped<IBillingOverviewReadService, BillingOverviewReadService>();
         services.AddScoped<IBillingRenewalService, BillingRenewalService>();
         services.AddScoped<IBillingUserContextService, BillingUserContextService>();
-        services.AddScoped<IBillingUserLookupService, BillingUserLookupService>();
         services.AddScoped<BillingAccessService>();
         services.AddScoped<BillingWebhookContextResolver>();
         services.AddScoped<BillingWebhookPaymentRecorder>();

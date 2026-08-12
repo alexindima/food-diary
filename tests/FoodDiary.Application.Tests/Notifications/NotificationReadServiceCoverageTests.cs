@@ -1,11 +1,15 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests.Notifications;
 
@@ -45,7 +49,7 @@ public sealed class NotificationReadServiceCoverageTests {
         var service = new WebPushDeliveryAudienceService(
             reader,
             writer,
-            Substitute.For<FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService>());
+            Substitute.For<IUserNotificationProfileService>());
 
         await service.RemoveInvalidSubscriptionsAsync(UserId.New(), [], CancellationToken.None);
 
@@ -69,9 +73,7 @@ public sealed class NotificationReadServiceCoverageTests {
             user.Id, "https://push.example.com/expired", "old", "old-auth", utcNow, "ru");
         IWebPushSubscriptionReadRepository reader = Substitute.For<IWebPushSubscriptionReadRepository>();
         IWebPushSubscriptionWriteRepository writer = Substitute.For<IWebPushSubscriptionWriteRepository>();
-        FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService users =
-            Substitute.For<FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService>();
-        users.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
+        IUserNotificationProfileService users = CreateUserProfileService(user);
         reader.GetByUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns([active, expired]);
         var service = new WebPushDeliveryAudienceService(reader, writer, users);
 
@@ -99,9 +101,7 @@ public sealed class NotificationReadServiceCoverageTests {
             user.Id, "https://push.example.com/active-only", "p256", "auth", utcNow.AddHours(1), "en");
         IWebPushSubscriptionReadRepository reader = Substitute.For<IWebPushSubscriptionReadRepository>();
         IWebPushSubscriptionWriteRepository writer = Substitute.For<IWebPushSubscriptionWriteRepository>();
-        FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService users =
-            Substitute.For<FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService>();
-        users.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
+        IUserNotificationProfileService users = CreateUserProfileService(user);
         reader.GetByUserAsync(user.Id, Arg.Any<CancellationToken>()).Returns([active]);
         var service = new WebPushDeliveryAudienceService(reader, writer, users);
 
@@ -120,10 +120,13 @@ public sealed class NotificationReadServiceCoverageTests {
     [Fact]
     public async Task WebPushDeliveryAudienceService_GetActiveAudienceAsync_WhenUserMissing_ReturnsEmptyWithoutReadingSubscriptions() {
         IWebPushSubscriptionReadRepository reader = Substitute.For<IWebPushSubscriptionReadRepository>();
+        IUserNotificationProfileService users = Substitute.For<IUserNotificationProfileService>();
+        users.GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<UserNotificationProfileModel>(Errors.Authentication.InvalidToken)));
         var service = new WebPushDeliveryAudienceService(
             reader,
             Substitute.For<IWebPushSubscriptionWriteRepository>(),
-            Substitute.For<FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService>());
+            users);
 
         IReadOnlyList<WebPushDeliverySubscription> result = await service.GetActiveAudienceAsync(
             UserId.New(),
@@ -142,9 +145,7 @@ public sealed class NotificationReadServiceCoverageTests {
             PushNotificationsEnabled: true,
             FastingPushNotificationsEnabled: false));
         IWebPushSubscriptionReadRepository reader = Substitute.For<IWebPushSubscriptionReadRepository>();
-        FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService users =
-            Substitute.For<FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService>();
-        users.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(user);
+        IUserNotificationProfileService users = CreateUserProfileService(user);
         var service = new WebPushDeliveryAudienceService(
             reader,
             Substitute.For<IWebPushSubscriptionWriteRepository>(),
@@ -171,7 +172,7 @@ public sealed class NotificationReadServiceCoverageTests {
         var service = new WebPushDeliveryAudienceService(
             reader,
             writer,
-            Substitute.For<FoodDiary.Application.Abstractions.Users.Common.IUserDirectoryService>());
+            Substitute.For<IUserNotificationProfileService>());
 
         await service.RemoveInvalidSubscriptionsAsync(userId, [matching.Id.Value, Guid.NewGuid()], CancellationToken.None);
 
@@ -204,8 +205,26 @@ public sealed class NotificationReadServiceCoverageTests {
             FastingPushNotificationsEnabled: true,
             SocialPushNotificationsEnabled: true));
 
-        bool result = WebPushDeliveryAudienceService.IsCategoryEnabled(user, notificationType);
+        bool result = WebPushDeliveryAudienceService.IsCategoryEnabled(ToNotificationProfile(user), notificationType);
 
         Assert.True(result);
     }
+
+    private static IUserNotificationProfileService CreateUserProfileService(User user) {
+        IUserNotificationProfileService service = Substitute.For<IUserNotificationProfileService>();
+        service.GetAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success(ToNotificationProfile(user))));
+        return service;
+    }
+
+    private static UserNotificationProfileModel ToNotificationProfile(User user) =>
+        new(
+            user.Id,
+            user.HasPassword,
+            user.Language,
+            user.PushNotificationsEnabled,
+            user.FastingPushNotificationsEnabled,
+            user.SocialPushNotificationsEnabled,
+            user.FastingCheckInReminderHours,
+            user.FastingCheckInFollowUpReminderHours);
 }

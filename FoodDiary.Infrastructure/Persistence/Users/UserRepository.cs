@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -8,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Users;
 
-public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository, IGoogleIdentityUserDirectoryService, IUserAdminReadRepository, IUserAdminReadModelRepository {
+public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository, IUserGoogleIdentityRepository, IUserAdminReadRepository, IUserAdminReadModelRepository {
     private const string LikeEscapeCharacter = "\\";
 
     private IQueryable<User> UsersWithRoles() =>

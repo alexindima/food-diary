@@ -1,26 +1,22 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Models;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 
 public sealed class GoogleLoginCommandHandler(
-    IAuthenticationUserMutationService userMutationService,
+    IUserAuthenticationIdentityService userIdentityService,
     INotificationDeduplicationService notificationDeduplicationService,
     INotificationWriter notificationWriter,
     IGoogleTokenValidator googleTokenValidator,
-    IPasswordHasher passwordHasher,
+    TimeProvider dateTimeProvider,
     IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<GoogleLoginCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(GoogleLoginCommand command, CancellationToken cancellationToken) {
@@ -30,84 +26,51 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         GoogleIdentityPayload payload = payloadResult.Value;
-        User? user = await userMutationService
-            .GetByGoogleIdentityIncludingDeletedAsync(payload.Issuer, payload.Subject, cancellationToken)
+        Result<UserAuthenticationPrincipalModel> authenticationResult = await userIdentityService
+            .AuthenticateGoogleAsync(
+                new UserGoogleAuthenticationModel(
+                    payload.Issuer,
+                    payload.Subject,
+                    payload.Email,
+                    payload.FirstName,
+                    payload.LastName,
+                    payload.Locale),
+                dateTimeProvider.GetUtcNow().UtcDateTime,
+                cancellationToken)
             .ConfigureAwait(false);
-
-        if (user is null) {
-            User? emailOwner = await userMutationService.GetByEmailIncludingDeletedAsync(payload.Email, cancellationToken).ConfigureAwait(false);
-            if (emailOwner is not null) {
-                return Result.Failure<AuthenticationModel>(Errors.Authentication.GoogleAccountLinkRequired);
-            }
-
-            user = CreateGoogleUser(payload, passwordHasher);
-            user = await userMutationService.AddAsync(user, cancellationToken).ConfigureAwait(false);
-        } else {
-            Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
-            if (accessError is not null) {
-                return Result.Failure<AuthenticationModel>(accessError);
-            }
-
-            ApplyGoogleProfile(user, payload);
-            await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        if (authenticationResult.IsFailure) {
+            return Result.Failure<AuthenticationModel>(authenticationResult.Error);
         }
 
-        await EnsurePasswordSetupReminderAsync(user, notificationDeduplicationService, notificationWriter, cancellationToken).ConfigureAwait(false);
+        UserAuthenticationPrincipalModel principal = authenticationResult.Value;
+        await EnsurePasswordSetupReminderAsync(
+            principal,
+            notificationDeduplicationService,
+            notificationWriter,
+            cancellationToken).ConfigureAwait(false);
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueAndStoreAsync(user, cancellationToken, command.ClientContext, command.RememberMe)
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe)
             .ConfigureAwait(false);
-        return Result.Success(user.ToAuthenticationModel(tokens));
-    }
-
-    private static User CreateGoogleUser(GoogleIdentityPayload payload, IPasswordHasher passwordHasher) {
-        string placeholderPasswordHash = passwordHasher.Hash(SecurityTokenGenerator.GenerateUrlSafeToken());
-        var user = User.Create(payload.Email, placeholderPasswordHash, hasPassword: false);
-        user.LinkGoogleIdentity(payload.Issuer, payload.Subject);
-        user.UpdateGoals(new UserGoalUpdate(
-            DailyCalorieTarget: 2000,
-            ProteinTarget: 150,
-            FatTarget: 65,
-            CarbTarget: 200,
-            FiberTarget: 28,
-            WaterGoal: 2000));
-        ApplyGoogleProfile(user, payload);
-        return user;
-    }
-
-    private static void ApplyGoogleProfile(User user, GoogleIdentityPayload payload) {
-        if (!user.IsEmailConfirmed) {
-            user.SetEmailConfirmed(isConfirmed: true);
-        }
-
-        if (!string.IsNullOrWhiteSpace(payload.Locale)) {
-            string normalizedLanguage = LanguageCode.FromPreferred(payload.Locale).Value;
-            if (!string.Equals(user.Language, normalizedLanguage, StringComparison.Ordinal)) {
-                user.SetLanguage(normalizedLanguage);
-            }
-        }
-
-        user.UpdatePersonalInfo(
-            firstName: payload.FirstName,
-            lastName: payload.LastName);
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
     }
 
     private static async Task EnsurePasswordSetupReminderAsync(
-        User user,
+        UserAuthenticationPrincipalModel principal,
         INotificationDeduplicationService notificationDeduplicationService,
         INotificationWriter notificationWriter,
         CancellationToken cancellationToken) {
-        if (user.HasPassword) {
+        if (principal.User.HasPassword) {
             return;
         }
 
-        string referenceId = $"password-setup:{user.Id.Value}";
-        bool exists = await notificationDeduplicationService.ExistsAsync(user.Id, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken).ConfigureAwait(false);
+        string referenceId = $"password-setup:{principal.UserId.Value}";
+        bool exists = await notificationDeduplicationService.ExistsAsync(principal.UserId, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken).ConfigureAwait(false);
         if (exists) {
             return;
         }
 
-        Notification notification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, referenceId);
+        Notification notification = NotificationFactory.CreatePasswordSetupSuggested(principal.UserId, referenceId);
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
-using User = FoodDiary.Domain.Entities.Users.User;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
@@ -38,7 +38,7 @@ public sealed class BillingWebhookContextResolver(
             provider,
             webhookEvent.RelatedTransactionId,
             cancellationToken).ConfigureAwait(false);
-        User? user = await ResolveUserAsync(
+        UserBillingProfileModel? user = await ResolveUserAsync(
             subscription,
             webhookEvent.UserId,
             relatedPayment?.UserId,
@@ -93,7 +93,7 @@ public sealed class BillingWebhookContextResolver(
             : billingPaymentRepository.GetByExternalPaymentIdAsync(provider, relatedTransactionId, cancellationToken);
     }
 
-    private async Task<User?> ResolveUserAsync(
+    private async Task<UserBillingProfileModel?> ResolveUserAsync(
         BillingSubscription? subscription,
         Guid? webhookUserId,
         UserId? relatedPaymentUserId,

@@ -1,9 +1,11 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Admin.Commands.CreateAdminUser;
-using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -15,30 +17,17 @@ namespace FoodDiary.Application.Tests.Admin;
 public sealed class CreateAdminUserCommandHandlerTests {
     [Fact]
     public async Task Handle_WithGeneratedPassword_CreatesConfirmedUserAndQueuesCredentialsEmail() {
-        IAdminUserManagementService userManagementService = Substitute.For<IAdminUserManagementService>();
-        IPasswordHasher passwordHasher = Substitute.For<IPasswordHasher>();
+        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
         IEmailSender emailSender = Substitute.For<IEmailSender>();
         IAuditLogger auditLogger = Substitute.For<IAuditLogger>();
-        var role = Role.Create(RoleNames.Dietologist);
-        User? createdUser = null;
-
-        userManagementService
-            .GetByEmailIncludingDeletedAsync("dietologist@example.com", Arg.Any<CancellationToken>())
-            .Returns((User?)null);
-        userManagementService
-            .GetRolesByNamesAsync(Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
-            .Returns([role]);
-        userManagementService
-            .AddAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
-            .Returns(callInfo => {
-                createdUser = callInfo.Arg<User>();
-                return createdUser!;
-            });
-        passwordHasher.Hash(Arg.Any<string>()).Returns(callInfo => $"hashed:{callInfo.Arg<string>()}");
+        UserAdminCreateModel? capturedRequest = null;
+        userManagementService.CreateAsync(
+                Arg.Do<UserAdminCreateModel>(request => capturedRequest = request),
+                Arg.Any<CancellationToken>())
+            .Returns(call => Result.Success(ToReadModel(call.Arg<UserAdminCreateModel>())));
 
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
-            passwordHasher,
             emailSender,
             auditLogger,
             TimeProvider.System);
@@ -48,10 +37,10 @@ public sealed class CreateAdminUserCommandHandlerTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        User capturedUser = Assert.IsType<User>(createdUser);
-        Assert.True(capturedUser.IsEmailConfirmed);
-        Assert.True(capturedUser.MustChangePassword);
-        Assert.Contains(RoleNames.Dietologist, capturedUser.GetRoleNames(), StringComparer.Ordinal);
+        UserAdminCreateModel request = Assert.IsType<UserAdminCreateModel>(capturedRequest);
+        Assert.True(request.IsEmailConfirmed);
+        Assert.True(request.RequirePasswordChange);
+        Assert.Contains(RoleNames.Dietologist, request.Roles, StringComparer.Ordinal);
         AdminUserCreationModel creation = result.Value;
         Assert.NotEmpty(creation.TemporaryPassword);
         Assert.True(creation.CredentialsEmailQueued);
@@ -61,24 +50,17 @@ public sealed class CreateAdminUserCommandHandlerTests {
                 string.Equals(message.TemporaryPassword, creation.TemporaryPassword, StringComparison.Ordinal) &&
                 string.Equals(message.Language, "ru", StringComparison.Ordinal)),
             Arg.Any<CancellationToken>());
-        await userManagementService.Received(1).UpdateAsync(
-            capturedUser,
-            Arg.Is<IReadOnlyCollection<UserRoleAuditEvent>>(events =>
-                events != null &&
-                events.Count == 1 &&
-                string.Equals(events.Single().RoleName, RoleNames.Dietologist, StringComparison.Ordinal)),
-            Arg.Any<CancellationToken>());
+        await userManagementService.Received(1).CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_WhenEmailAlreadyExists_ReturnsConflictWithoutCreatingUser() {
-        IAdminUserManagementService userManagementService = Substitute.For<IAdminUserManagementService>();
+        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
         userManagementService
-            .GetByEmailIncludingDeletedAsync("dietologist@example.com", Arg.Any<CancellationToken>())
-            .Returns(User.Create("dietologist@example.com", "hash"));
+            .CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserAdminReadModel>(Errors.User.EmailAlreadyExists));
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
-            Substitute.For<IPasswordHasher>(),
             Substitute.For<IEmailSender>(),
             Substitute.For<IAuditLogger>(),
             TimeProvider.System);
@@ -89,15 +71,13 @@ public sealed class CreateAdminUserCommandHandlerTests {
 
         ResultAssert.Failure(result);
         Assert.Equal(Errors.User.EmailAlreadyExists, result.Error);
-        await userManagementService.DidNotReceive().AddAsync(Arg.Any<User>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_WithEmptyActorId_ReturnsValidationFailure() {
-        IAdminUserManagementService userManagementService = Substitute.For<IAdminUserManagementService>();
+        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
-            Substitute.For<IPasswordHasher>(),
             Substitute.For<IEmailSender>(),
             Substitute.For<IAuditLogger>(),
             TimeProvider.System);
@@ -107,23 +87,17 @@ public sealed class CreateAdminUserCommandHandlerTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        await userManagementService.DidNotReceive().GetByEmailIncludingDeletedAsync(
-            Arg.Any<string>(),
-            Arg.Any<CancellationToken>());
+        await userManagementService.DidNotReceive().CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_WithUnknownRole_ReturnsValidationFailure() {
-        IAdminUserManagementService userManagementService = Substitute.For<IAdminUserManagementService>();
+        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
         userManagementService
-            .GetByEmailIncludingDeletedAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns((User?)null);
-        userManagementService
-            .GetRolesByNamesAsync(Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
-            .Returns(Array.Empty<Role>());
+            .CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserAdminReadModel>(Errors.Validation.Invalid("Roles", "Unknown role.")));
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
-            Substitute.For<IPasswordHasher>(),
             Substitute.For<IEmailSender>(),
             Substitute.For<IAuditLogger>(),
             TimeProvider.System);
@@ -133,33 +107,17 @@ public sealed class CreateAdminUserCommandHandlerTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        await userManagementService.DidNotReceive().AddAsync(
-            Arg.Any<User>(),
-            Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Handle_WithExplicitPasswordAndNoEmail_CreatesUserWithoutPasswordChange() {
-        IAdminUserManagementService userManagementService = Substitute.For<IAdminUserManagementService>();
-        IPasswordHasher passwordHasher = Substitute.For<IPasswordHasher>();
+        IUserAdministrationMutationService userManagementService = Substitute.For<IUserAdministrationMutationService>();
         IEmailSender emailSender = Substitute.For<IEmailSender>();
-        var role = Role.Create(RoleNames.Dietologist);
-        User? createdUser = null;
         userManagementService
-            .GetByEmailIncludingDeletedAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns((User?)null);
-        userManagementService
-            .GetRolesByNamesAsync(Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
-            .Returns([role]);
-        userManagementService.AddAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                createdUser = call.Arg<User>();
-                return createdUser!;
-            });
-        passwordHasher.Hash("explicit-password").Returns("hash");
+            .CreateAsync(Arg.Any<UserAdminCreateModel>(), Arg.Any<CancellationToken>())
+            .Returns(call => Result.Success(ToReadModel(call.Arg<UserAdminCreateModel>())));
         var handler = new CreateAdminUserCommandHandler(
             userManagementService,
-            passwordHasher,
             emailSender,
             Substitute.For<IAuditLogger>(),
             TimeProvider.System);
@@ -176,11 +134,23 @@ public sealed class CreateAdminUserCommandHandlerTests {
         AdminUserCreationModel model = ResultAssert.Success(result);
         Assert.Multiple(
             () => Assert.Equal("explicit-password", model.TemporaryPassword),
-            () => Assert.False(model.CredentialsEmailQueued),
-            () => Assert.False(Assert.IsType<User>(createdUser).MustChangePassword));
+            () => Assert.False(model.CredentialsEmailQueued));
         await emailSender.DidNotReceive().SendAccountCreatedAsync(
             Arg.Any<AccountCreatedMessage>(),
             Arg.Any<CancellationToken>());
+    }
+
+    private static UserAdminReadModel ToReadModel(UserAdminCreateModel request) {
+        var user = User.Create(request.Email, "hash");
+        user.UpdatePersonalInfo(request.FirstName, request.LastName);
+        user.SetLanguage(request.Language ?? "en");
+        user.SetEmailConfirmed(request.IsEmailConfirmed);
+        user.ReplaceRoles([.. request.Roles.Select(Role.Create)]);
+        if (request.RequirePasswordChange) {
+            user.RequirePasswordChange();
+        }
+
+        return user.ToAdminReadModel();
     }
 
     private static CreateAdminUserCommand CreateCommand() =>

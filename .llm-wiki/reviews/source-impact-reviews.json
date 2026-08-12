@@ -8,13 +8,17 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
+                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
+                                        },
+                                        {
+                                            "path":  "docs/ARCHITECTURE.md",
+                                            "sha256":  "a80223456d17bf2e7fa685c8df442da74f19fa60bd44a89e9f31430d65744da0"
                                         }
                                     ],
-                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
+                        "reason":  "Architecture overview now documents Users as the third extracted application module; mail-service architecture and runtime boundaries are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:21:43.0688759Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:51:43.0252575Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -23,13 +27,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "677af26b197c8be76be1c8734750e2a17be36bd57f1c477e2266f46dd7b17878"
+                                            "sha256":  "a80223456d17bf2e7fa685c8df442da74f19fa60bd44a89e9f31430d65744da0"
                                         }
                                     ],
-                        "reason":  "Reviewed mail-service module page; analyzer wiring is build-only and does not change mail-service runtime boundaries.",
+                        "reason":  "Architecture overview now documents Users as the third extracted application module; mail-service architecture and runtime boundaries are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1ccbd1bd704c69fb25c8aa7aa0c9316adb4c16a8",
-                        "reviewedAtUtc":  "2026-08-08T15:21:55.0614188Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:51:43.2586208Z"
                     },
                     {
                         "pageId":  "module.primary-backend",
@@ -37,29 +41,45 @@
                         "pageSha256":  "8513486fc92e9236d116ce0c4eeaf7ba511ab53761f517bcc26e58464a249fa1",
                         "sources":  [
                                         {
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "e9b9fa663479b59e59d7cd87448d79eb0fbfc440c6945344de9412be09502b27"
+                                        },
+                                        {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "b89aee0eacc759b5e91342633325101692fa2d713d7536f8ee6d32c3931486f4"
+                                            "sha256":  "bcfb6059c6f24a88e399ede5fc7cf4f3ed3980abbf92027510daa3bbea0414fa"
                                         }
                                     ],
-                        "reason":  "Reviewed Users-owned authentication identity capability and Authentication-to-Users boundary documentation.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
-                        "reviewedAtUtc":  "2026-08-12T03:16:18.7262776Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:12.0174933Z"
                     },
                     {
                         "pageId":  "system.architecture",
                         "pagePath":  ".llm-wiki/system/architecture.md",
-                        "pageSha256":  "db8ec229f2fd9d661b5737dbd6112c28b9d356334ebb19c26e801907f4a22afc",
+                        "pageSha256":  "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
                         "sources":  [
                                         {
+                                            "path":  "docs/ARCHITECTURE.md",
+                                            "sha256":  "a80223456d17bf2e7fa685c8df442da74f19fa60bd44a89e9f31430d65744da0"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "e9b9fa663479b59e59d7cd87448d79eb0fbfc440c6945344de9412be09502b27"
+                                        },
+                                        {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "8856ac3582eb96da5c65def02fdf35bdf1287dc8d6890c52cb3a836fee211044"
+                                            "sha256":  "63e0225b2bbde9e9a9e16a8e4d36e2206f1438c5094de4a433a1fa1639fb0f75"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+                                            "sha256":  "054c014c796303fd02cf7b36e11f0390623872bf9103eed0a0dd45bb1ad74a88"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "The durable architecture overview now matches the implemented Users assembly boundary and shared CQRS contracts in Application.Abstractions; dependency matrix and architecture tests validate the graph.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:48.6733071Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:51:44.4999108Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -83,28 +103,32 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
+                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
                                         }
                                     ],
-                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:21:43.2932123Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:12.2166060Z"
                     },
                     {
                         "pageId":  "system.repository-catalog",
                         "pagePath":  ".llm-wiki/system/repository-catalog.md",
-                        "pageSha256":  "a97b8a5d6e04018699449d6024d8fb3ec6db81d895ad34ff276835ec4d3db159",
+                        "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
                         "sources":  [
                                         {
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "e9b9fa663479b59e59d7cd87448d79eb0fbfc440c6945344de9412be09502b27"
+                                        },
+                                        {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "8856ac3582eb96da5c65def02fdf35bdf1287dc8d6890c52cb3a836fee211044"
+                                            "sha256":  "63e0225b2bbde9e9a9e16a8e4d36e2206f1438c5094de4a433a1fa1639fb0f75"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:49.4326646Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:12.4186042Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -112,14 +136,14 @@
                         "pageSha256":  "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "d25cb3fa394cb5a240aa51b810c3c3d60fdf47152e2d2e7b1010cbdc980d3c57"
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:04.8748081Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:13.6816533Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -142,14 +166,18 @@
                         "pageSha256":  "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1",
+                                            "sha256":  "2014060080165545c723db6597a0272612bfd7489ac39f43b7160475bc353bd2"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
                                             "sha256":  "86d0979768a76d5e5c8fa9dc9a6fa27f2ca2e71eba544dda6f6e6a887170bfc2"
                                         }
                                     ],
-                        "reason":  "Reviewed evidence-lineage set comparison hardening; semantics are unchanged and equal, different, and empty evidence sets are now handled safely.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "009e677aa8c7d6f4b4cbec20e302b47165a8b316",
-                        "reviewedAtUtc":  "2026-08-12T13:32:26.1764095Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:15.2521829Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -172,14 +200,22 @@
                         "pageSha256":  "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/generated/repository-catalog.json",
+                                            "sha256":  "bb7cfeb1470820798a1d894aeb110f4e66901f1ef70352f22a1a08a6e6f9f45a"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
                                             "sha256":  "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
+                                        },
+                                        {
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
                                         }
                                     ],
-                        "reason":  "Reviewed safe origin, project, and dependency extraction for heterogeneous module catalog entries.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0d08671c1d651c61876941d03e33372a0dedbc3c",
-                        "reviewedAtUtc":  "2026-08-12T13:06:07.6580609Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:18.0309948Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -187,22 +223,14 @@
                         "pageSha256":  "fc98ae1eba6a72137dfa02d7b37e13b08738bd2dd7b0408bf971d6f7dda29917",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Add-LlmWikiSourceReview.ps1",
-                                            "sha256":  "4bb4a5990e5cf227012aae5df92b186e03541cd927ad60e2572ab4f71c27108f"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "e11d90f5959638f46818001c99aa79eb2ac669fd3dc419036028697399f6f8af"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
-                                            "sha256":  "c9692ab3d1fefd459b09104661835555a524c46979b9b3a3fcdc46a909f7f1a9"
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:07.4163776Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:18.6164697Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -231,12 +259,28 @@
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
                                             "sha256":  "252cfe09742f6c7f62b12cc1f47a0446358dde09877c9c03e922727e1aacf2b0"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+                                            "sha256":  "c84d77ebb9730212326aebc45ec44b31285f9e15d53034a486ea75f5317b9a35"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+                                            "sha256":  "8d980c4d6e8a270343626b3559f8374d51f0f4a1f476b26359c2bad9874e6c6f"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+                                            "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
+                                            "sha256":  "499b12903b4bd2a153b3ec3150d801dd34f61736c748f7a015eedb15a6e7ad0f"
                                         }
                                     ],
-                        "reason":  "Optional implementation-plan phase collections are normalized defensively; adaptive routing, profile selection, slice semantics, and required checkpoints are unchanged.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3bc6dfee586376e754323775bd37890bcc7006cb",
-                        "reviewedAtUtc":  "2026-08-12T17:20:04.4224484Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:12.6258379Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -244,29 +288,37 @@
                         "pageSha256":  "037cc1091ca997ebc790af65de373c685931315349afb4750800c31f49bd7245",
                         "sources":  [
                                         {
-                                            "path":  "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-                                            "sha256":  "902650514121cb63d5c0a869a373759349755c262d3cb2c3ed516c4890c8a7e5"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+                                            "sha256":  "c9541cd9b6cd17a0cb574583321979932dcc8279d83ef396b2169f12c38dcc4b"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:50.3887865Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:12.8292917Z"
                     },
                     {
                         "pageId":  "workflow-architecture-health-review",
                         "pagePath":  ".llm-wiki/workflows/architecture-health-review.md",
-                        "pageSha256":  "13c911643835938223822e5a1566c4d89542a3717b262390dafdd850323ee329",
+                        "pageSha256":  "f74e1b06fd3864499e0a28e359f979e552cb8fa51fa0da582148e417a7dfd065",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "5dbc02c1f39ca8d7f0704bbdbce680aebca661ffded978baf26a17226bf168b5"
+                                            "sha256":  "10883234d3dfd8b4b28d4e3a44b7c1d48c597f4605ae22ae9eca184c86047e7a"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "e9b9fa663479b59e59d7cd87448d79eb0fbfc440c6945344de9412be09502b27"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+                                            "sha256":  "054c014c796303fd02cf7b36e11f0390623872bf9103eed0a0dd45bb1ad74a88"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated indexes and dependent guidance for this frontend-only fasting presentation change; component contracts, architecture boundaries, feature trace, and focused quality risks remain valid.",
+                        "reason":  "Architecture health evidence was regenerated after Users extraction; project references match the allowed matrix and all 544 architecture guardrails pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8e2e1834fc0fb828f81b9a5aa71d19d08b9d141",
-                        "reviewedAtUtc":  "2026-08-11T21:38:26.1250129Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:30.0858698Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -275,13 +327,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "2fb58a8fdbb477f815d261d149e361eef2a3e0afba919618202eec390e5e7bae"
+                                            "sha256":  "7703ee4f72cbd59d40bcc52b1088088cdd0d61b07b448a3ba2bcbdfbe4f6f8ea"
                                         }
                                     ],
-                        "reason":  "Reviewed new in-process Users contract, consumers, nullability, and aggregate isolation.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
-                        "reviewedAtUtc":  "2026-08-12T03:16:21.0040922Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:13.1343948Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -289,14 +341,18 @@
                         "pageSha256":  "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
                                             "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:37.8340049Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:13.4151255Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -319,14 +375,18 @@
                         "pageSha256":  "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
+                                            "sha256":  "785f052003ad3c8ad93e7a044ea2d3acd0c32d79fb00a8c783aaeed1028ec626"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
                                             "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:39.6188940Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:13.9049947Z"
                     },
                     {
                         "pageId":  "workflow-context-budget-optimization",
@@ -349,14 +409,26 @@
                         "pageSha256":  "c6ad719eb6441142cdea59a921180a1c64d63b5c3143b6d0ac37ccf2df185fda",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+                                            "sha256":  "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
                                             "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
+                                            "sha256":  "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
+                                            "sha256":  "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
                                         }
                                     ],
-                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
-                        "reviewedAtUtc":  "2026-08-12T14:07:33.2218253Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:14.1542166Z"
                     },
                     {
                         "pageId":  "workflow-context-security",
@@ -383,18 +455,34 @@
                                             "sha256":  "7c4d449e9443dd07872fc64622b63c5ee236d2abe24e660ed4c228aa8a14df70"
                                         },
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
+                                            "sha256":  "bcb5da42c93ff7837fbf33ec9c50b89145c6487fab6f82ea97d61d3bd08cc110"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
                                             "sha256":  "996a9c5fdbf6b674ed1ce15f03531ea956b91f91766bd8369d11c72419c6074d"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
                                             "sha256":  "b373c3c4fb7e20a4529005a06e4643b6e2ffd44f0b185ecb6199072564abcd87"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
                                         }
                                     ],
-                        "reason":  "Reviewed the versioned hash-chain migration, persisted JSON hashing, strict corruption handling, and action-safe formatters. The documented governed promotion workflow remains current; changes harden storage compatibility and verification without changing its public lifecycle.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "681462b330264144002d61b60b77c14d0d0a4fea",
-                        "reviewedAtUtc":  "2026-08-12T16:10:52.0876353Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:14.4422672Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -417,14 +505,18 @@
                         "pageSha256":  "89bba606d2635692a16e530538c4ccc5a89b7d983e5a9465a605a1aefdd34e7c",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
                                             "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
-                        "reviewedAtUtc":  "2026-08-12T09:51:48.9508679Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:14.7368462Z"
                     },
                     {
                         "pageId":  "workflow-decision-context",
@@ -494,12 +586,20 @@
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
                                             "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
+                                            "sha256":  "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
+                                            "sha256":  "e203a5aef1a161ba884d4f632842cd6831546fc18537212634186c6b9c3d7f61"
                                         }
                                     ],
-                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
-                        "reviewedAtUtc":  "2026-08-12T14:07:41.2104722Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:14.9736782Z"
                     },
                     {
                         "pageId":  "workflow-failure-prediction",
@@ -507,14 +607,22 @@
                         "pageSha256":  "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
+                                            "sha256":  "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
+                                            "sha256":  "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
                                             "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
-                        "reviewedAtUtc":  "2026-08-12T09:51:50.9282570Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:15.5471170Z"
                     },
                     {
                         "pageId":  "workflow-impact-simulation",
@@ -522,14 +630,22 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
                                             "sha256":  "3e3767dfd27ab232d7f94a573e2030a89673a74265fe6d1070e170293cf4efb8"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed scalar-safe feature cardinality handling for zero, one, and multiple matches; workflow guidance remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ae3b2a9c65c2ce767d1586109d3b31c002896f8d",
-                        "reviewedAtUtc":  "2026-08-12T10:11:57.1127681Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:15.8406449Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -552,14 +668,18 @@
                         "pageSha256":  "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
+                                            "sha256":  "716c306fd32a152e2d9c634937c9428bb54459b33f479043ee0f9cabeef51b33"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
                                             "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:43.3390397Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:16.0799017Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -612,14 +732,22 @@
                         "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
+                                            "sha256":  "87a2bc5f65c33fe55d63035ec361d2c978ac7128e1a5e2b8b606d0c145747566"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
                                             "sha256":  "13e4c6052b365688000c6a90260308027d84d50b868ead24185f60cbbe5c598e"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
                                         }
                                     ],
-                        "reason":  "Reviewed action-aware eval-promotion text formatting; eval registry and promotion semantics are unchanged.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "681462b330264144002d61b60b77c14d0d0a4fea",
-                        "reviewedAtUtc":  "2026-08-12T14:53:56.9490514Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:16.3885233Z"
                     },
                     {
                         "pageId":  "workflow-model-routing",
@@ -643,13 +771,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "8856ac3582eb96da5c65def02fdf35bdf1287dc8d6890c52cb3a836fee211044"
+                                            "sha256":  "63e0225b2bbde9e9a9e16a8e4d36e2206f1438c5094de4a433a1fa1639fb0f75"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:56.2229792Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:16.7181887Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -672,14 +800,22 @@
                         "pageSha256":  "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+                                            "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
                                             "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed product-scope filtering for independent Wiki provenance; documented workflow behavior remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "edc50056e63d116c9798f70d0f5a072b64198013",
-                        "reviewedAtUtc":  "2026-08-12T08:19:24.2089244Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:17.0097814Z"
                     },
                     {
                         "pageId":  "workflow-post-task-retrospective",
@@ -703,13 +839,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "a0d247344af24e4dbf15b8000bd5d47c53c7bb37fb8d54ebd9c3c17a5042681b"
+                                            "sha256":  "dc0a4912ba0c5969fe40f10fc5a48b6239b17932f6a09b97167234edb98b315a"
                                         }
                                     ],
-                        "reason":  "Reviewed identity and email verification data minimization; no new logging, storage category, or provider sharing.",
+                        "reason":  "Users identity and profile code moved assemblies without changing stored fields, authorization behavior, provider sharing, logging, retention, exports, or HTTP payloads; application and host tests preserve behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
-                        "reviewedAtUtc":  "2026-08-12T03:16:23.0954242Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:40.4815715Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -732,14 +868,18 @@
                         "pageSha256":  "8b82837eee71015fa0bc4c18f084e4ece9b7aedd383f14fb07def75df7fbda78",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
                                             "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:46.2852356Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:17.3031437Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -748,19 +888,27 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "af78d4518f3c512f9ba8408c6b9b080e92ee4ee0bb49d79a20a1c64edb7a6635"
+                                            "sha256":  "c18fe06bad4efbe22652ea600ce3392ed102a825d879d2360b6c417fc5de8a5e"
                                         }
                                     ],
-                        "reason":  "Reviewed focused behavior coverage, architecture guardrail, and extraction readiness delta.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
-                        "reviewedAtUtc":  "2026-08-12T03:16:25.1858961Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:17.6819120Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
                         "pagePath":  ".llm-wiki/workflows/release-readiness.md",
                         "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+                                            "sha256":  "ce590751a3075fdbb97221274ba29b64adfdba1c2ff1b9d6603f23dfff6c8f8b"
+                                        },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
                                             "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
@@ -770,10 +918,10 @@
                                             "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:51.7966832Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:18.3082873Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -819,14 +967,18 @@
                         "pageSha256":  "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
+                                            "sha256":  "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
                                             "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
-                        "reviewedAtUtc":  "2026-08-12T09:51:53.0852656Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:18.9821407Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -849,14 +1001,18 @@
                         "pageSha256":  "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
                                             "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
-                        "reviewedAtUtc":  "2026-08-12T09:51:54.1517765Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:19.2784372Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -919,12 +1075,16 @@
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
                                             "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
+                                            "sha256":  "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
                                         }
                                     ],
-                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
-                        "reviewedAtUtc":  "2026-08-12T14:07:43.9302206Z"
+                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+                        "reviewedAtUtc":  "2026-08-12T18:49:19.5792723Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

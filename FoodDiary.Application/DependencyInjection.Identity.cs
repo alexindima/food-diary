@@ -5,25 +5,16 @@ using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
-using FoodDiary.Application.Users.Common;
-using FoodDiary.Application.Users.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application;
 
 public static partial class DependencyInjection {
     private static void AddIdentityModules(this IServiceCollection services) {
-        services.AddScoped<IAuthenticationUserLookupService, AuthenticationUserLookupService>();
         services.AddScoped<IAuthenticationLoginEventCleanupService, AuthenticationLoginEventCleanupService>();
         services.AddScoped<IAuthenticationLoginEventReadService, AuthenticationLoginEventReadService>();
-        services.AddScoped<IAuthenticationUserMutationService, AuthenticationUserMutationService>();
-        services.AddScoped<IAuthenticationUserRegistrationService, AuthenticationUserRegistrationService>();
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
         services.AddScoped<IInitialAdminBootstrapService, InitialAdminBootstrapService>();
-        services.AddScoped<IUserAdministrationService, UserAdministrationService>();
-        services.AddScoped<IUserAdministrationReadService, UserAdministrationReadService>();
-        services.AddScoped<IUserIdentityMutationService, UserIdentityMutationService>();
-        services.AddScoped<IUserAuthenticationIdentityService, UserAuthenticationIdentityService>();
         services.AddScoped<IDietologistClientReadService, DietologistClientReadService>();
         services.AddScoped<IDietologistInvitationReadService, DietologistInvitationReadService>();
         services.AddScoped<IProfileDietologistReadService>(static provider =>
@@ -33,17 +24,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecommendationTemplateReadService, RecommendationTemplateReadService>();
         services.AddScoped<IDietologistUserLookupService, DietologistUserLookupService>();
         services.AddScoped<IDietologistUserContextService, DietologistUserContextService>();
-        services.AddScoped<UserContextService>();
-        services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserAiProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserDashboardProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserDietologistProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserGamificationProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserHydrationProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserTdeeProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IUserWeeklyCheckInProfileReadService>(static provider => provider.GetRequiredService<UserContextService>());
-        services.AddScoped<IProfileOverviewReadService, ProfileOverviewReadService>();
     }
 }

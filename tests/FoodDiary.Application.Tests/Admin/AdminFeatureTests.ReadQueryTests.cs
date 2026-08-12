@@ -3,6 +3,7 @@ using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.Users.Services;
+using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
@@ -219,11 +220,10 @@ public partial class AdminFeatureTests {
     [Fact]
     public async Task AdminUserReadService_ExistsIncludingDeletedAsync_UsesLookupRepository() {
         User user = CreateUserWithRoles("admin-read-exists@example.com", [RoleNames.Admin]);
-        IUserLookupRepository lookupRepository = Substitute.For<IUserLookupRepository>();
-        lookupRepository.GetByIdIncludingDeletedAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
-        var service = new AdminUserReadService(
-            lookupRepository,
-            new UserAdministrationReadService(Substitute.For<IUserAdminReadModelRepository>()));
+        IUserAdminReadModelRepository repository = Substitute.For<IUserAdminReadModelRepository>();
+        repository.GetByIdIncludingDeletedReadModelAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(user.ToAdminReadModel());
+        var service = new AdminUserReadService(new UserAdministrationReadService(repository));
 
         bool exists = await service.ExistsIncludingDeletedAsync(user.Id, CancellationToken.None);
 

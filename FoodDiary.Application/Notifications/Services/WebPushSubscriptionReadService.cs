@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUser;
 
