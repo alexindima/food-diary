@@ -41,6 +41,7 @@ sources:
   - .llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1
   - .llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1
   - .llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1
+  - .llm-wiki/tools/LlmWikiChangePacket.ps1
   - .llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1
   - .llm-wiki/tools/Get-LlmWikiReviewReport.ps1
   - .llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1
@@ -352,6 +353,11 @@ as one transaction. If any stage fails, every workspace artifact is restored.
 Delivery validation rejects packet paths that neither exist nor represent a
 current Git deletion, preventing removed intermediate migrations from surviving
 as apparently current audit evidence.
+Delivery status, replan, validation, and critique resolve the objective through
+the shared packet metadata reader. Workspaces using current
+`inputs.objective` and legacy root `objective` are both supported; corrupted
+packets fail with one actionable diagnostic rather than a strict-mode property
+error.
 
 Readiness exposes two independent conclusions: engineering readiness covers
 policy, architecture, API compatibility, and executed verification; governance

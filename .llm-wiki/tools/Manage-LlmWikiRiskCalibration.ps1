@@ -78,14 +78,17 @@ function Get-Current([Nullable[int]]$HistoricalPoints) {
     if ('Database' -in @($packet.diff.scopes)) { $signals.Add([pscustomobject][ordered]@{ id = 'database'; points = [int]$riskPolicy.databaseScopePoints; evidence = 'Database scope' }) }
     if ('Api' -in @($packet.diff.scopes)) { $signals.Add([pscustomobject][ordered]@{ id = 'api'; points = [int]$riskPolicy.apiScopePoints; evidence = 'Api scope' }) }
     if ('security-review' -in @($packet.policy.reviewObligations.id)) { $signals.Add([pscustomobject][ordered]@{ id = 'security-review'; points = [int]$riskPolicy.securityReviewPoints; evidence = 'security-review obligation' }) }
-    $negativeEvents = [int](($adjustments.metrics.dispatchProfiles | Where-Object totalDelta -lt 0 | Measure-Object eventCount -Sum).Sum)
+    $negativeEventValues = @($adjustments.metrics.dispatchProfiles | Where-Object totalDelta -lt 0 | ForEach-Object { [int]$_.eventCount })
+    $negativeEvents = if ($negativeEventValues.Count -gt 0) { [int](($negativeEventValues | Measure-Object -Sum).Sum) } else { 0 }
     $historyPoints = if ($null -ne $HistoricalPoints) {
         [int]$HistoricalPoints
     } else {
         [Math]::Min([int]$riskPolicy.maximumHistoricalPoints, $negativeEvents * [int]$riskPolicy.negativeQualityAdjustmentPoints)
     }
     if ($historyPoints -gt 0) { $signals.Add([pscustomobject][ordered]@{ id = 'historical-rework-pressure'; points = $historyPoints; evidence = "snapshot-points=$historyPoints" }) }
-    $score = [Math]::Min(100, [int](($signals.points | Measure-Object -Sum).Sum))
+    $signalPoints = @($signals | ForEach-Object { [int]$_.points })
+    $signalTotal = if ($signalPoints.Count -gt 0) { [int](($signalPoints | Measure-Object -Sum).Sum) } else { 0 }
+    $score = [Math]::Min(100, $signalTotal)
     $level = Get-Level $score
     [pscustomobject]@{
         packet = $packet

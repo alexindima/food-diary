@@ -10,6 +10,7 @@ tags:
   - ci
   - report
 sources:
+  - .llm-wiki/tools/LlmWikiChangePacket.ps1
   - .llm-wiki/tools/Get-LlmWikiReviewReport.ps1
   - .llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1
   - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
@@ -33,6 +34,8 @@ fingerprint, change scope, risk, every readiness dimension, concrete findings,
 required checks, review obligations, and suggested test scenarios.
 Module values are normalized to stable names rather than serializing internal
 objects, so malformed placeholders cannot enter the generated report.
+Objective metadata uses the shared current/legacy packet reader, keeping reports
+and governed delivery commands compatible with the same workspace formats.
 
 CI deliberately produces the report without requiring local manifest,
 acceptance, or evidence files. Missing optional governance artifacts therefore

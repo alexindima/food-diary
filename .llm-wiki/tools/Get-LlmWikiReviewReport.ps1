@@ -19,6 +19,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiChangePacket.ps1')
 
 function ConvertTo-MarkdownCell([object]$Value) {
     if ($null -eq $Value) { return '' }
@@ -59,7 +60,10 @@ $evidence = if (Test-Path -LiteralPath $evidenceAbsolute -PathType Leaf) { Get-C
 $evidenceApplicable = $null -ne $evidence -and
     (@($evidence.change.changedPaths | Sort-Object) -join '|') -ceq (@($packet.diff.changedPaths | Sort-Object) -join '|')
 $testCommands = @($packet.testPlan.commands)
-$packetObjective = if ($packet.PSObject.Properties['objective']) { $packet.objective } else { $Objective }
+$currentPacketObjective = if ($packet.PSObject.Properties['inputs'] -and $null -ne $packet.inputs -and $packet.inputs.PSObject.Properties['objective']) { [string]$packet.inputs.objective } else { '' }
+$legacyPacketObjective = if ($packet.PSObject.Properties['objective']) { [string]$packet.objective } else { '' }
+$packetHasObjective = -not [string]::IsNullOrWhiteSpace($currentPacketObjective) -or -not [string]::IsNullOrWhiteSpace($legacyPacketObjective)
+$packetObjective = if (-not [string]::IsNullOrWhiteSpace($Objective)) { $Objective } elseif ($packetHasObjective) { Get-LlmWikiPacketObjective $packet } else { $null }
 
 $report = [pscustomobject][ordered]@{
     schemaVersion = 1

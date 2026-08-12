@@ -26,6 +26,7 @@ $receiptPath = Join-Path $workspaceAbsolute 'impact-simulation.json'
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $impactPolicy = $policy.impactSimulation
+. (Join-Path $PSScriptRoot 'LlmWikiImplementationBrief.ps1')
 
 function Get-Hash([object]$Value) {
     $json = ConvertTo-Json -InputObject $Value -Depth 40 -Compress
@@ -42,7 +43,7 @@ function Get-Signatures([object[]]$Items) {
     } | Sort-Object -Unique)
 }
 function Get-ImpactSnapshot([object]$Packet) {
-    $brief = $Packet.brief
+    $brief = Normalize-LlmWikiImplementationBrief $Packet.brief
     $runtime = @(
         @($brief.runtimeImpact.hostedServices) +
         @($brief.runtimeImpact.httpClients) +

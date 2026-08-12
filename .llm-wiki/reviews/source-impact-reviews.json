@@ -230,17 +230,17 @@
                     {
                         "pageId":  "workflow-adaptive-development",
                         "pagePath":  ".llm-wiki/workflows/adaptive-development.md",
-                        "pageSha256":  "816e17cb3087f1de89f17f4bc185c05b9245c849fde8fab1b51dc8fd0af71d58",
+                        "pageSha256":  "7b31e07462b7a226949fca58c200d0330514b3158ce5f905e77bc1d9bda431dd",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "c0d09e427cc1bbb7a2c5393760c2883aa9cfcfc595e8994c47a015368445f099"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+                                            "sha256":  "c84d77ebb9730212326aebc45ec44b31285f9e15d53034a486ea75f5317b9a35"
                                         }
                                     ],
-                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
-                        "reviewedAtUtc":  "2026-08-12T01:49:05.2534175Z"
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:46.0477349Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -327,14 +327,14 @@
                         "pageSha256":  "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
+                                            "sha256":  "995879b649e0f423faef91641632ef5eb0eff28a547547e4cb57a89e86bd4321"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:55.7172304Z"
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:46.2704685Z"
                     },
                     {
                         "pageId":  "workflow-context-bundles",
@@ -450,19 +450,34 @@
                         "reviewedAtUtc":  "2026-08-09T22:10:54.0868838Z"
                     },
                     {
+                        "pageId":  "workflow-failure-prediction",
+                        "pagePath":  ".llm-wiki/workflows/failure-prediction.md",
+                        "pageSha256":  "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
+                                            "sha256":  "91efac1a282020cf161974ccd91846ef0df79a92990335ba648d71f836ccb068"
+                                        }
+                                    ],
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:46.5112566Z"
+                    },
+                    {
                         "pageId":  "workflow-impact-simulation",
                         "pagePath":  ".llm-wiki/workflows/impact-simulation.md",
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
+                                            "sha256":  "c51b41aff7ca5036c3379fe41ed639f92a140c85ec7e8fbbef1e72cea0b79146"
                                         }
                                     ],
-                        "reason":  "Clean-worktree task-start now forwards objective and planned paths into packet compilation; optional plan metadata receives safe defaults. Acceptance, manifest, impact, release, report, similarity, and index semantics are unchanged.",
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6062708410ed79679192be137afe56544aa41008",
-                        "reviewedAtUtc":  "2026-08-12T02:28:28.0862385Z"
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:46.7436247Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -470,14 +485,18 @@
                         "pageSha256":  "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/LlmWikiImplementationBrief.ps1",
+                                            "sha256":  "1f050fc8c1931ad766d878840cb7ab7460c1afbb710bc61715361146c21e4373"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "22f4b919862eb3ee5c2b77018690259bbce61de866f0f9f4a92bb61e2340831c"
+                                            "sha256":  "b3fc65e4ff589972305b03c74e8380acde84c2f8eb4b15a9a3867d32ea7d432c"
                                         }
                                     ],
-                        "reason":  "Reviewed atomic requirement expansion regression: governed task creation semantics are unchanged; the test now proves invalid compound criteria become a valid atomic model.",
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b4cf2cb961400df3cc4ab722be496514f63c2197",
-                        "reviewedAtUtc":  "2026-08-12T03:00:38.8384797Z"
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:46.9787240Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -485,14 +504,14 @@
                         "pageSha256":  "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
+                                            "sha256":  "703afb9fb3428858c8cf8fb985452c4774e4aa93bf03f63f81d1c73be8107382"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:56.8071885Z"
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:47.2345683Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -501,17 +520,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "0502a3b2212355980accce25d6174ac49478621545087dc1cd36144e0dcdbc02"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "86646c72e47905cbec112168888f150b9a7209d0f314576570e9bba66ba48e1f"
+                                            "sha256":  "543093c28b722cd933fb17fca308bb9406af6a5e322b082f2602027c1abb85c5"
                                         }
                                     ],
-                        "reason":  "Reviewed verify runner hardening: initialize child process before progress serialization and report the dynamic stage count; facade behavior remains unchanged.",
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:48:17.0170368Z"
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:47.5554616Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -625,13 +640,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "46b93858f0b8b84225462a1eaab4b06817ab3f576eef006cb11bba21e5570e32"
+                                            "sha256":  "c84d77ebb9730212326aebc45ec44b31285f9e15d53034a486ea75f5317b9a35"
                                         }
                                     ],
-                        "reason":  "Reviewed optimized atomic replan execution; journey discovery and matching behavior remain unchanged.",
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5987539780501d90425a3e002e8c00b0fdec58af",
-                        "reviewedAtUtc":  "2026-08-08T11:32:21.5634334Z"
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:47.8943263Z"
                     },
                     {
                         "pageId":  "workflow-proof-of-change",
@@ -693,17 +708,17 @@
                     {
                         "pageId":  "workflow-requirement-intelligence",
                         "pagePath":  ".llm-wiki/workflows/requirement-intelligence.md",
-                        "pageSha256":  "a363e4461094ca73ab61e8a9a90c0bbd73b47f41ad6d81cd554345296367e54f",
+                        "pageSha256":  "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
-                                            "sha256":  "624ed2cf689aaf50579294e1a5c9d7ec91aefcc695645fab9a3fe074afc036aa"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
+                                            "sha256":  "b3fc65e4ff589972305b03c74e8380acde84c2f8eb4b15a9a3867d32ea7d432c"
                                         }
                                     ],
-                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:47:08.7833919Z"
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:48.2005685Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -727,6 +742,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
                         "reviewedAtUtc":  "2026-08-12T03:16:29.4109081Z"
+                    },
+                    {
+                        "pageId":  "workflow-risk-calibration",
+                        "pagePath":  ".llm-wiki/workflows/risk-calibration.md",
+                        "pageSha256":  "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
+                                            "sha256":  "91efac1a282020cf161974ccd91846ef0df79a92990335ba648d71f836ccb068"
+                                        }
+                                    ],
+                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
+                        "reviewedAtUtc":  "2026-08-12T03:36:48.5204522Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",

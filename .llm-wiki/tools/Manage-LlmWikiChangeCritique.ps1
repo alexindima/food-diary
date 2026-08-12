@@ -13,6 +13,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiImplementationBrief.ps1')
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $critiquePolicy = $policy.scheduler.changeCritique
@@ -75,9 +76,13 @@ function Add-Finding(
         evidence = @($Evidence | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
     })
 }
+function Get-Ids([object[]]$Items) {
+    @($Items | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { $_ })
+}
 function New-Critique([string]$CreatedAtUtc) {
     $descriptor = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'workspace.json') -Raw | ConvertFrom-Json
     $packet = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw | ConvertFrom-Json
+    $brief = Normalize-LlmWikiImplementationBrief $packet.brief
     $acceptance = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'acceptance-matrix.json') -Raw | ConvertFrom-Json
     $evidence = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'evidence.json') -Raw | ConvertFrom-Json
     $requirements = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
@@ -96,11 +101,14 @@ function New-Critique([string]$CreatedAtUtc) {
     $contextSecurity = if (Test-Path -LiteralPath $contextSecurityPath -PathType Leaf) {
         & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextSecurity.ps1') verify -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     } else { $null }
-    $sensitiveContextRequired = @($packet.privacyImpact.fields).Count -gt 0 -or
-        @($packet.privacyImpact.boundaries).Count -gt 0 -or
-        @($packet.privacyImpact.externalTransfers).Count -gt 0 -or
-        @($packet.policy.matchedRules.id | Where-Object { $_ -in @('security-sensitive', 'privacy-data-lifecycle') }).Count -gt 0 -or
-        [bool]$packet.rolloutFlags.externalIntegrations
+    $matchedRuleIds = @($packet.policy.matchedRules | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } })
+    $externalIntegrations = $packet.PSObject.Properties['rolloutFlags'] -and $null -ne $packet.rolloutFlags -and
+        $packet.rolloutFlags.PSObject.Properties['externalIntegrations'] -and [bool]$packet.rolloutFlags.externalIntegrations
+    $sensitiveContextRequired = @($brief.privacyImpact.fields).Count -gt 0 -or
+        @($brief.privacyImpact.boundaries).Count -gt 0 -or
+        @($brief.privacyImpact.externalTransfers).Count -gt 0 -or
+        @($matchedRuleIds | Where-Object { $_ -in @('security-sensitive', 'privacy-data-lifecycle') }).Count -gt 0 -or
+        $externalIntegrations
     $confidencePath = Join-Path $absoluteWorkspace 'confidence-ledger.json'
     $confidence = & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') `
         $(if (Test-Path -LiteralPath $confidencePath -PathType Leaf) { 'verify' } else { 'assess' }) `
@@ -109,26 +117,26 @@ function New-Critique([string]$CreatedAtUtc) {
 
     $findings = [Collections.Generic.List[object]]::new()
     if (-not $requirements.valid) {
-        Add-Finding $findings 'intent-requirements-invalid' 'intent' 'major' 'Requirements contain ambiguity or weak acceptance criteria.' 'Clarify, split, or explicitly resolve every requirement-model finding.' @($requirements.model.findings.id)
+        Add-Finding $findings 'intent-requirements-invalid' 'intent' 'major' 'Requirements contain ambiguity or weak acceptance criteria.' 'Clarify, split, or explicitly resolve every requirement-model finding.' @(Get-Ids @($requirements.model.findings))
     }
     if (-not $conformance.valid) {
-        Add-Finding $findings 'scope-plan-drift' 'scope' 'major' 'Observed changes do not conform to the declared implementation plan.' 'Replan the task or bring the changed paths back into the approved scope.' @($conformance.conformance.policyFindings.id) "./.llm-wiki/wiki.ps1 delivery-replan -WorkspacePath $workspace -Reason '<observed scope evidence>'"
+        Add-Finding $findings 'scope-plan-drift' 'scope' 'major' 'Observed changes do not conform to the declared implementation plan.' 'Replan the task or bring the changed paths back into the approved scope.' @(Get-Ids @($conformance.conformance.policyFindings)) "./.llm-wiki/wiki.ps1 delivery-replan -WorkspacePath $workspace -Reason '<observed scope evidence>'"
     }
     if ($proof.applicable -and -not $proof.valid) {
-        Add-Finding $findings 'proof-insufficient' 'proof' 'major' 'Satisfied criteria are not backed by current change and verification evidence.' 'Link each satisfied criterion to current changed paths and verified evidence.' @($proof.proof.findings.id) "./.llm-wiki/wiki.ps1 acceptance-map -AcceptancePath $workspace/acceptance-matrix.json -CriterionId <AC-ID> -ChangedPath <path>"
+        Add-Finding $findings 'proof-insufficient' 'proof' 'major' 'Satisfied criteria are not backed by current change and verification evidence.' 'Link each satisfied criterion to current changed paths and verified evidence.' @(Get-Ids @($proof.proof.findings)) "./.llm-wiki/wiki.ps1 acceptance-map -AcceptancePath $workspace/acceptance-matrix.json -CriterionId <AC-ID> -ChangedPath <path>"
     }
     $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable'))
     $unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable'))
     $unresolvedCriteria = @($acceptance.criteria | Where-Object status -notin @('satisfied', 'not-applicable'))
     if ($unresolvedChecks.Count + $unresolvedReviews.Count + $unresolvedCriteria.Count -gt 0) {
-        Add-Finding $findings 'verification-unresolved' 'verification' 'critical' 'Checks, reviews, or acceptance criteria remain unresolved.' 'Resolve every required check, review, and acceptance criterion before completion.' @(@($unresolvedChecks.id) + @($unresolvedReviews.id) + @($unresolvedCriteria.id)) "./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath $workspace"
+        Add-Finding $findings 'verification-unresolved' 'verification' 'critical' 'Checks, reviews, or acceptance criteria remain unresolved.' 'Resolve every required check, review, and acceptance criterion before completion.' @((Get-Ids $unresolvedChecks) + (Get-Ids $unresolvedReviews) + (Get-Ids $unresolvedCriteria)) "./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath $workspace"
     }
     if (-not $impact.valid) {
-        Add-Finding $findings 'architecture-impact-drift' 'architecture' 'major' 'Observed architectural impact exceeds the forecast.' 'Review unexpected impact and replan or narrow the implementation.' @($impact.simulation.findings.id)
+        Add-Finding $findings 'architecture-impact-drift' 'architecture' 'major' 'Observed architectural impact exceeds the forecast.' 'Review unexpected impact and replan or narrow the implementation.' @(Get-Ids @($impact.simulation.findings))
     }
     $repairUnresolved = -not $repair.valid -or @($repair.activeAttempts).Count -gt 0 -or @($repair.unresolvedAttempts).Count -gt 0
     if ($repairUnresolved) {
-        Add-Finding $findings 'operability-repair-open' 'operability' 'critical' 'Controlled repair history contains active or unresolved attempts.' 'End every repair chain with a distinct, evidence-backed completed attempt.' @(@($repair.activeAttempts.id) + @($repair.unresolvedAttempts.id) + @($repair.issues))
+        Add-Finding $findings 'operability-repair-open' 'operability' 'critical' 'Controlled repair history contains active or unresolved attempts.' 'End every repair chain with a distinct, evidence-backed completed attempt.' @((Get-Ids @($repair.activeAttempts)) + (Get-Ids @($repair.unresolvedAttempts)) + @($repair.issues))
     }
     if (-not $prediction.valid) {
         Add-Finding $findings 'verification-prediction-invalid' 'verification' 'warning' 'Failure prediction could not be validated.' 'Regenerate and validate the failure prediction before relying on verification prioritization.' @($prediction.issues)
@@ -138,7 +146,8 @@ function New-Critique([string]$CreatedAtUtc) {
     if (-not $telemetry.valid) {
         Add-Finding $findings 'verification-telemetry-invalid' 'verification' 'major' 'Verification telemetry integrity is invalid.' 'Repair or rebuild the verification telemetry registry.' @($telemetry.issues)
     } else {
-        $flakyChecks = @($telemetry.metrics | Where-Object { $_.checkId -in @($evidence.checks.id) -and $_.flaky })
+        $evidenceCheckIds = @(Get-Ids @($evidence.checks))
+        $flakyChecks = @($telemetry.metrics | Where-Object { $_.PSObject.Properties['checkId'] -and $_.checkId -in $evidenceCheckIds -and $_.PSObject.Properties['flaky'] -and $_.flaky })
         if ($flakyChecks.Count -gt 0) {
             Add-Finding $findings 'verification-flaky-history' 'verification' 'warning' 'Relevant checks have flaky historical transitions.' 'Obtain fresh stable evidence or fix the flaky checks before high-confidence approval.' @($flakyChecks.checkId)
         }
@@ -160,7 +169,7 @@ function New-Critique([string]$CreatedAtUtc) {
         [pscustomobject][ordered]@{
             id = [string]$area
             status = if (@($areaFindings | Where-Object blocking).Count -gt 0) { 'block' } elseif ($areaFindings.Count -gt 0) { 'attention' } else { 'pass' }
-            findingIds = @($areaFindings.id)
+            findingIds = @(Get-Ids @($areaFindings))
         }
     }
     $penalty = [double](($orderedFindings | ForEach-Object { [double]$critiquePolicy.severityPenalties.($_.severity) } | Measure-Object -Sum).Sum)

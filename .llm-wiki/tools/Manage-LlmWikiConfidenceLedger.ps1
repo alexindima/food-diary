@@ -58,6 +58,9 @@ function Get-Level([double]$Score) {
     if ($Score -ge [int]$confidencePolicy.levels.guardedAt) { return 'guarded' }
     'low'
 }
+function Get-Ids([object[]]$Items) {
+    @($Items | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { $_ })
+}
 function New-Ledger {
     $descriptor = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'workspace.json') -Raw | ConvertFrom-Json
     $packet = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw | ConvertFrom-Json
@@ -81,38 +84,41 @@ function New-Ledger {
     $dimensions = [Collections.Generic.List[object]]::new()
     Add-Dimension $dimensions 'requirements' $(if ($requirements.valid) { 'pass' } else { 'fail' }) `
         $(if ($requirements.valid) { 'Acceptance criteria are structurally actionable.' } else { 'Requirement model contains blocking ambiguity.' }) `
-        @($requirements.model.findings.id)
+        @(Get-Ids @($requirements.model.findings))
     Add-Dimension $dimensions 'planConformance' $(if ($conformance.valid) { 'pass' } else { 'fail' }) `
         $(if ($conformance.valid) { 'Observed changes conform to the implementation plan.' } else { 'Observed changes drift from the implementation plan.' }) `
-        @($conformance.conformance.policyFindings.id)
+        @(Get-Ids @($conformance.conformance.policyFindings))
     $proofStatus = if (-not $proof.applicable) { 'pass' } elseif ($proof.valid) { 'pass' } else { 'fail' }
     Add-Dimension $dimensions 'proofOfChange' $proofStatus `
         $(if (-not $proof.applicable) { 'No proof-bearing criteria are applicable.' } elseif ($proof.valid) { 'Proof-bearing criteria have valid evidence.' } else { 'Proof-of-change findings remain.' }) `
-        @($proof.proof.findings.id)
+        @(Get-Ids @($proof.proof.findings))
     $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable'))
     $unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable'))
     $unresolvedCriteria = @($acceptance.criteria | Where-Object status -notin @('satisfied', 'not-applicable'))
     $evidenceResolved = $unresolvedChecks.Count -eq 0 -and $unresolvedReviews.Count -eq 0 -and $unresolvedCriteria.Count -eq 0
     Add-Dimension $dimensions 'evidence' $(if ($evidenceResolved) { 'pass' } else { 'fail' }) `
         $(if ($evidenceResolved) { 'Checks, reviews, and acceptance criteria are resolved.' } else { 'Evidence or acceptance remains unresolved.' }) `
-        @(@($unresolvedChecks.id) + @($unresolvedReviews.id) + @($unresolvedCriteria.id))
+        @((Get-Ids $unresolvedChecks) + (Get-Ids $unresolvedReviews) + (Get-Ids $unresolvedCriteria))
     Add-Dimension $dimensions 'impactSimulation' $(if ($impact.valid) { 'pass' } else { 'fail' }) `
         $(if ($impact.valid) { 'Observed impact stays within the forecast.' } else { 'Observed impact drifted from the forecast.' }) `
-        @($impact.simulation.findings.id)
+        @(Get-Ids @($impact.simulation.findings))
     $repairResolved = $repair.valid -and @($repair.unresolvedAttempts).Count -eq 0 -and @($repair.activeAttempts).Count -eq 0
     Add-Dimension $dimensions 'repairLoop' $(if ($repairResolved) { 'pass' } else { 'fail' }) `
         $(if ($repairResolved) { 'No unresolved controlled repair remains.' } else { 'Controlled repair attempts remain unresolved or invalid.' }) `
-        @(@($repair.unresolvedAttempts.id) + @($repair.activeAttempts.id) + @($repair.issues))
+        @((Get-Ids @($repair.unresolvedAttempts)) + (Get-Ids @($repair.activeAttempts)) + @($repair.issues))
     $predictionStatus = if (-not $prediction.valid) { 'fail' } elseif ([int]$prediction.calibration.falseNegativeCount -gt 0) { 'warning' } else { 'pass' }
     Add-Dimension $dimensions 'failurePrediction' $predictionStatus `
         $(if (-not $prediction.valid) { 'Failure prediction is invalid.' } elseif ([int]$prediction.calibration.falseNegativeCount -gt 0) { 'Failure prediction contains false negatives.' } else { 'Failure prediction has no observed false negatives.' }) `
-        @($prediction.calibration.outcomes | Where-Object classification -eq 'false-negative' | Select-Object -ExpandProperty checkId)
-    $relevantTelemetry = @($telemetry.metrics | Where-Object checkId -in @($evidence.checks.id))
+        @($prediction.calibration.outcomes | Where-Object { $_.PSObject.Properties['classification'] -and $_.classification -eq 'false-negative' -and $_.PSObject.Properties['checkId'] } | ForEach-Object { $_.checkId })
+    $evidenceCheckIds = @(Get-Ids @($evidence.checks))
+    $relevantTelemetry = @($telemetry.metrics | Where-Object {
+        $_.PSObject.Properties['checkId'] -and [string]$_.checkId -in $evidenceCheckIds
+    })
     $flaky = @($relevantTelemetry | Where-Object flaky)
     $telemetryStatus = if (-not $telemetry.valid) { 'fail' } elseif ($flaky.Count -gt 0) { 'warning' } elseif ($relevantTelemetry.Count -eq 0) { 'not-assessed' } else { 'pass' }
     Add-Dimension $dimensions 'verificationTelemetry' $telemetryStatus `
         $(if (-not $telemetry.valid) { 'Verification telemetry is invalid.' } elseif ($flaky.Count -gt 0) { 'Relevant checks exhibit flaky transitions.' } elseif ($relevantTelemetry.Count -eq 0) { 'No historical verification samples are available.' } else { 'Relevant verification history has no flaky signal.' }) `
-        @($flaky.checkId)
+        @($flaky | ForEach-Object { if ($_.PSObject.Properties['checkId']) { $_.checkId } })
     $contextStatus = if ($null -eq $contextSecurity) { 'not-assessed' } elseif (-not $contextSecurity.valid) { 'fail' } elseif ([int]$contextSecurity.assessment.summary.quarantineCount -gt 0) { 'warning' } else { 'pass' }
     Add-Dimension $dimensions 'contextSecurity' $contextStatus `
         $(if ($null -eq $contextSecurity) { 'No context security assessment exists.' } elseif (-not $contextSecurity.valid) { 'Context security assessment is invalid.' } elseif ([int]$contextSecurity.assessment.summary.quarantineCount -gt 0) { 'Context instructions were quarantined and require review.' } else { 'Selected context has no quarantined instruction matches.' }) `

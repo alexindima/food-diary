@@ -14,9 +14,10 @@ function Normalize-LlmWikiImplementationBrief([object]$Brief) {
     Add-LlmWikiBriefDefault $Brief 'rolloutPlan' ([pscustomobject]@{ preDeploy = @(); deploy = @(); postDeploy = @(); rollback = @() })
     Add-LlmWikiBriefDefault $Brief 'structuralViolations' @()
     Add-LlmWikiBriefDefault $Brief 'architectureHealthImpact' ([pscustomobject]@{ dependencyViolations = @(); untrackedProductionProjects = @(); moduleCycleNodes = @() })
-    Add-LlmWikiBriefDefault $Brief 'backendContractImpact' ([pscustomobject]@{ contracts = @(); productionConsumers = @(); testConsumers = @() })
-    Add-LlmWikiBriefDefault $Brief 'frontendContractImpact' ([pscustomobject]@{ components = @(); downstreamConsumers = @() })
-    Add-LlmWikiBriefDefault $Brief 'privacyImpact' ([pscustomobject]@{ fields = @() })
+    Add-LlmWikiBriefDefault $Brief 'runtimeImpact' ([pscustomobject]@{ hostedServices = @(); httpClients = @(); webhooks = @(); recurringJobs = @(); composeServices = @() })
+    Add-LlmWikiBriefDefault $Brief 'backendContractImpact' ([pscustomobject]@{ contracts = @(); productionConsumers = @(); testConsumers = @(); downstreamConsumers = @() })
+    Add-LlmWikiBriefDefault $Brief 'frontendContractImpact' ([pscustomobject]@{ components = @(); downstreamConsumers = @(); changedConsumers = @(); apiCalls = @(); translations = @() })
+    Add-LlmWikiBriefDefault $Brief 'privacyImpact' ([pscustomobject]@{ fields = @(); changedCandidates = @(); boundaryFiles = @(); boundaries = @(); externalTransfers = @() })
     Add-LlmWikiBriefDefault $Brief 'domainDataImpact' ([pscustomobject]@{ types = @(); invariants = @(); mappings = @() })
     foreach ($arrayProperty in @('focusedTests', 'testScenarios', 'requiredChecks', 'reviewObligations', 'generatedActions')) {
         Add-LlmWikiBriefDefault $Brief $arrayProperty @()
@@ -30,9 +31,10 @@ function Normalize-LlmWikiImplementationBrief([object]$Brief) {
     Add-LlmWikiBriefDefault $Brief.decisionContext 'guidance' $null
     foreach ($property in @('preDeploy', 'deploy', 'postDeploy', 'rollback')) { Add-LlmWikiBriefDefault $Brief.rolloutPlan $property @() }
     foreach ($property in @('dependencyViolations', 'untrackedProductionProjects', 'moduleCycleNodes')) { Add-LlmWikiBriefDefault $Brief.architectureHealthImpact $property @() }
-    foreach ($property in @('contracts', 'productionConsumers', 'testConsumers')) { Add-LlmWikiBriefDefault $Brief.backendContractImpact $property @() }
-    foreach ($property in @('components', 'downstreamConsumers')) { Add-LlmWikiBriefDefault $Brief.frontendContractImpact $property @() }
-    Add-LlmWikiBriefDefault $Brief.privacyImpact 'fields' @()
+    foreach ($property in @('hostedServices', 'httpClients', 'webhooks', 'recurringJobs', 'composeServices')) { Add-LlmWikiBriefDefault $Brief.runtimeImpact $property @() }
+    foreach ($property in @('contracts', 'productionConsumers', 'testConsumers', 'downstreamConsumers')) { Add-LlmWikiBriefDefault $Brief.backendContractImpact $property @() }
+    foreach ($property in @('components', 'downstreamConsumers', 'changedConsumers', 'apiCalls', 'translations')) { Add-LlmWikiBriefDefault $Brief.frontendContractImpact $property @() }
+    foreach ($property in @('fields', 'changedCandidates', 'boundaryFiles', 'boundaries', 'externalTransfers')) { Add-LlmWikiBriefDefault $Brief.privacyImpact $property @() }
     foreach ($property in @('types', 'invariants', 'mappings')) { Add-LlmWikiBriefDefault $Brief.domainDataImpact $property @() }
     return $Brief
 }

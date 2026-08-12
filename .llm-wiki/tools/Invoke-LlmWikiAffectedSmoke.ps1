@@ -73,7 +73,7 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('knowledge-isolation')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
         $null = $smokeGroups.Add('test-only-governance')
-    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Add-LlmWikiSourceReview|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiChangePacket|Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|Manage-LlmWikiConfidenceLedger|Manage-LlmWikiImpactSimulation|Manage-LlmWikiRiskCalibration|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Add-LlmWikiSourceReview|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiChangePacketMetadata|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
         $null = $smokeGroups.Add('governed-delivery')
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
@@ -222,6 +222,7 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'governed-delivery' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiChangePacketMetadata.ps1')
             & (Join-Path $toolsRoot 'Test-LlmWikiGovernedDeliveryRegression.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')

@@ -53,6 +53,13 @@ try {
         -Format Json | ConvertFrom-Json
     if (-not $assessment.valid) { throw "Governed requirements assessment failed: $(@($assessment.model.findings | ForEach-Object { "$($_.criterionId):$($_.id)" }) -join ', ')" }
     if (@($assessment.model.classification.criteria | Where-Object { -not $_.atomic }).Count -ne 0) { throw 'Requirement expansion retained compound criteria.' }
+
+    $deliveryStatus = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') delivery-status `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    if ($deliveryStatus.assessment.objective -cne 'Replace direct User aggregate mutation in critical Authentication handlers with narrow Users-owned capabilities') {
+        throw 'Delivery workflow did not read the objective from the current change-packet schema.'
+    }
 } finally {
     Remove-Item -LiteralPath $workspaceAbsolute -Recurse -Force -ErrorAction SilentlyContinue
 }

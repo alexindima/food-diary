@@ -16,6 +16,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiChangePacket.ps1')
 $workspace = $WorkspacePath.Replace('\', '/').TrimEnd('/')
 if ([IO.Path]::IsPathRooted($WorkspacePath) -or $workspace -notmatch '^\.artifacts/llm-wiki/tasks/[^/]+$') {
     throw 'WorkspacePath must identify one workspace directly inside .artifacts/llm-wiki/tasks.'
@@ -58,6 +59,7 @@ function Get-DeliveryAssessment {
         RequireEvidence = $true
     }
     $packet = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-packet.json') -Raw | ConvertFrom-Json
+    $packetObjective = Get-LlmWikiPacketObjective $packet
     $taskContract = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'task-contract.json') -Raw | ConvertFrom-Json
     $stalePacketPaths = @($packet.diff.changedPaths | Where-Object {
         $candidate = Join-Path $repositoryRoot ([string]$_)
@@ -67,7 +69,7 @@ function Get-DeliveryAssessment {
         return @($nameStatus | Where-Object { $_ -match '^D\s' }).Count -eq 0
     })
     $journeys = Invoke-JsonTool 'Find-LlmWikiProductJourney.ps1' @{
-        Query = [string]$packet.objective
+        Query = $packetObjective
         ChangedPath = @($packet.diff.changedPaths)
         Limit = 20
     }
@@ -110,7 +112,7 @@ function Get-DeliveryAssessment {
     [pscustomobject][ordered]@{
         schemaVersion = 1
         workspace = $workspace
-        objective = [string]$packet.objective
+        objective = $packetObjective
         valid = @($gates | Where-Object { -not $_.passed }).Count -eq 0
         engineeringReadiness = [pscustomobject][ordered]@{
             verdict = $(if (@($coreGates | Where-Object { $_.id -in @('packet-freshness', 'requirements', 'plan-conformance', 'proof-of-change') -and -not $_.passed }).Count -eq 0) { 'ready' } else { 'blocked' })

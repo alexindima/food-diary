@@ -10,7 +10,9 @@ tags:
   - context
   - packet
 sources:
+  - .llm-wiki/tools/LlmWikiChangePacket.ps1
   - .llm-wiki/tools/Get-LlmWikiChangePacket.ps1
+  - .llm-wiki/tools/Test-LlmWikiChangePacketMetadata.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1
 ---
@@ -38,3 +40,8 @@ For a brief or test plan without a packet or diff, use their direct
 `-ChangedPath` snapshot.
 
 Its SHA-256 fingerprint covers Git HEAD, base/head refs, normalized changed paths, and objective. Recompile when any of those inputs change; a packet is a snapshot, not a durable source of truth.
+
+Packet consumers read metadata through a shared compatibility helper. The
+current `inputs.objective` location is preferred, legacy root `objective`
+remains readable for existing workspaces, and a packet with neither location
+fails with an explicit schema diagnostic.
