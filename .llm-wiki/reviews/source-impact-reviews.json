@@ -325,19 +325,49 @@
                         "reviewedAtUtc":  "2026-08-12T08:06:39.6188940Z"
                     },
                     {
+                        "pageId":  "workflow-context-budget-optimization",
+                        "pagePath":  ".llm-wiki/workflows/context-budget-optimization.md",
+                        "pageSha256":  "79a057816a216c509d2f1d25849e93e19a32ce66f1f22b4e39db637ed292e1db",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+                                        }
+                                    ],
+                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
+                        "reviewedAtUtc":  "2026-08-12T14:07:30.4199634Z"
+                    },
+                    {
                         "pageId":  "workflow-context-bundles",
                         "pagePath":  ".llm-wiki/workflows/context-bundles.md",
                         "pageSha256":  "c6ad719eb6441142cdea59a921180a1c64d63b5c3143b6d0ac37ccf2df185fda",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-                                            "sha256":  "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
                                         }
                                     ],
-                        "reason":  "Reviewed null/scalar-safe durable-memory collection handling used by context bundles; retrieval semantics are unchanged.",
+                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2916c8e6376a62c97a4666b0e62e4f73565b6807",
-                        "reviewedAtUtc":  "2026-08-12T13:50:54.1244263Z"
+                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
+                        "reviewedAtUtc":  "2026-08-12T14:07:33.2218253Z"
+                    },
+                    {
+                        "pageId":  "workflow-context-security",
+                        "pagePath":  ".llm-wiki/workflows/context-security.md",
+                        "pageSha256":  "b1772ca6e2b1bc91074242feec33660475b32799725366e180a3238cbd6a081c",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+                                        }
+                                    ],
+                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
+                        "reviewedAtUtc":  "2026-08-12T14:07:35.8298746Z"
                     },
                     {
                         "pageId":  "workflow-controlled-learning-promotion",
@@ -345,14 +375,14 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
-                                            "sha256":  "9c32a9b69a02d9ed721902feb0ba15f743660d6d2c8629a549b5c8cca4f9eefc"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
                                         }
                                     ],
-                        "reason":  "Reviewed canary evaluation for empty, legacy, and multi-workspace observations.",
+                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0d08671c1d651c61876941d03e33372a0dedbc3c",
-                        "reviewedAtUtc":  "2026-08-12T13:06:05.5707782Z"
+                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
+                        "reviewedAtUtc":  "2026-08-12T14:07:38.5329842Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -450,14 +480,14 @@
                         "pageSha256":  "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-                                            "sha256":  "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
                                         }
                                     ],
-                        "reason":  "Reviewed empty and single-event registry hardening plus focused memory regression coverage; hash-chain validation remains strict.",
+                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2916c8e6376a62c97a4666b0e62e4f73565b6807",
-                        "reviewedAtUtc":  "2026-08-12T13:50:57.2573166Z"
+                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
+                        "reviewedAtUtc":  "2026-08-12T14:07:41.2104722Z"
                     },
                     {
                         "pageId":  "workflow-failure-prediction",
@@ -879,14 +909,14 @@
                         "pageSha256":  "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
-                                            "sha256":  "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
                                         }
                                     ],
-                        "reason":  "Reviewed isolated feedback fixture root and safe receipt enumeration without changing scheduler scoring semantics.",
+                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "866a5578a309c7615014cab797ce2e9ae9822c39",
-                        "reviewedAtUtc":  "2026-08-12T13:19:43.6045005Z"
+                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
+                        "reviewedAtUtc":  "2026-08-12T14:07:43.9302206Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

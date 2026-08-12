@@ -217,6 +217,7 @@ if ($Action -eq 'create') {
     $quarantineCount = 0
     $quarantineCategories = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     $memories = [Collections.Generic.List[object]]::new()
+    $memoryIds = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($memory in @($memoryResult.memories)) {
         $statement = Protect-Text ([string]$memory.statement) $redactionCategories ([ref]$redactionCount)
         $rationale = Protect-Text ([string]$memory.rationale) $redactionCategories ([ref]$redactionCount)
@@ -233,6 +234,7 @@ if ($Action -eq 'create') {
             source = $memory.source
             eventHash = [string]$memory.eventHash
         })
+        $null = $memoryIds.Add([string]$memory.id)
     }
     foreach ($learning in @($learningResult.candidates | Where-Object {
         $_.decision -eq 'approved' -and
@@ -263,6 +265,7 @@ if ($Action -eq 'create') {
             }
             eventHash = [string]$learning.application.evidenceHash
         })
+        $null = $memoryIds.Add([string]$learning.id)
     }
     foreach ($experiment in @($experimentResult.experiments | Where-Object { $_.canary.application.target -eq 'durable-memory' })) {
         $application = $experiment.canary.application
@@ -270,7 +273,7 @@ if ($Action -eq 'create') {
             $changedPath = [string]$_
             @($application.scopePaths | Where-Object { $changedPath -match [string]$_ }).Count -gt 0
         }).Count -gt 0
-        if (-not $relevant -or @($memories.id) -contains [string]$experiment.candidateId) { continue }
+        if (-not $relevant -or $memoryIds.Contains([string]$experiment.candidateId)) { continue }
         $statement = Protect-Text ([string]$application.statement) $redactionCategories ([ref]$redactionCount)
         $rationale = Protect-Text ([string]$application.rationale) $redactionCategories ([ref]$redactionCount)
         $memoryCharacters = $statement.Length + $rationale.Length
@@ -291,6 +294,7 @@ if ($Action -eq 'create') {
             }
             eventHash = [string]$experiment.canaryEventHash
         })
+        $null = $memoryIds.Add([string]$experiment.candidateId)
     }
     $perItemCharacterBudget = [Math]::Max(1, [Math]::Min([int]$bundlePolicy.maximumItemCharacters, [Math]::Floor($effectiveCharacterBudget / [Math]::Max(1, $selectedCandidates.Count))))
     foreach ($candidate in $selectedCandidates) {
