@@ -33,6 +33,11 @@ function Test-GovernanceGeneratedPath([string]$Value) {
     $Value -match '^\.llm-wiki/generated/' -or
         $Value -eq '.llm-wiki/reviews/source-impact-reviews.json'
 }
+function Get-Ids([object[]]$Items) {
+    return @($Items | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['id'] -and -not [string]::IsNullOrWhiteSpace([string]$_.id)) { $_.id }
+    })
+}
 
 $packetArguments = @{ BaseRef = $BaseRef; Objective = $Objective; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $packetArguments.HeadRef = $HeadRef }
@@ -98,8 +103,8 @@ if (-not (Test-Path -LiteralPath $manifestAbsolute)) {
     $currentChecks = @($packet.policy.requiredChecks | ForEach-Object { "$($_.id)|$($_.command)" })
     $snapshotChecks = @($manifest.plan.requiredChecks | ForEach-Object { "$($_.id)|$($_.command)" })
     $newChecks = @($currentChecks | Where-Object { $_ -notin $snapshotChecks })
-    $currentReviews = @($packet.policy.reviewObligations.id)
-    $snapshotReviews = @($manifest.plan.reviewObligations.id)
+    $currentReviews = @(Get-Ids @($packet.policy.reviewObligations))
+    $snapshotReviews = @(Get-Ids @($manifest.plan.reviewObligations))
     $newReviews = @($currentReviews | Where-Object { $_ -notin $snapshotReviews })
     $manifestIssues = @(
         @($outOfScope | ForEach-Object { "Out of scope: $_" }) +
@@ -146,8 +151,10 @@ if ($null -eq $evidence) {
 } else {
     $unresolvedChecks = @($evidence.checks | Where-Object { $_.status -notin @('passed', 'not-applicable') })
     $unresolvedReviews = @($evidence.reviews | Where-Object { $_.status -notin @('completed', 'not-applicable') })
-    $missingChecks = @($packet.policy.requiredChecks.id | Where-Object { $_ -notin @($evidence.checks.id) })
-    $missingReviews = @($packet.policy.reviewObligations.id | Where-Object { $_ -notin @($evidence.reviews.id) })
+    $evidenceCheckIds = @(Get-Ids @($evidence.checks))
+    $evidenceReviewIds = @(Get-Ids @($evidence.reviews))
+    $missingChecks = @(Get-Ids @($packet.policy.requiredChecks) | Where-Object { $_ -notin $evidenceCheckIds })
+    $missingReviews = @(Get-Ids @($packet.policy.reviewObligations) | Where-Object { $_ -notin $evidenceReviewIds })
     $verificationIssues = @(
         @($unresolvedChecks | ForEach-Object { "Check $($_.id): $($_.status)" }) +
         @($missingChecks | ForEach-Object { "Missing check: $_" })

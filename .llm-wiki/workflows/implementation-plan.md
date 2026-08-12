@@ -9,6 +9,7 @@ tags:
   - planning
   - implementation
 sources:
+  - .llm-wiki/tools/LlmWikiImplementationBrief.ps1
   - .llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1
@@ -38,8 +39,10 @@ Compiled impact arrays may contain summary or compatibility entries without a
 source path. The planner projects only path-bearing values and preserves array
 shape for zero or one result, so strict mode cannot turn heterogeneous metadata
 or a scalar result into a design-checkpoint failure.
-An abbreviated packet that omits optional decision or rollout sections receives
-empty ADR and rollout defaults rather than failing under strict mode.
+Before phase construction, a shared normalizer supplies absent optional sections
+and their nested arrays. Abbreviated packets may omit decision, rollout,
+architecture-health, backend/frontend contract, privacy, domain-data, warning,
+test, or review metadata without failing under strict mode.
 Use `brief -ProposedPath` or `test-plan -ProposedPath` for early exploration;
 promote the settled path set to this plan's explicit `-ChangedPath` input.
 

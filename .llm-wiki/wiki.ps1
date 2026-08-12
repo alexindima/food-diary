@@ -349,10 +349,11 @@ function Invoke-ObservedWikiStage {
     $null = New-Item -ItemType Directory -Path $logRoot -Force
     $safeStageName = $Name -replace '[^a-zA-Z0-9_.-]', '-'
     $logPath = Join-Path $logRoot "$safeStageName.log"
+    $process = $null
     function Write-VerifyProgress([string]$Status, [int]$ElapsedSeconds, [string]$Detail = '') {
         $null = New-Item -ItemType Directory -Path (Split-Path -Parent $progressPath) -Force
         $payload = [ordered]@{
-            schemaVersion = 1; status = $Status; stage = $Name; ordinal = $script:verifyStageOrdinal; stageCount = 8
+            schemaVersion = 1; status = $Status; stage = $Name; ordinal = $script:verifyStageOrdinal; stageCount = $script:verifyStageTotal
             elapsedSeconds = $ElapsedSeconds; expectedSeconds = $expectedSeconds; timeoutSeconds = $TimeoutSeconds
             detail = $Detail; resumeCommand = "./.llm-wiki/wiki.ps1 verify -Stage '$Name'"
             ownerProcessId = $PID; childProcessId = if ($null -ne $process -and -not $process.HasExited) { $process.Id } else { $null }
@@ -417,7 +418,7 @@ function Invoke-ObservedWikiStage {
             throw "Wiki verify stage failed: $Name (exit=$($process.ExitCode)). Run separately: $StandaloneCommand"
         }
     } finally {
-        $process.Dispose()
+        if ($null -ne $process) { $process.Dispose() }
         $stopwatch.Stop()
         Remove-Item -LiteralPath $argumentsPath -Force -ErrorAction SilentlyContinue
     }
@@ -982,8 +983,8 @@ switch ($Command) {
             Criterion = $Criterion
             WorkspacePath = $WorkspacePath
             BaseRef = $BaseRef
-            AllowedPath = $AllowedPath
-            ExcludedPath = $ExcludedPath
+            AllowedPath = @($AllowedPath)
+            ExcludedPath = @($ExcludedPath)
         }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $taskStartArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $taskStartArguments.ChangedPath = $ChangedPath }

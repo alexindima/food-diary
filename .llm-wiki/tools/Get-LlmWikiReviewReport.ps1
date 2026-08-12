@@ -59,11 +59,12 @@ $evidence = if (Test-Path -LiteralPath $evidenceAbsolute -PathType Leaf) { Get-C
 $evidenceApplicable = $null -ne $evidence -and
     (@($evidence.change.changedPaths | Sort-Object) -join '|') -ceq (@($packet.diff.changedPaths | Sort-Object) -join '|')
 $testCommands = @($packet.testPlan.commands)
+$packetObjective = if ($packet.PSObject.Properties['objective']) { $packet.objective } else { $Objective }
 
 $report = [pscustomobject][ordered]@{
     schemaVersion = 1
     packetFingerprint = $packet.fingerprint
-    objective = $packet.objective
+    objective = $packetObjective
     verdict = $readiness.verdict
     engineeringReadiness = $readiness.engineeringReadiness
     governanceCompleteness = $readiness.governanceCompleteness

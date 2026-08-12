@@ -25,6 +25,10 @@ $absolutePath = if ([System.IO.Path]::IsPathRooted($Path)) { $Path } else { Join
 $absoluteEvidencePath = if ([System.IO.Path]::IsPathRooted($EvidencePath)) { $EvidencePath } else { Join-Path $repositoryRoot $EvidencePath }
 $hasHeadRef = $PSBoundParameters.ContainsKey('HeadRef')
 $hasChangedPath = $PSBoundParameters.ContainsKey('ChangedPath')
+$ChangedPath = @($ChangedPath | Where-Object { $_ })
+$PlannedPath = @($PlannedPath | Where-Object { $_ })
+$AllowedPath = @($AllowedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+$ExcludedPath = @($ExcludedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 
 function Write-Manifest([object]$Manifest) {
     $directory = Split-Path -Parent $absolutePath
@@ -54,7 +58,7 @@ function Get-Fingerprint([object]$Value) {
 }
 
 function Get-ChangeInputs([string]$SelectedBaseRef) {
-    $briefArguments = @{ BaseRef = $SelectedBaseRef; Format = 'Json' }
+    $briefArguments = @{ BaseRef = $SelectedBaseRef; Format = 'Json'; Intent = $Objective }
     $planArguments = @{ BaseRef = $SelectedBaseRef; Format = 'Json'; Objective = $Objective }
     if ($hasHeadRef) {
         $briefArguments.HeadRef = $HeadRef
@@ -63,6 +67,10 @@ function Get-ChangeInputs([string]$SelectedBaseRef) {
     if ($hasChangedPath) {
         $briefArguments.ChangedPath = $ChangedPath
         $planArguments.ChangedPath = $ChangedPath
+    }
+    elseif (@($PlannedPath).Count -gt 0) {
+        $briefArguments.ProposedPath = @($PlannedPath)
+        $planArguments.ChangedPath = @($PlannedPath)
     }
     $brief = & (Join-Path $PSScriptRoot 'Get-LlmWikiTaskBrief.ps1') @briefArguments | ConvertFrom-Json
     $plan = & (Join-Path $PSScriptRoot 'Get-LlmWikiImplementationPlan.ps1') @planArguments -BriefInput $brief | ConvertFrom-Json
@@ -76,16 +84,16 @@ switch ($Action) {
             try { $null = [regex]::new($pattern) } catch { throw "Invalid path regex: $pattern" }
         }
         $inputs = Get-ChangeInputs $BaseRef
-        $candidatePlannedPaths = if (@($PlannedPath).Count -gt 0) { @($PlannedPath) } else { @($inputs.brief.change.paths) }
+        $candidatePlannedPaths = @(if ($PlannedPath.Count -gt 0) { @($PlannedPath) } else { @($inputs.brief.change.paths) })
         $plannedPaths = @($candidatePlannedPaths | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Where-Object {
             $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
             $_ -notmatch '^\.artifacts/llm-wiki/'
         } | Sort-Object -Unique)
-        $allowedPatterns = if ($AllowedPath.Count -gt 0) {
+        $allowedPatterns = @(if ($AllowedPath.Count -gt 0) {
             @($AllowedPath)
         } else {
             @($plannedPaths | ForEach-Object { '^' + [regex]::Escape($_) + '$' })
-        }
+        })
         if ($AllowedPath.Count -gt 0) {
             $plannedPaths = @($plannedPaths | Where-Object {
                 $candidate = [string]$_

@@ -59,7 +59,7 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('ui-continuation')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiResearchPacket|Test-LlmWikiResearchConfidence)\.ps1$') {
         $null = $smokeGroups.Add('research-confidence')
-    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiImplementationPlan|Get-LlmWikiChangePacket|Initialize-LlmWikiTaskWorkspace|Test-LlmWikiImplementationPlan|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiImplementationBrief|Get-LlmWikiImplementationPlan|Get-LlmWikiChangePacket|Manage-LlmWikiChangeManifest|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Manage-LlmWikiRequirementModel|Initialize-LlmWikiTaskWorkspace|Test-LlmWikiImplementationPlan|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
         $null = $smokeGroups.Add('implementation-plan')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
         $null = $smokeGroups.Add('reporting')

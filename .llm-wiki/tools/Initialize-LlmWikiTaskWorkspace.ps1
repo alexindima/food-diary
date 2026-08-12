@@ -32,6 +32,8 @@ $criteria = @($Criterion | Where-Object { -not [string]::IsNullOrWhiteSpace($_) 
 if ($criteria.Count -eq 0) { throw 'At least one acceptance criterion is required.' }
 $ChangedPath = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/') } | Sort-Object -Unique)
 $PlannedPath = @($PlannedPath | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Sort-Object -Unique)
+$AllowedPath = @($AllowedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+$ExcludedPath = @($ExcludedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 
 $absoluteWorkspacePath = Join-Path $repositoryRoot $normalizedWorkspacePath
 if (Test-Path -LiteralPath $absoluteWorkspacePath) {
@@ -65,7 +67,7 @@ try {
     $packet = Get-Content -LiteralPath (Join-Path $temporaryAbsolutePath 'change-packet.json') -Raw | ConvertFrom-Json
 
     $scopeRoots = if ($PlannedPath.Count -gt 0) { @($PlannedPath) } elseif ($ChangedPath.Count -gt 0) { @($ChangedPath) } else { @($packet.diff.changedPaths) }
-    $allowedPatterns = if ($AllowedPath.Count -gt 0) {
+    $allowedPatterns = @(if ($AllowedPath.Count -gt 0) {
         @($AllowedPath)
     } else {
         @($scopeRoots | ForEach-Object {
@@ -73,7 +75,7 @@ try {
             if ([IO.Path]::GetExtension($normalized)) { '^' + [regex]::Escape($normalized) + '$' }
             else { '^' + [regex]::Escape($normalized) + '(?:/.*)?$' }
         })
-    }
+    })
     if ($allowedPatterns.Count -eq 0) {
         throw 'No changed paths were detected; provide at least one -AllowedPath regex.'
     }

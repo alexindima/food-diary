@@ -79,6 +79,10 @@ files plus one or more `-AllowedPath` regular expressions for the wider intended
 scope. Task initialization forwards planned paths into initial packet
 compilation, while the manifest continues to distinguish planned work from the
 actual Git delta.
+One `-AllowedPath` value is normalized exactly like multiple values throughout
+the facade, initializer, and manifest. The governed Authentication regression
+executes `design`, `task-start`, and `task-requirements-assess` against a clean
+working tree so abbreviated pre-implementation packets remain supported.
 
 Manifest initialization records only current product paths accepted by the
 allowed/excluded boundary; derived Wiki output never becomes planned product

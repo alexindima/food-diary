@@ -294,28 +294,32 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "f147b19fa0ce4bde39bbf00c16f4919b8370e43be9661def87762f0c87637581"
+                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+                                            "sha256":  "8c52edd04363ae86b381d35834f5eaf18d5e20915af123238c7dece7063e0b2e"
                                         }
                                     ],
-                        "reason":  "Clean-worktree task-start now forwards objective and planned paths into packet compilation; optional plan metadata receives safe defaults. Acceptance, manifest, impact, release, report, similarity, and index semantics are unchanged.",
+                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6062708410ed79679192be137afe56544aa41008",
-                        "reviewedAtUtc":  "2026-08-12T02:28:27.8583439Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:47:07.4458323Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
                         "pagePath":  ".llm-wiki/workflows/change-packet.md",
-                        "pageSha256":  "a78df40d6573d1d9334e04c7ef92268b22a1d511cf2bdda6445652fc0d299fc0",
+                        "pageSha256":  "f088440a668d74bd8743c11ca2ab0da4ca55d82558f9033cdcf001fc952bc903",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "dbba6de0a23bf99a730bf4e622fc51734351777e19a32be9601f811e442882ca"
+                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
                                         }
                                     ],
-                        "reason":  "Implementation planning now ignores heterogeneous metadata entries without path-like properties and preserves collection shape; manifest, packet, similarity reuse, integration, and index contracts are unchanged.",
+                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1787511f44c0b9c407c94859c7340e55ab4088e3",
-                        "reviewedAtUtc":  "2026-08-12T02:20:39.0045296Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:47:07.6583159Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -505,13 +509,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "56b3e2cdcf05b01a70eac52fc887cb18bed576b6f5680ba71b007b37629a5560"
+                                            "sha256":  "0502a3b2212355980accce25d6174ac49478621545087dc1cd36144e0dcdbc02"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "86646c72e47905cbec112168888f150b9a7209d0f314576570e9bba66ba48e1f"
                                         }
                                     ],
-                        "reason":  "Clean-worktree task-start now forwards objective and planned paths into packet compilation; optional plan metadata receives safe defaults. Acceptance, manifest, impact, release, report, similarity, and index semantics are unchanged.",
+                        "reason":  "Reviewed verify runner hardening: initialize child process before progress serialization and report the dynamic stage count; facade behavior remains unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6062708410ed79679192be137afe56544aa41008",
-                        "reviewedAtUtc":  "2026-08-12T02:28:28.3240906Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:48:17.0170368Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -595,21 +603,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "7205a2f62b5c6b695f801fde2b8d29386c900aed75d39d8bb784c6a3cc52f404"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "1b48297e8c5ee5ebc96d49371f2a9de45a4dd74ff87a3321d56a7c73d3bd8276"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
+                                            "sha256":  "8c52edd04363ae86b381d35834f5eaf18d5e20915af123238c7dece7063e0b2e"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:57.7351889Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:47:08.1408561Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
@@ -681,14 +681,18 @@
                         "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+                                            "sha256":  "ce590751a3075fdbb97221274ba29b64adfdba1c2ff1b9d6603f23dfff6c8f8b"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+                                            "sha256":  "8c52edd04363ae86b381d35834f5eaf18d5e20915af123238c7dece7063e0b2e"
                                         }
                                     ],
-                        "reason":  "Clean-worktree task-start now forwards objective and planned paths into packet compilation; optional plan metadata receives safe defaults. Acceptance, manifest, impact, release, report, similarity, and index semantics are unchanged.",
+                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6062708410ed79679192be137afe56544aa41008",
-                        "reviewedAtUtc":  "2026-08-12T02:28:28.5866654Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:47:08.4304102Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -696,22 +700,14 @@
                         "pageSha256":  "a363e4461094ca73ab61e8a9a90c0bbd73b47f41ad6d81cd554345296367e54f",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "11fac10bbcda9426ababd9a6618c940aa01ba41b4be203d0c1002ec3441e6860"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
-                                            "sha256":  "03afbcfbd25ebd814549c264050d9b60b46de452c3a515097fab5567393eb38e"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
+                                            "sha256":  "624ed2cf689aaf50579294e1a5c9d7ec91aefcc695645fab9a3fe074afc036aa"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:58.6124812Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:47:08.7833919Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -719,14 +715,18 @@
                         "pageSha256":  "249ac686153517f2268ed4ad80018e78759bf60fa80a0c886019bbfe99fa07e7",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+                                            "sha256":  "ce590751a3075fdbb97221274ba29b64adfdba1c2ff1b9d6603f23dfff6c8f8b"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
+                                            "sha256":  "df0c2d9358a09fec190034903c153c4af414e42655a76dd58685329011b12e11"
                                         }
                                     ],
-                        "reason":  "Clean-worktree task-start now forwards objective and planned paths into packet compilation; optional plan metadata receives safe defaults. Acceptance, manifest, impact, release, report, similarity, and index semantics are unchanged.",
+                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6062708410ed79679192be137afe56544aa41008",
-                        "reviewedAtUtc":  "2026-08-12T02:28:28.8954479Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:47:09.1244528Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -750,13 +750,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "f147b19fa0ce4bde39bbf00c16f4919b8370e43be9661def87762f0c87637581"
+                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
                                         }
                                     ],
-                        "reason":  "Clean-worktree task-start now forwards objective and planned paths into packet compilation; optional plan metadata receives safe defaults. Acceptance, manifest, impact, release, report, similarity, and index semantics are unchanged.",
+                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6062708410ed79679192be137afe56544aa41008",
-                        "reviewedAtUtc":  "2026-08-12T02:28:29.2519796Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:47:09.4197016Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -803,13 +803,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "c06c328dc6bb2a2e9af918c8474421d38a8056489a4abe77e6011ecf604b3ff7"
+                                            "sha256":  "86646c72e47905cbec112168888f150b9a7209d0f314576570e9bba66ba48e1f"
                                         }
                                     ],
-                        "reason":  "Facade gained independent local verification-receipt commands; dispatch payloads, leases, lifecycle receipts, and fingerprints are unchanged.",
+                        "reason":  "Reviewed verify runner hardening: initialize child process before progress serialization and report the dynamic stage count; facade behavior remains unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a17986a6ffb32f53aabc94158cd3e74037516f2e",
-                        "reviewedAtUtc":  "2026-08-12T02:01:33.2924549Z"
+                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
+                        "reviewedAtUtc":  "2026-08-12T02:48:17.3502832Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

@@ -13,6 +13,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
+. (Join-Path $toolsRoot 'LlmWikiImplementationBrief.ps1')
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
@@ -22,6 +23,7 @@ $briefArguments.Limit = [Math]::Min($Limit, 20)
 $brief = if ($null -ne $BriefInput) { $BriefInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') @briefArguments | ConvertFrom-Json
 }
+$brief = Normalize-LlmWikiImplementationBrief $brief
 $decision = if ($brief.PSObject.Properties['decisionContext'] -and $null -ne $brief.decisionContext) {
     $brief.decisionContext
 } else { [pscustomobject]@{ relatedAdrs = @() } }

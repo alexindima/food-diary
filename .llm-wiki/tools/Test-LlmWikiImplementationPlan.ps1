@@ -37,11 +37,18 @@ if ($expectedAdr -notin @($context.files)) { throw 'Context phase lost a valid A
 
 $brief.PSObject.Properties.Remove('decisionContext')
 $brief.PSObject.Properties.Remove('rolloutPlan')
+$brief.PSObject.Properties.Remove('architectureHealthImpact')
+$brief.PSObject.Properties.Remove('backendContractImpact')
+$brief.PSObject.Properties.Remove('frontendContractImpact')
+$brief.PSObject.Properties.Remove('privacyImpact')
+$brief.PSObject.Properties.Remove('domainDataImpact')
+$brief.PSObject.Properties.Remove('warnings')
 $abbreviatedPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiImplementationPlan.ps1') `
     -BriefInput $brief `
     -Objective 'Compile an abbreviated change packet' `
     -Format Json | ConvertFrom-Json
 if (@($abbreviatedPlan.phases).Count -eq 0) { throw 'Abbreviated brief did not produce an implementation plan.' }
 if (@($abbreviatedPlan.acceptanceInputs.relatedAdrs).Count -ne 0) { throw 'Missing decision context did not default to an empty ADR set.' }
+if (@($abbreviatedPlan.unresolved.structuralViolations).Count -ne 0) { throw 'Abbreviated brief introduced structural violations.' }
 
 Write-Host 'LLM Wiki implementation-plan tests passed.'

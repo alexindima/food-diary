@@ -68,7 +68,11 @@ function Get-RequirementType([string]$Text) {
 }
 function Get-Recommendations([object]$Packet, [object[]]$Criteria) {
     $recommendations = [Collections.Generic.List[object]]::new()
-    $appliedRecommendationIds = @($Criteria | ForEach-Object { [string]$_.origin.recommendationId } | Where-Object { $_ } | Sort-Object -Unique)
+    $appliedRecommendationIds = @($Criteria | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['origin'] -and $null -ne $_.origin -and $_.origin.PSObject.Properties['recommendationId']) {
+            [string]$_.origin.recommendationId
+        }
+    } | Where-Object { $_ } | Sort-Object -Unique)
     function Add-Recommendation([string]$Id, [string]$Type, [string]$Text, [string]$Rationale, [string]$Pattern) {
         if ($Id -notin $appliedRecommendationIds -and -not (Test-Coverage $Criteria $Pattern) -and $recommendations.Count -lt [int]$modelPolicy.maximumRecommendations) {
             $recommendations.Add([pscustomobject][ordered]@{ id = $Id; type = $Type; text = $Text; rationale = $Rationale })
@@ -76,7 +80,10 @@ function Get-Recommendations([object]$Packet, [object[]]$Criteria) {
     }
     Add-Recommendation 'REC-BEHAVIOR' 'behavior' 'The intended user-visible behavior succeeds for the primary scenario.' 'Every change needs a positive behavioral outcome.' '(?i)succeed|success|return|create|update|display'
     Add-Recommendation 'REC-FAILURE' 'failure' 'Invalid or unsupported input is rejected with the expected observable outcome.' 'Boundary behavior should be explicit and testable.' '(?i)invalid|error|fail|reject'
-    if (@($Packet.brief.reviewObligations.id) -contains 'security-review' -or [string]$Packet.brief.risk.level -in @('high', 'critical')) {
+    $reviewIds = @($Packet.brief.reviewObligations | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+    })
+    if ($reviewIds -contains 'security-review' -or [string]$Packet.brief.risk.level -in @('high', 'critical')) {
         Add-Recommendation 'REC-SECURITY' 'security' 'Authorization, data scoping, secrets, and sensitive logging remain safe for the changed flow.' 'The packet triggers elevated security or risk review.' '(?i)security|authori[sz]|permission|tenant|secret'
     }
     if (@($Packet.diff.scopes) -contains 'Api') {
