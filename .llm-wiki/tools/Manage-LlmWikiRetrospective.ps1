@@ -35,6 +35,17 @@ function Get-Hash([object]$Value) {
 function Get-FileSha([string]$Value) {
     (Get-FileHash -LiteralPath $Value -Algorithm SHA256).Hash.ToLowerInvariant()
 }
+function Get-ImpactSimulation([object]$ImpactArtifact) {
+    if ($null -eq $ImpactArtifact) { throw 'impact-simulation.json is empty.' }
+    $simulation = if ($ImpactArtifact.PSObject.Properties['simulation']) { $ImpactArtifact.simulation } else { $ImpactArtifact }
+    if ($null -eq $simulation -or -not $simulation.PSObject.Properties['comparison']) {
+        throw 'impact-simulation.json is invalid: comparison is absent.'
+    }
+    if ($null -eq $simulation.comparison -or -not $simulation.comparison.PSObject.Properties['unexpected']) {
+        throw 'impact-simulation.json is invalid: comparison.unexpected is absent.'
+    }
+    $simulation
+}
 function Get-Payload([object]$Retrospective) {
     [pscustomobject][ordered]@{
         schemaVersion = [int]$Retrospective.schemaVersion
@@ -79,6 +90,7 @@ function New-Retrospective([string]$CreatedAtUtc, [object[]]$TelemetrySnapshot =
     $confidence = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'confidence-ledger.json') -Raw | ConvertFrom-Json
     $critique = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'change-critique.json') -Raw | ConvertFrom-Json
     $impact = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'impact-simulation.json') -Raw | ConvertFrom-Json
+    $impactSimulation = Get-ImpactSimulation $impact
     $prediction = & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     $cost = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1') assess -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     $repair = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') show -WorkspacePath $workspace -Format Json | ConvertFrom-Json
@@ -102,7 +114,7 @@ function New-Retrospective([string]$CreatedAtUtc, [object[]]$TelemetrySnapshot =
     $falsePositives = @($prediction.calibration.outcomes | Where-Object classification -eq 'false-positive')
     $flakyChecks = @($TelemetrySnapshot | Where-Object flaky)
     $impactFindings = [Collections.Generic.List[object]]::new()
-    foreach ($property in @($impact.simulation.comparison.unexpected.PSObject.Properties | Sort-Object Name)) {
+    foreach ($property in @($impactSimulation.comparison.unexpected.PSObject.Properties | Sort-Object Name)) {
         $unexpectedValues = @($property.Value | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
         if ($unexpectedValues.Count -gt 0) {
             $impactFindings.Add([pscustomobject][ordered]@{
@@ -116,9 +128,9 @@ function New-Retrospective([string]$CreatedAtUtc, [object[]]$TelemetrySnapshot =
     $costVariance = @($costOutcomes | Where-Object {
         $null -ne $_.forecastErrorPercent -and [Math]::Abs([double]$_.forecastErrorPercent) -ge [double]$retrospectivePolicy.costVarianceWarningPercent
     })
-    $quarantinedSources = if ($null -eq $context) { @() } else {
+    $quarantinedSources = @(if ($null -ne $context) {
         @($context.sources | Where-Object quarantineCount -gt 0)
-    }
+    })
 
     $candidates = [Collections.Generic.List[object]]::new()
     foreach ($finding in $impactFindings) {
@@ -128,10 +140,11 @@ function New-Retrospective([string]$CreatedAtUtc, [object[]]$TelemetrySnapshot =
             ([int]$retrospectivePolicy.candidateScores.impactDrift) @($finding.id, "count=$($finding.count)", @($finding.values)) @('architecture', 'impact', 'planning')
     }
     foreach ($item in $falseNegatives) {
+        $probabilityPercent = if ($item.PSObject.Properties['probabilityPercent']) { [int]$item.probabilityPercent } else { 0 }
         Add-Candidate $candidates "prediction-$($item.checkId)" 'failure-prediction' `
             "Raise predicted failure risk for check '$($item.checkId)' under a similar change profile." `
             'The check failed although the stored prediction was below the configured failure threshold.' `
-            ([int]$retrospectivePolicy.candidateScores.falseNegative) @($item.checkId, "probability=$($item.probabilityPercent)") @('verification', 'prediction', 'failure')
+            ([int]$retrospectivePolicy.candidateScores.falseNegative) @($item.checkId, "probability=$probabilityPercent") @('verification', 'prediction', 'failure')
     }
     foreach ($attempt in $failedRepairs) {
         Add-Candidate $candidates "repair-$($attempt.id)" 'repair-learning' `

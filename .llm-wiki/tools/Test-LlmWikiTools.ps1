@@ -1431,6 +1431,25 @@ try {
                 [string]::IsNullOrWhiteSpace([string]$_.id) -or $_.id -eq 'impact-'
             }).Count -eq 0
         ) 'Post-task retrospective did not convert observed misses into learning candidates.'
+        $impactArtifactPath = Join-Path $absoluteTaskWorkspacePath 'impact-simulation.json'
+        $currentImpactArtifactRaw = Get-Content -LiteralPath $impactArtifactPath -Raw
+        try {
+            $currentImpactArtifact = $currentImpactArtifactRaw | ConvertFrom-Json
+            [IO.File]::WriteAllText(
+                $impactArtifactPath,
+                (([pscustomobject]@{ simulation = $currentImpactArtifact } | ConvertTo-Json -Depth 50) + [Environment]::NewLine),
+                [Text.UTF8Encoding]::new($false))
+            $legacyImpactRetrospective = & (Join-Path $toolsRoot 'Manage-LlmWikiRetrospective.ps1') assess `
+                -WorkspacePath $taskWorkspacePath `
+                -AsOfUtc ([DateTime]'2026-01-01T00:04:50Z') `
+                -Format Json | ConvertFrom-Json
+            Assert-Wiki (
+                $legacyImpactRetrospective.valid -and
+                $legacyImpactRetrospective.retrospective.summary.candidateCount -eq $retrospective.retrospective.summary.candidateCount
+            ) 'Post-task retrospective did not support the legacy impact simulation wrapper.'
+        } finally {
+            [IO.File]::WriteAllText($impactArtifactPath, $currentImpactArtifactRaw, [Text.UTF8Encoding]::new($false))
+        }
         $learningPromotionPath = Join-Path $testKnowledgeRoot 'learning-promotions.json'
         $learningPromotionRaw = Get-Content -LiteralPath $learningPromotionPath -Raw
         $learningExperimentPath = Join-Path $testKnowledgeRoot 'learning-experiments.json'

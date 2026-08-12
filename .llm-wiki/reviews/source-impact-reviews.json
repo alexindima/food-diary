@@ -353,14 +353,14 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed current and legacy impact-simulation receipt compatibility plus optional retrospective fields; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:40.0711973Z"
+                        "gitHead":  "8f6e68336eb71c2692fb7cc120d69bc421a14aff",
+                        "reviewedAtUtc":  "2026-08-12T10:39:43.6822812Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -578,14 +578,14 @@
                         "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
-                                            "sha256":  "bd230c6197acb4902ebc06c50373d3fa50cfe553cd8f6a507d091aae8125f548"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
                                         }
                                     ],
-                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
+                        "reason":  "Reviewed current and legacy impact-simulation receipt compatibility plus optional retrospective fields; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:21:44.6948011Z"
+                        "gitHead":  "8f6e68336eb71c2692fb7cc120d69bc421a14aff",
+                        "reviewedAtUtc":  "2026-08-12T10:39:45.0935654Z"
                     },
                     {
                         "pageId":  "workflow-model-routing",
@@ -646,6 +646,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "edc50056e63d116c9798f70d0f5a072b64198013",
                         "reviewedAtUtc":  "2026-08-12T08:19:24.2089244Z"
+                    },
+                    {
+                        "pageId":  "workflow-post-task-retrospective",
+                        "pagePath":  ".llm-wiki/workflows/post-task-retrospective.md",
+                        "pageSha256":  "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
+                                        }
+                                    ],
+                        "reason":  "Reviewed current and legacy impact-simulation receipt compatibility plus optional retrospective fields; workflow guidance remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "8f6e68336eb71c2692fb7cc120d69bc421a14aff",
+                        "reviewedAtUtc":  "2026-08-12T10:39:46.2768485Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
