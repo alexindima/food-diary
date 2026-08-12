@@ -4,7 +4,7 @@ param(
     [ValidateSet(
         'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
-        'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy',
+        'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
         'task-decompose-list', 'task-decompose-plan', 'task-decompose-verify', 'task-decompose-apply', 'task-decompose-prune',
@@ -107,6 +107,7 @@ param(
     [ValidateSet('pending', 'passed', 'failed', 'completed', 'not-applicable')]
     [string]$Status,
     [string]$EvidenceCommand,
+    [string[]]$CoverageScope,
     [string]$Reason,
     [string]$Symptom,
     [string]$RepairAttemptId,
@@ -912,6 +913,19 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('Objective')) { $testPlanArguments.Intent = $Objective }
         if ($Compact) { $testPlanArguments.Compact = $true }
         Invoke-WikiTool 'Get-LlmWikiTestPlan.ps1' $testPlanArguments
+    }
+    { $_ -in @('verification-record', 'verification-list') } {
+        $receiptArguments = @{
+            Action = $(if ($Command -eq 'verification-record') { 'Record' } else { 'List' })
+            Format = $Format
+        }
+        if ($Command -eq 'verification-record') {
+            $receiptArguments.Command = $EvidenceCommand
+            $receiptArguments.Result = $(if ($Status -eq 'failed') { 'failed' } else { 'passed' })
+            $receiptArguments.DurationSeconds = $DurationSeconds
+            $receiptArguments.CoverageScope = @($CoverageScope)
+        }
+        Invoke-WikiTool 'Manage-LlmWikiVerificationReceipts.ps1' $receiptArguments
     }
     'decision' {
         $decisionArguments = @{ BaseRef = $BaseRef; Format = $Format }
@@ -2324,6 +2338,8 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 brief'
         Write-Host '  ./.llm-wiki/wiki.ps1 plan -Objective <text> [-ChangedPath <path>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 test-plan'
+        Write-Host "  ./.llm-wiki/wiki.ps1 verification-record -EvidenceCommand '<command>' -Status passed -DurationSeconds <seconds> [-CoverageScope <scope>]"
+        Write-Host '  ./.llm-wiki/wiki.ps1 verification-list'
         Write-Host '  ./.llm-wiki/wiki.ps1 decision'
         Write-Host '  ./.llm-wiki/wiki.ps1 dependencies -BaseRef origin/master'
         Write-Host '  ./.llm-wiki/wiki.ps1 rollout'

@@ -59,7 +59,7 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('ui-continuation')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
         $null = $smokeGroups.Add('reporting')
-    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Test-LlmWikiVerificationReceipts|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification)\.ps1$') {
         $null = $smokeGroups.Add('verification-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         $null = $smokeGroups.Add('query-cache')
@@ -183,6 +183,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'verification-cache' {
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiVerificationReceipts.ps1')
             if (-not $?) { exit 1 }
         }
         'query-cache' {

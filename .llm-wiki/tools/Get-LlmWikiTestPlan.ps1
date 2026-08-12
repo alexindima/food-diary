@@ -19,12 +19,20 @@ $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $toolsRoot 'LlmWikiQueryCache.ps1')
+. (Join-Path $toolsRoot 'LlmWikiVerificationReceipts.ps1')
+$verificationReceipts = @(Get-LlmWikiVerificationReceipts $repositoryRoot)
+$validReceiptFingerprint = Get-LlmWikiSha256 (@(
+    $verificationReceipts |
+        Where-Object validForCurrentState |
+        ForEach-Object { "$($_.normalizedCommand):$($_.recordedAtUtc)" }
+) -join '|')
 $queryCacheEntry = $null
 $cacheEligible = $Format -eq 'Json' -and $null -eq $DiffInput -and $null -eq $PolicyInput
 if ($cacheEligible) {
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'test-plan' -Arguments @{
         BaseRef = $BaseRef; HeadRef = $HeadRef; ChangedPath = @($ChangedPath)
         ProposedPath = @($ProposedPath); Intent = $Intent; Compact = [bool]$Compact; Limit = $Limit
+        VerificationReceipts = $validReceiptFingerprint
     }
     $cachedTestPlan = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedTestPlan) { Write-Output $cachedTestPlan; exit 0 }
@@ -312,14 +320,25 @@ foreach ($testPath in $frontendFocusedTests) {
         }
     }
 }
-foreach ($consumerProject in @($directConsumerProjects | Sort-Object)) {
+if ($directConsumerProjects.Count -gt 3) {
     $commands += [pscustomobject]@{
-        id = 'compile-direct-consumer'
-        command = "dotnet build $consumerProject --no-restore"
+        id = 'composition-confidence'
+        command = 'dotnet build FoodDiary.slnx --no-restore'
         source = 'consumer-graph'
-        priority = 'required'
-        reason = 'production-project-references-changed-symbol'
-        commandEvidence = $consumerProject
+        priority = 'recommended'
+        reason = 'grouped-transitive-composition-confidence'
+        commandEvidence = "$($directConsumerProjects.Count) production projects reference changed symbols; grouped instead of listing each project build"
+    }
+} else {
+    foreach ($consumerProject in @($directConsumerProjects | Sort-Object)) {
+        $commands += [pscustomobject]@{
+            id = 'compile-direct-consumer'
+            command = "dotnet build $consumerProject --no-restore"
+            source = 'consumer-graph'
+            priority = 'required'
+            reason = 'production-project-references-changed-symbol'
+            commandEvidence = $consumerProject
+        }
     }
 }
 $contractBoundaryChange = @($effectivePaths | Where-Object {
@@ -348,6 +367,31 @@ if ($presentationBoundaryChange -or ($contractBoundaryChange -and @($effectivePa
 $commands = @($commands | Group-Object { ([string]$_.command) -replace '\s+--no-restore\s*$', '' } | ForEach-Object {
     @($_.Group | Sort-Object @{ Expression = { switch ($_.priority) { 'required' { 0 } 'recommended' { 1 } 'contextual' { 2 } default { 3 } } } }, command | Select-Object -First 1)
 } | Sort-Object command)
+$validReceiptsByCommand = @{}
+foreach ($receipt in @($verificationReceipts | Where-Object validForCurrentState)) {
+    if (-not $validReceiptsByCommand.ContainsKey([string]$receipt.normalizedCommand)) {
+        $validReceiptsByCommand[[string]$receipt.normalizedCommand] = $receipt
+    }
+}
+$commands = @($commands | ForEach-Object {
+    $receipt = $validReceiptsByCommand[(Normalize-LlmWikiVerificationCommand ([string]$_.command))]
+    [pscustomobject][ordered]@{
+        id = $_.id
+        command = $_.command
+        source = $_.source
+        priority = $_.priority
+        reason = $_.reason
+        commandEvidence = $(if ($_.PSObject.Properties['commandEvidence']) { $_.commandEvidence } else { $null })
+        status = $(if ($null -eq $receipt) { 'pending' } else { 'satisfied' })
+        receipt = $(if ($null -eq $receipt) { $null } else { [pscustomobject]@{
+            result = $receipt.result
+            durationSeconds = $receipt.durationSeconds
+            coverageScope = @($receipt.coverageScope)
+            recordedAtUtc = $receipt.recordedAtUtc
+            fingerprint = $receipt.fingerprint
+        } })
+    }
+})
 
 $result = [pscustomobject]@{
     scopes = $scopes
@@ -358,9 +402,10 @@ $result = [pscustomobject]@{
     focusedTestDetails = $selectedFocusedTests
     commands = @($commands)
     commandGroups = [pscustomobject][ordered]@{
-        required = @($commands | Where-Object priority -eq 'required')
-        recommended = @($commands | Where-Object priority -eq 'recommended')
-        fullRegression = @($commands | Where-Object priority -in @('contextual', 'full-regression'))
+        required = @($commands | Where-Object { $_.priority -eq 'required' -and $_.status -eq 'pending' })
+        recommended = @($commands | Where-Object { $_.priority -eq 'recommended' -and $_.status -eq 'pending' })
+        fullRegression = @($commands | Where-Object { $_.priority -in @('contextual', 'full-regression') -and $_.status -eq 'pending' })
+        satisfied = @($commands | Where-Object status -eq 'satisfied')
     }
     scenarios = @($scenarios)
     reviewObligations = @($policy.reviewObligations)
@@ -397,7 +442,10 @@ foreach ($priority in @('required', 'recommended', 'full-regression', 'contextua
     $entries = @($result.commands | Where-Object priority -eq $priority)
     if ($entries.Count -eq 0) { continue }
     Write-Host " $priority`:"
-    foreach ($entry in $entries) { Write-Host "  - [$($entry.source); $($entry.reason)] $($entry.command)" }
+    foreach ($entry in $entries) {
+        $status = if ($entry.status -eq 'satisfied') { "; satisfied $($entry.receipt.durationSeconds)s" } else { '' }
+        Write-Host "  - [$($entry.source); $($entry.reason)$status] $($entry.command)"
+    }
 }
 Write-Host ''
 Write-Host 'Scenarios:'

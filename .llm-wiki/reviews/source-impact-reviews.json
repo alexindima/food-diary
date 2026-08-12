@@ -800,13 +800,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "926d2f67c2ec86d559e3fdd7e0b9c436fd61450fbe42588bcfb165012241b06f"
+                                            "sha256":  "c06c328dc6bb2a2e9af918c8474421d38a8056489a4abe77e6011ecf604b3ff7"
                                         }
                                     ],
-                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
+                        "reason":  "Facade gained independent local verification-receipt commands; dispatch payloads, leases, lifecycle receipts, and fingerprints are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
-                        "reviewedAtUtc":  "2026-08-12T01:49:06.3004396Z"
+                        "gitHead":  "a17986a6ffb32f53aabc94158cd3e74037516f2e",
+                        "reviewedAtUtc":  "2026-08-12T02:01:33.2924549Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

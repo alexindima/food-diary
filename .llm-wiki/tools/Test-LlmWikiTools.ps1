@@ -261,6 +261,7 @@ Assert-Wiki (@($testPlan.commands.id) -contains 'data-access-integration-tests')
 Assert-Wiki (@($testPlan.scenarios.id) -contains 'persistence-query-shape') 'Test plan did not include query-shape coverage.'
 Assert-Wiki (@($testPlan.focusedTestFiles | Where-Object { $_ -match 'Infrastructure.*Tests' }).Count -gt 0) 'Test plan did not discover a directly referencing infrastructure test.'
 Assert-Wiki (@($testPlan.focusedTestDetails | Where-Object priority -in @('required', 'recommended')).Count -gt 0) 'Test plan did not classify focused-test execution priority.'
+Assert-Wiki (@($testPlan.commands | Where-Object status -notin @('pending', 'satisfied')).Count -eq 0) 'Test plan did not expose verification receipt status.'
 
 $intentBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
     -Intent 'Add food photo annotations from OpenAI recognition' `

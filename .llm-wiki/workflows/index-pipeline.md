@@ -27,6 +27,8 @@ sources:
   - .llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1
   - .llm-wiki/tools/LlmWikiIndexCache.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
+  - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
+  - .llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
   - .llm-wiki/tools/LlmWikiProcess.ps1
   - .llm-wiki/wiki.ps1
@@ -37,7 +39,11 @@ sources:
 
 Mutable tool-smoke registries are redirected to `.artifacts/llm-wiki` instead of editing canonical knowledge and relying on `finally` restoration. Index updates persist an in-progress transaction snapshot under the Git directory; the next update restores any interrupted transaction whose owner process no longer exists before making new changes.
 
-Test plans expose `required`, `recommended`, and `fullRegression` command groups. Direct owners and production projects referencing changed C# symbols are required; broad transitive coverage remains a publication-hook or CI concern.
+Test plans expose `required`, `recommended`, `fullRegression`, and `satisfied`
+command groups. Direct owners remain required. A broad production consumer set
+is represented by one recommended composition build instead of many project
+builds, while content-addressed local verification receipts prevent unchanged
+successful commands from being presented as pending work.
 
 Ordinary `wiki verify` is always affected and resumable. `wiki verify-full`, pre-push, and CI retain the explicit full-repository gate. Successful stage receipts survive a later timeout, so rerunning `verify` continues from unchanged green stages rather than replaying them.
 

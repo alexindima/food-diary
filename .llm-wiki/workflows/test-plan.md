@@ -11,6 +11,8 @@ tags:
 sources:
   - docs/TESTING_STRATEGY.md
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
+  - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
+  - .llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1
   - .llm-wiki/policies/change-policies.json
 ---
 
@@ -55,3 +57,22 @@ Commands are grouped by obligation. `required` covers triggered policy and direc
 owners, `recommended` covers close consumers, and `full-regression` is the broad
 safety net normally delegated to pre-push or CI. The causal reason is printed
 with every command.
+
+When more than three production projects reference a changed contract, the
+planner replaces noisy per-project builds with one recommended
+`composition-confidence` solution build. Focused Application and Architecture
+tests remain required for abstraction-boundary changes.
+
+Record a completed check without creating tracked evidence files:
+
+```powershell
+./.llm-wiki/wiki.ps1 verification-record `
+  -EvidenceCommand 'dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore' `
+  -Status passed -DurationSeconds 24 -CoverageScope application-contract
+```
+
+Receipts live under the Git directory and are bound to the command, HEAD, and
+the current non-generated worktree fingerprint. A later `test-plan` marks an
+exact matching command as `satisfied` and exposes duration and coverage scope;
+source changes make the receipt stale automatically. Use `verification-list`
+to inspect current and stale receipts.
