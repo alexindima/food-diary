@@ -59,6 +59,10 @@ phase progress, reuses the content-addressed research cache, and defers Git
 history. Extraction readiness scans core Application namespace and public-type
 references, static helpers, mediator types, DI registrations, the executable
 module dependency graph, and available extracted project references. The
+physical source set is authoritative for ownership: multiple logical feature
+namespaces compiled into the same target project are reported as internal
+features, not external module dependencies. References to namespaces that are
+not declared by that source set remain extraction blockers. The
 compile probe creates an ignored temporary SDK project from the module sources,
 builds it with inferred references, reports compiler diagnostics, and removes
 the fixture. A requested compile probe must pass before the module is reported

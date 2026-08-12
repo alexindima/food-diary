@@ -39,13 +39,22 @@ $declaredDependencies = @(
         @($dependencyConfig.modules.$Module)
     }
 )
+$internalFeatureNamespaces = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+foreach ($path in $moduleSourcePaths) {
+    $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
+    $scanText = [regex]::Replace($text, '(?s)"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/', { param($match) ' ' * $match.Length })
+    foreach ($match in [regex]::Matches($scanText, '(?m)^\s*namespace\s+FoodDiary\.Application\.(?<feature>[A-Z][A-Za-z0-9_]+)(?:\.|\s*[;{])')) {
+        $feature = $match.Groups['feature'].Value
+        if ($feature -ne 'Abstractions') { $null = $internalFeatureNamespaces.Add($feature) }
+    }
+}
 $sourceDependencies = [Collections.Generic.List[object]]::new()
 foreach ($path in $moduleSourcePaths) {
     $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
     $scanText = [regex]::Replace($text, '(?s)"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/', { param($match) ' ' * $match.Length })
     foreach ($match in [regex]::Matches($scanText, '\bFoodDiary\.Application\.(?<module>[A-Z][A-Za-z0-9_]+)(?:\.[A-Za-z0-9_]+)*')) {
         $dependencyModule = $match.Groups['module'].Value
-        if ($dependencyModule -in @($Module, 'Abstractions')) { continue }
+        if ($dependencyModule -in @($Module, 'Abstractions') -or $internalFeatureNamespaces.Contains($dependencyModule)) { continue }
         $line = 1 + ($text.Substring(0, $match.Index) -split "`n").Count - 1
         $kind = if ($text.Substring([Math]::Max(0, $match.Index - [Math]::Min(20, $match.Index)), [Math]::Min($match.Length + [Math]::Min(20, $match.Index), $text.Length - [Math]::Max(0, $match.Index - [Math]::Min(20, $match.Index)))) -match '(?i)using\s+static') {
             'static-helper'
@@ -217,6 +226,7 @@ $result = [pscustomobject]@{
     moduleReadiness = [pscustomobject]@{ ready = $blockers.Count -eq 0; blockers = @($blockers); aggregateLeakPaths = $productionLeaks.Count; leakingContracts = @($leakingNames | Sort-Object) }
     dependencyReadiness = [pscustomobject]@{
         sourceFileCount = $moduleSourcePaths.Count
+        internalFeatureNamespaces = @($internalFeatureNamespaces | Sort-Object)
         actualModules = $actualDependencies
         declaredModules = $declaredDependencies
         undeclaredModules = $undeclaredDependencies

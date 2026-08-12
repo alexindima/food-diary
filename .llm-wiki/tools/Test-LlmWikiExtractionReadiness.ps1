@@ -18,6 +18,19 @@ $probe = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Modul
 if (-not $probe.compileProbe.passed) { throw "Dietologist extraction compile probe failed: $($probe.compileProbe.diagnostics -join '; ')" }
 if (-not $probe.dependencyReadiness.ready -or @($probe.dependencyReadiness.actualModules).Count -ne 0) { throw 'Dietologist dependency scan must be clean before extraction.' }
 
+$bodyMetrics = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module BodyMetrics -Format Json | ConvertFrom-Json
+if (-not $bodyMetrics.moduleReadiness.ready -or -not $bodyMetrics.dependencyReadiness.ready) {
+    throw "BodyMetrics internal feature namespaces must not be treated as external module dependencies: $($bodyMetrics.moduleReadiness.blockers -join '; ')"
+}
+if (@($bodyMetrics.dependencyReadiness.internalFeatureNamespaces) -notcontains 'WeightEntries' -or
+    @($bodyMetrics.dependencyReadiness.internalFeatureNamespaces) -notcontains 'WaistEntries') {
+    throw 'BodyMetrics readiness did not discover both logical features owned by its physical source set.'
+}
+if (@($bodyMetrics.dependencyReadiness.actualModules) -contains 'WeightEntries' -or
+    @($bodyMetrics.dependencyReadiness.actualModules) -contains 'WaistEntries') {
+    throw 'BodyMetrics readiness still reports assembly-internal logical features as external dependencies.'
+}
+
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $fixtureRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/extraction-readiness-$PID"
 $fixturePath = Join-Path $fixtureRoot 'DashboardLeak.cs'
