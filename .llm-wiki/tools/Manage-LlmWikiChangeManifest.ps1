@@ -84,17 +84,17 @@ switch ($Action) {
             try { $null = [regex]::new($pattern) } catch { throw "Invalid path regex: $pattern" }
         }
         $inputs = Get-ChangeInputs $BaseRef
-        $candidatePlannedPaths = @(if ($PlannedPath.Count -gt 0) { @($PlannedPath) } else { @($inputs.brief.change.paths) })
+        $candidatePlannedPaths = @(if (@($PlannedPath).Count -gt 0) { @($PlannedPath) } else { @($inputs.brief.change.paths) })
         $plannedPaths = @($candidatePlannedPaths | ForEach-Object { ([string]$_).Replace('\', '/').TrimEnd('/') } | Where-Object {
             $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
             $_ -notmatch '^\.artifacts/llm-wiki/'
         } | Sort-Object -Unique)
-        $allowedPatterns = @(if ($AllowedPath.Count -gt 0) {
+        $allowedPatterns = @(if (@($AllowedPath).Count -gt 0) {
             @($AllowedPath)
         } else {
             @($plannedPaths | ForEach-Object { '^' + [regex]::Escape($_) + '$' })
         })
-        if ($AllowedPath.Count -gt 0) {
+        if (@($AllowedPath).Count -gt 0) {
             $plannedPaths = @($plannedPaths | Where-Object {
                 $candidate = [string]$_
                 @($AllowedPath | Where-Object { $candidate -match [string]$_ }).Count -gt 0 -and
@@ -160,8 +160,8 @@ switch ($Action) {
         $currentChecks = @($inputs.brief.requiredChecks | ForEach-Object { "$($_.id)|$($_.command)" } | Sort-Object -Unique)
         $manifestChecks = @($manifest.plan.requiredChecks | ForEach-Object { "$($_.id)|$($_.command)" } | Sort-Object -Unique)
         $newChecks = @($currentChecks | Where-Object { $_ -notin $manifestChecks })
-        $currentReviews = @($inputs.brief.reviewObligations.id | Sort-Object -Unique)
-        $manifestReviews = @($manifest.plan.reviewObligations.id | Sort-Object -Unique)
+        $currentReviews = @($inputs.brief.reviewObligations | ForEach-Object { if ($_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { $_ } | Sort-Object -Unique)
+        $manifestReviews = @($manifest.plan.reviewObligations | ForEach-Object { if ($_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { $_ } | Sort-Object -Unique)
         $newReviews = @($currentReviews | Where-Object { $_ -notin $manifestReviews })
         $structuralViolations = @($inputs.brief.structuralViolations)
         $unresolvedEvidence = [System.Collections.Generic.List[object]]::new()

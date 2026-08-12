@@ -35,6 +35,13 @@ function Get-Hash([object]$Value) {
     $sha = [Security.Cryptography.SHA256]::Create()
     try { ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($json))) -replace '-', '').ToLowerInvariant() } finally { $sha.Dispose() }
 }
+function Get-Sum([object[]]$Items, [string]$PropertyName) {
+    $values = @($Items | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties[$PropertyName]) { [double]$_.$PropertyName }
+    })
+    if ($values.Count -eq 0) { return [double]0 }
+    return [double](($values | Measure-Object -Sum).Sum)
+}
 function Get-Category([string]$Id) {
     if ($Id -match '(?i)compile|build') { return 'compile' }
     if ($Id -match '(?i)format|whitespace') { return 'format' }
@@ -125,7 +132,9 @@ function Get-Forecast([bool]$PersistPrediction) {
             checkId = $_.checkId; category = $category; failureProbabilityPercent = [int]$_.probabilityPercent
             verificationSeconds = $verificationSeconds; repairSeconds = $repairSeconds
             verificationCostSource = $(if ($learningOverrides.Count -gt 0) { 'approved-learning' } elseif ($useHistory) { 'blended-history' } else { 'policy' })
-            learningCandidateIds = @($learningOverrides.id | Sort-Object -Unique)
+            learningCandidateIds = @($learningOverrides | ForEach-Object {
+                if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+            } | Where-Object { $_ } | Sort-Object -Unique)
             telemetrySampleCount = $(if ($null -eq $historical) { 0 } else { [int]$historical.sampleCount })
             telemetryMedianDurationSeconds = $(if ($null -eq $historical) { $null } else { [double]$historical.medianDurationSeconds })
             telemetryFlaky = $(if ($null -eq $historical) { $false } else { [bool]$historical.flaky })
@@ -194,6 +203,15 @@ function Test-Receipt([object]$Receipt) {
     if ([string]$Receipt.policyFingerprint -cne (Get-FileHash -LiteralPath $policyPath -Algorithm SHA256).Hash.ToLowerInvariant()) { $issues.Add('Workspace policy drifted.') }
     $allowedCategories = @('compile', 'test', 'format', 'lint', 'contract', 'architecture', 'infrastructure', 'unknown')
     foreach ($estimate in @($Receipt.estimates)) {
+        $estimateId = if ($null -ne $estimate -and $estimate.PSObject.Properties['checkId']) { [string]$estimate.checkId } else { '<unknown>' }
+        $requiredEstimateProperties = @('checkId', 'category', 'failureProbabilityPercent', 'verificationSeconds', 'repairSeconds', 'expectedFailureSeconds', 'expectedTotalSeconds', 'valueDensity', 'priorityBoost')
+        $missingEstimateProperties = @($requiredEstimateProperties | Where-Object { $null -eq $estimate -or -not $estimate.PSObject.Properties[$_] })
+        if ($missingEstimateProperties.Count -gt 0) {
+            foreach ($propertyName in $missingEstimateProperties) {
+                $issues.Add("verification-cost.json estimate '$estimateId' is missing required field '$propertyName'.")
+            }
+            continue
+        }
         if ([string]::IsNullOrWhiteSpace([string]$estimate.checkId)) { $issues.Add('Cost estimate checkId must be non-empty.'); continue }
         if ([string]$estimate.category -notin $allowedCategories) { $issues.Add("Cost category is invalid for '$($estimate.checkId)'.") }
         if ([int]$estimate.failureProbabilityPercent -lt 0 -or [int]$estimate.failureProbabilityPercent -gt 100) { $issues.Add("Failure probability is invalid for '$($estimate.checkId)'.") }
@@ -209,7 +227,8 @@ function Test-Receipt([object]$Receipt) {
             $issues.Add("Cost arithmetic is invalid for '$($estimate.checkId)'.")
         }
         if ([int]$estimate.priorityBoost -ne $boost) { $issues.Add("Cost priority boost is invalid for '$($estimate.checkId)'.") }
-        $snapshotOverrides = @($Receipt.appliedLearningSnapshot | Where-Object { $estimate.checkId -in @($_.application.subjectIds) })
+        $snapshot = if ($Receipt.PSObject.Properties['appliedLearningSnapshot']) { @($Receipt.appliedLearningSnapshot) } else { @() }
+        $snapshotOverrides = @($snapshot | Where-Object { $estimate.checkId -in @($_.application.subjectIds) })
         if ($snapshotOverrides.Count -gt 0) {
             $expectedSeconds = [int][Math]::Round([double](($snapshotOverrides.application.recommendedSeconds | Measure-Object -Average).Average))
             if ([string]$estimate.verificationCostSource -ne 'approved-learning' -or [int]$estimate.verificationSeconds -ne [Math]::Max(1, $expectedSeconds)) {
@@ -223,21 +242,25 @@ function Test-Receipt([object]$Receipt) {
         }
     }
     $expectedTotals = [pscustomobject][ordered]@{
-        verificationSeconds = [double](($Receipt.estimates.verificationSeconds | Measure-Object -Sum).Sum)
-        expectedFailureSeconds = [double](($Receipt.estimates.expectedFailureSeconds | Measure-Object -Sum).Sum)
-        expectedTotalSeconds = [double](($Receipt.estimates.expectedTotalSeconds | Measure-Object -Sum).Sum)
+        verificationSeconds = Get-Sum @($Receipt.estimates) 'verificationSeconds'
+        expectedFailureSeconds = Get-Sum @($Receipt.estimates) 'expectedFailureSeconds'
+        expectedTotalSeconds = Get-Sum @($Receipt.estimates) 'expectedTotalSeconds'
     }
-    if ((Get-Hash $Receipt.totals) -cne (Get-Hash $expectedTotals)) { $issues.Add('Cost totals are invalid.') }
-    if ([string]$Receipt.costHash -cne (Get-Hash (Get-Payload $Receipt))) { $issues.Add('Verification cost hash is invalid.') }
+    if (-not $Receipt.PSObject.Properties['totals'] -or (Get-Hash $Receipt.totals) -cne (Get-Hash $expectedTotals)) { $issues.Add('Cost totals are invalid.') }
+    if (-not $Receipt.PSObject.Properties['costHash']) {
+        $issues.Add('verification-cost.json is missing required field costHash.')
+    } elseif ($issues.Count -eq 0 -and [string]$Receipt.costHash -cne (Get-Hash (Get-Payload $Receipt))) {
+        $issues.Add('Verification cost hash is invalid.')
+    }
     [pscustomobject]@{ valid = $issues.Count -eq 0; issues = @($issues) }
 }
 
 if ($Action -eq 'create') {
     $forecast = Get-Forecast $true
     $totals = [pscustomobject][ordered]@{
-        verificationSeconds = [double](($forecast.estimates.verificationSeconds | Measure-Object -Sum).Sum)
-        expectedFailureSeconds = [double](($forecast.estimates.expectedFailureSeconds | Measure-Object -Sum).Sum)
-        expectedTotalSeconds = [double](($forecast.estimates.expectedTotalSeconds | Measure-Object -Sum).Sum)
+        verificationSeconds = Get-Sum @($forecast.estimates) 'verificationSeconds'
+        expectedFailureSeconds = Get-Sum @($forecast.estimates) 'expectedFailureSeconds'
+        expectedTotalSeconds = Get-Sum @($forecast.estimates) 'expectedTotalSeconds'
     }
     $receipt = [pscustomobject][ordered]@{
         schemaVersion = 1; workspace = $workspace; createdAtUtc = $AsOfUtc.ToUniversalTime().ToString('o')
@@ -256,9 +279,9 @@ if ($Action -eq 'create') {
 } elseif ($Action -eq 'assess' -and -not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) {
     $forecast = Get-Forecast $false
     $totals = [pscustomobject][ordered]@{
-        verificationSeconds = [double](($forecast.estimates.verificationSeconds | Measure-Object -Sum).Sum)
-        expectedFailureSeconds = [double](($forecast.estimates.expectedFailureSeconds | Measure-Object -Sum).Sum)
-        expectedTotalSeconds = [double](($forecast.estimates.expectedTotalSeconds | Measure-Object -Sum).Sum)
+        verificationSeconds = Get-Sum @($forecast.estimates) 'verificationSeconds'
+        expectedFailureSeconds = Get-Sum @($forecast.estimates) 'expectedFailureSeconds'
+        expectedTotalSeconds = Get-Sum @($forecast.estimates) 'expectedTotalSeconds'
     }
     $receipt = [pscustomobject][ordered]@{
         schemaVersion = 1; workspace = $workspace; createdAtUtc = $AsOfUtc.ToUniversalTime().ToString('o')
@@ -277,7 +300,33 @@ if ($Action -eq 'create') {
     if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw "Verification cost forecast is absent: $workspace/verification-cost.json" }
     $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
     $validation = Test-Receipt $receipt
-    $result = [pscustomobject][ordered]@{ action = $Action; valid = $validation.valid; forecast = $receipt; calibration = Get-Calibration $receipt.estimates; issues = @($validation.issues) }
+    if ($Action -eq 'assess' -and -not $validation.valid) {
+        $forecast = Get-Forecast $false
+        $totals = [pscustomobject][ordered]@{
+            verificationSeconds = Get-Sum @($forecast.estimates) 'verificationSeconds'
+            expectedFailureSeconds = Get-Sum @($forecast.estimates) 'expectedFailureSeconds'
+            expectedTotalSeconds = Get-Sum @($forecast.estimates) 'expectedTotalSeconds'
+        }
+        $receipt = [pscustomobject][ordered]@{
+            schemaVersion = 1; workspace = $workspace; createdAtUtc = $AsOfUtc.ToUniversalTime().ToString('o')
+            packetFingerprint = [string]$forecast.packet.fingerprint
+            policyFingerprint = (Get-FileHash -LiteralPath $policyPath -Algorithm SHA256).Hash.ToLowerInvariant()
+            predictionHash = [string]$forecast.prediction.prediction.predictionHash
+            telemetryRegistryHash = [string]$forecast.telemetry.registryHash
+            learningRegistryFingerprint = [string]$forecast.learning.registryFingerprint
+            experimentRegistryFingerprint = [string]$forecast.experiments.registryFingerprint
+            appliedLearningSnapshot = @($forecast.appliedLearningSnapshot)
+            estimates = @($forecast.estimates); totals = $totals; costHash = ''
+        }
+        $receipt.costHash = Get-Hash (Get-Payload $receipt)
+        $result = [pscustomobject][ordered]@{
+            action = 'assess-regenerated'; valid = $true; forecast = $receipt
+            calibration = Get-Calibration $receipt.estimates
+            issues = @($validation.issues | ForEach-Object { "Legacy forecast replaced in memory: $_" })
+        }
+    } else {
+        $result = [pscustomobject][ordered]@{ action = $Action; valid = $validation.valid; forecast = $receipt; calibration = Get-Calibration $receipt.estimates; issues = @($validation.issues) }
+    }
 }
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 40 } else {

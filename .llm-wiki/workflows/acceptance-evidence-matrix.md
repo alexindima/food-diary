@@ -35,6 +35,11 @@ Map each criterion to one or more discovered verification targets:
   -CheckId architecture-tests
 ```
 
+Matched product journeys such as `FD-AUTH` are exposed beside generated test
+scenarios and may be mapped directly. Empty scenario, check, review, or changed
+path catalogs are valid pre-implementation state: mapping reports a specific
+unknown evidence identifier instead of failing on a missing object property.
+
 For a packet containing only test sources, initialization automatically maps
 each criterion to the changed test bundle, focused test paths, and required
 checks. This removes repetitive bookkeeping but does not resolve a criterion:

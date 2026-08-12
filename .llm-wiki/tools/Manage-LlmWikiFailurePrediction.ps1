@@ -142,7 +142,9 @@ function Get-Current([bool]$PersistRisk) {
             }
             telemetrySampleCount = $(if ($null -eq $historicalMetric) { 0 } else { [int]$historicalMetric.sampleCount })
             telemetryFlaky = $(if ($null -eq $historicalMetric) { $false } else { [bool]$historicalMetric.flaky })
-            historicalLearningIds = @($learnings.learnings.id)
+            historicalLearningIds = @($learnings.learnings | ForEach-Object {
+                if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+            } | Where-Object { $_ })
             priorRepairAttemptCount = $priorAttempts
         }
     } | Sort-Object checkId)
@@ -190,9 +192,13 @@ function Test-Receipt([object]$Receipt) {
     if ([string]$Receipt.workspace -cne $normalizedWorkspace) { $issues.Add('Workspace does not match.') }
     if ([string]$Receipt.packetFingerprint -cne [string]$current.packet.fingerprint) { $issues.Add('Change packet drifted.') }
     if ([string]$Receipt.policyFingerprint -cne [string]$current.policyFingerprint) { $issues.Add('Workspace policy drifted.') }
-    $expectedCheckIds = @($current.evidence.checks.id | Sort-Object -Unique)
-    $storedCheckIds = @($Receipt.predictions.checkId | Sort-Object -Unique)
-    if ($expectedCheckIds.Count -ne $storedCheckIds.Count -or (Compare-Object $expectedCheckIds $storedCheckIds).Count -ne 0) {
+    $expectedCheckIds = @($current.evidence.checks | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+    } | Where-Object { $_ } | Sort-Object -Unique)
+    $storedCheckIds = @($Receipt.predictions | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['checkId']) { [string]$_.checkId }
+    } | Where-Object { $_ } | Sort-Object -Unique)
+    if ($expectedCheckIds.Count -ne $storedCheckIds.Count -or @(Compare-Object $expectedCheckIds $storedCheckIds).Count -ne 0) {
         $issues.Add('Predicted check set drifted.')
     }
     foreach ($prediction in @($Receipt.predictions)) {

@@ -154,9 +154,9 @@ function New-Critique([string]$CreatedAtUtc) {
     }
     if ($sensitiveContextRequired -and $null -eq $contextSecurity) {
         Add-Finding $findings 'security-context-unassessed' 'security' 'warning' 'The selected AI context has no trust assessment.' 'Create and review context-security evidence before delegating or sealing sensitive work.' @() "./.llm-wiki/wiki.ps1 task-context-security-create -WorkspacePath $workspace"
-    } elseif (-not $contextSecurity.valid) {
+    } elseif ($null -ne $contextSecurity -and -not $contextSecurity.valid) {
         Add-Finding $findings 'security-context-invalid' 'security' 'critical' 'AI context security evidence is invalid.' 'Regenerate the trust assessment and resolve integrity or quarantine issues.' @($contextSecurity.issues)
-    } elseif ([int]$contextSecurity.assessment.summary.quarantineCount -gt 0) {
+    } elseif ($null -ne $contextSecurity -and [int]$contextSecurity.assessment.summary.quarantineCount -gt 0) {
         Add-Finding $findings 'security-context-quarantined' 'security' 'warning' 'Potential prompt-injection instructions were quarantined.' 'Review quarantined sources and confirm they are data rather than instructions.' @($contextSecurity.assessment.sources | Where-Object quarantineCount -gt 0 | Select-Object -ExpandProperty path)
     }
     if (-not $confidence.valid) {

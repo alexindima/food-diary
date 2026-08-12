@@ -233,14 +233,14 @@
                         "pageSha256":  "7b31e07462b7a226949fca58c200d0330514b3158ce5f905e77bc1d9bda431dd",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "c84d77ebb9730212326aebc45ec44b31285f9e15d53034a486ea75f5317b9a35"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+                                            "sha256":  "86e0b13db36fc9021da127a618db699a675d97722ff287922ace5951427dc9a0"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:46.0477349Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:36.7999071Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -293,18 +293,14 @@
                         "pageSha256":  "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "8c52edd04363ae86b381d35834f5eaf18d5e20915af123238c7dece7063e0b2e"
+                                            "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
                                         }
                                     ],
-                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:47:07.4458323Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:37.8340049Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -328,13 +324,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
-                                            "sha256":  "995879b649e0f423faef91641632ef5eb0eff28a547547e4cb57a89e86bd4321"
+                                            "sha256":  "785f052003ad3c8ad93e7a044ea2d3acd0c32d79fb00a8c783aaeed1028ec626"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:46.2704685Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:38.9283058Z"
                     },
                     {
                         "pageId":  "workflow-context-bundles",
@@ -357,22 +357,14 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
-                                            "sha256":  "ed8b85b12f1c9229f137dcee33fade20726caf7668669b0f9646601ae82f4284"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
-                                            "sha256":  "86cb41dfc1b81584dce4312222973a708df4d1b1765287bf1ef1eeb3da5d13c2"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
-                                            "sha256":  "05bac6e006f9cf06f37780fafa5746b7ddd311ef33db61cf6fceb179d5ae28de"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
                                         }
                                     ],
-                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:21:44.3210503Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:40.0711973Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
@@ -381,13 +373,28 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
+                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:55.9638995Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:41.2399778Z"
+                    },
+                    {
+                        "pageId":  "workflow-cost-aware-verification",
+                        "pagePath":  ".llm-wiki/workflows/cost-aware-verification.md",
+                        "pageSha256":  "89bba606d2635692a16e530538c4ccc5a89b7d983e5a9465a605a1aefdd34e7c",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+                                        }
+                                    ],
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:42.3280292Z"
                     },
                     {
                         "pageId":  "workflow-decision-context",
@@ -455,14 +462,18 @@
                         "pageSha256":  "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
+                                            "sha256":  "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
-                                            "sha256":  "91efac1a282020cf161974ccd91846ef0df79a92990335ba648d71f836ccb068"
+                                            "sha256":  "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:46.5112566Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:43.4463086Z"
                     },
                     {
                         "pageId":  "workflow-impact-simulation",
@@ -471,13 +482,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
-                                            "sha256":  "c51b41aff7ca5036c3379fe41ed639f92a140c85ec7e8fbbef1e72cea0b79146"
+                                            "sha256":  "4715ac9597d1e9833f3a6d9cd385a5a94c7823ebdce5640b7b816e45500f9e9d"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:46.7436247Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:44.5598303Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -485,18 +500,14 @@
                         "pageSha256":  "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/LlmWikiImplementationBrief.ps1",
-                                            "sha256":  "1f050fc8c1931ad766d878840cb7ab7460c1afbb710bc61715361146c21e4373"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "b3fc65e4ff589972305b03c74e8380acde84c2f8eb4b15a9a3867d32ea7d432c"
+                                            "sha256":  "7c6f11fd08ac3bc2ec0a767a697f1850fff03d1e48b25659d5cbf216e9688c8d"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:46.9787240Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:45.7328229Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -505,13 +516,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
-                                            "sha256":  "703afb9fb3428858c8cf8fb985452c4774e4aa93bf03f63f81d1c73be8107382"
+                                            "sha256":  "716c306fd32a152e2d9c634937c9428bb54459b33f479043ee0f9cabeef51b33"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:47.2345683Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:47.1280169Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -520,13 +535,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "543093c28b722cd933fb17fca308bb9406af6a5e322b082f2602027c1abb85c5"
+                                            "sha256":  "cca21c7afb0feb30ed1881bae72ff5010f78982c1daef015ab303abdd98ee70c"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:47.5554616Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:48.3122994Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -610,13 +625,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "8c52edd04363ae86b381d35834f5eaf18d5e20915af123238c7dece7063e0b2e"
+                                            "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+                                            "sha256":  "86e0b13db36fc9021da127a618db699a675d97722ff287922ace5951427dc9a0"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
                                         }
                                     ],
-                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:47:08.1408561Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:49.4819360Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
@@ -655,17 +678,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "11fac10bbcda9426ababd9a6618c940aa01ba41b4be203d0c1002ec3441e6860"
+                                            "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
+                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:58.0243759Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:50.6445118Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -688,22 +711,18 @@
                         "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "ce590751a3075fdbb97221274ba29b64adfdba1c2ff1b9d6603f23dfff6c8f8b"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "8c52edd04363ae86b381d35834f5eaf18d5e20915af123238c7dece7063e0b2e"
+                                            "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
                                         }
                                     ],
-                        "reason":  "Reviewed in-process DI registration and compatibility; no migration, configuration, or deployment ordering change.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
-                        "reviewedAtUtc":  "2026-08-12T03:16:27.3399482Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:51.7966832Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -711,14 +730,22 @@
                         "pageSha256":  "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "b3fc65e4ff589972305b03c74e8380acde84c2f8eb4b15a9a3867d32ea7d432c"
+                                            "sha256":  "7c6f11fd08ac3bc2ec0a767a697f1850fff03d1e48b25659d5cbf216e9688c8d"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:48.2005685Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:53.0548434Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -750,13 +777,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
-                                            "sha256":  "91efac1a282020cf161974ccd91846ef0df79a92990335ba648d71f836ccb068"
+                                            "sha256":  "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:48.5204522Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:54.3110993Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -908,17 +935,21 @@
                     {
                         "pageId":  "workflow-verification-telemetry",
                         "pagePath":  ".llm-wiki/workflows/verification-telemetry.md",
-                        "pageSha256":  "07f18275242cb36a31be5517655701417726c9539b75cc7d23b04b058d5036a5",
+                        "pageSha256":  "b12a79df67989847845ec9725cad44610e5ee3779bf54ed16e8194f751f45e77",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/knowledge/verification-telemetry.json",
-                                            "sha256":  "4b4dfb53669a2b694a0975aee232e5ec53eb53a69841990ea7a0d6b1807deab9"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
+                                            "sha256":  "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
                                         }
                                     ],
-                        "reason":  "Reviewed the governed wiki-verify observations added during this task; telemetry schema and interpretation remain unchanged.",
+                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:24:32.5534311Z"
+                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
+                        "reviewedAtUtc":  "2026-08-12T04:43:55.6331155Z"
                     }
                 ]
 }

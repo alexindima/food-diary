@@ -97,13 +97,13 @@ $pendingCriteria = @($acceptance.criteria | Where-Object status -eq 'pending')
 $rejectedCriteria = @($acceptance.criteria | Where-Object status -eq 'rejected')
 $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable'))
 $unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable'))
-$initialFingerprint = if ($null -ne $descriptor.initialPacketFingerprint) {
+$initialFingerprint = if ($descriptor.PSObject.Properties['initialPacketFingerprint'] -and $null -ne $descriptor.initialPacketFingerprint) {
     [string]$descriptor.initialPacketFingerprint
 } else {
     [string]$descriptor.packetFingerprint
 }
 $fingerprintChanged = $initialFingerprint -ne $packet.fingerprint
-$lastCompiledFingerprint = if (-not [string]::IsNullOrWhiteSpace([string]$descriptor.currentPacketFingerprint)) {
+$lastCompiledFingerprint = if ($descriptor.PSObject.Properties['currentPacketFingerprint'] -and -not [string]::IsNullOrWhiteSpace([string]$descriptor.currentPacketFingerprint)) {
     [string]$descriptor.currentPacketFingerprint
 } else {
     $initialFingerprint
@@ -147,7 +147,11 @@ $contextSecurityPath = Join-Path $absoluteWorkspacePath 'context-security.json'
 $contextSecurity = if (Test-Path -LiteralPath $contextSecurityPath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextSecurity.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json
 } else { $null }
-$relevantTelemetry = @($verificationTelemetry.metrics | Where-Object checkId -in @($evidence.checks.id))
+function Get-Ids([object[]]$Items) {
+    @($Items | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { $_ })
+}
+$evidenceCheckIds = @(Get-Ids @($evidence.checks))
+$relevantTelemetry = @($verificationTelemetry.metrics | Where-Object { $_.PSObject.Properties['checkId'] -and $_.checkId -in $evidenceCheckIds })
 $confidenceLedger = & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
@@ -268,10 +272,10 @@ $result = [pscustomobject][ordered]@{
     contextSecurity = $contextSecurity
     confidenceLedger = $confidenceLedger
     changeCritique = $changeCritique
-    pendingCriteria = @($pendingCriteria.id)
-    rejectedCriteria = @($rejectedCriteria.id)
-    unresolvedChecks = @($unresolvedChecks.id)
-    unresolvedReviews = @($unresolvedReviews.id)
+    pendingCriteria = @(Get-Ids $pendingCriteria)
+    rejectedCriteria = @(Get-Ids $rejectedCriteria)
+    unresolvedChecks = @(Get-Ids $unresolvedChecks)
+    unresolvedReviews = @(Get-Ids $unresolvedReviews)
     blockingDimensions = @($readiness.blockingDimensions) +
         $(if ($journalView.openBlockerCount -gt 0) { @('task-journal') } else { @() }) +
         $(if (-not $planConformance.valid) { @('plan-conformance') } else { @() }) +
@@ -343,15 +347,15 @@ if ($Action -eq 'refresh') {
             -OutputPath $temporaryReportRelative | Out-Null
         [System.IO.File]::Copy($temporaryPacketAbsolute, $packetArtifactPath, $true)
         [System.IO.File]::Copy($temporaryReportAbsolute, $reportArtifactPath, $true)
-        if ($null -eq $descriptor.initialPacketFingerprint) {
+        if (-not $descriptor.PSObject.Properties['initialPacketFingerprint'] -or $null -eq $descriptor.initialPacketFingerprint) {
             $descriptor | Add-Member -NotePropertyName initialPacketFingerprint -NotePropertyValue $initialFingerprint
         }
-        if ($null -eq $descriptor.currentPacketFingerprint) {
+        if (-not $descriptor.PSObject.Properties['currentPacketFingerprint'] -or $null -eq $descriptor.currentPacketFingerprint) {
             $descriptor | Add-Member -NotePropertyName currentPacketFingerprint -NotePropertyValue $packet.fingerprint
         } else {
             $descriptor.currentPacketFingerprint = $packet.fingerprint
         }
-        if ($null -eq $descriptor.lastRefreshedAtUtc) {
+        if (-not $descriptor.PSObject.Properties['lastRefreshedAtUtc'] -or $null -eq $descriptor.lastRefreshedAtUtc) {
             $descriptor | Add-Member -NotePropertyName lastRefreshedAtUtc -NotePropertyValue ([DateTime]::UtcNow.ToString('o'))
         } else {
             $descriptor.lastRefreshedAtUtc = [DateTime]::UtcNow.ToString('o')

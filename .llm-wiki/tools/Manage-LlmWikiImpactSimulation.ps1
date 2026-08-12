@@ -42,6 +42,11 @@ function Get-Signatures([object[]]$Items) {
         if ($_ -is [string]) { [string]$_ } else { ConvertTo-Json -InputObject $_ -Depth 12 -Compress }
     } | Sort-Object -Unique)
 }
+function Get-Ids([object[]]$Items) {
+    @($Items | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+    } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+}
 function Get-ImpactSnapshot([object]$Packet) {
     $brief = Normalize-LlmWikiImplementationBrief $Packet.brief
     $runtime = @(
@@ -76,8 +81,8 @@ function Get-ImpactSnapshot([object]$Packet) {
         scopes = @($Packet.diff.scopes | Sort-Object -Unique)
         directModules = @($Packet.ownership.directModules | Sort-Object -Unique)
         downstreamModules = @($Packet.ownership.downstreamModules | Sort-Object -Unique)
-        requiredChecks = @($Packet.brief.requiredChecks.id | Sort-Object -Unique)
-        reviewObligations = @($Packet.brief.reviewObligations.id | Sort-Object -Unique)
+        requiredChecks = @(Get-Ids @($Packet.brief.requiredChecks))
+        reviewObligations = @(Get-Ids @($Packet.brief.reviewObligations))
         contracts = @(Get-Signatures $contracts)
         consumers = @(Get-Signatures $consumers)
         runtimeBindings = @(Get-Signatures $runtime)

@@ -64,7 +64,7 @@ function Get-PathAffinity([string]$Left, [string]$Right) {
 function Test-SameSet([object[]]$Left, [object[]]$Right) {
     $leftValues = @($Left | ForEach-Object { [string]$_ } | Sort-Object -Unique)
     $rightValues = @($Right | ForEach-Object { [string]$_ } | Sort-Object -Unique)
-    return ($leftValues.Count -eq $rightValues.Count -and (Compare-Object $leftValues $rightValues).Count -eq 0)
+    return ($leftValues.Count -eq $rightValues.Count -and @(Compare-Object $leftValues $rightValues).Count -eq 0)
 }
 function Get-ChangeReason([object]$OldRequirement, [object]$NewRequirement, [string]$ValueProperty) {
     if ($null -eq $OldRequirement) { return 'new-requirement' }
@@ -77,7 +77,7 @@ function Get-ChangeReason([object]$OldRequirement, [object]$NewRequirement, [str
 }
 function Get-LineageChangeReason([object]$Entry, [object]$Requirement) {
     if ($null -eq $Entry -or [string]$Entry.status -notin @('passed', 'failed', 'completed', 'not-applicable')) { return $null }
-    if ($null -eq $Entry.lineage) { return 'lineage-missing' }
+    if (-not $Entry.PSObject.Properties['lineage'] -or $null -eq $Entry.lineage) { return 'lineage-missing' }
     $paths = Get-RulePaths $newPacket ([string]$Requirement.sourceRule)
     $content = & (Join-Path $PSScriptRoot 'Get-LlmWikiContentFingerprint.ps1') -Path $paths -Format Json | ConvertFrom-Json
     if ([string]$Entry.lineage.dependencies.contentFingerprint -cne [string]$content.fingerprint) { return 'dependency-content-changed' }
@@ -110,8 +110,37 @@ function New-HistoryEntry([string]$Kind, [string]$Id, [string]$PriorStatus, [str
         reason = $Reason
     }
 }
+function Get-Ids([object[]]$Items) {
+    @($Items | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+    } | Where-Object { $_ } | Sort-Object -Unique)
+}
+function Get-AvailableScenarios([object]$Packet, [string]$Intent) {
+    $items = [System.Collections.Generic.List[object]]::new()
+    foreach ($scenario in @($Packet.testPlan.scenarios)) {
+        if ($null -eq $scenario -or -not $scenario.PSObject.Properties['id']) { continue }
+        $items.Add([pscustomobject][ordered]@{
+            id = [string]$scenario.id
+            description = [string]$scenario.description
+            evidence = [string]$scenario.evidence
+        })
+    }
+    $journeys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
+        -Query $Intent -ChangedPath @($Packet.diff.changedPaths) -Format Json | ConvertFrom-Json
+    foreach ($journey in @($journeys.journeys)) {
+        if ($null -eq $journey -or -not $journey.PSObject.Properties['id']) { continue }
+        $items.Add([pscustomobject][ordered]@{
+            id = [string]$journey.id
+            description = [string]$journey.title
+            evidence = "Product journey: $(@($journey.scenarios) -join ', ')"
+        })
+    }
+    @($items | Group-Object id | ForEach-Object { $_.Group | Select-Object -First 1 } | Sort-Object id)
+}
 
 $history = [System.Collections.Generic.List[object]]::new()
+$newCheckIds = @(Get-Ids @($newPacket.policy.requiredChecks))
+$newReviewIds = @(Get-Ids @($newPacket.policy.reviewObligations))
 $invalidatedCheckIds = [System.Collections.Generic.List[string]]::new()
 $invalidatedReviewIds = [System.Collections.Generic.List[string]]::new()
 $newChecks = [System.Collections.Generic.List[object]]::new()
@@ -123,7 +152,8 @@ foreach ($requirement in @($newPacket.policy.requiredChecks)) {
     if ($null -eq $reason) { $reason = Get-LineageChangeReason $oldEntry $requirement }
     if ($null -ne $reason) {
         $priorStatus = if ($null -ne $oldEntry) { [string]$oldEntry.status } else { 'absent' }
-        $history.Add((New-HistoryEntry 'check' ([string]$requirement.id) $priorStatus $reason $oldEntry.lineage))
+        $priorLineage = if ($null -ne $oldEntry -and $oldEntry.PSObject.Properties['lineage']) { $oldEntry.lineage } else { $null }
+        $history.Add((New-HistoryEntry 'check' ([string]$requirement.id) $priorStatus $reason $priorLineage))
         $invalidatedCheckIds.Add([string]$requirement.id)
         $newChecks.Add([pscustomobject][ordered]@{
             id = [string]$requirement.id
@@ -137,8 +167,9 @@ foreach ($requirement in @($newPacket.policy.requiredChecks)) {
         $newChecks.Add($oldEntry)
     }
 }
-foreach ($oldEntry in @($evidence.checks | Where-Object { $_.id -notin @($newPacket.policy.requiredChecks.id) })) {
-    $history.Add((New-HistoryEntry 'check' ([string]$oldEntry.id) ([string]$oldEntry.status) 'requirement-removed' $oldEntry.lineage))
+foreach ($oldEntry in @($evidence.checks | Where-Object { $_.id -notin $newCheckIds })) {
+    $priorLineage = if ($oldEntry.PSObject.Properties['lineage']) { $oldEntry.lineage } else { $null }
+    $history.Add((New-HistoryEntry 'check' ([string]$oldEntry.id) ([string]$oldEntry.status) 'requirement-removed' $priorLineage))
     $invalidatedCheckIds.Add([string]$oldEntry.id)
 }
 
@@ -151,7 +182,8 @@ foreach ($requirement in @($newPacket.policy.reviewObligations)) {
     if ($null -eq $reason) { $reason = Get-LineageChangeReason $oldEntry $requirement }
     if ($null -ne $reason) {
         $priorStatus = if ($null -ne $oldEntry) { [string]$oldEntry.status } else { 'absent' }
-        $history.Add((New-HistoryEntry 'review' ([string]$requirement.id) $priorStatus $reason $oldEntry.lineage))
+        $priorLineage = if ($null -ne $oldEntry -and $oldEntry.PSObject.Properties['lineage']) { $oldEntry.lineage } else { $null }
+        $history.Add((New-HistoryEntry 'review' ([string]$requirement.id) $priorStatus $reason $priorLineage))
         $invalidatedReviewIds.Add([string]$requirement.id)
         $newReviews.Add([pscustomobject][ordered]@{
             id = [string]$requirement.id
@@ -164,15 +196,18 @@ foreach ($requirement in @($newPacket.policy.reviewObligations)) {
         $newReviews.Add($oldEntry)
     }
 }
-foreach ($oldEntry in @($evidence.reviews | Where-Object { $_.id -notin @($newPacket.policy.reviewObligations.id) })) {
-    $history.Add((New-HistoryEntry 'review' ([string]$oldEntry.id) ([string]$oldEntry.status) 'requirement-removed' $oldEntry.lineage))
+foreach ($oldEntry in @($evidence.reviews | Where-Object { $_.id -notin $newReviewIds })) {
+    $priorLineage = if ($oldEntry.PSObject.Properties['lineage']) { $oldEntry.lineage } else { $null }
+    $history.Add((New-HistoryEntry 'review' ([string]$oldEntry.id) ([string]$oldEntry.status) 'requirement-removed' $priorLineage))
     $invalidatedReviewIds.Add([string]$oldEntry.id)
 }
 
+$oldAvailableScenarios = @(Get-AvailableScenarios $oldPacket ([string]$acceptance.objective))
+$newAvailableScenarios = @(Get-AvailableScenarios $newPacket ([string]$acceptance.objective))
 $oldScenarios = @{}
-foreach ($item in @($oldPacket.testPlan.scenarios)) { $oldScenarios[[string]$item.id] = "$($item.description)|$($item.evidence)" }
+foreach ($item in $oldAvailableScenarios) { $oldScenarios[[string]$item.id] = "$($item.description)|$($item.evidence)" }
 $newScenarios = @{}
-foreach ($item in @($newPacket.testPlan.scenarios)) { $newScenarios[[string]$item.id] = "$($item.description)|$($item.evidence)" }
+foreach ($item in $newAvailableScenarios) { $newScenarios[[string]$item.id] = "$($item.description)|$($item.evidence)" }
 $changedScenarioIds = @($oldScenarios.Keys + $newScenarios.Keys | Sort-Object -Unique | Where-Object {
     -not $oldScenarios.ContainsKey($_) -or -not $newScenarios.ContainsKey($_) -or $oldScenarios[$_] -cne $newScenarios[$_]
 })
@@ -189,7 +224,8 @@ foreach ($newPath in $newProductPaths) {
         $best = if ($scores.Count -gt 0) { [int](($scores | Measure-Object -Maximum).Maximum) } else { 0 }
         if ($best -ge 2) { [pscustomobject]@{ id = [string]$candidate.id; score = $best } }
     }
-    $highest = [int](($ranked | Measure-Object -Property score -Maximum).Maximum)
+    $ranked = @($ranked)
+    $highest = if ($ranked.Count -gt 0) { [int](($ranked | Measure-Object -Property score -Maximum).Maximum) } else { 0 }
     $winners = @($ranked | Where-Object score -eq $highest)
     if ($highest -ge 2 -and $winners.Count -eq 1) {
         $autoLinkedPaths[$newPath] = [string]$winners[0].id
@@ -212,8 +248,8 @@ foreach ($criterion in @($acceptance.criteria)) {
     $unanchoredResolution = -not $hasMapping -and [string]$criterion.status -ne 'pending' -and
         [string]$oldPacket.fingerprint -cne [string]$newPacket.fingerprint
     $retainedChangedPaths = @($mappedChangedPaths | Where-Object { $_ -in @($newPacket.diff.changedPaths) })
-    $retainedChecks = @($mappedChecks | Where-Object { $_ -in @($newPacket.policy.requiredChecks.id) -and $_ -notin $invalidatedCheckIds })
-    $retainedReviews = @($mappedReviews | Where-Object { $_ -in @($newPacket.policy.reviewObligations.id) -and $_ -notin $invalidatedReviewIds })
+    $retainedChecks = @($mappedChecks | Where-Object { $_ -in $newCheckIds -and $_ -notin $invalidatedCheckIds })
+    $retainedReviews = @($mappedReviews | Where-Object { $_ -in $newReviewIds -and $_ -notin $invalidatedReviewIds })
     $retainedScenarios = @($mappedScenarios | Where-Object { $newScenarios.ContainsKey([string]$_) -and $_ -notin $changedScenarioIds })
     $retainedTests = @($mappedTests | Where-Object { $_ -in $newTestPaths })
     $hasDirectEvidence = $retainedChangedPaths.Count -gt 0 -and -not [string]::IsNullOrWhiteSpace([string]$criterion.resolution.evidenceNote)
@@ -243,13 +279,13 @@ $evidence.git.head = [string]$newPacket.inputs.gitHead
 $evidence.git.comparedHead = $newPacket.inputs.headRef
 $evidence.change.changedPaths = @($newPacket.diff.changedPaths)
 $evidence.change.scopes = @($newPacket.diff.scopes)
-$evidence.change.modules = @($newPacket.diff.modules.name)
-$priorHistory = @($evidence.invalidationHistory | Where-Object { $null -ne $_ })
+$evidence.change.modules = @($newPacket.diff.modules | ForEach-Object {
+    if ($_ -is [string]) { [string]$_ } elseif ($null -ne $_ -and $_.PSObject.Properties['name']) { [string]$_.name }
+} | Where-Object { $_ } | Sort-Object -Unique)
+$priorHistory = if ($evidence.PSObject.Properties['invalidationHistory']) { @($evidence.invalidationHistory | Where-Object { $null -ne $_ }) } else { @() }
 $combinedHistory = @($priorHistory) + @($history)
 $evidence | Add-Member -NotePropertyName invalidationHistory -NotePropertyValue $combinedHistory -Force
-$acceptance.availableEvidence.scenarios = @($newPacket.testPlan.scenarios | ForEach-Object {
-    [pscustomobject][ordered]@{ id = $_.id; description = $_.description; evidence = $_.evidence }
-})
+$acceptance.availableEvidence.scenarios = $newAvailableScenarios
 $acceptance.availableEvidence | Add-Member -NotePropertyName changedPaths -NotePropertyValue @($newPacket.diff.changedPaths) -Force
 $acceptance.availableEvidence.checks = @($newPacket.policy.requiredChecks | ForEach-Object {
     [pscustomobject][ordered]@{ id = $_.id; command = $_.command }

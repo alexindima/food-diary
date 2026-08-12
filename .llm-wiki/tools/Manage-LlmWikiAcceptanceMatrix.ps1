@@ -68,6 +68,29 @@ function Test-TestOnlyPacket([object]$Packet) {
     return $testPaths.Count -eq $productPaths.Count
 }
 
+function Get-AvailableScenarios([object]$Packet, [string]$Intent) {
+    $items = [System.Collections.Generic.List[object]]::new()
+    foreach ($scenario in @($Packet.testPlan.scenarios)) {
+        if ($null -eq $scenario -or -not $scenario.PSObject.Properties['id']) { continue }
+        $items.Add([pscustomobject][ordered]@{
+            id = [string]$scenario.id
+            description = [string]$scenario.description
+            evidence = [string]$scenario.evidence
+        })
+    }
+    $journeys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
+        -Query $Intent -ChangedPath @($Packet.diff.changedPaths) -Format Json | ConvertFrom-Json
+    foreach ($journey in @($journeys.journeys)) {
+        if ($null -eq $journey -or -not $journey.PSObject.Properties['id']) { continue }
+        $items.Add([pscustomobject][ordered]@{
+            id = [string]$journey.id
+            description = [string]$journey.title
+            evidence = "Product journey: $(@($journey.scenarios) -join ', ')"
+        })
+    }
+    @($items | Group-Object id | ForEach-Object { $_.Group | Select-Object -First 1 } | Sort-Object id)
+}
+
 switch ($Action) {
     'init' {
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'acceptance init requires -Objective.' }
@@ -129,7 +152,7 @@ switch ($Action) {
             git = [ordered]@{ base = $BaseRef; headAtInit = $packet.inputs.gitHead }
             availableEvidence = [ordered]@{
                 changedPaths = @($packet.diff.changedPaths)
-                scenarios = @($packet.testPlan.scenarios | ForEach-Object { [ordered]@{ id = $_.id; description = $_.description; evidence = $_.evidence } })
+                scenarios = @(Get-AvailableScenarios $packet $Objective)
                 checks = @($packet.policy.requiredChecks | ForEach-Object { [ordered]@{ id = $_.id; command = $_.command } })
                 reviews = @($packet.policy.reviewObligations | ForEach-Object { [ordered]@{ id = $_.id; description = $_.description } })
                 testPaths = @($packet.testPlan.focusedTestFiles)
@@ -149,13 +172,12 @@ switch ($Action) {
         if ([string]::IsNullOrWhiteSpace($CriterionId)) { throw 'acceptance map requires -CriterionId.' }
         $matrix = Read-Matrix
         $item = Get-Criterion $matrix $CriterionId
-        $availableScenarioIds = @($matrix.availableEvidence.scenarios.id)
-        $availableCheckIds = @($matrix.availableEvidence.checks.id)
-        $availableReviewIds = @($matrix.availableEvidence.reviews.id)
-        $availableChangedPaths = @($matrix.availableEvidence.changedPaths | ForEach-Object { ([string]$_).Replace('\', '/') })
-        if ($null -eq $matrix.availableEvidence.PSObject.Properties['changedPaths']) {
-            $availableChangedPaths = @()
-        }
+        $availableScenarioIds = @($matrix.availableEvidence.scenarios | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+        $availableCheckIds = @($matrix.availableEvidence.checks | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+        $availableReviewIds = @($matrix.availableEvidence.reviews | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+        $availableChangedPaths = if ($matrix.availableEvidence.PSObject.Properties['changedPaths']) {
+            @($matrix.availableEvidence.changedPaths | ForEach-Object { ([string]$_).Replace('\', '/') })
+        } else { @() }
         $normalizedChangedPaths = @($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/') })
         $normalizedTestPaths = @($TestPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/') })
         foreach ($path in $normalizedChangedPaths) {

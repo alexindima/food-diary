@@ -77,7 +77,10 @@ function Get-Current([Nullable[int]]$HistoricalPoints) {
     if ($scopePoints -gt 0) { $signals.Add([pscustomobject][ordered]@{ id = 'cross-scope'; points = $scopePoints; evidence = "scopes=$(@($packet.diff.scopes) -join ',')" }) }
     if ('Database' -in @($packet.diff.scopes)) { $signals.Add([pscustomobject][ordered]@{ id = 'database'; points = [int]$riskPolicy.databaseScopePoints; evidence = 'Database scope' }) }
     if ('Api' -in @($packet.diff.scopes)) { $signals.Add([pscustomobject][ordered]@{ id = 'api'; points = [int]$riskPolicy.apiScopePoints; evidence = 'Api scope' }) }
-    if ('security-review' -in @($packet.policy.reviewObligations.id)) { $signals.Add([pscustomobject][ordered]@{ id = 'security-review'; points = [int]$riskPolicy.securityReviewPoints; evidence = 'security-review obligation' }) }
+    $reviewIds = @($packet.policy.reviewObligations | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+    } | Where-Object { $_ })
+    if ('security-review' -in $reviewIds) { $signals.Add([pscustomobject][ordered]@{ id = 'security-review'; points = [int]$riskPolicy.securityReviewPoints; evidence = 'security-review obligation' }) }
     $negativeEventValues = @($adjustments.metrics.dispatchProfiles | Where-Object totalDelta -lt 0 | ForEach-Object { [int]$_.eventCount })
     $negativeEvents = if ($negativeEventValues.Count -gt 0) { [int](($negativeEventValues | Measure-Object -Sum).Sum) } else { 0 }
     $historyPoints = if ($null -ne $HistoricalPoints) {

@@ -48,6 +48,11 @@ function Test-GovernanceGeneratedPath([string]$Value) {
     $Value -match '^\.llm-wiki/generated/' -or
         $Value -eq '.llm-wiki/reviews/source-impact-reviews.json'
 }
+function Get-Ids([object[]]$Items) {
+    @($Items | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+    } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+}
 function Get-Payload([object]$Receipt) {
     [pscustomobject][ordered]@{
         schemaVersion = $Receipt.schemaVersion
@@ -100,8 +105,8 @@ function Get-Assessment {
     $manifestChecks = @($manifest.plan.requiredChecks | ForEach-Object { "$($_.id)|$($_.command)" } | Sort-Object -Unique)
     $packetChecks = @($packet.brief.requiredChecks | ForEach-Object { "$($_.id)|$($_.command)" } | Sort-Object -Unique)
     $newChecks = @($packetChecks | Where-Object { $_ -notin $manifestChecks })
-    $manifestReviews = @($manifest.plan.reviewObligations.id | Sort-Object -Unique)
-    $packetReviews = @($packet.brief.reviewObligations.id | Sort-Object -Unique)
+    $manifestReviews = @(Get-Ids @($manifest.plan.reviewObligations))
+    $packetReviews = @(Get-Ids @($packet.brief.reviewObligations))
     $newReviews = @($packetReviews | Where-Object { $_ -notin $manifestReviews })
     if ([bool]$conformancePolicy.blockNewChecks -and $newChecks.Count -gt 0) {
         $findings.Add([pscustomobject][ordered]@{ id = 'new-required-checks'; severity = 'block'; count = $newChecks.Count })

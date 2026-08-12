@@ -176,7 +176,7 @@ function Test-Ledger([object]$Ledger) {
     }
     $expectedDimensionIds = @($confidencePolicy.dimensions.PSObject.Properties.Name | Sort-Object)
     $storedDimensionIds = @($Ledger.dimensions.id | Sort-Object -Unique)
-    if ($expectedDimensionIds.Count -ne $storedDimensionIds.Count -or (Compare-Object $expectedDimensionIds $storedDimensionIds).Count -ne 0) { $issues.Add('Confidence dimension set is invalid.') }
+    if ($expectedDimensionIds.Count -ne $storedDimensionIds.Count -or @(Compare-Object $expectedDimensionIds $storedDimensionIds).Count -ne 0) { $issues.Add('Confidence dimension set is invalid.') }
     foreach ($dimension in @($Ledger.dimensions)) {
         $dimensionPolicy = $confidencePolicy.dimensions.PSObject.Properties[[string]$dimension.id]
         if ($null -eq $dimensionPolicy -or [int]$dimension.weight -ne [int]$dimensionPolicy.Value) { $issues.Add("Dimension weight is invalid for '$($dimension.id)'.") }

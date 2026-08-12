@@ -111,6 +111,12 @@ Refresh derived context after the implementation changes:
   -WorkspacePath .artifacts/llm-wiki/tasks/fasting-command
 ```
 
+Refresh accepts workspaces created by earlier Wiki schemas. Optional descriptor,
+prediction, telemetry, and verification-cost fields are normalized; an obsolete
+cost forecast is regenerated in memory during a dry run and replaced
+transactionally by the real refresh. Product-journey mappings remain available
+across refreshes.
+
 Refresh updates only the compiled packet, review report, and workspace
 metadata. It deliberately preserves the task contract, manifest, acceptance
 decisions, and collected evidence.
