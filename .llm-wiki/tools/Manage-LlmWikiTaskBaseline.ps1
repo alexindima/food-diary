@@ -9,6 +9,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 
 function Invoke-Git([string[]]$Arguments) {
     $output = @(& git -C $RepositoryRoot @Arguments)
@@ -17,13 +18,13 @@ function Invoke-Git([string[]]$Arguments) {
 }
 
 function ConvertTo-RepositoryPath([string]$Path) {
-    return $Path.Trim().Replace('\', '/')
+    return ConvertTo-LlmWikiRepositoryPath $Path
 }
 
 function Get-ChangedPaths([string]$BaseRef) {
     $paths = @(
-        Invoke-Git @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef, '--')
-        Invoke-Git @('ls-files', '--others', '--exclude-standard')
+        Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef, '--') -FailureMessage "Unable to collect baseline paths from '$BaseRef'."
+        Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to collect baseline untracked paths.'
     )
     return @($paths | Where-Object { $_ } | ForEach-Object { ConvertTo-RepositoryPath $_ } | Sort-Object -Unique)
 }

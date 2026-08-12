@@ -112,14 +112,14 @@
                         "pageSha256":  "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "d25cb3fa394cb5a240aa51b810c3c3d60fdf47152e2d2e7b1010cbdc980d3c57"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:54.6138749Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:04.8748081Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -128,13 +128,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "4b5aac87710ae0a5e6475d7db069968e536deb296c1cbe8ed6e4d80b925228a6"
+                                            "sha256":  "e11d90f5959638f46818001c99aa79eb2ac669fd3dc419036028697399f6f8af"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "d25cb3fa394cb5a240aa51b810c3c3d60fdf47152e2d2e7b1010cbdc980d3c57"
                                         }
                                     ],
-                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
-                        "reviewedAtUtc":  "2026-08-10T18:18:15.7371195Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:05.5988479Z"
                     },
                     {
                         "pageId":  "workflow.evidence-bundle",
@@ -142,14 +146,14 @@
                         "pageSha256":  "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "d25cb3fa394cb5a240aa51b810c3c3d60fdf47152e2d2e7b1010cbdc980d3c57"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:54.9444054Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:05.9112020Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -191,14 +195,22 @@
                         "pageSha256":  "fc98ae1eba6a72137dfa02d7b37e13b08738bd2dd7b0408bf971d6f7dda29917",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "18a9d69f3391711dc98f0f7cf3f855675b0c00d4ae6a0eff4dc1ec1f754a525d"
+                                            "path":  ".llm-wiki/tools/Add-LlmWikiSourceReview.ps1",
+                                            "sha256":  "4bb4a5990e5cf227012aae5df92b186e03541cd927ad60e2572ab4f71c27108f"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+                                            "sha256":  "e11d90f5959638f46818001c99aa79eb2ac669fd3dc419036028697399f6f8af"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
+                                            "sha256":  "c9692ab3d1fefd459b09104661835555a524c46979b9b3a3fcdc46a909f7f1a9"
                                         }
                                     ],
-                        "reason":  "Reviewed the startup, test-tiering, sandboxed learning registries, durable transaction recovery, formatting preflight, and affected-smoke routing against their declared sources; changes preserve canonical knowledge, keep broad regression in CI, and add no product or public runtime contract.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "a7a3374232ced34d2554eb374d94b2ad82b1d0cb",
-                        "reviewedAtUtc":  "2026-08-11T00:21:44.0778788Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:07.4163776Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -221,14 +233,26 @@
                         "pageSha256":  "816e17cb3087f1de89f17f4bc185c05b9245c849fde8fab1b51dc8fd0af71d58",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "1b48297e8c5ee5ebc96d49371f2a9de45a4dd74ff87a3321d56a7c73d3bd8276"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+                                            "sha256":  "8a047052cf04d6726b7b4d67d91163466894ab288eec9807712abe4b24c03636"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+                                            "sha256":  "eeab70cbfc34946c94ef1a9265a975ef8a7d6d669b2152f798a780c1c34aacf1"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1",
+                                            "sha256":  "95e8e3a35d903eb58eaa50073eabc16ef64f3acd163343bb06c053f5df723657"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:55.3304515Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:04.2207277Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -281,14 +305,14 @@
                         "pageSha256":  "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "7205a2f62b5c6b695f801fde2b8d29386c900aed75d39d8bb784c6a3cc52f404"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:55.5255032Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:04.4352050Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -297,13 +321,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
+                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
                                         }
                                     ],
-                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
-                        "reviewedAtUtc":  "2026-08-07T18:52:47.3058182Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:04.6300524Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -374,58 +398,53 @@
                         "reviewedAtUtc":  "2026-08-11T23:54:55.9638995Z"
                     },
                     {
+                        "pageId":  "workflow-decision-context",
+                        "pagePath":  ".llm-wiki/workflows/decision-context.md",
+                        "pageSha256":  "8b4cb2d28a12dabbacea071dc05d656bf06ccbaec42ac12f5b35408b708a161a",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
+                                            "sha256":  "c7a531a0c64cd75e50a9c237faf735b0687a6867f57fc04e6c04efec9d3445b5"
+                                        }
+                                    ],
+                        "reason":  "Reviewed decision-context strict-mode handling: missing rule/module fields now produce an empty evidence set without changing ADR trigger semantics.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:09.1330805Z"
+                    },
+                    {
                         "pageId":  "workflow-dependency-rollout",
                         "pagePath":  ".llm-wiki/workflows/dependency-rollout.md",
                         "pageSha256":  "285b7d0005f1b054eda23538c5f17b3dd44d318411cb12f6e7e4146e9db95db9",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1",
+                                            "sha256":  "ff989c5b3a8524333987e2fabd769b9a102e4765e80f08b1dfc85bcddcdc7e95"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:56.2325401Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:05.0897836Z"
                     },
                     {
                         "pageId":  "workflow-developer-experience",
                         "pagePath":  ".llm-wiki/workflows/developer-experience.md",
-                        "pageSha256":  "41e5ceabe1974fc31ad7182747a3619d690ac39f43bc4597ff52a9d68ac8fa81",
+                        "pageSha256":  "6acbf4618bd68012e8c38ef837ccc43ed48a996935703b60e5ce5be0c4cdcbb8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/experience-policies.json",
-                                            "sha256":  "9f8e06ccfc151b8ea3dc57f7b62f41257cdaa21c1ca5d60dcfeb392993cdf92e"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiExperience.ps1",
-                                            "sha256":  "598e031694ec0c0db72977dd8481219a7e72f248f0c8402d90ceb48893c0e5c0"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiManualQaPlan.ps1",
-                                            "sha256":  "d7534e2f7aa08426e57d527dca48264af0f52003c160f0174bcb04e52b616f31"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiPhaseStatus.ps1",
-                                            "sha256":  "dbde18a557f9a8c678f733801d9bc0797c4b9ed5d68c8ff9db1668538c6bbe11"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "6f1aa62bc5f7f7708b7e7d487251ccf045fc591dbeb455743f52835d33a422a5"
+                                            "sha256":  "8a047052cf04d6726b7b4d67d91163466894ab288eec9807712abe4b24c03636"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1",
-                                            "sha256":  "d640b6f8d45df9a73c6255a516e6fc29a85c8ddda5de38725a1997915d39d7a1"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
-                                            "sha256":  "64222ee6ed440ef1771fef3f9c3c90fcb1c6f31c35bd09cca95742f0e3452526"
+                                            "path":  ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+                                            "sha256":  "eeab70cbfc34946c94ef1a9265a975ef8a7d6d669b2152f798a780c1c34aacf1"
                                         }
                                     ],
-                        "reason":  "Reviewed sealed-workspace detection in workflow metrics; it now reports completion.json as sealed without changing the metric contract.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec7e8579cdc1ec32aab373afacd52d35df5cc003",
-                        "reviewedAtUtc":  "2026-07-31T13:44:52.2746395Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:05.3189518Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -448,14 +467,14 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:56.5332112Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:06.2111458Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -463,14 +482,22 @@
                         "pageSha256":  "b334aa33b376b21b605d36121ee2c03148cc7d97176a7f2c319f463426c3574d",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
+                                            "sha256":  "c7a531a0c64cd75e50a9c237faf735b0687a6867f57fc04e6c04efec9d3445b5"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1",
+                                            "sha256":  "ff989c5b3a8524333987e2fabd769b9a102e4765e80f08b1dfc85bcddcdc7e95"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
+                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
                                         }
                                     ],
-                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
-                        "reviewedAtUtc":  "2026-08-07T18:52:48.7393179Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:06.4744242Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -493,22 +520,38 @@
                         "pageSha256":  "00ed44ae7969545582f106af9c38c4e07f6feb7ba746a6e1738dc2cb0bd9da70",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
+                                            "sha256":  "18ece074189ffd9c4ef78638419abd5d24ce69523fb4a67c849db6747d547f95"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "3889e00f10746ad6fcdf9cbf0e266a19b11e430995c806ddcb20b033bc190dac"
+                                            "sha256":  "ed683f483613eac44682273f6a8145cc0881db70ca35309aeacc0fe209c0ecf3"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "4cbfb0c340bb206c36e74a2e6670594bc0d7308daba975db7429cc641564786f"
+                                            "sha256":  "f384a75936cf6ed015bd162b4c9147abd90c16d3cae6bb75f9330bde9b3d570f"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+                                            "sha256":  "47b7d8aa7816262672796de1eeca36960c85010517a5648aef2fe3c61d4ef1fa"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/LlmWikiIndexCache.ps1",
+                                            "sha256":  "e1efb19b8d6b7e04139133201f3e61c262c3ea7d85a3c501f7ea0af9a9ee89bc"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
+                                            "sha256":  "e606c8402910ffb0dbeb26d8f778b9f871ebcfbea09f53f042866bcbbc030c45"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "69a64530f5a3b6f848762e1272c769aa62259a361ff1010f218866fbe0c072d6"
+                                            "sha256":  "d30aab0d9d34f58da31ce5131d72895eef735ab70bac07cc598819f4da0c4518"
                                         }
                                     ],
-                        "reason":  "Re-reviewed after making affected-smoke fingerprints group-specific so unrelated Wiki changes no longer invalidate every group; documented behavior remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:59:10.3371813Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:06.7874588Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -532,17 +575,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "cc784ce36768fe49c9308562bacc4f9a80f1a1975ab08666354c03529ba1a473"
+                                            "sha256":  "8a047052cf04d6726b7b4d67d91163466894ab288eec9807712abe4b24c03636"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "4b8b2ef2195bc52fadf588f50037af85a50290fab3dfe15e1e634c1a7382c9c5"
+                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
                                         }
                                     ],
-                        "reason":  "Reviewed query-cache integration: command contracts and documented workflow semantics remain unchanged; cache is content-addressed and invalidates on every working-tree edit.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4907aaa6598d334998242227169efd9a5d3b4fb0",
-                        "reviewedAtUtc":  "2026-08-07T18:52:50.0936100Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:07.0987420Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -755,13 +798,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "4b5aac87710ae0a5e6475d7db069968e536deb296c1cbe8ed6e4d80b925228a6"
+                                            "sha256":  "e11d90f5959638f46818001c99aa79eb2ac669fd3dc419036028697399f6f8af"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "d25cb3fa394cb5a240aa51b810c3c3d60fdf47152e2d2e7b1010cbdc980d3c57"
                                         }
                                     ],
-                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
-                        "reviewedAtUtc":  "2026-08-10T18:18:16.1600370Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:07.7352810Z"
                     },
                     {
                         "pageId":  "workflow-task-contract",
@@ -785,13 +836,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "69a64530f5a3b6f848762e1272c769aa62259a361ff1010f218866fbe0c072d6"
+                                            "sha256":  "d30aab0d9d34f58da31ce5131d72895eef735ab70bac07cc598819f4da0c4518"
                                         }
                                     ],
-                        "reason":  "Re-reviewed after making affected-smoke fingerprints group-specific so unrelated Wiki changes no longer invalidate every group; documented behavior remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:59:10.6189431Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:08.0838182Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -799,34 +850,14 @@
                         "pageSha256":  "a45447b6e7f1265860361cf0f2b350b00fa2414147ce4d9a5bb02bf29b7aa1ec",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "744abb37b94f136a5ecf40a38bb49e952c79c4deaca470287e6786f2dbdbed7f"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "11fac10bbcda9426ababd9a6618c940aa01ba41b4be203d0c1002ec3441e6860"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "7205a2f62b5c6b695f801fde2b8d29386c900aed75d39d8bb784c6a3cc52f404"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "1b48297e8c5ee5ebc96d49371f2a9de45a4dd74ff87a3321d56a7c73d3bd8276"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
-                                            "sha256":  "b913fcdba8e023cec77a49bbfd12a9e91047f1eb31deafb54de131ce44abaa86"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "bff23dc5b4d5a5ec756e2dca1041d1534e30198184757b986fbd768aa9a955d5"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1",
+                                            "sha256":  "55c9b52f50520afcdec8bfb8e80eb36ea6a9c59c16a62e2eeee50ad81bf7b2e2"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:59.8995716Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:08.4000387Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",
@@ -834,18 +865,14 @@
                         "pageSha256":  "58431db00a85f5a9da2ea8a0aa2d2910509884d52c68707826ae9c8c3bd23e16",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "3889e00f10746ad6fcdf9cbf0e266a19b11e430995c806ddcb20b033bc190dac"
+                                            "sha256":  "ed683f483613eac44682273f6a8145cc0881db70ca35309aeacc0fe209c0ecf3"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:55:00.2356427Z"
+                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+                        "reviewedAtUtc":  "2026-08-12T01:16:08.7166054Z"
                     },
                     {
                         "pageId":  "workflow-trace-feature",

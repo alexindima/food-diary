@@ -22,6 +22,7 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGeneratedArtifacts.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $toolsRoot = [System.IO.Path]::GetFullPath($PSScriptRoot)
 $shellPath = [System.IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $repositoryRoot = [System.IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
@@ -52,15 +53,13 @@ function Get-StringSha256([string]$Value) {
 }
 
 function Get-PipelineCacheState([string[]]$ToolNames) {
-    $repositoryInputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard)
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate pipeline cache inputs.' }
+    $repositoryInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate pipeline cache inputs.')
     $repositoryInputs = @($repositoryInputs | Where-Object {
         $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' -and
         $_ -notmatch '^\.artifacts/' -and
         $_ -notmatch '(?:^|/)(?:node_modules|bin|obj|dist|coverage|TestResults)/'
     })
-    $generatedOutputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '.llm-wiki/generated/**')
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate pipeline cache outputs.' }
+    $generatedOutputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '.llm-wiki/generated/**') -FailureMessage 'Unable to enumerate pipeline cache outputs.')
     $toolSet = @($ToolNames | Sort-Object -Unique) -join '|'
     $toolSetHash = (Get-StringSha256 $toolSet).Substring(0, 16)
     return [pscustomobject]@{
@@ -72,19 +71,15 @@ function Get-PipelineCacheState([string[]]$ToolNames) {
 }
 
 function Get-WorkspaceChangedPaths {
-    $paths = @(& git -C $repositoryRoot diff --name-only --diff-filter=ACMRD HEAD --)
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to collect workspace changes for stale-index diagnostics.' }
-    $paths += @(& git -C $repositoryRoot ls-files --others --exclude-standard)
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to collect untracked paths for stale-index diagnostics.' }
+    $paths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') -FailureMessage 'Unable to collect workspace changes for stale-index diagnostics.')
+    $paths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to collect untracked paths for stale-index diagnostics.')
     return @($paths | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique)
 }
 
 if ($AffectedOnly -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
-    $ChangedPath = @(& git -C $repositoryRoot diff --name-only --diff-filter=ACMRD $BaseRef --)
-    if ($LASTEXITCODE -ne 0) { throw "Unable to collect changed paths from '$BaseRef'." }
+    $ChangedPath = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef, '--') -FailureMessage "Unable to collect changed paths from '$BaseRef'.")
     if ($BaseRef -eq 'HEAD') {
-        $ChangedPath += @(& git -C $repositoryRoot ls-files --others --exclude-standard)
-        if ($LASTEXITCODE -ne 0) { throw 'Unable to collect untracked paths.' }
+        $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to collect untracked paths.')
     }
 }
 
@@ -215,6 +210,20 @@ if ($AffectedOnly) {
 }
 
 $selectedToolNames = if ($AffectedOnly) { @($selectedTools | Sort-Object) } else { @($allIndexTools | Sort-Object) }
+$coldCostSeconds = @{
+    'Build-LlmWikiQualityIndex.ps1' = 30
+    'Build-LlmWikiBackendContractIndex.ps1' = 30
+    'Build-LlmWikiFrontendContractIndex.ps1' = 30
+    'Build-LlmWikiCatalog.ps1' = 15
+    'Build-LlmWikiSymbolIndex.ps1' = 15
+    'Build-LlmWikiModulePages.ps1' = 15
+    'Build-LlmWikiArchitectureHealthIndex.ps1' = 10
+}
+$estimatedColdSeconds = (@($selectedToolNames | ForEach-Object { if ($coldCostSeconds.ContainsKey($_)) { [int]$coldCostSeconds[$_] } else { 5 } }) | Measure-Object -Sum).Sum
+Write-Host "LLM Wiki index forecast: ~$estimatedColdSeconds cold second(s) for $($selectedToolNames.Count) generator(s); cache/no-op suppression can reduce this."
+if (-not $RequiredOnly -and 'Build-LlmWikiQualityIndex.ps1' -in $selectedToolNames) {
+    Write-Host 'Iteration hint: use update -AffectedOnly -ContractIndexesOnly while editing; run the full affected update once before handoff.'
+}
 if ($Area -eq 'Backend') {
     $selectedToolNames = @($selectedToolNames | Where-Object { $_ -notin @(
         'Build-LlmWikiFrontendIndex.ps1', 'Build-LlmWikiFrontendContractIndex.ps1',

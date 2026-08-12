@@ -100,7 +100,7 @@ if ($null -ne $policy) {
     Add-Issue ($policy.repairLoop.learningMinimumConfidence -ge 1 -and $policy.repairLoop.learningMinimumConfidence -le 100) 'repairLoop.learningMinimumConfidence must be between 1 and 100.'
     Add-Issue ($policy.repairLoop.learningMaximumMatches -ge 1 -and $policy.repairLoop.learningMaximumMatches -le 100) 'repairLoop.learningMaximumMatches must be between 1 and 100.'
     $repairCategories = @($policy.repairLoop.allowedCategories)
-    Add-Issue ($repairCategories.Count -gt 0 -and $repairCategories.Count -eq @($repairCategories | Sort-Object -Unique).Count) 'repairLoop.allowedCategories must be non-empty and unique.'
+    Add-Issue (@($repairCategories).Count -gt 0 -and @($repairCategories).Count -eq @($repairCategories | Sort-Object -Unique).Count) 'repairLoop.allowedCategories must be non-empty and unique.'
     Add-Issue ($policy.scheduler.defaultConcurrency -ge 1) 'scheduler.defaultConcurrency must be positive.'
     Add-Issue ($policy.scheduler.maximumConcurrency -ge $policy.scheduler.defaultConcurrency -and $policy.scheduler.maximumConcurrency -le 32) 'scheduler.maximumConcurrency must cover the default and not exceed 32.'
     Add-Issue ($policy.scheduler.defaultLeaseMinutes -ge 1) 'scheduler.defaultLeaseMinutes must be positive.'
@@ -189,7 +189,7 @@ if ($null -ne $policy) {
     Add-Issue ($instructionOutcomes.maximumSourcesPerEvent -ge 1 -and $instructionOutcomes.maximumSourcesPerEvent -le 1000) 'instruction outcomes maximumSourcesPerEvent is invalid.'
     Add-Issue ($instructionOutcomes.candidateScore -ge 1 -and $instructionOutcomes.candidateScore -le 100) 'instruction outcomes candidateScore is invalid.'
     $instructionBands = @($instructionOutcomes.complexityBandUpperBounds | ForEach-Object { [int]$_ })
-    Add-Issue ($instructionBands.Count -ge 2 -and $instructionBands[-1] -eq 100) 'instruction outcome complexity bands must contain at least two bounds and end at 100.'
+    Add-Issue (@($instructionBands).Count -ge 2 -and @($instructionBands)[-1] -eq 100) 'instruction outcome complexity bands must contain at least two bounds and end at 100.'
     Add-Issue (($instructionBands -join ',') -eq (($instructionBands | Sort-Object -Unique) -join ',')) 'instruction outcome complexity bands must be unique and ascending.'
     $instructionExperiments = $policy.scheduler.verificationPlanner.instructionExperiments
     Add-Issue ($instructionExperiments.enabled -eq $true) 'instruction experiments enabled must remain true.'
@@ -273,7 +273,7 @@ if ($null -ne $policy) {
     Add-Issue (@($critique.blockingSeverities).Count -gt 0 -and @($critique.blockingSeverities | Where-Object { $_ -notin $critiqueSeverities }).Count -eq 0) 'changeCritique.blockingSeverities must contain known severities.'
     Add-Issue (@($critique.blockingSeverities | Sort-Object -Unique).Count -eq @($critique.blockingSeverities).Count) 'changeCritique.blockingSeverities must be unique.'
     $requiredReviewAreas = @('intent', 'scope', 'proof', 'verification', 'architecture', 'security', 'operability')
-    Add-Issue (@($critique.requiredReviewAreas | Sort-Object -Unique).Count -eq $requiredReviewAreas.Count -and (Compare-Object @($critique.requiredReviewAreas | Sort-Object) @($requiredReviewAreas | Sort-Object)).Count -eq 0) 'changeCritique.requiredReviewAreas must cover every governed review area exactly once.'
+    Add-Issue (@($critique.requiredReviewAreas | Sort-Object -Unique).Count -eq @($requiredReviewAreas).Count -and @(Compare-Object @($critique.requiredReviewAreas | Sort-Object) @($requiredReviewAreas | Sort-Object)).Count -eq 0) 'changeCritique.requiredReviewAreas must cover every governed review area exactly once.'
     $retrospective = $policy.scheduler.retrospective
     Add-Issue ($retrospective.minimumLearningScore -ge 1 -and $retrospective.minimumLearningScore -le 100) 'retrospective.minimumLearningScore must be between 1 and 100.'
     Add-Issue ($retrospective.maximumLearningCandidates -ge 1 -and $retrospective.maximumLearningCandidates -le 100) 'retrospective.maximumLearningCandidates must be between 1 and 100.'
@@ -445,7 +445,7 @@ if ($null -ne $policy) {
         Add-Issue ($regressionValue -ge 0 -and $regressionValue -le 1000) "scheduler.metricsSnapshots.regression.$regressionKey must be between 0 and 1000."
     }
     $allowedCapabilities = @($policy.scheduler.agentRegistry.allowedCapabilities)
-    Add-Issue ($allowedCapabilities.Count -ge 1 -and $allowedCapabilities.Count -eq @($allowedCapabilities | Select-Object -Unique).Count) 'scheduler.agentRegistry.allowedCapabilities must be non-empty and unique.'
+    Add-Issue (@($allowedCapabilities).Count -ge 1 -and @($allowedCapabilities).Count -eq @($allowedCapabilities | Select-Object -Unique).Count) 'scheduler.agentRegistry.allowedCapabilities must be non-empty and unique.'
     foreach ($capability in $allowedCapabilities) {
         Add-Issue ([string]$capability -cmatch '^[a-z][a-z0-9-]{1,31}$') "Invalid scheduler agent capability: $capability"
     }
@@ -483,19 +483,19 @@ if ($null -ne $policy) {
     Add-Issue ($policy.import.revalidateAcceptance -eq $true) 'import.revalidateAcceptance must remain true.'
     Add-Issue (-not [string]::IsNullOrWhiteSpace([string]$policy.export.redaction.policyId)) 'export.redaction.policyId is required.'
     $patterns = @($policy.export.redaction.patterns)
-    Add-Issue ($patterns.Count -gt 0) 'At least one redaction pattern is required.'
+    Add-Issue (@($patterns).Count -gt 0) 'At least one redaction pattern is required.'
     $ids = @($patterns.id)
-    Add-Issue (@($ids | Sort-Object -Unique).Count -eq $ids.Count) 'Redaction pattern IDs must be unique.'
+    Add-Issue (@($ids | Sort-Object -Unique).Count -eq @($ids).Count) 'Redaction pattern IDs must be unique.'
     foreach ($pattern in $patterns) {
         Add-Issue (-not [string]::IsNullOrWhiteSpace([string]$pattern.id)) 'Every redaction pattern needs an ID.'
         Add-Issue (-not [string]::IsNullOrWhiteSpace([string]$pattern.category)) "Redaction pattern '$($pattern.id)' needs a category."
         Add-Issue ([string]$pattern.replacementMode -in @('full', 'preserve-group-1', 'preserve-groups-1-2')) "Redaction pattern '$($pattern.id)' has an unsupported replacementMode."
         Test-Regex ([string]$pattern.pattern) "Redaction pattern '$($pattern.id)'"
         if ([string]$pattern.replacementMode -eq 'preserve-group-1') {
-            try { Add-Issue ([regex]::new([string]$pattern.pattern).GetGroupNumbers().Count -ge 2) "Redaction pattern '$($pattern.id)' must define capture group 1." } catch {}
+            try { Add-Issue (@([regex]::new([string]$pattern.pattern).GetGroupNumbers()).Count -ge 2) "Redaction pattern '$($pattern.id)' must define capture group 1." } catch {}
         }
         if ([string]$pattern.replacementMode -eq 'preserve-groups-1-2') {
-            try { Add-Issue ([regex]::new([string]$pattern.pattern).GetGroupNumbers().Count -ge 3) "Redaction pattern '$($pattern.id)' must define capture groups 1 and 2." } catch {}
+            try { Add-Issue (@([regex]::new([string]$pattern.pattern).GetGroupNumbers()).Count -ge 3) "Redaction pattern '$($pattern.id)' must define capture groups 1 and 2." } catch {}
         }
     }
 }

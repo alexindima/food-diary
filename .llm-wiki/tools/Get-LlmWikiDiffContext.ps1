@@ -13,18 +13,14 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
 $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)
-
-    $normalizedPath = $Path.Trim().Replace('\', '/')
-    while ($normalizedPath.StartsWith('./')) {
-        $normalizedPath = $normalizedPath.Substring(2)
-    }
-    return $normalizedPath
+    return ConvertTo-LlmWikiRepositoryPath $Path
 }
 
 function ConvertTo-Slug {
@@ -39,16 +35,10 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
         $gitArguments += $HeadRef
     }
     $gitArguments += '--'
-    $ChangedPath = @(& git @gitArguments)
-    if ($LASTEXITCODE -ne 0) {
-        throw "git diff failed for base '$BaseRef' and head '$HeadRef'."
-    }
+    $ChangedPath = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments $gitArguments -FailureMessage "git diff failed for base '$BaseRef' and head '$HeadRef'.")
 
     if ([string]::IsNullOrWhiteSpace($HeadRef)) {
-        $ChangedPath += @(& git ls-files --others --exclude-standard)
-        if ($LASTEXITCODE -ne 0) {
-            throw 'git ls-files failed while collecting untracked paths.'
-        }
+        $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'git ls-files failed while collecting untracked paths.')
     }
 }
 

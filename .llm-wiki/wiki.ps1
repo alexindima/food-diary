@@ -2,9 +2,9 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'start', 'update', 'repair-verify', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
-        'diff', 'impact', 'review', 'ownership', 'api-compat', 'policy',
+        'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
         'task-decompose-list', 'task-decompose-plan', 'task-decompose-verify', 'task-decompose-apply', 'task-decompose-prune',
@@ -119,6 +119,8 @@ param(
     [string[]]$Verification,
     [Alias('Intent')]
     [string]$Objective,
+    [ValidateSet('Auto', 'Assessment', 'Implementation')]
+    [string]$ResearchPurpose = 'Auto',
     [string[]]$Criterion,
     [string]$CriterionId,
     [string[]]$ScenarioId,
@@ -231,6 +233,7 @@ Set-Item -LiteralPath "Env:GIT_CONFIG_KEY_$gitConfigCount" -Value 'core.safecrlf
 Set-Item -LiteralPath "Env:GIT_CONFIG_VALUE_$gitConfigCount" -Value 'false'
 $env:GIT_CONFIG_COUNT = [string]($gitConfigCount + 1)
 $toolsRoot = Join-Path $PSScriptRoot 'tools'
+. (Join-Path $toolsRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $toolsRoot 'LlmWikiJson.ps1')
 . (Join-Path $toolsRoot 'LlmWikiProcess.ps1')
 Enable-LlmWikiStringDateJsonParsing
@@ -283,7 +286,7 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
     $ResumePassedStages = $true
 }
 
-$deltaAwareCommands = @('update', 'repair-verify', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'ownership', 'policy')
+$deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
 $explicitScopePlanningCommands = @('research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
 $taskBaselineContext = $null
 if ($Command -in @('develop', 'start')) {
@@ -294,8 +297,9 @@ if ($Command -in @('develop', 'start')) {
     if ($taskBaseline.available) {
         $taskBaselineContext = $taskBaseline
         $ChangedPath = @($taskBaseline.changedPaths)
-        $workingTreePaths = @(& git -C (Resolve-Path (Join-Path $toolsRoot '../..')).Path diff --name-only --diff-filter=ACMRD HEAD --)
-        $workingTreePaths += @(& git -C (Resolve-Path (Join-Path $toolsRoot '../..')).Path ls-files --others --exclude-standard)
+        $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+        $workingTreePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') -FailureMessage 'Unable to enumerate the current working delta.')
+        $workingTreePaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to enumerate untracked working paths.')
         $workingTreePaths = @($workingTreePaths | Where-Object { $_ } | Sort-Object -Unique)
         if ($workingTreePaths.Count -gt 0 -and $ChangedPath.Count -gt [Math]::Max(($workingTreePaths.Count * 3), ($workingTreePaths.Count + 50))) {
             Write-Warning "Task baseline contains $($ChangedPath.Count) paths but the current working delta contains $($workingTreePaths.Count). Using the current delta to avoid stale-session over-expansion."
@@ -613,7 +617,7 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
         Write-Host 'Strict affected verification passed. Full repository verification remains the CI gate.'
     }
-    'repair-verify' {
+    { $_ -in @('repair-verify', 'completion') } {
         $repairPaths = @($ChangedPath)
         if ($repairPaths.Count -eq 0) { Write-Host 'Repair verify: no task-delta paths; nothing to repair.'; break }
         Write-Host 'Repair verify [0/3]: checking source formatting before hashing and generation.'
@@ -626,7 +630,7 @@ switch ($Command) {
         $pendingReviewIds = @($impactResult.impacts | Where-Object { -not $_.Reviewed } | ForEach-Object { [string]$_.Id })
         if ($pendingReviewIds.Count -gt 0) {
             if ([string]::IsNullOrWhiteSpace($Reason)) {
-                throw "Source-impact review is required for $($pendingReviewIds -join ', '). Re-run repair-verify -Reason '<one evidence-based reason>' to record the grouped review and continue."
+                throw "Source-impact review is required for $($pendingReviewIds -join ', '). Re-run completion -Reason '<one evidence-based reason>' to record the grouped review and continue."
             }
             foreach ($pendingPageId in $pendingReviewIds) {
                 & (Join-Path $toolsRoot 'Add-LlmWikiSourceReview.ps1') -Id $pendingPageId -Reason $Reason -ChangedPath $repairPaths
@@ -637,6 +641,7 @@ switch ($Command) {
         Write-Host 'Repair verify [3/3]: running resumable affected verification.'
         & $PSCommandPath verify -AffectedOnly -ChangedPath $repairPaths -BaseRef $BaseRef
         if (-not $?) { exit 1 }
+        Write-Host 'Completion passed. Each stage is cached independently; an interrupted rerun resumes unchanged successful work.'
     }
     'verify-full' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
@@ -755,8 +760,9 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiExperience.ps1' $experienceArguments
     }
     'research' {
-        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'research requires -Intent <task description>.' }
-        $researchArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = $Format; Limit = $Limit }
+        if ([string]::IsNullOrWhiteSpace($Objective) -and -not [string]::IsNullOrWhiteSpace($Query)) { $Objective = $Query }
+        if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'research requires -Intent <task description> (compatible alias: -Query).' }
+        $researchArguments = @{ Objective = $Objective; Purpose = $ResearchPurpose; BaseRef = $BaseRef; Format = $Format; Limit = $Limit }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $researchArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $researchArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $researchArguments.ProposedPath = $ProposedPath }
@@ -1999,7 +2005,8 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiImpact.ps1' $impactArguments
     }
     'review' {
-        $pageReviewIds = @($(if (@($ReviewId).Count -gt 0) { @($ReviewId) } else { @($Id) }) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+        $pageReviewIds = if ($PSBoundParameters.ContainsKey('ReviewId')) { @($ReviewId) } elseif ($PSBoundParameters.ContainsKey('Id')) { @($Id) } else { @() }
+        $pageReviewIds = @($pageReviewIds | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
         if ($pageReviewIds.Count -eq 0) { throw 'review requires -Id or -ReviewId.' }
         foreach ($pageReviewId in $pageReviewIds) {
             $reviewArguments = @{ Id = $pageReviewId; Reason = $Reason; BaseRef = $BaseRef }
@@ -2008,6 +2015,25 @@ switch ($Command) {
             Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
         }
         if ($pageReviewIds.Count -gt 1) { Write-Host "Grouped source-impact review recorded for $($pageReviewIds.Count) pages with one shared rationale." }
+    }
+    'review-affected' {
+        if ([string]::IsNullOrWhiteSpace($Reason)) { throw 'review-affected requires -Reason describing the shared source review.' }
+        $impactArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
+        if ($PSBoundParameters.ContainsKey('HeadRef')) { $impactArguments.HeadRef = $HeadRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $impactArguments.ChangedPath = $ChangedPath }
+        $impact = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') @impactArguments | ConvertFrom-Json
+        $pending = @($impact.impacts | Where-Object { -not $_.Reviewed -and [string]::IsNullOrWhiteSpace([string]$_.GeneratedBy) })
+        $protected = @($pending | Where-Object { $_.Id -match '(?i)privacy|security|architecture|decision' -or $_.Path -match '(?i)privacy|security|architecture|adr' })
+        $safe = @($pending | Where-Object { $_.Id -notin @($protected.Id) })
+        foreach ($item in $pending) { Write-Host " - $($item.Id): $($item.Path) <- $($item.ChangedSources -join ', ')" }
+        foreach ($item in $safe) {
+            $reviewArguments = @{ Id = [string]$item.Id; Reason = $Reason; BaseRef = $BaseRef }
+            if ($PSBoundParameters.ContainsKey('HeadRef')) { $reviewArguments.HeadRef = $HeadRef }
+            if ($PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = $ChangedPath }
+            Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
+        }
+        if ($protected.Count -gt 0) { Write-Warning "$($protected.Count) architecture/privacy/security page(s) require explicit wiki.ps1 review -ReviewId <id> with a page-specific rationale." }
+        Write-Host "Affected reviews: recorded=$($safe.Count), explicit-required=$($protected.Count), already-reviewed=$([int]$impact.impactCount - $pending.Count)."
     }
     'ownership' {
         $ownershipArguments = @{ BaseRef = $BaseRef; Format = $Format }
@@ -2279,7 +2305,8 @@ switch ($Command) {
         Write-Host ''
         Write-Host 'Usage:'
         Write-Host '  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
-        Write-Host "  ./.llm-wiki/wiki.ps1 repair-verify [-Reason '<grouped source-review rationale>'] [-ChangedPath <path[]>]"
+        Write-Host "  ./.llm-wiki/wiki.ps1 completion [-Reason '<grouped source-review rationale>'] [-ChangedPath <path[]>]  # update -> reviews -> resumable verify"
+        Write-Host "  ./.llm-wiki/wiki.ps1 repair-verify ...  # compatibility alias for completion"
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools [-AffectedOnly] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast [-BaseRef <ref>] [-ChangedPath <path[]>]'
@@ -2465,7 +2492,7 @@ switch ($Command) {
         Write-Host "  ./.llm-wiki/wiki.ps1 continue-ui [-Intent '<iteration>'] [-ChangedPath <path[]>]"
         Write-Host "  ./.llm-wiki/wiki.ps1 ui-finalize [-ChangedPath <accumulated-ui-path[]>]"
         Write-Host "  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>] [-Intent '<new task>']"
-        Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-Query '<compatible alias>'] [-ResearchPurpose Assessment|Implementation] [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 integration-scan -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 precedents -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 solutions -Intent '<task>' [-Option '<option one>','<option two>'] [-BoundaryEvidence '<current-source proof>']"

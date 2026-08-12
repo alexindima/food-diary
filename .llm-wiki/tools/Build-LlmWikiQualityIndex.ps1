@@ -7,6 +7,7 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'LlmWikiJson.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiIndexCache.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
@@ -29,8 +30,7 @@ function Get-TextSha256([string]$Value) {
     } finally { $sha.Dispose() }
 }
 
-$cacheInputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '*.cs' '*.ts')
-if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate quality-index inputs.' }
+$cacheInputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs', '*.ts') -FailureMessage 'Unable to enumerate quality-index inputs.')
 $cacheInputs += @(
     '.llm-wiki/generated/csharp-symbol-index.json'
     '.llm-wiki/tools/Build-LlmWikiQualityIndex.ps1'
@@ -64,16 +64,10 @@ $symbols = (Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json).s
 $criticalRoles = @('CommandHandler', 'QueryHandler', 'Handler', 'Controller', 'Validator')
 $criticalSymbols = @($symbols | Where-Object { $_.role -in $criticalRoles -and $_.kind -ne 'interface' })
 
-$additionalSourceRoots = @(
-    Join-Path $repositoryRoot 'FoodDiary.Web.Client/.storybook'
-)
 $repositoryFiles = @(
-    Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File
-    foreach ($additionalSourceRoot in $additionalSourceRoots) {
-        if (Test-Path -LiteralPath $additionalSourceRoot -PathType Container) {
-            Get-ChildItem -LiteralPath $additionalSourceRoot -Recurse -File
-        }
-    }
+    $cacheInputs |
+        Where-Object { $_ -match '\.(?:cs|ts)$' } |
+        ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -ErrorAction SilentlyContinue }
 ) | Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName } -Unique
 
 $testFiles = @(

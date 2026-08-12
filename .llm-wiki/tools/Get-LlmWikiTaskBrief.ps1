@@ -76,10 +76,12 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
         $symbolIndex = Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
         foreach ($symbol in @($symbolIndex.symbols)) {
             if ($frontendIntent -and -not $backendIntent) { continue }
-            $searchText = "$($symbol.name) $($symbol.path)".ToLowerInvariant()
+            $symbolName = if ($symbol.PSObject.Properties['name']) { [string]$symbol.name } else { '' }
+            $symbolPath = if ($symbol.PSObject.Properties['path']) { [string]$symbol.path } else { '' }
+            $searchText = "$symbolName $symbolPath".ToLowerInvariant()
             $score = @($intentTokens | Where-Object { $searchText -match [regex]::Escape($_) }).Count
-            if ($score -gt 0) {
-                $candidates.Add([pscustomobject]@{ path = $symbol.path; score = $score; source = 'csharp-symbol-index' })
+            if ($score -gt 0 -and -not [string]::IsNullOrWhiteSpace($symbolPath)) {
+                $candidates.Add([pscustomobject]@{ path = $symbolPath; score = $score; source = 'csharp-symbol-index' })
             }
         }
     }
@@ -87,11 +89,15 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
     if (Test-Path -LiteralPath $frontendIntentIndexPath) {
         $frontendIntentIndex = Get-Content -LiteralPath $frontendIntentIndexPath -Raw | ConvertFrom-Json
         foreach ($symbol in @($frontendIntentIndex.symbols)) {
-            $searchText = "$($symbol.name) $($symbol.path) $($symbol.role) $($symbol.selector)".ToLowerInvariant()
+            $symbolName = if ($symbol.PSObject.Properties['name']) { [string]$symbol.name } else { '' }
+            $symbolPath = if ($symbol.PSObject.Properties['path']) { [string]$symbol.path } else { '' }
+            $symbolRole = if ($symbol.PSObject.Properties['role']) { [string]$symbol.role } else { '' }
+            $symbolSelector = if ($symbol.PSObject.Properties['selector']) { [string]$symbol.selector } else { '' }
+            $searchText = "$symbolName $symbolPath $symbolRole $symbolSelector".ToLowerInvariant()
             $semanticScore = @($intentTokens | Where-Object { $searchText -match [regex]::Escape($_) }).Count
-            if ($semanticScore -gt 0) {
+            if ($semanticScore -gt 0 -and -not [string]::IsNullOrWhiteSpace($symbolPath)) {
                 $score = $semanticScore + $(if ($frontendIntent) { 4 } else { 0 })
-                $candidates.Add([pscustomobject]@{ path = $symbol.path; score = $score; source = 'frontend-index' })
+                $candidates.Add([pscustomobject]@{ path = $symbolPath; score = $score; source = 'frontend-index' })
             }
         }
     }
@@ -194,6 +200,7 @@ if ($effectivePaths.Count -eq 0 -and
 $policy = if ($null -ne $PolicyInput) { $PolicyInput } else {
     & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') @common | ConvertFrom-Json
 }
+$matchedRuleIds = @($policy.matchedRules | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })
 $ownership = if ($null -ne $OwnershipInput) { $OwnershipInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiOwnershipImpact.ps1') @common -DiffInput $diff | ConvertFrom-Json
 }
@@ -274,7 +281,9 @@ $domainDataImpact = [ordered]@{
 $changedBackendContracts = @($backendContract.contracts | Where-Object {
     @($_.definitionPaths | Where-Object { $changedPathsForQuality -contains $_ }).Count -gt 0
 })
-$changedBackendContractNames = @($changedBackendContracts.name)
+$changedBackendContractNames = @($changedBackendContracts | ForEach-Object {
+    if ($_.PSObject.Properties['name']) { [string]$_.name }
+} | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 $changedBackendConsumerEdges = @($backendContract.consumerEdges | Where-Object {
     $_.contract -in $changedBackendContractNames
 })
@@ -322,12 +331,12 @@ $riskReasons = [System.Collections.Generic.List[string]]::new()
 if (@($diff.scopes) -contains 'Api') { $riskScore += 2; $riskReasons.Add('public API surface') }
 if (@($diff.scopes) -contains 'Database') { $riskScore += 3; $riskReasons.Add('database or migration') }
 if (@($diff.scopes) -contains 'Localization') { $riskScore += 1; $riskReasons.Add('paired localization') }
-if (@($policy.matchedRules.id) -contains 'security-sensitive') { $riskScore += 3; $riskReasons.Add('security-sensitive flow') }
-if (@($policy.matchedRules.id) -contains 'performance-data-access') { $riskScore += 2; $riskReasons.Add('query or persistence shape') }
-if (@($policy.matchedRules.id) -contains 'architecture-decision') { $riskScore += 1; $riskReasons.Add('durable architecture decision candidate') }
-if (@($policy.matchedRules.id) -contains 'observability-critical-flow') { $riskScore += 1; $riskReasons.Add('critical-flow telemetry') }
-if (@($policy.matchedRules.id) -contains 'privacy-data-lifecycle') { $riskScore += 2; $riskReasons.Add('privacy data lifecycle') }
-if (@($policy.matchedRules.id) -contains 'dependency-nuget' -or @($policy.matchedRules.id) -contains 'dependency-npm') {
+if ($matchedRuleIds -contains 'security-sensitive') { $riskScore += 3; $riskReasons.Add('security-sensitive flow') }
+if ($matchedRuleIds -contains 'performance-data-access') { $riskScore += 2; $riskReasons.Add('query or persistence shape') }
+if ($matchedRuleIds -contains 'architecture-decision') { $riskScore += 1; $riskReasons.Add('durable architecture decision candidate') }
+if ($matchedRuleIds -contains 'observability-critical-flow') { $riskScore += 1; $riskReasons.Add('critical-flow telemetry') }
+if ($matchedRuleIds -contains 'privacy-data-lifecycle') { $riskScore += 2; $riskReasons.Add('privacy data lifecycle') }
+if ($matchedRuleIds -contains 'dependency-nuget' -or $matchedRuleIds -contains 'dependency-npm') {
     $riskScore += 2
     $riskReasons.Add('dependency graph change')
 }
@@ -444,7 +453,7 @@ if (@($architectureHealthImpact.selectorUnreferencedComponents).Count -gt 0) {
     $riskScore += 1
     $riskReasons.Add('frontend selector without static template consumer')
 }
-if (@($diff.scopes) -contains 'Api' -and @($policy.matchedRules.id) -contains 'security-sensitive') {
+if (@($diff.scopes) -contains 'Api' -and $matchedRuleIds -contains 'security-sensitive') {
     $riskScore += 1
     $riskReasons.Add('internet-exposed sensitive flow')
 }
@@ -461,7 +470,7 @@ if ($frontendPresentationOnly -and $riskScore -gt 4) {
 if ($inferredPaths.Count -gt 0 -and
     $riskScore -gt 4 -and
     @($diff.scopes | Where-Object { $_ -in @('Api', 'Database', 'Deployment', 'Configuration') }).Count -eq 0 -and
-    @($policy.matchedRules.id | Where-Object { $_ -in @('security-sensitive', 'privacy-data-lifecycle') }).Count -eq 0) {
+    @($matchedRuleIds | Where-Object { $_ -in @('security-sensitive', 'privacy-data-lifecycle') }).Count -eq 0) {
     $riskScore = 4
     $riskCalibration = 'intent-inference-cap'
 }
@@ -528,7 +537,7 @@ $brief = [pscustomobject]@{
             @($diff.scopes) -contains 'Backend' -or
             $_ -notmatch '^(FoodDiary\.(Application|Domain|Infrastructure)|MailInbox/|MailRelay/)'
         })
-    contextPages = @($diff.wikiPages.path)
+    contextPages = @($diff.wikiPages | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } | Where-Object { $_ })
     focusedTests = @($testPlan.focusedTestFiles)
     testScenarios = @($testPlan.scenarios)
     requiredChecks = @($policy.requiredChecks)

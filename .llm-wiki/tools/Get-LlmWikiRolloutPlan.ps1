@@ -23,7 +23,7 @@ $policy = if ($null -ne $PolicyInput) { $PolicyInput } else {
     & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') @common | ConvertFrom-Json
 }
 $paths = @($diff.changedPaths)
-$rules = @($policy.matchedRules.id)
+$rules = @($policy.matchedRules | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })
 
 $flags = [ordered]@{
     databaseMigration = @($paths | Where-Object { $_ -match '/Migrations/' -or $_ -match 'ModelSnapshot\.cs$' }).Count -gt 0

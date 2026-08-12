@@ -3,7 +3,8 @@ param(
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath,
     [switch]$Plan,
-    [string[]]$Group,
+    [Alias('Group')]
+    [string[]]$RequestedGroup,
     [switch]$NoCache,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
@@ -13,23 +14,21 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = Split-Path -Parent $wikiRoot
+. (Join-Path $toolsRoot 'LlmWikiGitPaths.ps1')
 
 if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
-    $ChangedPath = @(& git -C $repositoryRoot diff --name-only --diff-filter=ACMRD $BaseRef --)
-    if ($LASTEXITCODE -ne 0) { throw "Unable to collect changed paths from '$BaseRef'." }
+    $ChangedPath = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef, '--') -FailureMessage "Unable to collect changed paths from '$BaseRef'.")
     if ($BaseRef -eq 'HEAD') {
-        $ChangedPath += @(& git -C $repositoryRoot ls-files --others --exclude-standard)
-        if ($LASTEXITCODE -ne 0) { throw 'Unable to collect untracked paths.' }
+        $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to collect untracked paths.')
     }
 }
-$paths = @($ChangedPath | Where-Object { $_ } | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique)
+$paths = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ConvertTo-LlmWikiRepositoryPath $_ } | Sort-Object -Unique)
 if ($paths.Count -eq 0) {
     Write-Host 'Affected tools smoke: no changed paths; nothing to run.'
     exit 0
 }
 
-$groups = [Collections.Generic.List[string]]::new()
-function Add-Group([string]$Name) { if (-not $groups.Contains($Name)) { $groups.Add($Name) } }
+$smokeGroups = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
 
 $hasUnknownToolChange = $false
 $wikiRelevantPathCount = 0
@@ -37,39 +36,41 @@ foreach ($path in $paths) {
     if ($path -notmatch '^\.llm-wiki/') { continue }
     $wikiRelevantPathCount++
     if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan)|evals/|policies/experience-policies\.json|workflows/(developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
-        Add-Group 'adaptive-routing'
+        $null = $smokeGroups.Add('adaptive-routing')
     } elseif ($path -match '^\.llm-wiki/(policies/change-policies\.json|tools/(Get-LlmWikiChangePolicy|Test-LlmWikiChangePolicy)\.ps1)$') {
-        Add-Group 'change-policy'
+        $null = $smokeGroups.Add('change-policy')
     } elseif ($path -match '^\.llm-wiki/tools/Get-LlmWikiDesignCheckpoint\.ps1$') {
-        Add-Group 'adaptive-experience'
+        $null = $smokeGroups.Add('adaptive-experience')
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
-        Add-Group 'dependency-analysis'
+        $null = $smokeGroups.Add('dependency-analysis')
     } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Invoke-LlmWikiAdaptiveVerification|Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
-        Add-Group 'facade-contract'
+        $null = $smokeGroups.Add('facade-contract')
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiGeneratedArtifacts|Build-LlmWikiCatalog|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth|ModulePages)Index|Build-LlmWikiModulePages|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection|Test-LlmWikiBackendModuleModel)\.ps1$' -or $path -eq 'docs/architecture/backend-modules.json') {
-        Add-Group 'index-selection'
+        $null = $smokeGroups.Add('index-selection')
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
-        Add-Group 'trace-output'
+        $null = $smokeGroups.Add('trace-output')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Get-LlmWikiDiffContext|Test-LlmWikiTaskBaseline)\.ps1$') {
-        Add-Group 'task-baseline'
+        $null = $smokeGroups.Add('task-baseline')
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiGitPaths|Test-LlmWikiGitPaths)\.ps1$') {
+        $null = $smokeGroups.Add('git-paths')
     } elseif ($path -match '^\.llm-wiki/tools/(Initialize-LlmWikiTaskWorkspace|Manage-LlmWikiTaskContract|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiPlanConformance|Test-LlmWikiTaskScope)\.ps1$') {
-        Add-Group 'task-scope'
+        $null = $smokeGroups.Add('task-scope')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan|Test-LlmWikiTools)\.ps1$') {
-        Add-Group 'ui-continuation'
+        $null = $smokeGroups.Add('ui-continuation')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
-        Add-Group 'reporting'
+        $null = $smokeGroups.Add('reporting')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification)\.ps1$') {
-        Add-Group 'verification-cache'
+        $null = $smokeGroups.Add('verification-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
-        Add-Group 'query-cache'
+        $null = $smokeGroups.Add('query-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiContractConsumers|Test-LlmWikiContractConsumers)\.ps1$') {
-        Add-Group 'contract-consumers'
+        $null = $smokeGroups.Add('contract-consumers')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiLearningPromotion|Manage-LlmWikiLearningExperiment|Manage-LlmWikiEvalPromotion|Manage-LlmWikiLearningHealth|Test-LlmWikiKnowledgeIsolation)\.ps1$') {
-        Add-Group 'knowledge-isolation'
+        $null = $smokeGroups.Add('knowledge-isolation')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
-        Add-Group 'test-only-governance'
-    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
-        Add-Group 'governed-delivery'
+        $null = $smokeGroups.Add('test-only-governance')
+    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiChangeCritique|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Add-LlmWikiSourceReview|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiGovernedDeliveryRegression)\.ps1$') {
+        $null = $smokeGroups.Add('governed-delivery')
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
     }
@@ -78,17 +79,17 @@ if ($wikiRelevantPathCount -eq 0) {
     Write-Host 'Affected tools smoke: no LLM Wiki implementation paths changed; nothing to run.'
     exit 0
 }
-if ($hasUnknownToolChange -or $groups.Count -eq 0) { Add-Group 'full-tools' }
-if (@($Group).Count -gt 0) {
-    $requestedGroups = @($Group | Where-Object { $_ } | Sort-Object -Unique)
-    $selectedGroups = @($groups | Where-Object { $_ -in $requestedGroups })
-    $groups = [Collections.Generic.List[string]]::new()
-    foreach ($selectedGroup in $selectedGroups) { $groups.Add($selectedGroup) }
+if ($hasUnknownToolChange -or $smokeGroups.Count -eq 0) { $null = $smokeGroups.Add('full-tools') }
+if ($PSBoundParameters.ContainsKey('RequestedGroup') -and @($RequestedGroup).Count -gt 0) {
+    $requestedGroups = @($RequestedGroup | Where-Object { $_ } | Sort-Object -Unique)
+    $selectedGroups = @($smokeGroups | Where-Object { $_ -in $requestedGroups })
+    $smokeGroups = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($selectedGroup in $selectedGroups) { $null = $smokeGroups.Add($selectedGroup) }
 }
 
-$planResult = [pscustomobject][ordered]@{ changedPathCount = $paths.Count; groups = @($groups) }
+$planResult = [pscustomobject][ordered]@{ changedPathCount = $paths.Count; groups = @($smokeGroups | Sort-Object) }
 if ($Plan -and $Format -eq 'Json') { $planResult | ConvertTo-Json -Depth 3; exit 0 }
-Write-Host "Affected tools smoke: $($paths.Count) changed path(s), groups=$($groups -join ',')."
+Write-Host "Affected tools smoke: $($paths.Count) changed path(s), groups=$(@($smokeGroups | Sort-Object) -join ',')."
 if ($Plan) { exit 0 }
 
 $gitDirectoryOutput = @(& git -C $repositoryRoot rev-parse --absolute-git-dir)
@@ -96,7 +97,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for smoke 
 $gitDirectory = [string]($gitDirectoryOutput | Select-Object -First 1)
 $receiptRoot = Join-Path $gitDirectory 'llm-wiki/affected-smoke-groups'
 $null = New-Item -ItemType Directory -Path $receiptRoot -Force
-foreach ($group in $groups) {
+foreach ($group in @($smokeGroups | Sort-Object)) {
     $fingerprint = & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') `
         -Stage "affected smoke:$group" `
         -Arguments @{ group = $group } `
@@ -154,6 +155,10 @@ foreach ($group in $groups) {
         }
         'task-baseline' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'git-paths' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiGitPaths.ps1')
             if (-not $?) { exit 1 }
         }
         'task-scope' {

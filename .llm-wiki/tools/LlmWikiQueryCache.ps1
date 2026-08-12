@@ -1,3 +1,7 @@
+if (-not (Get-Command Invoke-LlmWikiGitPathList -ErrorAction SilentlyContinue)) {
+    . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+}
+
 function Get-LlmWikiSha256 {
     param([Parameter(Mandatory)][string]$Value)
     $sha = [Security.Cryptography.SHA256]::Create()
@@ -24,11 +28,9 @@ function Get-LlmWikiQueryCacheEntry {
 
     $head = (& git -C $RepositoryRoot rev-parse HEAD).Trim()
     if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for the Wiki query cache.' }
-    $workspacePaths = @(& git -C $RepositoryRoot diff --name-only --diff-filter=ACMRD HEAD --)
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve modified paths for the Wiki query cache.' }
-    $workspacePaths += @(& git -C $RepositoryRoot ls-files --others --exclude-standard)
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve untracked paths for the Wiki query cache.' }
-    $workspacePaths = @($workspacePaths | Where-Object { $_ } | ForEach-Object { ([string]$_).Replace('\', '/') } | Sort-Object -Unique)
+    $workspacePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') -FailureMessage 'Unable to resolve modified paths for the Wiki query cache.')
+    $workspacePaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to resolve untracked paths for the Wiki query cache.')
+    $workspacePaths = @($workspacePaths | Sort-Object -Unique)
     $argumentJson = [ordered]@{}
     foreach ($key in @($Arguments.Keys | Sort-Object)) {
         $value = $Arguments[$key]

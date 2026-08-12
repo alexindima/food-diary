@@ -32,7 +32,7 @@ if ($verifyBody -notmatch '\$stages\s*=\s*@\(' -or @('workspace policy', 'page c
     throw 'Ordinary verify does not route every verification stage through the observed runner.'
 }
 $strictStart = $facadeText.IndexOf("    'verify-strict-affected' {")
-$strictEnd = $facadeText.IndexOf("    'repair-verify' {", $strictStart)
+$strictEnd = $facadeText.IndexOf("    { `$_ -in @('repair-verify', 'completion') } {", $strictStart)
 if ($strictStart -lt 0 -or $strictEnd -le $strictStart) { throw 'Unable to isolate verify-strict-affected implementation.' }
 $body = $facadeText.Substring($strictStart, $strictEnd - $strictStart)
 foreach ($required in @('AffectedOnly = $true', 'Invoke-LlmWikiAffectedSmoke.ps1', 'FailOnViolation = $true', 'FailOnUnreviewed = $true')) {
@@ -77,8 +77,8 @@ foreach ($builderText in $cachedBuilderTexts) {
         throw 'A cacheable index check does not refresh its receipt after proving the output current.'
     }
 }
-if ($indexCacheText -notmatch 'hash-object --stdin-paths') {
-    throw 'Index input fingerprints reverted to slow per-file PowerShell hashing.'
+if ($indexCacheText -notmatch 'TrimStart\(\[char\]0xFEFF\)' -or $indexCacheText -match 'hash-object --stdin-paths') {
+    throw 'Index input fingerprints must normalize BOM-prefixed paths without PowerShell 5 native stdin encoding.'
 }
 if ($pipelineText -notmatch 'analytical indexes:' -or $pipelineText -notmatch 'API snapshot review:' -or $pipelineText -notmatch 'migration review:') {
     throw 'Affected index pipeline omitted the compact delivery summary.'

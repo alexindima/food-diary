@@ -12,12 +12,11 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $ledgerPath = Join-Path $wikiRoot 'reviews/source-impact-reviews.json'
 
 function ConvertTo-RepositoryPath([string]$Path) {
-    $normalized = $Path.Trim().Replace('\', '/')
-    while ($normalized.StartsWith('./')) { $normalized = $normalized.Substring(2) }
-    return $normalized
+    return ConvertTo-LlmWikiRepositoryPath $Path
 }
 
 function Get-ContentHash([string]$RepositoryPath) {
@@ -37,11 +36,9 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $gitArguments = @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef)
     if (-not [string]::IsNullOrWhiteSpace($HeadRef)) { $gitArguments += $HeadRef }
     $gitArguments += '--'
-    $ChangedPath = @(& git @gitArguments)
-    if ($LASTEXITCODE -ne 0) { throw "git diff failed for base '$BaseRef'." }
+    $ChangedPath = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments $gitArguments -FailureMessage "git diff failed for base '$BaseRef'.")
     if ([string]::IsNullOrWhiteSpace($HeadRef)) {
-        $ChangedPath += @(& git ls-files --others --exclude-standard)
-        if ($LASTEXITCODE -ne 0) { throw 'git ls-files failed while collecting untracked paths.' }
+        $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'git ls-files failed while collecting untracked paths.')
     }
 }
 $changedPathSet = @{}

@@ -14,15 +14,12 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $policyPath = Join-Path $wikiRoot 'policies/change-policies.json'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)
 
-    $normalized = $Path.Trim().Replace('\', '/')
-    while ($normalized.StartsWith('./')) {
-        $normalized = $normalized.Substring(2)
-    }
-    return $normalized
+    return ConvertTo-LlmWikiRepositoryPath $Path
 }
 
 if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
@@ -31,15 +28,9 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
         $gitArguments += $HeadRef
     }
     $gitArguments += '--'
-    $ChangedPath = @(& git @gitArguments)
-    if ($LASTEXITCODE -ne 0) {
-        throw "git diff failed for base '$BaseRef' and head '$HeadRef'."
-    }
+    $ChangedPath = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments $gitArguments -FailureMessage "git diff failed for base '$BaseRef' and head '$HeadRef'.")
     if ([string]::IsNullOrWhiteSpace($HeadRef)) {
-        $ChangedPath += @(& git ls-files --others --exclude-standard)
-        if ($LASTEXITCODE -ne 0) {
-            throw 'git ls-files failed while collecting untracked paths.'
-        }
+        $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'git ls-files failed while collecting untracked paths.')
     }
 }
 
@@ -92,7 +83,8 @@ foreach ($rule in $policy.rules) {
         }
     }
 
-    foreach ($structuralCheck in @($rule.structuralChecks)) {
+    $structuralChecks = if ($rule.PSObject.Properties['structuralChecks']) { @($rule.structuralChecks) } else { @() }
+    foreach ($structuralCheck in $structuralChecks) {
         if ($structuralCheck -eq 'paired-locales') {
             foreach ($localePath in $matchingPaths) {
                 if ($localePath -notmatch '^FoodDiary\.Web\.Client/assets/i18n/(?<locale>en|ru)/(?<file>.+\.json)$') {

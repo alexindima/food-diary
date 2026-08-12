@@ -27,7 +27,7 @@ $policy = if ($null -ne $PolicyInput) { $PolicyInput } else {
 }
 
 $terms = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-foreach ($module in @($diff.modules.name)) { if ($module) { $null = $terms.Add($module) } }
+foreach ($module in @($diff.modules | ForEach-Object { if ($_.PSObject.Properties['name']) { $_.name } })) { if ($module) { $null = $terms.Add($module) } }
 foreach ($path in @($diff.changedPaths)) {
     if ($path -match 'module-dependencies\.json$') { $null = $terms.Add('dependency graph') }
     foreach ($segment in ($path -split '[/_.-]')) {
@@ -52,14 +52,14 @@ foreach ($file in Get-ChildItem -LiteralPath $adrRoot -File -Filter '*.md' | Whe
     }
 }
 
-$triggered = @($policy.matchedRules.id) -contains 'architecture-decision'
+$triggered = @($policy.matchedRules | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } }) -contains 'architecture-decision'
 $review = @($policy.reviewObligations | Where-Object id -eq 'adr-review' | Select-Object -First 1)
 $result = [pscustomobject]@{
     reviewRequired = $triggered
     guidance = if ($review.Count -gt 0) { $review[0].description } else { 'No deterministic ADR trigger matched; create one if the change establishes a durable constraint.' }
     decisionDrivers = @(
         @($diff.scopes | ForEach-Object { "Changed scope: $_" }) +
-        @($diff.modules.name | Where-Object { $_ } | ForEach-Object { "Affected module: $_" }) +
+        @($diff.modules | ForEach-Object { if ($_.PSObject.Properties['name']) { $_.name } } | Where-Object { $_ } | ForEach-Object { "Affected module: $_" }) +
         @($diff.warnings | ForEach-Object { "Change warning: $_" })
     )
     relatedAdrs = @($related | Sort-Object path)

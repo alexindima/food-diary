@@ -48,7 +48,7 @@ $diff = if ($null -ne $DiffInput) { $DiffInput } else {
 $policy = if ($null -ne $PolicyInput) { $PolicyInput } else {
     & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') @common | ConvertFrom-Json
 }
-$ruleIds = @($policy.matchedRules.id)
+$ruleIds = @($policy.matchedRules | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })
 $scopes = @($diff.scopes)
 $scenarios = [System.Collections.Generic.List[object]]::new()
 $discoveredTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
@@ -274,7 +274,7 @@ $commands = @(@(
 ) | Sort-Object command -Unique)
 
 $frontendFocusedTests = @(
-    $selectedFocusedTests.path |
+    $selectedFocusedTests | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } |
         Where-Object { $_ -match '^FoodDiary\.Web\.Client/.+\.spec\.ts$' } |
         Select-Object -First 5
 )
@@ -353,8 +353,8 @@ $result = [pscustomobject]@{
     scopes = $scopes
     intent = $Intent
     proposedPaths = @($ProposedPath)
-    modules = @($diff.modules.name)
-    focusedTestFiles = @($selectedFocusedTests.path)
+    modules = @($diff.modules | ForEach-Object { if ($_.PSObject.Properties['name']) { $_.name } } | Where-Object { $_ })
+    focusedTestFiles = @($selectedFocusedTests | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } | Where-Object { $_ })
     focusedTestDetails = $selectedFocusedTests
     commands = @($commands)
     commandGroups = [pscustomobject][ordered]@{
@@ -374,7 +374,7 @@ $resultOutput = if ($Compact) {
         focusedTests = $result.focusedTestDetails
         commands = $result.commands
         scenarios = @($result.scenarios | Select-Object id, description)
-        reviewObligationIds = @($result.reviewObligations.id)
+        reviewObligationIds = @($result.reviewObligations | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })
     }
 } else {
     $result
