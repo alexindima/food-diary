@@ -81,9 +81,11 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('context-bundle')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiContextFeedback|Test-LlmWikiContextFeedbackMetrics)\.ps1$') {
         $null = $smokeGroups.Add('context-feedback')
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiCollections|Test-LlmWikiCollections)\.ps1$') {
+        $null = $smokeGroups.Add('strict-shapes')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
         $null = $smokeGroups.Add('test-only-governance')
-    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiChangePacket|LlmWikiCollections|Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiAcceptanceMatrix|Manage-LlmWikiChangeCritique|Manage-LlmWikiConfidenceLedger|Manage-LlmWikiImpactSimulation|Manage-LlmWikiRiskCalibration|Manage-LlmWikiFailurePrediction|Manage-LlmWikiVerificationCost|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Add-LlmWikiSourceReview|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiEvidenceLineage|Test-LlmWikiCollections|Test-LlmWikiChangePacketMetadata|Test-LlmWikiGovernedDeliveryRegression|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiChangePacket|Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiAcceptanceMatrix|Manage-LlmWikiChangeCritique|Manage-LlmWikiConfidenceLedger|Manage-LlmWikiImpactSimulation|Manage-LlmWikiRiskCalibration|Manage-LlmWikiFailurePrediction|Manage-LlmWikiVerificationCost|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Add-LlmWikiSourceReview|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiEvidenceLineage|Test-LlmWikiChangePacketMetadata|Test-LlmWikiGovernedDeliveryRegression|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
         $null = $smokeGroups.Add('governed-delivery')
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
@@ -241,6 +243,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'context-feedback' {
             & (Join-Path $toolsRoot 'Test-LlmWikiContextFeedbackMetrics.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'strict-shapes' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiCollections.ps1')
             if (-not $?) { exit 1 }
         }
         'test-only-governance' {

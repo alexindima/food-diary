@@ -556,13 +556,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "4c82dcbb7c116fa049321a33f6f09073ca729e44c4c8e7745b06d591341de6d9"
+                                            "sha256":  "70ec2fc34bbc7fdbb1eb62b91156b04f1e823ff28f72a649e60c1ecdca44a485"
                                         }
                                     ],
-                        "reason":  "Reviewed dedicated memory affected-smoke routing; memory-only changes no longer require the monolithic full-tools smoke.",
+                        "reason":  "Reviewed dedicated strict-shapes affected suite; collection contract changes now avoid the broader governed-delivery smoke while full CI coverage remains unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2916c8e6376a62c97a4666b0e62e4f73565b6807",
-                        "reviewedAtUtc":  "2026-08-12T13:51:00.5122408Z"
+                        "gitHead":  "cf6c3bec7afa720a04231fdd065416ca324f7a49",
+                        "reviewedAtUtc":  "2026-08-12T14:17:04.0214758Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
