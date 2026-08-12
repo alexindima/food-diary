@@ -945,6 +945,31 @@ try {
         @($planConformance.conformance.classification.outOfScopePaths).Count -eq 0 -and
         @($planConformance.conformance.classification.missingPlannedPaths).Count -eq 0
     ) 'Fresh workspace did not conform to its declared implementation plan.'
+    $directoryScopeManifestPath = Join-Path $absoluteTaskWorkspacePath 'change-manifest.json'
+    $directoryScopePacketPath = Join-Path $absoluteTaskWorkspacePath 'change-packet.json'
+    $directoryScopeManifestRaw = Get-Content -LiteralPath $directoryScopeManifestPath -Raw
+    $directoryScopePacketRaw = Get-Content -LiteralPath $directoryScopePacketPath -Raw
+    try {
+        $directoryScopeManifest = $directoryScopeManifestRaw | ConvertFrom-Json
+        $directoryScopePacket = $directoryScopePacketRaw | ConvertFrom-Json
+        $directoryScopeManifest.scope.plannedPaths = @('tests/FoodDiary.ArchitectureTests')
+        $directoryScopeManifest.scope.allowedPathPatterns = @('^tests/FoodDiary\.ArchitectureTests/')
+        $directoryScopePacket.diff.changedPaths = @('tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs')
+        [IO.File]::WriteAllText($directoryScopeManifestPath, (($directoryScopeManifest | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($directoryScopePacketPath, (($directoryScopePacket | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        $directoryScopeConformance = & (Join-Path $toolsRoot 'Manage-LlmWikiPlanConformance.ps1') assess `
+            -WorkspacePath $taskWorkspacePath `
+            -Format Json | ConvertFrom-Json
+        Assert-Wiki (
+            $directoryScopeConformance.valid -and
+            @($directoryScopeConformance.conformance.classification.plannedChangedPaths) -contains 'tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs' -and
+            @($directoryScopeConformance.conformance.classification.missingPlannedPaths).Count -eq 0
+        ) 'Plan conformance treated a dotted directory scope as an exact file path.'
+    }
+    finally {
+        [IO.File]::WriteAllText($directoryScopeManifestPath, $directoryScopeManifestRaw, [Text.UTF8Encoding]::new($false))
+        [IO.File]::WriteAllText($directoryScopePacketPath, $directoryScopePacketRaw, [Text.UTF8Encoding]::new($false))
+    }
     $planConformancePath = Join-Path $absoluteTaskWorkspacePath 'plan-conformance.json'
     $planConformanceRaw = Get-Content -LiteralPath $planConformancePath -Raw
     $tamperedPlanConformance = $planConformanceRaw | ConvertFrom-Json

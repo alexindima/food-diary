@@ -1791,13 +1791,15 @@ switch ($Command) {
         }
     }
     { $_ -in @('task-status', 'task-refresh') } {
-        Invoke-WikiTool 'Manage-LlmWikiTaskWorkspace.ps1' @{
+        $taskWorkspaceArguments = @{
             Action = $(if ($Command -eq 'task-refresh') { 'refresh' } else { 'status' })
             WorkspacePath = $WorkspacePath
             FailOnBlocked = $FailOnBlocked
             DryRun = $DryRun
             Format = $Format
         }
+        if ($PSBoundParameters.ContainsKey('HeadRef')) { $taskWorkspaceArguments.HeadRef = $HeadRef }
+        Invoke-WikiTool 'Manage-LlmWikiTaskWorkspace.ps1' $taskWorkspaceArguments
     }
     'task-run' {
         Invoke-WikiTool 'Invoke-LlmWikiTaskChecks.ps1' @{
@@ -2487,7 +2489,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-lease-release -LeaseId <id> [-Owner <agent>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-audit [-StaleAfterDays 7] [-EvidenceMaxAgeDays 3] [-FailOnAttention]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-status -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnBlocked]'
-        Write-Host '  ./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-DryRun]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-HeadRef <commit>] [-DryRun]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-lineage -WorkspacePath .artifacts/llm-wiki/tasks/<name> [-FailOnInvalid] [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-cache-find -WorkspacePath <target> -CheckId <id> [-SourceWorkspacePath <source>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-cache-reuse -WorkspacePath <target> -CheckId <id> [-SourceWorkspacePath <source>] [-DryRun]'

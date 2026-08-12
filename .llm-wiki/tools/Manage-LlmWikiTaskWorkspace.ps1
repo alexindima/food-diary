@@ -5,6 +5,7 @@ param(
     [string]$Action = 'status',
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
     [object]$PacketInput,
+    [string]$HeadRef,
     [switch]$DryRun,
     [switch]$FailOnBlocked,
     [ValidateSet('Text', 'Json')]
@@ -65,13 +66,28 @@ function Test-GovernanceGeneratedPath([string]$Value) {
         $Value -eq '.llm-wiki/reviews/source-impact-reviews.json'
 }
 
+$storedHeadRef = if ($taskContract.git.PSObject.Properties['head']) { [string]$taskContract.git.head } else { '' }
+$requestedHeadRef = if ($PSBoundParameters.ContainsKey('HeadRef')) { $HeadRef } else { $storedHeadRef }
+$resolvedHeadRef = ''
+if (-not [string]::IsNullOrWhiteSpace($requestedHeadRef)) {
+    $resolvedHeadOutput = @(& git -C $repositoryRoot rev-parse --verify "$requestedHeadRef^{commit}" 2>$null)
+    $resolveExitCode = $LASTEXITCODE
+    $resolvedHeadRef = if ($resolvedHeadOutput.Count -gt 0) { ([string]$resolvedHeadOutput[0]).Trim() } else { '' }
+    if ($resolveExitCode -ne 0 -or $resolvedHeadRef -notmatch '^[a-f0-9]{40}$') {
+        throw "HeadRef '$requestedHeadRef' does not resolve to a commit."
+    }
+}
+
 $packet = if ($null -ne $PacketInput) {
     $PacketInput
 } else {
-    & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') `
-        -BaseRef $taskContract.git.base `
-        -Objective $descriptor.objective `
-        -Format Json | ConvertFrom-Json
+    $packetArguments = @{
+        BaseRef = $taskContract.git.base
+        Objective = $descriptor.objective
+        Format = 'Json'
+    }
+    if (-not [string]::IsNullOrWhiteSpace($resolvedHeadRef)) { $packetArguments.HeadRef = $resolvedHeadRef }
+    & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | ConvertFrom-Json
 }
 
 $manifestRelative = "$normalizedWorkspacePath/$($artifactNames.manifest)"
@@ -313,6 +329,8 @@ if ($Action -eq 'refresh') {
     $originalPacket = Get-Content -LiteralPath $packetArtifactPath -Raw
     $originalReport = Get-Content -LiteralPath $reportArtifactPath -Raw
     $originalDescriptor = Get-Content -LiteralPath $descriptorPath -Raw
+    $taskContractArtifactPath = Join-Path $absoluteWorkspacePath $artifactNames.taskContract
+    $originalTaskContract = Get-Content -LiteralPath $taskContractArtifactPath -Raw
     $originalEvidence = Get-Content -LiteralPath $evidenceArtifactPath -Raw
     $originalAcceptance = Get-Content -LiteralPath $acceptanceArtifactPath -Raw
     $derivedArtifactNames = @('risk-calibration.json', 'failure-prediction.json', 'verification-cost.json', 'verification-plan.json', 'model-routing.json', 'model-routing-outcome.json', 'instruction-outcome.json', 'plan-reuse.json', 'context-security.json', 'context-bundle.json', 'context-budget.json', 'context-benchmark.json', 'context-experiment.json', 'context-strategy-approval.json', 'context-strategy-application.json', 'context-strategy-outcome.json', 'confidence-ledger.json', 'change-critique.json')
@@ -360,6 +378,16 @@ if ($Action -eq 'refresh') {
         } else {
             $descriptor.lastRefreshedAtUtc = [DateTime]::UtcNow.ToString('o')
         }
+        if (-not [string]::IsNullOrWhiteSpace($resolvedHeadRef)) {
+            if ($descriptor.git.PSObject.Properties['head']) { $descriptor.git.head = $resolvedHeadRef }
+            else { $descriptor.git | Add-Member -NotePropertyName head -NotePropertyValue $resolvedHeadRef }
+            if ($taskContract.git.PSObject.Properties['head']) { $taskContract.git.head = $resolvedHeadRef }
+            else { $taskContract.git | Add-Member -NotePropertyName head -NotePropertyValue $resolvedHeadRef }
+            [System.IO.File]::WriteAllText(
+                $taskContractArtifactPath,
+                (($taskContract | ConvertTo-Json -Depth 20) + [Environment]::NewLine),
+                [System.Text.UTF8Encoding]::new($false))
+        }
         [System.IO.File]::WriteAllText(
             $descriptorPath,
             (($descriptor | ConvertTo-Json -Depth 20) + [Environment]::NewLine),
@@ -379,6 +407,7 @@ if ($Action -eq 'refresh') {
         [System.IO.File]::WriteAllText($packetArtifactPath, $originalPacket, [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($reportArtifactPath, $originalReport, [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($descriptorPath, $originalDescriptor, [System.Text.UTF8Encoding]::new($false))
+        [System.IO.File]::WriteAllText($taskContractArtifactPath, $originalTaskContract, [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($evidenceArtifactPath, $originalEvidence, [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($acceptanceArtifactPath, $originalAcceptance, [System.Text.UTF8Encoding]::new($false))
         foreach ($derivedArtifactName in $derivedArtifactNames) {

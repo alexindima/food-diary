@@ -234,13 +234,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "86e0b13db36fc9021da127a618db699a675d97722ff287922ace5951427dc9a0"
+                                            "sha256":  "1bcaebfe8fdb53a5007a06e28075321841199ac91905e8e388ad831d78fc1600"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:36.7999071Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:38.7493996Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -323,18 +323,14 @@
                         "pageSha256":  "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
-                                            "sha256":  "785f052003ad3c8ad93e7a044ea2d3acd0c32d79fb00a8c783aaeed1028ec626"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:38.9283058Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:39.6188940Z"
                     },
                     {
                         "pageId":  "workflow-context-bundles",
@@ -373,13 +369,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:41.2399778Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:40.6247774Z"
                     },
                     {
                         "pageId":  "workflow-cost-aware-verification",
@@ -496,18 +492,14 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
-                                            "sha256":  "4715ac9597d1e9833f3a6d9cd385a5a94c7823ebdce5640b7b816e45500f9e9d"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:44.5598303Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:41.5243243Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -516,13 +508,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "82212c188eb8ce5dd6bd282fbc556c10cabce449bc9996a21bec963286db4213"
+                                            "sha256":  "eac80e023c38d8ee7775525ce65c55e945c760a8bd1c13801ae62d5970e37506"
                                         }
                                     ],
-                        "reason":  "Reviewed governed Authentication regression extensions for symbolic-base migration and preserved implementation-diff discovery.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
-                        "reviewedAtUtc":  "2026-08-12T05:11:48.0332523Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:42.4996515Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -530,18 +522,14 @@
                         "pageSha256":  "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
-                                            "sha256":  "716c306fd32a152e2d9c634937c9428bb54459b33f479043ee0f9cabeef51b33"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:47.1280169Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:43.3390397Z"
                     },
                     {
                         "pageId":  "workflow-index-pipeline",
@@ -549,14 +537,14 @@
                         "pageSha256":  "4b700f452947b76c2dd708ab5978289650c76c32a49e06ea6356812757e73cd8",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "9a94c4973df4a35e7e21b1a66aacfbb714e1c734b47fd20f2baaf3583d8acc91"
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "4ccd4e314e2aafcfeea44649132adde005b06ca6448038cbae60f69cbe3c6446"
                                         }
                                     ],
-                        "reason":  "Reviewed immutable task-base pinning, legacy workspace migration, scalar-safe validation, and governed lifecycle regression; the documented workflow remains accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
-                        "reviewedAtUtc":  "2026-08-12T05:06:54.3788061Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:44.2962161Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -639,22 +627,18 @@
                         "pageSha256":  "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "86e0b13db36fc9021da127a618db699a675d97722ff287922ace5951427dc9a0"
+                                            "sha256":  "1bcaebfe8fdb53a5007a06e28075321841199ac91905e8e388ad831d78fc1600"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:49.4819360Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:45.2089079Z"
                     },
                     {
                         "pageId":  "workflow-privacy-review",
@@ -692,18 +676,14 @@
                         "pageSha256":  "8b82837eee71015fa0bc4c18f084e4ece9b7aedd383f14fb07def75df7fbda78",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "c2eb1728e955cc738dfb9f3325daf787f68a1fafce428e0b202d351149c1db4c"
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:50.6445118Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:46.2852356Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -745,14 +725,18 @@
                         "pageSha256":  "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "82212c188eb8ce5dd6bd282fbc556c10cabce449bc9996a21bec963286db4213"
+                                            "sha256":  "eac80e023c38d8ee7775525ce65c55e945c760a8bd1c13801ae62d5970e37506"
                                         }
                                     ],
-                        "reason":  "Reviewed governed Authentication regression extensions; requirement expansion and lifecycle semantics remain accurate.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
-                        "reviewedAtUtc":  "2026-08-12T05:11:48.9778467Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:47.1372405Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -867,13 +851,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "86646c72e47905cbec112168888f150b9a7209d0f314576570e9bba66ba48e1f"
+                                            "sha256":  "4ccd4e314e2aafcfeea44649132adde005b06ca6448038cbae60f69cbe3c6446"
                                         }
                                     ],
-                        "reason":  "Reviewed verify runner hardening: initialize child process before progress serialization and report the dynamic stage count; facade behavior remains unchanged.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:48:17.3502832Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:48.1429732Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",
@@ -881,34 +865,22 @@
                         "pageSha256":  "d82ff199232ffa58514f61a394d36cad07f3e2d96d7bab4fdaa09be847fce590",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Compare-LlmWikiTaskPolicy.ps1",
-                                            "sha256":  "d8d701e60201adfb049f0f38f7938ca4d0f3bef47b1cf584b451ce17a2ba1274"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+                                            "sha256":  "1bcaebfe8fdb53a5007a06e28075321841199ac91905e8e388ad831d78fc1600"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "f160c6405659b367bf7b697676aa8b36429d9d23805ad1877e3958979dc48406"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
-                                            "sha256":  "e203a5aef1a161ba884d4f632842cd6831546fc18537212634186c6b9c3d7f61"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "82212c188eb8ce5dd6bd282fbc556c10cabce449bc9996a21bec963286db4213"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "455f5ae7b64bdf7b170c8687635343c9d5db61fb0014cda5ca7ca36b84d4ddc6"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Update-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "4976e20ec55b8eca59e9ca47b3c729eb7a0845e7834a16551ba4cb9dc4a8f5d4"
+                                            "sha256":  "eac80e023c38d8ee7775525ce65c55e945c760a8bd1c13801ae62d5970e37506"
                                         }
                                     ],
-                        "reason":  "Reviewed immutable SHA base creation, same-schema legacy base and acceptance-origin migration, scalar-safe doctor validation, and end-to-end Authentication lifecycle coverage.",
+                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eed50cc0c54d4bb4308a3f7c679dc4ff3be3dc9",
-                        "reviewedAtUtc":  "2026-08-12T05:11:47.1591942Z"
+                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
+                        "reviewedAtUtc":  "2026-08-12T08:06:49.0437997Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",

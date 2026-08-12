@@ -197,6 +197,22 @@ try {
     if ($deliveryStatus.assessment.PSObject.Properties['refreshRequired'] -and $deliveryStatus.assessment.refreshRequired) {
         throw 'Refreshed governed workspace still reports packet drift.'
     }
+
+    & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-refresh `
+        -WorkspacePath $workspacePath `
+        -HeadRef HEAD | Out-Null
+    $pinnedHead = (& git -C $repositoryRoot rev-parse --verify 'HEAD^{commit}').Trim()
+    foreach ($name in @('workspace.json', 'task-contract.json')) {
+        $artifact = Get-Content -LiteralPath (Join-Path $workspaceAbsolute $name) -Raw | ConvertFrom-Json
+        if ([string]$artifact.git.head -cne $pinnedHead) { throw "Task refresh did not persist the resolved head SHA in $name." }
+    }
+    $pinnedStatus = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-status `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    $pinnedPacket = Get-Content -LiteralPath (Join-Path $workspaceAbsolute 'change-packet.json') -Raw | ConvertFrom-Json
+    if ([string]$pinnedStatus.currentPacketFingerprint -cne [string]$pinnedPacket.fingerprint) {
+        throw 'Task status did not reuse the persisted task head.'
+    }
 } finally {
     Remove-Item -LiteralPath $workspaceAbsolute -Recurse -Force -ErrorAction SilentlyContinue
 }

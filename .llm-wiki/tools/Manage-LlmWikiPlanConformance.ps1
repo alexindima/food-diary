@@ -48,6 +48,14 @@ function Test-GovernanceGeneratedPath([string]$Value) {
     $Value -match '^\.llm-wiki/generated/' -or
         $Value -eq '.llm-wiki/reviews/source-impact-reviews.json'
 }
+function Get-PlannedPathPattern([string]$Value, [object[]]$ActualPaths) {
+    $normalized = $Value.Replace('\', '/').TrimEnd('/')
+    $absolute = Join-Path $repositoryRoot $normalized
+    $isDirectory = (Test-Path -LiteralPath $absolute -PathType Container) -or
+        @($ActualPaths | Where-Object { ([string]$_).Replace('\', '/').StartsWith("$normalized/", [StringComparison]::Ordinal) }).Count -gt 0
+    if ($isDirectory) { return '^' + [regex]::Escape($normalized) + '(?:/.*)?$' }
+    return '^' + [regex]::Escape($normalized) + '$'
+}
 function Get-Ids([object[]]$Items) {
     @($Items | ForEach-Object {
         if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
@@ -78,16 +86,11 @@ function Get-Assessment {
         -not (Test-PathMatch $_ @($manifest.scope.allowedPathPatterns)) -or
         (Test-PathMatch $_ @($manifest.scope.excludedPathPatterns))
     })
-    $plannedPatterns = @($planned | ForEach-Object {
-        $normalized = ([string]$_).Replace('\', '/').TrimEnd('/')
-        if ([IO.Path]::GetExtension($normalized)) { '^' + [regex]::Escape($normalized) + '$' }
-        else { '^' + [regex]::Escape($normalized) + '(?:/.*)?$' }
-    })
+    $plannedPatterns = @($planned | ForEach-Object { Get-PlannedPathPattern ([string]$_) $actual })
     $plannedChanged = @($actual | Where-Object { Test-PathMatch $_ $plannedPatterns })
     $unplannedAllowed = @($actual | Where-Object { -not (Test-PathMatch $_ $plannedPatterns) -and $_ -notin $outOfScope })
     $missingPlanned = @($planned | Where-Object {
-        $normalized = ([string]$_).Replace('\', '/').TrimEnd('/')
-        $pattern = if ([IO.Path]::GetExtension($normalized)) { '^' + [regex]::Escape($normalized) + '$' } else { '^' + [regex]::Escape($normalized) + '(?:/.*)?$' }
+        $pattern = Get-PlannedPathPattern ([string]$_) $actual
         -not (@($actual | Where-Object { Test-PathMatch $_ @($pattern) }).Count)
     })
     $phaseFiles = @($manifest.plan.phases.files | Where-Object { $_ -and -not (Test-GovernanceGeneratedPath ([string]$_)) } | Sort-Object -Unique)
