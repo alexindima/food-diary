@@ -128,7 +128,7 @@ AI, Dashboard, Dietologist, Gamification, Hydration, TDEE and Weekly Check-In us
 
 This separation is an extraction prerequisite: a future `FoodDiary.Application.Users` assembly must be able to implement the abstraction-level profile contract without forcing read consumers to reference the Users implementation assembly.
 
-Authentication delegates Google and Telegram identity linking, email-verification token issuance/completion and password-reset issuance/completion to `IUserAuthenticationIdentityService`. Authentication remains responsible for validating provider assertions, replay protection, raw token generation and session/JWT issuance, while Users owns identity uniqueness checks, credential hashing, one-time-token validation and aggregate mutation. Migrated handlers receive only results, `UserModel`, delivery data or `UserAuthenticationPrincipalModel`; they never acquire the `User` aggregate.
+Authentication delegates password authentication, successful-authentication recording, account restoration, Google and Telegram identity linking, email-verification token issuance/completion and password-reset issuance/completion to `IUserAuthenticationIdentityService`. Authentication remains responsible for validating provider assertions, replay protection, raw token generation and session/JWT issuance, while Users owns identity uniqueness checks, credential hashing, credential verification, one-time-token validation and aggregate mutation. Migrated handlers receive only results, `UserModel`, delivery data or `UserAuthenticationPrincipalModel`; they never acquire the `User` aggregate.
 
 ## Notifications boundary
 
@@ -234,7 +234,7 @@ Meal persistence registrations live in `DependencyInjection.Meals.cs`, RecentIte
 
 ## Users and Authentication boundaries
 
-Users and Authentication are separate collaborating modules around one identity lifecycle. Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates/state. Authentication owns login/register/restore orchestration, refresh-token sessions and login-event history.
+Users and Authentication are separate collaborating modules around one identity lifecycle. Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates/state, including credential verification and account lifecycle mutation. Authentication owns login/register/restore orchestration, refresh-token sessions and login-event history.
 
 ### Users public capabilities
 
@@ -244,13 +244,13 @@ Other modules must not acquire `IUserRepository`, `IUserLookupRepository` or `IU
 - `ICurrentUserAccessService`/feature-specific context services for active-user access;
 - `IUserRoleMembershipService` for role membership changes;
 - `IUserAdministrationService` for privileged administration workflows;
-- `IUserIdentityMutationService` for Authentication-owned registration/restore/link workflows.
+- `IUserAuthenticationIdentityService` for password authentication, account restoration, credential-token workflows and external-identity linking.
 
 The directory currently returns the User domain model because several established workflows need identity and profile data. This is still a semantic module boundary, but future consumers that need only a small snapshot should prefer a projection-specific contract.
 
 ### Authentication boundary
 
-Authentication orchestrates credentials, external identity validation, token issuance, email verification/reset and refresh-session lifecycle. It does not acquire Users repositories. Registration and account mutation flow through `IUserIdentityMutationService`, while lookups flow through `IUserDirectoryService`.
+Authentication orchestrates credentials, external identity validation, token issuance, email verification/reset and refresh-session lifecycle. Migrated handlers do not acquire Users repositories or the `User` aggregate: password authentication, restoration and identity mutation flow through `IUserAuthenticationIdentityService`, which returns narrow projections for token issuance. Registration and remaining legacy authentication flows are migrated incrementally under the same boundary rule.
 
 Refresh sessions and login events remain Authentication-owned persistence contracts. Password hashing, JWT generation, Telegram/Google verification and SSO are adapters behind Authentication abstractions.
 

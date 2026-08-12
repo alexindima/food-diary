@@ -341,6 +341,14 @@
                          "structuralRiskScore":  65.36
                      },
                      {
+                         "path":  "FoodDiary.Application/Users/Services/UserAuthenticationIdentityService.cs",
+                         "nonBlankLines":  249,
+                         "decisionPoints":  40,
+                         "criticalSymbols":  0,
+                         "unreferencedCriticalSymbols":  0,
+                         "structuralRiskScore":  64.98
+                     },
+                     {
                          "path":  "FoodDiary.Domain/Entities/Users/User.cs",
                          "nonBlankLines":  490,
                          "decisionPoints":  36,
@@ -563,14 +571,6 @@
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  52.06
-                     },
-                     {
-                         "path":  "FoodDiary.Application/Users/Services/UserAuthenticationIdentityService.cs",
-                         "nonBlankLines":  194,
-                         "decisionPoints":  32,
-                         "criticalSymbols":  0,
-                         "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  51.88
                      },
                      {
                          "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/ux-playbook.stories.ts",
@@ -1584,11 +1584,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
-                      "nonBlankLines":  16,
+                      "nonBlankLines":  19,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.32
+                      "structuralRiskScore":  0.38
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Authentication/Services/IssuedAuthenticationTokens.cs",
@@ -4520,11 +4520,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs",
-                      "nonBlankLines":  41,
+                      "nonBlankLines":  55,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.82
+                      "structuralRiskScore":  1.1
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Users/Common/IUserCleanupService.cs",
@@ -6961,10 +6961,10 @@
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
                       "nonBlankLines":  29,
-                      "decisionPoints":  3,
+                      "decisionPoints":  1,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.08
+                      "structuralRiskScore":  4.08
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandValidator.cs",
@@ -6984,11 +6984,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-                      "nonBlankLines":  50,
+                      "nonBlankLines":  62,
                       "decisionPoints":  7,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  13.5
+                      "structuralRiskScore":  13.74
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
@@ -7080,11 +7080,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-                      "nonBlankLines":  31,
-                      "decisionPoints":  3,
+                      "nonBlankLines":  30,
+                      "decisionPoints":  1,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.12
+                      "structuralRiskScore":  4.1
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
@@ -7296,11 +7296,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Services/AuthenticationTokenService.cs",
-                      "nonBlankLines":  114,
-                      "decisionPoints":  10,
+                      "nonBlankLines":  138,
+                      "decisionPoints":  11,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  17.28
+                      "structuralRiskScore":  19.26
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Services/AuthenticationUserLookupService.cs",
@@ -13976,11 +13976,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Users/Services/UserAuthenticationIdentityService.cs",
-                      "nonBlankLines":  194,
-                      "decisionPoints":  32,
+                      "nonBlankLines":  249,
+                      "decisionPoints":  40,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  51.88
+                      "structuralRiskScore":  64.98
                   },
                   {
                       "path":  "FoodDiary.Application/Users/Services/UserIdentityMutationService.cs",
@@ -34641,12 +34641,13 @@
                                 "name":  "LoginCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-                                "line":  12,
-                                "testReferenceCount":  3,
+                                "line":  9,
+                                "testReferenceCount":  4,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs",
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.RegisterLogin.cs",
-                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+                                                       "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
                                                    ]
                             },
                             {
@@ -34796,10 +34797,11 @@
                                 "name":  "RefreshTokenCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-                                "line":  14,
-                                "testReferenceCount":  1,
+                                "line":  15,
+                                "testReferenceCount":  2,
                                 "testReferences":  [
-                                                       "tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs"
+                                                       "tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
+                                                       "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
                                                    ]
                             },
                             {
@@ -34902,11 +34904,12 @@
                                 "name":  "RestoreAccountCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-                                "line":  12,
-                                "testReferenceCount":  2,
+                                "line":  9,
+                                "testReferenceCount":  3,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Password.cs",
-                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+                                                       "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs"
                                                    ]
                             },
                             {

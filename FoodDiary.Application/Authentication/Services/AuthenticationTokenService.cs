@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Services.UserAgents;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Services;
 
@@ -19,31 +20,33 @@ public sealed class AuthenticationTokenService(
     : IAuthenticationTokenService {
     public async Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
         UserAuthenticationPrincipalModel principal,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken,
+        AuthenticationClientContext? clientContext = null,
+        bool rememberMe = false,
+        Guid? refreshSessionId = null) {
         string accessToken = jwtTokenGenerator.GenerateAccessToken(
             principal.UserId,
             principal.Email,
             principal.Roles,
             principal.AccessTokenCapUtc);
-        var refreshSessionId = Guid.NewGuid();
+        Guid resolvedRefreshSessionId = refreshSessionId ?? Guid.NewGuid();
         string refreshToken = jwtTokenGenerator.GenerateRefreshToken(
             principal.UserId,
             principal.Email,
             principal.Roles,
-            rememberMe: false,
-            refreshSessionId: refreshSessionId);
+            rememberMe,
+            resolvedRefreshSessionId);
         string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        var session = UserRefreshTokenSession.Create(
-            refreshSessionId,
+        await PersistAuthenticationArtifactsAsync(
             principal.UserId,
             hashedRefreshToken,
-            rememberMe: false,
-            authProvider: null,
-            ipAddress: null,
-            userAgent: null,
-            nowUtc: nowUtc);
-        await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
+            rememberMe,
+            resolvedRefreshSessionId,
+            refreshSessionId,
+            clientContext,
+            nowUtc,
+            cancellationToken).ConfigureAwait(false);
         return new IssuedAuthenticationTokens(accessToken, refreshToken);
     }
 
@@ -62,40 +65,15 @@ public sealed class AuthenticationTokenService(
         string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
         user.RecordAuthenticationActivity(nowUtc);
         await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
-
-        if (refreshSessionId.HasValue) {
-            UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(refreshSessionId.Value, cancellationToken).ConfigureAwait(false);
-            if (session is not null && session.UserId == user.Id && session.IsActive) {
-                session.Rotate(hashedRefreshToken, rememberMe, nowUtc, TimeSpan.Zero);
-                await refreshTokenSessionRepository.UpdateAsync(session, cancellationToken).ConfigureAwait(false);
-            }
-        } else {
-            var session = UserRefreshTokenSession.Create(
-                resolvedRefreshSessionId,
-                user.Id,
-                hashedRefreshToken,
-                rememberMe,
-                clientContext?.AuthProvider,
-                clientContext?.IpAddress,
-                clientContext?.UserAgent,
-                nowUtc);
-            await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
-        }
-
-        if (clientContext is not null) {
-            ParsedUserAgent userAgent = UserAgentParser.Parse(clientContext.UserAgent);
-            var loginEvent = UserLoginEvent.Create(
-                user.Id,
-                clientContext.AuthProvider,
-                clientContext.IpAddress,
-                clientContext.UserAgent,
-                userAgent.BrowserName,
-                userAgent.BrowserVersion,
-                userAgent.OperatingSystem,
-                userAgent.DeviceType,
-                nowUtc);
-            await userLoginEventRepository.AddAsync(loginEvent, cancellationToken).ConfigureAwait(false);
-        }
+        await PersistAuthenticationArtifactsAsync(
+            user.Id,
+            hashedRefreshToken,
+            rememberMe,
+            resolvedRefreshSessionId,
+            refreshSessionId,
+            clientContext,
+            nowUtc,
+            cancellationToken).ConfigureAwait(false);
 
         return new IssuedAuthenticationTokens(accessToken, refreshToken);
     }
@@ -122,5 +100,51 @@ public sealed class AuthenticationTokenService(
         }
 
         return user.PremiumTrialEndsAtUtc;
+    }
+
+    private async Task PersistAuthenticationArtifactsAsync(
+        UserId userId,
+        string hashedRefreshToken,
+        bool rememberMe,
+        Guid resolvedRefreshSessionId,
+        Guid? refreshSessionId,
+        AuthenticationClientContext? clientContext,
+        DateTime nowUtc,
+        CancellationToken cancellationToken) {
+        if (refreshSessionId.HasValue) {
+            UserRefreshTokenSession? session = await refreshTokenSessionRepository
+                .GetByIdAsync(refreshSessionId.Value, cancellationToken)
+                .ConfigureAwait(false);
+            if (session is not null && session.UserId == userId && session.IsActive) {
+                session.Rotate(hashedRefreshToken, rememberMe, nowUtc, TimeSpan.Zero);
+                await refreshTokenSessionRepository.UpdateAsync(session, cancellationToken).ConfigureAwait(false);
+            }
+        } else {
+            var session = UserRefreshTokenSession.Create(
+                resolvedRefreshSessionId,
+                userId,
+                hashedRefreshToken,
+                rememberMe,
+                clientContext?.AuthProvider,
+                clientContext?.IpAddress,
+                clientContext?.UserAgent,
+                nowUtc);
+            await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
+        }
+
+        if (clientContext is not null) {
+            ParsedUserAgent userAgent = UserAgentParser.Parse(clientContext.UserAgent);
+            var loginEvent = UserLoginEvent.Create(
+                userId,
+                clientContext.AuthProvider,
+                clientContext.IpAddress,
+                clientContext.UserAgent,
+                userAgent.BrowserName,
+                userAgent.BrowserVersion,
+                userAgent.OperatingSystem,
+                userAgent.DeviceType,
+                nowUtc);
+            await userLoginEventRepository.AddAsync(loginEvent, cancellationToken).ConfigureAwait(false);
+        }
     }
 }

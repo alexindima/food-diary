@@ -5617,7 +5617,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-                        "line":  12
+                        "line":  9
                     },
                     {
                         "name":  "LoginCommandValidator",
@@ -5638,7 +5638,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-                        "line":  14
+                        "line":  15
                     },
                     {
                         "name":  "RefreshTokenCommandValidator",
@@ -5722,7 +5722,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-                        "line":  12
+                        "line":  9
                     },
                     {
                         "name":  "RestoreAccountCommandValidator",
@@ -5911,7 +5911,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Authentication/Services/AuthenticationTokenService.cs",
-                        "line":  12
+                        "line":  13
                     },
                     {
                         "name":  "AuthenticationUserLookupService",

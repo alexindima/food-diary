@@ -1,36 +1,33 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.RestoreAccount;
 
 public sealed class RestoreAccountCommandHandler(
-    IAuthenticationUserMutationService userMutationService,
-    IPasswordHasher passwordHasher,
-    IAuthenticationTokenService authenticationTokenService,
-    TimeProvider dateTimeProvider)
+    IUserAuthenticationIdentityService userIdentityService,
+    TimeProvider dateTimeProvider,
+    IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<RestoreAccountCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(RestoreAccountCommand command, CancellationToken cancellationToken) {
-        User? user = await userMutationService.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
-        if (user is null || !passwordHasher.Verify(command.Password, user.Password)) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
-        }
-
-        if (user.DeletedAt is null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.AccountNotDeleted);
-        }
-
-        user.Restore(dateTimeProvider.GetUtcNow().UtcDateTime);
-
-        IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueAndStoreAsync(user, cancellationToken, command.ClientContext, command.RememberMe)
+        Result<UserAuthenticationPrincipalModel> restoreResult = await userIdentityService
+            .RestoreAccountAsync(
+                command.Email,
+                command.Password,
+                dateTimeProvider.GetUtcNow().UtcDateTime,
+                cancellationToken)
             .ConfigureAwait(false);
-        return Result.Success(user.ToAuthenticationModel(tokens));
+        if (restoreResult.IsFailure) {
+            return Result.Failure<AuthenticationModel>(restoreResult.Error);
+        }
+
+        UserAuthenticationPrincipalModel principal = restoreResult.Value;
+        IssuedAuthenticationTokens tokens = await authenticationTokenService
+            .IssueFromPrincipalAsync(principal, cancellationToken, command.ClientContext, command.RememberMe)
+            .ConfigureAwait(false);
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
     }
 }

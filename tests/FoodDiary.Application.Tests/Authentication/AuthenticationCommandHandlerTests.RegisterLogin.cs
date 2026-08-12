@@ -1,5 +1,6 @@
 using FoodDiary.Application.Authentication.Commands.Login;
 using FoodDiary.Application.Authentication.Commands.Register;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Authentication.Models;
@@ -98,8 +99,8 @@ public sealed partial class AuthenticationCommandHandlerTests {
         user.DeleteAccount(DateTime.UtcNow);
         var tokenService = new StubAuthenticationTokenService();
         var handler = new LoginCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
             tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
@@ -114,14 +115,22 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("login@example.com", "secret");
         var tokenService = new StubAuthenticationTokenService();
         var handler = new LoginCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
             tokenService);
+        var clientContext = new AuthenticationClientContext("password", "203.0.113.10", "test-agent");
 
-        Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(
+            new LoginCommand(user.Email, "secret", RememberMe: true, ClientContext: clientContext),
+            CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
-        Assert.Equal(user, tokenService.LastUser);
+        Assert.Null(tokenService.LastUser);
+        Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
+        Assert.Equal(user.Email, tokenService.LastPrincipal?.Email);
+        Assert.Same(clientContext, tokenService.LastClientContext);
+        Assert.True(tokenService.LastRememberMe);
+        Assert.Equal(new StubDateTimeProvider().GetUtcNow().UtcDateTime, user.LastLoginAtUtc);
     }
 }

@@ -40,6 +40,87 @@ public class AuthenticationTokenServiceTests {
     }
 
     [Fact]
+    public async Task IssueFromPrincipalAsync_WithClientContextAndRememberMe_RecordsLoginEvent() {
+        User user = CreateUser("principal-context@example.com");
+        var repository = new InMemoryUserRepository(user);
+        var loginEvents = new InMemoryUserLoginEventRepository();
+        var sessions = new InMemoryRefreshTokenSessionRepository();
+        var jwt = new FakeJwtTokenGenerator();
+        var service = new AuthenticationTokenService(repository, loginEvents, sessions, jwt, new StubDateTimeProvider());
+        var principal = new UserAuthenticationPrincipalModel(
+            user.Id,
+            user.Email,
+            ["User"],
+            AccessTokenCapUtc: null,
+            user.ToModel());
+        var clientContext = new AuthenticationClientContext(
+            "password",
+            "203.0.113.42",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125.0.0.0 Safari/537.36");
+
+        await service.IssueFromPrincipalAsync(
+            principal,
+            CancellationToken.None,
+            clientContext,
+            rememberMe: true);
+
+        UserRefreshTokenSession session = Assert.Single(sessions.Items);
+        Assert.True(session.RememberMe);
+        UserLoginEvent loginEvent = Assert.Single(loginEvents.Items);
+        Assert.Equal(user.Id, loginEvent.UserId);
+        Assert.Equal("password", loginEvent.AuthProvider);
+        Assert.Equal("203.0.113.42", loginEvent.IpAddress);
+        Assert.True(jwt.LastRefreshRememberMe);
+        Assert.False(repository.Updated);
+    }
+
+    [Fact]
+    public async Task IssueFromPrincipalAsync_WithExistingSession_RotatesWithoutAddingSession() {
+        User user = CreateUser("principal-rotation@example.com");
+        var repository = new InMemoryUserRepository(user);
+        var sessions = new InMemoryRefreshTokenSessionRepository();
+        var jwt = new FakeJwtTokenGenerator();
+        var dateTimeProvider = new StubDateTimeProvider();
+        var service = new AuthenticationTokenService(
+            repository,
+            new InMemoryUserLoginEventRepository(),
+            sessions,
+            jwt,
+            dateTimeProvider);
+        var principal = new UserAuthenticationPrincipalModel(
+            user.Id,
+            user.Email,
+            ["User"],
+            AccessTokenCapUtc: null,
+            user.ToModel());
+        var refreshSessionId = Guid.Parse("3f0a9db0-72a7-4ce1-a149-395bf13ba8bc");
+        var existingSession = UserRefreshTokenSession.Create(
+            refreshSessionId,
+            user.Id,
+            "old-refresh-hash",
+            rememberMe: false,
+            authProvider: "password",
+            ipAddress: null,
+            userAgent: null,
+            dateTimeProvider.GetUtcNow().UtcDateTime.AddMinutes(-1));
+        await sessions.AddAsync(existingSession, CancellationToken.None);
+
+        await service.IssueFromPrincipalAsync(
+            principal,
+            CancellationToken.None,
+            rememberMe: true,
+            refreshSessionId: refreshSessionId);
+
+        UserRefreshTokenSession rotatedSession = Assert.Single(sessions.Items);
+        Assert.Same(existingSession, rotatedSession);
+        Assert.Equal(
+            $"sha256:{SecurityTokenGenerator.NormalizeForSecureHashing("refresh-token")}",
+            rotatedSession.RefreshTokenHash);
+        Assert.True(rotatedSession.RememberMe);
+        Assert.False(repository.Updated);
+    }
+
+    [Fact]
     public async Task IssueAndStoreAsync_StoresHashedRefreshToken_AndReturnsTokens() {
         User user = CreateUser("user@example.com");
         var repository = new InMemoryUserRepository(user);

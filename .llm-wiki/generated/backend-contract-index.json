@@ -4,8 +4,8 @@
                     "contracts":  1032,
                     "ambiguousContracts":  3,
                     "consumerEdges":  7139,
-                    "productionConsumerEdges":  4362,
-                    "testConsumerEdges":  2777,
+                    "productionConsumerEdges":  4360,
+                    "testConsumerEdges":  2779,
                     "consumedContracts":  1032,
                     "unconsumedContracts":  0
                 },
@@ -43799,32 +43799,6 @@
                                                       "FoodDiary.Application/Authentication/Common/IAuthenticationUserLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IAuthenticationUserLookupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Authentication/Common/IAuthenticationUserLookupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IAuthenticationUserLookupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Authentication/Common/IAuthenticationUserLookupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -43908,16 +43882,16 @@
                               "referenceCount":  1
                           },
                           {
-                              "contract":  "IAuthenticationUserMutationService",
+                              "contract":  "IAuthenticationUserLookupService",
                               "roles":  [
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Authentication/Common/IAuthenticationUserMutationService.cs"
+                                                      "FoodDiary.Application/Authentication/Common/IAuthenticationUserLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-                              "isTest":  false,
+                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
+                              "isTest":  true,
                               "referenceCount":  1
                           },
                           {
@@ -43929,7 +43903,7 @@
                                                       "FoodDiary.Application/Authentication/Common/IAuthenticationUserMutationService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -44009,7 +43983,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
                               "isTest":  true,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IAuthenticationUserRegistrationService",
@@ -61960,6 +61934,19 @@
                                                       "FoodDiary.Application.Abstractions/Authentication/Common/IGoogleIdentityUserDirectoryService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IGoogleIdentityUserDirectoryService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Authentication/Common/IGoogleIdentityUserDirectoryService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Users/UserApplicationServiceDelegationTests.cs",
                               "isTest":  true,
                               "referenceCount":  6
@@ -71436,19 +71423,6 @@
                                                       "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IPasswordHasher",
-                              "roles":  [
-                                            "Other"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -71476,19 +71450,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IPasswordHasher",
-                              "roles":  [
-                                            "Other"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Authentication/Common/IPasswordHasher.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -85788,6 +85749,32 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserAuthenticationIdentityService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserAuthenticationIdentityService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -85802,6 +85789,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserAuthenticationIdentityService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserAuthenticationIdentityService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -107903,7 +107903,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Authentication/AuthenticationTokenServiceTests.cs",
                               "isTest":  true,
-                              "referenceCount":  5
+                              "referenceCount":  6
                           },
                           {
                               "contract":  "UserLoginEvent",

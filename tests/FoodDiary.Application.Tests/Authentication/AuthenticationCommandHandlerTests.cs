@@ -155,11 +155,18 @@ public sealed partial class AuthenticationCommandHandlerTests {
     private sealed class StubAuthenticationTokenService : IAuthenticationTokenService {
         public User? LastUser { get; private set; }
         public UserAuthenticationPrincipalModel? LastPrincipal { get; private set; }
+        public AuthenticationClientContext? LastClientContext { get; private set; }
+        public bool LastRememberMe { get; private set; }
 
         public Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
             UserAuthenticationPrincipalModel principal,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken,
+            AuthenticationClientContext? clientContext = null,
+            bool rememberMe = false,
+            Guid? refreshSessionId = null) {
             LastPrincipal = principal;
+            LastClientContext = clientContext;
+            LastRememberMe = rememberMe;
             return Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
         }
 

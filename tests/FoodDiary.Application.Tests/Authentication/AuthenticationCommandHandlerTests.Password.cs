@@ -6,6 +6,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -232,28 +233,33 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task RestoreAccountHandler_WithDeletedUser_RestoresAndIssuesTokens() {
         var user = User.Create("deleted@example.com", "secret");
         user.DeleteAccount(DateTime.UtcNow.AddDays(-2));
+        var tokenService = new StubAuthenticationTokenService();
         var handler = new RestoreAccountCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            new StubAuthenticationTokenService(),
-            new StubDateTimeProvider());
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
+            tokenService);
+        var clientContext = new AuthenticationClientContext("password", "203.0.113.11", "test-agent");
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new RestoreAccountCommand(user.Email, "secret"),
+            new RestoreAccountCommand(user.Email, "secret", RememberMe: true, ClientContext: clientContext),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.True(user.IsActive);
         Assert.Null(user.DeletedAt);
+        Assert.Equal(new StubDateTimeProvider().GetUtcNow().UtcDateTime, user.LastLoginAtUtc);
+        Assert.Null(tokenService.LastUser);
+        Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
+        Assert.Same(clientContext, tokenService.LastClientContext);
+        Assert.True(tokenService.LastRememberMe);
     }
 
     [Fact]
     public async Task RestoreAccountHandler_WithMissingUser_ReturnsInvalidCredentials() {
         var handler = new RestoreAccountCommandHandler(
-            new StubUserRepository(),
-            new StubPasswordHasher(),
-            new StubAuthenticationTokenService(),
-            new StubDateTimeProvider());
+            CreateUserAuthenticationIdentityService(new StubUserRepository()),
+            new StubDateTimeProvider(),
+            new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(
             new RestoreAccountCommand("missing@example.com", "secret"),
@@ -267,10 +273,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task RestoreAccountHandler_WithActiveUser_ReturnsAccountNotDeleted() {
         var user = User.Create("active-restore@example.com", "secret");
         var handler = new RestoreAccountCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            new StubAuthenticationTokenService(),
-            new StubDateTimeProvider());
+            CreateUserAuthenticationIdentityService(new StubUserRepository(user)),
+            new StubDateTimeProvider(),
+            new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(
             new RestoreAccountCommand(user.Email, "secret"),

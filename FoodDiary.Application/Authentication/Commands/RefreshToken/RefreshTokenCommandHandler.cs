@@ -1,9 +1,10 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
@@ -13,7 +14,8 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Commands.RefreshToken;
 
 public sealed class RefreshTokenCommandHandler(
-    IAuthenticationUserLookupService userLookupService,
+    IUserAuthenticationIdentityService userIdentityService,
+    TimeProvider dateTimeProvider,
     IJwtTokenGenerator jwtTokenGenerator,
     IPasswordHasher passwordHasher,
     IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
@@ -29,13 +31,9 @@ public sealed class RefreshTokenCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        User? user = await userLookupService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
-        if (accessError is not null) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
-        }
-
-        UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(refreshSessionId.Value, cancellationToken).ConfigureAwait(false);
+        UserRefreshTokenSession? session = await refreshTokenSessionRepository
+            .GetByIdAsync(refreshSessionId.Value, cancellationToken)
+            .ConfigureAwait(false);
         if (session is null || session.UserId != userId || !session.IsActive) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
@@ -44,11 +42,25 @@ public sealed class RefreshTokenCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        User currentUser = user!;
-        IssuedAuthenticationTokens tokens = await authenticationTokenService
-            .IssueAndStoreAsync(currentUser, cancellationToken, rememberMe: rememberMe, refreshSessionId: refreshSessionId)
+        Result<UserAuthenticationPrincipalModel> authenticationResult = await userIdentityService
+            .RecordAuthenticationAsync(
+                userId,
+                dateTimeProvider.GetUtcNow().UtcDateTime,
+                cancellationToken)
             .ConfigureAwait(false);
-        return Result.Success(currentUser.ToAuthenticationModel(tokens));
+        if (authenticationResult.IsFailure) {
+            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
+        }
+
+        UserAuthenticationPrincipalModel principal = authenticationResult.Value;
+        IssuedAuthenticationTokens tokens = await authenticationTokenService
+            .IssueFromPrincipalAsync(
+                principal,
+                cancellationToken,
+                rememberMe: rememberMe,
+                refreshSessionId: refreshSessionId)
+            .ConfigureAwait(false);
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
     }
 
     private bool VerifyRefreshToken(string refreshToken, string refreshTokenHash) =>

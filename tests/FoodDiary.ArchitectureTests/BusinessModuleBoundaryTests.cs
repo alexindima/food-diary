@@ -89,8 +89,10 @@ public sealed class BusinessModuleBoundaryTests {
             "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
         ];
         string[] forbiddenReferences = [
@@ -107,6 +109,30 @@ public sealed class BusinessModuleBoundaryTests {
                 .Where(entry.line.Contains)
                 .Select(reference => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} references {reference}"))
             .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void MigratedRefreshTokenHandler_DoesNotLoadOrMutateUserAggregate() {
+        string handlerPath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Application",
+            "Authentication",
+            "Commands",
+            "RefreshToken",
+            "RefreshTokenCommandHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+        string[] forbiddenReferences = [
+            "IAuthenticationUserLookupService",
+            "IAuthenticationUserMutationService",
+            "IssueAndStoreAsync",
+            "User? user",
+            "User currentUser",
+        ];
+
+        string[] violations = [.. forbiddenReferences
+            .Where(source.Contains)
+            .Select(reference => $"RefreshTokenCommandHandler references {reference}")];
 
         Assert.Empty(violations);
     }
