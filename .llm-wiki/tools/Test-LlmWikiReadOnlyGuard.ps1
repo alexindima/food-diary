@@ -17,6 +17,21 @@ try {
     if ($message -notlike '*attempted to modify protected files*') { throw "Read-only guard did not reject a protected write. Observed='$message'; sentinelExists=$(Test-Path -LiteralPath $sentinel)" }
     if (Test-Path -LiteralPath $sentinel) { throw 'Read-only guard did not remove a newly created protected file.' }
     if ((Get-Content -LiteralPath $worktreeSentinel -Raw) -cne 'original') { throw 'Read-only guard did not restore a pre-existing dirty worktree file.' }
+
+    $productOnlyPlan = & (Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1') `
+        -ChangedPath 'FoodDiary.Application/Users/Example.cs' `
+        -Plan `
+        -Format Json | ConvertFrom-Json
+    if ($productOnlyPlan.changedPathCount -ne 1 -or @($productOnlyPlan.groups).Count -ne 0) {
+        throw 'Affected smoke plan did not return a stable empty-groups contract for a product-only delta.'
+    }
+    $emptyPlan = & (Join-Path $PSScriptRoot 'Invoke-LlmWikiAffectedSmoke.ps1') `
+        -ChangedPath @() `
+        -Plan `
+        -Format Json | ConvertFrom-Json
+    if ($emptyPlan.changedPathCount -ne 0 -or @($emptyPlan.groups).Count -ne 0) {
+        throw 'Affected smoke plan did not return a stable empty-groups contract for an empty delta.'
+    }
 } finally {
     Remove-Item -LiteralPath $fixtureTool -Force -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $nestedFixtureTool -Force -ErrorAction SilentlyContinue

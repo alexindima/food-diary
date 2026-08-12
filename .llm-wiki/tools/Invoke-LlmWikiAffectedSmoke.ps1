@@ -24,6 +24,10 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
 }
 $paths = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ConvertTo-LlmWikiRepositoryPath $_ } | Sort-Object -Unique)
 if ($paths.Count -eq 0) {
+    if ($Plan -and $Format -eq 'Json') {
+        [pscustomobject][ordered]@{ changedPathCount = 0; groups = @() } | ConvertTo-Json -Depth 3
+        exit 0
+    }
     Write-Host 'Affected tools smoke: no changed paths; nothing to run.'
     exit 0
 }
@@ -84,6 +88,10 @@ foreach ($path in $paths) {
     }
 }
 if ($wikiRelevantPathCount -eq 0) {
+    if ($Plan -and $Format -eq 'Json') {
+        [pscustomobject][ordered]@{ changedPathCount = $paths.Count; groups = @() } | ConvertTo-Json -Depth 3
+        exit 0
+    }
     Write-Host 'Affected tools smoke: no LLM Wiki implementation paths changed; nothing to run.'
     exit 0
 }

@@ -225,18 +225,14 @@
                         "pageSha256":  "7b31e07462b7a226949fca58c200d0330514b3158ce5f905e77bc1d9bda431dd",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-                                            "sha256":  "8d980c4d6e8a270343626b3559f8374d51f0f4a1f476b26359c2bad9874e6c6f"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-                                            "sha256":  "6ef3f2430269576ff23262ef8e324a057035bc76cdcfe29b1e695c36bb3edf76"
+                                            "sha256":  "499b12903b4bd2a153b3ec3150d801dd34f61736c748f7a015eedb15a6e7ad0f"
                                         }
                                     ],
-                        "reason":  "Reviewed nested read-only lock sharing and dirty-worktree preservation; adaptive command semantics are unchanged.",
+                        "reason":  "Reviewed stable empty smoke-plan contract regression for empty and product-only deltas.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
-                        "reviewedAtUtc":  "2026-08-12T11:38:09.4456403Z"
+                        "gitHead":  "d40159f1a5ebc3b2d5f3dcb6df7de39b018e41e6",
+                        "reviewedAtUtc":  "2026-08-12T13:26:30.2573413Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -530,13 +526,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "427ae4ccb8fc8108e5a8342e223003b7c0381fe880a54cc88c3060fc31fadb68"
+                                            "sha256":  "0d3dcbdb652358eeaaab43316d3f6b3d4089f7efd47556a4b6f54812f781f062"
                                         }
                                     ],
-                        "reason":  "Reviewed focused context-feedback smoke routing; full-tools remains the fallback for unknown tooling changes.",
+                        "reason":  "Reviewed JSON plan behavior when no LLM Wiki implementation paths are affected.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "866a5578a309c7615014cab797ce2e9ae9822c39",
-                        "reviewedAtUtc":  "2026-08-12T13:19:42.5462866Z"
+                        "gitHead":  "d40159f1a5ebc3b2d5f3dcb6df7de39b018e41e6",
+                        "reviewedAtUtc":  "2026-08-12T13:26:31.8523115Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
