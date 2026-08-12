@@ -413,9 +413,25 @@
     "Wearables": {
       "role": "aggregate-owner",
       "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [],
-      "sourceMappings": {}
+      "enforcement": "explicit-boundary-tests",
+      "ownedEntities": [
+        "WearableConnection",
+        "WearableSyncEntry"
+      ],
+      "sourceMappings": {
+        "abstractionAreas": [
+          "Wearables"
+        ],
+        "domainAreas": [
+          "Wearables"
+        ],
+        "persistenceAreas": [
+          "Wearables"
+        ],
+        "adapterAreas": [
+          "FoodDiary.Integrations/Wearables"
+        ]
+      }
     },
     "WeeklyCheckIn": {
       "role": "read-composer",

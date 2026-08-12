@@ -3,7 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Wearables.Common;
 
-public interface IWearableReadService {
+internal interface IWearableReadService {
     Task<IReadOnlyList<WearableConnectionModel>> GetConnectionsAsync(
         UserId userId,
         CancellationToken cancellationToken);

@@ -28,6 +28,7 @@ sources:
 - `FoodDiary.Domain/Entities/Wearables`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Wearables`
 - `FoodDiary.Infrastructure/Persistence/Wearables`
+- `FoodDiary.Integrations/Wearables`
 - `FoodDiary.Presentation.Api/Features/Wearables`
 
 ## HTTP Surface
@@ -47,8 +48,8 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 
 - Role: aggregate-owner
 - Physical isolation: folder
-- Architecture guardrails: graph-only
-- Declared owned entities: not yet enumerated
+- Architecture guardrails: explicit-boundary-tests
+- Declared owned entities: WearableConnection, WearableSyncEntry
 - Public contract files: 16
 - Observed external consumer groups: 3
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
@@ -83,6 +84,7 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs`
 
 ## Working Rule

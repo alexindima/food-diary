@@ -55,6 +55,6 @@ are reported separately; `none observed` never means proven isolation.
 | [Tdee](tdee.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |
 | [Usda](usda.md) | adapter | 1 | 2 | 1 | 2 | graph-only |
 | [Users](users.md) | aggregate-owner | 0 | 0 | 0 | 4 | explicit-boundary-tests |
-| [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 3 | graph-only |
+| [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 3 | explicit-boundary-tests |
 | [WeeklyCheckIn](weekly-check-in.md) | read-composer | 2 | 5 | 0 | 1 | graph-only |
 | [WeeklyGoals](weekly-goals.md) | aggregate-owner | 1 | 2 | 0 | 2 | graph-only |

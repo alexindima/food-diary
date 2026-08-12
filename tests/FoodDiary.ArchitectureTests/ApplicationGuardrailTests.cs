@@ -192,7 +192,6 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string commonRoot = Path.Combine(root, "FoodDiary.Application", "Common");
         string[] allowedDirectories = [
-            "Abstractions",
             "Behaviors",
             "Models",
             "Services",

@@ -15,8 +15,6 @@ using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Services;
-using FoodDiary.Application.Wearables.Common;
-using FoodDiary.Application.Wearables.Services;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -49,7 +47,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IAchievementReconciliationHandler, AchievementReconciliationHandler>();
         services.AddScoped<IAchievementDefinitionAdministrationService, AchievementDefinitionAdministrationService>();
         services.AddScoped<IExerciseEntryReadService, ExerciseEntryReadService>();
-        services.AddScoped<IWearableReadService, WearableReadService>();
+        services.AddWearablesModule();
         services.AddScoped<ITdeeUserProfileService, TdeeUserProfileService>();
         services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
         services.AddScoped<IWeeklyCheckInReadService, WeeklyCheckInReadService>();

@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableConnections;
 
-public sealed class GetWearableConnectionsQueryHandler(
+internal sealed class GetWearableConnectionsQueryHandler(
     IWearableReadService wearableReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWearableConnectionsQuery, Result<IReadOnlyList<WearableConnectionModel>>> {

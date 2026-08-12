@@ -3,9 +3,9 @@
     "summary":  {
                     "contracts":  1028,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7100,
+                    "consumerEdges":  7101,
                     "productionConsumerEdges":  4338,
-                    "testConsumerEdges":  2762,
+                    "testConsumerEdges":  2763,
                     "consumedContracts":  1028,
                     "unconsumedContracts":  0
                 },
@@ -91015,7 +91015,7 @@
                                                       "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Wearables.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91070,6 +91070,19 @@
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IWearableReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "IWearableSyncReadModelRepository",

@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4144,
+                    "productionFiles":  4145,
                     "criticalSymbols":  538,
                     "criticalSymbolsWithTestReferences":  509,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -11008,11 +11008,19 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                      "nonBlankLines":  55,
+                      "nonBlankLines":  53,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.1
+                      "structuralRiskScore":  1.06
+                  },
+                  {
+                      "path":  "FoodDiary.Application/DependencyInjection.Wearables.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
@@ -14584,11 +14592,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Wearables/Common/WearableProviderParser.cs",
-                      "nonBlankLines":  9,
+                      "nonBlankLines":  14,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
+                      "structuralRiskScore":  0.28
                   },
                   {
                       "path":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
@@ -37605,10 +37613,11 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
                                 "line":  9,
-                                "testReferenceCount":  2,
+                                "testReferenceCount":  3,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
-                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+                                                       "tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs"
                                                    ]
                             },
                             {
@@ -37616,10 +37625,11 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
                                 "line":  9,
-                                "testReferenceCount":  2,
+                                "testReferenceCount":  3,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
-                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
+                                                       "tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs"
                                                    ]
                             },
                             {

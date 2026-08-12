@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
 
-public sealed class GetWearableDailySummaryQueryHandler(
+internal sealed class GetWearableDailySummaryQueryHandler(
     IWearableReadService wearableReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWearableDailySummaryQuery, Result<WearableDailySummaryModel>> {
