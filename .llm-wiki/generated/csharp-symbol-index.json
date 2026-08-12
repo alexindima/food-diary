@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3129,
-                    "symbols":  3167,
+                    "sourceFiles":  3132,
+                    "symbols":  3169,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1592,
+                                  "class":  1594,
                                   "enum":  49,
                                   "interface":  413,
                                   "record":  1000,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1133,
+                                  "Other":  1135,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -5326,6 +5326,384 @@
                         "line":  6
                     },
                     {
+                        "name":  "DeliverTestNotificationCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeliverTestNotificationCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "MarkAllNotificationsReadCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "MarkAllNotificationsReadCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "MarkNotificationReadCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "MarkNotificationReadCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "RemoveWebPushSubscriptionCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "RemoveWebPushSubscriptionCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "ScheduleTestNotificationCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ScheduleTestNotificationCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "ScheduleTestNotificationCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpdateNotificationPreferencesCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateNotificationPreferencesCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "UpdateNotificationPreferencesCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpsertWebPushSubscriptionCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "UpsertWebPushSubscriptionCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "UpsertWebPushSubscriptionCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "INotificationFeedReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Common/INotificationFeedReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "INotificationPreferencesService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Common/INotificationPreferencesService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "INotificationUserContextService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Common/INotificationUserContextService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IWebPushSubscriptionReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Common/IWebPushSubscriptionReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "NotificationFactory",
+                        "kind":  "class",
+                        "role":  "Factory",
+                        "path":  "FoodDiary.Application.Notifications/Common/NotificationFactory.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "NotificationIdParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Common/NotificationIdParser.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "NotificationPostCommitActions",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Common/NotificationPostCommitActions.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "NotificationPreferencesUpdateResult",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Common/NotificationPreferencesUpdateResult.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "NotificationUserContext",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Common/NotificationUserContext.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "WebPushEndpointHost",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Common/WebPushEndpointHost.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "NotificationMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Mappings/NotificationMappings.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "NotificationModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Models/NotificationModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "NotificationPreferencesModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Models/NotificationPreferencesModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ScheduledNotificationModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Models/ScheduledNotificationModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WebPushConfigurationModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Models/WebPushConfigurationModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WebPushSubscriptionModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Models/WebPushSubscriptionModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetNotificationPreferencesQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetNotificationPreferencesQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetNotificationPreferencesQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetNotificationsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetNotifications/GetNotificationsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetNotificationsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetNotifications/GetNotificationsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetUnreadCountQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetUnreadCount/GetUnreadCountQuery.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "GetUnreadCountQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetUnreadCount/GetUnreadCountQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetWebPushConfigurationQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWebPushConfigurationQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQueryHandler.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "GetWebPushSubscriptionsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWebPushSubscriptionsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "NotificationCleanupService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "NotificationClientRefreshService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "NotificationFeedReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "NotificationPreferencesService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Services/NotificationPreferencesService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "NotificationUserContextService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Services/NotificationUserContextService.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "NotificationWriter",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Services/NotificationWriter.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "TestNotificationDeliveryDispatcher",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Notifications/Services/TestNotificationDeliveryDispatcher.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "WebPushDeliveryAudienceService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "WebPushSubscriptionReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs",
+                        "line":  11
+                    },
+                    {
                         "name":  "AcceptAiConsentCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -6940,7 +7318,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-                        "line":  13
+                        "line":  12
                     },
                     {
                         "name":  "GoogleLoginCommandValidator",
@@ -8368,7 +8746,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                        "line":  14
+                        "line":  10
                     },
                     {
                         "name":  "DependencyInjection",
@@ -9075,7 +9453,7 @@
                         "kind":  "class",
                         "role":  "Factory",
                         "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationFactory.cs",
-                        "line":  6
+                        "line":  5
                     },
                     {
                         "name":  "FastingNotificationPushDispatcher",
@@ -10065,370 +10443,6 @@
                         "line":  10
                     },
                     {
-                        "name":  "DeliverTestNotificationCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeliverTestNotificationCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "MarkAllNotificationsReadCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "MarkAllNotificationsReadCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "MarkNotificationReadCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "MarkNotificationReadCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "RemoveWebPushSubscriptionCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "RemoveWebPushSubscriptionCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "ScheduleTestNotificationCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ScheduleTestNotificationCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "ScheduleTestNotificationCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpdateNotificationPreferencesCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateNotificationPreferencesCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "UpdateNotificationPreferencesCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpsertWebPushSubscriptionCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "UpsertWebPushSubscriptionCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "UpsertWebPushSubscriptionCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "INotificationFeedReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Common/INotificationFeedReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "INotificationPreferencesService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Common/INotificationPreferencesService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "INotificationUserContextService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Common/INotificationUserContextService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IWebPushSubscriptionReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Common/IWebPushSubscriptionReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "NotificationFactory",
-                        "kind":  "class",
-                        "role":  "Factory",
-                        "path":  "FoodDiary.Application/Notifications/Common/NotificationFactory.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "NotificationPostCommitActions",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Common/NotificationPostCommitActions.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "NotificationPreferencesUpdateResult",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Common/NotificationPreferencesUpdateResult.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "NotificationUserContext",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Common/NotificationUserContext.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "WebPushEndpointHost",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Common/WebPushEndpointHost.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "NotificationMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Mappings/NotificationMappings.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "NotificationModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Models/NotificationModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "NotificationPreferencesModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Models/NotificationPreferencesModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ScheduledNotificationModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Models/ScheduledNotificationModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WebPushConfigurationModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Models/WebPushConfigurationModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WebPushSubscriptionModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Models/WebPushSubscriptionModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetNotificationPreferencesQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetNotificationPreferencesQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetNotificationPreferencesQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetNotificationsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetNotifications/GetNotificationsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetNotificationsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetNotifications/GetNotificationsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetUnreadCountQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetUnreadCount/GetUnreadCountQuery.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "GetUnreadCountQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetUnreadCount/GetUnreadCountQueryHandler.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "GetWebPushConfigurationQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWebPushConfigurationQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQueryHandler.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "GetWebPushSubscriptionsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWebPushSubscriptionsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "NotificationCleanupService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Services/NotificationCleanupService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "NotificationClientRefreshService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Services/NotificationClientRefreshService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "NotificationFeedReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Services/NotificationFeedReadService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "NotificationPreferencesService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Services/NotificationPreferencesService.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "NotificationUserContextService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Services/NotificationUserContextService.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "NotificationWriter",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Services/NotificationWriter.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "TestNotificationDeliveryDispatcher",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Notifications/Services/TestNotificationDeliveryDispatcher.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "WebPushDeliveryAudienceService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Services/WebPushDeliveryAudienceService.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "WebPushSubscriptionReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Notifications/Services/WebPushSubscriptionReadService.cs",
-                        "line":  11
-                    },
-                    {
                         "name":  "ManualNutritionLimits",
                         "kind":  "class",
                         "role":  "Other",
@@ -10839,7 +10853,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "CreateRecipeCommentCommandValidator",
@@ -16103,7 +16117,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  334
+                        "line":  336
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16460,7 +16474,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  44
+                        "line":  46
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20247,7 +20261,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  19
+                        "line":  20
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23202,28 +23216,28 @@
                                          "interface":  "INotificationCleanupService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Notifications/Common/INotificationCleanupService.cs",
                                          "implementation":  "NotificationCleanupService",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/NotificationCleanupService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "INotificationClientRefreshService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Notifications/Common/INotificationClientRefreshService.cs",
                                          "implementation":  "NotificationClientRefreshService",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/NotificationClientRefreshService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "INotificationFeedReadService",
-                                         "interfacePath":  "FoodDiary.Application/Notifications/Common/INotificationFeedReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Notifications/Common/INotificationFeedReadService.cs",
                                          "implementation":  "NotificationFeedReadService",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/NotificationFeedReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "INotificationPreferencesService",
-                                         "interfacePath":  "FoodDiary.Application/Notifications/Common/INotificationPreferencesService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Notifications/Common/INotificationPreferencesService.cs",
                                          "implementation":  "NotificationPreferencesService",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/NotificationPreferencesService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/NotificationPreferencesService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23249,9 +23263,9 @@
                                      },
                                      {
                                          "interface":  "INotificationUserContextService",
-                                         "interfacePath":  "FoodDiary.Application/Notifications/Common/INotificationUserContextService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Notifications/Common/INotificationUserContextService.cs",
                                          "implementation":  "NotificationUserContextService",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/NotificationUserContextService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/NotificationUserContextService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23272,7 +23286,7 @@
                                          "interface":  "INotificationWriter",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs",
                                          "implementation":  "NotificationWriter",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/NotificationWriter.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/NotificationWriter.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23545,7 +23559,7 @@
                                          "interface":  "ITestNotificationDeliveryDispatcher",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Notifications/Common/ITestNotificationDeliveryDispatcher.cs",
                                          "implementation":  "TestNotificationDeliveryDispatcher",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/TestNotificationDeliveryDispatcher.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/TestNotificationDeliveryDispatcher.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23769,7 +23783,7 @@
                                          "interface":  "IWebPushDeliveryAudienceService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Notifications/Common/IWebPushDeliveryAudienceService.cs",
                                          "implementation":  "WebPushDeliveryAudienceService",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/WebPushDeliveryAudienceService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23781,9 +23795,9 @@
                                      },
                                      {
                                          "interface":  "IWebPushSubscriptionReadService",
-                                         "interfacePath":  "FoodDiary.Application/Notifications/Common/IWebPushSubscriptionReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Notifications/Common/IWebPushSubscriptionReadService.cs",
                                          "implementation":  "WebPushSubscriptionReadService",
-                                         "implementationPath":  "FoodDiary.Application/Notifications/Services/WebPushSubscriptionReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23941,6 +23955,69 @@
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application.Marketing/DependencyInjection.cs",
                                                  "line":  19
+                                             },
+                                             {
+                                                 "service":  "INotificationCleanupService",
+                                                 "implementation":  "NotificationCleanupService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
+                                                 "service":  "INotificationClientRefreshService",
+                                                 "implementation":  "NotificationClientRefreshService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  18
+                                             },
+                                             {
+                                                 "service":  "INotificationPreferencesService",
+                                                 "implementation":  "NotificationPreferencesService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  21
+                                             },
+                                             {
+                                                 "service":  "INotificationFeedReadService",
+                                                 "implementation":  "NotificationFeedReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  22
+                                             },
+                                             {
+                                                 "service":  "IWebPushSubscriptionReadService",
+                                                 "implementation":  "WebPushSubscriptionReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  23
+                                             },
+                                             {
+                                                 "service":  "IWebPushDeliveryAudienceService",
+                                                 "implementation":  "WebPushDeliveryAudienceService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  26
+                                             },
+                                             {
+                                                 "service":  "INotificationUserContextService",
+                                                 "implementation":  "NotificationUserContextService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  27
+                                             },
+                                             {
+                                                 "service":  "INotificationWriter",
+                                                 "implementation":  "NotificationWriter",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  28
+                                             },
+                                             {
+                                                 "service":  "ITestNotificationDeliveryDispatcher",
+                                                 "implementation":  "TestNotificationDeliveryDispatcher",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "IUserAdministrationMutationService",
@@ -24325,91 +24402,28 @@
                                                  "implementation":  "ImageAssetAccessService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  17
+                                                 "line":  13
                                              },
                                              {
                                                  "service":  "IImageAssetCleanupService",
                                                  "implementation":  "ImageAssetCleanupService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  18
-                                             },
-                                             {
-                                                 "service":  "INotificationCleanupService",
-                                                 "implementation":  "NotificationCleanupService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  19
-                                             },
-                                             {
-                                                 "service":  "INotificationClientRefreshService",
-                                                 "implementation":  "NotificationClientRefreshService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  20
-                                             },
-                                             {
-                                                 "service":  "INotificationPreferencesService",
-                                                 "implementation":  "NotificationPreferencesService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  23
-                                             },
-                                             {
-                                                 "service":  "INotificationFeedReadService",
-                                                 "implementation":  "NotificationFeedReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  24
-                                             },
-                                             {
-                                                 "service":  "IWebPushSubscriptionReadService",
-                                                 "implementation":  "WebPushSubscriptionReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  25
-                                             },
-                                             {
-                                                 "service":  "IWebPushDeliveryAudienceService",
-                                                 "implementation":  "WebPushDeliveryAudienceService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  28
-                                             },
-                                             {
-                                                 "service":  "INotificationUserContextService",
-                                                 "implementation":  "NotificationUserContextService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  29
-                                             },
-                                             {
-                                                 "service":  "INotificationWriter",
-                                                 "implementation":  "NotificationWriter",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  30
-                                             },
-                                             {
-                                                 "service":  "ITestNotificationDeliveryDispatcher",
-                                                 "implementation":  "TestNotificationDeliveryDispatcher",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  31
+                                                 "line":  14
                                              },
                                              {
                                                  "service":  "IOpenAiFoodService",
                                                  "implementation":  "OpenAiFoodService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  32
+                                                 "line":  15
                                              },
                                              {
                                                  "service":  "IEmailSender",
                                                  "implementation":  "EmailSender",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  33
+                                                 "line":  16
                                              },
                                              {
                                                  "service":  "ICycleReadService",
@@ -25207,14 +25221,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  64
+                                                 "line":  66
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  65
+                                                 "line":  67
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25305,7 +25319,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  36
+                                                 "line":  38
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25361,35 +25375,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  30
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  44
+                                                 "line":  46
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  45
+                                                 "line":  47
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  46
+                                                 "line":  48
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  69
+                                                 "line":  71
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

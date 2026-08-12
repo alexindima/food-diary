@@ -27,6 +27,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Billing",
             "FoodDiary.Application.Dietologist",
             "FoodDiary.Application.Marketing",
+            "FoodDiary.Application.Notifications",
             "FoodDiary.Application.Users",
             "FoodDiary.Infrastructure",
             "FoodDiary.Integrations",

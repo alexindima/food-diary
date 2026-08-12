@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
@@ -55,8 +54,10 @@ public sealed class CreateRecipeCommentCommandHandler(
                 IsOwnedByCurrentUser: true));
         }
 
-        Notification notification = NotificationFactory.CreateNewComment(
+        var notification = Notification.Create(
             recipe.UserId,
+            NotificationTypes.NewComment,
+            NotificationPayloads.Empty(),
             recipe.Id.Value.ToString());
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
 

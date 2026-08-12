@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4137,
+                    "productionFiles":  4140,
                     "criticalSymbols":  538,
                     "criticalSymbolsWithTestReferences":  509,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -302,11 +302,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  299,
+                         "nonBlankLines":  301,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  67.48
+                         "structuralRiskScore":  67.52
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
@@ -6631,6 +6631,446 @@
                       "structuralRiskScore":  5.22
                   },
                   {
+                      "path":  "FoodDiary.Application.Notifications/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
+                      "nonBlankLines":  36,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.72
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
+                      "nonBlankLines":  32,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommand.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
+                      "nonBlankLines":  49,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.98
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommand.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
+                      "nonBlankLines":  44,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.88
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
+                      "nonBlankLines":  42,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
+                      "nonBlankLines":  65,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  12.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandValidator.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
+                      "nonBlankLines":  63,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  9.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
+                      "nonBlankLines":  23,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.46
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/INotificationFeedReadService.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/INotificationPreferencesService.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/INotificationUserContextService.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/IWebPushSubscriptionReadService.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/NotificationFactory.cs",
+                      "nonBlankLines":  137,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/NotificationIdParser.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/NotificationPostCommitActions.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/NotificationPreferencesUpdateResult.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/NotificationUserContext.cs",
+                      "nonBlankLines":  3,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.06
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Common/WebPushEndpointHost.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/DependencyInjection.cs",
+                      "nonBlankLines":  29,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.58
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Mappings/NotificationMappings.cs",
+                      "nonBlankLines":  46,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.92
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Models/NotificationModel.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Models/NotificationPreferencesModel.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Models/ScheduledNotificationModel.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Models/WebPushConfigurationModel.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Models/WebPushSubscriptionModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.98
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  7.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetNotifications/GetNotificationsQuery.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetNotifications/GetNotificationsQueryHandler.cs",
+                      "nonBlankLines":  33,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.66
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetUnreadCount/GetUnreadCountQuery.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetUnreadCount/GetUnreadCountQueryHandler.cs",
+                      "nonBlankLines":  30,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.6
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQuery.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQueryHandler.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
+                      "nonBlankLines":  30,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/NotificationCleanupService.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.52
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/NotificationClientRefreshService.cs",
+                      "nonBlankLines":  23,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.96
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/NotificationFeedReadService.cs",
+                      "nonBlankLines":  36,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/NotificationPreferencesService.cs",
+                      "nonBlankLines":  36,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.72
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/NotificationUserContextService.cs",
+                      "nonBlankLines":  16,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.82
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/NotificationWriter.cs",
+                      "nonBlankLines":  16,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.82
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/TestNotificationDeliveryDispatcher.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/WebPushDeliveryAudienceService.cs",
+                      "nonBlankLines":  76,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  12.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Notifications/Services/WebPushSubscriptionReadService.cs",
+                      "nonBlankLines":  47,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.94
+                  },
+                  {
                       "path":  "FoodDiary.Application.Users/AssemblyInfo.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -8488,11 +8928,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-                      "nonBlankLines":  68,
+                      "nonBlankLines":  71,
                       "decisionPoints":  4,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.36
+                      "structuralRiskScore":  9.42
                   },
                   {
                       "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
@@ -10112,11 +10552,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                      "nonBlankLines":  33,
+                      "nonBlankLines":  16,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.66
+                      "structuralRiskScore":  0.32
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
@@ -10928,11 +11368,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationFactory.cs",
-                      "nonBlankLines":  29,
-                      "decisionPoints":  7,
+                      "nonBlankLines":  28,
+                      "decisionPoints":  3,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  11.08
+                      "structuralRiskScore":  5.06
                   },
                   {
                       "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationPushDispatcher.cs",
@@ -12063,422 +12503,6 @@
                       "structuralRiskScore":  5.26
                   },
                   {
-                      "path":  "FoodDiary.Application/Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
-                      "nonBlankLines":  36,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.72
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
-                      "nonBlankLines":  32,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommand.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
-                      "nonBlankLines":  50,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommand.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
-                      "nonBlankLines":  44,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.88
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
-                      "nonBlankLines":  42,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
-                      "nonBlankLines":  65,
-                      "decisionPoints":  6,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  12.3
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandValidator.cs",
-                      "nonBlankLines":  20,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
-                      "nonBlankLines":  63,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
-                      "nonBlankLines":  23,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.46
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/INotificationFeedReadService.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/INotificationPreferencesService.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/INotificationUserContextService.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/IWebPushSubscriptionReadService.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/NotificationFactory.cs",
-                      "nonBlankLines":  137,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/NotificationPostCommitActions.cs",
-                      "nonBlankLines":  17,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/NotificationPreferencesUpdateResult.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/NotificationUserContext.cs",
-                      "nonBlankLines":  3,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.06
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Common/WebPushEndpointHost.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Mappings/NotificationMappings.cs",
-                      "nonBlankLines":  46,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Models/NotificationModel.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Models/NotificationPreferencesModel.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Models/ScheduledNotificationModel.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Models/WebPushConfigurationModel.cs",
-                      "nonBlankLines":  2,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Models/WebPushSubscriptionModel.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
-                      "nonBlankLines":  24,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.98
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetNotifications/GetNotificationsQuery.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetNotifications/GetNotificationsQueryHandler.cs",
-                      "nonBlankLines":  33,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.66
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetUnreadCount/GetUnreadCountQuery.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetUnreadCount/GetUnreadCountQueryHandler.cs",
-                      "nonBlankLines":  30,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.6
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQuery.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQueryHandler.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
-                      "nonBlankLines":  30,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/NotificationCleanupService.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.52
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/NotificationClientRefreshService.cs",
-                      "nonBlankLines":  23,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.96
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/NotificationFeedReadService.cs",
-                      "nonBlankLines":  36,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/NotificationPreferencesService.cs",
-                      "nonBlankLines":  36,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.72
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/NotificationUserContextService.cs",
-                      "nonBlankLines":  16,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.82
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/NotificationWriter.cs",
-                      "nonBlankLines":  16,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.82
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/TestNotificationDeliveryDispatcher.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/WebPushDeliveryAudienceService.cs",
-                      "nonBlankLines":  76,
-                      "decisionPoints":  7,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  12.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Notifications/Services/WebPushSubscriptionReadService.cs",
-                      "nonBlankLines":  47,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.94
-                  },
-                  {
                       "path":  "FoodDiary.Application/Nutrition/Common/ManualNutritionLimits.cs",
                       "nonBlankLines":  7,
                       "decisionPoints":  0,
@@ -12944,11 +12968,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-                      "nonBlankLines":  66,
+                      "nonBlankLines":  67,
                       "decisionPoints":  3,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.82
+                      "structuralRiskScore":  7.84
                   },
                   {
                       "path":  "FoodDiary.Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandValidator.cs",
@@ -14560,11 +14584,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
-                      "nonBlankLines":  57,
+                      "nonBlankLines":  61,
                       "decisionPoints":  9,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  14.64
+                      "structuralRiskScore":  14.72
                   },
                   {
                       "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
@@ -18864,11 +18888,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  299,
+                      "nonBlankLines":  301,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  67.48
+                      "structuralRiskScore":  67.52
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19288,11 +19312,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  37,
+                      "nonBlankLines":  39,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.24
+                      "structuralRiskScore":  2.28
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23632,11 +23656,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  69,
+                      "nonBlankLines":  71,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.38
+                      "structuralRiskScore":  4.42
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34275,7 +34299,7 @@
                                 "name":  "CreateRecipeCommentCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-                                "line":  15,
+                                "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
@@ -34504,7 +34528,7 @@
                             {
                                 "name":  "DeliverTestNotificationCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -34620,7 +34644,7 @@
                                 "name":  "GoogleLoginCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-                                "line":  13,
+                                "line":  12,
                                 "testReferenceCount":  3,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.ExternalLogin.cs",
@@ -34731,7 +34755,7 @@
                             {
                                 "name":  "MarkAllNotificationsReadCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -34762,8 +34786,8 @@
                             {
                                 "name":  "MarkNotificationReadCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
-                                "line":  14,
+                                "path":  "FoodDiary.Application.Notifications/Commands/MarkNotificationRead/MarkNotificationReadCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.ReadCommands.cs"
@@ -34926,7 +34950,7 @@
                             {
                                 "name":  "RemoveWebPushSubscriptionCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/RemoveWebPushSubscription/RemoveWebPushSubscriptionCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -35015,7 +35039,7 @@
                             {
                                 "name":  "ScheduleTestNotificationCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -35313,7 +35337,7 @@
                             {
                                 "name":  "UpdateNotificationPreferencesCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandHandler.cs",
                                 "line":  13,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -35466,7 +35490,7 @@
                             {
                                 "name":  "UpsertWebPushSubscriptionCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37228,7 +37252,7 @@
                             {
                                 "name":  "GetNotificationPreferencesQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37239,7 +37263,7 @@
                             {
                                 "name":  "GetNotificationsQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Notifications/Queries/GetNotifications/GetNotificationsQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Queries/GetNotifications/GetNotificationsQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37451,7 +37475,7 @@
                             {
                                 "name":  "GetUnreadCountQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Notifications/Queries/GetUnreadCount/GetUnreadCountQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Queries/GetUnreadCount/GetUnreadCountQueryHandler.cs",
                                 "line":  8,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37569,7 +37593,7 @@
                             {
                                 "name":  "GetWebPushConfigurationQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushConfiguration/GetWebPushConfigurationQueryHandler.cs",
                                 "line":  7,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37579,7 +37603,7 @@
                             {
                                 "name":  "GetWebPushSubscriptionsQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Notifications/Queries/GetWebPushSubscriptions/GetWebPushSubscriptionsQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38559,7 +38583,7 @@
                             {
                                 "name":  "GetNotificationPreferencesQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  0,
                                 "testReferences":  [
@@ -39106,7 +39130,7 @@
                             {
                                 "name":  "ScheduleTestNotificationCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/ScheduleTestNotification/ScheduleTestNotificationCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39395,7 +39419,7 @@
                             {
                                 "name":  "UpdateNotificationPreferencesCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39519,7 +39543,7 @@
                             {
                                 "name":  "UpsertWebPushSubscriptionCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

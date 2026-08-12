@@ -3,6 +3,7 @@ using System.Globalization;
 using FoodDiary.Application;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.Dietologist;
+using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Users;
 using FoodDiary.Application.Authentication.Common;
@@ -56,6 +57,7 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
 
 builder.Services.AddApplication();
 builder.Services.AddDietologistModule();
+builder.Services.AddNotificationsModule();
 builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();
 builder.Services.AddMarketingModule();

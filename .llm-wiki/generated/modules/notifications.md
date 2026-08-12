@@ -16,15 +16,14 @@ sources:
 
 - Origin: module-graph
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Users
-- Business-module consumers: Authentication, Fasting, RecipeComments, WeeklyGoals
+- Abstraction-contract dependencies: none observed
+- Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Notifications`
-- `FoodDiary.Application/Notifications`
 - `FoodDiary.Domain/Entities/Notifications`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Notifications`
 - `FoodDiary.Infrastructure/Persistence/Notifications`
@@ -56,11 +55,11 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: explicit-boundary-tests
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: Notification, WebPushSubscription, NotificationWebPushOutboxMessage
 - Public contract files: 39
-- Observed external consumer groups: 9
+- Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -116,6 +115,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.WebPush.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/NotificationsModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/NotificationsControllerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Resources.Tests/Notifications/NotificationResourceRendererTests.cs`
 

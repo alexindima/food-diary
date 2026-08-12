@@ -7,6 +7,7 @@ using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Notifications.Services;
+using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Products.Common;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,7 +27,7 @@ public sealed class ApplicationDependencyInjectionTests {
             descriptor.ImplementationFactory is not null &&
             descriptor.Lifetime == ServiceLifetime.Scoped);
         Assert.Contains(services, ServiceDescriptorMatches<IPostCommitActionQueue, PostCommitActionQueue>(ServiceLifetime.Scoped));
-        Assert.Contains(services, ServiceDescriptorMatches<INotificationCleanupService, NotificationCleanupService>(ServiceLifetime.Scoped));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(INotificationCleanupService));
         Assert.Contains(services, ServiceDescriptorMatches<IAuthenticationTokenService, AuthenticationTokenService>(ServiceLifetime.Scoped));
         Assert.Contains(services, descriptor =>
             descriptor.ServiceType == typeof(TimeProvider) &&
@@ -37,6 +38,15 @@ public sealed class ApplicationDependencyInjectionTests {
         Assert.Contains(services, d => d.ImplementationType == typeof(LoggingBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(ValidationBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(CommandTransactionBehavior<,>));
+    }
+
+    [Fact]
+    public void AddNotificationsModule_RegistersNotificationServices() {
+        var services = new ServiceCollection();
+
+        services.AddNotificationsModule();
+
+        Assert.Contains(services, ServiceDescriptorMatches<INotificationCleanupService, NotificationCleanupService>(ServiceLifetime.Scoped));
     }
 
     private static Predicate<ServiceDescriptor> ServiceDescriptorMatches<TService, TImplementation>(ServiceLifetime lifetime) =>

@@ -8,17 +8,21 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
+                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
                                         },
                                         {
                                             "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "a80223456d17bf2e7fa685c8df442da74f19fa60bd44a89e9f31430d65744da0"
+                                            "sha256":  "0636f80fb6fd7637a88979593fc735341be650a6406fb7c1336f568552c7f6e6"
+                                        },
+                                        {
+                                            "path":  "docs/BACKEND_MODULE_MAP.md",
+                                            "sha256":  "975590cae22cfca701ad9a900c8017cd8cd985236e8dce67913aa2df6a9cc57a"
                                         }
                                     ],
-                        "reason":  "Architecture overview now documents Users as the third extracted application module; mail-service architecture and runtime boundaries are unchanged.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:51:43.0252575Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:32.8532790Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -27,13 +31,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "a80223456d17bf2e7fa685c8df442da74f19fa60bd44a89e9f31430d65744da0"
+                                            "sha256":  "0636f80fb6fd7637a88979593fc735341be650a6406fb7c1336f568552c7f6e6"
+                                        },
+                                        {
+                                            "path":  "docs/BACKEND_MODULE_MAP.md",
+                                            "sha256":  "975590cae22cfca701ad9a900c8017cd8cd985236e8dce67913aa2df6a9cc57a"
                                         }
                                     ],
-                        "reason":  "Architecture overview now documents Users as the third extracted application module; mail-service architecture and runtime boundaries are unchanged.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:51:43.2586208Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:33.0132832Z"
                     },
                     {
                         "pageId":  "module.primary-backend",
@@ -42,13 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "2ed3e25c023de5b52ec069d6562c52ed94f0f917ee1ae3f0f88528b0ba610f9e"
+                                            "sha256":  "aa6d761e23d0682dab040feac89558ec3fa940b2f039f3d4981d3ba880b26d0f"
+                                        },
+                                        {
+                                            "path":  "docs/BACKEND_MODULE_MAP.md",
+                                            "sha256":  "975590cae22cfca701ad9a900c8017cd8cd985236e8dce67913aa2df6a9cc57a"
                                         }
                                     ],
-                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
-                        "reviewedAtUtc":  "2026-08-12T21:04:54.4413351Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:33.1510949Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -56,18 +68,30 @@
                         "pageSha256":  "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
                         "sources":  [
                                         {
+                                            "path":  "docs/ARCHITECTURE.md",
+                                            "sha256":  "0636f80fb6fd7637a88979593fc735341be650a6406fb7c1336f568552c7f6e6"
+                                        },
+                                        {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "2ed3e25c023de5b52ec069d6562c52ed94f0f917ee1ae3f0f88528b0ba610f9e"
+                                            "sha256":  "aa6d761e23d0682dab040feac89558ec3fa940b2f039f3d4981d3ba880b26d0f"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "46889177098569713bfa7aadb9e0ab923fe96a562da560c5aa74dd27846808da"
+                                        },
+                                        {
+                                            "path":  "docs/BACKEND_MODULE_MAP.md",
+                                            "sha256":  "975590cae22cfca701ad9a900c8017cd8cd985236e8dce67913aa2df6a9cc57a"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "cef02eee69ed4de78c334d07801792647015180c4d326c99a22b7ade540d7b84"
+                                            "sha256":  "50214bf947b4192a2538575cb77670e4baa302c404ebba99e37d21e710de0574"
                                         }
                                     ],
-                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
-                        "reviewedAtUtc":  "2026-08-12T21:04:54.6270762Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:33.2927315Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -91,13 +115,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
+                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:12.2166060Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:33.4451912Z"
                     },
                     {
                         "pageId":  "system.repository-catalog",
@@ -106,13 +130,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "2ed3e25c023de5b52ec069d6562c52ed94f0f917ee1ae3f0f88528b0ba610f9e"
+                                            "sha256":  "aa6d761e23d0682dab040feac89558ec3fa940b2f039f3d4981d3ba880b26d0f"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "46889177098569713bfa7aadb9e0ab923fe96a562da560c5aa74dd27846808da"
                                         }
                                     ],
-                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
-                        "reviewedAtUtc":  "2026-08-12T21:04:54.7974531Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:33.5907097Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -121,13 +149,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
+                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:13.6816533Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:34.1669172Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -185,28 +213,32 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "51004a05b47b5ca21d3ce05257f1850f69876ac66d61148dbcbbd2a0ae7cfebc"
+                                            "sha256":  "364d21158c193acbb76fb33ccef7066cebf89ea527a5b41ed6bc148a26eca1e3"
+                                        },
+                                        {
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
                                         }
                                     ],
-                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
-                        "reviewedAtUtc":  "2026-08-12T21:04:56.4668011Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:35.2063046Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
                         "pagePath":  ".llm-wiki/workflows/review-diff.md",
-                        "pageSha256":  "fc98ae1eba6a72137dfa02d7b37e13b08738bd2dd7b0408bf971d6f7dda29917",
+                        "pageSha256":  "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2e127c4d90a2de601293eb995f442197e117f68ae45651eb3391e08f9c48ae7d"
+                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:18.6164697Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:35.4702316Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -280,21 +312,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "f1192fa017700de699f95a661bdde711a19203a58555eaa0e555b33274567f8a"
+                                            "sha256":  "74b709a77897f0f5cdb80f8ea486e007f5fb0c4da76590480fa0413690800263"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "2ed3e25c023de5b52ec069d6562c52ed94f0f917ee1ae3f0f88528b0ba610f9e"
+                                            "sha256":  "aa6d761e23d0682dab040feac89558ec3fa940b2f039f3d4981d3ba880b26d0f"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "cef02eee69ed4de78c334d07801792647015180c4d326c99a22b7ade540d7b84"
+                                            "sha256":  "50214bf947b4192a2538575cb77670e4baa302c404ebba99e37d21e710de0574"
                                         }
                                     ],
-                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
-                        "reviewedAtUtc":  "2026-08-12T21:04:54.9770742Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:33.7474881Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -303,13 +335,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "6ead80bd7a0f9431da35a0812497bd9deee976d9b776c64d0adb91cdffc67db1"
+                                            "sha256":  "080de6a63b4a606caa4093bf19058c728db0fe183b0d77f98a9dcd18fc2a16d0"
                                         }
                                     ],
-                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
-                        "reviewedAtUtc":  "2026-08-12T21:04:55.2276043Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:33.9801437Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -743,13 +775,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "e95937b80e5728344bae63a823bc39b0a217b36be30e460a7e2023a385248f27"
+                                            "sha256":  "46889177098569713bfa7aadb9e0ab923fe96a562da560c5aa74dd27846808da"
                                         }
                                     ],
-                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
-                        "reviewedAtUtc":  "2026-08-12T19:59:33.5492355Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:34.4447435Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -811,13 +843,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "1a9f2c29c62ee1a01c73376e6bfbf49f1ed1b2c5d5df8f78b43ece7ea5acb924"
+                                            "sha256":  "5811640795faaca93e1d3f8aa959aeda62bf86f37da7ac7c7d6db52de6047b9c"
                                         }
                                     ],
-                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
-                        "reviewedAtUtc":  "2026-08-12T21:04:55.5295059Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:34.6897370Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -860,13 +892,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "1ac7f74e49158ec48dc0a49f5a4d1ed8657d4126dbb54cb0b6919e38fd1fcb49"
+                                            "sha256":  "ca809649b04a932a5313f33066862ff7e2740914c7741a1ef209a26d8fd90388"
                                         }
                                     ],
-                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
+                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
-                        "reviewedAtUtc":  "2026-08-12T21:04:56.0431563Z"
+                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
+                        "reviewedAtUtc":  "2026-08-12T21:52:34.9450638Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

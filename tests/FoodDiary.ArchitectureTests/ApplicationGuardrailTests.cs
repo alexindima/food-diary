@@ -1206,10 +1206,10 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Lessons", "Commands", "MarkLessonRead", "MarkLessonReadCommandHandler.cs"),
             Path.Combine(applicationRoot, "Lessons", "Queries", "GetLessonById", "GetLessonByIdQueryHandler.cs"),
             Path.Combine(applicationRoot, "Lessons", "Queries", "GetLessons", "GetLessonsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Commands", "UpdateNotificationPreferences", "UpdateNotificationPreferencesCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Queries", "GetNotificationPreferences", "GetNotificationPreferencesQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Queries", "GetNotifications", "GetNotificationsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Queries", "GetUnreadCount", "GetUnreadCountQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Notifications", "Commands", "UpdateNotificationPreferences", "UpdateNotificationPreferencesCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetNotificationPreferences", "GetNotificationPreferencesQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetNotifications", "GetNotificationsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetUnreadCount", "GetUnreadCountQueryHandler.cs"),
             Path.Combine(applicationRoot, "Products", "Queries", "GetRecentProducts", "GetRecentProductsQueryHandler.cs"),
             Path.Combine(applicationRoot, "Recipes", "Queries", "GetRecentRecipes", "GetRecentRecipesQueryHandler.cs"),
             Path.Combine(applicationRoot, "Usda", "Commands", "LinkProductToUsdaFood", "LinkProductToUsdaFoodCommandHandler.cs"),
@@ -2163,7 +2163,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void NotificationQueries_UseReadServicesInsteadOfNotificationAggregates() {
         string root = GetRepositoryRoot();
-        string notificationQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Notifications", "Queries");
+        string notificationQueriesRoot = Path.Combine(root, "FoodDiary.Application.Notifications", "Queries");
         string[] notificationQueryFiles = [.. SourceScanner.SourceFiles(notificationQueriesRoot)];
 
         string[] violations = [
@@ -2210,8 +2210,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Notifications",
+            "FoodDiary.Application.Notifications",
             "Services",
             "WebPushSubscriptionReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -2230,8 +2229,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Notifications",
+            "FoodDiary.Application.Notifications",
             "Services",
             "NotificationFeedReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -3070,7 +3068,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void NotificationsSlice_DoesNotUseCurrentUserAccessPolicyDirectly() {
         string root = GetRepositoryRoot();
-        string notificationsRoot = Path.Combine(root, "FoodDiary.Application", "Notifications");
+        string notificationsRoot = Path.Combine(root, "FoodDiary.Application.Notifications");
         string[] notificationFiles = [.. SourceScanner.SourceFiles(notificationsRoot)];
 
         string[] violations = FindReferencesInFiles(root, notificationFiles, "CurrentUserAccessPolicy");

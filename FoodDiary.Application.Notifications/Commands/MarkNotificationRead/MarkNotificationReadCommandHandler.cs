@@ -3,7 +3,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -28,13 +27,13 @@ public sealed class MarkNotificationReadCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Result<NotificationId> notificationIdResult = RequiredIdParser.Parse(
+        Result<NotificationId> notificationIdResult = NotificationIdParser.Parse(
             command.NotificationId,
             nameof(command.NotificationId),
             "Notification id must not be empty.",
             value => new NotificationId(value));
         if (notificationIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure(notificationIdResult);
+            return NotificationIdParser.ToFailure(notificationIdResult);
         }
 
         NotificationId notificationId = notificationIdResult.Value;

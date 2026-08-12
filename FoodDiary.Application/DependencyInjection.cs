@@ -27,7 +27,7 @@ public static partial class DependencyInjection {
         services.AddIdentityModules();
         services.AddFoodModules();
         services.AddTrackingModules();
-        services.AddNotificationModule();
+        services.AddCommunicationServices();
         services.AddWeeklyGoalModule();
         return services;
     }

@@ -18,6 +18,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Application layer: `FoodDiary.Application/AGENTS.md`
 - Billing application module: `FoodDiary.Application.Billing/AGENTS.md`
 - Marketing application module: `FoodDiary.Application.Marketing/AGENTS.md`
+- Notifications application module: `FoodDiary.Application.Notifications/AGENTS.md`
 - Users application module: `FoodDiary.Application.Users/AGENTS.md`
 - Domain layer: `FoodDiary.Domain/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`

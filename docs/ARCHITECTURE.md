@@ -8,7 +8,10 @@ The primary product backend is a modular monolith:
 - `FoodDiary.Application.Abstractions`
 - `FoodDiary.Application`
 - `FoodDiary.Application.Billing`
+- `FoodDiary.Application.Dietologist`
 - `FoodDiary.Application.Marketing`
+- `FoodDiary.Application.Notifications`
+- `FoodDiary.Application.Users`
 - `FoodDiary.Infrastructure`
 - `FoodDiary.Integrations`
 - `FoodDiary.Presentation.Api`
@@ -77,7 +80,7 @@ Business-module ownership inside the primary backend is defined in `docs/backend
 
 Application service composition follows the same ownership model. Root `FoodDiary.Application/DependencyInjection.cs` contains mediator/validation/cross-cutting bootstrap and delegates registrations for the features that remain in the core assembly to module-area partials (`Administration`, `Identity`, `Food`, `Tracking`, and `Notifications`). Executable composition roots register extracted modules explicitly. Architecture tests prevent feature registrations from regrowing in the root aggregator.
 
-`FoodDiary.Application.Billing`, `FoodDiary.Application.Marketing`, and `FoodDiary.Application.Users` are physically extracted modules. They reference application-facing abstractions, domain where required, and the shared mediator, never the core `FoodDiary.Application` assembly. Shared command/query contracts and the `ITransactionalCommand` marker live in `FoodDiary.Application.Abstractions`, so the core mediator pipeline remains applicable without reversing project dependencies.
+`FoodDiary.Application.Billing`, `FoodDiary.Application.Dietologist`, `FoodDiary.Application.Marketing`, `FoodDiary.Application.Notifications`, and `FoodDiary.Application.Users` are physically extracted modules. They reference application-facing abstractions, domain where required, and the shared mediator, never the core `FoodDiary.Application` assembly. Shared command/query contracts and the `ITransactionalCommand` marker live in `FoodDiary.Application.Abstractions`, so the core mediator pipeline remains applicable without reversing project dependencies.
 
 Application read paths should use the narrowest contract that matches the behavior:
 - `*ReadModelRepository` for projection reads, counters, summaries, and API/UI read models.

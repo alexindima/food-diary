@@ -11,6 +11,7 @@ Use this file when deciding where backend code belongs.
 | Use cases | `FoodDiary.Application` | Commands, queries, handlers, validators, application services | Persistence implementation, HTTP request/response DTOs |
 | Billing use cases | `FoodDiary.Application.Billing` | Billing commands, queries, validators, renewal and webhook orchestration | Core Application dependencies, persistence, HTTP DTOs |
 | Marketing use cases | `FoodDiary.Application.Marketing` | Attribution commands, queries and conversion recording | Core Application dependencies, persistence, HTTP DTOs |
+| Notification use cases | `FoodDiary.Application.Notifications` | Notification feed, preferences, web-push subscription and delivery orchestration | Core Application dependencies, persistence implementations, HTTP DTOs |
 | Persistence/technical implementations | `FoodDiary.Infrastructure` | DbContext, EF mappings, repositories, technical service implementations | HTTP controllers, host startup, external provider orchestration |
 | External adapters | `FoodDiary.Integrations` | Provider clients, provider options, MailRelay/MailInbox client bridges | EF migrations, core domain workflows |
 | HTTP/SignalR transport | `FoodDiary.Presentation.Api` | Controllers, hubs, HTTP requests/responses, presentation mappings | Business logic, infrastructure, host middleware |

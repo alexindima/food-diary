@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Domain.Entities.Notifications;
@@ -70,7 +69,11 @@ public sealed class GoogleLoginCommandHandler(
             return;
         }
 
-        Notification notification = NotificationFactory.CreatePasswordSetupSuggested(principal.UserId, referenceId);
+        var notification = Notification.Create(
+            principal.UserId,
+            NotificationTypes.PasswordSetupSuggested,
+            NotificationPayloads.Empty(),
+            referenceId);
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

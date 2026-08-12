@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  78,
+                    "productionProjectEdges":  85,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
@@ -57,13 +57,6 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "Notifications",
-                               "fanIn":  4,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Recipes",
                                "fanIn":  0,
                                "fanOut":  4,
@@ -81,13 +74,6 @@
                                "module":  "WeightEntries",
                                "fanIn":  4,
                                "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Authentication",
-                               "fanIn":  1,
-                               "fanOut":  2,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -120,6 +106,13 @@
                                "role":  "aggregate-owner"
                            },
                            {
+                               "module":  "Authentication",
+                               "fanIn":  1,
+                               "fanOut":  1,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
                                "module":  "Cycles",
                                "fanIn":  2,
                                "fanOut":  0,
@@ -146,13 +139,6 @@
                                "fanOut":  2,
                                "level":  "informational",
                                "role":  "read-composer"
-                           },
-                           {
-                               "module":  "Fasting",
-                               "fanIn":  1,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Gamification",
@@ -190,13 +176,6 @@
                                "role":  "adapter"
                            },
                            {
-                               "module":  "WeeklyGoals",
-                               "fanIn":  0,
-                               "fanOut":  2,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Ai",
                                "fanIn":  1,
                                "fanOut":  0,
@@ -212,6 +191,13 @@
                            },
                            {
                                "module":  "DailyAdvices",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Fasting",
                                "fanIn":  1,
                                "fanOut":  0,
                                "level":  "informational",
@@ -260,13 +246,6 @@
                                "role":  "adapter"
                            },
                            {
-                               "module":  "RecipeComments",
-                               "fanIn":  0,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "ShoppingLists",
                                "fanIn":  1,
                                "fanOut":  0,
@@ -274,7 +253,28 @@
                                "role":  "aggregate-owner"
                            },
                            {
+                               "module":  "WeeklyGoals",
+                               "fanIn":  0,
+                               "fanOut":  1,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
                                "module":  "Dietologist",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Notifications",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "RecipeComments",
                                "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",
@@ -5658,7 +5658,7 @@
                                                  {
                                                      "name":  "GetNotificationPreferencesQueryValidator",
                                                      "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
+                                                     "path":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

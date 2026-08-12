@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
-using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 
 namespace FoodDiary.Application.WeeklyGoals.Services;
@@ -29,7 +29,11 @@ public sealed class WeeklyGoalReminderProcessor(
             }
 
             await notificationWriter.AddAsync(
-                NotificationFactory.CreateWeeklyGoalReminder(goal.UserId, goal.Id.Value.ToString()),
+                Notification.Create(
+                    goal.UserId,
+                    NotificationTypes.WeeklyGoalReminder,
+                    NotificationPayloads.Empty(),
+                    goal.Id.Value.ToString()),
                 sendWebPush: true,
                 cancellationToken).ConfigureAwait(false);
             goal.MarkReminderSent(localDate, utcNow);

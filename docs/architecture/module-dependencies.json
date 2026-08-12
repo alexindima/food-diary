@@ -4,7 +4,7 @@
   "modules": {
     "Admin": ["Ai", "Authentication", "ContentReports", "Email", "Gamification", "Lessons"],
     "Ai": [],
-    "Authentication": ["Email", "Notifications"],
+    "Authentication": ["Email"],
     "Consumptions": ["Images", "Nutrition"],
     "ContentReports": [],
     "Cycles": [],
@@ -14,7 +14,7 @@
     "Email": [],
     "Exercises": [],
     "Export": ["Consumptions", "Cycles"],
-    "Fasting": ["Notifications"],
+    "Fasting": [],
     "FavoriteMeals": ["Consumptions"],
     "FavoriteProducts": [],
     "FavoriteRecipes": [],
@@ -28,7 +28,7 @@
     "OpenFoodFacts": [],
     "Products": ["FavoriteProducts", "Images", "OpenFoodFacts", "RecentItems", "Usda"],
     "RecentItems": [],
-    "RecipeComments": ["Notifications"],
+    "RecipeComments": [],
     "RecipeLikes": [],
     "Recipes": ["FavoriteRecipes", "Images", "Nutrition", "RecentItems"],
     "ShoppingLists": [],
@@ -39,7 +39,7 @@
     "WaistEntries": [],
     "Wearables": [],
     "WeeklyCheckIn": ["Consumptions", "Hydration", "WaistEntries", "WeightEntries"],
-    "WeeklyGoals": ["Consumptions", "Notifications"],
+    "WeeklyGoals": ["Consumptions"],
     "WeightEntries": []
   },
   "knownCycles": []

@@ -17,7 +17,7 @@ public sealed class BusinessModuleBoundaryTests {
             "services.AddIdentityModules();",
             "services.AddFoodModules();",
             "services.AddTrackingModules();",
-            "services.AddNotificationModule();",
+            "services.AddCommunicationServices();",
         ];
 
         foreach (string expectedModuleCall in expectedModuleCalls) {
@@ -166,7 +166,7 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Fact]
     public void NotificationsModule_DoesNotDependOnUsersAggregateAccess() {
-        string notificationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Notifications");
+        string notificationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Notifications");
         string[] forbiddenReferences = [
             "FoodDiary.Domain.Entities.Users",
             "INotificationUserAccessService",
@@ -239,9 +239,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Common",
         "FoodDiary.Application.Abstractions.Notifications",
         "FoodDiary.Application.Abstractions.Users.Common",
-        "FoodDiary.Application.Common",
         "FoodDiary.Application.Notifications",
-        "FoodDiary.Application.Users.Common",
         "FoodDiary.Application.Abstractions.Users.Models",
     };
 
@@ -376,8 +374,7 @@ public sealed class BusinessModuleBoundaryTests {
     public void NotificationsApplication_DoesNotDependOnUnapprovedApplicationFeatures() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application",
-            "Notifications");
+            "FoodDiary.Application.Notifications");
 
         string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
@@ -412,7 +409,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotAcquireNotificationPersistenceRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string notificationsRoot = Path.Combine(applicationRoot, "Notifications");
+        string notificationsRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.Notifications");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
         string[] forbiddenRepositoryContracts = [
             "INotificationRepository",

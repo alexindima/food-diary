@@ -1,6 +1,7 @@
 using FoodDiary.Application;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.Marketing;
+using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Users;
 using FoodDiary.Infrastructure;
 using FoodDiary.Integrations;
@@ -99,6 +100,7 @@ public sealed class DependencyInjectionTests {
         services.AddUsersModule();
         services.AddBillingModule();
         services.AddMarketingModule();
+        services.AddNotificationsModule();
         services.AddInfrastructure(configuration);
         services.AddIntegrations(configuration);
         services.AddNotificationResources();
