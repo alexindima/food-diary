@@ -610,7 +610,7 @@ $compactBrief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') `
     -Format Json | ConvertFrom-Json
 Assert-Wiki ([bool]$compactBrief.compact) 'Task brief compact mode did not identify its compact response.'
 Assert-Wiki ($null -ne $compactBrief.impactCounts) 'Task brief compact mode omitted impact counts.'
-Assert-Wiki ($null -eq $compactBrief.backendContractImpact) 'Task brief compact mode retained verbose consumer payloads.'
+Assert-Wiki (-not $compactBrief.PSObject.Properties['backendContractImpact'] -or $null -eq $compactBrief.backendContractImpact) 'Task brief compact mode retained verbose consumer payloads.'
 
 $affectedPlan = & (Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1') `
     -AffectedOnly `

@@ -384,13 +384,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:28.4851488Z"
+                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
+                        "reviewedAtUtc":  "2026-08-12T09:51:48.9508679Z"
                     },
                     {
                         "pageId":  "workflow-decision-context",
@@ -413,14 +413,14 @@
                         "pageSha256":  "285b7d0005f1b054eda23538c5f17b3dd44d318411cb12f6e7e4146e9db95db9",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1",
-                                            "sha256":  "ff989c5b3a8524333987e2fabd769b9a102e4765e80f08b1dfc85bcddcdc7e95"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
+                                            "sha256":  "a2d73a8256a9fcbd88556c76d431637daef8d1016024615d0b66438b4dc728d5"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:05.0897836Z"
+                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
+                        "reviewedAtUtc":  "2026-08-12T09:51:49.8572958Z"
                     },
                     {
                         "pageId":  "workflow-developer-experience",
@@ -474,13 +474,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:30.4187149Z"
+                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
+                        "reviewedAtUtc":  "2026-08-12T09:51:50.9282570Z"
                     },
                     {
                         "pageId":  "workflow-impact-simulation",
@@ -594,13 +594,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:32.4184322Z"
+                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
+                        "reviewedAtUtc":  "2026-08-12T09:51:51.9454992Z"
                     },
                     {
                         "pageId":  "workflow-ownership-impact",
@@ -771,13 +771,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:34.3870682Z"
+                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
+                        "reviewedAtUtc":  "2026-08-12T09:51:53.0852656Z"
                     },
                     {
                         "pageId":  "workflow-runtime-impact",
@@ -801,13 +801,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:35.2638787Z"
+                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
+                        "reviewedAtUtc":  "2026-08-12T09:51:54.1517765Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",
@@ -868,18 +868,18 @@
                         "pageSha256":  "d82ff199232ffa58514f61a394d36cad07f3e2d96d7bab4fdaa09be847fce590",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                            "path":  ".llm-wiki/tools/Initialize-LlmWikiTaskWorkspace.ps1",
+                                            "sha256":  "29363c6858c21e523e7b499c3a9b421089b065079b92e38716a86c27b3fa85a1"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "d6149a9d74345df2e01803c392672ce0d7b97cfab2c53c2284815da516838aaa"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:36.3546267Z"
+                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
+                        "reviewedAtUtc":  "2026-08-12T09:51:55.2464113Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",
@@ -922,13 +922,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "a9352cd94ed4c7edcf218ab1751a8206a3dd6e4fc64ff7d419d0673834413f59"
+                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:37.3002635Z"
+                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
+                        "reviewedAtUtc":  "2026-08-12T09:51:56.3337732Z"
                     },
                     {
                         "pageId":  "workflow-verification-telemetry",

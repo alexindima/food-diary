@@ -71,7 +71,7 @@ try {
     & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | Out-Null
     $packet = Get-Content -LiteralPath (Join-Path $temporaryAbsolutePath 'change-packet.json') -Raw | ConvertFrom-Json
 
-    $scopeRoots = if ($PlannedPath.Count -gt 0) { @($PlannedPath) } elseif ($ChangedPath.Count -gt 0) { @($ChangedPath) } else { @($packet.diff.changedPaths) }
+    $scopeRoots = @(if ($PlannedPath.Count -gt 0) { @($PlannedPath) } elseif ($ChangedPath.Count -gt 0) { @($ChangedPath) } else { @($packet.diff.changedPaths) })
     $allowedPatterns = @(if ($AllowedPath.Count -gt 0) {
         @($AllowedPath)
     } else {

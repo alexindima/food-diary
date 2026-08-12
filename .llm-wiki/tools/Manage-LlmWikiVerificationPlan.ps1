@@ -336,7 +336,8 @@ if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
         foreach ($execution in @($result.plan.executions)) { Write-Host " - [$($execution.priority)] $($execution.primaryCheckId) covers $(@($execution.coversCheckIds) -join ', ')" }
         foreach ($decision in @($result.plan.decisions)) { Write-Host "   $($decision.checkId): $($decision.disposition) - $($decision.rationale)" }
     }
-    foreach ($issue in @($result.issues)) { Write-Host " - $issue" }
+    $resultIssues = if ($result.PSObject.Properties['issues']) { @($result.issues) } else { @() }
+    foreach ($issue in $resultIssues) { Write-Host " - $issue" }
 }
 if ($FailOnInvalid -and -not $result.valid) { exit 1 }
 if ($FailOnFailure -and $Action -eq 'run' -and [int]$result.failureCount -gt 0) { exit 1 }

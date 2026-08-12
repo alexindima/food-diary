@@ -9,6 +9,7 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $changes = [System.Collections.Generic.List[object]]::new()
+. (Join-Path $PSScriptRoot 'LlmWikiDependencyManifest.ps1')
 
 function Get-BaseText {
     param([string]$Path)
@@ -51,10 +52,10 @@ foreach ($path in $manifestPaths) {
     $beforePackages = @{}
     $afterPackages = @{}
     if ($file.Extension -in @('.csproj', '.props')) {
-        foreach ($item in ([xml]$beforeText).Project.ItemGroup.PackageReference) {
+        foreach ($item in @(Get-LlmWikiPackageReferences -XmlText $beforeText)) {
             if ($item.Include) { $beforePackages[[string]$item.Include] = [string]$item.Version }
         }
-        foreach ($item in ([xml]$afterText).Project.ItemGroup.PackageReference) {
+        foreach ($item in @(Get-LlmWikiPackageReferences -XmlText $afterText)) {
             if ($item.Include) { $afterPackages[[string]$item.Include] = [string]$item.Version }
         }
         $ecosystem = 'nuget'
@@ -62,8 +63,8 @@ foreach ($path in $manifestPaths) {
         $beforeJson = $beforeText | ConvertFrom-Json
         $afterJson = $afterText | ConvertFrom-Json
         foreach ($group in @('dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies')) {
-            $beforeGroup = $beforeJson.$group
-            $afterGroup = $afterJson.$group
+            $beforeGroup = if ($beforeJson.PSObject.Properties[$group]) { $beforeJson.PSObject.Properties[$group].Value } else { $null }
+            $afterGroup = if ($afterJson.PSObject.Properties[$group]) { $afterJson.PSObject.Properties[$group].Value } else { $null }
             if ($null -ne $beforeGroup) {
                 foreach ($property in @($beforeGroup.PSObject.Properties)) { $beforePackages[$property.Name] = [string]$property.Value }
             }
