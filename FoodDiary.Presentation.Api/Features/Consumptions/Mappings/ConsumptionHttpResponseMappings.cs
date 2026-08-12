@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
 using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;

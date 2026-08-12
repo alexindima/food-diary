@@ -13,6 +13,7 @@ COPY FoodDiary.Application.Billing/*.csproj FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/*.csproj FoodDiary.Application.Marketing/
 COPY FoodDiary.Application.Users/*.csproj FoodDiary.Application.Users/
 COPY FoodDiary.Application.Dietologist/*.csproj FoodDiary.Application.Dietologist/
+COPY FoodDiary.Application.Fasting/*.csproj FoodDiary.Application.Fasting/
 COPY FoodDiary.Application.Notifications/*.csproj FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/*.csproj FoodDiary.Application.BodyMetrics/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
@@ -35,6 +36,7 @@ COPY FoodDiary.Application.Billing/ FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/ FoodDiary.Application.Marketing/
 COPY FoodDiary.Application.Users/ FoodDiary.Application.Users/
 COPY FoodDiary.Application.Dietologist/ FoodDiary.Application.Dietologist/
+COPY FoodDiary.Application.Fasting/ FoodDiary.Application.Fasting/
 COPY FoodDiary.Application.Notifications/ FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/ FoodDiary.Application.BodyMetrics/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/

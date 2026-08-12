@@ -1,8 +1,8 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Models;
-using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 using FoodDiary.Application.Fasting.Queries.GetFastingInsights;

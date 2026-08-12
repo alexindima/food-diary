@@ -1,13 +1,13 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  92,
+                    "productionProjectEdges":  99,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
                     "backendBusinessModules":  40,
-                    "moduleHotspotReviewCandidates":  1,
+                    "moduleHotspotReviewCandidates":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  149,
@@ -38,8 +38,8 @@
                            {
                                "module":  "Dashboard",
                                "fanIn":  0,
-                               "fanOut":  8,
-                               "level":  "review-candidate",
+                               "fanOut":  7,
+                               "level":  "informational",
                                "role":  "read-composer"
                            },
                            {
@@ -176,13 +176,6 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "Fasting",
-                               "fanIn":  1,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "FavoriteMeals",
                                "fanIn":  0,
                                "fanOut":  1,
@@ -254,6 +247,13 @@
                            },
                            {
                                "module":  "Dietologist",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Fasting",
                                "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",

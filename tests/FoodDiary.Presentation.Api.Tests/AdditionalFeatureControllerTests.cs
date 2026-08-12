@@ -7,7 +7,7 @@ using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 using FoodDiary.Application.Fasting.Commands.SkipCyclicDay;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
-using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
 using FoodDiary.Application.Fasting.Queries.GetFastingStats;
 using FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;

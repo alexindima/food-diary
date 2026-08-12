@@ -1,5 +1,5 @@
 using System.Globalization;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;

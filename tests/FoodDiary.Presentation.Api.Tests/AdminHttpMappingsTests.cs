@@ -1,8 +1,8 @@
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Models;
-using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;

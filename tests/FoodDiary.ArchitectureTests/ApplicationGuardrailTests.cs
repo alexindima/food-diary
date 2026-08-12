@@ -193,7 +193,6 @@ public sealed class ApplicationGuardrailTests {
         string commonRoot = Path.Combine(root, "FoodDiary.Application", "Common");
         string[] allowedDirectories = [
             "Behaviors",
-            "Models",
             "Services",
             "Time",
             "Validation",
@@ -422,9 +421,9 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationCommonModels_StayLimitedToSharedApplicationResponsePrimitives() {
+    public void ApplicationAbstractionsCommonModels_StayLimitedToSharedApplicationResponsePrimitives() {
         string root = GetRepositoryRoot();
-        string modelsRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Models");
+        string modelsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Models");
         string[] allowedFiles = [
             "PagedResponse.cs",
         ];
@@ -482,7 +481,7 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
         string[] allowedFiles = [
             Path.Combine(applicationRoot, "Common", "Behaviors", "CommandTransactionBehavior.cs"),
-            Path.Combine(applicationRoot, "Fasting", "Services", "FastingNotificationScheduler.cs"),
+            Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.Fasting", "Services", "FastingNotificationScheduler.cs"),
         ];
         string[] forbiddenPatterns = [
             "CancellationToken.None",
@@ -1931,8 +1930,8 @@ public sealed class ApplicationGuardrailTests {
     public void FastingReadServices_UseFastingReadModelsInsteadOfOccurrenceAggregates() {
         string root = GetRepositoryRoot();
         string[] serviceFiles = [
-            Path.Combine(root, "FoodDiary.Application", "Fasting", "Services", "FastingReadService.cs"),
-            Path.Combine(root, "FoodDiary.Application", "Fasting", "Services", "FastingAnalyticsService.cs"),
+            Path.Combine(root, "FoodDiary.Application.Fasting", "Services", "FastingReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application.Fasting", "Services", "FastingAnalyticsService.cs"),
         ];
 
         string[] violations = [
@@ -2390,7 +2389,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void FastingQueries_UseReadServicesInsteadOfFastingAggregates() {
         string root = GetRepositoryRoot();
-        string fastingQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Fasting", "Queries");
+        string fastingQueriesRoot = Path.Combine(root, "FoodDiary.Application.Fasting", "Queries");
         string[] fastingQueryFiles = [.. SourceScanner.SourceFiles(fastingQueriesRoot)];
 
         string[] violations = [

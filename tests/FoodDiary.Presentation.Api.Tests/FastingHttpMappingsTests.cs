@@ -1,6 +1,6 @@
 using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
-using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
@@ -231,7 +231,7 @@ public sealed class FastingHttpMappingsTests {
                 [
                     new FastingMessageModel("positive", "FASTING.INSIGHTS.POSITIVE_TITLE", "FASTING.INSIGHTS.POSITIVE_BODY", "positive"),
                 ]),
-            new FoodDiary.Application.Common.Models.PagedResponse<FastingSessionModel>(
+            new FoodDiary.Application.Abstractions.Common.Models.PagedResponse<FastingSessionModel>(
                 [],
                 1,
                 10,

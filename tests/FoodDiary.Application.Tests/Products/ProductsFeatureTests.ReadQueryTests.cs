@@ -11,7 +11,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Products.Models;
 using FluentValidation.Results;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Tests.Products;
 

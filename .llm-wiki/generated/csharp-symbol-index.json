@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3137,
-                    "symbols":  3173,
+                    "sourceFiles":  3142,
+                    "symbols":  3176,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1598,
+                                  "class":  1601,
                                   "enum":  49,
                                   "interface":  413,
                                   "record":  1000,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1139,
+                                  "Other":  1142,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -1441,6 +1441,13 @@
                         "line":  8
                     },
                     {
+                        "name":  "PagedResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "DietologistEnumValueParser",
                         "kind":  "class",
                         "role":  "Other",
@@ -2190,6 +2197,13 @@
                         "line":  5
                     },
                     {
+                        "name":  "IFastingReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs",
+                        "line":  5
+                    },
+                    {
                         "name":  "IFastingSessionReadRepository",
                         "kind":  "interface",
                         "role":  "ReadRepository",
@@ -2232,11 +2246,39 @@
                         "line":  2
                     },
                     {
+                        "name":  "IFastingTelemetrySummaryReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingCheckInModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInModel.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "FastingCheckInReadModel",
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInReadModel.cs",
                         "line":  4
+                    },
+                    {
+                        "name":  "FastingInsightsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingInsightsModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "FastingMessageModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingMessageModel.cs",
+                        "line":  2
                     },
                     {
                         "name":  "FastingOccurrenceReadModel",
@@ -2246,11 +2288,46 @@
                         "line":  5
                     },
                     {
+                        "name":  "FastingOverviewModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingOverviewModel.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "FastingPlanReadModel",
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingPlanReadModel.cs",
                         "line":  5
+                    },
+                    {
+                        "name":  "FastingSessionModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingSessionModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "FastingStatsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingStatsModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "FastingTelemetryPresetSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingTelemetryPresetSummaryModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "FastingTelemetrySummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingTelemetrySummaryModel.cs",
+                        "line":  2
                     },
                     {
                         "name":  "FavoriteMealErrors",
@@ -5613,6 +5690,517 @@
                         "line":  8
                     },
                     {
+                        "name":  "EndFastingCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "EndFastingCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "EndFastingCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ExtendActiveFastingCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ExtendActiveFastingCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "ExtendActiveFastingCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "PostponeCyclicDayCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "PostponeCyclicDayCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "PostponeCyclicDayCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "RecordFastingTelemetryCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "RecordFastingTelemetryCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "ReduceActiveFastingTargetCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ReduceActiveFastingTargetCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "ReduceActiveFastingTargetCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "SkipCyclicDayCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "SkipCyclicDayCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "SkipCyclicDayCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "FastingStartFactory",
+                        "kind":  "class",
+                        "role":  "Factory",
+                        "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "StartFastingCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "StartFastingCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "StartFastingCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateCurrentFastingCheckInCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateCurrentFastingCheckInCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "UpdateCurrentFastingCheckInCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "EnumFilterParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Common/EnumFilterParser.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "EnumValueParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Common/EnumValueParser.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "FastingCurrentUserResolver",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Common/FastingCurrentUserResolver.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/DependencyInjection.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "FastingMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Mappings/FastingMappings.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetCurrentFastingQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetCurrentFastingQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetCurrentFastingQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetFastingHistoryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "GetFastingHistoryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "GetFastingHistoryQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetFastingInsightsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetFastingInsightsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetFastingInsightsQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetFastingOverviewQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetFastingOverviewQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "GetFastingOverviewQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetFastingStatsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetFastingStatsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetFastingStatsQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetFastingTelemetrySummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetFastingTelemetrySummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "FastingAlertBuilder",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingAlertBuilder.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "FastingAnalyticsService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "FastingCheckInLookup",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInLookup.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "FastingCheckInReminderPlanner",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInReminderPlanner.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingCheckInSnapshot",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInSnapshot.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "FastingCheckInTimelineBuilder",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInTimelineBuilder.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingCyclicTransitionPlanner",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingCyclicTransitionPlanner.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "FastingEndPolicy",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingEndPolicy.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingHistoricalInsightBuilder",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingHistoricalInsightBuilder.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "FastingHistoryResponseBuilder",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingHistoryResponseBuilder.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "FastingInsightBuilder",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingInsightBuilder.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "FastingIntermittentNotificationPlanner",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingIntermittentNotificationPlanner.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "FastingNotificationCandidate",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationCandidate.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingNotificationCandidatePlanner",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationCandidatePlanner.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "FastingNotificationCreationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationCreationService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingNotificationFactory",
+                        "kind":  "class",
+                        "role":  "Factory",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationFactory.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingNotificationPushDispatcher",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationPushDispatcher.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingNotificationScheduler",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "FastingOccurrenceAnalysis",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingOccurrenceAnalysis.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "FastingOccurrenceAnalysisBuilder",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingOccurrenceAnalysisBuilder.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "FastingStatsCalculator",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingStatsCalculator.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingSymptomCatalog",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingSymptomCatalog.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "FastingTelemetrySummaryReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingTelemetrySummaryReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "FastingWindowNotificationPlan",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/FastingWindowNotificationPlan.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "IFastingAnalyticsService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IFastingNotificationScheduler",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "RecordMarketingAttributionCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -8077,13 +8665,6 @@
                         "line":  9
                     },
                     {
-                        "name":  "PagedResponse",
-                        "kind":  "record",
-                        "role":  "Response",
-                        "path":  "FoodDiary.Application/Common/Models/PagedResponse.cs",
-                        "line":  2
-                    },
-                    {
                         "name":  "PostCommitActionQueue",
                         "kind":  "class",
                         "role":  "Other",
@@ -9138,7 +9719,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                        "line":  24
+                        "line":  22
                     },
                     {
                         "name":  "DependencyInjection",
@@ -9363,566 +9944,6 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Export/Services/ExportDiaryReadService.cs",
                         "line":  8
-                    },
-                    {
-                        "name":  "EndFastingCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Fasting/Commands/EndFasting/EndFastingCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "EndFastingCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "EndFastingCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Commands/EndFasting/EndFastingCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "ExtendActiveFastingCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ExtendActiveFastingCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "ExtendActiveFastingCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "PostponeCyclicDayCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "PostponeCyclicDayCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "PostponeCyclicDayCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "RecordFastingTelemetryCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "RecordFastingTelemetryCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "ReduceActiveFastingTargetCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ReduceActiveFastingTargetCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "ReduceActiveFastingTargetCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "SkipCyclicDayCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "SkipCyclicDayCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "SkipCyclicDayCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "FastingStartFactory",
-                        "kind":  "class",
-                        "role":  "Factory",
-                        "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/FastingStartFactory.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "StartFastingCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "StartFastingCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "StartFastingCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommandValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateCurrentFastingCheckInCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateCurrentFastingCheckInCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "UpdateCurrentFastingCheckInCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "FastingCurrentUserResolver",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Common/FastingCurrentUserResolver.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "IFastingReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Fasting/Common/IFastingReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IFastingTelemetrySummaryReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Fasting/Common/IFastingTelemetrySummaryReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Mappings/FastingMappings.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "FastingCheckInModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Models/FastingCheckInModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FastingInsightsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Models/FastingInsightsModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FastingMessageModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Models/FastingMessageModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FastingOverviewModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Models/FastingOverviewModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "FastingSessionModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Models/FastingSessionModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FastingStatsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Models/FastingStatsModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FastingTelemetryPresetSummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Models/FastingTelemetryPresetSummaryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FastingTelemetrySummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Models/FastingTelemetrySummaryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetCurrentFastingQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetCurrentFastingQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetCurrentFastingQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetFastingHistoryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "GetFastingHistoryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "GetFastingHistoryQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetFastingInsightsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetFastingInsightsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetFastingInsightsQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetFastingOverviewQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetFastingOverviewQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetFastingOverviewQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetFastingStatsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetFastingStatsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetFastingStatsQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetFastingTelemetrySummaryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetFastingTelemetrySummaryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "FastingAlertBuilder",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingAlertBuilder.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingAnalyticsService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingAnalyticsService.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "FastingCheckInLookup",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInLookup.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "FastingCheckInReminderPlanner",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInReminderPlanner.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingCheckInSnapshot",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInSnapshot.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FastingCheckInTimelineBuilder",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInTimelineBuilder.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingCyclicTransitionPlanner",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingCyclicTransitionPlanner.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "FastingEndPolicy",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingEndPolicy.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingHistoricalInsightBuilder",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingHistoricalInsightBuilder.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "FastingHistoryResponseBuilder",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingHistoryResponseBuilder.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "FastingInsightBuilder",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingInsightBuilder.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingIntermittentNotificationPlanner",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingIntermittentNotificationPlanner.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "FastingNotificationCandidate",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationCandidate.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingNotificationCandidatePlanner",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationCandidatePlanner.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "FastingNotificationCreationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationCreationService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingNotificationFactory",
-                        "kind":  "class",
-                        "role":  "Factory",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationFactory.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingNotificationPushDispatcher",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationPushDispatcher.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingNotificationScheduler",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationScheduler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "FastingOccurrenceAnalysis",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingOccurrenceAnalysis.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "FastingOccurrenceAnalysisBuilder",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingOccurrenceAnalysisBuilder.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "FastingReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingReadService.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "FastingStatsCalculator",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingStatsCalculator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "FastingSymptomCatalog",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingSymptomCatalog.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FastingTelemetrySummaryReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingTelemetrySummaryReadService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "FastingWindowNotificationPlan",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/FastingWindowNotificationPlan.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "IFastingAnalyticsService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Fasting/Services/IFastingAnalyticsService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "IFastingNotificationScheduler",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Fasting/Services/IFastingNotificationScheduler.cs",
-                        "line":  2
                     },
                     {
                         "name":  "AddFavoriteMealCommand",
@@ -16145,7 +16166,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  338
+                        "line":  340
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16502,7 +16523,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  48
+                        "line":  50
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20289,7 +20310,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  21
+                        "line":  22
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22878,9 +22899,9 @@
                                      },
                                      {
                                          "interface":  "IFastingAnalyticsService",
-                                         "interfacePath":  "FoodDiary.Application/Fasting/Services/IFastingAnalyticsService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs",
                                          "implementation":  "FastingAnalyticsService",
-                                         "implementationPath":  "FoodDiary.Application/Fasting/Services/FastingAnalyticsService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22892,9 +22913,9 @@
                                      },
                                      {
                                          "interface":  "IFastingNotificationScheduler",
-                                         "interfacePath":  "FoodDiary.Application/Fasting/Services/IFastingNotificationScheduler.cs",
+                                         "interfacePath":  "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs",
                                          "implementation":  "FastingNotificationScheduler",
-                                         "implementationPath":  "FoodDiary.Application/Fasting/Services/FastingNotificationScheduler.cs",
+                                         "implementationPath":  "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22913,9 +22934,9 @@
                                      },
                                      {
                                          "interface":  "IFastingReadService",
-                                         "interfacePath":  "FoodDiary.Application/Fasting/Common/IFastingReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs",
                                          "implementation":  "FastingReadService",
-                                         "implementationPath":  "FoodDiary.Application/Fasting/Services/FastingReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22934,9 +22955,9 @@
                                      },
                                      {
                                          "interface":  "IFastingTelemetrySummaryReadService",
-                                         "interfacePath":  "FoodDiary.Application/Fasting/Common/IFastingTelemetrySummaryReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs",
                                          "implementation":  "FastingTelemetrySummaryReadService",
-                                         "implementationPath":  "FoodDiary.Application/Fasting/Services/FastingTelemetrySummaryReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Fasting/Services/FastingTelemetrySummaryReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23985,6 +24006,34 @@
                                                  "line":  27
                                              },
                                              {
+                                                 "service":  "IFastingAnalyticsService",
+                                                 "implementation":  "FastingAnalyticsService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Fasting/DependencyInjection.cs",
+                                                 "line":  14
+                                             },
+                                             {
+                                                 "service":  "IFastingReadService",
+                                                 "implementation":  "FastingReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Fasting/DependencyInjection.cs",
+                                                 "line":  15
+                                             },
+                                             {
+                                                 "service":  "IFastingTelemetrySummaryReadService",
+                                                 "implementation":  "FastingTelemetrySummaryReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Fasting/DependencyInjection.cs",
+                                                 "line":  16
+                                             },
+                                             {
+                                                 "service":  "IFastingNotificationScheduler",
+                                                 "implementation":  "FastingNotificationScheduler",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Fasting/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
                                                  "service":  "IMarketingAttributionCleanupService",
                                                  "implementation":  "MarketingAttributionCleanupService",
                                                  "lifetime":  "Scoped",
@@ -24472,154 +24521,126 @@
                                                  "implementation":  "CycleReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  27
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "IDashboardStatisticsReadService",
                                                  "implementation":  "MediatorDashboardStatisticsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  28
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IDashboardBodyReadService",
                                                  "implementation":  "RepositoryDashboardBodyReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  29
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IDashboardMealsReadService",
                                                  "implementation":  "MediatorDashboardMealsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  30
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "IDashboardReadService",
                                                  "implementation":  "ComposedDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  31
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "IDashboardUserContextService",
                                                  "implementation":  "DashboardUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  32
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "IDashboardSectionDataLoader",
                                                  "implementation":  "DashboardSectionDataLoader",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  33
-                                             },
-                                             {
-                                                 "service":  "IFastingAnalyticsService",
-                                                 "implementation":  "FastingAnalyticsService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  38
-                                             },
-                                             {
-                                                 "service":  "IFastingReadService",
-                                                 "implementation":  "FastingReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  39
-                                             },
-                                             {
-                                                 "service":  "IFastingTelemetrySummaryReadService",
-                                                 "implementation":  "FastingTelemetrySummaryReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  40
-                                             },
-                                             {
-                                                 "service":  "IFastingNotificationScheduler",
-                                                 "implementation":  "FastingNotificationScheduler",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  41
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "IHydrationEntryReadService",
                                                  "implementation":  "HydrationEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  42
+                                                 "line":  36
                                              },
                                              {
                                                  "service":  "IHydrationGoalService",
                                                  "implementation":  "HydrationGoalService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  43
+                                                 "line":  37
                                              },
                                              {
                                                  "service":  "IGamificationReadService",
                                                  "implementation":  "GamificationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  44
+                                                 "line":  38
                                              },
                                              {
                                                  "service":  "IGamificationUserProfileService",
                                                  "implementation":  "GamificationUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  45
+                                                 "line":  39
                                              },
                                              {
                                                  "service":  "IAchievementAwardService",
                                                  "implementation":  "AchievementAwardService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  46
+                                                 "line":  40
                                              },
                                              {
                                                  "service":  "IAchievementReconciliationHandler",
                                                  "implementation":  "AchievementReconciliationHandler",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  47
+                                                 "line":  41
                                              },
                                              {
                                                  "service":  "IAchievementDefinitionAdministrationService",
                                                  "implementation":  "AchievementDefinitionAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  48
+                                                 "line":  42
                                              },
                                              {
                                                  "service":  "IExerciseEntryReadService",
                                                  "implementation":  "ExerciseEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  49
+                                                 "line":  43
                                              },
                                              {
                                                  "service":  "ITdeeUserProfileService",
                                                  "implementation":  "TdeeUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  51
+                                                 "line":  45
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInUserProfileService",
                                                  "implementation":  "WeeklyCheckInUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  52
+                                                 "line":  46
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInReadService",
                                                  "implementation":  "WeeklyCheckInReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  53
+                                                 "line":  47
                                              },
                                              {
                                                  "service":  "IWearableReadService",
@@ -25249,14 +25270,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  68
+                                                 "line":  70
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  69
+                                                 "line":  71
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25347,7 +25368,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  40
+                                                 "line":  42
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25403,35 +25424,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  32
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  48
+                                                 "line":  50
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  49
+                                                 "line":  51
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  50
+                                                 "line":  52
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  73
+                                                 "line":  75
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

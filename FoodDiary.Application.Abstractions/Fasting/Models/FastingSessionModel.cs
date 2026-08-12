@@ -1,0 +1,28 @@
+namespace FoodDiary.Application.Abstractions.Fasting.Models;
+
+public sealed record FastingSessionModel(
+    Guid Id,
+    DateTime StartedAtUtc,
+    DateTime? EndedAtUtc,
+    int InitialPlannedDurationHours,
+    int AddedDurationHours,
+    int PlannedDurationHours,
+    string Protocol,
+    string PlanType,
+    string OccurrenceKind,
+    int? CyclicFastDays,
+    int? CyclicEatDays,
+    int? CyclicEatDayFastHours,
+    int? CyclicEatDayEatingWindowHours,
+    int? CyclicPhaseDayNumber,
+    int? CyclicPhaseDayTotal,
+    bool IsCompleted,
+    string Status,
+    string? Notes,
+    DateTime? CheckInAtUtc,
+    int? HungerLevel,
+    int? EnergyLevel,
+    int? MoodLevel,
+    IReadOnlyList<string> Symptoms,
+    string? CheckInNotes,
+    IReadOnlyList<FastingCheckInModel> CheckIns);

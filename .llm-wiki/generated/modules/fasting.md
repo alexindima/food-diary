@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Notifications, Users
-- Business-module consumers: Dashboard
-- Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Fasting`
-- `FoodDiary.Application/Fasting`
+- `FoodDiary.Application.Fasting`
 - `FoodDiary.Domain/Entities/Tracking/Fasting`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Tracking`
 - `FoodDiary.Infrastructure/Persistence/Tracking`
@@ -62,18 +63,18 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: explicit-boundary-tests
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: FastingPlan, FastingOccurrence, FastingCheckIn, FastingSession, FastingTelemetryEvent
-- Public contract files: 22
-- Observed external consumer groups: 3
+- Public contract files: 32
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 22
-- Interfaces: 17
-- DTO/read-model/projection types: 3
+- Public contract types: 32
+- Interfaces: 19
+- DTO/read-model/projection types: 11
 - Enums: 0
 - Exported repository-shaped contracts: 17
 - Contracts referencing domain entities: 8
@@ -89,16 +90,25 @@ Source: `FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs`
 - `interface IFastingPlanReadRepository`
 - `interface IFastingPlanRepository`
 - `interface IFastingPlanWriteRepository`
+- `interface IFastingReadService`
 - `interface IFastingSessionReadRepository`
 - `interface IFastingSessionRepository`
 - `interface IFastingSessionWriteRepository`
 - `interface IFastingTelemetryEventReadRepository`
 - `interface IFastingTelemetryEventRepository`
 - `interface IFastingTelemetryEventWriteRepository`
+- `interface IFastingTelemetrySummaryReadService`
+- `record FastingCheckInModel`
 - `record FastingCheckInReadModel`
+- `record FastingInsightsModel`
+- `record FastingMessageModel`
 - `record FastingOccurrenceReadModel`
+- `record FastingOverviewModel`
 - `record FastingPlanReadModel`
+- `record FastingSessionModel`
+- `record FastingStatsModel`
 - `record FastingTelemetryEventRecord`
+- ... 2 more type(s)
 
 ## Focused Tests
 
@@ -116,6 +126,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Fasting/FastingInsightBuilderTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Fasting/FastingNotificationPlannerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/FastingModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/FastingCheckInInvariantTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/FastingOccurrenceInvariantTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/FastingPlanInvariantTests.cs`

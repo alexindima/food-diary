@@ -82,7 +82,7 @@ Fasting exclusively owns mutation of:
 - `FastingSession`;
 - `FastingTelemetryEvent`.
 
-Its repository contracts live under `FoodDiary.Application.Abstractions/Fasting`, domain behavior under `FoodDiary.Domain/Entities/Tracking/Fasting`, application behavior under `FoodDiary.Application/Fasting`, and EF implementations/configuration under Fasting-specific infrastructure folders.
+Its repository and cross-module read contracts live under `FoodDiary.Application.Abstractions/Fasting`, domain behavior under `FoodDiary.Domain/Entities/Tracking/Fasting`, application behavior under `FoodDiary.Application.Fasting`, and EF implementations/configuration under Fasting-specific infrastructure folders.
 
 Other application modules must not acquire Fasting repositories. Infrastructure implementations live under `Persistence/Tracking`, and their EF configurations under `Persistence/Configurations/Tracking`; this placement is enforced by architecture tests.
 

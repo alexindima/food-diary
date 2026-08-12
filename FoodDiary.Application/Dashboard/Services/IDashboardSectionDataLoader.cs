@@ -2,7 +2,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.DailyAdvices.Models;
-using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Tdee.Models;
 
 namespace FoodDiary.Application.Dashboard.Services;

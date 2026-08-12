@@ -1,5 +1,5 @@
 using FoodDiary.Application.FavoriteProducts.Models;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Products.Models;
 

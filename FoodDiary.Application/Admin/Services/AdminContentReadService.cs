@@ -6,7 +6,7 @@ using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Ai.Common;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Application.Email.Common;
 using FoodDiary.Application.Lessons.Common;

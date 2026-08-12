@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Consumptions.Models;
 

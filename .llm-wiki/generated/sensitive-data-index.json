@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  55
+                       "line":  56
                    },
                    {
                        "category":  "credential",
@@ -3547,6 +3547,62 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "FastingOccurrence",
+                       "type":  "FastingPlan,",
+                       "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingOccurrence",
+                       "type":  "FastingPlan,",
+                       "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
+                       "line":  25
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingOccurrence",
+                       "type":  "FastingPlan,",
+                       "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
+                       "line":  28
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingOccurrence",
+                       "type":  "FastingPlan,",
+                       "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
+                       "line":  56
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingOccurrence",
+                       "type":  "FastingPlan,",
+                       "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
+                       "line":  62
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingOccurrence",
+                       "type":  "FastingPlan,",
+                       "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
+                       "line":  84
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CycleStartSequence",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Fasting/Services/FastingCyclicTransitionPlanner.cs",
+                       "line":  103
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCycleDays",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Fasting/Services/FastingCyclicTransitionPlanner.cs",
+                       "line":  103
+                   },
+                   {
+                       "category":  "health",
                        "name":  "FastingPushNotificationsEnabled",
                        "type":  "bool?",
                        "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
@@ -4251,62 +4307,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
                        "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingOccurrence",
-                       "type":  "FastingPlan,",
-                       "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/FastingStartFactory.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingOccurrence",
-                       "type":  "FastingPlan,",
-                       "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/FastingStartFactory.cs",
-                       "line":  25
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingOccurrence",
-                       "type":  "FastingPlan,",
-                       "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/FastingStartFactory.cs",
-                       "line":  28
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingOccurrence",
-                       "type":  "FastingPlan,",
-                       "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/FastingStartFactory.cs",
-                       "line":  56
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingOccurrence",
-                       "type":  "FastingPlan,",
-                       "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/FastingStartFactory.cs",
-                       "line":  62
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingOccurrence",
-                       "type":  "FastingPlan,",
-                       "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/FastingStartFactory.cs",
-                       "line":  84
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleStartSequence",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Fasting/Services/FastingCyclicTransitionPlanner.cs",
-                       "line":  103
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCycleDays",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Fasting/Services/FastingCyclicTransitionPlanner.cs",
-                       "line":  103
                    },
                    {
                        "category":  "health",
@@ -8064,6 +8064,13 @@
                        "category":  "privateContent",
                        "name":  "Notes",
                        "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInReadModel.cs",
                        "line":  13
                    },
@@ -8080,6 +8087,20 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingOccurrenceReadModel.cs",
                        "line":  25
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingSessionModel.cs",
+                       "line":  21
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "CheckInNotes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingSessionModel.cs",
+                       "line":  27
                    },
                    {
                        "category":  "privateContent",
@@ -8234,6 +8255,27 @@
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
                        "line":  37
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "CheckInNotes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInSnapshot.cs",
+                       "line":  9
                    },
                    {
                        "category":  "privateContent",
@@ -8521,48 +8563,6 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
                        "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "CheckInNotes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Fasting/Models/FastingCheckInModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Fasting/Models/FastingSessionModel.cs",
-                       "line":  21
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "CheckInNotes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Fasting/Models/FastingSessionModel.cs",
-                       "line":  27
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInSnapshot.cs",
-                       "line":  9
                    },
                    {
                        "category":  "privateContent",

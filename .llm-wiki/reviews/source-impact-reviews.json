@@ -50,13 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "4d13860e95f5ea9cb258e53a2ffc58bd888629b88d6c8ca66bf62750593ab17e"
+                                            "sha256":  "18614e4f86b9a455ace97b7c5c997260bf29faeb901372c6d39433dd9e9c63ef"
+                                        },
+                                        {
+                                            "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+                                            "sha256":  "63a43cd6d926c459bc01ac0371b8b59c93e9eca2f2d62ef4628b2637f913d52c"
                                         }
                                     ],
-                        "reason":  "Wearables remains a folder module; ownership, internal service visibility, feature-owned DI, absence of root Application.Common dependencies, provider adapter direction, sensitive token handling, extraction readiness, focused tests, architecture tests, and the full solution build were reviewed.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cf19353a3d9241b708522b84400712572da908a0",
-                        "reviewedAtUtc":  "2026-08-12T23:06:51.9852572Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:31.0388165Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -65,13 +69,21 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "4d13860e95f5ea9cb258e53a2ffc58bd888629b88d6c8ca66bf62750593ab17e"
+                                            "sha256":  "18614e4f86b9a455ace97b7c5c997260bf29faeb901372c6d39433dd9e9c63ef"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "ff9c635f16832a94631fb12c5049c7c11cabed1c37290b436f0abc1b0e74027e"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+                                            "sha256":  "db0a9292ca2941df2f040bf4487a1a88617923e9169e502fb0204a21c7063aec"
                                         }
                                     ],
-                        "reason":  "Wearables remains a folder module; ownership, internal service visibility, feature-owned DI, absence of root Application.Common dependencies, provider adapter direction, sensitive token handling, extraction readiness, focused tests, architecture tests, and the full solution build were reviewed.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cf19353a3d9241b708522b84400712572da908a0",
-                        "reviewedAtUtc":  "2026-08-12T23:06:52.1565039Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:31.2544808Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -110,13 +122,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "4d13860e95f5ea9cb258e53a2ffc58bd888629b88d6c8ca66bf62750593ab17e"
+                                            "sha256":  "18614e4f86b9a455ace97b7c5c997260bf29faeb901372c6d39433dd9e9c63ef"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "ff9c635f16832a94631fb12c5049c7c11cabed1c37290b436f0abc1b0e74027e"
                                         }
                                     ],
-                        "reason":  "Wearables remains a folder module; ownership, internal service visibility, feature-owned DI, absence of root Application.Common dependencies, provider adapter direction, sensitive token handling, extraction readiness, focused tests, architecture tests, and the full solution build were reviewed.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cf19353a3d9241b708522b84400712572da908a0",
-                        "reviewedAtUtc":  "2026-08-12T23:06:52.3453115Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:31.4729081Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -189,13 +205,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "c1af7b195ea8baa7741a081f37fe19e23a1482600bc55888d5733959cfd7548c"
+                                            "sha256":  "d3b14aa2e87418df9dc3cc2598ccc31454ae3dab1cbb6d4a3fe3692c623c30c1"
                                         }
                                     ],
-                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
-                        "reviewedAtUtc":  "2026-08-12T22:39:35.2393939Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:33.5008033Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -267,14 +283,22 @@
                         "pageSha256":  "f74e1b06fd3864499e0a28e359f979e552cb8fa51fa0da582148e417a7dfd065",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/generated/architecture-health-index.json",
+                                            "sha256":  "caf2b3df642edb77601ff9cc9f0323f6a011bd45556ca840606fa7c3f7f0f030"
+                                        },
+                                        {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "4d13860e95f5ea9cb258e53a2ffc58bd888629b88d6c8ca66bf62750593ab17e"
+                                            "sha256":  "18614e4f86b9a455ace97b7c5c997260bf29faeb901372c6d39433dd9e9c63ef"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+                                            "sha256":  "db0a9292ca2941df2f040bf4487a1a88617923e9169e502fb0204a21c7063aec"
                                         }
                                     ],
-                        "reason":  "Wearables remains a folder module; ownership, internal service visibility, feature-owned DI, absence of root Application.Common dependencies, provider adapter direction, sensitive token handling, extraction readiness, focused tests, architecture tests, and the full solution build were reviewed.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cf19353a3d9241b708522b84400712572da908a0",
-                        "reviewedAtUtc":  "2026-08-12T23:06:52.5268228Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:31.7184835Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -283,13 +307,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "25d60531aaa378d499d3250e3a871b397b56660ef5f20ee03f873525d77f7df1"
+                                            "sha256":  "8fd4707a990598e8285a92462f7b7d63a5a8c3a50034ed053afcf683df16ff68"
                                         }
                                     ],
-                        "reason":  "Wearables remains a folder module; ownership, internal service visibility, feature-owned DI, absence of root Application.Common dependencies, provider adapter direction, sensitive token handling, extraction readiness, focused tests, architecture tests, and the full solution build were reviewed.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cf19353a3d9241b708522b84400712572da908a0",
-                        "reviewedAtUtc":  "2026-08-12T23:06:52.7888102Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:31.9998724Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -723,13 +747,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "e59a8fbf453a2278bf0fa245bab10c3769acb5e922c3c0845ef0f16e2459e8ae"
+                                            "sha256":  "ff9c635f16832a94631fb12c5049c7c11cabed1c37290b436f0abc1b0e74027e"
                                         }
                                     ],
-                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
-                        "reviewedAtUtc":  "2026-08-12T22:39:34.4273777Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:32.3350591Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -791,13 +815,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "8125eae4a253f208d3a137378f65fe0890c609a978ff13a858783f85d81a73be"
+                                            "sha256":  "c36a871b46f6bba2fc3c1434656e18430e3f3b107007f78eb29381beb971ede3"
                                         }
                                     ],
-                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
-                        "reviewedAtUtc":  "2026-08-12T22:39:34.6523728Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:32.7224703Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -840,13 +864,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "f11a566a8b4ef20799da7e75df973fed94e7b11db937ba2c4b0fc9c0cdd6bc38"
+                                            "sha256":  "2b660d842abf29b3c289f2d47277b44afcf5259bc1b6fbbd5caf9eae3b5dac2b"
                                         }
                                     ],
-                        "reason":  "Wearables remains a folder module; ownership, internal service visibility, feature-owned DI, absence of root Application.Common dependencies, provider adapter direction, sensitive token handling, extraction readiness, focused tests, architecture tests, and the full solution build were reviewed.",
+                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cf19353a3d9241b708522b84400712572da908a0",
-                        "reviewedAtUtc":  "2026-08-12T23:06:53.0976451Z"
+                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
+                        "reviewedAtUtc":  "2026-08-12T23:35:33.1416093Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Models;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.RecipeComments.Common;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;

@@ -4,6 +4,7 @@ using FoodDiary.Application;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.BodyMetrics;
 using FoodDiary.Application.Dietologist;
+using FoodDiary.Application.Fasting;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Users;
@@ -59,6 +60,7 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
 builder.Services.AddApplication();
 builder.Services.AddBodyMetricsModule();
 builder.Services.AddDietologistModule();
+builder.Services.AddFastingModule();
 builder.Services.AddNotificationsModule();
 builder.Services.AddUsersModule();
 builder.Services.AddBillingModule();

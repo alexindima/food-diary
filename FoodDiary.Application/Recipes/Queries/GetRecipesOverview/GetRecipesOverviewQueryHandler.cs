@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.FavoriteRecipes.Common;
 using FoodDiary.Application.FavoriteRecipes.Models;

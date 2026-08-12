@@ -12,7 +12,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Tests.Recipes;
 

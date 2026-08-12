@@ -1,6 +1,6 @@
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
 using FoodDiary.Presentation.Api.Responses;
 

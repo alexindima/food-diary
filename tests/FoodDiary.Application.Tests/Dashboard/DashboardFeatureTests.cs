@@ -10,7 +10,7 @@ using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;

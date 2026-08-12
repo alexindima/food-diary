@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Admin.Common;
 

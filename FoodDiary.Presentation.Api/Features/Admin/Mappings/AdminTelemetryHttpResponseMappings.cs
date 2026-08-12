@@ -1,4 +1,4 @@
-using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;

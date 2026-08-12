@@ -337,8 +337,7 @@ public sealed class BusinessModuleBoundaryTests {
     public void FastingApplication_DoesNotDependOnUnapprovedApplicationFeatures() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application",
-            "Fasting");
+            "FoodDiary.Application.Fasting");
 
         string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
@@ -439,8 +438,7 @@ public sealed class BusinessModuleBoundaryTests {
     public void FastingApplication_DoesNotAcquireNotificationReadModelRepository() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
-            "FoodDiary.Application",
-            "Fasting");
+            "FoodDiary.Application.Fasting");
 
         string[] violations = SourceScanner.FindLinePatternViolations(
             moduleRoot,
@@ -472,7 +470,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotAcquireFastingRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string fastingRoot = Path.Combine(applicationRoot, "Fasting");
+        string fastingRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.Fasting");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
         string[] forbiddenContracts = [
             "IFastingPlanRepository",

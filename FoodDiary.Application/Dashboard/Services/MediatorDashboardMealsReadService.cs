@@ -1,7 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Domain.ValueObjects.Ids;

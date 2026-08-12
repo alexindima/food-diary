@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;

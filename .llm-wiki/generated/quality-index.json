@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4145,
+                    "productionFiles":  4150,
                     "criticalSymbols":  538,
                     "criticalSymbolsWithTestReferences":  509,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -229,12 +229,12 @@
                          "structuralRiskScore":  72.1
                      },
                      {
-                         "path":  "FoodDiary.Application/Fasting/Mappings/FastingMappings.cs",
-                         "nonBlankLines":  209,
+                         "path":  "FoodDiary.Application.Fasting/Mappings/FastingMappings.cs",
+                         "nonBlankLines":  208,
                          "decisionPoints":  45,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  71.68
+                         "structuralRiskScore":  71.66
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/products/lib/list/product-list.facade.ts",
@@ -302,11 +302,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  303,
+                         "nonBlankLines":  305,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  67.56
+                         "structuralRiskScore":  67.6
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
@@ -2175,6 +2175,14 @@
                       "structuralRiskScore":  0.04
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/Common/Validation/DietologistEnumValueParser.cs",
                       "nonBlankLines":  34,
                       "decisionPoints":  3,
@@ -3031,6 +3039,14 @@
                       "structuralRiskScore":  0.18
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Common/IFastingReadService.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/Fasting/Common/IFastingSessionReadRepository.cs",
                       "nonBlankLines":  10,
                       "decisionPoints":  0,
@@ -3079,12 +3095,44 @@
                       "structuralRiskScore":  0.08
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Common/IFastingTelemetrySummaryReadService.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingCheckInReadModel.cs",
                       "nonBlankLines":  11,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingInsightsModel.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingMessageModel.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingOccurrenceReadModel.cs",
@@ -3095,12 +3143,52 @@
                       "structuralRiskScore":  0.5
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingOverviewModel.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingPlanReadModel.cs",
                       "nonBlankLines":  21,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingSessionModel.cs",
+                      "nonBlankLines":  27,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.54
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingStatsModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingTelemetryPresetSummaryModel.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Fasting/Models/FastingTelemetrySummaryModel.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Common/FavoriteMealErrors.cs",
@@ -6967,6 +7055,606 @@
                       "structuralRiskScore":  0.42
                   },
                   {
+                      "path":  "FoodDiary.Application.Fasting/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
+                      "nonBlankLines":  42,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.84
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+                      "nonBlankLines":  50,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  13.5
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+                      "nonBlankLines":  55,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  13.6
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
+                      "nonBlankLines":  80,
+                      "decisionPoints":  12,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  21.6
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+                      "nonBlankLines":  58,
+                      "decisionPoints":  9,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  16.66
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+                      "nonBlankLines":  52,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  12.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
+                      "nonBlankLines":  113,
+                      "decisionPoints":  17,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  27.76
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
+                      "nonBlankLines":  41,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandValidator.cs",
+                      "nonBlankLines":  22,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.94
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+                      "nonBlankLines":  57,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.64
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
+                      "nonBlankLines":  43,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Common/EnumFilterParser.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.66
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Common/EnumValueParser.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Common/FastingCurrentUserResolver.cs",
+                      "nonBlankLines":  22,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.44
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/DependencyInjection.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/GlobalUsings.cs",
+                      "nonBlankLines":  1,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Mappings/FastingMappings.cs",
+                      "nonBlankLines":  208,
+                      "decisionPoints":  45,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  71.66
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.98
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+                      "nonBlankLines":  35,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.98
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.92
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
+                      "nonBlankLines":  27,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingAlertBuilder.cs",
+                      "nonBlankLines":  64,
+                      "decisionPoints":  13,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  20.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingAnalyticsService.cs",
+                      "nonBlankLines":  81,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.62
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInLookup.cs",
+                      "nonBlankLines":  16,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInReminderPlanner.cs",
+                      "nonBlankLines":  29,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInSnapshot.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingCheckInTimelineBuilder.cs",
+                      "nonBlankLines":  67,
+                      "decisionPoints":  10,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  16.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingCyclicTransitionPlanner.cs",
+                      "nonBlankLines":  95,
+                      "decisionPoints":  10,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  16.9
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingEndPolicy.cs",
+                      "nonBlankLines":  27,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingHistoricalInsightBuilder.cs",
+                      "nonBlankLines":  81,
+                      "decisionPoints":  12,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  19.62
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingHistoryResponseBuilder.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingInsightBuilder.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingIntermittentNotificationPlanner.cs",
+                      "nonBlankLines":  57,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  11.64
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationCandidate.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationCandidatePlanner.cs",
+                      "nonBlankLines":  52,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.54
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationCreationService.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.92
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationFactory.cs",
+                      "nonBlankLines":  28,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.06
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationPushDispatcher.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingNotificationScheduler.cs",
+                      "nonBlankLines":  69,
+                      "decisionPoints":  10,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  16.38
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingOccurrenceAnalysis.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingOccurrenceAnalysisBuilder.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingReadService.cs",
+                      "nonBlankLines":  62,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.74
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingStatsCalculator.cs",
+                      "nonBlankLines":  63,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  11.76
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingSymptomCatalog.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingTelemetrySummaryReadService.cs",
+                      "nonBlankLines":  64,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/FastingWindowNotificationPlan.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/IFastingAnalyticsService.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Fasting/Services/IFastingNotificationScheduler.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
                       "path":  "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
                       "nonBlankLines":  18,
                       "decisionPoints":  0,
@@ -9807,14 +10495,6 @@
                       "structuralRiskScore":  11.76
                   },
                   {
-                      "path":  "FoodDiary.Application/Common/Models/PagedResponse.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
                       "path":  "FoodDiary.Application/Common/Services/PostCommitActionQueue.cs",
                       "nonBlankLines":  54,
                       "decisionPoints":  4,
@@ -11008,11 +11688,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                      "nonBlankLines":  53,
+                      "nonBlankLines":  47,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.06
+                      "structuralRiskScore":  0.94
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Wearables.cs",
@@ -11277,646 +11957,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  1.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/EndFasting/EndFastingCommand.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
-                      "nonBlankLines":  43,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.86
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/EndFasting/EndFastingCommandValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
-                      "nonBlankLines":  51,
-                      "decisionPoints":  7,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  13.52
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
-                      "nonBlankLines":  15,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommand.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-                      "nonBlankLines":  56,
-                      "decisionPoints":  7,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  13.62
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommand.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
-                      "nonBlankLines":  81,
-                      "decisionPoints":  12,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  21.62
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
-                      "nonBlankLines":  59,
-                      "decisionPoints":  9,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  16.68
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
-                      "nonBlankLines":  15,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommand.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-                      "nonBlankLines":  53,
-                      "decisionPoints":  6,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  12.06
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/FastingStartFactory.cs",
-                      "nonBlankLines":  113,
-                      "decisionPoints":  17,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  27.76
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
-                      "nonBlankLines":  42,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommandValidator.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.94
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommand.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
-                      "nonBlankLines":  58,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.66
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
-                      "nonBlankLines":  43,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Common/FastingCurrentUserResolver.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.44
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Common/IFastingReadService.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Common/IFastingTelemetrySummaryReadService.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Mappings/FastingMappings.cs",
-                      "nonBlankLines":  209,
-                      "decisionPoints":  45,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  71.68
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Models/FastingCheckInModel.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Models/FastingInsightsModel.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Models/FastingMessageModel.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Models/FastingOverviewModel.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Models/FastingSessionModel.cs",
-                      "nonBlankLines":  27,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.54
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Models/FastingStatsModel.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Models/FastingTelemetryPresetSummaryModel.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Models/FastingTelemetrySummaryModel.cs",
-                      "nonBlankLines":  17,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-                      "nonBlankLines":  25,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQuery.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
-                      "nonBlankLines":  35,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQuery.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-                      "nonBlankLines":  25,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQuery.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.94
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQuery.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
-                      "nonBlankLines":  27,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQuery.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingAlertBuilder.cs",
-                      "nonBlankLines":  65,
-                      "decisionPoints":  13,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  20.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingAnalyticsService.cs",
-                      "nonBlankLines":  83,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.66
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInLookup.cs",
-                      "nonBlankLines":  16,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.32
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInReminderPlanner.cs",
-                      "nonBlankLines":  29,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInSnapshot.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingCheckInTimelineBuilder.cs",
-                      "nonBlankLines":  67,
-                      "decisionPoints":  10,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  16.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingCyclicTransitionPlanner.cs",
-                      "nonBlankLines":  95,
-                      "decisionPoints":  10,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  16.9
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingEndPolicy.cs",
-                      "nonBlankLines":  27,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingHistoricalInsightBuilder.cs",
-                      "nonBlankLines":  81,
-                      "decisionPoints":  12,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  19.62
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingHistoryResponseBuilder.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.44
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingInsightBuilder.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingIntermittentNotificationPlanner.cs",
-                      "nonBlankLines":  57,
-                      "decisionPoints":  7,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  11.64
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationCandidate.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationCandidatePlanner.cs",
-                      "nonBlankLines":  52,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.54
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationCreationService.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationFactory.cs",
-                      "nonBlankLines":  28,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.06
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationPushDispatcher.cs",
-                      "nonBlankLines":  15,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingNotificationScheduler.cs",
-                      "nonBlankLines":  70,
-                      "decisionPoints":  10,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  16.4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingOccurrenceAnalysis.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingOccurrenceAnalysisBuilder.cs",
-                      "nonBlankLines":  15,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.3
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingReadService.cs",
-                      "nonBlankLines":  65,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingStatsCalculator.cs",
-                      "nonBlankLines":  64,
-                      "decisionPoints":  7,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  11.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingSymptomCatalog.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingTelemetrySummaryReadService.cs",
-                      "nonBlankLines":  66,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.82
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/FastingWindowNotificationPlan.cs",
-                      "nonBlankLines":  2,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/IFastingAnalyticsService.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Fasting/Services/IFastingNotificationScheduler.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
                   },
                   {
                       "path":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
@@ -18928,11 +18968,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  303,
+                      "nonBlankLines":  305,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  67.56
+                      "structuralRiskScore":  67.6
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19352,11 +19392,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  41,
+                      "nonBlankLines":  43,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.32
+                      "structuralRiskScore":  2.36
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23696,11 +23736,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  73,
+                      "nonBlankLines":  75,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.46
+                      "structuralRiskScore":  4.5
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34632,8 +34672,8 @@
                             {
                                 "name":  "EndFastingCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
-                                "line":  14,
+                                "path":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.End.cs"
@@ -34652,8 +34692,8 @@
                             {
                                 "name":  "ExtendActiveFastingCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
-                                "line":  14,
+                                "path":  "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
@@ -34857,8 +34897,8 @@
                             {
                                 "name":  "PostponeCyclicDayCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
-                                "line":  14,
+                                "path":  "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs"
@@ -34898,8 +34938,8 @@
                             {
                                 "name":  "RecordFastingTelemetryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
-                                "line":  8,
+                                "path":  "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
+                                "line":  7,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs"
@@ -34918,8 +34958,8 @@
                             {
                                 "name":  "ReduceActiveFastingTargetCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
-                                "line":  14,
+                                "path":  "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
@@ -35141,8 +35181,8 @@
                             {
                                 "name":  "SkipCyclicDayCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
-                                "line":  14,
+                                "path":  "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Cyclic.cs"
@@ -35162,8 +35202,8 @@
                             {
                                 "name":  "StartFastingCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
-                                "line":  13,
+                                "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandHandler.cs",
+                                "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Start.cs"
@@ -35292,8 +35332,8 @@
                             {
                                 "name":  "UpdateCurrentFastingCheckInCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
-                                "line":  13,
+                                "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+                                "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Adjustments.cs"
@@ -36842,8 +36882,8 @@
                             {
                                 "name":  "GetCurrentFastingQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
-                                "line":  9,
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryHandler.cs",
+                                "line":  8,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
@@ -36951,7 +36991,7 @@
                             {
                                 "name":  "GetFastingHistoryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryHandler.cs",
                                 "line":  10,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -36961,8 +37001,8 @@
                             {
                                 "name":  "GetFastingInsightsQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
-                                "line":  9,
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryHandler.cs",
+                                "line":  8,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
@@ -36971,8 +37011,8 @@
                             {
                                 "name":  "GetFastingOverviewQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
-                                "line":  9,
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryHandler.cs",
+                                "line":  8,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Fasting/FastingFeatureTests.Queries.cs"
@@ -36981,7 +37021,7 @@
                             {
                                 "name":  "GetFastingStatsQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -36991,8 +37031,8 @@
                             {
                                 "name":  "GetFastingTelemetrySummaryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
-                                "line":  7,
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingTelemetrySummary/GetFastingTelemetrySummaryQueryHandler.cs",
+                                "line":  6,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Presentation.Api.Tests/FastingTelemetrySummaryServiceTests.cs"
@@ -38278,7 +38318,7 @@
                             {
                                 "name":  "EndFastingCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Commands/EndFasting/EndFastingCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38328,7 +38368,7 @@
                             {
                                 "name":  "ExtendActiveFastingCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Commands/ExtendActiveFasting/ExtendActiveFastingCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38389,7 +38429,7 @@
                             {
                                 "name":  "GetCurrentFastingQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38473,7 +38513,7 @@
                             {
                                 "name":  "GetFastingHistoryQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingHistory/GetFastingHistoryQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38483,7 +38523,7 @@
                             {
                                 "name":  "GetFastingInsightsQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingInsights/GetFastingInsightsQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38493,7 +38533,7 @@
                             {
                                 "name":  "GetFastingOverviewQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingOverview/GetFastingOverviewQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38503,7 +38543,7 @@
                             {
                                 "name":  "GetFastingStatsQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Queries/GetFastingStats/GetFastingStatsQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39011,7 +39051,7 @@
                             {
                                 "name":  "PostponeCyclicDayCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Commands/PostponeCyclicDay/PostponeCyclicDayCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39081,7 +39121,7 @@
                             {
                                 "name":  "ReduceActiveFastingTargetCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Commands/ReduceActiveFastingTarget/ReduceActiveFastingTargetCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39272,7 +39312,7 @@
                             {
                                 "name":  "SkipCyclicDayCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Commands/SkipCyclicDay/SkipCyclicDayCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39292,7 +39332,7 @@
                             {
                                 "name":  "StartFastingCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommandValidator.cs",
                                 "line":  6,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39400,7 +39440,7 @@
                             {
                                 "name":  "UpdateCurrentFastingCheckInCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

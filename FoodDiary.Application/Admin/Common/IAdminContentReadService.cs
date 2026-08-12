@@ -1,5 +1,5 @@
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Common;

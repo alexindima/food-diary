@@ -7,8 +7,6 @@ using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Exercises.Services;
-using FoodDiary.Application.Fasting.Common;
-using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Application.Hydration.Common;
@@ -35,10 +33,6 @@ public static partial class DependencyInjection {
             new DashboardSnapshotBuilder(
                 serviceProvider.GetRequiredService<IDashboardSectionDataLoader>(),
                 serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>()));
-        services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();
-        services.AddScoped<IFastingReadService, FastingReadService>();
-        services.AddScoped<IFastingTelemetrySummaryReadService, FastingTelemetrySummaryReadService>();
-        services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
         services.AddScoped<IHydrationEntryReadService, HydrationEntryReadService>();
         services.AddScoped<IHydrationGoalService, HydrationGoalService>();
         services.AddScoped<IGamificationReadService, GamificationReadService>();

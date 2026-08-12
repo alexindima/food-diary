@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 34 folder modules and 6 extracted application modules.
+This index unifies 33 folder modules and 7 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
@@ -27,12 +27,12 @@ are reported separately; `none observed` never means proven isolation.
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 2 | 1 | graph-only |
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
-| [Dashboard](dashboard.md) | read-composer | 8 | 6 | 0 | 1 | explicit-boundary-tests |
+| [Dashboard](dashboard.md) | read-composer | 7 | 7 | 0 | 1 | explicit-boundary-tests |
 | [Dietologist](dietologist.md) | aggregate-owner | 0 | 0 | 0 | 4 | project-reference-matrix |
 | [Email](email.md) | aggregate-owner | 0 | 1 | 2 | 2 | graph-only |
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
 | [Export](export.md) | read-composer | 2 | 2 | 0 | 2 | graph-only |
-| [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 1 | 2 | explicit-boundary-tests |
+| [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
 | [FavoriteMeals](favorite-meals.md) | aggregate-owner | 1 | 1 | 0 | 1 | graph-only |
 | [FavoriteProducts](favorite-products.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |
 | [FavoriteRecipes](favorite-recipes.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |

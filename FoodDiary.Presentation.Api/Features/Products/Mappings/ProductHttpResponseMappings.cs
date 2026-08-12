@@ -1,4 +1,4 @@
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Mappings;
 using FoodDiary.Presentation.Api.Features.Products.Responses;

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 34,
-    "extractedModules": 6,
+    "folderModules": 33,
+    "extractedModules": 7,
     "totalModules": 40
   },
   "analysis": {
@@ -180,8 +180,8 @@
     },
     "Fasting": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "explicit-boundary-tests",
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "FastingPlan",
         "FastingOccurrence",
@@ -190,6 +190,9 @@
         "FastingTelemetryEvent"
       ],
       "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Fasting"
+        ],
         "abstractionAreas": [
           "Fasting"
         ],

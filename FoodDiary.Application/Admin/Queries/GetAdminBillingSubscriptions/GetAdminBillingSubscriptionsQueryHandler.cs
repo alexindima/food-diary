@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 

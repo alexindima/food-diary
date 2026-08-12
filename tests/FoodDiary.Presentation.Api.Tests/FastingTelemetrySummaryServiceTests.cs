@@ -2,7 +2,7 @@ using System.Text.Json;
 using FoodDiary.Results;
 using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;

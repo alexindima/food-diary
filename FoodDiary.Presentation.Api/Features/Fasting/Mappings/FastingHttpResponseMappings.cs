@@ -1,5 +1,5 @@
-using FoodDiary.Application.Fasting.Models;
-using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Abstractions.Fasting.Models;
+using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Presentation.Api.Features.Fasting.Responses;
 using FoodDiary.Presentation.Api.Responses;
 

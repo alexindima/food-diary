@@ -15,8 +15,8 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Consumptions, Cycles, DailyAdvices, Exercises, Fasting, Hydration, Statistics, Tdee
-- Abstraction-contract dependencies: Audit, Authentication, Dietologist, Users, WaistEntries, WeightEntries
+- Business-module dependencies: Consumptions, Cycles, DailyAdvices, Exercises, Hydration, Statistics, Tdee
+- Abstraction-contract dependencies: Audit, Authentication, Dietologist, Fasting, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Presentation.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.

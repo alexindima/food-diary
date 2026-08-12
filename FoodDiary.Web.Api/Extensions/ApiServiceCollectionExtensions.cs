@@ -2,6 +2,7 @@ using FoodDiary.Application;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.BodyMetrics;
 using FoodDiary.Application.Dietologist;
+using FoodDiary.Application.Fasting;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Users;
@@ -39,6 +40,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddApplication()
                 .AddBodyMetricsModule()
                 .AddDietologistModule()
+                .AddFastingModule()
                 .AddNotificationsModule()
                 .AddUsersModule()
                 .AddBillingModule()
