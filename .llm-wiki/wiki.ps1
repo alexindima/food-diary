@@ -3,7 +3,7 @@ param(
     [Parameter(Position = 0)]
     [ValidateSet(
         'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
-        'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
+        'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
@@ -813,6 +813,10 @@ switch ($Command) {
         $contractName = if (-not [string]::IsNullOrWhiteSpace($Query)) { $Query } elseif (-not [string]::IsNullOrWhiteSpace($Objective)) { $Objective } else { $null }
         if (-not $contractName) { throw 'contract-consumers requires -Query <contract type>.' }
         Invoke-WikiTool 'Get-LlmWikiContractConsumers.ps1' @{ Contract = $contractName; Format = $Format }
+    }
+    'extraction' {
+        if ([string]::IsNullOrWhiteSpace($Module)) { throw 'extraction requires -Module <module name>.' }
+        Invoke-WikiTool 'Get-LlmWikiExtractionReadiness.ps1' @{ Module = $Module; Format = $Format }
     }
     { $_ -in @('phase-status', 'phase-next', 'phase-complete') } {
         $phaseAction = @{ 'phase-status' = 'status'; 'phase-next' = 'next'; 'phase-complete' = 'complete' }[$Command]
@@ -2024,7 +2028,8 @@ switch ($Command) {
         $impact = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') @impactArguments | ConvertFrom-Json
         $pending = @($impact.impacts | Where-Object { -not $_.Reviewed -and [string]::IsNullOrWhiteSpace([string]$_.GeneratedBy) })
         $protected = @($pending | Where-Object { $_.Id -match '(?i)privacy|security|architecture|decision' -or $_.Path -match '(?i)privacy|security|architecture|adr' })
-        $safe = @($pending | Where-Object { $_.Id -notin @($protected.Id) })
+        $protectedIds = @($protected | ForEach-Object { if ($_.PSObject.Properties['Id']) { $_.Id } })
+        $safe = @($pending | Where-Object { $_.PSObject.Properties['Id'] -and $_.Id -notin $protectedIds })
         foreach ($item in $pending) { Write-Host " - $($item.Id): $($item.Path) <- $($item.ChangedSources -join ', ')" }
         foreach ($item in $safe) {
             $reviewArguments = @{ Id = [string]$item.Id; Reason = $Reason; BaseRef = $BaseRef }
@@ -2493,6 +2498,7 @@ switch ($Command) {
         Write-Host "  ./.llm-wiki/wiki.ps1 ui-finalize [-ChangedPath <accumulated-ui-path[]>]"
         Write-Host "  ./.llm-wiki/wiki.ps1 next|status [-WorkspacePath <task>] [-Intent '<new task>']"
         Write-Host "  ./.llm-wiki/wiki.ps1 research -Intent '<task>' [-Query '<compatible alias>'] [-ResearchPurpose Assessment|Implementation] [-PlannedPath 'path/one','path/two']"
+        Write-Host "  ./.llm-wiki/wiki.ps1 extraction -Module Users  # contract and boundary-wide aggregate readiness"
         Write-Host "  ./.llm-wiki/wiki.ps1 integration-scan -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 precedents -Intent '<task>' [-PlannedPath 'path/one','path/two']"
         Write-Host "  ./.llm-wiki/wiki.ps1 solutions -Intent '<task>' [-Option '<option one>','<option two>'] [-BoundaryEvidence '<current-source proof>']"

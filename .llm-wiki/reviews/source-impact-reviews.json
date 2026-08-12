@@ -234,25 +234,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "8a047052cf04d6726b7b4d67d91163466894ab288eec9807712abe4b24c03636"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-                                            "sha256":  "eeab70cbfc34946c94ef1a9265a975ef8a7d6d669b2152f798a780c1c34aacf1"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1",
-                                            "sha256":  "95e8e3a35d903eb58eaa50073eabc16ef64f3acd163343bb06c053f5df723657"
+                                            "sha256":  "c0d09e427cc1bbb7a2c5393760c2883aa9cfcfc595e8994c47a015368445f099"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:04.2207277Z"
+                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
+                        "reviewedAtUtc":  "2026-08-12T01:49:05.2534175Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -434,17 +422,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "8a047052cf04d6726b7b4d67d91163466894ab288eec9807712abe4b24c03636"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-                                            "sha256":  "eeab70cbfc34946c94ef1a9265a975ef8a7d6d669b2152f798a780c1c34aacf1"
+                                            "sha256":  "c0d09e427cc1bbb7a2c5393760c2883aa9cfcfc595e8994c47a015368445f099"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:05.3189518Z"
+                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
+                        "reviewedAtUtc":  "2026-08-12T01:49:05.4888960Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -520,38 +504,22 @@
                         "pageSha256":  "00ed44ae7969545582f106af9c38c4e07f6feb7ba746a6e1738dc2cb0bd9da70",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiQualityIndex.ps1",
-                                            "sha256":  "18ece074189ffd9c4ef78638419abd5d24ce69523fb4a67c849db6747d547f95"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "ed683f483613eac44682273f6a8145cc0881db70ca35309aeacc0fe209c0ecf3"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "f384a75936cf6ed015bd162b4c9147abd90c16d3cae6bb75f9330bde9b3d570f"
+                                            "sha256":  "a577b48f7062c369418b39a08cebd4a6992ea50795da66f5eda9dccd460cf537"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-                                            "sha256":  "47b7d8aa7816262672796de1eeca36960c85010517a5648aef2fe3c61d4ef1fa"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/LlmWikiIndexCache.ps1",
-                                            "sha256":  "e1efb19b8d6b7e04139133201f3e61c262c3ea7d85a3c501f7ea0af9a9ee89bc"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
-                                            "sha256":  "e606c8402910ffb0dbeb26d8f778b9f871ebcfbea09f53f042866bcbbc030c45"
+                                            "sha256":  "762791b3d1655d1ed617a69cb4d698df48c26fa674f8931a3ff774a16cc5c09d"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "d30aab0d9d34f58da31ce5131d72895eef735ab70bac07cc598819f4da0c4518"
+                                            "sha256":  "926d2f67c2ec86d559e3fdd7e0b9c436fd61450fbe42588bcfb165012241b06f"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:06.7874588Z"
+                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
+                        "reviewedAtUtc":  "2026-08-12T01:49:05.7312873Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -575,17 +543,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "8a047052cf04d6726b7b4d67d91163466894ab288eec9807712abe4b24c03636"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
+                                            "sha256":  "c0d09e427cc1bbb7a2c5393760c2883aa9cfcfc595e8994c47a015368445f099"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:07.0987420Z"
+                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
+                        "reviewedAtUtc":  "2026-08-12T01:49:05.9858119Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -836,13 +800,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "d30aab0d9d34f58da31ce5131d72895eef735ab70bac07cc598819f4da0c4518"
+                                            "sha256":  "926d2f67c2ec86d559e3fdd7e0b9c436fd61450fbe42588bcfb165012241b06f"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:08.0838182Z"
+                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
+                        "reviewedAtUtc":  "2026-08-12T01:49:06.3004396Z"
                     },
                     {
                         "pageId":  "workflow-task-workspace",

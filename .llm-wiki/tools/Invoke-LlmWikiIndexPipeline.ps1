@@ -220,7 +220,8 @@ $coldCostSeconds = @{
     'Build-LlmWikiArchitectureHealthIndex.ps1' = 10
 }
 $estimatedColdSeconds = (@($selectedToolNames | ForEach-Object { if ($coldCostSeconds.ContainsKey($_)) { [int]$coldCostSeconds[$_] } else { 5 } }) | Measure-Object -Sum).Sum
-Write-Host "LLM Wiki index forecast: ~$estimatedColdSeconds cold second(s) for $($selectedToolNames.Count) generator(s); cache/no-op suppression can reduce this."
+if ($null -eq $estimatedColdSeconds) { $estimatedColdSeconds = 0 }
+Write-Host "LLM Wiki index forecast: ~$estimatedColdSeconds cold second(s) for $(@($selectedToolNames).Count) generator(s); cache/no-op suppression can reduce this."
 if (-not $RequiredOnly -and 'Build-LlmWikiQualityIndex.ps1' -in $selectedToolNames) {
     Write-Host 'Iteration hint: use update -AffectedOnly -ContractIndexesOnly while editing; run the full affected update once before handoff.'
 }
@@ -236,7 +237,7 @@ if ($Area -eq 'Backend') {
     ) })
     Write-Host "LLM Wiki verification area: Frontend ($($selectedToolNames.Count) generator(s)); backend freshness is intentionally not evaluated."
 }
-if ($ReuseUnchangedChecks -and $selectedToolNames.Count -gt 0) {
+if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $pipelineCacheState = Get-PipelineCacheState $selectedToolNames
     if ($Check -and (Test-Path -LiteralPath $pipelineCacheState.receiptPath -PathType Leaf)) {
         try {
@@ -425,7 +426,7 @@ try {
     }
 }
 $pipelineStopwatch.Stop()
-if ($ReuseUnchangedChecks -and $selectedToolNames.Count -gt 0) {
+if ($ReuseUnchangedChecks -and @($selectedToolNames).Count -gt 0) {
     $finalPipelineCacheState = Get-PipelineCacheState $selectedToolNames
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $finalPipelineCacheState.receiptPath) -Force
     $pipelineReceipt = [ordered]@{

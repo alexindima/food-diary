@@ -7,8 +7,8 @@ if ($result.declarationPath -ne 'FoodDiary.Application/Users/Common/IUserContext
     throw "Unexpected IUserContextService declaration: $($result.declarationPath)"
 }
 if ($result.readiness.abstractionOwned) { throw 'IUserContextService must currently be reported as implementation-owned.' }
-if ($result.readiness.aggregateConsumers -lt 1) { throw 'Expected aggregate-reading IUserContextService consumers.' }
-if (@($result.consumers | Where-Object { $_.consumer -eq 'Dashboard' }).Count -ne 1) { throw 'Expected the Dashboard consumer in the contract report.' }
+if ($result.readiness.aggregateConsumers -ne 0) { throw 'IUserContextService aggregate readers should have been extracted.' }
+if ($result.readiness.mutationConsumers -lt 1) { throw 'Expected remaining mutation consumers in the contract report.' }
 if ($result.readiness.businessConsumers -ge $result.readiness.productionConsumers) { throw 'Composition and empty reference matches must not be counted as business consumers.' }
 if ($result.readiness.compositionRegistrations -lt 1) { throw 'Expected DI registration evidence to be reported separately.' }
 if ($result.readiness.externalModuleConsumers -lt 1 -or $result.readiness.internalOwnerConsumers -lt 1) { throw 'Expected external and owner-internal consumers to be reported separately.' }

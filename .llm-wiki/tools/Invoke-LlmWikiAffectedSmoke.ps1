@@ -63,7 +63,7 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('verification-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         $null = $smokeGroups.Add('query-cache')
-    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiContractConsumers|Test-LlmWikiContractConsumers)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiContractConsumers|Test-LlmWikiContractConsumers|Get-LlmWikiExtractionReadiness|Test-LlmWikiExtractionReadiness)\.ps1$') {
         $null = $smokeGroups.Add('contract-consumers')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiLearningPromotion|Manage-LlmWikiLearningExperiment|Manage-LlmWikiEvalPromotion|Manage-LlmWikiLearningHealth|Test-LlmWikiKnowledgeIsolation)\.ps1$') {
         $null = $smokeGroups.Add('knowledge-isolation')
@@ -191,6 +191,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'contract-consumers' {
             & (Join-Path $toolsRoot 'Test-LlmWikiContractConsumers.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiExtractionReadiness.ps1')
             if (-not $?) { exit 1 }
         }
         'knowledge-isolation' {

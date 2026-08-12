@@ -159,7 +159,7 @@ if ($Objective -match '(?i)IUserContextService|extraction|profile.{0,20}boundar|
 }
 
 $openQuestions = [Collections.Generic.List[object]]::new()
-if (-not $workflow.scopeKnown) {
+if (-not $workflow.scopeKnown -and $effectivePurpose -eq 'Implementation') {
     $openQuestions.Add([pscustomobject][ordered]@{ id = 'confirm-edit-boundary'; blocking = $true; question = 'Which ranked implementation paths form the actual edit boundary?'; evidenceNeeded = 'Read current source and confirm the entry point, implementation, and focused tests.' })
 }
 if ($workflow.requiresDecisionCheckpoint) {
@@ -211,9 +211,12 @@ $result = [pscustomobject][ordered]@{
     extractionDelta = $extractionDelta
     openQuestions = @($openQuestions)
     readiness = [pscustomobject][ordered]@{
+        assessmentStatus = $(if ($groundedPaths.Count -gt 0) { 'complete' } else { 'incomplete' })
+        designCheckpoint = $(if ($effectivePurpose -eq 'Assessment') { 'not-required' } elseif ($workflow.requiresDecisionCheckpoint) { 'required' } else { 'not-required' })
+        implementationStatus = $(if ($groundedPaths.Count -gt 0 -and ($effectivePurpose -eq 'Assessment' -or -not $workflow.requiresDecisionCheckpoint)) { 'ready' } else { 'blocked' })
         assessmentComplete = $groundedPaths.Count -gt 0
-        readyToDesign = $groundedPaths.Count -gt 0 -and @($openQuestions | Where-Object blocking).Count -eq 0
-        readyToImplement = $groundedPaths.Count -gt 0 -and -not $workflow.requiresDecisionCheckpoint
+        readyToDesign = $effectivePurpose -eq 'Assessment' -or ($groundedPaths.Count -gt 0 -and @($openQuestions | Where-Object blocking).Count -eq 0)
+        readyToImplement = $groundedPaths.Count -gt 0 -and ($effectivePurpose -eq 'Assessment' -or -not $workflow.requiresDecisionCheckpoint)
         blockers = @($openQuestions | Where-Object blocking | Select-Object -ExpandProperty id)
     }
     authority = @(
@@ -240,6 +243,7 @@ if ($Format -eq 'Json') {
 }
 Write-Host "Research packet: $($result.workflow.profile) workflow, $($result.workflow.confidence) confidence"
 Write-Host "Purpose: $($result.workflow.purpose); assessment complete: $($result.readiness.assessmentComplete)"
+Write-Host "Assessment status: $($result.readiness.assessmentStatus); design checkpoint: $($result.readiness.designCheckpoint); implementation readiness: $($result.readiness.implementationStatus)"
 Write-Host "Objective: $Objective"
 Write-Host "Grounded paths: $($result.discovery.groundedPaths.Count)"
 foreach ($item in @($result.discovery.implementationFiles | Select-Object -First 5)) { Write-Host "  Source: $($item.path) (score=$($item.score), $($item.provenance))" }
