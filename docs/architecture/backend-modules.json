@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 38,
-    "extractedModules": 3,
+    "folderModules": 37,
+    "extractedModules": 4,
     "totalModules": 41
   },
   "analysis": {
@@ -126,8 +126,8 @@
     },
     "Dietologist": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
       "ownedEntities": [],
       "sourceMappings": {}
     },

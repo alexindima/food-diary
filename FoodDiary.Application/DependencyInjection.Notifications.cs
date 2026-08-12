@@ -1,12 +1,10 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Authentication.Services;
-using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Images.Services;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Services;
@@ -33,6 +31,5 @@ public static partial class DependencyInjection {
         services.AddScoped<ITestNotificationDeliveryDispatcher, TestNotificationDeliveryDispatcher>();
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
         services.AddScoped<IEmailSender, EmailSender>();
-        services.AddScoped<IDietologistEmailSender, DietologistEmailSender>();
     }
 }

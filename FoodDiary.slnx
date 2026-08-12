@@ -34,6 +34,7 @@
   <Project Path="FoodDiary.Analyzers/FoodDiary.Analyzers.csproj" />
   <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
   <Project Path="FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj" />
+  <Project Path="FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj" />
   <Project Path="FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj" />
   <Project Path="FoodDiary.Application.Users/FoodDiary.Application.Users.csproj" />
   <Project Path="FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj" />

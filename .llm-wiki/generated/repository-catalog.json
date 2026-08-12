@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  62,
+                    "dotnetProjects":  63,
                     "testProjects":  29,
                     "frontendProjects":  4,
                     "applicationModules":  39,
-                    "extractedApplicationModules":  3,
-                    "backendBusinessModules":  42,
+                    "extractedApplicationModules":  4,
+                    "backendBusinessModules":  43,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  44,
+                    "agentGuides":  45,
                     "documentationPages":  43
                 },
     "dotnet":  {
@@ -70,6 +70,36 @@
                                         "name":  "FoodDiary.Application.Billing",
                                         "assemblyName":  "FoodDiary.Application.Billing",
                                         "path":  "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "FluentValidation",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "FluentValidation.DependencyInjectionExtensions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
+                                        "name":  "FoodDiary.Application.Dietologist",
+                                        "assemblyName":  "FoodDiary.Application.Dietologist",
+                                        "path":  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                         "sdk":  "Microsoft.NET.Sdk",
                                         "outputType":  "Library",
                                         "targetFrameworks":  [
@@ -300,6 +330,7 @@
                                         "isTestProject":  false,
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
+                                                                  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -391,6 +422,7 @@
                                         "isTestProject":  false,
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
+                                                                  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -453,6 +485,7 @@
                                         "isTestProject":  false,
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
+                                                                  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj"
@@ -521,6 +554,7 @@
                                         "isTestProject":  false,
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
+                                                                  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -1578,6 +1612,7 @@
                                         "isTestProject":  true,
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
+                                                                  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -1790,6 +1825,7 @@
                                                              ],
                                         "isTestProject":  true,
                                         "projectReferences":  [
+                                                                  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
                                                                   "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
@@ -1850,6 +1886,7 @@
                                         "isTestProject":  true,
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
+                                                                  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.JobManager/FoodDiary.JobManager.csproj"
                                                               ],
                                         "packageReferences":  [
@@ -1931,6 +1968,7 @@
                                         "isTestProject":  true,
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
+                                                                  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj",
                                                                   "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj"
@@ -2552,6 +2590,10 @@
                                         {
                                             "name":  "Billing",
                                             "project":  "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj"
+                                        },
+                                        {
+                                            "name":  "Dietologist",
+                                            "project":  "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj"
                                         },
                                         {
                                             "name":  "Marketing",
@@ -4523,6 +4565,7 @@
                                                  "FoodDiary.Analyzers/AGENTS.md",
                                                  "FoodDiary.Application.Abstractions/AGENTS.md",
                                                  "FoodDiary.Application.Billing/AGENTS.md",
+                                                 "FoodDiary.Application.Dietologist/AGENTS.md",
                                                  "FoodDiary.Application.Marketing/AGENTS.md",
                                                  "FoodDiary.Application.Users/AGENTS.md",
                                                  "FoodDiary.Application/AGENTS.md",

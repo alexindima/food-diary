@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3127,
-                    "symbols":  3166,
+                    "sourceFiles":  3129,
+                    "symbols":  3167,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1591,
+                                  "class":  1592,
                                   "enum":  49,
                                   "interface":  413,
                                   "record":  1000,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1132,
+                                  "Other":  1133,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -4423,6 +4423,811 @@
                         "line":  12
                     },
                     {
+                        "name":  "AcceptInvitationCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "AcceptInvitationCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
+                        "line":  17
+                    },
+                    {
+                        "name":  "AcceptInvitationCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "AcceptInvitationForCurrentUserCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "AcceptInvitationForCurrentUserCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
+                        "line":  16
+                    },
+                    {
+                        "name":  "ArchiveRecommendationTemplateCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "ArchiveRecommendationTemplateCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "BulkCreateRecommendationsCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "BulkCreateRecommendationsCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "BulkCreateRecommendationsCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CancelClientTaskCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CancelClientTask/CancelClientTaskCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CancelClientTaskCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "ChangeClientTaskStatusCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ChangeClientTaskStatusCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
+                        "line":  15
+                    },
+                    {
+                        "name":  "ChangeClientTaskStatusCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CreateClientTaskCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateClientTask/CreateClientTaskCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateClientTaskCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "CreateClientTaskCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateClientTask/CreateClientTaskCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CreateRecommendationCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendation/CreateRecommendationCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateRecommendationCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendation/CreateRecommendationCommandHandler.cs",
+                        "line":  15
+                    },
+                    {
+                        "name":  "CreateRecommendationCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendation/CreateRecommendationCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CreateRecommendationCommentCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateRecommendationCommentCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
+                        "line":  17
+                    },
+                    {
+                        "name":  "CreateRecommendationCommentCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CreateRecommendationTemplateCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateRecommendationTemplateCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "CreateRecommendationTemplateCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DeclineInvitationCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeclineInvitationCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
+                        "line":  15
+                    },
+                    {
+                        "name":  "DeclineInvitationForCurrentUserCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeclineInvitationForCurrentUserCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
+                        "line":  16
+                    },
+                    {
+                        "name":  "DisconnectDietologistCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/DisconnectDietologist/DisconnectDietologistCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DisconnectDietologistCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/DisconnectDietologist/DisconnectDietologistCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "InviteDietologistCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "InviteDietologistCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
+                        "line":  19
+                    },
+                    {
+                        "name":  "InviteDietologistCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "MarkRecommendationReadCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/MarkRecommendationRead/MarkRecommendationReadCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "MarkRecommendationReadCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/MarkRecommendationRead/MarkRecommendationReadCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "RevokeInvitationCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/RevokeInvitation/RevokeInvitationCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "RevokeInvitationCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "SetAttentionSignalStateCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "SetAttentionSignalStateCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "SetAttentionSignalStateCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpdateDietologistPermissionsCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateDietologistPermissionsCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "UpdateRecommendationTemplateCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateRecommendationTemplateCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "UpdateRecommendationTemplateCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ClientTaskMapping",
+                        "kind":  "class",
+                        "role":  "Mapping",
+                        "path":  "FoodDiary.Application.Dietologist/Common/ClientTaskMapping.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DietologistAccessPolicy",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Common/DietologistAccessPolicy.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "DietologistInvitationClientNotifier",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Common/DietologistInvitationClientNotifier.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DietologistInvitationTokenGenerator",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Common/DietologistInvitationTokenGenerator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DietologistNotificationFactory",
+                        "kind":  "class",
+                        "role":  "Factory",
+                        "path":  "FoodDiary.Application.Dietologist/Common/DietologistNotificationFactory.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DietologistNotificationPostCommitActions",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Common/DietologistNotificationPostCommitActions.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IDietologistClientReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Common/IDietologistClientReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IDietologistInvitationReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Common/IDietologistInvitationReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IDietologistRecommendationReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Common/IDietologistRecommendationReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IDietologistUserContextService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Common/IDietologistUserContextService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "IDietologistUserLookupService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Common/IDietologistUserLookupService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IRecommendationDiscussionReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Common/IRecommendationDiscussionReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IRecommendationTemplateReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Common/IRecommendationTemplateReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "RecommendationTemplateMapping",
+                        "kind":  "class",
+                        "role":  "Mapping",
+                        "path":  "FoodDiary.Application.Dietologist/Common/RecommendationTemplateMapping.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "RecommendationCreatedEventHandler",
+                        "kind":  "class",
+                        "role":  "Handler",
+                        "path":  "FoodDiary.Application.Dietologist/EventHandlers/RecommendationCreatedEventHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "DietologistMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Mappings/DietologistMappings.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "AttentionSignalModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/AttentionSignalModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "BulkRecommendationRecipientResultModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/BulkRecommendationRecipientResultModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "BulkRecommendationResultModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/BulkRecommendationResultModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ClientSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ClientTaskModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/ClientTaskModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DietologistInfoModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/DietologistInfoModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DietologistInvitationForCurrentUserModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/DietologistInvitationForCurrentUserModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DietologistPermissionsInput",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/DietologistPermissionsInput.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DietologistPermissionsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/DietologistPermissionsModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DietologistRelationshipModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/DietologistRelationshipModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "InvitationModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/InvitationModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "RecommendationCommentModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/RecommendationCommentModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "RecommendationModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/RecommendationModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "RecommendationTemplateModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Models/RecommendationTemplateModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetAttentionSignalsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetAttentionSignalsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "GetClientGoalsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetClientGoals/GetClientGoalsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetClientGoalsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetClientTasksForDietologistQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetClientTasksForDietologistQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "GetInvitationByTokenQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetInvitationByToken/GetInvitationByTokenQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetInvitationByTokenQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetInvitationForCurrentUserQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetInvitationForCurrentUserQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetMyClientsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyClients/GetMyClientsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetMyClientsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetMyClientTasksQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyClientTasks/GetMyClientTasksQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetMyClientTasksQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "GetMyDietologistQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyDietologist/GetMyDietologistQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetMyDietologistQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyDietologist/GetMyDietologistQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetMyDietologistRelationshipQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetMyDietologistRelationshipQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetMyRecommendationsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyRecommendations/GetMyRecommendationsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetMyRecommendationsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetMyRecommendations/GetMyRecommendationsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetRecommendationCommentsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetRecommendationComments/GetRecommendationCommentsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetRecommendationCommentsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetRecommendationsForClientQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetRecommendationsForClient/GetRecommendationsForClientQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetRecommendationsForClientQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "SearchRecommendationTemplatesQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "SearchRecommendationTemplatesQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "ClientTaskDueReminderProcessor",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Services/ClientTaskDueReminderProcessor.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DietologistClientReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Services/DietologistClientReadService.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "DietologistDashboardAccessService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Services/DietologistDashboardAccessService.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "DietologistEmailSender",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dietologist/Services/DietologistEmailSender.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DietologistInvitationReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Services/DietologistInvitationReadService.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "DietologistRecommendationReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Services/DietologistRecommendationReadService.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "DietologistUserContextService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Services/DietologistUserContextService.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "DietologistUserLookupService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Services/DietologistUserLookupService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "RecommendationDiscussionReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Services/RecommendationDiscussionReadService.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "RecommendationTemplateReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dietologist/Services/RecommendationTemplateReadService.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "RecordMarketingAttributionCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -7556,14 +8361,14 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                        "line":  12
+                        "line":  8
                     },
                     {
                         "name":  "DependencyInjection",
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                        "line":  16
+                        "line":  14
                     },
                     {
                         "name":  "DependencyInjection",
@@ -7578,804 +8383,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
                         "line":  6
-                    },
-                    {
-                        "name":  "AcceptInvitationCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "AcceptInvitationCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandHandler.cs",
-                        "line":  17
-                    },
-                    {
-                        "name":  "AcceptInvitationCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitation/AcceptInvitationCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "AcceptInvitationForCurrentUserCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "AcceptInvitationForCurrentUserCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitationForCurrentUser/AcceptInvitationForCurrentUserCommandHandler.cs",
-                        "line":  16
-                    },
-                    {
-                        "name":  "ArchiveRecommendationTemplateCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ArchiveRecommendationTemplateCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/ArchiveRecommendationTemplate/ArchiveRecommendationTemplateCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "BulkCreateRecommendationsCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "BulkCreateRecommendationsCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "BulkCreateRecommendationsCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/BulkCreateRecommendations/BulkCreateRecommendationsCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CancelClientTaskCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CancelClientTask/CancelClientTaskCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CancelClientTaskCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CancelClientTask/CancelClientTaskCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "ChangeClientTaskStatusCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ChangeClientTaskStatusCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "ChangeClientTaskStatusCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/ChangeClientTaskStatus/ChangeClientTaskStatusCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CreateClientTaskCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateClientTaskCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "CreateClientTaskCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateClientTask/CreateClientTaskCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CreateRecommendationCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendation/CreateRecommendationCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateRecommendationCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendation/CreateRecommendationCommandHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "CreateRecommendationCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendation/CreateRecommendationCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CreateRecommendationCommentCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateRecommendationCommentCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandHandler.cs",
-                        "line":  17
-                    },
-                    {
-                        "name":  "CreateRecommendationCommentCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationComment/CreateRecommendationCommentCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CreateRecommendationTemplateCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateRecommendationTemplateCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "CreateRecommendationTemplateCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/CreateRecommendationTemplate/CreateRecommendationTemplateCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "DeclineInvitationCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeclineInvitationCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/DeclineInvitation/DeclineInvitationCommandHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "DeclineInvitationForCurrentUserCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeclineInvitationForCurrentUserCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/DeclineInvitationForCurrentUser/DeclineInvitationForCurrentUserCommandHandler.cs",
-                        "line":  16
-                    },
-                    {
-                        "name":  "DisconnectDietologistCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/DisconnectDietologist/DisconnectDietologistCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DisconnectDietologistCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/DisconnectDietologist/DisconnectDietologistCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "InviteDietologistCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/InviteDietologist/InviteDietologistCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "InviteDietologistCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/InviteDietologist/InviteDietologistCommandHandler.cs",
-                        "line":  19
-                    },
-                    {
-                        "name":  "InviteDietologistCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/InviteDietologist/InviteDietologistCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "MarkRecommendationReadCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/MarkRecommendationRead/MarkRecommendationReadCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "MarkRecommendationReadCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/MarkRecommendationRead/MarkRecommendationReadCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "RevokeInvitationCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/RevokeInvitation/RevokeInvitationCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "RevokeInvitationCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/RevokeInvitation/RevokeInvitationCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "SetAttentionSignalStateCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "SetAttentionSignalStateCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "SetAttentionSignalStateCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/SetAttentionSignalState/SetAttentionSignalStateCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpdateDietologistPermissionsCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateDietologistPermissionsCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/UpdateDietologistPermissions/UpdateDietologistPermissionsCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "UpdateRecommendationTemplateCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateRecommendationTemplateCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "UpdateRecommendationTemplateCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "ClientTaskMapping",
-                        "kind":  "class",
-                        "role":  "Mapping",
-                        "path":  "FoodDiary.Application/Dietologist/Common/ClientTaskMapping.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "DietologistAccessPolicy",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Common/DietologistAccessPolicy.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "DietologistInvitationClientNotifier",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Common/DietologistInvitationClientNotifier.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "DietologistInvitationTokenGenerator",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Common/DietologistInvitationTokenGenerator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "DietologistNotificationFactory",
-                        "kind":  "class",
-                        "role":  "Factory",
-                        "path":  "FoodDiary.Application/Dietologist/Common/DietologistNotificationFactory.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "DietologistNotificationPostCommitActions",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Common/DietologistNotificationPostCommitActions.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IDietologistClientReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Common/IDietologistClientReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IDietologistInvitationReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Common/IDietologistInvitationReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IDietologistRecommendationReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Common/IDietologistRecommendationReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IDietologistUserContextService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Common/IDietologistUserContextService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "IDietologistUserLookupService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Common/IDietologistUserLookupService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IRecommendationDiscussionReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Common/IRecommendationDiscussionReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IRecommendationTemplateReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Common/IRecommendationTemplateReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "RecommendationTemplateMapping",
-                        "kind":  "class",
-                        "role":  "Mapping",
-                        "path":  "FoodDiary.Application/Dietologist/Common/RecommendationTemplateMapping.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "RecommendationCreatedEventHandler",
-                        "kind":  "class",
-                        "role":  "Handler",
-                        "path":  "FoodDiary.Application/Dietologist/EventHandlers/RecommendationCreatedEventHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "DietologistMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Mappings/DietologistMappings.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "AttentionSignalModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/AttentionSignalModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "BulkRecommendationRecipientResultModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/BulkRecommendationRecipientResultModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "BulkRecommendationResultModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/BulkRecommendationResultModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ClientSummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/ClientSummaryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ClientTaskModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/ClientTaskModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "DietologistInfoModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/DietologistInfoModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DietologistInvitationForCurrentUserModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/DietologistInvitationForCurrentUserModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DietologistPermissionsInput",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/DietologistPermissionsInput.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DietologistPermissionsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/DietologistPermissionsModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DietologistRelationshipModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/DietologistRelationshipModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "InvitationModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/InvitationModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "RecommendationCommentModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/RecommendationCommentModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "RecommendationModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/RecommendationModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "RecommendationTemplateModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Models/RecommendationTemplateModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetAttentionSignalsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetAttentionSignalsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "GetClientGoalsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetClientGoals/GetClientGoalsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetClientGoalsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetClientGoals/GetClientGoalsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetClientTasksForDietologistQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetClientTasksForDietologistQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetClientTasksForDietologist/GetClientTasksForDietologistQueryHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "GetInvitationByTokenQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetInvitationByToken/GetInvitationByTokenQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetInvitationByTokenQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetInvitationByToken/GetInvitationByTokenQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetInvitationForCurrentUserQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetInvitationForCurrentUserQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetInvitationForCurrentUser/GetInvitationForCurrentUserQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetMyClientsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyClients/GetMyClientsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetMyClientsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyClients/GetMyClientsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetMyClientTasksQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyClientTasks/GetMyClientTasksQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetMyClientTasksQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyClientTasks/GetMyClientTasksQueryHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "GetMyDietologistQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyDietologist/GetMyDietologistQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetMyDietologistQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyDietologist/GetMyDietologistQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetMyDietologistRelationshipQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetMyDietologistRelationshipQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyDietologistRelationship/GetMyDietologistRelationshipQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetMyRecommendationsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyRecommendations/GetMyRecommendationsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetMyRecommendationsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetMyRecommendations/GetMyRecommendationsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetRecommendationCommentsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetRecommendationComments/GetRecommendationCommentsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetRecommendationCommentsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetRecommendationComments/GetRecommendationCommentsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetRecommendationsForClientQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetRecommendationsForClient/GetRecommendationsForClientQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetRecommendationsForClientQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/GetRecommendationsForClient/GetRecommendationsForClientQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "SearchRecommendationTemplatesQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "SearchRecommendationTemplatesQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "ClientTaskDueReminderProcessor",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Services/ClientTaskDueReminderProcessor.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "DietologistClientReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Services/DietologistClientReadService.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "DietologistDashboardAccessService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Services/DietologistDashboardAccessService.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "DietologistEmailSender",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dietologist/Services/DietologistEmailSender.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "DietologistInvitationReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Services/DietologistInvitationReadService.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "DietologistRecommendationReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Services/DietologistRecommendationReadService.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "DietologistUserContextService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Services/DietologistUserContextService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "DietologistUserLookupService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Services/DietologistUserLookupService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "RecommendationDiscussionReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Services/RecommendationDiscussionReadService.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "RecommendationTemplateReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dietologist/Services/RecommendationTemplateReadService.cs",
-                        "line":  8
                     },
                     {
                         "name":  "ApplicationEmailTelemetry",
@@ -16096,7 +16103,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  332
+                        "line":  334
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16453,7 +16460,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  42
+                        "line":  44
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20240,7 +20247,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  18
+                        "line":  19
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22682,30 +22689,30 @@
                                      },
                                      {
                                          "interface":  "IDietologistClientReadService",
-                                         "interfacePath":  "FoodDiary.Application/Dietologist/Common/IDietologistClientReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dietologist/Common/IDietologistClientReadService.cs",
                                          "implementation":  "DietologistClientReadService",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/DietologistClientReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/DietologistClientReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IDietologistDashboardAccessService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistDashboardAccessService.cs",
                                          "implementation":  "DietologistDashboardAccessService",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/DietologistDashboardAccessService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/DietologistDashboardAccessService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IDietologistEmailSender",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Dietologist/Common/IDietologistEmailSender.cs",
                                          "implementation":  "DietologistEmailSender",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/DietologistEmailSender.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/DietologistEmailSender.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IDietologistInvitationReadService",
-                                         "interfacePath":  "FoodDiary.Application/Dietologist/Common/IDietologistInvitationReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dietologist/Common/IDietologistInvitationReadService.cs",
                                          "implementation":  "DietologistInvitationReadService",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/DietologistInvitationReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/DietologistInvitationReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22717,23 +22724,23 @@
                                      },
                                      {
                                          "interface":  "IDietologistRecommendationReadService",
-                                         "interfacePath":  "FoodDiary.Application/Dietologist/Common/IDietologistRecommendationReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dietologist/Common/IDietologistRecommendationReadService.cs",
                                          "implementation":  "DietologistRecommendationReadService",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/DietologistRecommendationReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/DietologistRecommendationReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IDietologistUserContextService",
-                                         "interfacePath":  "FoodDiary.Application/Dietologist/Common/IDietologistUserContextService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dietologist/Common/IDietologistUserContextService.cs",
                                          "implementation":  "DietologistUserContextService",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserContextService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/DietologistUserContextService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IDietologistUserLookupService",
-                                         "interfacePath":  "FoodDiary.Application/Dietologist/Common/IDietologistUserLookupService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dietologist/Common/IDietologistUserLookupService.cs",
                                          "implementation":  "DietologistUserLookupService",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/DietologistUserLookupService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/DietologistUserLookupService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23452,9 +23459,9 @@
                                      },
                                      {
                                          "interface":  "IRecommendationDiscussionReadService",
-                                         "interfacePath":  "FoodDiary.Application/Dietologist/Common/IRecommendationDiscussionReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dietologist/Common/IRecommendationDiscussionReadService.cs",
                                          "implementation":  "RecommendationDiscussionReadService",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/RecommendationDiscussionReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/RecommendationDiscussionReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23466,9 +23473,9 @@
                                      },
                                      {
                                          "interface":  "IRecommendationTemplateReadService",
-                                         "interfacePath":  "FoodDiary.Application/Dietologist/Common/IRecommendationTemplateReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dietologist/Common/IRecommendationTemplateReadService.cs",
                                          "implementation":  "RecommendationTemplateReadService",
-                                         "implementationPath":  "FoodDiary.Application/Dietologist/Services/RecommendationTemplateReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dietologist/Services/RecommendationTemplateReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23859,6 +23866,69 @@
                                                  "line":  26
                                              },
                                              {
+                                                 "service":  "IDietologistClientReadService",
+                                                 "implementation":  "DietologistClientReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
+                                                 "service":  "IDietologistDashboardAccessService",
+                                                 "implementation":  "DietologistDashboardAccessService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  18
+                                             },
+                                             {
+                                                 "service":  "IDietologistInvitationReadService",
+                                                 "implementation":  "DietologistInvitationReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  19
+                                             },
+                                             {
+                                                 "service":  "IDietologistRecommendationReadService",
+                                                 "implementation":  "DietologistRecommendationReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  22
+                                             },
+                                             {
+                                                 "service":  "IRecommendationDiscussionReadService",
+                                                 "implementation":  "RecommendationDiscussionReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  23
+                                             },
+                                             {
+                                                 "service":  "IRecommendationTemplateReadService",
+                                                 "implementation":  "RecommendationTemplateReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  24
+                                             },
+                                             {
+                                                 "service":  "IDietologistUserLookupService",
+                                                 "implementation":  "DietologistUserLookupService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  25
+                                             },
+                                             {
+                                                 "service":  "IDietologistUserContextService",
+                                                 "implementation":  "DietologistUserContextService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  26
+                                             },
+                                             {
+                                                 "service":  "IDietologistEmailSender",
+                                                 "implementation":  "DietologistEmailSender",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dietologist/DependencyInjection.cs",
+                                                 "line":  27
+                                             },
+                                             {
                                                  "service":  "IMarketingAttributionCleanupService",
                                                  "implementation":  "MarketingAttributionCleanupService",
                                                  "lifetime":  "Scoped",
@@ -24227,182 +24297,119 @@
                                                  "implementation":  "AuthenticationLoginEventCleanupService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  15
+                                                 "line":  11
                                              },
                                              {
                                                  "service":  "IAuthenticationLoginEventReadService",
                                                  "implementation":  "AuthenticationLoginEventReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  16
+                                                 "line":  12
                                              },
                                              {
                                                  "service":  "IAuthenticationTokenService",
                                                  "implementation":  "AuthenticationTokenService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  17
+                                                 "line":  13
                                              },
                                              {
                                                  "service":  "IInitialAdminBootstrapService",
                                                  "implementation":  "InitialAdminBootstrapService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  18
-                                             },
-                                             {
-                                                 "service":  "IDietologistClientReadService",
-                                                 "implementation":  "DietologistClientReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  19
-                                             },
-                                             {
-                                                 "service":  "IDietologistDashboardAccessService",
-                                                 "implementation":  "DietologistDashboardAccessService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  20
-                                             },
-                                             {
-                                                 "service":  "IDietologistInvitationReadService",
-                                                 "implementation":  "DietologistInvitationReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  21
-                                             },
-                                             {
-                                                 "service":  "IDietologistRecommendationReadService",
-                                                 "implementation":  "DietologistRecommendationReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  24
-                                             },
-                                             {
-                                                 "service":  "IRecommendationDiscussionReadService",
-                                                 "implementation":  "RecommendationDiscussionReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  25
-                                             },
-                                             {
-                                                 "service":  "IRecommendationTemplateReadService",
-                                                 "implementation":  "RecommendationTemplateReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  26
-                                             },
-                                             {
-                                                 "service":  "IDietologistUserLookupService",
-                                                 "implementation":  "DietologistUserLookupService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  27
-                                             },
-                                             {
-                                                 "service":  "IDietologistUserContextService",
-                                                 "implementation":  "DietologistUserContextService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  28
+                                                 "line":  14
                                              },
                                              {
                                                  "service":  "IImageAssetAccessService",
                                                  "implementation":  "ImageAssetAccessService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  19
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IImageAssetCleanupService",
                                                  "implementation":  "ImageAssetCleanupService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  20
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "INotificationCleanupService",
                                                  "implementation":  "NotificationCleanupService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  21
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "INotificationClientRefreshService",
                                                  "implementation":  "NotificationClientRefreshService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  22
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "INotificationPreferencesService",
                                                  "implementation":  "NotificationPreferencesService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  25
+                                                 "line":  23
                                              },
                                              {
                                                  "service":  "INotificationFeedReadService",
                                                  "implementation":  "NotificationFeedReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  26
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IWebPushSubscriptionReadService",
                                                  "implementation":  "WebPushSubscriptionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  27
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "IWebPushDeliveryAudienceService",
                                                  "implementation":  "WebPushDeliveryAudienceService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  30
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "INotificationUserContextService",
                                                  "implementation":  "NotificationUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  31
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "INotificationWriter",
                                                  "implementation":  "NotificationWriter",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  32
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "ITestNotificationDeliveryDispatcher",
                                                  "implementation":  "TestNotificationDeliveryDispatcher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  33
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "IOpenAiFoodService",
                                                  "implementation":  "OpenAiFoodService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  34
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "IEmailSender",
                                                  "implementation":  "EmailSender",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  35
-                                             },
-                                             {
-                                                 "service":  "IDietologistEmailSender",
-                                                 "implementation":  "DietologistEmailSender",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  36
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "ICycleReadService",
@@ -25200,14 +25207,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  62
+                                                 "line":  64
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  63
+                                                 "line":  65
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25298,7 +25305,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  34
+                                                 "line":  36
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25354,35 +25361,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  29
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  42
+                                                 "line":  44
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  43
+                                                 "line":  45
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  44
+                                                 "line":  46
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  67
+                                                 "line":  69
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

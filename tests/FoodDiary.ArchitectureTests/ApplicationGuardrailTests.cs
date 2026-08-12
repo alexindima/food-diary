@@ -1188,20 +1188,20 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Consumptions", "Queries", "GetConsumptionById", "GetConsumptionByIdQueryHandler.cs"),
             Path.Combine(applicationRoot, "ContentReports", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dashboard", "Queries", "GetDashboardSnapshot", "GetDashboardSnapshotQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "AcceptInvitationForCurrentUser", "AcceptInvitationForCurrentUserCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "CreateRecommendation", "CreateRecommendationCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "DeclineInvitationForCurrentUser", "DeclineInvitationForCurrentUserCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "InviteDietologist", "InviteDietologistCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitationForCurrentUser", "AcceptInvitationForCurrentUserCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "CreateRecommendation", "CreateRecommendationCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "DeclineInvitationForCurrentUser", "DeclineInvitationForCurrentUserCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "InviteDietologist", "InviteDietologistCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dashboard", "Queries", "GetDietologistClientDashboard", "GetDietologistClientDashboardQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetClientGoals", "GetClientGoalsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetInvitationByToken", "GetInvitationByTokenQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetInvitationForCurrentUser", "GetInvitationForCurrentUserQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyClients", "GetMyClientsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyDietologist", "GetMyDietologistQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyDietologistRelationship", "GetMyDietologistRelationshipQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyRecommendations", "GetMyRecommendationsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetRecommendationsForClient", "GetRecommendationsForClientQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetClientGoals", "GetClientGoalsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetInvitationByToken", "GetInvitationByTokenQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetInvitationForCurrentUser", "GetInvitationForCurrentUserQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetMyClients", "GetMyClientsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetMyDietologist", "GetMyDietologistQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetMyDietologistRelationship", "GetMyDietologistRelationshipQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetMyRecommendations", "GetMyRecommendationsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetRecommendationsForClient", "GetRecommendationsForClientQueryHandler.cs"),
             Path.Combine(applicationRoot, "Exercises", "Queries", "GetExerciseEntries", "GetExerciseEntriesQueryHandler.cs"),
             Path.Combine(applicationRoot, "Lessons", "Commands", "MarkLessonRead", "MarkLessonReadCommandHandler.cs"),
             Path.Combine(applicationRoot, "Lessons", "Queries", "GetLessonById", "GetLessonByIdQueryHandler.cs"),
@@ -2028,7 +2028,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void DietologistQueries_UseReadServicesInsteadOfRepositories() {
         string root = GetRepositoryRoot();
-        string dietologistQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Queries");
+        string dietologistQueriesRoot = Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries");
         string[] dietologistQueryFiles = [.. SourceScanner.SourceFiles(dietologistQueriesRoot)];
 
         string[] violations = [
@@ -2043,7 +2043,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void DietologistReadServices_UseReadModelsInsteadOfDietologistAggregates() {
         string root = GetRepositoryRoot();
-        string dietologistServicesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Services");
+        string dietologistServicesRoot = Path.Combine(root, "FoodDiary.Application.Dietologist", "Services");
         string userServicesRoot = Path.Combine(root, "FoodDiary.Application.Users", "Services");
         string[] readServiceFiles = [
             Path.Combine(dietologistServicesRoot, "DietologistInvitationReadService.cs"),
@@ -2087,7 +2087,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void DietologistQueries_UseUserReadModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
-        string dietologistQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Queries");
+        string dietologistQueriesRoot = Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries");
         string[] dietologistQueryFiles = [.. SourceScanner.SourceFiles(dietologistQueriesRoot)];
 
         string[] violations = [
@@ -2911,8 +2911,7 @@ public sealed class ApplicationGuardrailTests {
     public void AttentionSignals_UseDedicatedBatchProjectionInsteadOfDashboardComposition() {
         string handlerPath = Path.Combine(
             GetRepositoryRoot(),
-            "FoodDiary.Application",
-            "Dietologist",
+            "FoodDiary.Application.Dietologist",
             "Queries",
             "GetAttentionSignals",
             "GetAttentionSignalsQueryHandler.cs");
@@ -3043,8 +3042,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Dietologist",
+            "FoodDiary.Application.Dietologist",
             "Services",
             "DietologistUserContextService.cs");
         string source = File.ReadAllText(servicePath);
@@ -3282,7 +3280,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string emailSenderPath = Path.Combine(applicationRoot, "Authentication", "Services", "EmailSender.cs");
-        string dietologistEmailSenderPath = Path.Combine(applicationRoot, "Dietologist", "Services", "DietologistEmailSender.cs");
+        string dietologistEmailSenderPath = Path.Combine(root, "FoodDiary.Application.Dietologist", "Services", "DietologistEmailSender.cs");
 
         string emailSenderSource = File.ReadAllText(emailSenderPath);
         string dietologistEmailSenderSource = File.ReadAllText(dietologistEmailSenderPath);

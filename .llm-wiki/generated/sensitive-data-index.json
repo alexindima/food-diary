@@ -152,6 +152,20 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "CurrentPassword",
                        "type":  "string",
                        "path":  "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
@@ -317,20 +331,6 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application/Authentication/Models/AuthenticationModel.cs",
                        "line":  7
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Token",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Commands/AcceptInvitation/AcceptInvitationCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Token",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Commands/DeclineInvitation/DeclineInvitationCommand.cs",
-                       "line":  8
                    },
                    {
                        "category":  "credential",
@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  52
+                       "line":  53
                    },
                    {
                        "category":  "credential",
@@ -3414,6 +3414,69 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "BirthDate",
+                       "type":  "DateTime?",
+                       "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Gender",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ActivityLevel",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ShareWeight",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dietologist/Models/DietologistPermissionsModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ShareWaist",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dietologist/Models/DietologistPermissionsModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ShareHydration",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dietologist/Models/DietologistPermissionsModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ShareFasting",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dietologist/Models/DietologistPermissionsModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeightChangePercent",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
                        "name":  "DesiredWaist",
                        "type":  "double?",
                        "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
@@ -4034,69 +4097,6 @@
                        "type":  "bool",
                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
                        "line":  14
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "BirthDate",
-                       "type":  "DateTime?",
-                       "path":  "FoodDiary.Application/Dietologist/Models/ClientSummaryModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Gender",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Dietologist/Models/ClientSummaryModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Height",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Dietologist/Models/ClientSummaryModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ActivityLevel",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Dietologist/Models/ClientSummaryModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ShareWeight",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dietologist/Models/DietologistPermissionsModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ShareWaist",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dietologist/Models/DietologistPermissionsModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ShareHydration",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dietologist/Models/DietologistPermissionsModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ShareFasting",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dietologist/Models/DietologistPermissionsModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeightChangePercent",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQuery.cs",
-                       "line":  12
                    },
                    {
                        "category":  "health",
@@ -7201,6 +7201,55 @@
                    },
                    {
                        "category":  "identity",
+                       "name":  "DietologistEmail",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Models/DietologistInfoModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "ClientEmail",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Models/DietologistInvitationForCurrentUserModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Models/DietologistRelationshipModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "ClientEmail",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Models/InvitationModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "AuthorEmail",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dietologist/Models/RecommendationCommentModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "identity",
                        "name":  "Email",
                        "type":  "string",
                        "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
@@ -7352,55 +7401,6 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application/Dashboard/Models/DashboardUserContextModel.cs",
                        "line":  7
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "DietologistEmail",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Commands/InviteDietologist/InviteDietologistCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Models/ClientSummaryModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Models/DietologistInfoModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "ClientEmail",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Models/DietologistInvitationForCurrentUserModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Models/DietologistRelationshipModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "ClientEmail",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Models/InvitationModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "AuthorEmail",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dietologist/Models/RecommendationCommentModel.cs",
-                       "line":  9
                    },
                    {
                        "category":  "identity",

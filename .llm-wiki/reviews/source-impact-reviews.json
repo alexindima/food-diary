@@ -42,17 +42,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "e9b9fa663479b59e59d7cd87448d79eb0fbfc440c6945344de9412be09502b27"
-                                        },
-                                        {
-                                            "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "bcfb6059c6f24a88e399ede5fc7cf4f3ed3980abbf92027510daa3bbea0414fa"
+                                            "sha256":  "2ed3e25c023de5b52ec069d6562c52ed94f0f917ee1ae3f0f88528b0ba610f9e"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:12.0174933Z"
+                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
+                        "reviewedAtUtc":  "2026-08-12T21:04:54.4413351Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -60,14 +56,18 @@
                         "pageSha256":  "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
                         "sources":  [
                                         {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "e95937b80e5728344bae63a823bc39b0a217b36be30e460a7e2023a385248f27"
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "2ed3e25c023de5b52ec069d6562c52ed94f0f917ee1ae3f0f88528b0ba610f9e"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+                                            "sha256":  "cef02eee69ed4de78c334d07801792647015180c4d326c99a22b7ade540d7b84"
                                         }
                                     ],
-                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
+                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
-                        "reviewedAtUtc":  "2026-08-12T19:59:29.5609508Z"
+                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
+                        "reviewedAtUtc":  "2026-08-12T21:04:54.6270762Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -105,14 +105,14 @@
                         "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
                         "sources":  [
                                         {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "e95937b80e5728344bae63a823bc39b0a217b36be30e460a7e2023a385248f27"
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "2ed3e25c023de5b52ec069d6562c52ed94f0f917ee1ae3f0f88528b0ba610f9e"
                                         }
                                     ],
-                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
+                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
-                        "reviewedAtUtc":  "2026-08-12T19:59:30.4918170Z"
+                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
+                        "reviewedAtUtc":  "2026-08-12T21:04:54.7974531Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -185,13 +185,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "daafbfae1b1c3e4e3034ae96296db754dbbf1bc1466f3541f25f0376ee571e7f"
+                                            "sha256":  "51004a05b47b5ca21d3ce05257f1850f69876ac66d61148dbcbbd2a0ae7cfebc"
                                         }
                                     ],
-                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
+                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
-                        "reviewedAtUtc":  "2026-08-12T19:59:35.5243428Z"
+                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
+                        "reviewedAtUtc":  "2026-08-12T21:04:56.4668011Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -280,13 +280,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "9b09ee96eaa411685b5c3eee345e533e23c5f6e6ae65c2e5714f403f11b9a555"
+                                            "sha256":  "f1192fa017700de699f95a661bdde711a19203a58555eaa0e555b33274567f8a"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "2ed3e25c023de5b52ec069d6562c52ed94f0f917ee1ae3f0f88528b0ba610f9e"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+                                            "sha256":  "cef02eee69ed4de78c334d07801792647015180c4d326c99a22b7ade540d7b84"
                                         }
                                     ],
-                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
+                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
-                        "reviewedAtUtc":  "2026-08-12T19:59:31.5548589Z"
+                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
+                        "reviewedAtUtc":  "2026-08-12T21:04:54.9770742Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -295,13 +303,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "c753d1bd33d27a635e2073457e6004192701dddd5090933fc5aeb9bd3ff4f546"
+                                            "sha256":  "6ead80bd7a0f9431da35a0812497bd9deee976d9b776c64d0adb91cdffc67db1"
                                         }
                                     ],
-                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
+                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
-                        "reviewedAtUtc":  "2026-08-12T19:59:32.5109915Z"
+                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
+                        "reviewedAtUtc":  "2026-08-12T21:04:55.2276043Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -811,13 +819,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "dc0a4912ba0c5969fe40f10fc5a48b6239b17932f6a09b97167234edb98b315a"
+                                            "sha256":  "1a9f2c29c62ee1a01c73376e6bfbf49f1ed1b2c5d5df8f78b43ece7ea5acb924"
                                         }
                                     ],
-                        "reason":  "Users identity and profile code moved assemblies without changing stored fields, authorization behavior, provider sharing, logging, retention, exports, or HTTP payloads; application and host tests preserve behavior.",
+                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:40.4815715Z"
+                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
+                        "reviewedAtUtc":  "2026-08-12T21:04:55.5295059Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -860,13 +868,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "39fea20da35fde7a776fce4dd25f0c4e381c52db2045bf7b4343b67f62d58951"
+                                            "sha256":  "1ac7f74e49158ec48dc0a49f5a4d1ed8657d4126dbb54cb0b6919e38fd1fcb49"
                                         }
                                     ],
-                        "reason":  "Dietologist dashboard composition moved to Dashboard ownership; module graph and generated indexes reviewed.",
+                        "reason":  "Dietologist application source moved from the core Application folder into the dedicated FoodDiary.Application.Dietologist project; project-reference matrix, composition roots, Docker build inputs, module inventory, generated indexes, and architecture guardrails were updated and verified without HTTP or persistence contract changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "68661f84b2aa0c708015af78cdc689864d38f7ae",
-                        "reviewedAtUtc":  "2026-08-12T19:59:34.4746570Z"
+                        "gitHead":  "bd6966bb76f7ac7026ead0edf0fb79d453e12ed7",
+                        "reviewedAtUtc":  "2026-08-12T21:04:56.0431563Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

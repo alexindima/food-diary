@@ -16,15 +16,14 @@ sources:
 
 - Origin: module-graph
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Audit, Authentication, Email, Notifications, Users
+- Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.JobManager, FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Dietologist`
-- `FoodDiary.Application/Dietologist`
 - `FoodDiary.Domain/Entities/Dietologist`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Dietologist`
 - `FoodDiary.Infrastructure/Persistence/Dietologist`
@@ -113,11 +112,11 @@ Source: `FoodDiary.Presentation.Api/Features/Dietologist/RecommendationsControll
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 35
-- Observed external consumer groups: 2
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

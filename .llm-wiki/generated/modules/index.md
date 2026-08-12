@@ -27,7 +27,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 2 | 1 | graph-only |
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
 | [Dashboard](dashboard.md) | read-composer | 10 | 4 | 0 | 1 | explicit-boundary-tests |
-| [Dietologist](dietologist.md) | aggregate-owner | 0 | 5 | 0 | 2 | graph-only |
+| [Dietologist](dietologist.md) | aggregate-owner | 0 | 0 | 0 | 4 | project-reference-matrix |
 | [Email](email.md) | aggregate-owner | 0 | 1 | 2 | 2 | graph-only |
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
 | [Export](export.md) | read-composer | 2 | 2 | 0 | 2 | graph-only |
