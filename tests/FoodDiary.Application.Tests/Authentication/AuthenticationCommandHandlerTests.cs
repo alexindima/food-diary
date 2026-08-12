@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Models;
@@ -51,7 +52,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
             replayGuard ?? new StubTelegramAssertionReplayGuard());
 
     private static UserAuthenticationIdentityService CreateUserAuthenticationIdentityService(StubUserRepository userRepository) =>
-        new(userRepository, userRepository, userRepository);
+        new(userRepository, userRepository, userRepository, new StubPasswordHasher());
 
     [ExcludeFromCodeCoverage]
     private sealed class StubTelegramAssertionReplayGuard(bool consume = true) : ITelegramAssertionReplayGuard {
@@ -153,6 +154,14 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [ExcludeFromCodeCoverage]
     private sealed class StubAuthenticationTokenService : IAuthenticationTokenService {
         public User? LastUser { get; private set; }
+        public UserAuthenticationPrincipalModel? LastPrincipal { get; private set; }
+
+        public Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
+            UserAuthenticationPrincipalModel principal,
+            CancellationToken cancellationToken) {
+            LastPrincipal = principal;
+            return Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
+        }
 
         public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
             User user,

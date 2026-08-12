@@ -1,18 +1,16 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
 
 public sealed class VerifyEmailCommandHandler(
-    IAuthenticationUserMutationService userMutationService,
-    IPasswordHasher passwordHasher,
+    IUserAuthenticationIdentityService userIdentityService,
     TimeProvider dateTimeProvider,
     IPostCommitActionQueue postCommitActionQueue,
     IEmailVerificationNotifier emailVerificationNotifier)
@@ -26,32 +24,20 @@ public sealed class VerifyEmailCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        User? user = await userMutationService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user is null) {
-            return Result.Failure(Errors.User.NotFound(userId));
+        Result<bool> verificationResult = await userIdentityService
+            .VerifyEmailAsync(userId, command.Token, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .ConfigureAwait(false);
+        if (verificationResult.IsFailure) {
+            return Result.Failure(verificationResult.Error);
         }
 
-        if (user.IsEmailConfirmed) {
+        if (!verificationResult.Value) {
             return Result.Success();
         }
 
-        if (string.IsNullOrWhiteSpace(user.EmailConfirmationTokenHash) ||
-            !user.EmailConfirmationTokenExpiresAtUtc.HasValue ||
-            user.EmailConfirmationTokenExpiresAtUtc.Value < dateTimeProvider.GetUtcNow().UtcDateTime) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
-        }
-
-        bool isValid = passwordHasher.Verify(command.Token, user.EmailConfirmationTokenHash);
-        if (!isValid) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
-        }
-
-        user.CompleteEmailVerification();
-        await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
-
         postCommitActionQueue.Enqueue("auth.email-verification.hub-notify", async ct => {
             try {
-                await emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, ct).ConfigureAwait(false);
+                await emailVerificationNotifier.NotifyEmailVerifiedAsync(userId.Value, ct).ConfigureAwait(false);
             } catch {
                 // Notification failures shouldn't block verification.
             }

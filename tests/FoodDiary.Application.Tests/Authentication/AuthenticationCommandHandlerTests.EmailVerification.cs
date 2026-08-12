@@ -7,15 +7,19 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
+    private static VerifyEmailCommandHandler CreateVerifyEmailHandler(
+        StubUserRepository userRepository,
+        StubDateTimeProvider? dateTimeProvider = null,
+        StubEmailVerificationNotifier? notifier = null) =>
+        new(
+            CreateUserAuthenticationIdentityService(userRepository),
+            dateTimeProvider ?? new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
+            notifier ?? new StubEmailVerificationNotifier());
 
     [Fact]
     public async Task VerifyEmailHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new VerifyEmailCommandHandler(
-            new StubUserRepository(),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new ImmediatePostCommitActionQueue(),
-            new StubEmailVerificationNotifier());
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository());
 
         Result result = await handler.Handle(
             new VerifyEmailCommand(Guid.Empty, "token"),
@@ -28,12 +32,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
     [Fact]
     public async Task VerifyEmailHandler_WhenUserMissing_ReturnsNotFound() {
-        var handler = new VerifyEmailCommandHandler(
-            new StubUserRepository(),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new ImmediatePostCommitActionQueue(),
-            new StubEmailVerificationNotifier());
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository());
 
         Result result = await handler.Handle(
             new VerifyEmailCommand(Guid.NewGuid(), "token"),
@@ -47,29 +46,23 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task VerifyEmailHandler_WhenAlreadyConfirmed_ReturnsSuccess() {
         var user = User.Create("confirmed-verify@example.com", "secret");
         user.SetEmailConfirmed(isConfirmed: true);
-        var handler = new VerifyEmailCommandHandler(
+        var notifier = new StubEmailVerificationNotifier();
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(
             new StubUserRepository(user),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new ImmediatePostCommitActionQueue(),
-            new StubEmailVerificationNotifier());
+            notifier: notifier);
 
         Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
         ResultAssert.Success(result);
+        Assert.Null(notifier.LastUserId);
     }
 
     [Fact]
     public async Task VerifyEmailHandler_WhenTokenMissing_ReturnsInvalidToken() {
         var user = User.Create("missing-token@example.com", "secret");
-        var handler = new VerifyEmailCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new ImmediatePostCommitActionQueue(),
-            new StubEmailVerificationNotifier());
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository(user));
 
         Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "token"),
@@ -80,15 +73,27 @@ public sealed partial class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task VerifyEmailHandler_WhenTokenExpired_ReturnsInvalidToken() {
+        var user = User.Create("expired-token@example.com", "secret");
+        var dateTimeProvider = new StubDateTimeProvider();
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        user.SetEmailConfirmationToken(new UserTokenIssue("token", nowUtc.AddMinutes(-1), nowUtc.AddHours(-1)));
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository(user), dateTimeProvider);
+
+        Result result = await handler.Handle(
+            new VerifyEmailCommand(user.Id.Value, "token"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(user.IsEmailConfirmed);
+    }
+
+    [Fact]
     public async Task VerifyEmailHandler_WhenTokenDoesNotMatch_ReturnsInvalidToken() {
         var user = User.Create("bad-token@example.com", "secret");
         user.SetEmailConfirmationToken(new UserTokenIssue("expected", DateTime.UtcNow.AddHours(1), DateTime.UtcNow));
-        var handler = new VerifyEmailCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new ImmediatePostCommitActionQueue(),
-            new StubEmailVerificationNotifier());
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository(user));
 
         Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "actual"),
@@ -103,12 +108,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("verify-rejected-token@example.com", "secret");
         var dateTimeProvider = new StubDateTimeProvider();
         user.SetEmailConfirmationToken(new UserTokenIssue("valid-token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
-        var handler = new VerifyEmailCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            dateTimeProvider,
-            new ImmediatePostCommitActionQueue(),
-            new StubEmailVerificationNotifier());
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository(user), dateTimeProvider);
 
         Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "invalid-token"),
@@ -125,12 +125,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var dateTimeProvider = new StubDateTimeProvider();
         user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
         var notifier = new StubEmailVerificationNotifier();
-        var handler = new VerifyEmailCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            dateTimeProvider,
-            new ImmediatePostCommitActionQueue(),
-            notifier);
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(new StubUserRepository(user), dateTimeProvider, notifier);
 
         Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "token"),
@@ -146,11 +141,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var user = User.Create("verify-notifier-fails@example.com", "secret");
         var dateTimeProvider = new StubDateTimeProvider();
         user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
-        var handler = new VerifyEmailCommandHandler(
+        VerifyEmailCommandHandler handler = CreateVerifyEmailHandler(
             new StubUserRepository(user),
-            new StubPasswordHasher(),
             dateTimeProvider,
-            new ImmediatePostCommitActionQueue(),
             new StubEmailVerificationNotifier(throwOnNotify: true));
 
         Result result = await handler.Handle(

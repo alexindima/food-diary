@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3117,
-                    "symbols":  3157,
+                    "sourceFiles":  3121,
+                    "symbols":  3161,
                     "interfaceImplementationLinks":  234,
                     "dependencyInjectionRegistrations":  233,
                     "kinds":  {
                                   "class":  1589,
-                                  "enum":  48,
+                                  "enum":  49,
                                   "interface":  417,
-                                  "record":  990,
+                                  "record":  993,
                                   "record struct":  113
                               },
                     "roles":  {
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1117,
+                                  "Other":  1121,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -724,7 +724,7 @@
                         "kind":  "interface",
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
-                        "line":  5
+                        "line":  6
                     },
                     {
                         "name":  "IssuedAuthenticationTokens",
@@ -3681,6 +3681,13 @@
                         "line":  4
                     },
                     {
+                        "name":  "UserAuthenticationPrincipalModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAuthenticationPrincipalModel.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "UserDashboardProfileModel",
                         "kind":  "record",
                         "role":  "Other",
@@ -3741,6 +3748,27 @@
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Users/Models/UserNotificationPreferencesModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserPasswordResetDeliveryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetDeliveryModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserPasswordResetIssueModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetIssueModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserPasswordResetIssueStatus",
+                        "kind":  "enum",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetIssueStatus.cs",
                         "line":  2
                     },
                     {
@@ -5505,7 +5533,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "ConfirmPasswordResetCommandValidator",
@@ -5778,7 +5806,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "VerifyEmailCommandValidator",
@@ -5883,7 +5911,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Authentication/Services/AuthenticationTokenService.cs",
-                        "line":  11
+                        "line":  12
                     },
                     {
                         "name":  "AuthenticationUserLookupService",
@@ -11728,7 +11756,7 @@
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Users/Services/UserAuthenticationIdentityService.cs",
-                        "line":  13
+                        "line":  14
                     },
                     {
                         "name":  "UserIdentityMutationService",

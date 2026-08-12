@@ -374,6 +374,11 @@ public sealed class RefreshTokenCommandHandlerTests {
         public int IssueAndStoreCallCount { get; private set; }
         public bool LastRememberMe { get; private set; }
 
+        public Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
+            FoodDiary.Application.Abstractions.Users.Models.UserAuthenticationPrincipalModel principal,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
             User user,
             CancellationToken cancellationToken,

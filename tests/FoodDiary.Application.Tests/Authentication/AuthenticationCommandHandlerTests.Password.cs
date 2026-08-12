@@ -10,16 +10,32 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 namespace FoodDiary.Application.Tests.Authentication;
 
 public sealed partial class AuthenticationCommandHandlerTests {
+    private static RequestPasswordResetCommandHandler CreateRequestPasswordResetHandler(
+        StubUserRepository userRepository,
+        StubEmailSender sender,
+        StubDateTimeProvider? dateTimeProvider = null) =>
+        new(
+            CreateUserAuthenticationIdentityService(userRepository),
+            sender,
+            dateTimeProvider ?? new StubDateTimeProvider(),
+            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+
+    private static ConfirmPasswordResetCommandHandler CreateConfirmPasswordResetHandler(
+        StubUserRepository userRepository,
+        StubDateTimeProvider? dateTimeProvider = null,
+        StubAuthenticationTokenService? tokenService = null,
+        IRefreshTokenSessionWriteRepository? refreshTokenSessionRepository = null) =>
+        new(
+            CreateUserAuthenticationIdentityService(userRepository),
+            dateTimeProvider ?? new StubDateTimeProvider(),
+            tokenService ?? new StubAuthenticationTokenService(),
+            refreshTokenSessionRepository ?? Substitute.For<IRefreshTokenSessionWriteRepository>(),
+            new NullAuditLogger());
 
     [Fact]
     public async Task RequestPasswordResetHandler_WhenUserMissing_ReturnsSuccessWithoutSending() {
         var sender = new StubEmailSender();
-        var handler = new RequestPasswordResetCommandHandler(
-            new StubUserRepository(),
-            new StubPasswordHasher(),
-            sender,
-            new StubDateTimeProvider(),
-            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+        RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(), sender);
 
         Result result = await handler.Handle(new RequestPasswordResetCommand("missing@example.com"), CancellationToken.None);
 
@@ -33,12 +49,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         DateTime nowUtc = new StubDateTimeProvider().GetUtcNow().UtcDateTime;
         user.SetPasswordResetToken(new UserTokenIssue("old-hash", nowUtc.AddHours(1), nowUtc.AddSeconds(-30)));
         var sender = new StubEmailSender();
-        var handler = new RequestPasswordResetCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            sender,
-            new StubDateTimeProvider(),
-            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+        RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(user), sender);
 
         Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
 
@@ -50,12 +61,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     public async Task RequestPasswordResetHandler_WithActiveUser_UpdatesTokenAndSendsMessage() {
         var user = User.Create("reset@example.com", "secret");
         var sender = new StubEmailSender();
-        var handler = new RequestPasswordResetCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            sender,
-            new StubDateTimeProvider(),
-            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+        RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(user), sender);
 
         Result result = await handler.Handle(
             new RequestPasswordResetCommand(user.Email, "https://client.test"),
@@ -70,26 +76,45 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task RequestPasswordResetHandler_WhenEmailEnqueueFails_Throws() {
         var user = User.Create("reset-email-fails@example.com", "secret");
-        var handler = new RequestPasswordResetCommandHandler(
+        RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(
             new StubUserRepository(user),
-            new StubPasswordHasher(),
-            new StubEmailSender(throwOnPasswordReset: true),
-            new StubDateTimeProvider(),
-            Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
+            new StubEmailSender(throwOnPasswordReset: true));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None));
     }
 
     [Fact]
+    public async Task RequestPasswordResetHandler_WhenUserInactive_ReturnsSuccessWithoutSending() {
+        var user = User.Create("inactive-reset@example.com", "secret");
+        user.Deactivate();
+        var sender = new StubEmailSender();
+        RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(user), sender);
+
+        Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(sender.LastPasswordReset);
+        Assert.Null(user.PasswordResetTokenHash);
+    }
+
+    [Fact]
+    public async Task RequestPasswordResetHandler_WhenUserDeleted_ReturnsSuccessWithoutSending() {
+        var user = User.Create("deleted-reset@example.com", "secret");
+        user.DeleteAccount(DateTime.UtcNow);
+        var sender = new StubEmailSender();
+        RequestPasswordResetCommandHandler handler = CreateRequestPasswordResetHandler(new StubUserRepository(user), sender);
+
+        Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(sender.LastPasswordReset);
+        Assert.Null(user.PasswordResetTokenHash);
+    }
+
+    [Fact]
     public async Task ConfirmPasswordResetHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new ConfirmPasswordResetCommandHandler(
-            new StubUserRepository(),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new StubAuthenticationTokenService(),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            new NullAuditLogger());
+        ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(new StubUserRepository());
 
         Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(Guid.Empty, "token", "StrongPass123"),
@@ -102,13 +127,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
     [Fact]
     public async Task ConfirmPasswordResetHandler_WhenUserMissing_ReturnsNotFound() {
-        var handler = new ConfirmPasswordResetCommandHandler(
-            new StubUserRepository(),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new StubAuthenticationTokenService(),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            new NullAuditLogger());
+        ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(new StubUserRepository());
 
         Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(Guid.NewGuid(), "token", "StrongPass123"),
@@ -121,13 +140,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ConfirmPasswordResetHandler_WhenTokenMissing_ReturnsInvalidToken() {
         var user = User.Create("reset-missing-token@example.com", "secret");
-        var handler = new ConfirmPasswordResetCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new StubAuthenticationTokenService(),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            new NullAuditLogger());
+        ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(new StubUserRepository(user));
 
         Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(user.Id.Value, "token", "StrongPass123"),
@@ -138,16 +151,31 @@ public sealed partial class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task ConfirmPasswordResetHandler_WhenTokenExpired_ReturnsInvalidToken() {
+        var user = User.Create("reset-expired-token@example.com", "secret");
+        var dateTimeProvider = new StubDateTimeProvider();
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        user.SetPasswordResetToken(new UserTokenIssue("token", nowUtc.AddMinutes(-1), nowUtc.AddHours(-1)));
+        var tokenService = new StubAuthenticationTokenService();
+        ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(
+            new StubUserRepository(user),
+            dateTimeProvider,
+            tokenService);
+
+        Result<AuthenticationModel> result = await handler.Handle(
+            new ConfirmPasswordResetCommand(user.Id.Value, "token", "StrongPass123"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Null(tokenService.LastPrincipal);
+    }
+
+    [Fact]
     public async Task ConfirmPasswordResetHandler_WhenTokenDoesNotMatch_ReturnsInvalidToken() {
         var user = User.Create("reset-bad-token@example.com", "secret");
         user.SetPasswordResetToken(new UserTokenIssue("expected", DateTime.UtcNow.AddHours(1), DateTime.UtcNow));
-        var handler = new ConfirmPasswordResetCommandHandler(
-            new StubUserRepository(user),
-            new StubPasswordHasher(),
-            new StubDateTimeProvider(),
-            new StubAuthenticationTokenService(),
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            new NullAuditLogger());
+        ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(new StubUserRepository(user));
 
         Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(user.Id.Value, "actual", "StrongPass123"),
@@ -163,13 +191,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var dateTimeProvider = new StubDateTimeProvider();
         user.SetPasswordResetToken(new UserTokenIssue("valid-token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
         var tokenService = new StubAuthenticationTokenService();
-        var handler = new ConfirmPasswordResetCommandHandler(
+        ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(
             new StubUserRepository(user),
-            new StubPasswordHasher(),
             dateTimeProvider,
-            tokenService,
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            new NullAuditLogger());
+            tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(user.Id.Value, "invalid-token", "StrongPass123"),
@@ -178,6 +203,7 @@ public sealed partial class AuthenticationCommandHandlerTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Null(tokenService.LastUser);
+        Assert.Null(tokenService.LastPrincipal);
     }
 
     [Fact]
@@ -186,13 +212,10 @@ public sealed partial class AuthenticationCommandHandlerTests {
         var dateTimeProvider = new StubDateTimeProvider();
         user.SetPasswordResetToken(new UserTokenIssue("token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
         var tokenService = new StubAuthenticationTokenService();
-        var handler = new ConfirmPasswordResetCommandHandler(
+        ConfirmPasswordResetCommandHandler handler = CreateConfirmPasswordResetHandler(
             new StubUserRepository(user),
-            new StubPasswordHasher(),
             dateTimeProvider,
-            tokenService,
-            Substitute.For<IRefreshTokenSessionWriteRepository>(),
-            new NullAuditLogger());
+            tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(user.Id.Value, "token", "new-password"),
@@ -200,7 +223,9 @@ public sealed partial class AuthenticationCommandHandlerTests {
 
         ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
-        Assert.Equal(user, tokenService.LastUser);
+        Assert.Null(tokenService.LastUser);
+        Assert.Equal(user.Id, tokenService.LastPrincipal?.UserId);
+        Assert.Equal(user.Email, tokenService.LastPrincipal?.Email);
     }
 
     [Fact]

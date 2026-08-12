@@ -1,16 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
 
 public sealed class RequestPasswordResetCommandHandler(
-    IAuthenticationUserMutationService userMutationService,
-    IPasswordHasher passwordHasher,
+    IUserAuthenticationIdentityService userIdentityService,
     IEmailSender emailSender,
     TimeProvider dateTimeProvider,
     ILogger<RequestPasswordResetCommandHandler> logger)
@@ -19,30 +18,32 @@ public sealed class RequestPasswordResetCommandHandler(
     private static readonly TimeSpan TokenLifetime = TimeSpan.FromHours(1);
 
     public async Task<Result> Handle(RequestPasswordResetCommand command, CancellationToken cancellationToken) {
-        User? user = await userMutationService.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
-        if (!AuthenticationUserAccessPolicy.CanRequestPasswordReset(user)) {
-            return Result.Success();
-        }
-
-        User currentUser = user!;
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        if (currentUser.PasswordResetSentAtUtc.HasValue &&
-            nowUtc - currentUser.PasswordResetSentAtUtc.Value < Cooldown) {
+        string token = SecurityTokenGenerator.GenerateUrlSafeToken();
+        UserPasswordResetIssueModel issue = await userIdentityService
+            .IssuePasswordResetAsync(
+                command.Email,
+                token,
+                nowUtc.Add(TokenLifetime),
+                nowUtc,
+                Cooldown,
+                cancellationToken)
+            .ConfigureAwait(false);
+        if (issue.Status == UserPasswordResetIssueStatus.Throttled) {
             logger.LogInformation("Password reset request throttled by cooldown.");
+        }
+
+        if (issue.Status != UserPasswordResetIssueStatus.Issued || issue.Delivery is null) {
             return Result.Success();
         }
 
-        string token = SecurityTokenGenerator.GenerateUrlSafeToken();
-        string tokenHash = passwordHasher.Hash(token);
-        DateTime expiresAtUtc = nowUtc.Add(TokenLifetime);
-
-        currentUser.SetPasswordResetToken(new UserTokenIssue(
-            TokenHash: tokenHash,
-            ExpiresAtUtc: expiresAtUtc,
-            IssuedAtUtc: nowUtc));
-        await userMutationService.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
-
-        PasswordResetMessage message = new(currentUser.Email, currentUser.Id.Value.ToString(), token, currentUser.Language, command.ClientOrigin);
+        UserPasswordResetDeliveryModel delivery = issue.Delivery;
+        PasswordResetMessage message = new(
+            delivery.Email,
+            delivery.UserId.ToString(),
+            token,
+            delivery.Language,
+            command.ClientOrigin);
         await emailSender.SendPasswordResetAsync(message, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();

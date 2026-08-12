@@ -6,9 +6,9 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1411,
-                    "credential":  146,
-                    "identity":  143,
+                    "candidateFields":  1414,
+                    "credential":  147,
+                    "identity":  145,
                     "health":  626,
                     "financial":  199,
                     "privateContent":  297,
@@ -78,6 +78,13 @@
                        "name":  "HasPassword",
                        "type":  "bool",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAdminReadModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "AccessTokenCapUtc",
+                       "type":  "DateTime?",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAuthenticationPrincipalModel.cs",
                        "line":  9
                    },
                    {
@@ -7035,6 +7042,13 @@
                        "category":  "identity",
                        "name":  "Email",
                        "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserAuthenticationPrincipalModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserDashboardProfileModel.cs",
                        "line":  7
                    },
@@ -7065,6 +7079,13 @@
                        "type":  "bool",
                        "path":  "FoodDiary.Application.Abstractions/Users/Models/UserModel.cs",
                        "line":  40
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Abstractions/Users/Models/UserPasswordResetDeliveryModel.cs",
+                       "line":  5
                    },
                    {
                        "category":  "identity",

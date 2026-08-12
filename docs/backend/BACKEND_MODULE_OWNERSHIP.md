@@ -128,7 +128,7 @@ AI, Dashboard, Dietologist, Gamification, Hydration, TDEE and Weekly Check-In us
 
 This separation is an extraction prerequisite: a future `FoodDiary.Application.Users` assembly must be able to implement the abstraction-level profile contract without forcing read consumers to reference the Users implementation assembly.
 
-Authentication delegates Google and Telegram identity linking and email-verification token issuance to `IUserAuthenticationIdentityService`. Authentication remains responsible for validating provider assertions, replay protection, raw token generation and hashing, while Users owns identity uniqueness checks and aggregate mutation. The migrated handlers receive only `UserModel` or email-delivery data and never acquire the `User` aggregate.
+Authentication delegates Google and Telegram identity linking, email-verification token issuance/completion and password-reset issuance/completion to `IUserAuthenticationIdentityService`. Authentication remains responsible for validating provider assertions, replay protection, raw token generation and session/JWT issuance, while Users owns identity uniqueness checks, credential hashing, one-time-token validation and aggregate mutation. Migrated handlers receive only results, `UserModel`, delivery data or `UserAuthenticationPrincipalModel`; they never acquire the `User` aggregate.
 
 ## Notifications boundary
 

@@ -6,11 +6,39 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Application.Abstractions.Users.Models;
+using FoodDiary.Application.Users.Mappings;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
 [ExcludeFromCodeCoverage]
 public class AuthenticationTokenServiceTests {
+    [Fact]
+    public async Task IssueFromPrincipalAsync_StoresSessionWithoutMutatingUserAggregate() {
+        User user = CreateUser("principal@example.com");
+        var repository = new InMemoryUserRepository(user);
+        var loginEvents = new InMemoryUserLoginEventRepository();
+        var sessions = new InMemoryRefreshTokenSessionRepository();
+        var jwt = new FakeJwtTokenGenerator();
+        var service = new AuthenticationTokenService(repository, loginEvents, sessions, jwt, new StubDateTimeProvider());
+        var principal = new UserAuthenticationPrincipalModel(
+            user.Id,
+            user.Email,
+            ["User"],
+            AccessTokenCapUtc: null,
+            user.ToModel());
+
+        IssuedAuthenticationTokens result = await service
+            .IssueFromPrincipalAsync(principal, CancellationToken.None);
+
+        Assert.Equal("access-token", result.AccessToken);
+        Assert.Equal("refresh-token", result.RefreshToken);
+        Assert.Equal(user.Id, Assert.Single(sessions.Items).UserId);
+        Assert.False(repository.Updated);
+        Assert.Empty(loginEvents.Items);
+        Assert.Equal(["User"], jwt.LastAccessRoles);
+    }
+
     [Fact]
     public async Task IssueAndStoreAsync_StoresHashedRefreshToken_AndReturnsTokens() {
         User user = CreateUser("user@example.com");

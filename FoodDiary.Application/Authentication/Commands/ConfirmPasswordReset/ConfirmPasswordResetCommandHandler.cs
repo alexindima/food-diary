@@ -1,21 +1,19 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Authentication.Mappings;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 
 public sealed class ConfirmPasswordResetCommandHandler(
-    IAuthenticationUserMutationService userMutationService,
-    IPasswordHasher passwordHasher,
+    IUserAuthenticationIdentityService userIdentityService,
     TimeProvider dateTimeProvider,
     IAuthenticationTokenService authenticationTokenService,
     IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
@@ -30,33 +28,25 @@ public sealed class ConfirmPasswordResetCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        User? user = await userMutationService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user is null) {
-            return Result.Failure<AuthenticationModel>(Errors.User.NotFound(userId));
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        Result<UserAuthenticationPrincipalModel> resetResult = await userIdentityService
+            .CompletePasswordResetAsync(userId, command.Token, command.NewPassword, nowUtc, cancellationToken)
+            .ConfigureAwait(false);
+        if (resetResult.IsFailure) {
+            return Result.Failure<AuthenticationModel>(resetResult.Error);
         }
-
-        if (string.IsNullOrWhiteSpace(user.PasswordResetTokenHash) ||
-            !user.PasswordResetTokenExpiresAtUtc.HasValue ||
-            user.PasswordResetTokenExpiresAtUtc.Value < dateTimeProvider.GetUtcNow().UtcDateTime) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
-        }
-
-        bool isValid = passwordHasher.Verify(command.Token, user.PasswordResetTokenHash);
-        if (!isValid) {
-            return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
-        }
-
-        string hashedPassword = passwordHasher.Hash(command.NewPassword);
-        user.CompletePasswordReset(hashedPassword);
 
         await refreshTokenSessionRepository
-            .RevokeAllAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken)
+            .RevokeAllAsync(userId, nowUtc, cancellationToken)
             .ConfigureAwait(false);
 
-        IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken).ConfigureAwait(false);
+        UserAuthenticationPrincipalModel principal = resetResult.Value;
+        IssuedAuthenticationTokens tokens = await authenticationTokenService
+            .IssueFromPrincipalAsync(principal, cancellationToken)
+            .ConfigureAwait(false);
 
         auditLogger.Log("auth.password-reset.confirm", userId, "User", userId.Value.ToString());
 
-        return Result.Success(user.ToAuthenticationModel(tokens));
+        return Result.Success(new AuthenticationModel(tokens.AccessToken, tokens.RefreshToken, principal.User));
     }
 }

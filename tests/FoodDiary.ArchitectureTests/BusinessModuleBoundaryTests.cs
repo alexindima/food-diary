@@ -86,9 +86,12 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void MigratedAuthenticationIdentityHandlers_DoNotDependOnUsersAggregateAccess() {
         string[] handlerPaths = [
+            "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
             "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+            "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
         ];
         string[] forbiddenReferences = [
             "FoodDiary.Domain.Entities.Users",

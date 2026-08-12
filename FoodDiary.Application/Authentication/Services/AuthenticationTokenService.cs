@@ -4,6 +4,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Authentication.Services.UserAgents;
 using FoodDiary.Domain.Enums;
 
@@ -16,6 +17,36 @@ public sealed class AuthenticationTokenService(
     IJwtTokenGenerator jwtTokenGenerator,
     TimeProvider dateTimeProvider)
     : IAuthenticationTokenService {
+    public async Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
+        UserAuthenticationPrincipalModel principal,
+        CancellationToken cancellationToken) {
+        string accessToken = jwtTokenGenerator.GenerateAccessToken(
+            principal.UserId,
+            principal.Email,
+            principal.Roles,
+            principal.AccessTokenCapUtc);
+        var refreshSessionId = Guid.NewGuid();
+        string refreshToken = jwtTokenGenerator.GenerateRefreshToken(
+            principal.UserId,
+            principal.Email,
+            principal.Roles,
+            rememberMe: false,
+            refreshSessionId: refreshSessionId);
+        string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        var session = UserRefreshTokenSession.Create(
+            refreshSessionId,
+            principal.UserId,
+            hashedRefreshToken,
+            rememberMe: false,
+            authProvider: null,
+            ipAddress: null,
+            userAgent: null,
+            nowUtc: nowUtc);
+        await refreshTokenSessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
+        return new IssuedAuthenticationTokens(accessToken, refreshToken);
+    }
+
     public async Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
         User user,
         CancellationToken cancellationToken,

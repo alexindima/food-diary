@@ -83,20 +83,21 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent
-- Public contract files: 46
+- Public contract files: 50
 - Observed external consumer groups: 35
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 46
+- Public contract types: 50
 - Interfaces: 21
-- DTO/read-model/projection types: 23
-- Enums: 1
+- DTO/read-model/projection types: 26
+- Enums: 2
 - Exported repository-shaped contracts: 5
 - Contracts referencing domain entities: 4
 - `class UserErrors`
 - `enum UserAccountStatusFilter`
+- `enum UserPasswordResetIssueStatus`
 - `interface ICurrentUserAccessService`
 - `interface IUserAdminReadModelRepository`
 - `interface IUserAdminReadRepository`
@@ -124,8 +125,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `record ProfileDietologistRelationshipModel`
 - `record ProfileOverviewModel`
 - `record ProfileWebPushSubscriptionModel`
-- `record UserAdminReadModel`
-- ... 16 more type(s)
+- ... 20 more type(s)
 
 ## Extraction Readiness
 

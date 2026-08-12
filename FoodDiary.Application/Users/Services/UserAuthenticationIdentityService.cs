@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
@@ -14,8 +15,103 @@ namespace FoodDiary.Application.Users.Services;
 internal sealed class UserAuthenticationIdentityService(
     IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository,
-    IGoogleIdentityUserDirectoryService googleIdentityUserDirectoryService)
+    IGoogleIdentityUserDirectoryService googleIdentityUserDirectoryService,
+    IPasswordHasher passwordHasher)
     : IUserAuthenticationIdentityService {
+    public async Task<Result<UserAuthenticationPrincipalModel>> CompletePasswordResetAsync(
+        UserId userId,
+        string token,
+        string newPassword,
+        DateTime completedAtUtc,
+        CancellationToken cancellationToken = default) {
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (user is null) {
+            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.User.NotFound(userId));
+        }
+
+        if (string.IsNullOrWhiteSpace(user.PasswordResetTokenHash) ||
+            !user.PasswordResetTokenExpiresAtUtc.HasValue ||
+            user.PasswordResetTokenExpiresAtUtc.Value < completedAtUtc ||
+            !passwordHasher.Verify(token, user.PasswordResetTokenHash)) {
+            return Result.Failure<UserAuthenticationPrincipalModel>(Errors.Authentication.InvalidToken);
+        }
+
+        user.CompletePasswordReset(passwordHasher.Hash(newPassword));
+        user.RecordAuthenticationActivity(completedAtUtc);
+        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+
+        var roles = user.GetRoleNames().ToList();
+        bool hasActivePremiumTrial = user.HasActivePremiumTrial(completedAtUtc);
+        if (hasActivePremiumTrial && !roles.Contains(RoleNames.Premium, StringComparer.Ordinal)) {
+            roles.Add(RoleNames.Premium);
+        }
+
+        DateTime? accessTokenCapUtc = user.HasRole(RoleNames.Premium) || !hasActivePremiumTrial
+            ? null
+            : user.PremiumTrialEndsAtUtc;
+        return Result.Success(new UserAuthenticationPrincipalModel(
+            user.Id,
+            user.Email,
+            roles,
+            accessTokenCapUtc,
+            user.ToModel()));
+    }
+
+    public async Task<UserPasswordResetIssueModel> IssuePasswordResetAsync(
+        string email,
+        string token,
+        DateTime expiresAtUtc,
+        DateTime issuedAtUtc,
+        TimeSpan resendCooldown,
+        CancellationToken cancellationToken = default) {
+        User? user = await userLookupRepository
+            .GetByEmailIncludingDeletedAsync(email, cancellationToken)
+            .ConfigureAwait(false);
+        if (user is not { IsActive: true, DeletedAt: null }) {
+            return new UserPasswordResetIssueModel(UserPasswordResetIssueStatus.NotEligible);
+        }
+
+        if (user.PasswordResetSentAtUtc.HasValue &&
+            issuedAtUtc - user.PasswordResetSentAtUtc.Value < resendCooldown) {
+            return new UserPasswordResetIssueModel(UserPasswordResetIssueStatus.Throttled);
+        }
+
+        user.SetPasswordResetToken(new UserTokenIssue(
+            TokenHash: passwordHasher.Hash(token),
+            ExpiresAtUtc: expiresAtUtc,
+            IssuedAtUtc: issuedAtUtc));
+        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        return new UserPasswordResetIssueModel(
+            UserPasswordResetIssueStatus.Issued,
+            new UserPasswordResetDeliveryModel(user.Id.Value, user.Email, user.Language));
+    }
+
+    public async Task<Result<bool>> VerifyEmailAsync(
+        UserId userId,
+        string token,
+        DateTime verifiedAtUtc,
+        CancellationToken cancellationToken = default) {
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (user is null) {
+            return Result.Failure<bool>(Errors.User.NotFound(userId));
+        }
+
+        if (user.IsEmailConfirmed) {
+            return Result.Success(value: false);
+        }
+
+        if (string.IsNullOrWhiteSpace(user.EmailConfirmationTokenHash) ||
+            !user.EmailConfirmationTokenExpiresAtUtc.HasValue ||
+            user.EmailConfirmationTokenExpiresAtUtc.Value < verifiedAtUtc ||
+            !passwordHasher.Verify(token, user.EmailConfirmationTokenHash)) {
+            return Result.Failure<bool>(Errors.Authentication.InvalidToken);
+        }
+
+        user.CompleteEmailVerification();
+        await userWriteRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        return Result.Success(value: true);
+    }
+
     public async Task<Result<UserModel>> LinkGoogleAsync(
         UserId userId,
         string email,

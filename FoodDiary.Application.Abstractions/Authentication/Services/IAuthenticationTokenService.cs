@@ -1,9 +1,14 @@
 using FoodDiary.Application.Abstractions.Authentication.Models;
+using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Abstractions.Authentication.Services;
 
 public interface IAuthenticationTokenService {
+    Task<IssuedAuthenticationTokens> IssueFromPrincipalAsync(
+        UserAuthenticationPrincipalModel principal,
+        CancellationToken cancellationToken);
+
     Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
         User user,
         CancellationToken cancellationToken,

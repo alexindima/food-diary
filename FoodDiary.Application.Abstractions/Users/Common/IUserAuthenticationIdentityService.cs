@@ -5,6 +5,27 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Abstractions.Users.Common;
 
 public interface IUserAuthenticationIdentityService {
+    Task<Result<UserAuthenticationPrincipalModel>> CompletePasswordResetAsync(
+        UserId userId,
+        string token,
+        string newPassword,
+        DateTime completedAtUtc,
+        CancellationToken cancellationToken = default);
+
+    Task<UserPasswordResetIssueModel> IssuePasswordResetAsync(
+        string email,
+        string token,
+        DateTime expiresAtUtc,
+        DateTime issuedAtUtc,
+        TimeSpan resendCooldown,
+        CancellationToken cancellationToken = default);
+
+    Task<Result<bool>> VerifyEmailAsync(
+        UserId userId,
+        string token,
+        DateTime verifiedAtUtc,
+        CancellationToken cancellationToken = default);
+
     Task<Result<UserModel>> LinkGoogleAsync(
         UserId userId,
         string email,
