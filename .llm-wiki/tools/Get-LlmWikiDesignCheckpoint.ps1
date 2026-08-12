@@ -16,6 +16,17 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+
+function Get-CollectionPropertyValues([object[]]$InputObject, [string]$PropertyName) {
+    @(
+        foreach ($item in @($InputObject)) {
+            if ($null -eq $item) { continue }
+            $property = $item.PSObject.Properties[$PropertyName]
+            if ($null -ne $property) { @($property.Value) | Where-Object { $null -ne $_ } }
+        }
+    )
+}
+
 $common = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
@@ -49,33 +60,42 @@ $implementationPhase = @($plan.phases | Where-Object id -eq 'implementation' | S
 $contractPhases = @($plan.phases | Where-Object id -in @('contracts', 'domain-data'))
 $verificationPhase = @($plan.phases | Where-Object id -eq 'focused-verification' | Select-Object -First 1)
 $publicationPhases = @($plan.phases | Where-Object id -in @('generated-artifacts', 'release-readiness'))
+$implementationFiles = @(Get-CollectionPropertyValues $implementationPhase 'files')
+$verificationFiles = @(Get-CollectionPropertyValues $verificationPhase 'files')
+$verificationEvidence = @(Get-CollectionPropertyValues $verificationPhase 'evidence')
+$contractFiles = @(Get-CollectionPropertyValues $contractPhases 'files')
+$contractActions = @(Get-CollectionPropertyValues $contractPhases 'actions')
+$contractEvidence = @(Get-CollectionPropertyValues $contractPhases 'evidence')
+$publicationFiles = @(Get-CollectionPropertyValues $publicationPhases 'files')
+$publicationActions = @(Get-CollectionPropertyValues $publicationPhases 'actions')
+$publicationEvidence = @(Get-CollectionPropertyValues $publicationPhases 'evidence')
 $designSlices = if ($usesVerticalSlices) {
     @(
         [pscustomobject][ordered]@{
             id = 'slice-minimum-behavior'
             title = 'Deliver the smallest observable behavior'
             outcome = 'One acceptance-relevant behavior works end to end through its current runtime owner and closest reliable test.'
-            files = @($implementationPhase.files + $verificationPhase.files | Where-Object { $_ } | Select-Object -Unique)
+            files = @($implementationFiles + $verificationFiles | Where-Object { $_ } | Select-Object -Unique)
             actions = @('Choose one observable acceptance outcome.', 'Implement only the path required for that outcome.', 'Add and run its closest focused test before expanding scope.')
-            evidence = @($verificationPhase.evidence)
+            evidence = $verificationEvidence
             checkpoint = 'Confirm the behavior is observable, tested, and still inside the declared boundary.'
         }
         [pscustomobject][ordered]@{
             id = 'slice-compatibility-and-failure'
             title = 'Complete compatibility and failure behavior'
             outcome = 'Consumers, boundary cases, and failure behavior are compatible and independently verifiable.'
-            files = @($contractPhases.files + $implementationPhase.files + $verificationPhase.files | Where-Object { $_ } | Select-Object -Unique)
-            actions = @($contractPhases.actions + 'Exercise negative, boundary, and downstream-consumer scenarios.' | Where-Object { $_ } | Select-Object -Unique)
-            evidence = @($contractPhases.evidence + $verificationPhase.evidence | Where-Object { $_ } | Select-Object -Unique)
+            files = @($contractFiles + $implementationFiles + $verificationFiles | Where-Object { $_ } | Select-Object -Unique)
+            actions = @($contractActions + 'Exercise negative, boundary, and downstream-consumer scenarios.' | Where-Object { $_ } | Select-Object -Unique)
+            evidence = @($contractEvidence + $verificationEvidence | Where-Object { $_ } | Select-Object -Unique)
             checkpoint = 'Stop if compatibility, migration, privacy, or error semantics require a different design decision.'
         }
         [pscustomobject][ordered]@{
             id = 'slice-release-proof'
             title = 'Produce publication proof'
             outcome = 'Generated artifacts, rollout checks, and final evidence prove the complete change is publishable.'
-            files = @($publicationPhases.files | Where-Object { $_ } | Select-Object -Unique)
-            actions = @($publicationPhases.actions | Where-Object { $_ } | Select-Object -Unique)
-            evidence = @($publicationPhases.evidence | Where-Object { $_ } | Select-Object -Unique)
+            files = @($publicationFiles | Select-Object -Unique)
+            actions = @($publicationActions | Select-Object -Unique)
+            evidence = @($publicationEvidence | Select-Object -Unique)
             checkpoint = 'Complete only after strict gates and acceptance evidence pass on the final diff.'
         }
     )

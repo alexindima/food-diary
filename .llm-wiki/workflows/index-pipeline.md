@@ -23,6 +23,9 @@ sources:
   - .llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1
   - .llm-wiki/tools/Build-LlmWikiFrontendContractIndex.ps1
   - .llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1
+  - .llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1
+  - .llm-wiki/tools/Test-LlmWikiAffectedSmokePlanning.ps1
+  - .llm-wiki/tools/Test-LlmWikiChangedTools.ps1
   - .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1
   - .llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1
   - .llm-wiki/tools/LlmWikiIndexCache.ps1
@@ -30,6 +33,7 @@ sources:
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
   - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1
+  - .llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1
   - .llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1
   - .llm-wiki/tools/LlmWikiProcess.ps1
   - .llm-wiki/wiki.ps1
@@ -128,11 +132,13 @@ accumulated affected indexes and execute the uncached strict affected gate.
 `verify` runs every stage through an observed runner: it prints stage start and
 duration, emits a heartbeat every 30 seconds, applies a stage-specific timeout,
 and reports the exact standalone diagnostic command when a stage fails or times
-out. Its tool-regression stage is affected-aware: product-only changes skip Wiki
-evals, Wiki implementation changes select the relevant regression groups, and
-`verify-full`/CI retain the complete adaptive suite. Index and affected-tool
-verification each receive five minutes; cheap contract, policy, and impact
-stages use shorter limits.
+out. Its tool-regression stage is affected-aware and executes independent focused
+groups concurrently: product-only changes skip Wiki evals, known Wiki tools map
+to their owning regression group, and unknown tools receive a bounded parser
+contract instead of falling back to the monolithic tools suite. When adaptive
+evals are selected, their shards subsume separate routing and experience runs so
+the same workflow is not replayed twice. `verify-full`/CI retain every focused
+regression group. Cheap contract, policy, and impact stages use shorter limits.
 
 Each index worker also emits its own heartbeat and has an independent timeout.
 Timeout handling terminates the complete process tree on Windows and modern
@@ -152,6 +158,8 @@ working-tree inputs relevant to that stage. Adding a source-impact receipt no
 longer invalidates already-passed indexes or adaptive evals, while a real input
 change still invalidates its dependent stage. The five newest receipts per stage
 are retained. Hooks and CI omit this switch and therefore remain fully uncached.
+Focused smoke receipts use group-specific source patterns, so editing one test or
+formatter does not invalidate unrelated task, memory, context, and eval groups.
 
 `verify-strict-affected` is the final local gate for a grounded visual UI change.
 It is read-only and deliberately bypasses verification and index caches, stale
@@ -214,9 +222,13 @@ inputs; stylesheet-only changes select no compiled index.
 Use `wiki smoke -SmokeGroup tools -AffectedOnly` during iteration. Its dispatcher
 maps adaptive routing, solution/design planning, integration scanning,
 dependency analysis, and facade changes to existing focused regression suites
-and prints per-group duration. Only genuinely unknown shared-tool changes fall
-back to the complete monolithic tools smoke. The ordinary tools smoke and
-`verify-full` remain complete stateful publication/CI gates.
+and prints per-group duration. Unknown shared-tool changes run the bounded syntax
+and invocation contract; the monolithic `Test-LlmWikiTools.ps1` suite is never an
+automatic fallback. The unscoped tools smoke and `verify-full` execute the full
+focused group catalog with dependency-aware concurrency. Long groups start first,
+successful child output stays in per-group logs, and failures preserve the log
+tail and artifacts. Explicit `-FullTools`/`-CoreTools` script options retain the
+legacy monolithic suite for audit and profiling only.
 
 Use `-BaseRef <ref>` for a committed range or `-ChangedPath <path[]>` for an
 explicit scope. The conservative dependency map still runs derived indexes and
@@ -238,15 +250,13 @@ visible instead of treating index latency as an opaque fixed cost.
 
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
 
-`wiki verify` is the interactive gate. `wiki verify-full` and CI additionally
-run the portable contract and an adaptive stateful tool-smoke suite. Its `Core`
-profile always validates navigation, contracts, policies, indexes, acceptance,
-evidence, and durable-memory isolation. The governed task-workspace and
-orchestration lifecycle remains in the `Full` profile and is selected when the
-commit changes those tools or scheduler policy. Use
-`./.llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1 -FullTools` to force it.
-Use `-CoreTools` only for focused profiling of the Core pipeline; CI keeps the
-conservative automatic selection.
+`wiki verify` is the interactive affected gate. `wiki verify-full` and CI add the
+portable contract, index freshness, and the complete focused regression catalog.
+The legacy monolithic `Core` and `Full` profiles are audit-only because they
+repeat hundreds of facade calls and do not scale for daily verification. Use
+`./.llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1 -FullTools` or `-CoreTools`
+only when profiling that legacy coverage explicitly; neither mode is selected
+automatically.
 Full verification completes the index freshness checks before starting the stateful
 tools. This prevents tool-smoke readers from observing generated files while
 index workers are replacing them. Index workers remain concurrent within their

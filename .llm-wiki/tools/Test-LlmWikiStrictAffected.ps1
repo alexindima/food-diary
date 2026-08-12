@@ -28,7 +28,7 @@ if ($facadeText -match 'Start-Job' -or -not $facadeText.Contains('Invoke-LlmWiki
 $verifyStart = $facadeText.IndexOf("    'verify' {")
 $verifyEnd = $facadeText.IndexOf("    'verify-fast' {", $verifyStart)
 $verifyBody = if ($verifyStart -ge 0 -and $verifyEnd -gt $verifyStart) { $facadeText.Substring($verifyStart, $verifyEnd - $verifyStart) } else { '' }
-if ($verifyBody -notmatch '\$stages\s*=\s*@\(' -or @('workspace policy', 'page contracts', 'lint regression', 'indexes', 'affected tool regression', 'failure knowledge', 'change policy', 'source impact' | Where-Object { $verifyBody -notmatch [regex]::Escape($_) }).Count -gt 0) {
+if ($verifyBody -notmatch '\$stages\s*=\s*@\(' -or @('workspace policy', 'page contracts', 'lint regression', 'indexes', 'affected smoke', 'failure knowledge', 'change policy', 'source impact' | Where-Object { $verifyBody -notmatch [regex]::Escape($_) }).Count -gt 0) {
     throw 'Ordinary verify does not route every verification stage through the observed runner.'
 }
 $strictStart = $facadeText.IndexOf("    'verify-strict-affected' {")
@@ -51,7 +51,7 @@ if ($visualFastBody -notmatch 'VisualUiCompletion' -or $visualFastBody -notmatch
 foreach ($receiptContract in @('verify-progress.json', 'Write-VerifyProgress', "'timed-out'", 'Buffered-shell progress receipt:')) {
     if (-not $facadeText.Contains($receiptContract)) { throw "Observed verify omitted durable progress contract '$receiptContract'." }
 }
-if ($verifyBody -notmatch "'affected tool regression'" -or $verifyBody -match "'adaptive verification' 'Invoke-LlmWikiAdaptiveVerification") {
+if ($verifyBody -notmatch "'affected smoke'" -or $verifyBody -notmatch 'Invoke-LlmWikiParallelSmoke\.ps1' -or $verifyBody -match "'adaptive verification' 'Invoke-LlmWikiAdaptiveVerification") {
     throw 'Ordinary product verify still replays the complete Wiki adaptive eval suite instead of affected tool regressions.'
 }
 if ($facadeText -notmatch "CI -ne 'true'" -or $facadeText -notmatch 'content-addressed stage resume') {
@@ -95,7 +95,7 @@ if ($facadeText -notmatch "'start'" -or $facadeText -notmatch 'Start-LlmWikiDeve
 if ($facadeText -notmatch 'Repair verify \[0/3\]' -or $facadeText -notmatch 'Test-LlmWikiFormattingReady\.ps1') {
     throw 'Repair flow does not stabilize formatting before hashing and index generation.'
 }
-if ($facadeText -notmatch 'Wiki verify mode: affected/resumable' -or $verifyBody -notmatch 'AffectedOnly = \$true') {
+if ($facadeText -notmatch 'Wiki verify mode: bounded affected/resumable' -or $verifyBody -notmatch 'AffectedOnly = \$true') {
     throw 'Ordinary verify is not an affected/resumable gate by default.'
 }
 if ($facadeText -notmatch "ValidateSet\('All', 'Backend', 'Frontend'\)" -or $verifyBody -notmatch 'Area = \$Area') {
@@ -134,8 +134,8 @@ if ($fullVerificationText -notmatch 'still running' -or $fullVerificationText -n
 if ($fullVerificationText -notmatch 'LLM Wiki tool verification profile' -or $fullVerificationText -notmatch '\$FullTools' -or $fullVerificationText -notmatch '\$CoreTools') {
     throw 'Full verification does not expose its adaptive tool profile and explicit override.'
 }
-if ($fullVerificationText -notmatch 'Test-LlmWikiMemoryIsolation\.ps1') {
-    throw 'Full verification omitted unconditional durable-memory isolation coverage.'
+if ($fullVerificationText -notmatch 'Invoke-LlmWikiParallelSmoke\.ps1' -or $fullVerificationText -notmatch 'AllGroups') {
+    throw 'Full verification omitted the complete focused regression suite.'
 }
 if ($toolSmokeText -notmatch "ValidateSet\('Core', 'Full'\)" -or $toolSmokeText -notmatch 'Skipped governed task-workspace and orchestration smoke coverage') {
     throw 'Tool smoke suite omitted its observable Core and Full profiles.'

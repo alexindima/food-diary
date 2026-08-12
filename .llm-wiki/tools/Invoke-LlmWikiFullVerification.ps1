@@ -43,18 +43,9 @@ $receiptRoot = if ($ResumePassedStages) {
 } else { $null }
 if ($receiptRoot) { $null = New-Item -ItemType Directory -Path $receiptRoot -Force }
 
-$changedPaths = @(& git diff --name-only HEAD^ HEAD 2>$null | ForEach-Object { ([string]$_).Replace('\', '/') })
-$extendedToolPatterns = @(
-    '^\.llm-wiki/tools/(Get-LlmWikiAgentFleetCoverage|Get-LlmWikiDispatchMetrics|Get-LlmWikiTaskAudit|Get-LlmWikiTaskHandoff|Get-LlmWikiTaskSchedule|Manage-LlmWikiAgentRegistry|Manage-LlmWikiContextFeedback|Manage-LlmWikiContextOutcome|Manage-LlmWikiOrchestrationCycle|Manage-LlmWikiQualityAdjustment|Manage-LlmWikiSchedulePlan|Manage-LlmWikiTaskDecomposition|Manage-LlmWikiTaskDispatch|Manage-LlmWikiTaskLease|Manage-LlmWikiWorkspaceCircuit|Test-LlmWikiOrchestrationLineage|Test-LlmWikiTools)\.ps1$'
-    '^\.llm-wiki/policies/workspace-policies\.json$'
-)
 if ($FullTools -and $CoreTools) { throw 'FullTools and CoreTools cannot be used together.' }
-$requiresExtendedTools = $FullTools -or (-not $CoreTools -and @($changedPaths | Where-Object {
-    $path = $_
-    @($extendedToolPatterns | Where-Object { $path -match $_ }).Count -gt 0
-}).Count -gt 0)
-$toolsProfile = if ($requiresExtendedTools) { 'Full' } else { 'Core' }
-Write-Host "LLM Wiki tool verification profile: $toolsProfile (changed paths: $($changedPaths.Count))."
+$toolsProfile = if ($FullTools) { 'Full' } elseif ($CoreTools) { 'Core' } else { 'Focused' }
+Write-Host "LLM Wiki tool verification profile: $toolsProfile. Monolithic Core/Full profiles are explicit audit-only modes; focused regressions are the default full gate."
 
 $checks = @(
     [pscustomobject]@{
@@ -68,41 +59,23 @@ $checks = @(
         arguments = ''
     }
     [pscustomobject]@{
-        name = 'task baseline'
-        script = Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1'
-        arguments = ''
-    }
-    [pscustomobject]@{
-        name = 'verification cache'
-        script = Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1'
-        arguments = ''
-    }
-    [pscustomobject]@{
-        name = 'query cache'
-        script = Join-Path $toolsRoot 'Test-LlmWikiQueryCache.ps1'
-        arguments = ''
-    }
-    [pscustomobject]@{
-        name = 'governed delivery'
-        script = Join-Path $toolsRoot 'Test-LlmWikiGovernedDeliveryRegression.ps1'
-        arguments = ''
-    }
-    [pscustomobject]@{
         name = 'indexes'
         script = Join-Path $toolsRoot 'Invoke-LlmWikiIndexPipeline.ps1'
         arguments = "-Check -MaxConcurrency $IndexConcurrency"
     }
     [pscustomobject]@{
-        name = 'durable memory isolation'
-        script = Join-Path $toolsRoot 'Test-LlmWikiMemoryIsolation.ps1'
-        arguments = ''
+        name = 'focused tool regressions'
+        script = Join-Path $toolsRoot 'Invoke-LlmWikiParallelSmoke.ps1'
+        arguments = "-AllGroups -MaxConcurrency $IndexConcurrency"
     }
-    [pscustomobject]@{
-        name = 'tools'
+)
+if ($FullTools -or $CoreTools) {
+    $checks += [pscustomobject]@{
+        name = "monolithic tools audit ($toolsProfile)"
         script = Join-Path $toolsRoot 'Test-LlmWikiTools.ps1'
         arguments = "-Profile $toolsProfile"
     }
-)
+}
 
 foreach ($check in $checks) {
     $receiptPath = if ($receiptRoot) { Join-Path $receiptRoot (($check.name -replace '[^a-zA-Z0-9_.-]', '-') + '.passed') } else { $null }

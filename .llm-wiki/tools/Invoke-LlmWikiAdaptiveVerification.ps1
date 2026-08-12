@@ -1,17 +1,24 @@
 [CmdletBinding()]
-param()
+param(
+    [ValidateSet('All', 'Workflow', 'Evals')]
+    [string]$Scope = 'All'
+)
 
 $ErrorActionPreference = 'Stop'
 $toolsRoot = [IO.Path]::GetFullPath($PSScriptRoot)
 $repositoryRoot = [IO.Path]::GetFullPath((Join-Path $toolsRoot '../..'))
 $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
 $checks = @(
-    [pscustomobject]@{ name = 'adaptive routing'; script = Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1'; arguments = '-Group Routing' }
-    [pscustomobject]@{ name = 'adaptive experience'; script = Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1'; arguments = '-Group Experience' }
-    [pscustomobject]@{ name = 'integration scan'; script = Join-Path $toolsRoot 'Test-LlmWikiIntegrationScan.ps1'; arguments = '' }
-    [pscustomobject]@{ name = 'evals 1/3'; script = Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1'; arguments = '-ShardIndex 0 -ShardCount 3' }
-    [pscustomobject]@{ name = 'evals 2/3'; script = Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1'; arguments = '-ShardIndex 1 -ShardCount 3' }
-    [pscustomobject]@{ name = 'evals 3/3'; script = Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1'; arguments = '-ShardIndex 2 -ShardCount 3' }
+    if ($Scope -in @('All', 'Workflow')) {
+        [pscustomobject]@{ name = 'adaptive routing'; script = Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1'; arguments = '-Group Routing' }
+        [pscustomobject]@{ name = 'adaptive experience'; script = Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1'; arguments = '-Group Experience' }
+    }
+    if ($Scope -in @('All', 'Evals')) {
+        [pscustomobject]@{ name = 'integration scan'; script = Join-Path $toolsRoot 'Test-LlmWikiIntegrationScan.ps1'; arguments = '' }
+        [pscustomobject]@{ name = 'evals 1/3'; script = Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1'; arguments = '-ShardIndex 0 -ShardCount 3' }
+        [pscustomobject]@{ name = 'evals 2/3'; script = Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1'; arguments = '-ShardIndex 1 -ShardCount 3' }
+        [pscustomobject]@{ name = 'evals 3/3'; script = Join-Path $toolsRoot 'Invoke-LlmWikiEvals.ps1'; arguments = '-ShardIndex 2 -ShardCount 3' }
+    }
 )
 $workers = [Collections.Generic.List[object]]::new()
 
@@ -42,4 +49,4 @@ foreach ($worker in $workers) {
 }
 
 if ($failures.Count -gt 0) { throw "LLM Wiki adaptive verification failed: $($failures -join ', ')" }
-Write-Host 'LLM Wiki adaptive workflow and eval verification passed in parallel.'
+Write-Host "LLM Wiki adaptive verification passed in parallel (scope=$Scope)."

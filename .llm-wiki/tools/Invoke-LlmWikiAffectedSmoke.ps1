@@ -23,31 +23,50 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     }
 }
 $paths = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ConvertTo-LlmWikiRepositoryPath $_ } | Sort-Object -Unique)
+$hasExplicitChangedPaths = $paths.Count -gt 0
+$forcedGroups = @(
+    if ($PSBoundParameters.ContainsKey('RequestedGroup')) {
+        $RequestedGroup | Where-Object { $_ } | Sort-Object -Unique
+    }
+)
 if ($paths.Count -eq 0) {
-    if ($Plan -and $Format -eq 'Json') {
-        [pscustomobject][ordered]@{ changedPathCount = 0; groups = @() } | ConvertTo-Json -Depth 3
+    if ($forcedGroups.Count -gt 0) {
+        $paths = @('.llm-wiki/tools/__forced-focused-smoke__.ps1')
+    } else {
+        if ($Plan -and $Format -eq 'Json') {
+            [pscustomobject][ordered]@{ changedPathCount = 0; groups = @() } | ConvertTo-Json -Depth 3
+            exit 0
+        }
+        Write-Host 'Affected tools smoke: no changed paths; nothing to run.'
         exit 0
     }
-    Write-Host 'Affected tools smoke: no changed paths; nothing to run.'
-    exit 0
 }
 
 $smokeGroups = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
 
 $hasUnknownToolChange = $false
 $wikiRelevantPathCount = 0
-foreach ($path in $paths) {
-    if ($path -notmatch '^\.llm-wiki/') { continue }
-    $wikiRelevantPathCount++
-    if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Test-LlmWikiAdaptiveWorkflow|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan)|evals/|policies/experience-policies\.json|workflows/(developer-experience|integration-scan|evals|learned-regression-evals)\.md)') {
+if ($forcedGroups.Count -gt 0 -and -not $hasExplicitChangedPaths) {
+    foreach ($forcedGroup in $forcedGroups) { $null = $smokeGroups.Add($forcedGroup) }
+    $wikiRelevantPathCount = 1
+}
+if ($smokeGroups.Count -eq 0) {
+    foreach ($path in $paths) {
+        if ($path -notmatch '^\.llm-wiki/') { continue }
+        $wikiRelevantPathCount++
+        if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Test-LlmWikiAdaptiveWorkflow)|policies/experience-policies\.json|workflows/developer-experience\.md)') {
         $null = $smokeGroups.Add('adaptive-routing')
+    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAdaptiveVerification|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiEvals)|evals/|workflows/(integration-scan|evals|learned-regression-evals)\.md)') {
+        $null = $smokeGroups.Add('adaptive-evals')
     } elseif ($path -match '^\.llm-wiki/(policies/change-policies\.json|tools/(Get-LlmWikiChangePolicy|Test-LlmWikiChangePolicy)\.ps1)$') {
         $null = $smokeGroups.Add('change-policy')
     } elseif ($path -match '^\.llm-wiki/tools/Get-LlmWikiDesignCheckpoint\.ps1$') {
         $null = $smokeGroups.Add('adaptive-experience')
     } elseif ($path -match '^\.llm-wiki/(tools/Get-LlmWikiDependencyChanges|workflows/dependency-rollout\.md)') {
         $null = $smokeGroups.Add('dependency-analysis')
-    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiObservedStage|Invoke-LlmWikiAdaptiveVerification|Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard)\.ps1$') {
+        $null = $smokeGroups.Add('read-only-guard')
+    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiParallelSmoke|Invoke-LlmWikiObservedStage|Invoke-LlmWikiAdaptiveVerification|Test-LlmWikiAffectedSmokePlanning|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
         $null = $smokeGroups.Add('facade-contract')
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiIndexTiming|Test-LlmWikiIndexTiming|LlmWikiGeneratedArtifacts|Build-LlmWikiCatalog|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth|ModulePages)Index|Build-LlmWikiModulePages|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection|Test-LlmWikiBackendModuleModel)\.ps1$' -or $path -eq 'docs/architecture/backend-modules.json') {
         $null = $smokeGroups.Add('index-selection')
@@ -59,7 +78,7 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('git-paths')
     } elseif ($path -match '^\.llm-wiki/tools/(Initialize-LlmWikiTaskWorkspace|Manage-LlmWikiTaskContract|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiPlanConformance|Test-LlmWikiTaskScope|Test-LlmWikiTaskWorkspace|Update-LlmWikiTaskWorkspace|Manage-LlmWikiTaskJournal|Compare-LlmWikiTaskPolicy)\.ps1$') {
         $null = $smokeGroups.Add('task-scope')
-    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan|Test-LlmWikiTools)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan)\.ps1$') {
         $null = $smokeGroups.Add('ui-continuation')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiResearchPacket|Test-LlmWikiResearchConfidence)\.ps1$') {
         $null = $smokeGroups.Add('research-confidence')
@@ -67,7 +86,9 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('implementation-plan')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
         $null = $smokeGroups.Add('reporting')
-    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Test-LlmWikiVerificationReceipts|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Test-LlmWikiVerificationReceipts)\.ps1$') {
+        $null = $smokeGroups.Add('verification-receipts')
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification)\.ps1$') {
         $null = $smokeGroups.Add('verification-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         $null = $smokeGroups.Add('query-cache')
@@ -90,6 +111,7 @@ foreach ($path in $paths) {
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true
     }
+    }
 }
 if ($wikiRelevantPathCount -eq 0) {
     if ($Plan -and $Format -eq 'Json') {
@@ -99,9 +121,15 @@ if ($wikiRelevantPathCount -eq 0) {
     Write-Host 'Affected tools smoke: no LLM Wiki implementation paths changed; nothing to run.'
     exit 0
 }
-if ($hasUnknownToolChange -or $smokeGroups.Count -eq 0) { $null = $smokeGroups.Add('full-tools') }
-if ($PSBoundParameters.ContainsKey('RequestedGroup') -and @($RequestedGroup).Count -gt 0) {
-    $requestedGroups = @($RequestedGroup | Where-Object { $_ } | Sort-Object -Unique)
+if ($hasUnknownToolChange) { $null = $smokeGroups.Add('tool-contract') }
+if ($smokeGroups.Contains('adaptive-evals')) {
+    # The eval shards exercise both routing and experience cases. Avoid replaying
+    # the same expensive workflow regressions as separate sibling processes.
+    $null = $smokeGroups.Remove('adaptive-routing')
+    $null = $smokeGroups.Remove('adaptive-experience')
+}
+if ($forcedGroups.Count -gt 0) {
+    $requestedGroups = $forcedGroups
     $selectedGroups = @($smokeGroups | Where-Object { $_ -in $requestedGroups })
     $smokeGroups = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($selectedGroup in $selectedGroups) { $null = $smokeGroups.Add($selectedGroup) }
@@ -136,7 +164,11 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
     Write-Host "Affected tools smoke group starting: $group"
     switch ($group) {
         'adaptive-routing' {
-            & (Join-Path $toolsRoot 'Invoke-LlmWikiAdaptiveVerification.ps1')
+            & (Join-Path $toolsRoot 'Test-LlmWikiAdaptiveWorkflow.ps1') -Group Routing
+            if (-not $?) { exit 1 }
+        }
+        'adaptive-evals' {
+            & (Join-Path $toolsRoot 'Invoke-LlmWikiAdaptiveVerification.ps1') -Scope Evals
             if (-not $?) { exit 1 }
         }
         'adaptive-experience' {
@@ -160,12 +192,12 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             Write-Host "Dependency analysis smoke passed: $($rootResult.changeCount) current change(s), cwd-independent."
         }
         'facade-contract' {
-            & (Join-Path $toolsRoot 'Test-LlmWiki.ps1')
-            if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiLint.ps1')
-            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiStrictAffected.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiAffectedSmokePlanning.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'read-only-guard' {
             & (Join-Path $toolsRoot 'Test-LlmWikiReadOnlyGuard.ps1')
             if (-not $?) { exit 1 }
         }
@@ -206,8 +238,6 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'implementation-plan' {
             & (Join-Path $toolsRoot 'Test-LlmWikiImplementationPlan.ps1')
             if (-not $?) { exit 1 }
-            & (Join-Path $toolsRoot 'Test-LlmWikiGovernedAuthenticationStart.ps1')
-            if (-not $?) { exit 1 }
         }
         'reporting' {
             & (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')
@@ -216,6 +246,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'verification-cache' {
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1')
             if (-not $?) { exit 1 }
+        }
+        'verification-receipts' {
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationReceipts.ps1')
             if (-not $?) { exit 1 }
         }
@@ -266,6 +298,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiGovernedDeliveryRegression.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiReviewReport.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'tool-contract' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiChangedTools.ps1') -ChangedPath $paths
             if (-not $?) { exit 1 }
         }
         'full-tools' {

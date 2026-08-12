@@ -14,6 +14,17 @@ $ErrorActionPreference = 'Stop'
 $options = @($Option | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 $scopePaths = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
 $boundaryEvidence = @($BoundaryEvidence | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+
+function Get-OptionalStringProperty([object]$InputObject, [string[]]$Name) {
+    if ($null -eq $InputObject) { return '' }
+    foreach ($candidate in $Name) {
+        $property = $InputObject.PSObject.Properties[$candidate]
+        if ($null -ne $property -and -not [string]::IsNullOrWhiteSpace([string]$property.Value)) {
+            return [string]$property.Value
+        }
+    }
+    ''
+}
 $existingScopePaths = @($scopePaths | Where-Object { Test-Path -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent | Split-Path -Parent) $_) })
 $precedents = @()
 if ($scopePaths.Count -gt 0) {
@@ -43,7 +54,7 @@ $rows = for ($index = 0; $index -lt $options.Count; $index++) {
     $defer = $text -match '(?i)defer|wait|preserve current'
     $bounded = -not $structural -and -not $defer
     $matchingPrecedents = @($precedents | Where-Object {
-        $subject = [string]$_.subject
+        $subject = Get-OptionalStringProperty $_ @('subject')
         $bounded -or ($structural -and $subject -match '(?i)architect|refactor|restructur|migrat')
     })
     $evidence = @(
@@ -51,7 +62,11 @@ $rows = for ($index = 0; $index -lt $options.Count; $index++) {
             [pscustomobject][ordered]@{ kind = 'current-source'; reference = $_; description = 'Declared scope path exists in the current checkout.' }
         }
         $matchingPrecedents | Select-Object -First 4 | ForEach-Object {
-            [pscustomobject][ordered]@{ kind = 'git-precedent'; reference = $_.commit; description = $_.subject }
+            [pscustomobject][ordered]@{
+                kind = 'git-precedent'
+                reference = Get-OptionalStringProperty $_ @('hash', 'commit')
+                description = Get-OptionalStringProperty $_ @('subject')
+            }
         }
         if ($structural) {
             $boundaryEvidence | ForEach-Object {

@@ -453,7 +453,7 @@ switch ($Command) {
                     if ($PSBoundParameters.ContainsKey('ChangedPath')) { $smokeArguments.ChangedPath = $ChangedPath }
                     Invoke-WikiTool 'Invoke-LlmWikiAffectedSmoke.ps1' $smokeArguments
                 } else {
-                    Invoke-WikiTool 'Test-LlmWikiTools.ps1'
+                    Invoke-WikiTool 'Invoke-LlmWikiParallelSmoke.ps1' @{ AllGroups = $true; MaxConcurrency = $(if ($null -eq $MaxConcurrency) { 4 } else { [int]$MaxConcurrency }) }
                 }
             }
         }
@@ -491,10 +491,10 @@ switch ($Command) {
         $script:verifyRunStopwatch = [Diagnostics.Stopwatch]::StartNew()
         $script:verifyStageExpectedSeconds = @{
             'workspace policy' = 2; 'page contracts' = 2; 'lint regression' = 10; 'indexes' = 45
-            'affected tool regression' = 15; 'failure knowledge' = 2; 'change policy' = 3; 'source impact' = 3
+            'affected smoke' = 15; 'failure knowledge' = 2; 'change policy' = 3; 'source impact' = 3
         }
         if (@($ChangedPath | Where-Object { $_ -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Invoke-LlmWikiAdaptiveVerification)|evals/)' }).Count -gt 0) {
-            $script:verifyStageExpectedSeconds['affected tool regression'] = 240
+            $script:verifyStageExpectedSeconds['affected smoke'] = 120
         }
         $indexArguments = @{ Check = $true; AffectedOnly = $true; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly; Area = $Area }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
@@ -510,24 +510,24 @@ switch ($Command) {
         $smokePlanArguments.Plan = $true
         $smokePlanArguments.Format = 'Json'
         $smokePlan = & (Join-Path $toolsRoot 'Invoke-LlmWikiAffectedSmoke.ps1') @smokePlanArguments | ConvertFrom-Json
-        $smokeStages = @(@($smokePlan.groups) | ForEach-Object {
-            $groupName = [string]$_
-            $stageName = "affected smoke: $groupName"
-            $isFullToolsGroup = $groupName -eq 'full-tools'
-            $script:verifyStageExpectedSeconds[$stageName] = $(if ($isFullToolsGroup) { 330 } else { 60 })
-            $groupArguments = @{} + $affectedSmokeArguments
-            if ($groupArguments.ContainsKey('ChangedPath')) {
-                $groupArguments.ChangedPath = @($groupArguments.ChangedPath | Where-Object { $_ -match '^\.llm-wiki/(?:tools|policies|workflows|evals)/|^\.llm-wiki/wiki\.ps1$' })
-            }
-            $groupArguments.Group = @($groupName)
-            [pscustomobject]@{
-                Name = $stageName
-                Tool = 'Invoke-LlmWikiAffectedSmoke.ps1'
-                Arguments = $groupArguments
-                Timeout = $(if ($isFullToolsGroup) { 600 } else { 300 })
-                Standalone = "./.llm-wiki/wiki.ps1 verify -Stage '$stageName'"
-            }
-        })
+        $smokeGroups = @($smokePlan.groups | Where-Object { $_ -and $_ -ne 'full-tools' })
+        if (@($smokePlan.groups) -contains 'full-tools') {
+            throw 'Local affected verification selected the forbidden full-tools fallback. Use verify-full only for the explicit exhaustive gate.'
+        }
+        $smokeStages = @()
+        if ($smokeGroups.Count -gt 0) {
+            $parallelSmokeArguments = @{} + $affectedSmokeArguments
+            $effectiveSmokeConcurrency = if ($null -eq $MaxConcurrency) { 4 } else { [int]$MaxConcurrency }
+            $parallelSmokeArguments.MaxConcurrency = $effectiveSmokeConcurrency
+            $script:verifyStageExpectedSeconds['affected smoke'] = 60
+            $smokeStages = @([pscustomobject]@{
+                Name = 'affected smoke'
+                Tool = 'Invoke-LlmWikiParallelSmoke.ps1'
+                Arguments = $parallelSmokeArguments
+                Timeout = 240
+                Standalone = './.llm-wiki/wiki.ps1 verify -Stage ''affected smoke'''
+            })
+        }
         $stages = @(
             [pscustomobject]@{ Name = 'workspace policy'; Tool = 'Get-LlmWikiWorkspacePolicy.ps1'; Arguments = @{ Action = 'validate'; FailOnInvalid = $true }; Timeout = 60; Standalone = './.llm-wiki/wiki.ps1 workspace-policy' }
             [pscustomobject]@{ Name = 'page contracts'; Tool = 'Test-LlmWiki.ps1'; Arguments = @{}; Timeout = 60; Standalone = './.llm-wiki/wiki.ps1 lint' }
@@ -542,7 +542,9 @@ switch ($Command) {
         $expectedVerifySeconds = ($script:verifyStageExpectedSeconds.Values | Measure-Object -Sum).Sum
         Write-Host "Wiki verify: $script:verifyStageTotal observable stages, expected cold duration ~${expectedVerifySeconds}s; content-addressed stage resume is enabled=$([bool]$ResumePassedStages)."
         Write-Host 'Buffered-shell progress receipt: .artifacts/llm-wiki/verify-progress.json'
-        Write-Host 'Wiki verify mode: affected/resumable. Use verify-full only for an explicit local full-repository gate; CI remains full and uncached.'
+        $reportedSmokeConcurrency = if ($null -eq $MaxConcurrency) { 4 } else { [int]$MaxConcurrency }
+        Write-Host "Wiki verify mode: bounded affected/resumable; $($smokeGroups.Count) focused smoke group(s), parallelism=$reportedSmokeConcurrency."
+        Write-Host 'The monolithic full-tools audit is never an automatic local fallback. Use verify-full only for an explicit exhaustive gate.'
         $selectedStages = @(if ($PSBoundParameters.ContainsKey('Stage')) { $stages | Where-Object Name -eq $Stage } else { $stages })
         if ($Stage -and $selectedStages.Count -eq 0) { throw "Unknown verify stage '$Stage'. Available stages: $($stages.Name -join ', ')." }
         if ($Stage) { Write-Host "Wiki verify single-stage mode: $Stage" }
@@ -654,11 +656,8 @@ switch ($Command) {
     }
     'verify-full' {
         Invoke-WikiTool 'Get-LlmWikiWorkspacePolicy.ps1' @{ Action = 'validate'; FailOnInvalid = $true }
-        Invoke-WikiTool 'Test-LlmWiki.ps1'
-        Invoke-WikiTool 'Test-LlmWikiLint.ps1'
         Invoke-WikiTool 'Test-LlmWikiPortable.ps1'
         Invoke-WikiTool 'Invoke-LlmWikiFullVerification.ps1' @{ ResumePassedStages = $ResumePassedStages }
-        Invoke-WikiTool 'Invoke-LlmWikiAdaptiveVerification.ps1'
         Invoke-WikiTool 'Manage-LlmWikiFailures.ps1' @{ Action = 'validate' }
         $policyArguments = @{ FailOnViolation = $true }
         $impactArguments = @{ FailOnUnreviewed = $true }

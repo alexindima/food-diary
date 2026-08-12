@@ -225,14 +225,18 @@
                         "pageSha256":  "7b31e07462b7a226949fca58c200d0330514b3158ce5f905e77bc1d9bda431dd",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiReadOnlyGuard.ps1",
-                                            "sha256":  "499b12903b4bd2a153b3ec3150d801dd34f61736c748f7a015eedb15a6e7ad0f"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDesignCheckpoint.ps1",
+                                            "sha256":  "976227def0a39e4d55d9ce81056df5fd860f6d9d42f5c7a254638dfc45e47278"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
+                                            "sha256":  "252cfe09742f6c7f62b12cc1f47a0446358dde09877c9c03e922727e1aacf2b0"
                                         }
                                     ],
-                        "reason":  "Reviewed stable empty smoke-plan contract regression for empty and product-only deltas.",
+                        "reason":  "Optional implementation-plan phase collections are normalized defensively; adaptive routing, profile selection, slice semantics, and required checkpoints are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d40159f1a5ebc3b2d5f3dcb6df7de39b018e41e6",
-                        "reviewedAtUtc":  "2026-08-12T13:26:30.2573413Z"
+                        "gitHead":  "3bc6dfee586376e754323775bd37890bcc7006cb",
+                        "reviewedAtUtc":  "2026-08-12T17:20:04.4224484Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -455,17 +459,17 @@
                     {
                         "pageId":  "workflow-developer-experience",
                         "pagePath":  ".llm-wiki/workflows/developer-experience.md",
-                        "pageSha256":  "6acbf4618bd68012e8c38ef837ccc43ed48a996935703b60e5ce5be0c4cdcbb8",
+                        "pageSha256":  "59bec3d0957b927fdfd24028e580354343b8be5922bbcb679bfd5126c70d8a91",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "c0d09e427cc1bbb7a2c5393760c2883aa9cfcfc595e8994c47a015368445f099"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiSolutionComparison.ps1",
+                                            "sha256":  "7d8919135ada1347388a49305e7d5fd3006ed54019087d735345d99ef8b679b9"
                                         }
                                     ],
-                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
+                        "reason":  "Git precedent fields now accept the current hash schema and legacy commit schema; solution ranking, evidence rules, and decision guidance are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
-                        "reviewedAtUtc":  "2026-08-12T01:49:05.4888960Z"
+                        "gitHead":  "3bc6dfee586376e754323775bd37890bcc7006cb",
+                        "reviewedAtUtc":  "2026-08-12T17:20:05.6349796Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -899,13 +903,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3196cd63340ac4d76b5af5c48ec24b67f3d02d3705c5d381b0307bab77340e61"
+                                            "sha256":  "90c430c810ee744751465728956f2fe9ee01b5ac9ff8709b61ec184a2aeb41cf"
                                         }
                                     ],
-                        "reason":  "Reviewed verify-stage timeout/reporting change; dispatch receipt behavior is unaffected.",
+                        "reason":  "Facade edits are limited to verify and smoke orchestration; task dispatch, lease, receipt, reconciliation, and snapshot behavior are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
-                        "reviewedAtUtc":  "2026-08-12T11:38:13.9112572Z"
+                        "gitHead":  "3bc6dfee586376e754323775bd37890bcc7006cb",
+                        "reviewedAtUtc":  "2026-08-12T17:20:06.7178816Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
