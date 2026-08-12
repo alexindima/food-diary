@@ -501,25 +501,17 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "00ed44ae7969545582f106af9c38c4e07f6feb7ba746a6e1738dc2cb0bd9da70",
+                        "pageSha256":  "4b700f452947b76c2dd708ab5978289650c76c32a49e06ea6356812757e73cd8",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "a577b48f7062c369418b39a08cebd4a6992ea50795da66f5eda9dccd460cf537"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-                                            "sha256":  "762791b3d1655d1ed617a69cb4d698df48c26fa674f8931a3ff774a16cc5c09d"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "926d2f67c2ec86d559e3fdd7e0b9c436fd61450fbe42588bcfb165012241b06f"
+                                            "sha256":  "6dc244989fccf71fb098e497ad3873b8f4f3274a927be111b55029bc417a1556"
                                         }
                                     ],
-                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
+                        "reason":  "Affected smoke gained a focused research-confidence regression group; index selection, generation, caching, transactions, and timing calibration are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
-                        "reviewedAtUtc":  "2026-08-12T01:49:05.7312873Z"
+                        "gitHead":  "57c4358ea2e1c3721868aedeea36f1865e7a6e31",
+                        "reviewedAtUtc":  "2026-08-12T02:08:57.7025776Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -543,13 +535,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "c0d09e427cc1bbb7a2c5393760c2883aa9cfcfc595e8994c47a015368445f099"
+                                            "sha256":  "7d3aaf139206424195e0778eafba6fa45ff4888a74589af0b1928cda9418be16"
                                         }
                                     ],
-                        "reason":  "Reviewed boundary-wide Users extraction readiness, separation of contract and module readiness, projection field versus mutation-operation suggestions, assessment status UX, and zero-generator affected verification behavior.",
+                        "reason":  "Research now separates and explains confidence dimensions; integration discovery inputs, boundary classification, and scan output are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20db3e6376268a33cb85e1aa30022e408fcc6a83",
-                        "reviewedAtUtc":  "2026-08-12T01:49:05.9858119Z"
+                        "gitHead":  "57c4358ea2e1c3721868aedeea36f1865e7a6e31",
+                        "reviewedAtUtc":  "2026-08-12T02:08:56.5384214Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",

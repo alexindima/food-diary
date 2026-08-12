@@ -57,6 +57,8 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('task-scope')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan|Test-LlmWikiTools)\.ps1$') {
         $null = $smokeGroups.Add('ui-continuation')
+    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiResearchPacket|Test-LlmWikiResearchConfidence)\.ps1$') {
+        $null = $smokeGroups.Add('research-confidence')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
         $null = $smokeGroups.Add('reporting')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Test-LlmWikiVerificationReceipts|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification)\.ps1$') {
@@ -177,6 +179,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'ui-continuation' {
             & (Join-Path $toolsRoot 'Test-LlmWikiUiContinuation.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'research-confidence' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiResearchConfidence.ps1')
             if (-not $?) { exit 1 }
         }
         'reporting' {

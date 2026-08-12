@@ -125,6 +125,17 @@ elseif ($bugIntent -and (-not $crossCutting -or $boundedCrossLayerBug)) { $profi
 elseif (-not $featureIntent -and [int]$brief.risk.score -le 2 -and $scopeKnown -and -not $crossCutting -and -not $wikiInternal) { $profile = 'tiny' }
 
 $confidence = if (-not $scopeKnown) { 'low' } elseif ([string]$brief.analysis.confidence -eq 'high') { 'high' } else { 'medium' }
+$confidenceReasons = [Collections.Generic.List[string]]::new()
+$discoveryConfidence = if ($scopeKnown) { 'high' } else { 'low' }
+$blockerCountConfidence = if ($scopeKnown) { 'medium' } else { 'low' }
+$implementationScopeConfidence = switch ([string]$brief.analysis.mode) {
+    'git-diff' { 'high' }
+    'planned-paths' { 'medium' }
+    default { 'low' }
+}
+if (-not $scopeKnown) { $confidenceReasons.Add("Discovery is low because analysis mode '$($brief.analysis.mode)' does not provide confirmed implementation paths and scopes.") }
+if ($blockerCountConfidence -ne 'high') { $confidenceReasons.Add('Blocker-count confidence remains provisional until source-grounded research examines the selected boundary.') }
+if ($implementationScopeConfidence -eq 'low') { $confidenceReasons.Add('Implementation-scope confidence is low because no Git diff or caller-confirmed planned path defines the edit boundary.') }
 $requiresPathDiscovery = -not $scopeKnown
 $requiresDecisionCheckpoint = $profile -in @('critical', 'architectural') -or ($profile -notin @('ui-discovery', 'scope-discovery', 'test-only') -and [bool]$brief.decisionContext.reviewRequired)
 $requiresDesign = $profile -in @('feature', 'critical', 'architectural')
@@ -266,6 +277,12 @@ $result = [pscustomobject][ordered]@{
     workflowVariant = $(if ($visualTiny) { 'visual-tiny' } else { $profile })
     maintenanceKind = $(if ($profile -eq 'maintenance') { $maintenanceKind } else { $null })
     confidence = $confidence
+    confidenceDimensions = [pscustomobject][ordered]@{
+        discovery = $discoveryConfidence
+        blockerCount = $blockerCountConfidence
+        implementationScope = $implementationScopeConfidence
+    }
+    confidenceReasons = @($confidenceReasons)
     scopeKnown = $scopeKnown
     requiresPathDiscovery = $requiresPathDiscovery
     requiresDecisionCheckpoint = $requiresDecisionCheckpoint
@@ -286,6 +303,8 @@ $result = [pscustomobject][ordered]@{
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10; exit 0 }
 Write-Host "Adaptive workflow: $profile ($confidence confidence)"
+Write-Host "Confidence: discovery=$discoveryConfidence; blocker-count=$blockerCountConfidence; implementation-scope=$implementationScopeConfidence"
+foreach ($confidenceReason in $confidenceReasons) { Write-Host "Confidence reason: $confidenceReason" }
 Write-Host "Objective: $Objective"
 Write-Host "Ceremony budget: $($ceremonyBudget.label), at most $($ceremonyBudget.maximumRequiredStages) required stage(s)"
 foreach ($reason in $result.reasons) { Write-Host "Reason: $reason" }

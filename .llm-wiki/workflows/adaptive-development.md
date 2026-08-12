@@ -57,6 +57,14 @@ classification is allowed, including Russian task descriptions, but remains lowe
 confidence until repository paths are grounded. Do not treat an inferred path as
 authorization to edit it.
 
+Confidence is reported as three explainable dimensions: discovery,
+blocker-count, and implementation-scope. Routing confidence describes the
+pre-research classifier; research recalibrates its own confidence from grounded
+current-source evidence. A completed read-only assessment can therefore report
+high discovery confidence while marking implementation scope `not-required`,
+instead of inheriting an alarming low routing label. Every non-high dimension
+includes the evidence still missing.
+
 `develop` captures the starting `HEAD` and fingerprints any already modified or
 untracked files in the current worktree. Later delta-aware facade commands use
 only paths changed after that capture, so unrelated work that was already present

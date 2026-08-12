@@ -168,6 +168,17 @@ if ($workflow.requiresDecisionCheckpoint) {
 if ($scopePaths.Count -eq 0 -and @($context.implementationFiles).Count -eq 0 -and @($context.symbols).Count -eq 0 -and @($context.frontendSymbols).Count -eq 0) {
     $openQuestions.Add([pscustomobject][ordered]@{ id = 'locate-implementation'; blocking = $true; question = 'The context index found no ranked implementation file. What exact symbol or route names the flow?'; evidenceNeeded = 'Use trace or source search and rerun research with PlannedPath.' })
 }
+$researchDiscoveryConfidence = if ($groundedPaths.Count -gt 0) { 'high' } else { 'low' }
+$researchBlockerConfidence = if ($groundedPaths.Count -gt 0 -and $extractionDelta) { 'high' } elseif ($groundedPaths.Count -gt 0) { 'medium' } else { 'low' }
+$researchImplementationScopeConfidence = if ($effectivePurpose -eq 'Assessment') { 'not-required' } elseif ($workflow.scopeKnown) { 'high' } elseif ($groundedPaths.Count -gt 0) { 'medium' } else { 'low' }
+$researchConfidence = if ($effectivePurpose -eq 'Assessment') { $researchDiscoveryConfidence } elseif ($researchImplementationScopeConfidence -eq 'high') { 'high' } elseif ($groundedPaths.Count -gt 0) { 'medium' } else { 'low' }
+$researchConfidenceReasons = [Collections.Generic.List[string]]::new()
+if ($researchDiscoveryConfidence -eq 'high') { $researchConfidenceReasons.Add("Discovery is grounded in $($groundedPaths.Count) current repository path(s).") }
+else { $researchConfidenceReasons.Add('Discovery is low because no current repository path was grounded.') }
+if ($researchBlockerConfidence -eq 'high') { $researchConfidenceReasons.Add('Blocker count is backed by contract extraction analysis plus grounded source paths.') }
+elseif ($researchBlockerConfidence -eq 'medium') { $researchConfidenceReasons.Add('Blocker count is provisional because research found the flow but did not run a boundary-specific blocker analyzer.') }
+if ($researchImplementationScopeConfidence -eq 'not-required') { $researchConfidenceReasons.Add('Implementation scope is not rated because this is a read-only assessment.') }
+elseif ($researchImplementationScopeConfidence -ne 'high') { $researchConfidenceReasons.Add('Implementation scope is not high because the discovered paths were not confirmed as the future edit boundary.') }
 
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
@@ -176,7 +187,14 @@ $result = [pscustomobject][ordered]@{
     workflow = [pscustomobject][ordered]@{
         purpose = $effectivePurpose
         profile = $workflow.profile
-        confidence = $workflow.confidence
+        confidence = $researchConfidence
+        routingConfidence = $workflow.confidence
+        confidenceDimensions = [pscustomobject][ordered]@{
+            discovery = $researchDiscoveryConfidence
+            blockerCount = $researchBlockerConfidence
+            implementationScope = $researchImplementationScopeConfidence
+        }
+        confidenceReasons = @($researchConfidenceReasons)
         requiresDecisionCheckpoint = $workflow.requiresDecisionCheckpoint
         requiresDesign = $workflow.requiresDesign
         requiresWorkspace = $workflow.requiresWorkspace
@@ -242,6 +260,8 @@ if ($Format -eq 'Json') {
     exit 0
 }
 Write-Host "Research packet: $($result.workflow.profile) workflow, $($result.workflow.confidence) confidence"
+Write-Host "Confidence: discovery=$($result.workflow.confidenceDimensions.discovery); blocker-count=$($result.workflow.confidenceDimensions.blockerCount); implementation-scope=$($result.workflow.confidenceDimensions.implementationScope)"
+foreach ($confidenceReason in $result.workflow.confidenceReasons) { Write-Host "Confidence reason: $confidenceReason" }
 Write-Host "Purpose: $($result.workflow.purpose); assessment complete: $($result.readiness.assessmentComplete)"
 Write-Host "Assessment status: $($result.readiness.assessmentStatus); design checkpoint: $($result.readiness.designCheckpoint); implementation readiness: $($result.readiness.implementationStatus)"
 Write-Host "Objective: $Objective"

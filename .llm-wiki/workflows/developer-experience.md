@@ -144,3 +144,9 @@ agent-specific scratch output part of the Wiki contract. For `feature`, `critica
 and `architectural` work, design checkpoints add three acceptance-oriented vertical
 slices that keep behavior and its closest verification together. Smaller profiles
 do not gain slice-planning ceremony.
+
+The packet keeps routing confidence separate from research confidence and
+explains discovery, blocker-count, and implementation-scope confidence
+individually. Read-only assessment reports implementation scope as
+`not-required`; it does not turn an intentionally absent edit boundary into a
+false warning or design blocker.
