@@ -33,7 +33,9 @@ $ranked = foreach ($component in @($contracts.components)) {
         $_ -eq [string]$component.path -or $_ -eq [string]$component.templatePath -or
         [IO.Path]::GetDirectoryName($_).Replace('\', '/') -eq $componentDirectory
     }).Count -gt 0
-    $search = "$($component.class) $($component.selector) $($component.path) $($component.templatePath) $(@($component.inputs.name) -join ' ') $(@($component.outputs.name) -join ' ')".ToLowerInvariant()
+    $inputNames = @($component.inputs | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['name']) { [string]$_.name } } | Where-Object { $_ })
+    $outputNames = @($component.outputs | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['name']) { [string]$_.name } } | Where-Object { $_ })
+    $search = "$($component.class) $($component.selector) $($component.path) $($component.templatePath) $($inputNames -join ' ') $($outputNames -join ' ')".ToLowerInvariant()
     $semanticScore = @($tokens | Where-Object { $search -match [regex]::Escape($_) }).Count
     if ($explicit -or $semanticScore -gt 0) {
         [pscustomobject]@{ component = $component; score = $semanticScore + $(if ($explicit) { 100 } else { 0 }); explicit = $explicit }

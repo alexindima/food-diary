@@ -317,33 +317,29 @@
                         "pageSha256":  "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:13.4151255Z"
+                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+                        "reviewedAtUtc":  "2026-08-12T21:30:33.3048625Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
                         "pagePath":  ".llm-wiki/workflows/change-packet.md",
-                        "pageSha256":  "f088440a668d74bd8743c11ca2ab0da4ca55d82558f9033cdcf001fc952bc903",
+                        "pageSha256":  "49eab42e51f76e49c1ba23bb8ab93f7358270e92bed0b0e4547ba7b713fa4642",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
                                         }
                                     ],
-                        "reason":  "Reviewed governed planning hardening: optional brief metadata is normalized, scalar path filters preserve their collection shape, and existing public workflow semantics remain unchanged.",
+                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "cabd3bd3bff5ba3063802ae3dca84c37170c9503",
-                        "reviewedAtUtc":  "2026-08-12T02:47:07.6583159Z"
+                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+                        "reviewedAtUtc":  "2026-08-12T21:30:33.4987707Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -606,22 +602,14 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
-                                            "sha256":  "3e3767dfd27ab232d7f94a573e2030a89673a74265fe6d1070e170293cf4efb8"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:15.8406449Z"
+                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+                        "reviewedAtUtc":  "2026-08-12T21:30:33.7411349Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -629,14 +617,18 @@
                         "pageSha256":  "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "d6149a9d74345df2e01803c392672ce0d7b97cfab2c53c2284815da516838aaa"
+                                            "sha256":  "49587d707de326bbb0d0caff4978b393469f0105de83e4114cfcf38f4272f9e5"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:31.3355726Z"
+                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+                        "reviewedAtUtc":  "2026-08-12T21:30:34.0133615Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -697,14 +689,14 @@
                         "pageSha256":  "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "dbb7de33a0df1e51f58579976c4e2b42b0630870f069bec05a75611bf9a56e4d"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
                                         }
                                     ],
-                        "reason":  "Reviewed the compact research, combined update/verify facade, baseline lifecycle, and batch-review changes against current workflow pages; no additional narrative changes are required beyond adaptive-development and review-diff.",
+                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eec73d92f25d2ddb2b777c334386ac08965396b",
-                        "reviewedAtUtc":  "2026-08-12T20:39:01.5815180Z"
+                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+                        "reviewedAtUtc":  "2026-08-12T21:30:34.2957565Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -834,13 +826,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "c84d77ebb9730212326aebc45ec44b31285f9e15d53034a486ea75f5317b9a35"
+                                            "sha256":  "edf3653fb8a26ac9908d17a74dfa823f9475ae460c1482828c128ee6f89efc2c"
                                         }
                                     ],
-                        "reason":  "Reviewed governed delivery schema compatibility hardening: current and legacy packet objectives are supported, abbreviated optional sections are normalized, and scalar metadata no longer fails strict-mode consumers.",
+                        "reason":  "Reviewed the governed lifecycle fixes: next handles its distinct payload schema, start persists normalized planned paths, and delivery links completed checks only to single or behaviorally anchored criteria without auto-satisfying them.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "36387211c4d2eee2847c7a390fc1f924e7bb142b",
-                        "reviewedAtUtc":  "2026-08-12T03:36:47.8943263Z"
+                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+                        "reviewedAtUtc":  "2026-08-12T21:24:21.6445314Z"
                     },
                     {
                         "pageId":  "workflow-proof-of-change",
@@ -910,13 +902,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "d6149a9d74345df2e01803c392672ce0d7b97cfab2c53c2284815da516838aaa"
+                                            "sha256":  "49587d707de326bbb0d0caff4978b393469f0105de83e4114cfcf38f4272f9e5"
                                         }
                                     ],
-                        "reason":  "Reviewed verification-plan scalar handling, journey-fixture resilience, and null-safe content fingerprinting; workflow guidance remains accurate.",
+                        "reason":  "Reviewed the governed lifecycle fixes: next handles its distinct payload schema, start persists normalized planned paths, and delivery links completed checks only to single or behaviorally anchored criteria without auto-satisfying them.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "33c67a16429f022bfd7eeeaa82d7973a10122548",
-                        "reviewedAtUtc":  "2026-08-12T09:04:33.3475390Z"
+                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+                        "reviewedAtUtc":  "2026-08-12T21:24:21.8720040Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -1000,22 +992,14 @@
                         "pageSha256":  "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "e11d90f5959638f46818001c99aa79eb2ac669fd3dc419036028697399f6f8af"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "d25cb3fa394cb5a240aa51b810c3c3d60fdf47152e2d2e7b1010cbdc980d3c57"
+                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:07.7352810Z"
+                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+                        "reviewedAtUtc":  "2026-08-12T21:30:34.6075061Z"
                     },
                     {
                         "pageId":  "workflow-task-contract",

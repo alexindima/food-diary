@@ -38,7 +38,9 @@ Start or inspect work with one command:
 `next` prints exactly one recommended action and a short preview of later work.
 It derives state from the adaptive route or existing governed workspace; it does
 not create a second workflow record. `status` exposes the same compact pipeline
-without replacing the detailed delivery and task status commands.
+without replacing the detailed delivery and task status commands. Route-only
+fields such as `profile` are rendered only when present, because governed and
+adaptive state intentionally have different payload shapes.
 
 When a durable choice exists, compare options before design:
 

@@ -41,7 +41,7 @@ sources:
 
 # Adaptive FoodDiary Development
 
-For a non-trivial feature, prefer `./.llm-wiki/wiki.ps1 start -Intent <task> [-PlannedPath <paths>]`. It captures the task baseline before discovery, compiles research and a scope-aware acceptance checklist, and creates the governed workspace immediately when the adaptive route requires one and concrete paths are known. The checklist covers API/OpenAPI compatibility, migration pairs, notification safety, background-job configuration and direct consumers, frontend states, localization parity, and architecture boundaries only when applicable.
+For a non-trivial feature, prefer `./.llm-wiki/wiki.ps1 start -Intent <task> [-PlannedPath <paths>]`. It captures the task baseline before discovery, compiles research and a scope-aware acceptance checklist, and creates the governed workspace immediately when the adaptive route requires one and concrete paths are known. Comma- or semicolon-delimited input is normalized into distinct planned paths and the same list is persisted in the manifest, rather than being used only as an allow-list. The checklist covers API/OpenAPI compatibility, migration pairs, notification safety, background-job configuration and direct consumers, frontend states, localization parity, and architecture boundaries only when applicable.
 
 Use `develop` as the read-oriented classifier when automatic workspace creation is not wanted.
 

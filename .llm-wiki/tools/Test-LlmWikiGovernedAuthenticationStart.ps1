@@ -37,6 +37,14 @@ try {
         ) `
         -WorkspacePath $workspacePath
     if (-not (Test-Path -LiteralPath (Join-Path $workspaceAbsolute 'workspace.json') -PathType Leaf)) { throw 'Governed task-start did not create a workspace.' }
+    $startManifest = Get-Content -LiteralPath (Join-Path $workspaceAbsolute 'change-manifest.json') -Raw | ConvertFrom-Json
+    if (@($startManifest.scope.plannedPaths).Count -ne $paths.Count -or @($paths | Where-Object { $_ -notin @($startManifest.scope.plannedPaths) }).Count -gt 0) {
+        throw "Governed start did not preserve its PlannedPath list: $(@($startManifest.scope.plannedPaths) -join ', ')."
+    }
+    $nextText = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') next -WorkspacePath $workspacePath 6>&1 | Out-String
+    if ($nextText -notmatch 'Wiki next:.*governed-workspace' -or $nextText -match "property 'profile'") {
+        throw "Governed wiki next did not render its schema safely: $nextText"
+    }
 
     $baseArtifactNames = @('workspace.json', 'task-contract.json', 'change-manifest.json', 'acceptance-matrix.json', 'evidence.json')
     $pinnedBase = ''
@@ -185,6 +193,10 @@ try {
         -FailOnInvalid `
         -Format Json | ConvertFrom-Json
     if (-not $deliveryValidation.valid) { throw 'Governed lifecycle delivery validation did not pass.' }
+    $validatedAcceptance = Get-Content -LiteralPath $acceptancePath -Raw | ConvertFrom-Json
+    if (@($deliveryValidation.assessment.automaticCheckLinks).Count -eq 0 -or @($validatedAcceptance.criteria | Where-Object { 'wiki-verify' -notin @($_.mapping.checkIds) }).Count -gt 0) {
+        throw 'Delivery validation did not automatically link the completed required check to anchored acceptance criteria.'
+    }
     $deliveryCritique = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') delivery-critique `
         -WorkspacePath $workspacePath `
         -FailOnInvalid `

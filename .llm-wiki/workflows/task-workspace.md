@@ -92,6 +92,13 @@ criterion to the test bundle, focused test paths, and required checks. Resolutio
 still requires current execution evidence, but repetitive manual mapping is not
 needed.
 
+Before delivery validation, completed required checks are linked automatically to
+acceptance criteria when there is a single criterion, a semantic match, or an
+existing behavioral anchor through a changed path, journey, or focused test. This
+adds traceability but never changes a criterion from `pending` to `satisfied` and
+does not let an unrelated generic check become the sole behavioral mapping for a
+multi-criterion task.
+
 Inspect actionable progress at any time:
 
 ```powershell

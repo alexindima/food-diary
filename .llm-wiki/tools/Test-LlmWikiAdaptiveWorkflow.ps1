@@ -11,6 +11,9 @@ $failures = [Collections.Generic.List[string]]::new()
 function Assert-Adaptive([bool]$Condition, [string]$Message) {
     if (-not $Condition) { $script:failures.Add($Message) }
 }
+function Get-AdaptiveIds([object[]]$Items) {
+    @($Items | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { $_ })
+}
 
 $visualPaths = @(
     'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html'
@@ -23,14 +26,14 @@ $tiny = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($tiny.profile -eq 'visual-ui-change') 'Bounded visual work did not receive the visual UI route.'
 Assert-Adaptive (-not $tiny.requiresDesign -and -not $tiny.requiresWorkspace) 'Visual UI work retained heavyweight design or workspace requirements.'
-Assert-Adaptive (@($tiny.stages.id) -notcontains 'independent-review') 'Visual UI work retained critical independent review.'
+Assert-Adaptive (@(Get-AdaptiveIds $tiny.stages) -notcontains 'independent-review') 'Visual UI work retained critical independent review.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'visual-brief' -and $_.command -match 'brief' -and $_.command -match 'Compact' -and $_.completionEvidence -match 'UI-kit' }).Count -eq 1) 'Visual UI work did not start with a compact ownership and design-system brief.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'completion' -and $_.command -match 'verify-strict-affected' }).Count -eq 1) 'Visual UI work did not select strict affected verification as its final local gate.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'completion' -and $_.completionEvidence -match 'full repository verification remains the CI gate' }).Count -eq 1) 'Visual UI work did not distinguish scoped strict completion from full CI verification.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'focused-verification' -and $_.command -match 'test-plan' -and $_.command -match 'npm run build' }).Count -eq 1) 'Visual UI work did not combine focused tests and build into one verification stage.'
 Assert-Adaptive (@($tiny.stages | Where-Object required).Count -eq 5) 'Visual UI work exceeded its five-stage ceremony budget.'
-Assert-Adaptive (@($tiny.stages.id) -notcontains 'acceptance') 'Visual UI work retained a separate acceptance ceremony instead of using the compact brief.'
-Assert-Adaptive (@($tiny.stages.id) -contains 'browser-evidence') 'Visual UI work omitted browser evidence.'
+Assert-Adaptive (@(Get-AdaptiveIds $tiny.stages) -notcontains 'acceptance') 'Visual UI work retained a separate acceptance ceremony instead of using the compact brief.'
+Assert-Adaptive (@(Get-AdaptiveIds $tiny.stages) -contains 'browser-evidence') 'Visual UI work omitted browser evidence.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'browser-evidence' -and $_.purpose -notmatch 'desktop and mobile' -and $_.completionEvidence -match 'omitted viewports' }).Count -eq 1) 'Visual UI work still required unconditional desktop and mobile evidence.'
 Assert-Adaptive (@($tiny.stages | Where-Object { $_.id -eq 'browser-evidence' -and $_.command -match 'visual-qa' -and $_.command -match 'FixturePath' }).Count -eq 1) 'Visual UI work did not select automated file-upload browser QA.'
 Assert-Adaptive ((@($tiny.stages | Where-Object id -eq 'browser-evidence')[0].order) -lt (@($tiny.stages | Where-Object id -eq 'completion')[0].order)) 'Visual UI work ran verify-fast before browser evidence.'
@@ -54,15 +57,15 @@ $localInteraction = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($localInteraction.profile -eq 'visual-ui-change') 'Local interaction inside an existing frontend component was elevated to feature.'
 Assert-Adaptive (@($localInteraction.stages | Where-Object { $_.id -eq 'journey-impact' -and $_.required }).Count -eq 0) 'Local component interaction retained required feature journey ceremony.'
-Assert-Adaptive (@($localInteraction.stages.id) -notcontains 'design') 'Local component interaction retained feature design ceremony.'
-Assert-Adaptive (@($localInteraction.stages.id) -contains 'focused-verification') 'Local component interaction omitted focused verification.'
+Assert-Adaptive (@(Get-AdaptiveIds $localInteraction.stages) -notcontains 'design') 'Local component interaction retained feature design ceremony.'
+Assert-Adaptive (@(Get-AdaptiveIds $localInteraction.stages) -contains 'focused-verification') 'Local component interaction omitted focused verification.'
 
 $ungroundedInfrastructureBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Fix the cycle database read query because split-query loading is slow and duplicates related rows.' `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($ungroundedInfrastructureBug.profile -eq 'scope-discovery') 'Ungrounded database query bug was elevated before its paths and boundary were confirmed.'
-Assert-Adaptive (@($ungroundedInfrastructureBug.stages.id) -contains 'scope-research') 'Ungrounded database query bug omitted compact scope research.'
-Assert-Adaptive (@($ungroundedInfrastructureBug.stages.id) -notcontains 'design') 'Ungrounded database query bug required premature design ceremony.'
+Assert-Adaptive (@(Get-AdaptiveIds $ungroundedInfrastructureBug.stages) -contains 'scope-research') 'Ungrounded database query bug omitted compact scope research.'
+Assert-Adaptive (@(Get-AdaptiveIds $ungroundedInfrastructureBug.stages) -notcontains 'design') 'Ungrounded database query bug required premature design ceremony.'
 
 $groundedInfrastructureBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Fix the cycle database read query because split-query loading is slow and duplicates related rows.' `
@@ -84,7 +87,7 @@ $dockerMaintenance = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1
     -ProposedPath 'FoodDiary.Web.Client/Dockerfile' `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($dockerMaintenance.profile -eq 'maintenance' -and $dockerMaintenance.maintenanceKind -eq 'deployment-build-fix') 'Bounded Docker build fix did not use deployment maintenance routing.'
-Assert-Adaptive ((@($dockerMaintenance.stages | Where-Object required).id -join ',') -eq 'evidence-brief,implementation,targeted-verification,completion') 'Docker maintenance retained non-focused ceremony.'
+Assert-Adaptive ((@(Get-AdaptiveIds @($dockerMaintenance.stages | Where-Object required)) -join ',') -eq 'evidence-brief,implementation,targeted-verification,completion') 'Docker maintenance retained non-focused ceremony.'
 Assert-Adaptive (@($dockerMaintenance.stages.command | Where-Object { $_ -match 'trace|research|design' }).Count -eq 0) 'Docker maintenance invoked heuristic application-flow discovery.'
 
 $dependencyMaintenance = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
@@ -125,7 +128,7 @@ $ungroundedUiSurface = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.p
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($ungroundedUiSurface.profile -eq 'ui-discovery') 'Ungrounded local UI surface work was not routed to discovery-only.'
 Assert-Adaptive (-not $ungroundedUiSurface.requiresWorkspace -and -not $ungroundedUiSurface.requiresDesign) 'UI discovery retained governed ceremony.'
-Assert-Adaptive ((@($ungroundedUiSurface.stages.id) -join ',') -eq 'research,reclassify') 'UI discovery emitted implementation stages before grounding paths.'
+Assert-Adaptive ((@(Get-AdaptiveIds $ungroundedUiSurface.stages) -join ',') -eq 'research,reclassify') 'UI discovery emitted implementation stages before grounding paths.'
 Assert-Adaptive ($ungroundedUiSurface.stages[0].command -match 'ui-trace') 'UI discovery did not start with runtime-owner tracing.'
 
 $ungroundedDashboardFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
@@ -133,7 +136,7 @@ $ungroundedDashboardFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWor
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($ungroundedDashboardFeature.profile -eq 'scope-discovery') 'Ungrounded cross-layer feature intent was classified before existing-flow research.'
 Assert-Adaptive (-not $ungroundedDashboardFeature.requiresWorkspace -and -not $ungroundedDashboardFeature.requiresDesign) 'Scope discovery created feature or critical ceremony before grounding paths.'
-Assert-Adaptive ((@($ungroundedDashboardFeature.stages.id) -join ',') -eq 'scope-research,reclassify') 'Scope discovery emitted implementation stages before reclassification.'
+Assert-Adaptive ((@(Get-AdaptiveIds $ungroundedDashboardFeature.stages) -join ',') -eq 'scope-research,reclassify') 'Scope discovery emitted implementation stages before reclassification.'
 Assert-Adaptive ($ungroundedDashboardFeature.stages[0].command -match 'brief' -and $ungroundedDashboardFeature.stages[0].command -match 'research') 'Scope discovery omitted compact brief or existing-flow research.'
 
 $dashboardFeaturePaths = @(
@@ -164,9 +167,9 @@ $dashboardLocalDayBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($dashboardLocalDayBug.profile -eq 'bug') 'Bounded cross-layer Dashboard fix was elevated to feature.'
 Assert-Adaptive (-not $dashboardLocalDayBug.requiresDesign -and -not $dashboardLocalDayBug.requiresWorkspace) 'Bounded cross-layer bug retained design or workspace ceremony.'
-Assert-Adaptive ((@($dashboardLocalDayBug.stages | Where-Object required).id -join ',') -eq 'bug-brief,implementation,focused-verification,completion') 'Bounded cross-layer bug did not receive the four-stage compact route.'
+Assert-Adaptive ((@(Get-AdaptiveIds @($dashboardLocalDayBug.stages | Where-Object required)) -join ',') -eq 'bug-brief,implementation,focused-verification,completion') 'Bounded cross-layer bug did not receive the four-stage compact route.'
 Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'bug-brief' -and $_.command -match 'Compact' -and $_.command -match 'trace' }).Count -eq 1) 'Bounded cross-layer bug omitted compact root-cause tracing.'
-Assert-Adaptive (@($dashboardLocalDayBug.stages.id) -notcontains 'journey-impact' -and @($dashboardLocalDayBug.stages.id) -notcontains 'design') 'Bounded cross-layer bug retained mandatory journey or design stages.'
+Assert-Adaptive (@(Get-AdaptiveIds $dashboardLocalDayBug.stages) -notcontains 'journey-impact' -and @(Get-AdaptiveIds $dashboardLocalDayBug.stages) -notcontains 'design') 'Bounded cross-layer bug retained mandatory journey or design stages.'
 Assert-Adaptive (@($dashboardLocalDayBug.stages | Where-Object { $_.id -eq 'completion' -and $_.command -match 'verify-fast' }).Count -eq 1) 'Bounded cross-layer bug did not finish with the fast local gate.'
 
 $localReactiveBug = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
@@ -196,7 +199,7 @@ $criticalCoverageOnly = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($criticalCoverageOnly.profile -eq 'test-only') 'Test-only coverage inherited critical risk from unchanged production code.'
 Assert-Adaptive (-not $criticalCoverageOnly.requiresDecisionCheckpoint -and -not $criticalCoverageOnly.requiresDesign -and -not $criticalCoverageOnly.requiresWorkspace) 'Test-only coverage retained governed ceremony.'
-Assert-Adaptive ((@($criticalCoverageOnly.stages | Where-Object required).id -join ',') -eq 'coverage-brief,test-implementation,focused-verification,completion') 'Test-only coverage did not use the four-stage focused route.'
+Assert-Adaptive ((@(Get-AdaptiveIds @($criticalCoverageOnly.stages | Where-Object required)) -join ',') -eq 'coverage-brief,test-implementation,focused-verification,completion') 'Test-only coverage did not use the four-stage focused route.'
 Assert-Adaptive (@($criticalCoverageOnly.stages.command | Where-Object { $_ -match 'journeys|design|privacy|rollout|wiki\.ps1 verify$' }).Count -eq 0) 'Test-only coverage retained unrelated product or critical workflow commands.'
 
 $testOnlyWithWikiBookkeeping = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
@@ -226,12 +229,12 @@ $patternExtension = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($patternExtension.profile -eq 'pattern-extension') 'Grounded extension of an existing repository pattern was routed as design-from-scratch work.'
 Assert-Adaptive (-not $patternExtension.requiresDesign -and -not $patternExtension.requiresWorkspace) 'Pattern extension retained governed design ceremony.'
-Assert-Adaptive ((@($patternExtension.stages | Where-Object required).id -join ',') -eq 'precedent-brief,compatibility-delta,implementation,focused-verification,completion') 'Pattern extension did not retain the precedent-focused five-stage route.'
+Assert-Adaptive ((@(Get-AdaptiveIds @($patternExtension.stages | Where-Object required)) -join ',') -eq 'precedent-brief,compatibility-delta,implementation,focused-verification,completion') 'Pattern extension did not retain the precedent-focused five-stage route.'
 
 $replanJourney = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
     -Query 'Preserve acceptance evidence during delivery replan.' `
     -Format Json | ConvertFrom-Json
-Assert-Adaptive (@($replanJourney.journeys.id) -notcontains 'FD-BILLING') 'Journey matching treated replan as the billing alias plan.'
+Assert-Adaptive (@(Get-AdaptiveIds $replanJourney.journeys) -notcontains 'FD-BILLING') 'Journey matching treated replan as the billing alias plan.'
 
 $critical = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Fix Google authentication token linking for an existing account.' `
@@ -239,18 +242,18 @@ $critical = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($critical.profile -eq 'critical') 'Authentication and credential work was not routed as critical.'
 Assert-Adaptive ($critical.requiresDecisionCheckpoint -and $critical.requiresWorkspace) 'Critical work omitted checkpoint or governed workspace.'
-Assert-Adaptive (@($critical.stages.id) -contains 'independent-review') 'Critical work omitted independent review.'
-Assert-Adaptive (@($critical.stages.id) -contains 'requirements') 'Critical work omitted requirement quality assessment.'
-Assert-Adaptive (@($critical.stages.id) -contains 'delivery-validation') 'Critical work omitted evidence-backed delivery validation.'
+Assert-Adaptive (@(Get-AdaptiveIds $critical.stages) -contains 'independent-review') 'Critical work omitted independent review.'
+Assert-Adaptive (@(Get-AdaptiveIds $critical.stages) -contains 'requirements') 'Critical work omitted requirement quality assessment.'
+Assert-Adaptive (@(Get-AdaptiveIds $critical.stages) -contains 'delivery-validation') 'Critical work omitted evidence-backed delivery validation.'
 Assert-Adaptive (@($critical.stages | Where-Object { $_.id -eq 'independent-review' -and $_.command -match 'delivery-critique' }).Count -eq 1) 'Critical work did not route through adverse delivery critique.'
 
 $journeys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') `
     -Query 'Fix the dietologist invitation email link' `
     -ChangedPath 'FoodDiary.Application/Dietologist/Services/DietologistEmailSender.cs' `
     -Format Json | ConvertFrom-Json
-Assert-Adaptive (@($journeys.journeys.id) -contains 'FD-DIET') 'Journey impact omitted dietologist collaboration.'
-Assert-Adaptive (@($journeys.journeys.id) -contains 'FD-MAIL') 'Journey impact omitted transactional email.'
-Assert-Adaptive (@($journeys.journeys.id) -notcontains 'FD-MEAL') 'Journey impact produced a broad meal-tracking false positive.'
+Assert-Adaptive (@(Get-AdaptiveIds $journeys.journeys) -contains 'FD-DIET') 'Journey impact omitted dietologist collaboration.'
+Assert-Adaptive (@(Get-AdaptiveIds $journeys.journeys) -contains 'FD-MAIL') 'Journey impact omitted transactional email.'
+Assert-Adaptive (@(Get-AdaptiveIds $journeys.journeys) -notcontains 'FD-MEAL') 'Journey impact produced a broad meal-tracking false positive.'
 
 $ungrounded = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Fix quasar zephyr nimbus anomaly.' `
@@ -258,7 +261,6 @@ $ungrounded = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
 Assert-Adaptive (-not $ungrounded.scopeKnown -and $ungrounded.requiresPathDiscovery) 'Ungrounded intent silently absorbed working-tree paths.'
 Assert-Adaptive ($ungrounded.confidence -eq 'low') 'Ungrounded intent did not expose low confidence.'
 }
-
 if ($Group -in @('All', 'Experience')) {
 $precedents = & (Join-Path $PSScriptRoot 'Get-LlmWikiGitPrecedents.ps1') `
     -Objective 'Improve photo annotation visibility' `
@@ -276,7 +278,7 @@ $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
 Assert-Adaptive (@($research.discovery.groundedPaths).Count -gt 0) 'Research did not ground the task in current repository paths.'
 Assert-Adaptive (@($research.precedents).Count -gt 0) 'Research omitted Git precedents.'
 Assert-Adaptive (@($research.authority).Count -ge 2) 'Research omitted authority and provenance guidance.'
-Assert-Adaptive (@($research.researchLanes.id) -contains 'integrations') 'Research packet omitted the integrations investigation lane.'
+Assert-Adaptive (@(Get-AdaptiveIds $research.researchLanes) -contains 'integrations') 'Research packet omitted the integrations investigation lane.'
 
 $solutions = & (Join-Path $PSScriptRoot 'Get-LlmWikiSolutionComparison.ps1') `
     -Objective 'Improve the Wiki developer experience.' `
@@ -306,7 +308,7 @@ $architecturalDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.p
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($architecturalDesign.sliceStrategy.enabled -and $architecturalDesign.sliceStrategy.kind -eq 'vertical-outcome') 'Architectural design did not enable vertical outcome slices.'
 Assert-Adaptive (@($architecturalDesign.designSlices).Count -eq 3) 'Architectural design did not produce the bounded three-slice decomposition.'
-Assert-Adaptive (@($architecturalDesign.designSlices.id) -contains 'slice-minimum-behavior') 'Vertical decomposition omitted the minimum observable behavior slice.'
+Assert-Adaptive (@(Get-AdaptiveIds $architecturalDesign.designSlices) -contains 'slice-minimum-behavior') 'Vertical decomposition omitted the minimum observable behavior slice.'
 
 $bugDesign = & (Join-Path $PSScriptRoot 'Get-LlmWikiDesignCheckpoint.ps1') `
     -Objective 'Fix a local Wiki output formatting bug.' `
@@ -320,8 +322,8 @@ $qa = & (Join-Path $PSScriptRoot 'Get-LlmWikiManualQaPlan.ps1') `
     -ProposedPath 'FoodDiary.Application/Dietologist/Services/DietologistEmailSender.cs' `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive (@($qa.journeys) -contains 'FD-DIET') 'Manual QA plan omitted the matched product journey.'
-Assert-Adaptive (@($qa.cases.id) -contains 'QA-ERROR') 'Manual QA plan omitted generic negative coverage.'
-Assert-Adaptive (@($qa.cases.id) -notcontains 'QA-MOBILE') 'Backend-only manual QA plan retained irrelevant frontend ceremony.'
+Assert-Adaptive (@(Get-AdaptiveIds $qa.cases) -contains 'QA-ERROR') 'Manual QA plan omitted generic negative coverage.'
+Assert-Adaptive (@(Get-AdaptiveIds $qa.cases) -notcontains 'QA-MOBILE') 'Backend-only manual QA plan retained irrelevant frontend ceremony.'
 
 $experience = & (Join-Path $PSScriptRoot 'Get-LlmWikiExperience.ps1') `
     -Action next `
@@ -387,9 +389,9 @@ try {
         -WorkspacePath $deliveryWorkspace `
         -AssessmentInput $deliveryFixture `
         -Format Json | ConvertFrom-Json
-    Assert-Adaptive (@($delivery.assessment.gates.id) -contains 'requirements') 'Delivery status omitted the requirement gate.'
-    Assert-Adaptive (@($delivery.assessment.gates.id) -contains 'proof-of-change') 'Delivery status omitted proof-of-change.'
-    Assert-Adaptive (@($delivery.assessment.journeyImpact.id) -contains 'FD-DIET') 'Delivery status omitted journey impact.'
+    Assert-Adaptive (@(Get-AdaptiveIds $delivery.assessment.gates) -contains 'requirements') 'Delivery status omitted the requirement gate.'
+    Assert-Adaptive (@(Get-AdaptiveIds $delivery.assessment.gates) -contains 'proof-of-change') 'Delivery status omitted proof-of-change.'
+    Assert-Adaptive (@(Get-AdaptiveIds $delivery.assessment.journeyImpact) -contains 'FD-DIET') 'Delivery status omitted journey impact.'
     Assert-Adaptive (-not $delivery.valid) 'Unresolved acceptance evidence was incorrectly approved.'
     $replan = & (Join-Path $PSScriptRoot 'Invoke-LlmWikiDeliveryWorkflow.ps1') replan `
         -WorkspacePath $deliveryWorkspace `

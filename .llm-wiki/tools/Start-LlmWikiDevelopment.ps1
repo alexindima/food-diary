@@ -9,6 +9,14 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$ProposedPath = @(
+    @($ProposedPath) |
+        Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+        ForEach-Object { [string]$_ -split '[;,]' } |
+        ForEach-Object { ([string]$_).Trim().Replace('\', '/').TrimEnd('/') } |
+        Where-Object { $_ } |
+        Sort-Object -Unique
+)
 $workflowArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
 $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @workflowArguments | ConvertFrom-Json
@@ -34,7 +42,7 @@ if ([bool]$workflow.requiresWorkspace) {
     elseif ($paths.Count -eq 0) { $workspaceMessage = 'workspace required, but concrete paths are not grounded; complete research/reclassification first' }
     else {
         $allowedPaths = @($paths | ForEach-Object { '^' + [regex]::Escape([string]$_) + '$' })
-        & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') -Objective $Objective -Criterion @($criteria) -WorkspacePath $WorkspacePath -BaseRef $BaseRef -AllowedPath $allowedPaths | Out-Null
+        & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') -Objective $Objective -Criterion @($criteria) -WorkspacePath $WorkspacePath -BaseRef $BaseRef -AllowedPath $allowedPaths -PlannedPath $paths | Out-Null
         $workspaceCreated = $true
         $workspaceMessage = "created: $WorkspacePath"
     }

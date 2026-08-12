@@ -52,7 +52,13 @@ if ($hasWorkspace) {
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12; exit 0 }
 Write-Host "Wiki ${Action}: $($result.state) [$($result.mode)]"
-if ($result.profile) { Write-Host "Profile: $($result.profile); ceremony: $($result.ceremonyBudget.label)" }
+$resultProfile = if ($result.PSObject.Properties['profile']) { [string]$result.profile } else { '' }
+if (-not [string]::IsNullOrWhiteSpace($resultProfile)) {
+    $ceremonyLabel = if ($result.PSObject.Properties['ceremonyBudget'] -and $null -ne $result.ceremonyBudget -and $result.ceremonyBudget.PSObject.Properties['label']) {
+        [string]$result.ceremonyBudget.label
+    } else { 'governed' }
+    Write-Host "Profile: $resultProfile; ceremony: $ceremonyLabel"
+}
 Write-Host "Flow: $($result.flow -join ' -> ')"
 Write-Host "NEXT: $($result.nextAction)"
 foreach ($item in @($result.additionalActions)) { Write-Host " Later: $item" }

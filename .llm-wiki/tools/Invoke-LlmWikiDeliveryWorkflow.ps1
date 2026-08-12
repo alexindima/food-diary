@@ -48,10 +48,50 @@ function Restore-WorkspaceSnapshot([hashtable]$Snapshot) {
         [IO.File]::WriteAllBytes($target, [byte[]]$entry.Value)
     }
 }
+function Sync-CompletedAcceptanceChecks {
+    $acceptancePath = Join-Path $absoluteWorkspace 'acceptance-matrix.json'
+    $evidencePath = Join-Path $absoluteWorkspace 'evidence.json'
+    if (-not (Test-Path -LiteralPath $acceptancePath -PathType Leaf) -or -not (Test-Path -LiteralPath $evidencePath -PathType Leaf)) {
+        return @()
+    }
+    $matrix = Get-Content -LiteralPath $acceptancePath -Raw | ConvertFrom-Json
+    $evidence = Get-Content -LiteralPath $evidencePath -Raw | ConvertFrom-Json
+    $completedChecks = @($evidence.checks | Where-Object { $_.status -in @('passed', 'not-applicable') -and $_.PSObject.Properties['id'] })
+    if ($completedChecks.Count -eq 0) { return @() }
+    $criteria = @($matrix.criteria)
+    $stopWords = @('acceptance', 'behavior', 'change', 'complete', 'correctly', 'implemented', 'observable', 'outcome', 'requested', 'remains', 'verified')
+    $links = [Collections.Generic.List[object]]::new()
+    foreach ($criterion in $criteria) {
+        $existingIds = @($criterion.mapping.checkIds | Where-Object { $_ })
+        $criterionText = @(
+            [string]$criterion.text
+            @($criterion.mapping.changedPaths)
+            @($criterion.mapping.testPaths)
+        ) -join ' '
+        $hasBehavioralAnchor = @($criterion.mapping.changedPaths).Count + @($criterion.mapping.scenarioIds).Count + @($criterion.mapping.testPaths).Count -gt 0
+        $tokens = @([regex]::Matches($criterionText.ToLowerInvariant(), '[\p{L}\p{Nd}]{4,}') | ForEach-Object Value | Where-Object { $_ -notin $stopWords } | Sort-Object -Unique)
+        $matches = @($completedChecks | Where-Object {
+            $checkText = "$($_.id) $($_.command)".ToLowerInvariant()
+            $criteria.Count -eq 1 -or $hasBehavioralAnchor -or @($tokens | Where-Object { $checkText.Contains($_) }).Count -gt 0
+        })
+        $newIds = @($matches | ForEach-Object { [string]$_.id } | Where-Object { $_ -notin $existingIds } | Sort-Object -Unique)
+        if ($newIds.Count -eq 0) { continue }
+        $criterion.mapping.checkIds = @($existingIds + $newIds | Sort-Object -Unique)
+        foreach ($id in $newIds) {
+            $linkReason = if ($criteria.Count -eq 1) { 'single-criterion-completed-check' } elseif ($hasBehavioralAnchor) { 'anchored-criterion-required-check' } else { 'semantic-check-affinity' }
+            $links.Add([pscustomobject][ordered]@{ criterionId = [string]$criterion.id; checkId = $id; reason = $linkReason })
+        }
+    }
+    if ($links.Count -gt 0) {
+        [IO.File]::WriteAllText($acceptancePath, (($matrix | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    }
+    return @($links)
+}
 function Get-DeliveryAssessment {
     $requirements = Invoke-JsonTool 'Manage-LlmWikiRequirementModel.ps1' @{ Action = 'assess'; WorkspacePath = $workspace }
     $conformance = Invoke-JsonTool 'Manage-LlmWikiPlanConformance.ps1' @{ Action = 'assess'; WorkspacePath = $workspace }
     $proof = Invoke-JsonTool 'Manage-LlmWikiProofOfChange.ps1' @{ Action = 'assess'; WorkspacePath = $workspace }
+    $automaticCheckLinks = @(Sync-CompletedAcceptanceChecks)
     $acceptance = Invoke-JsonTool 'Manage-LlmWikiAcceptanceMatrix.ps1' @{
         Action = 'validate'
         Path = "$workspace/acceptance-matrix.json"
@@ -124,6 +164,7 @@ function Get-DeliveryAssessment {
         }
         gates = $gates
         requirementCoverage = @($coverage)
+        automaticCheckLinks = @($automaticCheckLinks)
         journeyImpact = @($journeys.journeys)
         nextActions = @($nextActions)
         provenance = [pscustomobject][ordered]@{

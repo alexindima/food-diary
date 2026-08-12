@@ -101,7 +101,8 @@ if ($effectivePaths.Count -eq 0 -and -not [string]::IsNullOrWhiteSpace($Intent))
             }
         }
     }
-    $maximumCandidateScore = @($candidates | Measure-Object score -Maximum).Maximum
+    $candidateScoreMeasure = @($candidates | Measure-Object score -Maximum)
+    $maximumCandidateScore = if ($candidateScoreMeasure.Count -gt 0 -and $candidateScoreMeasure[0].PSObject.Properties['Maximum']) { $candidateScoreMeasure[0].Maximum } else { $null }
     $minimumCandidateScore = if ($null -eq $maximumCandidateScore) { 1 } else { [Math]::Max(1, $maximumCandidateScore - 1) }
     $inferredPaths = @(
         $candidates |
