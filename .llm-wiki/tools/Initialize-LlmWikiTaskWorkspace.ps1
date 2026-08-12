@@ -60,6 +60,7 @@ try {
     }
     if ($PSBoundParameters.ContainsKey('HeadRef')) { $packetArguments.HeadRef = $HeadRef }
     if ($PSBoundParameters.ContainsKey('ChangedPath')) { $packetArguments.ChangedPath = $ChangedPath }
+    elseif ($PlannedPath.Count -gt 0) { $packetArguments.ChangedPath = $PlannedPath }
     & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | Out-Null
     $packet = Get-Content -LiteralPath (Join-Path $temporaryAbsolutePath 'change-packet.json') -Raw | ConvertFrom-Json
 

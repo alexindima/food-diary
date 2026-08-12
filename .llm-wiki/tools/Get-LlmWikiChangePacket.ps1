@@ -28,6 +28,7 @@ $testPlan = & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') @diffArguments -D
 $rollout = & (Join-Path $toolsRoot 'Get-LlmWikiRolloutPlan.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
 $decision = & (Join-Path $toolsRoot 'Get-LlmWikiDecisionContext.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
 $brief = & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') @diffArguments `
+    -Intent $Objective `
     -DiffInput $diff `
     -PolicyInput $policy `
     -OwnershipInput $ownership `

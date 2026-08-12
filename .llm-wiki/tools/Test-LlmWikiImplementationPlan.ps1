@@ -35,4 +35,13 @@ if (@($plan.acceptanceInputs.relatedAdrs).Count -ne 1 -or $plan.acceptanceInputs
 $context = @($plan.phases | Where-Object id -eq 'context')[0]
 if ($expectedAdr -notin @($context.files)) { throw 'Context phase lost a valid ADR path.' }
 
+$brief.PSObject.Properties.Remove('decisionContext')
+$brief.PSObject.Properties.Remove('rolloutPlan')
+$abbreviatedPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiImplementationPlan.ps1') `
+    -BriefInput $brief `
+    -Objective 'Compile an abbreviated change packet' `
+    -Format Json | ConvertFrom-Json
+if (@($abbreviatedPlan.phases).Count -eq 0) { throw 'Abbreviated brief did not produce an implementation plan.' }
+if (@($abbreviatedPlan.acceptanceInputs.relatedAdrs).Count -ne 0) { throw 'Missing decision context did not default to an empty ADR set.' }
+
 Write-Host 'LLM Wiki implementation-plan tests passed.'

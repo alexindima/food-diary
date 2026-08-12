@@ -11,6 +11,7 @@ tags:
 sources:
   - .llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1
   - .llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1
+  - .llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1
   - .llm-wiki/tools/Get-LlmWikiDecisionContext.ps1
@@ -37,6 +38,8 @@ Compiled impact arrays may contain summary or compatibility entries without a
 source path. The planner projects only path-bearing values and preserves array
 shape for zero or one result, so strict mode cannot turn heterogeneous metadata
 or a scalar result into a design-checkpoint failure.
+An abbreviated packet that omits optional decision or rollout sections receives
+empty ADR and rollout defaults rather than failing under strict mode.
 Use `brief -ProposedPath` or `test-plan -ProposedPath` for early exploration;
 promote the settled path set to this plan's explicit `-ChangedPath` input.
 

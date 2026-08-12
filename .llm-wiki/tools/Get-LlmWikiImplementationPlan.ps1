@@ -22,8 +22,12 @@ $briefArguments.Limit = [Math]::Min($Limit, 20)
 $brief = if ($null -ne $BriefInput) { $BriefInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiTaskBrief.ps1') @briefArguments | ConvertFrom-Json
 }
-$decision = $brief.decisionContext
-$rollout = $brief.rolloutPlan
+$decision = if ($brief.PSObject.Properties['decisionContext'] -and $null -ne $brief.decisionContext) {
+    $brief.decisionContext
+} else { [pscustomobject]@{ relatedAdrs = @() } }
+$rollout = if ($brief.PSObject.Properties['rolloutPlan'] -and $null -ne $brief.rolloutPlan) {
+    $brief.rolloutPlan
+} else { [pscustomobject]@{ preDeploy = @(); deploy = @(); postDeploy = @(); rollback = @() } }
 $phases = [System.Collections.Generic.List[object]]::new()
 
 function Get-PlanPropertyValues([object[]]$InputObject, [string]$PropertyName) {

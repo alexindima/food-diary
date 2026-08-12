@@ -59,7 +59,7 @@ foreach ($path in $paths) {
         $null = $smokeGroups.Add('ui-continuation')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiResearchPacket|Test-LlmWikiResearchConfidence)\.ps1$') {
         $null = $smokeGroups.Add('research-confidence')
-    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiImplementationPlan|Test-LlmWikiImplementationPlan)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiImplementationPlan|Get-LlmWikiChangePacket|Initialize-LlmWikiTaskWorkspace|Test-LlmWikiImplementationPlan|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
         $null = $smokeGroups.Add('implementation-plan')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
         $null = $smokeGroups.Add('reporting')
@@ -189,6 +189,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'implementation-plan' {
             & (Join-Path $toolsRoot 'Test-LlmWikiImplementationPlan.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiGovernedAuthenticationStart.ps1')
             if (-not $?) { exit 1 }
         }
         'reporting' {

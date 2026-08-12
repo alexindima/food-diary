@@ -44,6 +44,7 @@ sources:
   - .llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1
   - .llm-wiki/tools/Get-LlmWikiReviewReport.ps1
   - .llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1
+  - .llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1
 ---
 
 # Start a Governed AI Task Workspace
@@ -73,8 +74,11 @@ The command creates:
 
 Initialization is staged in a temporary sibling directory and moved into place
 only after every artifact succeeds. Existing workspaces are never overwritten.
-When no changed paths exist yet, provide one or more `-AllowedPath` regular
-expressions to define the intended scope.
+When no changed paths exist yet, provide `-PlannedPath` for the concrete future
+files plus one or more `-AllowedPath` regular expressions for the wider intended
+scope. Task initialization forwards planned paths into initial packet
+compilation, while the manifest continues to distinguish planned work from the
+actual Git delta.
 
 Manifest initialization records only current product paths accepted by the
 allowed/excluded boundary; derived Wiki output never becomes planned product
