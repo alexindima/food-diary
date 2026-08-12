@@ -13,9 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
-using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Services;
 
 namespace FoodDiary.Application.Tests.WaistEntries;

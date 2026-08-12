@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 36 folder modules and 5 extracted application modules.
+This index unifies 34 folder modules and 6 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
@@ -22,11 +22,12 @@ are reported separately; `none observed` never means proven isolation.
 | [Ai](ai.md) | orchestrator | 0 | 3 | 1 | 2 | graph-only |
 | [Authentication](authentication.md) | aggregate-owner | 1 | 3 | 1 | 5 | graph-only |
 | [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
+| [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |
 | [Consumptions](consumptions.md) | aggregate-owner | 2 | 7 | 7 | 1 | explicit-boundary-tests |
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 2 | 1 | graph-only |
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
-| [Dashboard](dashboard.md) | read-composer | 10 | 4 | 0 | 1 | explicit-boundary-tests |
+| [Dashboard](dashboard.md) | read-composer | 8 | 6 | 0 | 1 | explicit-boundary-tests |
 | [Dietologist](dietologist.md) | aggregate-owner | 0 | 0 | 0 | 4 | project-reference-matrix |
 | [Email](email.md) | aggregate-owner | 0 | 1 | 2 | 2 | graph-only |
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
@@ -50,12 +51,10 @@ are reported separately; `none observed` never means proven isolation.
 | [RecipeLikes](recipe-likes.md) | aggregate-owner | 0 | 2 | 0 | 1 | graph-only |
 | [Recipes](recipes.md) | aggregate-owner | 4 | 4 | 0 | 1 | explicit-boundary-tests |
 | [ShoppingLists](shopping-lists.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |
-| [Statistics](statistics.md) | read-composer | 2 | 2 | 1 | 1 | graph-only |
-| [Tdee](tdee.md) | read-composer | 2 | 2 | 1 | 1 | graph-only |
+| [Statistics](statistics.md) | read-composer | 0 | 4 | 1 | 1 | graph-only |
+| [Tdee](tdee.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |
 | [Usda](usda.md) | adapter | 1 | 2 | 1 | 2 | graph-only |
 | [Users](users.md) | aggregate-owner | 0 | 0 | 0 | 4 | explicit-boundary-tests |
-| [WaistEntries](waist-entries.md) | aggregate-owner | 0 | 1 | 3 | 1 | graph-only |
 | [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 3 | graph-only |
-| [WeeklyCheckIn](weekly-check-in.md) | read-composer | 4 | 3 | 0 | 1 | graph-only |
+| [WeeklyCheckIn](weekly-check-in.md) | read-composer | 2 | 5 | 0 | 1 | graph-only |
 | [WeeklyGoals](weekly-goals.md) | aggregate-owner | 1 | 2 | 0 | 2 | graph-only |
-| [WeightEntries](weight-entries.md) | aggregate-owner | 0 | 1 | 4 | 1 | graph-only |

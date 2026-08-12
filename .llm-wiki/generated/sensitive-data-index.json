@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  54
+                       "line":  55
                    },
                    {
                        "category":  "credential",
@@ -3409,8 +3409,78 @@
                        "category":  "health",
                        "name":  "Weight",
                        "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double",
                        "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
                        "line":  3
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AverageWeight",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WaistEntryId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WaistEntryId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeightEntryId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeightEntryId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
+                       "line":  10
                    },
                    {
                        "category":  "health",
@@ -4527,27 +4597,6 @@
                    },
                    {
                        "category":  "health",
-                       "name":  "WaistEntryId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WaistEntryId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Height",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
                        "name":  "TotalCalories",
                        "type":  "double",
                        "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
@@ -4629,55 +4678,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application/WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
                        "line":  65
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeightEntryId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeightEntryId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/WeightEntries/Models/WeightEntryModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AverageWeight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/WeightEntries/Models/WeightEntrySummaryModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Height",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
-                       "line":  8
                    },
                    {
                        "category":  "health",

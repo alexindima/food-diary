@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;

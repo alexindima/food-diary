@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  85,
+                    "productionProjectEdges":  92,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
-                    "backendBusinessModules":  41,
+                    "backendBusinessModules":  40,
                     "moduleHotspotReviewCandidates":  1,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
@@ -29,18 +29,18 @@
                          ],
     "moduleHotspots":  [
                            {
-                               "module":  "Dashboard",
-                               "fanIn":  0,
-                               "fanOut":  10,
-                               "level":  "review-candidate",
-                               "role":  "read-composer"
-                           },
-                           {
                                "module":  "Consumptions",
                                "fanIn":  7,
                                "fanOut":  2,
                                "level":  "informational",
                                "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Dashboard",
+                               "fanIn":  0,
+                               "fanOut":  8,
+                               "level":  "review-candidate",
+                               "role":  "read-composer"
                            },
                            {
                                "module":  "Admin",
@@ -64,42 +64,7 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "WeeklyCheckIn",
-                               "fanIn":  0,
-                               "fanOut":  4,
-                               "level":  "informational",
-                               "role":  "read-composer"
-                           },
-                           {
-                               "module":  "WeightEntries",
-                               "fanIn":  4,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Images",
-                               "fanIn":  3,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Statistics",
-                               "fanIn":  1,
-                               "fanOut":  2,
-                               "level":  "informational",
-                               "role":  "read-composer"
-                           },
-                           {
-                               "module":  "Tdee",
-                               "fanIn":  1,
-                               "fanOut":  2,
-                               "level":  "informational",
-                               "role":  "read-composer"
-                           },
-                           {
-                               "module":  "WaistEntries",
                                "fanIn":  3,
                                "fanOut":  0,
                                "level":  "informational",
@@ -169,11 +134,25 @@
                                "role":  "aggregate-owner"
                            },
                            {
+                               "module":  "Tdee",
+                               "fanIn":  1,
+                               "fanOut":  1,
+                               "level":  "informational",
+                               "role":  "read-composer"
+                           },
+                           {
                                "module":  "Usda",
                                "fanIn":  1,
                                "fanOut":  1,
                                "level":  "informational",
                                "role":  "adapter"
+                           },
+                           {
+                               "module":  "WeeklyCheckIn",
+                               "fanIn":  0,
+                               "fanOut":  2,
+                               "level":  "informational",
+                               "role":  "read-composer"
                            },
                            {
                                "module":  "Ai",
@@ -253,9 +232,23 @@
                                "role":  "aggregate-owner"
                            },
                            {
+                               "module":  "Statistics",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "read-composer"
+                           },
+                           {
                                "module":  "WeeklyGoals",
                                "fanIn":  0,
                                "fanOut":  1,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "BodyMetrics",
+                               "fanIn":  0,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },

@@ -1,6 +1,7 @@
 using FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 using FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;

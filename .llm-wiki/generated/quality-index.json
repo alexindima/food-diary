@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4140,
+                    "productionFiles":  4144,
                     "criticalSymbols":  538,
                     "criticalSymbolsWithTestReferences":  509,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -302,11 +302,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  301,
+                         "nonBlankLines":  303,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  67.52
+                         "structuralRiskScore":  67.56
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
@@ -5087,6 +5087,14 @@
                       "structuralRiskScore":  0.52
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
+                      "nonBlankLines":  19,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.38
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryRepository.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -5111,12 +5119,28 @@
                       "structuralRiskScore":  1.84
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntryModel.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntrySummaryModel.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Wearables/Common/IWearableClient.cs",
@@ -5271,6 +5295,14 @@
                       "structuralRiskScore":  0.52
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+                      "nonBlankLines":  19,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.38
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryRepository.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -5295,12 +5327,28 @@
                       "structuralRiskScore":  1.84
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryModel.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
                   },
                   {
                       "path":  "FoodDiary.Application.Billing/AssemblyInfo.cs",
@@ -5589,6 +5637,406 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  16.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.72
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/DependencyInjection.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
+                      "nonBlankLines":  41,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.82
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.92
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
+                      "nonBlankLines":  44,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.38
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.86
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
+                      "nonBlankLines":  58,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.66
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
+                      "nonBlankLines":  25,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Mappings/WaistEntryMappings.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQuery.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQuery.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
+                      "nonBlankLines":  39,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
+                      "nonBlankLines":  23,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  6.96
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQuery.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
+                      "nonBlankLines":  63,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.76
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQuery.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
+                      "nonBlankLines":  43,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
+                      "nonBlankLines":  22,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.94
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
+                      "nonBlankLines":  70,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
+                      "nonBlankLines":  41,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.82
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.92
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
+                      "nonBlankLines":  44,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.38
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.86
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
+                      "nonBlankLines":  58,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.66
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
+                      "nonBlankLines":  25,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Mappings/WeightEntryMappings.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQuery.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
+                      "nonBlankLines":  39,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
+                      "nonBlankLines":  23,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  6.96
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQuery.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
+                      "nonBlankLines":  63,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.76
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQuery.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
+                      "nonBlankLines":  43,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
+                      "nonBlankLines":  22,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.94
+                  },
+                  {
+                      "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
+                      "nonBlankLines":  70,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.4
                   },
                   {
                       "path":  "FoodDiary.Application.Dietologist/AssemblyInfo.cs",
@@ -10560,11 +11008,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                      "nonBlankLines":  61,
+                      "nonBlankLines":  55,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.22
+                      "structuralRiskScore":  1.1
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
@@ -14079,214 +14527,6 @@
                       "structuralRiskScore":  0.24
                   },
                   {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-                      "nonBlankLines":  41,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.82
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-                      "nonBlankLines":  44,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.38
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.86
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-                      "nonBlankLines":  59,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.68
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
-                      "nonBlankLines":  25,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Common/IWaistEntryReadService.cs",
-                      "nonBlankLines":  19,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.38
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Mappings/WaistEntryMappings.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Models/WaistEntryModel.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Models/WaistEntrySummaryModel.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQuery.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQuery.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
-                      "nonBlankLines":  39,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
-                      "nonBlankLines":  23,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  6.96
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQuery.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
-                      "nonBlankLines":  62,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.74
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQuery.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
-                      "nonBlankLines":  43,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.94
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WaistEntries/Services/WaistEntryReadService.cs",
-                      "nonBlankLines":  72,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.44
-                  },
-                  {
                       "path":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
                       "nonBlankLines":  9,
                       "decisionPoints":  0,
@@ -14589,214 +14829,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  14.72
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-                      "nonBlankLines":  41,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.82
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-                      "nonBlankLines":  44,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.38
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.86
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-                      "nonBlankLines":  59,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.68
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
-                      "nonBlankLines":  25,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Common/IWeightEntryReadService.cs",
-                      "nonBlankLines":  19,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.38
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Mappings/WeightEntryMappings.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Models/WeightEntryModel.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Models/WeightEntrySummaryModel.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQuery.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
-                      "nonBlankLines":  39,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
-                      "nonBlankLines":  23,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  6.96
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQuery.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
-                      "nonBlankLines":  62,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.74
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQuery.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
-                      "nonBlankLines":  43,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.94
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeightEntries/Services/WeightEntryReadService.cs",
-                      "nonBlankLines":  72,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.44
                   },
                   {
                       "path":  "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -18888,11 +18920,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  301,
+                      "nonBlankLines":  303,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  67.52
+                      "structuralRiskScore":  67.56
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19312,11 +19344,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  39,
+                      "nonBlankLines":  41,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.28
+                      "structuralRiskScore":  2.32
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23000,11 +23032,11 @@
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
-                      "nonBlankLines":  25,
+                      "nonBlankLines":  26,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.5
+                      "structuralRiskScore":  0.52
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Requests/CreateWaistEntryHttpRequest.cs",
@@ -23232,11 +23264,11 @@
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
-                      "nonBlankLines":  25,
+                      "nonBlankLines":  26,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.5
+                      "structuralRiskScore":  0.52
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Requests/CreateWeightEntryHttpRequest.cs",
@@ -23656,11 +23688,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  71,
+                      "nonBlankLines":  73,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.42
+                      "structuralRiskScore":  4.46
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34351,7 +34383,7 @@
                             {
                                 "name":  "CreateWaistEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
                                 "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -34362,7 +34394,7 @@
                             {
                                 "name":  "CreateWeightEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
                                 "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -34506,7 +34538,7 @@
                             {
                                 "name":  "DeleteWaistEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -34517,7 +34549,7 @@
                             {
                                 "name":  "DeleteWeightEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -35428,8 +35460,8 @@
                             {
                                 "name":  "UpdateWaistEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-                                "line":  15,
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
+                                "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/WaistEntries/WaistEntriesFeatureTests.cs",
@@ -35439,8 +35471,8 @@
                             {
                                 "name":  "UpdateWeightEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-                                "line":  15,
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
+                                "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
@@ -37068,7 +37100,7 @@
                             {
                                 "name":  "GetLatestWaistEntryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37079,7 +37111,7 @@
                             {
                                 "name":  "GetLatestWeightEntryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37518,7 +37550,7 @@
                             {
                                 "name":  "GetWaistEntriesQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
                                 "line":  10,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37539,8 +37571,8 @@
                             {
                                 "name":  "GetWaistHistoryPageSummaryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
-                                "line":  12,
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
@@ -37549,7 +37581,7 @@
                             {
                                 "name":  "GetWaistSummariesQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37634,7 +37666,7 @@
                             {
                                 "name":  "GetWeightEntriesQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
                                 "line":  10,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37655,8 +37687,8 @@
                             {
                                 "name":  "GetWeightHistoryPageSummaryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
-                                "line":  12,
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Users/HistoryPageSummaryHandlerTests.cs"
@@ -37665,7 +37697,7 @@
                             {
                                 "name":  "GetWeightSummariesQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38122,7 +38154,7 @@
                             {
                                 "name":  "CreateWaistEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
                                 "line":  6,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38133,7 +38165,7 @@
                             {
                                 "name":  "CreateWeightEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
                                 "line":  6,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38196,7 +38228,7 @@
                             {
                                 "name":  "DeleteWaistEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38206,7 +38238,7 @@
                             {
                                 "name":  "DeleteWeightEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38503,7 +38535,7 @@
                             {
                                 "name":  "GetLatestWaistEntryQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38513,7 +38545,7 @@
                             {
                                 "name":  "GetLatestWeightEntryQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38769,7 +38801,7 @@
                             {
                                 "name":  "GetWaistEntriesQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38780,7 +38812,7 @@
                             {
                                 "name":  "GetWaistSummariesQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38801,7 +38833,7 @@
                             {
                                 "name":  "GetWeightEntriesQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38812,7 +38844,7 @@
                             {
                                 "name":  "GetWeightSummariesQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -39491,7 +39523,7 @@
                             {
                                 "name":  "UpdateWaistEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
                                 "line":  6,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39501,7 +39533,7 @@
                             {
                                 "name":  "UpdateWeightEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
                                 "line":  6,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

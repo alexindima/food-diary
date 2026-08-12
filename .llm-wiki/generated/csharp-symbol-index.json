@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3132,
-                    "symbols":  3169,
+                    "sourceFiles":  3136,
+                    "symbols":  3172,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1594,
+                                  "class":  1597,
                                   "enum":  49,
                                   "interface":  413,
                                   "record":  1000,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1135,
+                                  "Other":  1138,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -3989,6 +3989,13 @@
                         "line":  5
                     },
                     {
+                        "name":  "IWaistEntryReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
+                        "line":  5
+                    },
+                    {
                         "name":  "IWaistEntryRepository",
                         "kind":  "interface",
                         "role":  "Repository",
@@ -4010,10 +4017,24 @@
                         "line":  5
                     },
                     {
+                        "name":  "WaistEntryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntryModel.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "WaistEntryReadModel",
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntryReadModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WaistEntrySummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/WaistEntries/Models/WaistEntrySummaryModel.cs",
                         "line":  2
                     },
                     {
@@ -4150,6 +4171,13 @@
                         "line":  5
                     },
                     {
+                        "name":  "IWeightEntryReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
+                        "line":  5
+                    },
+                    {
                         "name":  "IWeightEntryRepository",
                         "kind":  "interface",
                         "role":  "Repository",
@@ -4171,10 +4199,24 @@
                         "line":  5
                     },
                     {
+                        "name":  "WeightEntryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryModel.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "WeightEntryReadModel",
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntryReadModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeightEntrySummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
                         "line":  2
                     },
                     {
@@ -4421,6 +4463,349 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Billing/Services/BillingWebhookInboxService.cs",
                         "line":  12
+                    },
+                    {
+                        "name":  "RequiredIdParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.BodyMetrics/Common/RequiredIdParser.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "UtcDateNormalizer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.BodyMetrics/Common/UtcDateNormalizer.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.BodyMetrics/DependencyInjection.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "CreateWaistEntryCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateWaistEntryCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "CreateWaistEntryCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DeleteWaistEntryCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeleteWaistEntryCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "DeleteWaistEntryCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpdateWaistEntryCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateWaistEntryCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "UpdateWaistEntryCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "WaistEntryMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Mappings/WaistEntryMappings.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "WaistHistoryPageSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetLatestWaistEntryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetLatestWaistEntryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetLatestWaistEntryQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetWaistEntriesQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWaistEntriesQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "GetWaistEntriesQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetWaistHistoryPageSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWaistHistoryPageSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "GetWaistSummariesQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWaistSummariesQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "GetWaistSummariesQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "WaistEntryReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "CreateWeightEntryCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateWeightEntryCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "CreateWeightEntryCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DeleteWeightEntryCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeleteWeightEntryCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "DeleteWeightEntryCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpdateWeightEntryCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateWeightEntryCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "UpdateWeightEntryCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "WeightEntryMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Mappings/WeightEntryMappings.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "WeightHistoryPageSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetLatestWeightEntryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetLatestWeightEntryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetLatestWeightEntryQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetWeightEntriesQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWeightEntriesQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "GetWeightEntriesQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetWeightHistoryPageSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWeightHistoryPageSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "GetWeightSummariesQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWeightSummariesQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "GetWeightSummariesQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "WeightEntryReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
+                        "line":  7
                     },
                     {
                         "name":  "AcceptInvitationCommand",
@@ -8753,7 +9138,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                        "line":  30
+                        "line":  26
                     },
                     {
                         "name":  "DependencyInjection",
@@ -11822,188 +12207,6 @@
                         "line":  6
                     },
                     {
-                        "name":  "CreateWaistEntryCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateWaistEntryCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "CreateWaistEntryCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommandValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "DeleteWaistEntryCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeleteWaistEntryCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "DeleteWaistEntryCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpdateWaistEntryCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateWaistEntryCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "UpdateWaistEntryCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WaistEntries/Commands/UpdateWaistEntry/UpdateWaistEntryCommandValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IWaistEntryReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/WaistEntries/Common/IWaistEntryReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "WaistEntryMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/WaistEntries/Mappings/WaistEntryMappings.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "WaistEntryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/WaistEntries/Models/WaistEntryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WaistEntrySummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/WaistEntries/Models/WaistEntrySummaryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WaistHistoryPageSummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/WaistEntries/Models/WaistHistoryPageSummaryModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetLatestWaistEntryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetLatestWaistEntryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetLatestWaistEntryQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetWaistEntriesQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWaistEntriesQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "GetWaistEntriesQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistEntries/GetWaistEntriesQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetWaistHistoryPageSummaryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWaistHistoryPageSummaryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistHistoryPageSummary/GetWaistHistoryPageSummaryQueryHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "GetWaistSummariesQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWaistSummariesQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "GetWaistSummariesQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WaistEntries/Queries/GetWaistSummaries/GetWaistSummariesQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "WaistEntryReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/WaistEntries/Services/WaistEntryReadService.cs",
-                        "line":  9
-                    },
-                    {
                         "name":  "ConnectWearableCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -12268,188 +12471,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
                         "line":  8
-                    },
-                    {
-                        "name":  "CreateWeightEntryCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateWeightEntryCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "CreateWeightEntryCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/CreateWeightEntry/CreateWeightEntryCommandValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "DeleteWeightEntryCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeleteWeightEntryCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "DeleteWeightEntryCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/DeleteWeightEntry/DeleteWeightEntryCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpdateWeightEntryCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateWeightEntryCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "UpdateWeightEntryCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WeightEntries/Commands/UpdateWeightEntry/UpdateWeightEntryCommandValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IWeightEntryReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/WeightEntries/Common/IWeightEntryReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "WeightEntryMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/WeightEntries/Mappings/WeightEntryMappings.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "WeightEntryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/WeightEntries/Models/WeightEntryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WeightEntrySummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/WeightEntries/Models/WeightEntrySummaryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WeightHistoryPageSummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/WeightEntries/Models/WeightHistoryPageSummaryModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetLatestWeightEntryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetLatestWeightEntryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetLatestWeightEntryQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetLatestWeightEntry/GetLatestWeightEntryQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetWeightEntriesQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWeightEntriesQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "GetWeightEntriesQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightEntries/GetWeightEntriesQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetWeightHistoryPageSummaryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWeightHistoryPageSummaryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightHistoryPageSummary/GetWeightHistoryPageSummaryQueryHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "GetWeightSummariesQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWeightSummariesQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "GetWeightSummariesQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/WeightEntries/Queries/GetWeightSummaries/GetWeightSummariesQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "WeightEntryReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/WeightEntries/Services/WeightEntryReadService.cs",
-                        "line":  9
                     },
                     {
                         "name":  "DomainConstants",
@@ -16117,7 +16138,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  336
+                        "line":  338
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16474,7 +16495,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  46
+                        "line":  48
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -19694,7 +19715,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/WaistEntries/Mappings/WaistEntryHttpResponseMappings.cs",
-                        "line":  6
+                        "line":  7
                     },
                     {
                         "name":  "CreateWaistEntryHttpRequest",
@@ -19897,7 +19918,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Presentation.Api/Features/WeightEntries/Mappings/WeightEntryHttpResponseMappings.cs",
-                        "line":  6
+                        "line":  7
                     },
                     {
                         "name":  "CreateWeightEntryHttpRequest",
@@ -20261,7 +20282,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  20
+                        "line":  21
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23725,9 +23746,9 @@
                                      },
                                      {
                                          "interface":  "IWaistEntryReadService",
-                                         "interfacePath":  "FoodDiary.Application/WaistEntries/Common/IWaistEntryReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/WaistEntries/Common/IWaistEntryReadService.cs",
                                          "implementation":  "WaistEntryReadService",
-                                         "implementationPath":  "FoodDiary.Application/WaistEntries/Services/WaistEntryReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.BodyMetrics/WaistEntries/Services/WaistEntryReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23837,9 +23858,9 @@
                                      },
                                      {
                                          "interface":  "IWeightEntryReadService",
-                                         "interfacePath":  "FoodDiary.Application/WeightEntries/Common/IWeightEntryReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/WeightEntries/Common/IWeightEntryReadService.cs",
                                          "implementation":  "WeightEntryReadService",
-                                         "implementationPath":  "FoodDiary.Application/WeightEntries/Services/WeightEntryReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23878,6 +23899,20 @@
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application.Billing/DependencyInjection.cs",
                                                  "line":  26
+                                             },
+                                             {
+                                                 "service":  "IWeightEntryReadService",
+                                                 "implementation":  "WeightEntryReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.BodyMetrics/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
+                                                 "service":  "IWaistEntryReadService",
+                                                 "implementation":  "WaistEntryReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.BodyMetrics/DependencyInjection.cs",
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IDietologistClientReadService",
@@ -24430,175 +24465,161 @@
                                                  "implementation":  "CycleReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  33
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "IDashboardStatisticsReadService",
                                                  "implementation":  "MediatorDashboardStatisticsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  34
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "IDashboardBodyReadService",
                                                  "implementation":  "RepositoryDashboardBodyReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  35
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "IDashboardMealsReadService",
                                                  "implementation":  "MediatorDashboardMealsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  36
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "IDashboardReadService",
                                                  "implementation":  "ComposedDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  37
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IDashboardUserContextService",
                                                  "implementation":  "DashboardUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  38
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IDashboardSectionDataLoader",
                                                  "implementation":  "DashboardSectionDataLoader",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  39
+                                                 "line":  35
                                              },
                                              {
                                                  "service":  "IFastingAnalyticsService",
                                                  "implementation":  "FastingAnalyticsService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  44
+                                                 "line":  40
                                              },
                                              {
                                                  "service":  "IFastingReadService",
                                                  "implementation":  "FastingReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  45
+                                                 "line":  41
                                              },
                                              {
                                                  "service":  "IFastingTelemetrySummaryReadService",
                                                  "implementation":  "FastingTelemetrySummaryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  46
+                                                 "line":  42
                                              },
                                              {
                                                  "service":  "IFastingNotificationScheduler",
                                                  "implementation":  "FastingNotificationScheduler",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  47
+                                                 "line":  43
                                              },
                                              {
                                                  "service":  "IHydrationEntryReadService",
                                                  "implementation":  "HydrationEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  48
+                                                 "line":  44
                                              },
                                              {
                                                  "service":  "IHydrationGoalService",
                                                  "implementation":  "HydrationGoalService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  49
+                                                 "line":  45
                                              },
                                              {
                                                  "service":  "IGamificationReadService",
                                                  "implementation":  "GamificationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  50
+                                                 "line":  46
                                              },
                                              {
                                                  "service":  "IGamificationUserProfileService",
                                                  "implementation":  "GamificationUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  51
+                                                 "line":  47
                                              },
                                              {
                                                  "service":  "IAchievementAwardService",
                                                  "implementation":  "AchievementAwardService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  52
+                                                 "line":  48
                                              },
                                              {
                                                  "service":  "IAchievementReconciliationHandler",
                                                  "implementation":  "AchievementReconciliationHandler",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  53
+                                                 "line":  49
                                              },
                                              {
                                                  "service":  "IAchievementDefinitionAdministrationService",
                                                  "implementation":  "AchievementDefinitionAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  54
+                                                 "line":  50
                                              },
                                              {
                                                  "service":  "IExerciseEntryReadService",
                                                  "implementation":  "ExerciseEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  55
-                                             },
-                                             {
-                                                 "service":  "IWaistEntryReadService",
-                                                 "implementation":  "WaistEntryReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  56
+                                                 "line":  51
                                              },
                                              {
                                                  "service":  "IWearableReadService",
                                                  "implementation":  "WearableReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  57
-                                             },
-                                             {
-                                                 "service":  "IWeightEntryReadService",
-                                                 "implementation":  "WeightEntryReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  58
+                                                 "line":  52
                                              },
                                              {
                                                  "service":  "ITdeeUserProfileService",
                                                  "implementation":  "TdeeUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  59
+                                                 "line":  53
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInUserProfileService",
                                                  "implementation":  "WeeklyCheckInUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  60
+                                                 "line":  54
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInReadService",
                                                  "implementation":  "WeeklyCheckInReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  61
+                                                 "line":  55
                                              },
                                              {
                                                  "service":  "IWeeklyGoalReadService",
@@ -25221,14 +25242,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  66
+                                                 "line":  68
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  67
+                                                 "line":  69
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25319,7 +25340,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  38
+                                                 "line":  40
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25375,35 +25396,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  31
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  46
+                                                 "line":  48
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  47
+                                                 "line":  49
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  48
+                                                 "line":  50
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  71
+                                                 "line":  73
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 36,
-    "extractedModules": 5,
-    "totalModules": 41
+    "folderModules": 34,
+    "extractedModules": 6,
+    "totalModules": 40
   },
   "analysis": {
     "compileTime": "Roslyn/syntax and project-reference evidence; unresolved or runtime-only DI edges are reported separately.",
@@ -60,6 +60,30 @@
         ],
         "adapterAreas": [
           "FoodDiary.Integrations/Billing"
+        ]
+      }
+    },
+    "BodyMetrics": {
+      "role": "aggregate-owner",
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
+      "ownedEntities": [
+        "WaistEntry",
+        "WeightEntry"
+      ],
+      "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.BodyMetrics"
+        ],
+        "abstractionAreas": [
+          "WaistEntries",
+          "WeightEntries"
+        ],
+        "domainAreas": [
+          "BodyMetrics"
+        ],
+        "persistenceAreas": [
+          "BodyMetrics"
         ]
       }
     },
@@ -386,25 +410,6 @@
       ],
       "sourceMappings": {}
     },
-    "WaistEntries": {
-      "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [
-        "WaistEntry"
-      ],
-      "sourceMappings": {
-        "abstractionAreas": [
-          "WaistEntries"
-        ],
-        "domainAreas": [
-          "BodyMetrics"
-        ],
-        "persistenceAreas": [
-          "BodyMetrics"
-        ]
-      }
-    },
     "Wearables": {
       "role": "aggregate-owner",
       "physicalIsolation": "folder",
@@ -425,25 +430,6 @@
       "enforcement": "graph-only",
       "ownedEntities": [],
       "sourceMappings": {}
-    },
-    "WeightEntries": {
-      "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [
-        "WeightEntry"
-      ],
-      "sourceMappings": {
-        "abstractionAreas": [
-          "WeightEntries"
-        ],
-        "domainAreas": [
-          "BodyMetrics"
-        ],
-        "persistenceAreas": [
-          "BodyMetrics"
-        ]
-      }
     }
   }
 }

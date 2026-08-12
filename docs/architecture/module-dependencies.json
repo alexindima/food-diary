@@ -5,11 +5,12 @@
     "Admin": ["Ai", "Authentication", "ContentReports", "Email", "Gamification", "Lessons"],
     "Ai": [],
     "Authentication": ["Email"],
+    "BodyMetrics": [],
     "Consumptions": ["Images", "Nutrition"],
     "ContentReports": [],
     "Cycles": [],
     "DailyAdvices": [],
-    "Dashboard": ["Consumptions", "Cycles", "DailyAdvices", "Exercises", "Fasting", "Hydration", "Statistics", "Tdee", "WaistEntries", "WeightEntries"],
+    "Dashboard": ["Consumptions", "Cycles", "DailyAdvices", "Exercises", "Fasting", "Hydration", "Statistics", "Tdee"],
     "Dietologist": [],
     "Email": [],
     "Exercises": [],
@@ -32,15 +33,13 @@
     "RecipeLikes": [],
     "Recipes": ["FavoriteRecipes", "Images", "Nutrition", "RecentItems"],
     "ShoppingLists": [],
-    "Statistics": ["WaistEntries", "WeightEntries"],
-    "Tdee": ["Exercises", "WeightEntries"],
+    "Statistics": [],
+    "Tdee": ["Exercises"],
     "Usda": ["Consumptions"],
     "Users": [],
-    "WaistEntries": [],
     "Wearables": [],
-    "WeeklyCheckIn": ["Consumptions", "Hydration", "WaistEntries", "WeightEntries"],
-    "WeeklyGoals": ["Consumptions"],
-    "WeightEntries": []
+    "WeeklyCheckIn": ["Consumptions", "Hydration"],
+    "WeeklyGoals": ["Consumptions"]
   },
   "knownCycles": []
 }

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.WaistEntries.Models;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Services;
-using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 
 namespace FoodDiary.Application.Tests.WeeklyCheckIn;
 

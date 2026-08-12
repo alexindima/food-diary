@@ -1,6 +1,6 @@
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Exercises.Models;
-using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 
 namespace FoodDiary.Application.Tdee.Services;
 

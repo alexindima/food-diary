@@ -1,6 +1,7 @@
 using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;

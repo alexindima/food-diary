@@ -1,5 +1,6 @@
 using FoodDiary.Application;
 using FoodDiary.Application.Billing;
+using FoodDiary.Application.BodyMetrics;
 using FoodDiary.Application.Dietologist;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Marketing;
@@ -14,6 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddApplication();
+builder.Services.AddBodyMetricsModule();
 builder.Services.AddDietologistModule();
 builder.Services.AddNotificationsModule();
 builder.Services.AddUsersModule();

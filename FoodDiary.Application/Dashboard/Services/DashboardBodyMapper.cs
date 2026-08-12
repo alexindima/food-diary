@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Models;
-using FoodDiary.Application.WaistEntries.Models;
-using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 
 namespace FoodDiary.Application.Dashboard.Services;
 

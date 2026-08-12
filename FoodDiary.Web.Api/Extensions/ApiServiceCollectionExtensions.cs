@@ -1,5 +1,6 @@
 using FoodDiary.Application;
 using FoodDiary.Application.Billing;
+using FoodDiary.Application.BodyMetrics;
 using FoodDiary.Application.Dietologist;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Marketing;
@@ -36,6 +37,7 @@ public static class ApiServiceCollectionExtensions {
         private IServiceCollection AddApplicationModules(IConfiguration configuration, IHostEnvironment? environment) {
             return services
                 .AddApplication()
+                .AddBodyMetricsModule()
                 .AddDietologistModule()
                 .AddNotificationsModule()
                 .AddUsersModule()

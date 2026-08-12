@@ -8,8 +8,8 @@ using FoodDiary.Application.Exercises.Models;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
-using FoodDiary.Application.WeightEntries.Common;
-using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;

@@ -25,6 +25,7 @@ public sealed class JobManagerGuardrailTests {
         string[] expectedProjectReferences = [
             "FoodDiary.Application",
             "FoodDiary.Application.Billing",
+            "FoodDiary.Application.BodyMetrics",
             "FoodDiary.Application.Dietologist",
             "FoodDiary.Application.Marketing",
             "FoodDiary.Application.Notifications",

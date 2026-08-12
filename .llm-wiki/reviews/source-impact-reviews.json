@@ -50,17 +50,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "aa6d761e23d0682dab040feac89558ec3fa940b2f039f3d4981d3ba880b26d0f"
-                                        },
-                                        {
-                                            "path":  "docs/BACKEND_MODULE_MAP.md",
-                                            "sha256":  "975590cae22cfca701ad9a900c8017cd8cd985236e8dce67913aa2df6a9cc57a"
+                                            "sha256":  "bb4edcd14de6f48823f1da4dde8e69ba2bab3878b7c6754a16212b0237c0057f"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:33.1510949Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:33.4588328Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -68,30 +64,22 @@
                         "pageSha256":  "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
                         "sources":  [
                                         {
-                                            "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "0636f80fb6fd7637a88979593fc735341be650a6406fb7c1336f568552c7f6e6"
-                                        },
-                                        {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "aa6d761e23d0682dab040feac89558ec3fa940b2f039f3d4981d3ba880b26d0f"
+                                            "sha256":  "bb4edcd14de6f48823f1da4dde8e69ba2bab3878b7c6754a16212b0237c0057f"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "46889177098569713bfa7aadb9e0ab923fe96a562da560c5aa74dd27846808da"
-                                        },
-                                        {
-                                            "path":  "docs/BACKEND_MODULE_MAP.md",
-                                            "sha256":  "975590cae22cfca701ad9a900c8017cd8cd985236e8dce67913aa2df6a9cc57a"
+                                            "sha256":  "e59a8fbf453a2278bf0fa245bab10c3769acb5e922c3c0845ef0f16e2459e8ae"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "50214bf947b4192a2538575cb77670e4baa302c404ebba99e37d21e710de0574"
+                                            "sha256":  "50c8c50895e2c4aaf22ba7a07fe4004360c3c0a698810bf57f3afda4018291cb"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:33.2927315Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:33.6439987Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -129,14 +117,18 @@
                         "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-                                            "sha256":  "8d8a6f17daa7d9a44e0509548706ea72287dd930ba380a4ea1d4300b0f41959e"
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "bb4edcd14de6f48823f1da4dde8e69ba2bab3878b7c6754a16212b0237c0057f"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "e59a8fbf453a2278bf0fa245bab10c3769acb5e922c3c0845ef0f16e2459e8ae"
                                         }
                                     ],
-                        "reason":  "Reviewed trace null-safety, canonical 36+5 module inventory generation, and objective-safe governed workspace selection against current workflow pages.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4145e274a7a1daea8112754ab0575514046cf969",
-                        "reviewedAtUtc":  "2026-08-12T22:06:15.0675158Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:33.8326906Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -209,17 +201,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "4fa6ce05609d4ff03e38edf9f63f92d699bdda10fe9e6b965020c7f7fe49dab3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-                                            "sha256":  "8d8a6f17daa7d9a44e0509548706ea72287dd930ba380a4ea1d4300b0f41959e"
+                                            "sha256":  "c1af7b195ea8baa7741a081f37fe19e23a1482600bc55888d5733959cfd7548c"
                                         }
                                     ],
-                        "reason":  "Reviewed trace null-safety, canonical 36+5 module inventory generation, and objective-safe governed workspace selection against current workflow pages.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4145e274a7a1daea8112754ab0575514046cf969",
-                        "reviewedAtUtc":  "2026-08-12T22:06:15.7078001Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:35.2393939Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -292,21 +280,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "74b709a77897f0f5cdb80f8ea486e007f5fb0c4da76590480fa0413690800263"
+                                            "sha256":  "7208bb6afbcf21b2732a58c8cf01c6cc76cd57e8e314f4a361ada423faca0afd"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "aa6d761e23d0682dab040feac89558ec3fa940b2f039f3d4981d3ba880b26d0f"
+                                            "sha256":  "bb4edcd14de6f48823f1da4dde8e69ba2bab3878b7c6754a16212b0237c0057f"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "50214bf947b4192a2538575cb77670e4baa302c404ebba99e37d21e710de0574"
+                                            "sha256":  "50c8c50895e2c4aaf22ba7a07fe4004360c3c0a698810bf57f3afda4018291cb"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:33.7474881Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:34.0138262Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -315,13 +303,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "080de6a63b4a606caa4093bf19058c728db0fe183b0d77f98a9dcd18fc2a16d0"
+                                            "sha256":  "94bfed8e92deff8ec4113163e3ca7fd85a17802a09b5de8003109f988daf4832"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:33.9801437Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:34.2290694Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -755,13 +743,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "46889177098569713bfa7aadb9e0ab923fe96a562da560c5aa74dd27846808da"
+                                            "sha256":  "e59a8fbf453a2278bf0fa245bab10c3769acb5e922c3c0845ef0f16e2459e8ae"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:34.4447435Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:34.4273777Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -823,13 +811,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "5811640795faaca93e1d3f8aa959aeda62bf86f37da7ac7c7d6db52de6047b9c"
+                                            "sha256":  "8125eae4a253f208d3a137378f65fe0890c609a978ff13a858783f85d81a73be"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:34.6897370Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:34.6523728Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -872,13 +860,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "ca809649b04a932a5313f33066862ff7e2740914c7741a1ef209a26d8fd90388"
+                                            "sha256":  "fa113d6dabed6b700cbcb3fb5b8f28193b3717e92bc5bab539afe3ad5de689b6"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "BodyMetrics extraction was reviewed against the updated backend module manifest, dependency graph, project-reference matrix, composition roots, generated contract indexes, focused application tests, architecture tests, and a successful full solution build.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:34.9450638Z"
+                        "gitHead":  "7990f5609e166dd6dc1fa23a724badfac873de73",
+                        "reviewedAtUtc":  "2026-08-12T22:39:34.9455246Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

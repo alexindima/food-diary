@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Hydration.Common;
-using FoodDiary.Application.WaistEntries.Common;
-using FoodDiary.Application.WaistEntries.Models;
-using FoodDiary.Application.WeightEntries.Common;
-using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Services;

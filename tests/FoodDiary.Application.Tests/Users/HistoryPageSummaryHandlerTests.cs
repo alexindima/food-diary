@@ -1,12 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.WaistEntries.Common;
-using FoodDiary.Application.WaistEntries.Models;
+using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
-using FoodDiary.Application.WeightEntries.Common;
-using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.WaistEntries.Models;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightHistoryPageSummary;
+using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
