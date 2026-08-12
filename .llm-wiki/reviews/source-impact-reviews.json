@@ -293,14 +293,14 @@
                         "pageSha256":  "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+                                            "sha256":  "dbba6de0a23bf99a730bf4e622fc51734351777e19a32be9601f811e442882ca"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Implementation planning now ignores heterogeneous metadata entries without path-like properties and preserves collection shape; manifest, packet, similarity reuse, integration, and index contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:04.4352050Z"
+                        "gitHead":  "1787511f44c0b9c407c94859c7340e55ab4088e3",
+                        "reviewedAtUtc":  "2026-08-12T02:20:38.8135399Z"
                     },
                     {
                         "pageId":  "workflow-change-packet",
@@ -308,14 +308,14 @@
                         "pageSha256":  "a78df40d6573d1d9334e04c7ef92268b22a1d511cf2bdda6445652fc0d299fc0",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+                                            "sha256":  "dbba6de0a23bf99a730bf4e622fc51734351777e19a32be9601f811e442882ca"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Implementation planning now ignores heterogeneous metadata entries without path-like properties and preserves collection shape; manifest, packet, similarity reuse, integration, and index contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:04.6300524Z"
+                        "gitHead":  "1787511f44c0b9c407c94859c7340e55ab4088e3",
+                        "reviewedAtUtc":  "2026-08-12T02:20:39.0045296Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -505,13 +505,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "6dc244989fccf71fb098e497ad3873b8f4f3274a927be111b55029bc417a1556"
+                                            "sha256":  "af732c053ebc8aa2ec21bb1164d6c1cf70055e4be8e5633a30bc32059b437ff5"
                                         }
                                     ],
-                        "reason":  "Affected smoke gained a focused research-confidence regression group; index selection, generation, caching, transactions, and timing calibration are unchanged.",
+                        "reason":  "Implementation planning now ignores heterogeneous metadata entries without path-like properties and preserves collection shape; manifest, packet, similarity reuse, integration, and index contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "57c4358ea2e1c3721868aedeea36f1865e7a6e31",
-                        "reviewedAtUtc":  "2026-08-12T02:08:57.7025776Z"
+                        "gitHead":  "1787511f44c0b9c407c94859c7340e55ab4088e3",
+                        "reviewedAtUtc":  "2026-08-12T02:20:39.2852957Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -746,6 +746,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
                         "reviewedAtUtc":  "2026-08-11T23:54:58.9398531Z"
+                    },
+                    {
+                        "pageId":  "workflow-similar-task-plan-reuse",
+                        "pagePath":  ".llm-wiki/workflows/similar-task-plan-reuse.md",
+                        "pageSha256":  "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+                                            "sha256":  "dbba6de0a23bf99a730bf4e622fc51734351777e19a32be9601f811e442882ca"
+                                        }
+                                    ],
+                        "reason":  "Implementation planning now ignores heterogeneous metadata entries without path-like properties and preserves collection shape; manifest, packet, similarity reuse, integration, and index contracts are unchanged.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "1787511f44c0b9c407c94859c7340e55ab4088e3",
+                        "reviewedAtUtc":  "2026-08-12T02:20:39.5466829Z"
                     },
                     {
                         "pageId":  "workflow-task-brief",

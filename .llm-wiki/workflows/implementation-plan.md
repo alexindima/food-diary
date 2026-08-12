@@ -10,6 +10,7 @@ tags:
   - implementation
 sources:
   - .llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1
+  - .llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1
   - .llm-wiki/tools/Get-LlmWikiTaskBrief.ps1
   - .llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1
   - .llm-wiki/tools/Get-LlmWikiDecisionContext.ps1
@@ -32,6 +33,10 @@ The plan orders context discovery, contract migration, domain/data work, impleme
 
 When a compiled brief is available, the planner consumes it directly instead
 of recomputing decision and rollout context.
+Compiled impact arrays may contain summary or compatibility entries without a
+source path. The planner projects only path-bearing values and preserves array
+shape for zero or one result, so strict mode cannot turn heterogeneous metadata
+or a scalar result into a design-checkpoint failure.
 Use `brief -ProposedPath` or `test-plan -ProposedPath` for early exploration;
 promote the settled path set to this plan's explicit `-ChangedPath` input.
 

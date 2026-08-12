@@ -26,6 +26,15 @@ $decision = $brief.decisionContext
 $rollout = $brief.rolloutPlan
 $phases = [System.Collections.Generic.List[object]]::new()
 
+function Get-PlanPropertyValues([object[]]$InputObject, [string]$PropertyName) {
+    return @($InputObject | ForEach-Object {
+        if ($null -ne $_ -and $_.PSObject.Properties[$PropertyName]) {
+            $value = $_.$PropertyName
+            if ($null -ne $value -and -not [string]::IsNullOrWhiteSpace([string]$value)) { $value }
+        }
+    })
+}
+
 function Add-Phase {
     param(
         [string]$Id,
@@ -56,7 +65,7 @@ $preflightStops = @(
 )
 Add-Phase 'context' 'Establish scope and invariants' `
     'The implementation starts from authoritative instructions, affected modules, contracts, and explicit constraints.' `
-    @($brief.instructions + $brief.contextPages + $decision.relatedAdrs.path) `
+    @($brief.instructions + $brief.contextPages + (Get-PlanPropertyValues @($decision.relatedAdrs) 'path')) `
     @(
         "Confirm objective: $(if ([string]::IsNullOrWhiteSpace($Objective)) { 'derive exact acceptance criteria from the task before editing' } else { $Objective })"
         "Read applicable AGENTS.md files and cited source pages."
@@ -67,11 +76,11 @@ Add-Phase 'context' 'Establish scope and invariants' `
     $preflightStops
 
 $contractFiles = @(
-    @($brief.backendContractImpact.contracts.definitionPaths) +
-    @($brief.backendContractImpact.productionConsumers.consumerPath) +
-    @($brief.frontendContractImpact.components.path) +
-    @($brief.frontendContractImpact.components.templatePath) +
-    @($brief.frontendContractImpact.downstreamConsumers.consumerPath)
+    @(Get-PlanPropertyValues @($brief.backendContractImpact.contracts) 'definitionPaths') +
+    @(Get-PlanPropertyValues @($brief.backendContractImpact.productionConsumers) 'consumerPath') +
+    @(Get-PlanPropertyValues @($brief.frontendContractImpact.components) 'path') +
+    @(Get-PlanPropertyValues @($brief.frontendContractImpact.components) 'templatePath') +
+    @(Get-PlanPropertyValues @($brief.frontendContractImpact.downstreamConsumers) 'consumerPath')
 ) | Select-Object -First ($Limit * 3)
 $contractActions = @()
 if (@($brief.backendContractImpact.contracts).Count -gt 0) {
@@ -92,11 +101,11 @@ if ($contractActions.Count -gt 0) {
         @('Stop if an external or dynamically resolved consumer cannot be assessed.', 'Stop if rollout requires an unplanned breaking contract transition.')
 }
 
-$domainFiles = @(
-    @($brief.domainDataImpact.types.path) +
-    @($brief.domainDataImpact.invariants.path) +
-    @($brief.domainDataImpact.mappings.path)
-) | Select-Object -Unique
+$domainFiles = @(@(
+    @(Get-PlanPropertyValues @($brief.domainDataImpact.types) 'path') +
+    @(Get-PlanPropertyValues @($brief.domainDataImpact.invariants) 'path') +
+    @(Get-PlanPropertyValues @($brief.domainDataImpact.mappings) 'path')
+) | Select-Object -Unique)
 if ($domainFiles.Count -gt 0 -or @($brief.change.scopes) -contains 'Database') {
     Add-Phase 'domain-data' 'Preserve domain and persistence invariants' `
         'All construction, mutation, and persistence paths enforce the intended rule and schema contract.' `
@@ -112,8 +121,8 @@ if ($domainFiles.Count -gt 0 -or @($brief.change.scopes) -contains 'Database') {
 
 $implementationFiles = @(
     @($brief.change.paths) +
-    @($brief.backendContractImpact.productionConsumers.consumerPath) +
-    @($brief.frontendContractImpact.downstreamConsumers.consumerPath)
+    @(Get-PlanPropertyValues @($brief.backendContractImpact.productionConsumers) 'consumerPath') +
+    @(Get-PlanPropertyValues @($brief.frontendContractImpact.downstreamConsumers) 'consumerPath')
 ) | Select-Object -Unique -First ($Limit * 4)
 Add-Phase 'implementation' 'Implement in dependency order' `
     'Lower-level contracts and rules are implemented before adapters, hosts, and consuming surfaces.' `
@@ -128,7 +137,7 @@ Add-Phase 'implementation' 'Implement in dependency order' `
 
 $testFiles = @(
     @($brief.focusedTests) +
-    @($brief.backendContractImpact.testConsumers.consumerPath)
+    @(Get-PlanPropertyValues @($brief.backendContractImpact.testConsumers) 'consumerPath')
 ) | Select-Object -Unique -First ($Limit * 3)
 Add-Phase 'focused-verification' 'Add and run focused verification' `
     'Changed behavior, boundaries, failure paths, and consumers are covered at the closest reliable test level.' `
@@ -177,7 +186,7 @@ $result = [pscustomobject][ordered]@{
         changedPaths = @($brief.change.paths)
         instructions = @($brief.instructions)
         contextPages = @($brief.contextPages)
-        relatedAdrs = @($decision.relatedAdrs.path)
+        relatedAdrs = @(Get-PlanPropertyValues @($decision.relatedAdrs) 'path')
     }
     phases = @($phases)
     finalGates = @(
