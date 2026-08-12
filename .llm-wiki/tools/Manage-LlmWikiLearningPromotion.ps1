@@ -57,7 +57,12 @@ function Get-EventPayload([object]$Event) {
     }
 }
 function Add-Event([object]$Registry, [string]$Kind, [string]$CandidateId, [object]$Observation, [object]$Decision, [string]$TargetId, [string]$EventReason, [string]$CreatedAtUtc) {
-    $previousHash = if (@($Registry.events).Count -eq 0) { '' } else { [string]$Registry.events[-1].eventHash }
+    $existingEvents = @($Registry.events)
+    if ($existingEvents.Count -gt 0 -and (-not $existingEvents[-1].PSObject.Properties['eventHash'] -or [string]::IsNullOrWhiteSpace([string]$existingEvents[-1].eventHash))) {
+        $null = Initialize-LegacyHashChain $Registry
+        $existingEvents = @($Registry.events)
+    }
+    $previousHash = if ($existingEvents.Count -eq 0) { '' } else { [string]$existingEvents[-1].eventHash }
     $event = [pscustomobject][ordered]@{
         schemaVersion = 1
         sequence = @($Registry.events).Count + 1
@@ -73,7 +78,10 @@ function Add-Event([object]$Registry, [string]$Kind, [string]$CandidateId, [obje
     }
     $event.eventHash = Get-Hash (Get-EventPayload $event)
     $Registry.events = @($Registry.events) + $event
-    $event
+    # Property assignments can leak values into a PowerShell function's output
+    # pipeline. Return exactly the event object so callers never append a hash
+    # string or a partial event array to the registry.
+    Write-Output -NoEnumerate $event
 }
 function Get-CandidateId([object]$Candidate) {
     $candidateTags = if ($null -ne $Candidate.PSObject.Properties['suggestedTags']) {
@@ -275,7 +283,50 @@ function Test-Registry([object]$Registry) {
     @($issues)
 }
 
+function Initialize-LegacyHashChain([object]$Registry) {
+    $events = @($Registry.events)
+    if ($events.Count -eq 0) { return $false }
+    $hashedCount = @($events | Where-Object {
+        $_.PSObject.Properties['eventHash'] -and -not [string]::IsNullOrWhiteSpace([string]$_.eventHash)
+    }).Count
+    if ($hashedCount -eq $events.Count) { return $false }
+    if ($hashedCount -ne 0) {
+        throw "Learning-promotion registry has a partially hashed event chain ($hashedCount/$($events.Count)); restore it from a trusted copy instead of migrating it."
+    }
+
+    $previousHash = ''
+    foreach ($event in $events) {
+        if ($event.PSObject.Properties['previousHash']) {
+            $event.previousHash = $previousHash
+        } else {
+            $event | Add-Member -NotePropertyName previousHash -NotePropertyValue $previousHash
+        }
+        $eventHash = Get-Hash (Get-EventPayload $event)
+        if ($event.PSObject.Properties['eventHash']) {
+            $event.eventHash = $eventHash
+        } else {
+            $event | Add-Member -NotePropertyName eventHash -NotePropertyValue $eventHash
+        }
+        $previousHash = $eventHash
+    }
+    $true
+}
+
 $registry = Read-Registry
+$legacyHashChainMigrated = Initialize-LegacyHashChain $registry
+$registryIssues = @(Test-Registry $registry)
+if ($registryIssues.Count -gt 0) {
+    throw "Learning-promotion registry is invalid: $($registryIssues -join ' ')"
+}
+if ($legacyHashChainMigrated) {
+    $temporaryRegistryPath = "$registryPath.$PID.migrating"
+    try {
+        [IO.File]::WriteAllText($temporaryRegistryPath, (($registry | ConvertTo-Json -Depth 50) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        Move-Item -LiteralPath $temporaryRegistryPath -Destination $registryPath -Force
+    } finally {
+        Remove-Item -LiteralPath $temporaryRegistryPath -Force -ErrorAction SilentlyContinue
+    }
+}
 $result = $null
 $now = $AsOfUtc.ToUniversalTime().ToString('o')
 if ($Action -eq 'observe') {
@@ -318,7 +369,7 @@ if ($Action -eq 'observe') {
     if ($issues.Count -eq 0 -and $added.Count -gt 0) { Write-Registry $registry }
     $result = [pscustomobject][ordered]@{
         action = 'observe'; valid = $issues.Count -eq 0; addedCount = $added.Count
-        observationEventHashes = @($added.eventHash); candidates = @(Get-View $registry); issues = $issues
+        observationEventHashes = @($added | ForEach-Object { [string]$_.eventHash }); candidates = @(Get-View $registry); issues = $issues
     }
 } elseif ($Action -in @('approve', 'reject')) {
     if ([string]::IsNullOrWhiteSpace($Id)) { throw 'Id is required.' }
@@ -418,7 +469,7 @@ if ($Action -eq 'observe') {
 if ($FailOnInvalid -and -not $result.valid) { throw "Learning-promotion registry is invalid: $(@($result.issues) -join ' ')" }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 50 } else {
     Write-Host "Learning promotion: action=$Action, valid=$($result.valid)"
-    if ($null -ne $result.addedCount) { Write-Host "Observed=$($result.addedCount)" }
+    if ($result.PSObject.Properties['addedCount']) { Write-Host "Observed=$($result.addedCount)" }
     foreach ($candidate in @($result.candidates | Where-Object { $null -ne $_ })) {
         Write-Host " - [$($candidate.decision)/$($candidate.materialization)] $($candidate.id): tasks=$($candidate.distinctTaskCount), score=$($candidate.averageScore), eligible=$($candidate.eligible), target=$($candidate.target)"
     }

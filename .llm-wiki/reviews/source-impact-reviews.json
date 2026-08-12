@@ -353,14 +353,14 @@
                         "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
-                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
+                                            "sha256":  "10b711a24c85adebd3a9469a5d118dd322cb0ca859166788eb0144fb3964c7c4"
                                         }
                                     ],
-                        "reason":  "Reviewed current and legacy impact-simulation receipt compatibility plus optional retrospective fields; workflow guidance remains accurate.",
+                        "reason":  "Reviewed atomic legacy hash-chain migration, corruption rejection, idempotent empty-result formatting, and single-event output semantics.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "8f6e68336eb71c2692fb7cc120d69bc421a14aff",
-                        "reviewedAtUtc":  "2026-08-12T10:39:43.6822812Z"
+                        "gitHead":  "3f99ed7d556db2dfd976ba80b39b4278d1339189",
+                        "reviewedAtUtc":  "2026-08-12T12:22:22.5070430Z"
                     },
                     {
                         "pageId":  "workflow-controlled-repair-loop",
