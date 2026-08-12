@@ -12,9 +12,9 @@ $paths = @(
     'FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs'
 )
 $criteria = @(
-    'Google linking rejects a credential email that differs from the current user email.'
-    'Telegram linking rejects a replayed linking token.'
-    'Email verification resend enforces cooldown before issuing a replacement token.'
+    'Google linking preserves email mismatch, same identity, different identity, already-owned identity, and successful link outcomes without exposing User to Authentication.'
+    'Telegram linking preserves replay protection, already-linked identity, already-owned identity, and successful link outcomes without exposing User to Authentication.'
+    'Email verification resend preserves confirmed-user no-op, cooldown failure, token persistence, and email delivery fields without exposing User to Authentication.'
     'Architecture tests reject direct User aggregate access from the migrated Authentication handlers.'
 )
 try {
@@ -32,11 +32,27 @@ try {
         -WorkspacePath $workspacePath
     if (-not (Test-Path -LiteralPath (Join-Path $workspaceAbsolute 'workspace.json') -PathType Leaf)) { throw 'Governed task-start did not create a workspace.' }
 
-    $assessment = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-requirements-assess `
+    $initialAssessment = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-requirements-assess `
         -WorkspacePath $workspacePath `
         -Format Json | ConvertFrom-Json
+    if ($initialAssessment.valid -or @($initialAssessment.model.findings | Where-Object id -eq 'criterion-compound').Count -lt 3) {
+        throw 'Requirement assessment did not reject the compound Authentication criteria.'
+    }
+
+    $expansion = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-requirements-expand `
+        -WorkspacePath $workspacePath `
+        -Reason 'Split compound outcomes and add atomic elevated-risk requirements.' `
+        -Format Json | ConvertFrom-Json
+    if (-not $expansion.valid -or $expansion.addedCount -le 0) {
+        throw "Requirement expansion did not produce a valid atomic model: $(@($expansion.model.findings | ForEach-Object { "$($_.criterionId):$($_.id)" }) -join ', ')"
+    }
+
+    $assessment = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-requirements-assess `
+        -WorkspacePath $workspacePath `
+        -FailOnInvalid `
+        -Format Json | ConvertFrom-Json
     if (-not $assessment.valid) { throw "Governed requirements assessment failed: $(@($assessment.model.findings | ForEach-Object { "$($_.criterionId):$($_.id)" }) -join ', ')" }
-    if ([int]$assessment.model.classification.criteriaCount -ne $criteria.Count) { throw 'Governed requirements assessment lost acceptance criteria.' }
+    if (@($assessment.model.classification.criteria | Where-Object { -not $_.atomic }).Count -ne 0) { throw 'Requirement expansion retained compound criteria.' }
 } finally {
     Remove-Item -LiteralPath $workspaceAbsolute -Recurse -Force -ErrorAction SilentlyContinue
 }

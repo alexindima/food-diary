@@ -66,6 +66,39 @@ function Get-RequirementType([string]$Text) {
     if ($Text -match '(?i)abstraction|projection|module boundary|ownership|dependency direction') { return 'structure' }
     'behavior'
 }
+function Split-CompoundCriterion([string]$Text) {
+    $normalized = $Text.Trim()
+    $suffix = ''
+    if ($normalized -match '^(?<main>.+?)(?<suffix>\s+without\s+.+?)(?<period>\.)?$') {
+        $normalized = $Matches.main.Trim()
+        $suffix = $Matches.suffix.Trim()
+    }
+    $lead = $null
+    $tail = $suffix
+    $itemsText = $null
+    if ($normalized -match '^(?<lead>.+?\b(?:preserves|prevents|rejects|supports|ensures|validates|keeps|maintains|allows|requires)\s+)(?<items>.+)$') {
+        $lead = $Matches.lead.TrimEnd()
+        $itemsText = $Matches.items.Trim().TrimEnd('.')
+    } elseif ($normalized -match '^(?<items>.+?)(?<tail>\s+remain(?:s)?\s+.+)$') {
+        $itemsText = $Matches.items.Trim()
+        $tail = $Matches.tail.Trim().TrimEnd('.')
+    } else {
+        return @($Text)
+    }
+    if ($itemsText -notmatch '[,;]') { return @($Text) }
+    $items = @($itemsText -split '\s*[,;]\s*|\s+(?:and|or)\s+' | ForEach-Object { $_.Trim() -replace '^(?i:and|or)\s+', '' } | Where-Object { $_ })
+    if ($items.Count -le 1) { return @($Text) }
+    return @($items | ForEach-Object {
+        if ($lead) { "$lead $_$(if ($tail) { " $tail" })." }
+        else { "$_ $tail." }
+    })
+}
+function Get-CriterionOriginKind([object]$Criterion) {
+    if ($null -ne $Criterion -and $Criterion.PSObject.Properties['origin'] -and $null -ne $Criterion.origin -and $Criterion.origin.PSObject.Properties['kind']) {
+        return [string]$Criterion.origin.kind
+    }
+    return ''
+}
 function Get-Recommendations([object]$Packet, [object[]]$Criteria) {
     $recommendations = [Collections.Generic.List[object]]::new()
     $appliedRecommendationIds = @($Criteria | ForEach-Object {
@@ -84,7 +117,10 @@ function Get-Recommendations([object]$Packet, [object[]]$Criteria) {
         if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
     })
     if ($reviewIds -contains 'security-review' -or [string]$Packet.brief.risk.level -in @('high', 'critical')) {
-        Add-Recommendation 'REC-SECURITY' 'security' 'Authorization, data scoping, secrets, and sensitive logging remain safe for the changed flow.' 'The packet triggers elevated security or risk review.' '(?i)security|authori[sz]|permission|tenant|secret'
+        Add-Recommendation 'REC-SECURITY-AUTHORIZATION' 'security' 'Authorization remains correct for the changed flow.' 'Elevated-risk changes require an explicit authorization outcome.' '(?i)authori[sz]|permission'
+        Add-Recommendation 'REC-SECURITY-SCOPING' 'security' 'Identity data remains scoped to the intended user.' 'Elevated-risk changes require an explicit data-scoping outcome.' '(?i)data scop|intended user|tenant'
+        Add-Recommendation 'REC-SECURITY-SECRETS' 'security' 'Secrets remain protected throughout the changed flow.' 'Elevated-risk changes require an explicit secret-handling outcome.' '(?i)secret|credential|token protection'
+        Add-Recommendation 'REC-SECURITY-LOGGING' 'security' 'Sensitive values remain absent from application logs.' 'Elevated-risk changes require an explicit logging outcome.' '(?i)sensitive log|absent from .*logs|redact'
     }
     if (@($Packet.diff.scopes) -contains 'Api') {
         Add-Recommendation 'REC-COMPATIBILITY' 'compatibility' 'Existing API consumers remain compatible, or the intentional contract change is versioned and documented.' 'API scope requires an explicit consumer outcome.' '(?i)compatib|consumer|contract'
@@ -146,6 +182,7 @@ function Get-Assessment {
     }
     for ($left = 0; $left -lt $criteria.Count; $left++) {
         for ($right = $left + 1; $right -lt $criteria.Count; $right++) {
+            if ((Get-CriterionOriginKind $criteria[$left]) -eq 'compound-split' -or (Get-CriterionOriginKind $criteria[$right]) -eq 'compound-split') { continue }
             $leftType = Get-RequirementType ([string]$criteria[$left].text)
             $rightType = Get-RequirementType ([string]$criteria[$right].text)
             if ($leftType -ne $rightType) { continue }
@@ -212,6 +249,31 @@ if ($Action -eq 'expand') {
     $nextNumber = @($acceptance.criteria | ForEach-Object { if ([string]$_.id -match '^AC-(\d+)$') { [int]$Matches[1] } } | Measure-Object -Maximum).Maximum
     if ($null -eq $nextNumber) { $nextNumber = 0 }
     $added = [Collections.Generic.List[object]]::new()
+    $expandedCriteria = [Collections.Generic.List[object]]::new()
+    foreach ($criterion in @($acceptance.criteria)) {
+        $analysis = @($assessment.classification.criteria | Where-Object { $_.id -eq $criterion.id })[0]
+        $parts = @(if ($null -ne $analysis -and -not $analysis.atomic) { @(Split-CompoundCriterion ([string]$criterion.text)) } else { @([string]$criterion.text) })
+        for ($partIndex = 0; $partIndex -lt $parts.Count; $partIndex++) {
+            if ($partIndex -eq 0) {
+                $criterion.text = $parts[$partIndex]
+                $criterion | Add-Member -NotePropertyName origin -NotePropertyValue ([pscustomobject][ordered]@{ kind = 'compound-split'; sourceCriterionId = [string]$criterion.id }) -Force
+                $expandedCriteria.Add($criterion)
+                continue
+            }
+            $nextNumber++
+            $splitCriterion = [pscustomobject][ordered]@{
+                id = 'AC-{0:d3}' -f ([int]$nextNumber)
+                text = $parts[$partIndex]
+                status = 'pending'
+                origin = [pscustomobject][ordered]@{ kind = 'compound-split'; sourceCriterionId = [string]$criterion.id }
+                mapping = $criterion.mapping
+                resolution = [pscustomobject][ordered]@{ reason = $null; evidenceNote = $null }
+            }
+            $expandedCriteria.Add($splitCriterion)
+            $added.Add($splitCriterion)
+        }
+    }
+    $acceptance.criteria = @($expandedCriteria)
     foreach ($recommendation in @($assessment.recommendations)) {
         $nextNumber++
         $criterion = [pscustomobject][ordered]@{
@@ -243,7 +305,7 @@ if ($Action -eq 'expand') {
         if (Test-Path -LiteralPath $temporaryModelPath) { [IO.File]::Delete($temporaryModelPath) }
     }
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') add -WorkspacePath $normalizedWorkspace -JournalType decision -Text "Expanded acceptance with $($added.Count) requirement recommendation(s)." -Rationale $Reason | Out-Null
-    $result = [pscustomobject][ordered]@{ action = 'expand'; valid = $expandedModel.valid; addedCount = $added.Count; addedCriteria = @($added); model = $expandedModel; savedPath = "$normalizedWorkspace/requirement-model.json" }
+    $result = [pscustomobject][ordered]@{ action = 'expand'; valid = $expandedModel.valid; addedCount = $added.Count; addedCriteria = @($added); issues = @(); model = $expandedModel; savedPath = "$normalizedWorkspace/requirement-model.json" }
 } elseif ($Action -in @('assess', 'create')) {
     $receipt = New-Receipt (Get-Assessment)
     $temporaryPath = "$receiptPath.$([guid]::NewGuid().ToString('N')).tmp"
@@ -254,7 +316,7 @@ if ($Action -eq 'expand') {
     } finally {
         if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
     }
-    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; model = $receipt; savedPath = "$normalizedWorkspace/requirement-model.json" }
+    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; issues = @(); model = $receipt; savedPath = "$normalizedWorkspace/requirement-model.json" }
 } else {
     if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw "Requirement model is absent: $normalizedWorkspace/requirement-model.json" }
     $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json

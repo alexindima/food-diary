@@ -467,25 +467,17 @@
                     {
                         "pageId":  "workflow-implementation-plan",
                         "pagePath":  ".llm-wiki/workflows/implementation-plan.md",
-                        "pageSha256":  "b334aa33b376b21b605d36121ee2c03148cc7d97176a7f2c319f463426c3574d",
+                        "pageSha256":  "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
-                                            "sha256":  "c7a531a0c64cd75e50a9c237faf735b0687a6867f57fc04e6c04efec9d3445b5"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiRolloutPlan.ps1",
-                                            "sha256":  "ff989c5b3a8524333987e2fabd769b9a102e4765e80f08b1dfc85bcddcdc7e95"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "a3a16bdd24d0e2767b0142166885fd7947b2ab14c073e3c1adb5b55d527c6e5b"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
+                                            "sha256":  "22f4b919862eb3ee5c2b77018690259bbce61de866f0f9f4a92bb61e2340831c"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed atomic requirement expansion regression: governed task creation semantics are unchanged; the test now proves invalid compound criteria become a valid atomic model.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:06.4744242Z"
+                        "gitHead":  "b4cf2cb961400df3cc4ab722be496514f63c2197",
+                        "reviewedAtUtc":  "2026-08-12T03:00:38.8384797Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -814,17 +806,17 @@
                     {
                         "pageId":  "workflow-task-workspace",
                         "pagePath":  ".llm-wiki/workflows/task-workspace.md",
-                        "pageSha256":  "a45447b6e7f1265860361cf0f2b350b00fa2414147ce4d9a5bb02bf29b7aa1ec",
+                        "pageSha256":  "117ec86ecffb8488f8850acedce4a4bb9afd6bde01f6bc17ae1e8fc0dcc61658",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiWorkspacePolicy.ps1",
-                                            "sha256":  "55c9b52f50520afcdec8bfb8e80eb36ea6a9c59c16a62e2eeee50ad81bf7b2e2"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
+                                            "sha256":  "22f4b919862eb3ee5c2b77018690259bbce61de866f0f9f4a92bb61e2340831c"
                                         }
                                     ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+                        "reason":  "Reviewed atomic requirement expansion regression: governed task creation semantics are unchanged; the test now proves invalid compound criteria become a valid atomic model.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:08.4000387Z"
+                        "gitHead":  "b4cf2cb961400df3cc4ab722be496514f63c2197",
+                        "reviewedAtUtc":  "2026-08-12T03:00:39.1801716Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",

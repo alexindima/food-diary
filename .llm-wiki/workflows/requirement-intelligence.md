@@ -11,6 +11,7 @@ tags:
   - planning
 sources:
   - .llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1
+  - .llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1
   - .llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1
   - .llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1
   - .llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1
@@ -44,10 +45,14 @@ the recommendations explicitly:
   -Reason <why-the-expanded-contract-is-intended>
 ```
 
-Expansion appends stable, provenance-marked pending criteria. It records the
-decision in the task journal and invalidates old proof and requirement
-receipts. The new criteria must still be mapped, verified, and resolved
-normally.
+Expansion first replaces supported compound outcome lists with atomic,
+provenance-marked criteria, preserving the original mapping on every split.
+Risk recommendations are themselves atomic; security coverage is represented
+separately for authorization, identity-data scope, secrets, and sensitive
+logging. Expansion then appends missing recommendations, records the decision
+in the task journal, and invalidates old proof and requirement receipts. A
+second `task-requirements-assess -FailOnInvalid` must pass before implementation.
+The new criteria must still be mapped, verified, and resolved normally.
 
 Task completion automatically seals `requirement-model.json`. Its hash binds
 the acceptance matrix, task packet, policy, classifications,
