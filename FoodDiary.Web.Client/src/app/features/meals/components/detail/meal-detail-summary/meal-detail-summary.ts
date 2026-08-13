@@ -18,16 +18,16 @@ import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from '../
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MealDetailSummaryComponent {
-    public readonly consumption = input.required<Meal>();
+    public readonly meal = input.required<Meal>();
     public readonly macroSummaryBlocks = input.required<readonly MealMacroBlock[]>();
     public readonly preMealSatietyMeta = input.required<MealSatietyMeta>();
     public readonly postMealSatietyMeta = input.required<MealSatietyMeta>();
     public readonly itemPreview = input.required<readonly MealDetailItemPreview[]>();
     public readonly isItemPreviewExpanded = input.required<boolean>();
 
-    protected readonly calories = computed(() => this.consumption().totalCalories);
-    protected readonly qualityGrade = computed(() => this.consumption().qualityGrade ?? MEAL_DETAIL_DEFAULT_QUALITY_GRADE);
-    protected readonly qualityScore = computed(() => normalizeQualityScore(this.consumption().qualityScore));
+    protected readonly calories = computed(() => this.meal().totalCalories);
+    protected readonly qualityGrade = computed(() => this.meal().qualityGrade ?? MEAL_DETAIL_DEFAULT_QUALITY_GRADE);
+    protected readonly qualityScore = computed(() => normalizeQualityScore(this.meal().qualityScore));
     protected readonly qualityHintKey = computed(() => `QUALITY.${this.qualityGrade().toUpperCase()}`);
 
     public readonly itemPreviewExpandedToggle = output();

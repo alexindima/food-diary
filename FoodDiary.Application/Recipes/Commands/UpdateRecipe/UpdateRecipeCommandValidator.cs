@@ -1,6 +1,6 @@
 using FluentValidation;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Nutrition.Common;
+using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
 using FoodDiary.Domain.Enums;

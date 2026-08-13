@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../products/models/product.data';
-import { ConsumptionSourceType, type Meal } from '../../../models/meal.data';
+import { type Meal,MealSourceType } from '../../../models/meal.data';
 import { MealDetailComponent } from './meal-detail';
 
 const BASE_AMOUNT = 100;
@@ -154,8 +154,8 @@ describe('MealDetailComponent actions', () => {
         expect(mockDialogRef.close).toHaveBeenCalledWith(expect.objectContaining({ id: '1', action: 'Delete' }));
     });
 
-    it('should store the consumption data', () => {
-        expect(component['consumption']).toEqual(mockMeal);
+    it('should store the meal data', () => {
+        expect(component['meal']).toEqual(mockMeal);
     });
 
     it('should build an empty item preview', () => {
@@ -170,16 +170,16 @@ describe('MealDetailComponent item previews', () => {
             items: [
                 {
                     id: 'item-1',
-                    consumptionId: '1',
+                    mealId: '1',
                     amount: 180,
-                    sourceType: ConsumptionSourceType.Product,
+                    sourceType: MealSourceType.Product,
                     product: createProduct('p1', 'Manual item'),
                 },
             ],
             aiSessions: [
                 {
                     id: 'session-1',
-                    consumptionId: '1',
+                    mealId: '1',
                     imageAssetId: null,
                     imageUrl: null,
                     recognizedAtUtc: '2026-05-06T19:00:00Z',
@@ -224,23 +224,23 @@ describe('MealDetailComponent macro blocks and expanded preview', () => {
             items: [
                 {
                     id: 'item-1',
-                    consumptionId: '1',
+                    mealId: '1',
                     amount: BASE_AMOUNT,
-                    sourceType: ConsumptionSourceType.Product,
+                    sourceType: MealSourceType.Product,
                     product: createProduct('p1', 'First item'),
                 },
                 {
                     id: 'item-2',
-                    consumptionId: '1',
+                    mealId: '1',
                     amount: SECOND_ITEM_AMOUNT,
-                    sourceType: ConsumptionSourceType.Product,
+                    sourceType: MealSourceType.Product,
                     product: createProduct('p2', 'Second item'),
                 },
                 {
                     id: 'item-3',
-                    consumptionId: '1',
+                    mealId: '1',
                     amount: THIRD_ITEM_AMOUNT,
-                    sourceType: ConsumptionSourceType.Product,
+                    sourceType: MealSourceType.Product,
                     product: createProduct('p3', 'Third item'),
                 },
             ],

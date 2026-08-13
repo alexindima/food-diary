@@ -2,8 +2,8 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Meals.Models;
+using FoodDiary.Application.Meals.Queries.GetMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 
@@ -17,14 +17,14 @@ internal sealed class MediatorDashboardMealsReadService(ISender sender) : IDashb
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
-        Result<PagedResponse<ConsumptionModel>> result = await sender.Send(
-            new GetConsumptionsQuery(userId.Value, page, limit, dateFrom, dateTo),
+        Result<PagedResponse<MealModel>> result = await sender.Send(
+            new GetMealsQuery(userId.Value, page, limit, dateFrom, dateTo),
             cancellationToken).ConfigureAwait(false);
         if (result.IsFailure) {
             return Result.Failure<DashboardMealsReadModel>(result.Error);
         }
 
-        PagedResponse<ConsumptionModel> value = result.Value;
+        PagedResponse<MealModel> value = result.Value;
         return Result.Success(new DashboardMealsReadModel(
             [.. value.Data.Select(ToReadModel)],
             value.Page,
@@ -33,7 +33,7 @@ internal sealed class MediatorDashboardMealsReadService(ISender sender) : IDashb
             value.TotalItems));
     }
 
-    private static DashboardMealReadModel ToReadModel(ConsumptionModel meal) {
+    private static DashboardMealReadModel ToReadModel(MealModel meal) {
         return new DashboardMealReadModel(
             meal.Id,
             meal.Date,
@@ -62,10 +62,10 @@ internal sealed class MediatorDashboardMealsReadService(ISender sender) : IDashb
             [.. meal.AiSessions.Select(ToReadModel)]);
     }
 
-    private static DashboardMealItemReadModel ToReadModel(ConsumptionItemModel item) {
+    private static DashboardMealItemReadModel ToReadModel(MealItemModel item) {
         return new DashboardMealItemReadModel(
             item.Id,
-            item.ConsumptionId,
+            item.MealId,
             item.Amount,
             item.ProductId,
             item.ProductName,
@@ -94,10 +94,10 @@ internal sealed class MediatorDashboardMealsReadService(ISender sender) : IDashb
             item.Origin);
     }
 
-    private static DashboardMealAiSessionReadModel ToReadModel(ConsumptionAiSessionModel session) {
+    private static DashboardMealAiSessionReadModel ToReadModel(MealAiSessionModel session) {
         return new DashboardMealAiSessionReadModel(
             session.Id,
-            session.ConsumptionId,
+            session.MealId,
             session.ImageAssetId,
             session.ImageUrl,
             session.Source,
@@ -107,7 +107,7 @@ internal sealed class MediatorDashboardMealsReadService(ISender sender) : IDashb
             [.. session.Items.Select(ToReadModel)]);
     }
 
-    private static DashboardMealAiItemReadModel ToReadModel(ConsumptionAiItemModel item) {
+    private static DashboardMealAiItemReadModel ToReadModel(MealAiItemModel item) {
         return new DashboardMealAiItemReadModel(
             item.Id,
             item.SessionId,

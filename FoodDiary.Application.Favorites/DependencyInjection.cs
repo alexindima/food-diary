@@ -1,5 +1,5 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Consumptions.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
@@ -18,8 +18,8 @@ public static class DependencyInjection {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
 
         services.AddScoped<IFavoriteMealReadService, FavoriteMealReadService>();
-        services.AddScoped<IConsumptionFavoriteReadService>(static provider =>
-            (IConsumptionFavoriteReadService)provider.GetRequiredService<IFavoriteMealReadService>());
+        services.AddScoped<IMealFavoriteReadService>(static provider =>
+            (IMealFavoriteReadService)provider.GetRequiredService<IFavoriteMealReadService>());
         services.AddScoped<IFavoriteProductReadService, FavoriteProductReadService>();
         services.AddScoped<IFavoriteRecipeReadService, FavoriteRecipeReadService>();
 

@@ -52,7 +52,7 @@ describe('AiInputBarFacade', () => {
         facade.analyzePhoto('asset-1');
 
         expect(facade.text.errorKey()).toBe('AI_INPUT_BAR.TEXT_ERROR_PREMIUM');
-        expect(facade.photo.errorKey()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+        expect(facade.photo.errorKey()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
     });
 
     it('handles empty edit results and can clear the complete channel state', () => {

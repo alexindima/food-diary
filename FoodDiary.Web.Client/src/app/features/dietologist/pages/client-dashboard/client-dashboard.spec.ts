@@ -335,7 +335,7 @@ function createDashboardSnapshot(): unknown {
                     totalFiber: 8,
                     totalAlcohol: 0,
                     isNutritionAutoCalculated: true,
-                    items: [{ id: 'item-1', consumptionId: 'meal-1', amount: 150, sourceType: 'Product', product: { name: 'Chicken' } }],
+                    items: [{ id: 'item-1', mealId: 'meal-1', amount: 150, sourceType: 'Product', product: { name: 'Chicken' } }],
                 },
             ],
             total: 1,

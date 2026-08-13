@@ -1,6 +1,6 @@
 @use 'variables' as variables;
 
-.consumption-manage {
+.meal-manage {
     --fd-bg-page: var(--fd-bg-body);
     margin: 0 auto;
     box-sizing: border-box;
@@ -47,12 +47,12 @@
     }
 
     &__hero {
-        --fd-consumption-input-height: var(--fd-size-control-lg);
-        --fd-consumption-input-subscript: var(--fd-size-form-field-subscript-height);
-        --fd-consumption-image-size: calc(
-            (var(--fd-consumption-input-height) + var(--fd-consumption-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)
+        --fd-meal-input-height: var(--fd-size-control-lg);
+        --fd-meal-input-subscript: var(--fd-size-form-field-subscript-height);
+        --fd-meal-image-size: calc(
+            (var(--fd-meal-input-height) + var(--fd-meal-input-subscript)) * 3 + var(--fd-space-lg) + var(--fd-space-lg)
         );
-        grid-template-columns: var(--fd-consumption-image-size) minmax(0, 1fr);
+        grid-template-columns: var(--fd-meal-image-size) minmax(0, 1fr);
         grid-template-rows: repeat(3, minmax(0, auto));
         align-items: stretch;
 
@@ -63,8 +63,8 @@
 
     &__image {
         grid-row: 1 / span 3;
-        width: var(--fd-consumption-image-size);
-        height: var(--fd-consumption-image-size);
+        width: var(--fd-meal-image-size);
+        height: var(--fd-meal-image-size);
         aspect-ratio: 1 / 1;
         align-self: start;
         justify-self: start;
@@ -333,7 +333,7 @@
     }
 }
 
-.consumption-item-card {
+.meal-item-card {
     padding: var(--fd-space-md);
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-panel);
@@ -341,25 +341,25 @@
     box-shadow: var(--fd-shadow-lg);
 }
 
-.consumption-item-card:first-child {
+.meal-item-card:first-child {
     margin-top: 0;
 }
 
-.consumption-item-card:last-child {
+.meal-item-card:last-child {
     margin-bottom: 0;
 }
 
-.consumption-item__row--with-remove {
+.meal-item__row--with-remove {
     flex-wrap: nowrap;
     align-items: center;
 }
 
-.consumption-item__remove--inline {
+.meal-item__remove--inline {
     align-self: center;
     margin-top: calc(var(--fd-space-lg) - var(--fd-space-micro));
 }
 
-.consumption-item__field {
+.meal-item__field {
     &--source {
         flex: 2 1 240px;
     }
@@ -369,26 +369,26 @@
     }
 }
 
-.consumption-item__selector-input {
+.meal-item__selector-input {
     width: 100%;
 }
 
-.consumption-item__actions--stack {
+.meal-item__actions--stack {
     align-items: stretch;
     justify-content: flex-start;
     margin-top: var(--fd-space-sm);
 
-    .consumption-item__add {
+    .meal-item__add {
         width: 100%;
         --fd-radius-md: var(--fd-radius-button);
     }
 }
 
-.consumption-item__error {
+.meal-item__error {
     margin-top: var(--fd-space-sm);
 }
 
-.consumption-item__nutrition {
+.meal-item__nutrition {
     padding-top: var(--fd-space-sm);
     border-top: var(--fd-border-muted);
     color: var(--fd-color-text-muted);
@@ -397,21 +397,21 @@
     font-weight: var(--fd-text-stat-value-weight);
 }
 
-.consumption-item__nutrition-calories {
+.meal-item__nutrition-calories {
     color: var(--fd-color-text);
     font-weight: var(--fd-text-action-weight);
 }
 
-.consumption-item__nutrition-label {
+.meal-item__nutrition-label {
     color: var(--fd-color-text-muted);
     font-weight: var(--fd-text-action-weight);
 }
 
-.consumption-item__nutrition-macros {
+.meal-item__nutrition-macros {
     color: var(--fd-color-text-muted);
     font-weight: var(--fd-font-weight-medium);
 }
 
-.consumption-manage__nutrition-toggle {
+.meal-manage__nutrition-toggle {
     width: 100%;
 }

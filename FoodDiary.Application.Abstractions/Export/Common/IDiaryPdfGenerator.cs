@@ -4,7 +4,7 @@ namespace FoodDiary.Application.Abstractions.Export.Common;
 
 public interface IDiaryPdfGenerator {
     Task<byte[]> GenerateAsync(
-        IReadOnlyList<MealConsumptionReadModel> meals,
+        IReadOnlyList<MealProjectionReadModel> meals,
         DateTime dateFrom,
         DateTime dateTo,
         string? locale,

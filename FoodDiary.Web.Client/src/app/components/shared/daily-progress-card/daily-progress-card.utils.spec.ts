@@ -15,7 +15,7 @@ const OVER_GOAL_PROGRESS = 150;
 const REMAINING_CALORIES = 1500;
 
 describe('daily progress card utils', () => {
-    it('calculates rounded progress and clamps negative consumption', () => {
+    it('calculates rounded progress and clamps negative meal', () => {
         expect(calculateDailyProgressPercent(CONSUMED_QUARTER, DAILY_GOAL)).toBe(QUARTER_PROGRESS);
         expect(calculateDailyProgressPercent(CONSUMED_THIRD, ROUNDING_GOAL)).toBe(THIRD_PROGRESS);
         expect(calculateDailyProgressPercent(NEGATIVE_CONSUMED, DAILY_GOAL)).toBe(0);

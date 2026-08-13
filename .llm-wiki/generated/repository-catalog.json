@@ -13,16 +13,16 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  80,
+                    "dotnetProjects":  81,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  14,
-                    "extractedApplicationModules":  21,
-                    "backendBusinessModules":  35,
+                    "applicationModules":  12,
+                    "extractedApplicationModules":  22,
+                    "backendBusinessModules":  34,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  62,
-                    "documentationPages":  43
+                    "agentGuides":  63,
+                    "documentationPages":  44
                 },
     "dotnet":  {
                    "projects":  [
@@ -482,6 +482,37 @@
                                                               ]
                                     },
                                     {
+                                        "name":  "FoodDiary.Application.Meals",
+                                        "assemblyName":  "FoodDiary.Application.Meals",
+                                        "path":  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "FluentValidation",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "FluentValidation.DependencyInjectionExtensions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
                                         "name":  "FoodDiary.Application.Notifications",
                                         "assemblyName":  "FoodDiary.Application.Notifications",
                                         "path":  "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
@@ -702,6 +733,7 @@
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
                                                                   "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
                                                                   "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
@@ -859,6 +891,7 @@
                                                                   "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
                                                                   "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
@@ -968,6 +1001,7 @@
                                                                   "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
                                                                   "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
@@ -1048,6 +1082,7 @@
                                                                   "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
                                                                   "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
@@ -1134,6 +1169,7 @@
                                                                   "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
                                                                   "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
@@ -2209,6 +2245,7 @@
                                                                   "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
                                                                   "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
@@ -2603,6 +2640,7 @@
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
                                                                   "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
@@ -2971,13 +3009,6 @@
                                                     ]
                                },
                                {
-                                   "name":  "Consumptions",
-                                   "dependencies":  [
-                                                        "Images",
-                                                        "Nutrition"
-                                                    ]
-                               },
-                               {
                                    "name":  "ContentReports",
                                    "dependencies":  [
 
@@ -2992,11 +3023,11 @@
                                {
                                    "name":  "Dashboard",
                                    "dependencies":  [
-                                                        "Consumptions",
                                                         "Cycles",
                                                         "DailyAdvices",
                                                         "Exercises",
                                                         "Hydration",
+                                                        "Meals",
                                                         "Statistics",
                                                         "Tdee"
                                                     ]
@@ -3004,20 +3035,14 @@
                                {
                                    "name":  "Export",
                                    "dependencies":  [
-                                                        "Consumptions",
-                                                        "Cycles"
+                                                        "Cycles",
+                                                        "Meals"
                                                     ]
                                },
                                {
                                    "name":  "Gamification",
                                    "dependencies":  [
-                                                        "Consumptions"
-                                                    ]
-                               },
-                               {
-                                   "name":  "Nutrition",
-                                   "dependencies":  [
-
+                                                        "Meals"
                                                     ]
                                },
                                {
@@ -3039,27 +3064,26 @@
                                    "name":  "Recipes",
                                    "dependencies":  [
                                                         "Images",
-                                                        "Nutrition",
                                                         "RecentItems"
                                                     ]
                                },
                                {
                                    "name":  "Usda",
                                    "dependencies":  [
-                                                        "Consumptions"
+                                                        "Meals"
                                                     ]
                                },
                                {
                                    "name":  "WeeklyCheckIn",
                                    "dependencies":  [
-                                                        "Consumptions",
-                                                        "Hydration"
+                                                        "Hydration",
+                                                        "Meals"
                                                     ]
                                },
                                {
                                    "name":  "WeeklyGoals",
                                    "dependencies":  [
-                                                        "Consumptions"
+                                                        "Meals"
                                                     ]
                                }
                            ],
@@ -3119,6 +3143,10 @@
                                         {
                                             "name":  "MealPlanning",
                                             "project":  "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj"
+                                        },
+                                        {
+                                            "name":  "Meals",
+                                            "project":  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj"
                                         },
                                         {
                                             "name":  "Notifications",
@@ -3625,48 +3653,6 @@
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/billing/webhooks/{provider}",
                                                                "line":  17
-                                                           }
-                                                       ]
-                                     },
-                                     {
-                                         "name":  "ConsumptionsController",
-                                         "path":  "FoodDiary.Presentation.Api/Features/Consumptions/ConsumptionsController.cs",
-                                         "routePrefix":  "api/v{version:apiVersion}/consumptions",
-                                         "endpoints":  [
-                                                           {
-                                                               "verb":  "GET",
-                                                               "route":  "/api/v{version:apiVersion}/consumptions/overview",
-                                                               "line":  16
-                                                           },
-                                                           {
-                                                               "verb":  "GET",
-                                                               "route":  "/api/v{version:apiVersion}/consumptions",
-                                                               "line":  22
-                                                           },
-                                                           {
-                                                               "verb":  "GET",
-                                                               "route":  "/api/v{version:apiVersion}/consumptions/{id:guid}",
-                                                               "line":  28
-                                                           },
-                                                           {
-                                                               "verb":  "POST",
-                                                               "route":  "/api/v{version:apiVersion}/consumptions",
-                                                               "line":  34
-                                                           },
-                                                           {
-                                                               "verb":  "PATCH",
-                                                               "route":  "/api/v{version:apiVersion}/consumptions/{id:guid}",
-                                                               "line":  45
-                                                           },
-                                                           {
-                                                               "verb":  "POST",
-                                                               "route":  "/api/v{version:apiVersion}/consumptions/{id:guid}/repeat",
-                                                               "line":  52
-                                                           },
-                                                           {
-                                                               "verb":  "DELETE",
-                                                               "route":  "/api/v{version:apiVersion}/consumptions/{id:guid}",
-                                                               "line":  62
                                                            }
                                                        ]
                                      },
@@ -4328,6 +4314,48 @@
                                                                "verb":  "POST",
                                                                "route":  "/api/v{version:apiVersion}/meal-plans/{id:guid}/shopping-list",
                                                                "line":  36
+                                                           }
+                                                       ]
+                                     },
+                                     {
+                                         "name":  "MealsController",
+                                         "path":  "FoodDiary.Presentation.Api/Features/Meals/MealsController.cs",
+                                         "routePrefix":  "api/v{version:apiVersion}/meals",
+                                         "endpoints":  [
+                                                           {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/meals/overview",
+                                                               "line":  16
+                                                           },
+                                                           {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/meals",
+                                                               "line":  22
+                                                           },
+                                                           {
+                                                               "verb":  "GET",
+                                                               "route":  "/api/v{version:apiVersion}/meals/{id:guid}",
+                                                               "line":  28
+                                                           },
+                                                           {
+                                                               "verb":  "POST",
+                                                               "route":  "/api/v{version:apiVersion}/meals",
+                                                               "line":  34
+                                                           },
+                                                           {
+                                                               "verb":  "PATCH",
+                                                               "route":  "/api/v{version:apiVersion}/meals/{id:guid}",
+                                                               "line":  45
+                                                           },
+                                                           {
+                                                               "verb":  "POST",
+                                                               "route":  "/api/v{version:apiVersion}/meals/{id:guid}/repeat",
+                                                               "line":  52
+                                                           },
+                                                           {
+                                                               "verb":  "DELETE",
+                                                               "route":  "/api/v{version:apiVersion}/meals/{id:guid}",
+                                                               "line":  62
                                                            }
                                                        ]
                                      },
@@ -5123,6 +5151,7 @@
                                                  "FoodDiary.Application.Lessons/AGENTS.md",
                                                  "FoodDiary.Application.Marketing/AGENTS.md",
                                                  "FoodDiary.Application.MealPlanning/AGENTS.md",
+                                                 "FoodDiary.Application.Meals/AGENTS.md",
                                                  "FoodDiary.Application.Notifications/AGENTS.md",
                                                  "FoodDiary.Application.OpenFoodFacts/AGENTS.md",
                                                  "FoodDiary.Application.RecipeCommunity/AGENTS.md",
@@ -5184,6 +5213,7 @@
                                                    "docs/adr/0007-backend-side-effect-transaction-semantics.md",
                                                    "docs/adr/0008-product-recipe-read-model-query-paths.md",
                                                    "docs/adr/0009-executable-application-module-dependency-graph.md",
+                                                   "docs/adr/0010-meals-terminology-and-application-boundary.md",
                                                    "docs/adr/README.md",
                                                    "docs/adr/template.md",
                                                    "docs/ai/CODE_REVIEW.md",

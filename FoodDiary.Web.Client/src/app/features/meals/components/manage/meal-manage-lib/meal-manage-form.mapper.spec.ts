@@ -2,21 +2,21 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import {
-    type Consumption,
-    type ConsumptionAiSessionManageDto,
-    ConsumptionSourceType,
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
+    type Meal,
+    type MealAiSessionManageDto,
+    MealSourceType,
 } from '../../../models/meal.data';
-import type { ConsumptionFormValues, ConsumptionItemFormValues, NutritionTotals } from './meal-manage.types';
+import type { MealFormValues, MealItemFormValues, NutritionTotals } from './meal-manage.types';
 import {
     buildMealDateTime,
     buildMealManageDto,
     buildMealManageFormPatchValue,
-    createConsumptionItemValue,
+    createMealItemValue,
     createMealManageFormValue,
     findReusableEmptyMealItemIndex,
-    getConsumptionItemInitialAmount,
+    getMealItemInitialAmount,
     hasSelectedMealItems,
 } from './meal-manage-form.mapper';
 
@@ -33,7 +33,7 @@ const MANUAL_TOTALS: NutritionTotals = {
     fiber: 8,
     alcohol: 1,
 };
-const AI_SESSIONS: ConsumptionAiSessionManageDto[] = [
+const AI_SESSIONS: MealAiSessionManageDto[] = [
     {
         notes: 'recognized',
         items: [],
@@ -59,7 +59,7 @@ describe('meal manage form creation', () => {
 
         expect(value.date).toBe('2026-04-05');
         expect(value.time).toBe('09:07');
-        expect(value.items).toEqual([createConsumptionItemValue()]);
+        expect(value.items).toEqual([createMealItemValue()]);
         expect(value.isNutritionAutoCalculated).toBe(true);
     });
 
@@ -69,7 +69,7 @@ describe('meal manage form creation', () => {
     });
 
     it('should find reusable empty items and detect product, recipe or AI selections', () => {
-        const emptyItem = createConsumptionItemValue();
+        const emptyItem = createMealItemValue();
         const productItem = createProductItem();
 
         expect(findReusableEmptyMealItemIndex([productItem, emptyItem])).toBe(1);
@@ -115,7 +115,7 @@ describe('meal manage DTO mapping', () => {
             isNutritionAutoCalculated: false,
             items: [
                 {
-                    sourceType: ConsumptionSourceType.Recipe,
+                    sourceType: MealSourceType.Recipe,
                     product: null,
                     recipe,
                     amount: RECIPE_AMOUNT_GRAMS,
@@ -137,8 +137,8 @@ describe('meal manage DTO mapping', () => {
 
 describe('meal manage edit mapping', () => {
     it('should build form patch and prefer manual nutrition over totals', () => {
-        const consumption: Consumption = {
-            id: 'consumption-1',
+        const meal: Meal = {
+            id: 'meal-1',
             date: '2026-04-05T09:07:00',
             mealType: 'breakfast',
             comment: 'Comment',
@@ -162,20 +162,20 @@ describe('meal manage edit mapping', () => {
             items: [],
         };
 
-        expect(buildMealManageFormPatchValue(consumption)).toEqual({
+        expect(buildMealManageFormPatchValue(meal)).toEqual({
             date: '2026-04-05',
             time: '09:07',
             mealType: 'BREAKFAST',
-            comment: consumption.comment,
+            comment: meal.comment,
             imageUrl: image,
             isNutritionAutoCalculated: false,
-            manualCalories: consumption.totalCalories,
-            manualProteins: consumption.manualProteins,
-            manualFats: consumption.totalFats,
-            manualCarbs: consumption.totalCarbs,
-            manualFiber: consumption.totalFiber,
-            manualAlcohol: consumption.manualAlcohol,
-            preMealSatietyLevel: consumption.preMealSatietyLevel,
+            manualCalories: meal.totalCalories,
+            manualProteins: meal.manualProteins,
+            manualFats: meal.totalFats,
+            manualCarbs: meal.totalCarbs,
+            manualFiber: meal.totalFiber,
+            manualAlcohol: meal.manualAlcohol,
+            preMealSatietyLevel: meal.preMealSatietyLevel,
             postMealSatietyLevel: 4,
         });
     });
@@ -184,12 +184,12 @@ describe('meal manage edit mapping', () => {
         const convertRecipeServingsToGrams = vi.fn().mockReturnValue(RECIPE_AMOUNT_GRAMS);
 
         expect(
-            getConsumptionItemInitialAmount(
+            getMealItemInitialAmount(
                 {
                     id: 'item-1',
-                    consumptionId: 'consumption-1',
+                    mealId: 'meal-1',
                     amount: RECIPE_AMOUNT_SERVINGS,
-                    sourceType: ConsumptionSourceType.Recipe,
+                    sourceType: MealSourceType.Recipe,
                     recipe,
                 },
                 convertRecipeServingsToGrams,
@@ -197,12 +197,12 @@ describe('meal manage edit mapping', () => {
         ).toBe(RECIPE_AMOUNT_GRAMS);
         expect(convertRecipeServingsToGrams).toHaveBeenCalled();
         expect(
-            getConsumptionItemInitialAmount(
+            getMealItemInitialAmount(
                 {
                     id: 'item-2',
-                    consumptionId: 'consumption-1',
+                    mealId: 'meal-1',
                     amount: PRODUCT_AMOUNT,
-                    sourceType: ConsumptionSourceType.Product,
+                    sourceType: MealSourceType.Product,
                     product,
                 },
                 convertRecipeServingsToGrams,
@@ -211,7 +211,7 @@ describe('meal manage edit mapping', () => {
     });
 });
 
-function createBaseFormValue(): ConsumptionFormValues {
+function createBaseFormValue(): MealFormValues {
     return {
         date: '2026-04-05',
         time: '10:30',
@@ -231,9 +231,9 @@ function createBaseFormValue(): ConsumptionFormValues {
     };
 }
 
-function createProductItem(): ConsumptionItemFormValues {
+function createProductItem(): MealItemFormValues {
     return {
-        sourceType: ConsumptionSourceType.Product,
+        sourceType: MealSourceType.Product,
         product,
         recipe: null,
         amount: PRODUCT_AMOUNT,

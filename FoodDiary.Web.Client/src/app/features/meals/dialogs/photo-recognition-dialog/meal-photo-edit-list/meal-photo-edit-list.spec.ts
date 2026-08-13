@@ -85,7 +85,7 @@ async function setupComponentAsync(
     fixture.componentRef.setInput('unitOptions', overrides.unitOptions ?? [{ value: 'ml', labelKey: 'PRODUCT_AMOUNT_UNITS.ML' }]);
     fixture.componentRef.setInput(
         'resolutionOptions',
-        overrides.resolutionOptions ?? [{ value: 'Rejected', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REJECTED' }],
+        overrides.resolutionOptions ?? [{ value: 'Rejected', labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REJECTED' }],
     );
 
     return {

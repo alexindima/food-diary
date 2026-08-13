@@ -17,7 +17,7 @@ describe('MealPhotoResultTableComponent', () => {
         fixture.detectChanges();
 
         const text = getFixtureText(fixture);
-        expect(text).toContain('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL');
+        expect(text).toContain('MEAL_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL');
         expect(text).toContain('Apple');
         expect(text).toContain('PRODUCT_AMOUNT_UNITS.G');
         expect(text).toContain('Tea spoon');

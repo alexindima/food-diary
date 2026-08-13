@@ -2,7 +2,7 @@ import type { TranslateService } from '@ngx-translate/core';
 
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
-import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../models/meal.data';
 import type { NutritionTotals } from './meal-manage.types';
 
 const FRACTION_EPSILON = 0.01;
@@ -71,7 +71,7 @@ export function getEmptyNutritionTotals(): NutritionTotals {
     return { calories: 0, proteins: 0, fats: 0, carbs: 0, fiber: 0, alcohol: 0 };
 }
 
-export function getAiSessionTotals(session: ConsumptionAiSessionManageDto): NutritionTotals {
+export function getAiSessionTotals(session: MealAiSessionManageDto): NutritionTotals {
     return session.items
         .filter(item => item.resolution !== 'Rejected')
         .reduce((totals, item) => addAiItemTotals(totals, item), getEmptyNutritionTotals());
@@ -99,7 +99,7 @@ export function resolveMealManageControlError(
     return translateService.instant('FORM_ERRORS.UNKNOWN');
 }
 
-function addAiItemTotals(totals: NutritionTotals, item: ConsumptionAiItemManageDto): NutritionTotals {
+function addAiItemTotals(totals: NutritionTotals, item: MealAiItemManageDto): NutritionTotals {
     return {
         calories: totals.calories + item.calories,
         proteins: totals.proteins + item.proteins,

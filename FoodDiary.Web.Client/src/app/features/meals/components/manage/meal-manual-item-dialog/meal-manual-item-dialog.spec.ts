@@ -9,8 +9,8 @@ import { provideTranslateTesting } from '../../../../../../testing/translate-tes
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
-import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormValues } from '../meal-manage-lib/meal-manage.types';
+import { MealSourceType } from '../../../models/meal.data';
+import type { MealItemFormValues } from '../meal-manage-lib/meal-manage.types';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog';
 
 const PRODUCT_DEFAULT_PORTION_AMOUNT = 125;
@@ -34,7 +34,7 @@ describe('MealManualItemDialogComponent selection', () => {
         expect(component['product']()).toBe(product);
         expect(component['recipe']()).toBeNull();
         expect(component['amountModel']()).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
-        expect(component['sourceType']()).toBe(ConsumptionSourceType.Product);
+        expect(component['sourceType']()).toBe(MealSourceType.Product);
     });
 
     it('should apply selected recipe serving weight', async () => {
@@ -47,7 +47,7 @@ describe('MealManualItemDialogComponent selection', () => {
         expect(component['recipe']()).toBe(recipe);
         expect(component['product']()).toBeNull();
         expect(component['amountModel']()).toBe(RECIPE_SERVING_WEIGHT);
-        expect(component['sourceType']()).toBe(ConsumptionSourceType.Recipe);
+        expect(component['sourceType']()).toBe(MealSourceType.Recipe);
     });
 });
 
@@ -68,7 +68,7 @@ describe('MealManualItemDialogComponent save', () => {
         component['save']();
 
         expect(dialogRef.close).toHaveBeenCalledWith({
-            sourceType: ConsumptionSourceType.Product,
+            sourceType: MealSourceType.Product,
             product,
             recipe: null,
             amount: PRODUCT_DEFAULT_PORTION_AMOUNT,
@@ -80,7 +80,7 @@ describe('MealManualItemDialogComponent save', () => {
 
         component['save']();
 
-        expect(component['sourceError']()).toBe('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR');
+        expect(component['sourceError']()).toBe('MEAL_MANAGE.ITEM_SOURCE_ERROR');
         expect(dialogRef.close).not.toHaveBeenCalled();
     });
 
@@ -127,9 +127,9 @@ async function setupComponentAsync(values: Partial<{ product: Product; recipe: R
     };
 }
 
-function createItemValue(values: Partial<{ product: Product; recipe: Recipe; amount: number }>): ConsumptionItemFormValues {
+function createItemValue(values: Partial<{ product: Product; recipe: Recipe; amount: number }>): MealItemFormValues {
     return {
-        sourceType: values.recipe === undefined ? ConsumptionSourceType.Product : ConsumptionSourceType.Recipe,
+        sourceType: values.recipe === undefined ? MealSourceType.Product : MealSourceType.Recipe,
         product: values.product ?? null,
         recipe: values.recipe ?? null,
         amount: values.amount ?? null,

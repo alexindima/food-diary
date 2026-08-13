@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
-import type { ConsumptionFormValues, MacroBarState, NutritionMode } from '../meal-manage-lib/meal-manage.types';
+import type { MacroBarState, MealFormValues, NutritionMode } from '../meal-manage-lib/meal-manage.types';
 import { createMealManageFormValue } from '../meal-manage-lib/meal-manage-form.mapper';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar';
 
@@ -25,7 +25,7 @@ describe('MealNutritionSidebarComponent state', () => {
     });
 
     it('should expose manual nutrition max field errors in manual mode', async () => {
-        const formModel = signal<ConsumptionFormValues>({
+        const formModel = signal<MealFormValues>({
             ...createMealManageFormValue(),
             date: '2026-04-05',
             time: '10:30',
@@ -33,9 +33,9 @@ describe('MealNutritionSidebarComponent state', () => {
             manualCalories: MANUAL_NUTRITION_MAX_CALORIES + 1,
             manualFats: MANUAL_NUTRITION_MAX_NUTRIENT + 1,
         });
-        const { component, consumptionForm, fixture } = await setupComponentAsync({ nutritionMode: 'manual', formModel });
-        consumptionForm.manualCalories().markAsTouched();
-        consumptionForm.manualFats().markAsTouched();
+        const { component, mealForm, fixture } = await setupComponentAsync({ nutritionMode: 'manual', formModel });
+        mealForm.manualCalories().markAsTouched();
+        mealForm.manualFats().markAsTouched();
         fixture.detectChanges();
 
         expect(component['maxCalories']).toBe(MANUAL_NUTRITION_MAX_CALORIES);
@@ -51,7 +51,7 @@ describe('MealNutritionSidebarComponent actions', () => {
         const submitButton = (fixture.nativeElement as HTMLElement).querySelector('button[type="submit"]');
 
         expect(submitButton?.hasAttribute('disabled')).toBe(true);
-        expect((fixture.nativeElement as HTMLElement).textContent).toContain('CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT');
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT');
     });
 
     it('should prioritize global error over disabled submit hint', async () => {
@@ -59,7 +59,7 @@ describe('MealNutritionSidebarComponent actions', () => {
         const text = (fixture.nativeElement as HTMLElement).textContent;
 
         expect(text).toContain('FORM_ERRORS.NON_EMPTY_ARRAY');
-        expect(text).not.toContain('CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT');
+        expect(text).not.toContain('MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT');
     });
 
     it('should emit nutrition mode changes and cancel requests', async () => {
@@ -78,7 +78,7 @@ describe('MealNutritionSidebarComponent actions', () => {
 });
 
 type MealNutritionSidebarSetupOptions = {
-    formModel?: ReturnType<typeof signal<ConsumptionFormValues>>;
+    formModel?: ReturnType<typeof signal<MealFormValues>>;
     globalError?: string | null;
     nutritionMode?: NutritionMode;
     submitDisabled?: boolean;
@@ -86,7 +86,7 @@ type MealNutritionSidebarSetupOptions = {
 
 async function setupComponentAsync(options: MealNutritionSidebarSetupOptions = {}): Promise<{
     component: MealNutritionSidebarComponent;
-    consumptionForm: ConsumptionSignalForm;
+    mealForm: MealSignalForm;
     fixture: ComponentFixture<MealNutritionSidebarComponent>;
 }> {
     await TestBed.configureTestingModule({
@@ -95,8 +95,8 @@ async function setupComponentAsync(options: MealNutritionSidebarSetupOptions = {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealNutritionSidebarComponent);
-    const consumptionForm = createConsumptionForm(options.formModel);
-    fixture.componentRef.setInput('consumptionForm', consumptionForm);
+    const mealForm = createMealForm(options.formModel);
+    fixture.componentRef.setInput('mealForm', mealForm);
     fixture.componentRef.setInput('macroBarState', createMacroBarState());
     fixture.componentRef.setInput('nutritionMode', options.nutritionMode ?? 'auto');
     fixture.componentRef.setInput('nutritionWarning', null);
@@ -110,19 +110,19 @@ async function setupComponentAsync(options: MealNutritionSidebarSetupOptions = {
 
     return {
         component: fixture.componentInstance,
-        consumptionForm,
+        mealForm,
         fixture,
     };
 }
 
-function createConsumptionForm(
-    formModel: ReturnType<typeof signal<ConsumptionFormValues>> = signal<ConsumptionFormValues>({
+function createMealForm(
+    formModel: ReturnType<typeof signal<MealFormValues>> = signal<MealFormValues>({
         ...createMealManageFormValue(),
         date: '2026-04-05',
         time: '10:30',
         mealType: 'BREAKFAST',
     }),
-): ConsumptionSignalForm {
+): MealSignalForm {
     return TestBed.runInInjectionContext(() =>
         form(formModel, path => {
             required(path.date);
@@ -137,7 +137,7 @@ function createConsumptionForm(
     );
 }
 
-type ConsumptionSignalForm = ReturnType<typeof form<ConsumptionFormValues>>;
+type MealSignalForm = ReturnType<typeof form<MealFormValues>>;
 
 function createMacroBarState(): MacroBarState {
     return {

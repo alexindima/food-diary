@@ -96,7 +96,7 @@ function createPageOf(meals: Meal[], page = DEFAULT_PAGE): PageOf<Meal> {
 
 function createOverview(meals: Meal[], favorites: FavoriteMeal[] = []): MealOverview {
     return {
-        allConsumptions: createPageOf(meals),
+        allMeals: createPageOf(meals),
         favoriteItems: favorites,
         favoriteTotalCount: favorites.length,
     };
@@ -137,7 +137,7 @@ describe('MealListFacade', () => {
                 { provide: FavoriteMealService, useValue: favoriteMealService },
                 { provide: FdUiToastService, useValue: toastService },
                 { provide: FdUiDialogService, useValue: { open: vi.fn() } },
-                { provide: NavigationService, useValue: { navigateToConsumptionEditAsync: vi.fn() } },
+                { provide: NavigationService, useValue: { navigateToMealEditAsync: vi.fn() } },
                 {
                     provide: TranslateService,
                     useValue: {
@@ -182,7 +182,7 @@ function registerLoadTests(): void {
                 },
                 MEAL_LIST_OVERVIEW_FAVORITES_LIMIT,
             );
-            expect(facade.consumptionData.items()).toEqual([meal]);
+            expect(facade.mealData.items()).toEqual([meal]);
             expect(facade.favorites()).toEqual([favorite]);
             expect(facade.favoriteTotalCount()).toBe(1);
             expect(facade.errorKey()).toBeNull();
@@ -191,11 +191,11 @@ function registerLoadTests(): void {
         it('sets retry error state when list load fails', () => {
             mealService.query.mockReturnValue(throwError(() => new Error('load failed')));
 
-            facade.loadConsumptions(1, emptyMealFilters()).subscribe();
+            facade.loadMeals(1, emptyMealFilters()).subscribe();
 
             expect(facade.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
-            expect(facade.consumptionData.items()).toEqual([]);
-            expect(facade.consumptionData.isLoading()).toBe(false);
+            expect(facade.mealData.items()).toEqual([]);
+            expect(facade.mealData.isLoading()).toBe(false);
         });
 
         it('shows a toast when favorites load fails', () => {
@@ -203,7 +203,7 @@ function registerLoadTests(): void {
 
             facade.loadFavorites();
 
-            expect(toastService.error).toHaveBeenCalledWith('CONSUMPTION_LIST.OPERATION_ERROR_MESSAGE');
+            expect(toastService.error).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');
             expect(facade.favorites()).toEqual([]);
             expect(facade.isFavoritesLoadingMore()).toBe(false);
         });
@@ -236,7 +236,7 @@ function registerMutationTests(): void {
             });
 
             expect(result).toBe(false);
-            expect(toastService.error).toHaveBeenCalledWith('CONSUMPTION_LIST.OPERATION_ERROR_MESSAGE');
+            expect(toastService.error).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');
             expect(mealService.query).not.toHaveBeenCalled();
         });
 
@@ -257,7 +257,7 @@ function registerMutationTests(): void {
         it('removes favorite and syncs meal card state', () => {
             const favorite = createFavorite();
             const meal = createMeal({ id: favorite.mealId, isFavorite: true, favoriteMealId: favorite.id });
-            facade.consumptionData.setData(createPageOf([meal]));
+            facade.mealData.setData(createPageOf([meal]));
             facade.favorites.set([favorite]);
             facade.favoriteTotalCount.set(1);
 
@@ -266,7 +266,7 @@ function registerMutationTests(): void {
             expect(favoriteMealService.remove).toHaveBeenCalledWith(favorite.id);
             expect(facade.favorites()).toEqual([]);
             expect(facade.favoriteTotalCount()).toBe(0);
-            expect(facade.consumptionData.items()[0]).toMatchObject({ isFavorite: false, favoriteMealId: null });
+            expect(facade.mealData.items()[0]).toMatchObject({ isFavorite: false, favoriteMealId: null });
         });
     });
 }

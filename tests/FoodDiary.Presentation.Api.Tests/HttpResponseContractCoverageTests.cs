@@ -1,6 +1,6 @@
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
-using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
+using FoodDiary.Presentation.Api.Features.Meals.Responses;
 using FoodDiary.Presentation.Api.Features.Cycles.Responses;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 using FoodDiary.Presentation.Api.Features.Goals.Responses;
@@ -53,19 +53,19 @@ public sealed class HttpResponseContractCoverageTests {
     }
 
     [Fact]
-    public void ConsumptionAiResponses_ExposeSessionAndItemFields() {
+    public void MealAiResponses_ExposeSessionAndItemFields() {
         var sessionId = Guid.NewGuid();
         var mealId = Guid.NewGuid();
-        var item = new ConsumptionAiItemHttpResponse(
+        var item = new MealAiItemHttpResponse(
             Guid.NewGuid(), sessionId, "Toast", "toast-local", 1.5, "slice", 120, 4, 3, 20, 2, 0, 0.91, "Accepted");
-        var session = new ConsumptionAiSessionHttpResponse(
+        var session = new MealAiSessionHttpResponse(
             sessionId, mealId, Guid.NewGuid(), "https://example.test/ai.webp", "Vision", "Reviewed", DateTime.UtcNow, "ok", [item]);
 
-        ConsumptionAiItemHttpResponse responseItem = Assert.Single(session.Items);
+        MealAiItemHttpResponse responseItem = Assert.Single(session.Items);
 
         Assert.Multiple(
             () => Assert.Equal(sessionId, session.Id),
-            () => Assert.Equal(mealId, session.ConsumptionId),
+            () => Assert.Equal(mealId, session.MealId),
             () => Assert.NotNull(session.ImageAssetId),
             () => Assert.Equal("https://example.test/ai.webp", session.ImageUrl),
             () => Assert.Equal("Vision", session.Source),

@@ -1,6 +1,6 @@
 @use 'variables' as variables;
 
-.consumption-list {
+.meal-list {
     margin: 0 auto;
     box-sizing: border-box;
     font-size: var(--fd-text-body-sm-size);
@@ -102,7 +102,7 @@
         margin: var(--fd-space-lg) auto;
     }
 
-    %consumption-list-no-results {
+    %meal-list-no-results {
         font-size: var(--fd-text-title-compact-size);
         font-weight: var(--fd-text-title-compact-weight);
         color: var(--fd-color-text-muted);
@@ -111,7 +111,7 @@
     }
 
     &__no-results {
-        @extend %consumption-list-no-results;
+        @extend %meal-list-no-results;
 
         &-icon {
             font-size: var(--fd-size-icon-xxl);
@@ -120,7 +120,7 @@
     }
 
     &__empty-state {
-        @extend %consumption-list-no-results;
+        @extend %meal-list-no-results;
         padding: var(--fd-space-lg);
         border: var(--fd-border-dashed);
         border-radius: var(--fd-radius-card);

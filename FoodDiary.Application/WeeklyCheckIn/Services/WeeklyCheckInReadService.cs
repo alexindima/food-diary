@@ -2,7 +2,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;

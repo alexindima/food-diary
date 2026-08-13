@@ -12,7 +12,7 @@ export const mealResolver: ResolveFn<Meal | null> = route => {
 
     const mealId = route.paramMap.get('id');
     if (mealId === null || mealId.trim().length === 0) {
-        void navigationService.navigateToConsumptionListAsync();
+        void navigationService.navigateToMealListAsync();
         return of(null);
     }
 
@@ -21,11 +21,11 @@ export const mealResolver: ResolveFn<Meal | null> = route => {
             if (meal !== null) {
                 return meal;
             }
-            void navigationService.navigateToConsumptionListAsync();
+            void navigationService.navigateToMealListAsync();
             return null;
         }),
         catchError(() => {
-            void navigationService.navigateToConsumptionListAsync();
+            void navigationService.navigateToMealListAsync();
             return of(null);
         }),
     );

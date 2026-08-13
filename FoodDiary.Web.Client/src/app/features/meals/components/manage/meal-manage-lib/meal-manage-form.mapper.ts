@@ -3,30 +3,30 @@ import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../../sha
 import type { Recipe } from '../../../../recipes/models/recipe.data';
 import { getDateInputValue, getTimeInputValue } from '../../../lib/meal-date-input.utils';
 import {
-    type Consumption,
-    type ConsumptionAiSessionManageDto,
-    type ConsumptionItem,
-    type ConsumptionItemManageDto,
-    type ConsumptionManageDto,
-    ConsumptionSourceType,
+    type Meal,
+    type MealAiSessionManageDto,
+    type MealItem,
+    type MealItemManageDto,
+    type MealManageDto,
+    MealSourceType,
 } from '../../../models/meal.data';
-import type { ConsumptionFormValues, ConsumptionItemFormValues, NutritionTotals } from './meal-manage.types';
+import type { MealFormValues, MealItemFormValues, NutritionTotals } from './meal-manage.types';
 
 export type MealManageDtoCallbacks = {
-    aiSessions: ConsumptionManageDto['aiSessions'];
+    aiSessions: MealManageDto['aiSessions'];
     buildDateTime: () => Date;
     convertRecipeGramsToServings: (recipe: Recipe, amount: number) => number;
     manualTotals: NutritionTotals;
 };
 
-export type MealManageFormPatchValue = Partial<ConsumptionFormValues>;
+export type MealManageFormPatchValue = Partial<MealFormValues>;
 
-export function createMealManageFormValue(now = new Date()): ConsumptionFormValues {
+export function createMealManageFormValue(now = new Date()): MealFormValues {
     return {
         date: getDateInputValue(now),
         time: getTimeInputValue(now),
         mealType: null,
-        items: [createConsumptionItemValue()],
+        items: [createMealItemValue()],
         comment: null,
         imageUrl: null,
         isNutritionAutoCalculated: true,
@@ -41,12 +41,12 @@ export function createMealManageFormValue(now = new Date()): ConsumptionFormValu
     };
 }
 
-export function createConsumptionItemValue(
-    product: ConsumptionItemFormValues['product'] = null,
-    recipe: ConsumptionItemFormValues['recipe'] = null,
+export function createMealItemValue(
+    product: MealItemFormValues['product'] = null,
+    recipe: MealItemFormValues['recipe'] = null,
     amount: number | null = null,
-    sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
-): ConsumptionItemFormValues {
+    sourceType: MealSourceType = MealSourceType.Product,
+): MealItemFormValues {
     return {
         sourceType,
         product,
@@ -60,18 +60,15 @@ export function buildMealDateTime(dateValue: string, timeValue: string, fallback
     return Number.isNaN(parsed.getTime()) ? fallback : parsed;
 }
 
-export function findReusableEmptyMealItemIndex(items: readonly ConsumptionItemFormValues[]): number {
+export function findReusableEmptyMealItemIndex(items: readonly MealItemFormValues[]): number {
     return items.findIndex(item => item.product === null && item.recipe === null);
 }
 
-export function hasSelectedMealItems(
-    items: readonly ConsumptionItemFormValues[],
-    aiSessions: readonly ConsumptionAiSessionManageDto[],
-): boolean {
+export function hasSelectedMealItems(items: readonly MealItemFormValues[], aiSessions: readonly MealAiSessionManageDto[]): boolean {
     return items.some(item => item.product !== null || item.recipe !== null) || aiSessions.length > 0;
 }
 
-export function buildMealManageDto(formValue: ConsumptionFormValues, callbacks: MealManageDtoCallbacks): ConsumptionManageDto {
+export function buildMealManageDto(formValue: MealFormValues, callbacks: MealManageDtoCallbacks): MealManageDto {
     const image = formValue.imageUrl;
     const isNutritionAutoCalculated = formValue.isNutritionAutoCalculated;
 
@@ -81,7 +78,7 @@ export function buildMealManageDto(formValue: ConsumptionFormValues, callbacks: 
         comment: formValue.comment ?? undefined,
         imageUrl: image?.url ?? undefined,
         imageAssetId: image?.assetId ?? undefined,
-        items: mapConsumptionItems(formValue.items, callbacks.convertRecipeGramsToServings),
+        items: mapMealItems(formValue.items, callbacks.convertRecipeGramsToServings),
         aiSessions: callbacks.aiSessions,
         isNutritionAutoCalculated,
         ...buildManualNutritionPayload(isNutritionAutoCalculated, callbacks.manualTotals),
@@ -90,52 +87,49 @@ export function buildMealManageDto(formValue: ConsumptionFormValues, callbacks: 
     };
 }
 
-export function buildMealManageFormPatchValue(consumption: Consumption): MealManageFormPatchValue {
-    const date = new Date(consumption.date);
+export function buildMealManageFormPatchValue(meal: Meal): MealManageFormPatchValue {
+    const date = new Date(meal.date);
     return {
         date: getDateInputValue(date),
         time: getTimeInputValue(date),
-        mealType: normalizeMealType(consumption.mealType),
-        comment: toNullable(consumption.comment),
+        mealType: normalizeMealType(meal.mealType),
+        comment: toNullable(meal.comment),
         imageUrl: {
-            url: toNullable(consumption.imageUrl),
-            assetId: toNullable(consumption.imageAssetId),
+            url: toNullable(meal.imageUrl),
+            assetId: toNullable(meal.imageAssetId),
         },
-        isNutritionAutoCalculated: consumption.isNutritionAutoCalculated,
-        ...buildConsumptionManualNutritionPatchValue(consumption),
-        preMealSatietyLevel: normalizeSatietyLevel(toNullable(consumption.preMealSatietyLevel)),
-        postMealSatietyLevel: normalizeSatietyLevel(toNullable(consumption.postMealSatietyLevel)),
+        isNutritionAutoCalculated: meal.isNutritionAutoCalculated,
+        ...buildMealManualNutritionPatchValue(meal),
+        preMealSatietyLevel: normalizeSatietyLevel(toNullable(meal.preMealSatietyLevel)),
+        postMealSatietyLevel: normalizeSatietyLevel(toNullable(meal.postMealSatietyLevel)),
     };
 }
 
-export function getConsumptionItemInitialAmount(
-    item: ConsumptionItem,
-    convertRecipeServingsToGrams: (item: ConsumptionItem) => number,
-): number {
-    return item.sourceType === ConsumptionSourceType.Recipe ? convertRecipeServingsToGrams(item) : item.amount;
+export function getMealItemInitialAmount(item: MealItem, convertRecipeServingsToGrams: (item: MealItem) => number): number {
+    return item.sourceType === MealSourceType.Recipe ? convertRecipeServingsToGrams(item) : item.amount;
 }
 
 export { getDateInputValue, getTimeInputValue } from '../../../lib/meal-date-input.utils';
 
-function mapConsumptionItems(
-    items: ConsumptionItemFormValues[],
+function mapMealItems(
+    items: MealItemFormValues[],
     convertRecipeGramsToServings: (recipe: Recipe, amount: number) => number,
-): ConsumptionItemManageDto[] {
-    return items.flatMap(item => mapConsumptionItem(item, convertRecipeGramsToServings));
+): MealItemManageDto[] {
+    return items.flatMap(item => mapMealItem(item, convertRecipeGramsToServings));
 }
 
-function mapConsumptionItem(
-    item: ConsumptionItemFormValues,
+function mapMealItem(
+    item: MealItemFormValues,
     convertRecipeGramsToServings: (recipe: Recipe, amount: number) => number,
-): ConsumptionItemManageDto[] {
+): MealItemManageDto[] {
     const amount = normalizeItemAmount(item.amount);
     const sourceType = item.sourceType;
 
-    if (sourceType === ConsumptionSourceType.Product && item.product !== null) {
+    if (sourceType === MealSourceType.Product && item.product !== null) {
         return [{ productId: item.product.id, recipeId: null, amount, origin: 'Manual' }];
     }
 
-    if (sourceType === ConsumptionSourceType.Recipe && item.recipe !== null) {
+    if (sourceType === MealSourceType.Recipe && item.recipe !== null) {
         return [
             {
                 recipeId: item.recipe.id,
@@ -154,7 +148,7 @@ function normalizeItemAmount(value: unknown): number {
     return parsedAmount === 0 || Number.isNaN(parsedAmount) ? 0 : parsedAmount;
 }
 
-function buildManualNutritionPayload(isNutritionAutoCalculated: boolean, manualTotals: NutritionTotals): Partial<ConsumptionManageDto> {
+function buildManualNutritionPayload(isNutritionAutoCalculated: boolean, manualTotals: NutritionTotals): Partial<MealManageDto> {
     return {
         manualCalories: isNutritionAutoCalculated ? undefined : manualTotals.calories,
         manualProteins: isNutritionAutoCalculated ? undefined : manualTotals.proteins,
@@ -165,14 +159,14 @@ function buildManualNutritionPayload(isNutritionAutoCalculated: boolean, manualT
     };
 }
 
-function buildConsumptionManualNutritionPatchValue(consumption: Consumption): Partial<ConsumptionFormValues> {
+function buildMealManualNutritionPatchValue(meal: Meal): Partial<MealFormValues> {
     return {
-        manualCalories: consumption.manualCalories ?? consumption.totalCalories,
-        manualProteins: consumption.manualProteins ?? consumption.totalProteins,
-        manualFats: consumption.manualFats ?? consumption.totalFats,
-        manualCarbs: consumption.manualCarbs ?? consumption.totalCarbs,
-        manualFiber: consumption.manualFiber ?? consumption.totalFiber,
-        manualAlcohol: consumption.manualAlcohol ?? consumption.totalAlcohol,
+        manualCalories: meal.manualCalories ?? meal.totalCalories,
+        manualProteins: meal.manualProteins ?? meal.totalProteins,
+        manualFats: meal.manualFats ?? meal.totalFats,
+        manualCarbs: meal.manualCarbs ?? meal.totalCarbs,
+        manualFiber: meal.manualFiber ?? meal.totalFiber,
+        manualAlcohol: meal.manualAlcohol ?? meal.totalAlcohol,
     };
 }
 

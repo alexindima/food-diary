@@ -7,7 +7,7 @@ namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private sealed record DiaryReportData(
-        IReadOnlyList<MealConsumptionReadModel> Meals,
+        IReadOnlyList<MealProjectionReadModel> Meals,
         IReadOnlyList<DiaryDay> Days,
         string PeriodStartLabel,
         string PeriodEndLabel,
@@ -51,7 +51,7 @@ internal sealed partial class DiaryPdfGenerator {
             };
 
         public static DiaryReportData Create(
-            IReadOnlyList<MealConsumptionReadModel> meals,
+            IReadOnlyList<MealProjectionReadModel> meals,
             DateTime dateFrom,
             DateTime dateTo,
             IReadOnlyDictionary<Guid, byte[]> mealImages,
@@ -69,7 +69,7 @@ internal sealed partial class DiaryPdfGenerator {
             CultureInfo culture = ResolveCulture(texts.CultureName);
             TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, timeZoneOffsetMinutes);
             IReadOnlyList<DiaryDay> days = BuildDays(meals, normalizedFrom, normalizedTo, displayOffset, culture);
-            MealConsumptionReadModel[] orderedMeals = [.. meals.OrderBy(meal => meal.Date)];
+            MealProjectionReadModel[] orderedMeals = [.. meals.OrderBy(meal => meal.Date)];
             string firstDayLabel = days.Count > 0
                 ? days[0].Label
                 : normalizedFrom.ToString("yyyy-MM-dd", culture);
@@ -92,7 +92,7 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         private static IReadOnlyList<DiaryDay> BuildDays(
-            IReadOnlyList<MealConsumptionReadModel> meals,
+            IReadOnlyList<MealProjectionReadModel> meals,
             DateTime dateFrom,
             DateTime dateTo,
             TimeSpan displayOffset,
@@ -104,7 +104,7 @@ internal sealed partial class DiaryPdfGenerator {
             for (int index = 0; index < dayCount; index++) {
                 DateTime start = dateFrom.AddDays(index);
                 DateTime end = index == dayCount - 1 ? dateTo : start.AddDays(1).AddTicks(-1);
-                MealConsumptionReadModel[] bucketMeals = [.. meals.Where(meal => meal.Date >= start && meal.Date <= end)];
+                MealProjectionReadModel[] bucketMeals = [.. meals.Where(meal => meal.Date >= start && meal.Date <= end)];
 
                 DateTime labelDate = start.Add(displayOffset).Date;
                 result.Add(new DiaryDay(

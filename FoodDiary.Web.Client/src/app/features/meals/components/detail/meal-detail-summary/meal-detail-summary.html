@@ -1,41 +1,41 @@
-<section class="consumption-detail__overview fd-grid fd-gap-md">
-    <div class="consumption-detail__overview-main fd-stack fd-gap-sm">
+<section class="meal-detail__overview fd-grid fd-gap-md">
+    <div class="meal-detail__overview-main fd-stack fd-gap-sm">
         <fd-ui-accent-surface
-            class="consumption-detail__hero fd-ui-summary-surface"
+            class="meal-detail__hero fd-ui-summary-surface"
             accentSide="left"
             accentColor="var(--fd-color-primary-300)"
             [tinted]="true"
         >
-            <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                'CONSUMPTION_DETAIL.SUMMARY.CALORIES' | translate
+            <span class="meal-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                'MEAL_DETAIL.SUMMARY.CALORIES' | translate
             }}</span>
-            <strong class="consumption-detail__hero-value fd-ui-summary-surface__value">
+            <strong class="meal-detail__hero-value fd-ui-summary-surface__value">
                 {{ calories() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
             </strong>
         </fd-ui-accent-surface>
 
-        <div class="consumption-detail__quality-row">
-            <span class="consumption-detail__quality-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
-            <div class="consumption-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
+        <div class="meal-detail__quality-row">
+            <span class="meal-detail__quality-label fd-ui-caption">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
+            <div class="meal-detail__quality-bar fd-ui-progress-track" aria-hidden="true">
                 <span
-                    [class]="`consumption-detail__quality-fill fd-ui-progress-fill consumption-detail__quality-fill--${qualityGrade()}`"
+                    [class]="`meal-detail__quality-fill fd-ui-progress-fill meal-detail__quality-fill--${qualityGrade()}`"
                     [style.width.%]="qualityScore()"
                 ></span>
             </div>
-            <strong class="consumption-detail__quality-value fd-ui-body-sm" [fdUiHint]="qualityHintKey() | translate">
+            <strong class="meal-detail__quality-value fd-ui-body-sm" [fdUiHint]="qualityHintKey() | translate">
                 {{ qualityScore() }}
             </strong>
         </div>
     </div>
 
-    <div class="consumption-detail__macro-bars fd-stack fd-gap-sm">
+    <div class="meal-detail__macro-bars fd-stack fd-gap-sm">
         @for (macro of macroSummaryBlocks(); track macro.labelKey) {
-            <div class="consumption-detail__macro-row">
-                <span class="consumption-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
-                <div class="consumption-detail__macro-track" aria-hidden="true">
-                    <span class="consumption-detail__macro-fill" [style.background]="macro.color" [style.width.%]="macro.percent"></span>
+            <div class="meal-detail__macro-row">
+                <span class="meal-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
+                <div class="meal-detail__macro-track" aria-hidden="true">
+                    <span class="meal-detail__macro-fill" [style.background]="macro.color" [style.width.%]="macro.percent"></span>
                 </div>
-                <strong class="consumption-detail__macro-value fd-ui-body-sm">
+                <strong class="meal-detail__macro-value fd-ui-body-sm">
                     {{ macro.value | number: '1.0-1' }} {{ macro.unitKey | translate }}
                 </strong>
             </div>
@@ -43,55 +43,55 @@
     </div>
 </section>
 
-<div class="consumption-detail__summary fd-grid fd-gap-sm">
+<div class="meal-detail__summary fd-grid fd-gap-sm">
     <fd-ui-accent-surface
-        class="consumption-detail__surface consumption-detail__surface--satiety fd-ui-summary-surface"
+        class="meal-detail__surface meal-detail__surface--satiety fd-ui-summary-surface"
         accentSide="top"
         accentColor="var(--fd-color-primary-300)"
         [tinted]="true"
     >
-        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-            'CONSUMPTION_DETAIL.SUMMARY.HUNGER_BEFORE' | translate
+        <span class="meal-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
+            'MEAL_DETAIL.SUMMARY.HUNGER_BEFORE' | translate
         }}</span>
-        <span class="consumption-detail__satiety-value">
-            <span class="consumption-detail__satiety-emoji" aria-hidden="true">{{ preMealSatietyMeta().emoji }}</span>
-            <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
+        <span class="meal-detail__satiety-value">
+            <span class="meal-detail__satiety-emoji" aria-hidden="true">{{ preMealSatietyMeta().emoji }}</span>
+            <strong class="meal-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
                 {{ preMealSatietyMeta().title }}
             </strong>
         </span>
-        <span class="consumption-detail__satiety-description fd-ui-body-sm">{{ preMealSatietyMeta().description }}</span>
+        <span class="meal-detail__satiety-description fd-ui-body-sm">{{ preMealSatietyMeta().description }}</span>
     </fd-ui-accent-surface>
 
     <fd-ui-accent-surface
-        class="consumption-detail__surface consumption-detail__surface--satiety fd-ui-summary-surface"
+        class="meal-detail__surface meal-detail__surface--satiety fd-ui-summary-surface"
         accentSide="top"
         accentColor="var(--fd-color-primary-300)"
         [tinted]="true"
     >
-        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-            'CONSUMPTION_DETAIL.SUMMARY.SATIETY_AFTER' | translate
+        <span class="meal-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
+            'MEAL_DETAIL.SUMMARY.SATIETY_AFTER' | translate
         }}</span>
-        <span class="consumption-detail__satiety-value">
-            <span class="consumption-detail__satiety-emoji" aria-hidden="true">{{ postMealSatietyMeta().emoji }}</span>
-            <strong class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
+        <span class="meal-detail__satiety-value">
+            <span class="meal-detail__satiety-emoji" aria-hidden="true">{{ postMealSatietyMeta().emoji }}</span>
+            <strong class="meal-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
                 {{ postMealSatietyMeta().title }}
             </strong>
         </span>
-        <span class="consumption-detail__satiety-description fd-ui-body-sm">{{ postMealSatietyMeta().description }}</span>
+        <span class="meal-detail__satiety-description fd-ui-body-sm">{{ postMealSatietyMeta().description }}</span>
     </fd-ui-accent-surface>
 </div>
 
-@if (consumption().comment) {
+@if (meal().comment) {
     <fd-ui-accent-surface
-        class="consumption-detail__surface consumption-detail__surface--comment fd-ui-summary-surface"
+        class="meal-detail__surface meal-detail__surface--comment fd-ui-summary-surface"
         accentSide="left"
         accentColor="var(--fd-color-primary-200)"
         [tinted]="true"
     >
-        <span class="consumption-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
-            'CONSUMPTION_DETAIL.SUMMARY.COMMENT' | translate
+        <span class="meal-detail__surface-label fd-ui-summary-surface__label fd-ui-meta-text">{{
+            'MEAL_DETAIL.SUMMARY.COMMENT' | translate
         }}</span>
-        <span class="consumption-detail__surface-value fd-ui-summary-surface__value fd-ui-body-sm"> {{ consumption().comment }} </span>
+        <span class="meal-detail__surface-value fd-ui-summary-surface__value fd-ui-body-sm"> {{ meal().comment }} </span>
     </fd-ui-accent-surface>
 }
 

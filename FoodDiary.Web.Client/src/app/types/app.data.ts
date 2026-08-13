@@ -21,7 +21,7 @@ export type AppConfigApiUrls = {
     auth: string;
     billing: string;
     products: string;
-    consumptions: string;
+    meals: string;
     statistics: string;
     users: string;
     recipes: string;

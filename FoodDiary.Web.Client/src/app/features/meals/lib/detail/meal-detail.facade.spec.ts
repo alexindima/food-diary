@@ -94,7 +94,7 @@ describe('MealDetailFacade favorite state', () => {
         expect(favoriteMealService.isFavorite).toHaveBeenCalledWith('meal-1');
         expect(facade.isFavorite()).toBe(true);
         expect(facade.favoriteIcon()).toBe('star');
-        expect(facade.favoriteAriaLabelKey()).toBe('CONSUMPTION_DETAIL.REMOVE_FAVORITE');
+        expect(facade.favoriteAriaLabelKey()).toBe('MEAL_DETAIL.REMOVE_FAVORITE');
     });
 
     it('should add favorite and store loading state', () => {

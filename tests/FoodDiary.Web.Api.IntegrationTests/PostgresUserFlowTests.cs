@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
+using FoodDiary.Presentation.Api.Features.Meals.Requests;
 using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
@@ -21,7 +21,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
     };
 
     [RequiresDockerFact]
-    public async Task CreateProduct_ThenCreateConsumption_ThenGetDashboard_ReturnsNutritionData() {
+    public async Task CreateProduct_ThenCreateMeal_ThenGetDashboard_ReturnsNutritionData() {
         HttpClient client = await CreateAuthenticatedClientAsync();
 
         HttpResponseMessage createProductResponse = await client.PostAsJsonAsync("/api/v1/products", new CreateProductHttpRequest(
@@ -32,18 +32,18 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         Assert.NotNull(product);
 
         DateTime today = DateTime.UtcNow.Date;
-        HttpResponseMessage createConsumptionResponse = await client.PostAsJsonAsync("/api/v1/consumptions", new CreateConsumptionHttpRequest(
+        HttpResponseMessage createMealResponse = await client.PostAsJsonAsync("/api/v1/meals", new CreateMealHttpRequest(
             today, "Lunch", Comment: null, ImageUrl: null, ImageAssetId: null,
-            [new ConsumptionItemHttpRequest(product.Id, RecipeId: null, 200)],
+            [new MealItemHttpRequest(product.Id, RecipeId: null, 200)],
             IsNutritionAutoCalculated: true));
-        await AssertStatusCodeAsync(HttpStatusCode.Created, createConsumptionResponse);
+        await AssertStatusCodeAsync(HttpStatusCode.Created, createMealResponse);
 
         HttpResponseMessage dashboardResponse = await client.GetAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/dashboard?date={today:yyyy-MM-dd}"));
         await AssertStatusCodeAsync(HttpStatusCode.OK, dashboardResponse);
         DashboardPayload? dashboard = await dashboardResponse.Content.ReadFromJsonAsync<DashboardPayload>(JsonOptions);
 
         Assert.NotNull(dashboard);
-        Assert.True(dashboard.Statistics.TotalCalories > 0, "Dashboard should show calories from the consumption");
+        Assert.True(dashboard.Statistics.TotalCalories > 0, "Dashboard should show calories from the meal");
     }
 
     [RequiresDockerFact]

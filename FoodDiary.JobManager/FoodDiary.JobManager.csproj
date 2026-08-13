@@ -43,6 +43,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Lessons\FoodDiary.Application.Lessons.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
   </ItemGroup>
 
 </Project>

@@ -11,5 +11,5 @@ import type { Meal } from '../../../models/meal.data';
     imports: [MealManageFormComponent],
 })
 export class MealEditComponent {
-    public readonly consumption = input<Meal | null>(null);
+    public readonly meal = input<Meal | null>(null);
 }

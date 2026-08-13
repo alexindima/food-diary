@@ -1,6 +1,6 @@
-<div class="consumption-manage__sticky-stack fd-stack fd-gap-lg">
+<div class="meal-manage__sticky-stack fd-stack fd-gap-lg">
     <fd-ui-card
-        class="consumption-manage__card consumption-manage__card--nutrition"
+        class="meal-manage__card meal-manage__card--nutrition"
         appearance="entry"
         tone="editor"
         density="relaxed"
@@ -8,9 +8,9 @@
         accent="success"
         [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
     >
-        <div class="consumption-manage__nutrition fd-stack fd-gap-md">
+        <div class="meal-manage__nutrition fd-stack fd-gap-md">
             <fd-nutrition-editor
-                manualHintKey="CONSUMPTION_MANAGE.MANUAL_NUTRITION_HINT"
+                manualHintKey="MEAL_MANAGE.MANUAL_NUTRITION_HINT"
                 [form]="nutritionForm()"
                 [macroState]="macroBarState()"
                 [readonly]="isNutritionReadonly()"
@@ -24,25 +24,25 @@
             >
                 <fd-ui-segmented-toggle
                     nutrition-before
-                    class="consumption-manage__nutrition-toggle"
+                    class="meal-manage__nutrition-toggle"
                     appearance="soft"
                     [fullWidth]="true"
                     [options]="nutritionModeOptions()"
                     [selectedValue]="nutritionMode()"
                     [stackOnNarrow]="false"
-                    [fdUiHint]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
-                    [ariaLabel]="'CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                    [fdUiHint]="'MEAL_MANAGE.NUTRITION_MODE.ARIA' | translate"
+                    [ariaLabel]="'MEAL_MANAGE.NUTRITION_MODE.ARIA' | translate"
                     (selectedValueChange)="onNutritionModeChange($event)"
                 />
             </fd-nutrition-editor>
         </div>
     </fd-ui-card>
 
-    <div class="consumption-manage__actions-panel">
-        <div class="consumption-manage__footer-actions fd-grid fd-gap-md fd-align-center">
+    <div class="meal-manage__actions-panel">
+        <div class="meal-manage__footer-actions fd-grid fd-gap-md fd-align-center">
             <fd-ui-button
                 type="button"
-                class="consumption-manage__cancel-button"
+                class="meal-manage__cancel-button"
                 fill="outline"
                 variant="primary"
                 icon="arrow_back"
@@ -55,39 +55,35 @@
             @if (isEditMode()) {
                 <fd-ui-button
                     type="submit"
-                    class="consumption-manage__action-button"
+                    class="meal-manage__action-button"
                     appearance="brand-action"
                     icon="save"
                     [fullWidth]="true"
                     [disabled]="submitDisabled()"
-                    [disabledReason]="
-                        submitDisabled() && !isSubmitting() ? ('CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate) : null
-                    "
+                    [disabledReason]="submitDisabled() && !isSubmitting() ? ('MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate) : null"
                     [loading]="isSubmitting()"
                 >
-                    {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
+                    {{ 'MEAL_MANAGE.SAVE_BUTTON' | translate }}
                 </fd-ui-button>
             } @else {
                 <fd-ui-button
                     type="submit"
-                    class="consumption-manage__action-button"
+                    class="meal-manage__action-button"
                     appearance="brand-action"
                     icon="add"
                     [fullWidth]="true"
                     [disabled]="submitDisabled()"
-                    [disabledReason]="
-                        submitDisabled() && !isSubmitting() ? ('CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate) : null
-                    "
+                    [disabledReason]="submitDisabled() && !isSubmitting() ? ('MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate) : null"
                     [loading]="isSubmitting()"
                 >
-                    {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
+                    {{ 'MEAL_MANAGE.ADD_BUTTON' | translate }}
                 </fd-ui-button>
             }
         </div>
         @if (globalError()) {
-            <fd-ui-form-error class="consumption-manage__footer-error" [error]="globalError()" />
+            <fd-ui-form-error class="meal-manage__footer-error" [error]="globalError()" />
         } @else if (submitDisabled() && !isSubmitting()) {
-            <p class="consumption-manage__submit-hint fd-ui-body-sm">{{ 'CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate }}</p>
+            <p class="meal-manage__submit-hint fd-ui-body-sm">{{ 'MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate }}</p>
         }
     </div>
 </div>

@@ -7056,7 +7056,7 @@
                            "inputs":  [
                                           {
                                               "name":  "aiSessions",
-                                              "type":  "ConsumptionAiSessionManageDto[]",
+                                              "type":  "MealAiSessionManageDto[]",
                                               "required":  true
                                           }
                                       ],
@@ -7134,7 +7134,7 @@
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-summary/meal-detail-summary.html",
                            "inputs":  [
                                           {
-                                              "name":  "consumption",
+                                              "name":  "meal",
                                               "type":  "Meal",
                                               "required":  true
                                           },
@@ -7180,7 +7180,7 @@
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-edit/meal-edit.html",
                            "inputs":  [
                                           {
-                                              "name":  "consumption",
+                                              "name":  "meal",
                                               "type":  "Meal | null",
                                               "required":  false
                                           }
@@ -7198,8 +7198,8 @@
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.html",
                            "inputs":  [
                                           {
-                                              "name":  "consumptionForm",
-                                              "type":  "FieldTree\u003cConsumptionFormValues\u003e",
+                                              "name":  "mealForm",
+                                              "type":  "FieldTree\u003cMealFormValues\u003e",
                                               "required":  true
                                           },
                                           {
@@ -7276,7 +7276,7 @@
                                           },
                                           {
                                               "name":  "aiSessions",
-                                              "type":  "ConsumptionAiSessionManageDto[]",
+                                              "type":  "MealAiSessionManageDto[]",
                                               "required":  true
                                           },
                                           {
@@ -7551,8 +7551,8 @@
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.html",
                            "inputs":  [
                                           {
-                                              "name":  "consumption",
-                                              "type":  "Consumption | null",
+                                              "name":  "meal",
+                                              "type":  "Meal | null",
                                               "required":  false
                                           }
                                       ],
@@ -7583,8 +7583,8 @@
                            "templatePath":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.html",
                            "inputs":  [
                                           {
-                                              "name":  "consumptionForm",
-                                              "type":  "FieldTree\u003cConsumptionFormValues\u003e",
+                                              "name":  "mealForm",
+                                              "type":  "FieldTree\u003cMealFormValues\u003e",
                                               "required":  true
                                           },
                                           {
@@ -7878,11 +7878,11 @@
                            "specPath":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.spec.ts"
                        },
                        {
-                           "class":  "QuickConsumptionDrawerComponent",
-                           "selector":  "fd-quick-consumption-drawer",
+                           "class":  "QuickMealDrawerComponent",
+                           "selector":  "fd-quick-meal-drawer",
                            "feature":  "meals",
-                           "path":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.ts",
-                           "templatePath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.html",
+                           "path":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
+                           "templatePath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.html",
                            "inputs":  [
                                           {
                                               "name":  "forceShow",
@@ -7898,7 +7898,7 @@
                            "outputs":  [
 
                                        ],
-                           "specPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.spec.ts"
+                           "specPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.spec.ts"
                        },
                        {
                            "class":  "PremiumAccessBannersComponent",
@@ -14669,50 +14669,50 @@
                      {
                          "feature":  "meals",
                          "method":  "GET",
-                         "responseType":  "ConsumptionOverview",
+                         "responseType":  "MealOverview",
                          "urlExpression":  "\u0027overview\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-                         "line":  64,
+                         "line":  62,
                          "publicMethod":  "queryOverview",
                          "transport":  "InheritedApiService",
-                         "baseUrlExpression":  "environment.apiUrls.consumptions",
-                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/overview"
+                         "baseUrlExpression":  "environment.apiUrls.meals",
+                         "resolvedUrlExpression":  "environment.apiUrls.meals/overview"
                      },
                      {
                          "feature":  "meals",
                          "method":  "GET",
-                         "responseType":  "ConsumptionResponseDto",
+                         "responseType":  "MealResponseDto",
                          "urlExpression":  "id",
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-                         "line":  78,
+                         "line":  76,
                          "publicMethod":  "getById",
                          "transport":  "InheritedApiService",
-                         "baseUrlExpression":  "environment.apiUrls.consumptions",
-                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/id"
+                         "baseUrlExpression":  "environment.apiUrls.meals",
+                         "resolvedUrlExpression":  "environment.apiUrls.meals/id"
                      },
                      {
                          "feature":  "meals",
                          "method":  "POST",
-                         "responseType":  "ConsumptionResponseDto",
+                         "responseType":  "MealResponseDto",
                          "urlExpression":  "\u0027\u0027",
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-                         "line":  85,
+                         "line":  83,
                          "publicMethod":  "create",
                          "transport":  "InheritedApiService",
-                         "baseUrlExpression":  "environment.apiUrls.consumptions",
-                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/\u0027\u0027"
+                         "baseUrlExpression":  "environment.apiUrls.meals",
+                         "resolvedUrlExpression":  "environment.apiUrls.meals/\u0027\u0027"
                      },
                      {
                          "feature":  "meals",
                          "method":  "PATCH",
-                         "responseType":  "ConsumptionResponseDto",
+                         "responseType":  "MealResponseDto",
                          "urlExpression":  "id",
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-                         "line":  92,
+                         "line":  90,
                          "publicMethod":  "update",
                          "transport":  "InheritedApiService",
-                         "baseUrlExpression":  "environment.apiUrls.consumptions",
-                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/id"
+                         "baseUrlExpression":  "environment.apiUrls.meals",
+                         "resolvedUrlExpression":  "environment.apiUrls.meals/id"
                      },
                      {
                          "feature":  "meals",
@@ -14720,23 +14720,23 @@
                          "responseType":  "void",
                          "urlExpression":  "id",
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-                         "line":  99,
+                         "line":  97,
                          "publicMethod":  "deleteById",
                          "transport":  "InheritedApiService",
-                         "baseUrlExpression":  "environment.apiUrls.consumptions",
-                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/id"
+                         "baseUrlExpression":  "environment.apiUrls.meals",
+                         "resolvedUrlExpression":  "environment.apiUrls.meals/id"
                      },
                      {
                          "feature":  "meals",
                          "method":  "POST",
-                         "responseType":  "ConsumptionResponseDto",
+                         "responseType":  "MealResponseDto",
                          "urlExpression":  "`${id}/repeat`",
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-                         "line":  103,
+                         "line":  101,
                          "publicMethod":  "repeat",
                          "transport":  "InheritedApiService",
-                         "baseUrlExpression":  "environment.apiUrls.consumptions",
-                         "resolvedUrlExpression":  "environment.apiUrls.consumptions/`${id}/repeat`"
+                         "baseUrlExpression":  "environment.apiUrls.meals",
+                         "resolvedUrlExpression":  "environment.apiUrls.meals/`${id}/repeat`"
                      },
                      {
                          "feature":  "premium",
@@ -17504,20 +17504,20 @@
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-item-preview/meal-detail-item-preview.html",
                                  "keys":  [
-                                              "CONSUMPTION_DETAIL.SUMMARY.ITEMS",
-                                              "CONSUMPTION_DETAIL.SUMMARY.ITEMS_HIDE",
-                                              "CONSUMPTION_DETAIL.SUMMARY.ITEMS_MORE"
+                                              "MEAL_DETAIL.SUMMARY.ITEMS",
+                                              "MEAL_DETAIL.SUMMARY.ITEMS_HIDE",
+                                              "MEAL_DETAIL.SUMMARY.ITEMS_MORE"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail-summary/meal-detail-summary.html",
                                  "keys":  [
-                                              "CONSUMPTION_DETAIL.SUMMARY.CALORIES",
-                                              "CONSUMPTION_DETAIL.SUMMARY.COMMENT",
-                                              "CONSUMPTION_DETAIL.SUMMARY.HUNGER_BEFORE",
-                                              "CONSUMPTION_DETAIL.SUMMARY.SATIETY_AFTER",
                                               "GENERAL.UNITS.KCAL",
+                                              "MEAL_DETAIL.SUMMARY.CALORIES",
+                                              "MEAL_DETAIL.SUMMARY.COMMENT",
+                                              "MEAL_DETAIL.SUMMARY.HUNGER_BEFORE",
+                                              "MEAL_DETAIL.SUMMARY.SATIETY_AFTER",
                                               "PRODUCT_CARD.QUALITY_SCORE"
                                           ]
                              },
@@ -17526,69 +17526,69 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
                                  "keys":  [
                                               "COMMON.CLOSE",
-                                              "CONSUMPTION_DETAIL.DELETE_BUTTON",
-                                              "CONSUMPTION_DETAIL.EDIT_BUTTON",
-                                              "CONSUMPTION_DETAIL.REPEAT_BUTTON",
-                                              "CONSUMPTION_DETAIL.TITLE"
+                                              "MEAL_DETAIL.DELETE_BUTTON",
+                                              "MEAL_DETAIL.EDIT_BUTTON",
+                                              "MEAL_DETAIL.REPEAT_BUTTON",
+                                              "MEAL_DETAIL.TITLE"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-ai-sessions/meal-ai-sessions.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.ITEMS_AI_DELETE",
-                                              "CONSUMPTION_MANAGE.ITEMS_AI_EDIT",
-                                              "CONSUMPTION_MANAGE.ITEMS_AI_HIDE",
-                                              "CONSUMPTION_MANAGE.ITEMS_AI_MORE",
-                                              "CONSUMPTION_MANAGE.ITEMS_AI_SUMMARY",
                                               "GENERAL.NUTRIENTS.CALORIES",
                                               "GENERAL.NUTRIENTS.CARB",
                                               "GENERAL.NUTRIENTS.FAT",
-                                              "GENERAL.NUTRIENTS.PROTEIN"
+                                              "GENERAL.NUTRIENTS.PROTEIN",
+                                              "MEAL_MANAGE.ITEMS_AI_DELETE",
+                                              "MEAL_MANAGE.ITEMS_AI_EDIT",
+                                              "MEAL_MANAGE.ITEMS_AI_HIDE",
+                                              "MEAL_MANAGE.ITEMS_AI_MORE",
+                                              "MEAL_MANAGE.ITEMS_AI_SUMMARY"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-general-info/meal-general-info.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.CHOOSE_DATE",
-                                              "CONSUMPTION_MANAGE.CHOOSE_TIME",
-                                              "CONSUMPTION_MANAGE.COMMENT",
-                                              "CONSUMPTION_MANAGE.COMMENT_PLACEHOLDER",
-                                              "CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE",
-                                              "CONSUMPTION_MANAGE.IMAGE_DESCRIPTION",
-                                              "CONSUMPTION_MANAGE.MEAL_TYPE_LABEL",
-                                              "CONSUMPTION_MANAGE.MEAL_TYPE_PLACEHOLDER"
+                                              "MEAL_MANAGE.CHOOSE_DATE",
+                                              "MEAL_MANAGE.CHOOSE_TIME",
+                                              "MEAL_MANAGE.COMMENT",
+                                              "MEAL_MANAGE.COMMENT_PLACEHOLDER",
+                                              "MEAL_MANAGE.GENERAL_GROUP_TITLE",
+                                              "MEAL_MANAGE.IMAGE_DESCRIPTION",
+                                              "MEAL_MANAGE.MEAL_TYPE_LABEL",
+                                              "MEAL_MANAGE.MEAL_TYPE_PLACEHOLDER"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-list/meal-items-list.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.ITEMS_ADDED_TITLE",
-                                              "CONSUMPTION_MANAGE.ITEMS_EMPTY",
-                                              "CONSUMPTION_MANAGE.ITEMS_MANUAL_SUMMARY",
-                                              "CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT",
-                                              "CONSUMPTION_MANAGE.REMOVE_ITEM",
                                               "GENERAL.NUTRIENTS.CALORIES",
                                               "GENERAL.NUTRIENTS.CARB",
                                               "GENERAL.NUTRIENTS.FAT",
-                                              "GENERAL.NUTRIENTS.PROTEIN"
+                                              "GENERAL.NUTRIENTS.PROTEIN",
+                                              "MEAL_MANAGE.ITEMS_ADDED_TITLE",
+                                              "MEAL_MANAGE.ITEMS_EMPTY",
+                                              "MEAL_MANAGE.ITEMS_MANUAL_SUMMARY",
+                                              "MEAL_MANAGE.MANUAL_ITEM_EDIT",
+                                              "MEAL_MANAGE.REMOVE_ITEM"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-items-section/meal-items-section.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE"
+                                              "MEAL_MANAGE.ITEMS_GROUP_TITLE"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.SUBTITLE",
-                                              "CONSUMPTION_MANAGE.TOUR.START_TOUR",
+                                              "MEAL_MANAGE.SUBTITLE",
+                                              "MEAL_MANAGE.TOUR.START_TOUR",
                                               "PRODUCT_MANAGE.CANCEL_BUTTON"
                                           ]
                              },
@@ -17597,11 +17597,11 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.html",
                                  "keys":  [
                                               "COMMON.CLOSE",
-                                              "CONSUMPTION_MANAGE.ADD_ITEM_ROW.AMOUNT",
-                                              "CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_SAVE",
-                                              "CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_TITLE",
-                                              "CONSUMPTION_MANAGE.MANUAL_ITEM_SAVE_DISABLED",
-                                              "CONSUMPTION_MANAGE.MANUAL_ITEM_TYPE_LABEL",
+                                              "MEAL_MANAGE.ADD_ITEM_ROW.AMOUNT",
+                                              "MEAL_MANAGE.MANUAL_ITEM_DIALOG_SAVE",
+                                              "MEAL_MANAGE.MANUAL_ITEM_DIALOG_TITLE",
+                                              "MEAL_MANAGE.MANUAL_ITEM_SAVE_DISABLED",
+                                              "MEAL_MANAGE.MANUAL_ITEM_TYPE_LABEL",
                                               "PRODUCT_MANAGE.CANCEL_BUTTON"
                                           ]
                              },
@@ -17609,11 +17609,11 @@
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.ADD_BUTTON",
-                                              "CONSUMPTION_MANAGE.NUTRITION_MODE.ARIA",
-                                              "CONSUMPTION_MANAGE.SAVE_BUTTON",
-                                              "CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT",
                                               "DISABLED_HINTS.OPERATION_BUSY",
+                                              "MEAL_MANAGE.ADD_BUTTON",
+                                              "MEAL_MANAGE.NUTRITION_MODE.ARIA",
+                                              "MEAL_MANAGE.SAVE_BUTTON",
+                                              "MEAL_MANAGE.SUBMIT_DISABLED_ITEMS_HINT",
                                               "PRODUCT_MANAGE.CANCEL_BUTTON",
                                               "PRODUCT_MANAGE.NUTRITION_VALUE"
                                           ]
@@ -17622,25 +17622,25 @@
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-satiety-card/meal-satiety-card.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.SATIETY_SECTION_HINT",
-                                              "CONSUMPTION_MANAGE.SATIETY_SECTION_TITLE"
+                                              "MEAL_MANAGE.SATIETY_SECTION_HINT",
+                                              "MEAL_MANAGE.SATIETY_SECTION_TITLE"
                                           ]
                              },
                              {
                                  "feature":  "meals",
-                                 "path":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.html",
+                                 "path":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT",
-                                              "CONSUMPTION_MANAGE.MANUAL_ITEM_EDIT_NAMED",
-                                              "QUICK_CONSUMPTION.AMOUNT",
-                                              "QUICK_CONSUMPTION.CLEAR",
-                                              "QUICK_CONSUMPTION.ITEMS",
-                                              "QUICK_CONSUMPTION.PREVIEW_EMPTY",
-                                              "QUICK_CONSUMPTION.REMOVE_ITEM",
-                                              "QUICK_CONSUMPTION.REMOVE_ITEM_NAMED",
-                                              "QUICK_CONSUMPTION.SAVE",
-                                              "QUICK_CONSUMPTION.SAVE_ARIA",
-                                              "QUICK_CONSUMPTION.TITLE"
+                                              "MEAL_MANAGE.MANUAL_ITEM_EDIT",
+                                              "MEAL_MANAGE.MANUAL_ITEM_EDIT_NAMED",
+                                              "QUICK_MEAL.AMOUNT",
+                                              "QUICK_MEAL.CLEAR",
+                                              "QUICK_MEAL.ITEMS",
+                                              "QUICK_MEAL.PREVIEW_EMPTY",
+                                              "QUICK_MEAL.REMOVE_ITEM",
+                                              "QUICK_MEAL.REMOVE_ITEM_NAMED",
+                                              "QUICK_MEAL.SAVE",
+                                              "QUICK_MEAL.SAVE_ARIA",
+                                              "QUICK_MEAL.TITLE"
                                           ]
                              },
                              {
@@ -17648,14 +17648,14 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-edit-list/meal-photo-edit-list.html",
                                  "keys":  [
                                               "COMMON.DELETE",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM"
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-nutrition-summary/meal-photo-nutrition-summary.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE"
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE"
                                           ]
                              },
                              {
@@ -17663,45 +17663,45 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.html",
                                  "keys":  [
                                               "COMMON.CANCEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SUBTITLE",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.TITLE",
-                                              "DISABLED_HINTS.SELECT_RECOGNITION"
+                                              "DISABLED_HINTS.SELECT_RECOGNITION",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.SUBTITLE",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.TITLE"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-result-actions/meal-photo-result-actions.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE"
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-result-table/meal-photo-result-table.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL"
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.AMOUNT_LABEL",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.NAME_LABEL"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-upload-panel/meal-photo-upload-panel.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_DESC",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_LABEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED",
-                                              "GENERAL.UNITS.KCAL"
+                                              "GENERAL.UNITS.KCAL",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.UPLOAD_DESC",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.UPLOAD_LABEL",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/dialogs/satiety-level-dialog/meal-satiety-level-dialog.html",
                                  "keys":  [
-                                              "CONSUMPTION_MANAGE.SATIETY_DIALOG_APPLY",
-                                              "CONSUMPTION_MANAGE.SATIETY_DIALOG_CANCEL",
-                                              "DISABLED_HINTS.SELECT_VALUE"
+                                              "DISABLED_HINTS.SELECT_VALUE",
+                                              "MEAL_MANAGE.SATIETY_DIALOG_APPLY",
+                                              "MEAL_MANAGE.SATIETY_DIALOG_CANCEL"
                                           ]
                              },
                              {
@@ -17709,62 +17709,62 @@
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-filters-dialog/meal-list-filters-dialog.html",
                                  "keys":  [
                                               "COMMON.CANCEL",
-                                              "CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL",
-                                              "CONSUMPTION_LIST.DATE_FILTER_TO_LABEL",
-                                              "CONSUMPTION_LIST.DATE_FROM_PLACEHOLDER",
-                                              "CONSUMPTION_LIST.DATE_TO_PLACEHOLDER",
-                                              "CONSUMPTION_LIST.FILTERS_TITLE",
-                                              "CONSUMPTION_LIST.FILTER_AI",
-                                              "CONSUMPTION_LIST.FILTER_APPLY_BUTTON",
-                                              "CONSUMPTION_LIST.FILTER_CALORIES_FROM",
-                                              "CONSUMPTION_LIST.FILTER_CALORIES_TO",
-                                              "CONSUMPTION_LIST.FILTER_HAS_AI",
-                                              "CONSUMPTION_LIST.FILTER_HAS_IMAGE",
-                                              "CONSUMPTION_LIST.FILTER_MEAL_TYPES",
-                                              "CONSUMPTION_LIST.FILTER_MEDIA",
-                                              "CONSUMPTION_LIST.FILTER_NUTRITION",
-                                              "CONSUMPTION_LIST.FILTER_RESET_BUTTON"
+                                              "MEAL_LIST.DATE_FILTER_FROM_LABEL",
+                                              "MEAL_LIST.DATE_FILTER_TO_LABEL",
+                                              "MEAL_LIST.DATE_FROM_PLACEHOLDER",
+                                              "MEAL_LIST.DATE_TO_PLACEHOLDER",
+                                              "MEAL_LIST.FILTERS_TITLE",
+                                              "MEAL_LIST.FILTER_AI",
+                                              "MEAL_LIST.FILTER_APPLY_BUTTON",
+                                              "MEAL_LIST.FILTER_CALORIES_FROM",
+                                              "MEAL_LIST.FILTER_CALORIES_TO",
+                                              "MEAL_LIST.FILTER_HAS_AI",
+                                              "MEAL_LIST.FILTER_HAS_IMAGE",
+                                              "MEAL_LIST.FILTER_MEAL_TYPES",
+                                              "MEAL_LIST.FILTER_MEDIA",
+                                              "MEAL_LIST.FILTER_NUTRITION",
+                                              "MEAL_LIST.FILTER_RESET_BUTTON"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-content/meal-list-content.html",
                                  "keys":  [
-                                              "CONSUMPTION_LIST.ADD_FIRST_CONSUMPTION_BUTTON",
-                                              "CONSUMPTION_LIST.EMPTY_COPY",
-                                              "CONSUMPTION_LIST.EMPTY_TITLE",
-                                              "CONSUMPTION_LIST.NO_RESULTS_COPY",
-                                              "CONSUMPTION_LIST.NO_RESULTS_TITLE"
+                                              "MEAL_LIST.ADD_FIRST_MEAL_BUTTON",
+                                              "MEAL_LIST.EMPTY_COPY",
+                                              "MEAL_LIST.EMPTY_TITLE",
+                                              "MEAL_LIST.NO_RESULTS_COPY",
+                                              "MEAL_LIST.NO_RESULTS_TITLE"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-favorites/meal-list-favorites.html",
                                  "keys":  [
-                                              "CONSUMPTION_LIST.FAVORITES_LOAD_MORE",
-                                              "CONSUMPTION_LIST.FAVORITES_TITLE",
-                                              "CONSUMPTION_LIST.FAVORITE_REPEAT"
+                                              "MEAL_LIST.FAVORITES_LOAD_MORE",
+                                              "MEAL_LIST.FAVORITES_TITLE",
+                                              "MEAL_LIST.FAVORITE_REPEAT"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list-sections/meal-list-planned/meal-list-planned.html",
                                  "keys":  [
-                                              "CONSUMPTION_LIST.PLANNED_TITLE"
+                                              "MEAL_LIST.PLANNED_TITLE"
                                           ]
                              },
                              {
                                  "feature":  "meals",
                                  "path":  "FoodDiary.Web.Client/src/app/features/meals/pages/list/meal-list.html",
                                  "keys":  [
-                                              "CONSUMPTION_LIST.ACTIVE_FILTERS_EDIT",
-                                              "CONSUMPTION_LIST.ACTIVE_FILTERS_LABEL",
-                                              "CONSUMPTION_LIST.DATE_FILTER_BUTTON",
-                                              "CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL",
-                                              "CONSUMPTION_LIST.DATE_FILTER_TO_LABEL",
-                                              "CONSUMPTION_LIST.SUBTITLE",
-                                              "CONSUMPTION_LIST.TITLE",
-                                              "CONSUMPTION_LIST.TOUR.START_TOUR"
+                                              "MEAL_LIST.ACTIVE_FILTERS_EDIT",
+                                              "MEAL_LIST.ACTIVE_FILTERS_LABEL",
+                                              "MEAL_LIST.DATE_FILTER_BUTTON",
+                                              "MEAL_LIST.DATE_FILTER_FROM_LABEL",
+                                              "MEAL_LIST.DATE_FILTER_TO_LABEL",
+                                              "MEAL_LIST.SUBTITLE",
+                                              "MEAL_LIST.TITLE",
+                                              "MEAL_LIST.TOUR.START_TOUR"
                                           ]
                              },
                              {
@@ -18635,9 +18635,9 @@
                                  "keys":  [
                                               "AI_INPUT_BAR.ADD_ACTION",
                                               "AI_INPUT_BAR.PHOTO_TITLE",
-                                              "CONSUMPTION_LIST.VOICE_MIC_TITLE",
-                                              "CONSUMPTION_LIST.VOICE_PLACEHOLDER",
-                                              "DISABLED_HINTS.OPERATION_BUSY"
+                                              "DISABLED_HINTS.OPERATION_BUSY",
+                                              "MEAL_LIST.VOICE_MIC_TITLE",
+                                              "MEAL_LIST.VOICE_PLACEHOLDER"
                                           ]
                              },
                              {
@@ -18652,7 +18652,7 @@
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-edit-list/ai-photo-edit-list.html",
                                  "keys":  [
                                               "COMMON.DELETE",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM"
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_ITEM"
                                           ]
                              },
                              {
@@ -18660,12 +18660,12 @@
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-preview/ai-photo-preview.html",
                                  "keys":  [
                                               "AI_INPUT_BAR.PHOTO_PREVIEW_ALT",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING",
                                               "GENERAL.UNITS.G",
                                               "GENERAL.UNITS.KCAL",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING",
                                               "NUTRITION_EDITOR.CARBS",
                                               "NUTRITION_EDITOR.FATS",
                                               "NUTRITION_EDITOR.PROTEINS"
@@ -18676,7 +18676,7 @@
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result-actions/ai-photo-result-actions.html",
                                  "keys":  [
                                               "COMMON.CANCEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION"
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.REANALYZE_ACTION"
                                           ]
                              },
                              {
@@ -18691,12 +18691,12 @@
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.html",
                                  "keys":  [
                                               "COMMON.CANCEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PHOTO_STAGE",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCTS_PANEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCT_COUNT",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING",
-                                              "GENERAL.UNITS.KCAL"
+                                              "GENERAL.UNITS.KCAL",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.PHOTO_STAGE",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.PRODUCTS_PANEL",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.PRODUCT_COUNT",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING"
                                           ]
                              },
                              {
@@ -18704,8 +18704,8 @@
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/photo-upload-dialog/photo-upload-dialog.html",
                                  "keys":  [
                                               "COMMON.CANCEL",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SUBTITLE",
-                                              "CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.TITLE"
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.SUBTITLE",
+                                              "MEAL_MANAGE.PHOTO_AI_DIALOG.TITLE"
                                           ]
                              },
                              {
@@ -18749,11 +18749,11 @@
                                  "feature":  "shared",
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/day-nutrition-summary/day-nutrition-summary.html",
                                  "keys":  [
-                                              "CONSUMPTION_RING.UNIT",
-                                              "CONSUMPTION_RING.WEEKLY_LABEL",
                                               "DASHBOARD.DAY_SUMMARY.CALORIE_PROGRESS",
                                               "DASHBOARD.DAY_SUMMARY.GOAL_MARKER",
-                                              "DASHBOARD.DAY_SUMMARY.TITLE"
+                                              "DASHBOARD.DAY_SUMMARY.TITLE",
+                                              "MEAL_RING.UNIT",
+                                              "MEAL_RING.WEEKLY_LABEL"
                                           ]
                              },
                              {
@@ -18875,7 +18875,7 @@
                                  "feature":  "shared",
                                  "path":  "FoodDiary.Web.Client/src/app/components/shared/product-card/product-card.html",
                                  "keys":  [
-                                              "PRODUCT_CARD.ADD_TO_CONSUMPTION",
+                                              "PRODUCT_CARD.ADD_TO_MEAL",
                                               "PRODUCT_CARD.NO_BARCODE"
                                           ]
                              },
@@ -18920,7 +18920,7 @@
                                  "path":  "FoodDiary.Web.Client/src/app/shared/dialogs/item-select-dialog/item-select-dialog.html",
                                  "keys":  [
                                               "COMMON.CLOSE",
-                                              "CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.TITLE"
+                                              "MEAL_MANAGE.ITEM_SELECT_DIALOG.TITLE"
                                           ]
                              },
                              {
@@ -23590,7 +23590,7 @@
                               "selector":  "fd-ui-button",
                               "componentPath":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
                               "consumerFeature":  "meals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.html",
                               "occurrences":  6,
                               "inputsUsed":  [
                                                  "appearance",
@@ -32176,10 +32176,10 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/components/detail/meal-detail/meal-detail.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-                                                 "consumption",
                                                  "isItemPreviewExpanded",
                                                  "itemPreview",
                                                  "macroSummaryBlocks",
+                                                 "meal",
                                                  "postMealSatietyMeta",
                                                  "preMealSatietyMeta"
                                              ],
@@ -32213,7 +32213,7 @@
                               "selector":  "fd-meal-details-fields",
                               "componentPath":  "FoodDiary.Web.Client/src/app/components/shared/meal-details-fields/meal-details-fields.ts",
                               "consumerFeature":  "meals",
-                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.html",
+                              "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.html",
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "comment",
@@ -32235,8 +32235,8 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-                                                 "consumptionForm",
                                                  "generalErrors",
+                                                 "mealForm",
                                                  "mealTypeSelectOptions"
                                              ],
                               "outputsHandled":  [
@@ -32374,7 +32374,7 @@
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/meals/pages/manage/meal-edit/meal-edit.html",
                               "occurrences":  1,
                               "inputsUsed":  [
-                                                 "consumption"
+                                                 "meal"
                                              ],
                               "outputsHandled":  [
 
@@ -32389,12 +32389,12 @@
                               "occurrences":  1,
                               "inputsUsed":  [
                                                  "caloriesError",
-                                                 "consumptionForm",
                                                  "globalError",
                                                  "isEditMode",
                                                  "isSubmitting",
                                                  "macroBarState",
                                                  "macrosError",
+                                                 "mealForm",
                                                  "nutritionMode",
                                                  "nutritionWarning",
                                                  "submitDisabled"
@@ -34170,9 +34170,9 @@
                                                  ]
                           },
                           {
-                              "component":  "QuickConsumptionDrawerComponent",
-                              "selector":  "fd-quick-consumption-drawer",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.ts",
+                              "component":  "QuickMealDrawerComponent",
+                              "selector":  "fd-quick-meal-drawer",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
                               "consumerFeature":  "public",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/features/public/components/landing-preview-tour/landing-preview-tour.html",
                               "occurrences":  1,
@@ -34185,9 +34185,9 @@
                                                  ]
                           },
                           {
-                              "component":  "QuickConsumptionDrawerComponent",
-                              "selector":  "fd-quick-consumption-drawer",
-                              "componentPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.ts",
+                              "component":  "QuickMealDrawerComponent",
+                              "selector":  "fd-quick-meal-drawer",
+                              "componentPath":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
                               "consumerFeature":  "shell",
                               "consumerPath":  "FoodDiary.Web.Client/src/app/shell/app.html",
                               "occurrences":  1,

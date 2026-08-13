@@ -8,7 +8,7 @@ using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
-using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -36,7 +36,7 @@ public class ExportFeatureTests {
         return meal;
     }
 
-    private static MealConsumptionReadModel ToReadModel(Meal meal) =>
+    private static MealProjectionReadModel ToReadModel(Meal meal) =>
         new(
             meal.Id.Value,
             meal.Date,
@@ -123,7 +123,7 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithLocalDayUtcBoundaries_PreservesRequestedInstants() {
         var userId = UserId.New();
         IMealRepository repository = CreateMealRepository([], out Func<(DateTime? DateFrom, DateTime? DateTo)> getLastPeriod);
-        ExportDiaryQueryHandler handler = CreateHandler(new ExportDiaryReadService(new ConsumptionExportReadService(repository)));
+        ExportDiaryQueryHandler handler = CreateHandler(new ExportDiaryReadService(new MealExportReadService(repository)));
         DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
 
@@ -502,7 +502,7 @@ public class ExportFeatureTests {
         CreateMealRepository(meals, out _);
 
     private static IExportDiaryReadService CreateExportDiaryReadService(IReadOnlyList<Meal> meals) =>
-        new ExportDiaryReadService(new ConsumptionExportReadService(CreateMealRepository(meals)));
+        new ExportDiaryReadService(new MealExportReadService(CreateMealRepository(meals)));
 
     private static IMealRepository CreateMealRepository(
         IReadOnlyList<Meal> meals,
@@ -513,11 +513,11 @@ public class ExportFeatureTests {
 
         IMealRepository repository = Substitute.For<IMealRepository>();
         repository
-            .GetByPeriodConsumptionReadModelsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .GetByPeriodMealProjectionsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 lastDateFrom = call.ArgAt<DateTime>(1);
                 lastDateTo = call.ArgAt<DateTime>(2);
-                return Task.FromResult<IReadOnlyList<MealConsumptionReadModel>>([.. meals.Select(ToReadModel)]);
+                return Task.FromResult<IReadOnlyList<MealProjectionReadModel>>([.. meals.Select(ToReadModel)]);
             });
 
         return repository;
@@ -618,7 +618,7 @@ public class ExportFeatureTests {
         IDiaryPdfGenerator generator = Substitute.For<IDiaryPdfGenerator>();
         generator
             .GenerateAsync(
-                Arg.Any<IReadOnlyList<MealConsumptionReadModel>>(),
+                Arg.Any<IReadOnlyList<MealProjectionReadModel>>(),
                 Arg.Any<DateTime>(),
                 Arg.Any<DateTime>(),
                 Arg.Any<string?>(),

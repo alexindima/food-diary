@@ -16,7 +16,7 @@ describe('MealDetailItemPreviewComponent', () => {
 
         expect(component['visibleItems']().length).toBe(PREVIEW_LIMIT);
         expect(component['hiddenItemPreviewCount']()).toBe(1);
-        expect(getFixtureText(fixture)).toContain('CONSUMPTION_DETAIL.SUMMARY.ITEMS_MORE');
+        expect(getFixtureText(fixture)).toContain('MEAL_DETAIL.SUMMARY.ITEMS_MORE');
     });
 
     it('should show all items while expanded', async () => {
@@ -26,7 +26,7 @@ describe('MealDetailItemPreviewComponent', () => {
         fixture.detectChanges();
 
         expect(component['visibleItems']()).toEqual(items);
-        expect(getFixtureText(fixture)).toContain('CONSUMPTION_DETAIL.SUMMARY.ITEMS_HIDE');
+        expect(getFixtureText(fixture)).toContain('MEAL_DETAIL.SUMMARY.ITEMS_HIDE');
     });
 
     it('should emit expand toggle from more button', async () => {

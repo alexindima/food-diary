@@ -35,7 +35,7 @@ describe('MealPhotoUploadPanelComponent', () => {
 
     it('should render status and loading overlay states', async () => {
         const { fixture } = await setupComponentAsync({
-            statusKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANALYZING',
+            statusKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ANALYZING',
             isLoading: true,
             isNutritionLoading: false,
         });
@@ -43,7 +43,7 @@ describe('MealPhotoUploadPanelComponent', () => {
         fixture.detectChanges();
         const host = fixture.nativeElement as HTMLElement;
 
-        expect(host.textContent).toContain('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANALYZING');
+        expect(host.textContent).toContain('MEAL_MANAGE.PHOTO_AI_DIALOG.ANALYZING');
         expect(host.querySelector('.photo-ai-dialog__status--loading')).not.toBeNull();
         expect(host.querySelector('.photo-ai-dialog__scan-overlay')).not.toBeNull();
         expect(host.querySelector('.photo-ai-dialog__scan-line--nutrition')).toBeNull();

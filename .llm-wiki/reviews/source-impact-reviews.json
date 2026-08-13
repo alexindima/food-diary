@@ -42,17 +42,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "a150abe3a8e862da8dae0c30cdb03d918731b9615fec3491428bd135de9c5ee8"
+                                            "sha256":  "72d6ea30455b53241fb563be14a352736a4a791f97a82e15febb44f9f6b45657"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "a955a498b72c3e9e6c8d9cb4e73675220295fc711717a9154a6cf6a277cc0ee9"
+                                            "sha256":  "44687148064d23d01b4040c6caef7f8ae16cce89301b979bf15102cd2fe103e1"
                                         }
                                     ],
-                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
-                        "reviewedAtUtc":  "2026-08-13T11:27:48.2000798Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:12:57.9816200Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -61,17 +61,21 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "a150abe3a8e862da8dae0c30cdb03d918731b9615fec3491428bd135de9c5ee8"
+                                            "sha256":  "72d6ea30455b53241fb563be14a352736a4a791f97a82e15febb44f9f6b45657"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "19801482826c8005498550c0adb2aa333cbc5a1a3da3ec027f85dd5c3fa10eb8"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "e4fb58dccdea9fba7805eb2d7d3680e86e66be633c4edaa5576acee26fdaa7f2"
+                                            "sha256":  "873f9f559aceda3fe5ba540eb996b0d4f84d6cb7e35fd179dc37cf7a38f1d34e"
                                         }
                                     ],
-                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
-                        "reviewedAtUtc":  "2026-08-13T11:27:48.7156119Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:12:58.2726387Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -110,13 +114,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "a150abe3a8e862da8dae0c30cdb03d918731b9615fec3491428bd135de9c5ee8"
+                                            "sha256":  "72d6ea30455b53241fb563be14a352736a4a791f97a82e15febb44f9f6b45657"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "19801482826c8005498550c0adb2aa333cbc5a1a3da3ec027f85dd5c3fa10eb8"
                                         }
                                     ],
-                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
-                        "reviewedAtUtc":  "2026-08-13T11:27:49.2434981Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:12:58.5378104Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -174,13 +182,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "44262c6e36fd88ff7fd41d5b045d8795f95e5d8865c978cac28a55a18cc0535a"
+                                            "sha256":  "99e35e859a32418b59935aec99d0243a1db3d990addf93aede27cc887ace2074"
                                         }
                                     ],
-                        "reason":  "Reviewed regenerated indexes and dependent guidance for this frontend-only fasting presentation change; component contracts, architecture boundaries, feature trace, and focused quality risks remain valid.",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d8e2e1834fc0fb828f81b9a5aa71d19d08b9d141",
-                        "reviewedAtUtc":  "2026-08-11T21:38:25.9044506Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:00.2562684Z"
                     },
                     {
                         "pageId":  "workflow.query-context",
@@ -189,13 +197,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "9fbb18c19f5e66f46e53bd1001bc5f07c2a40e0584dbd83f93ad3181feac8a39"
+                                            "sha256":  "5b35bb5f0205f6d4fe533d03a616bfbf06ab7a12bdd820f80ad34f7294b4e4cf"
                                         }
                                     ],
-                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
-                        "reviewedAtUtc":  "2026-08-13T11:27:52.7241897Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:02.9661233Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -230,21 +238,17 @@
                     {
                         "pageId":  "workflow-adaptive-development",
                         "pagePath":  ".llm-wiki/workflows/adaptive-development.md",
-                        "pageSha256":  "d2c5fb2ce16991118d641fd45d46d2507d334f6f4576c3a1e3774fe5b90a769f",
+                        "pageSha256":  "5e0ad5354ca56d6d730fe0ad27f732115930bdb9bc5b8e4b461e263a2042da3f",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
-                                            "sha256":  "304ccee856b4e996019f60b7d898b758407e9b68947a50b5e5a116087e38d81d"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-                                            "sha256":  "375929cd50a8fa8c994c566b800813054916af0cc80b7f08da191dfdef15aee9"
+                                            "path":  ".llm-wiki/knowledge/product-journeys.json",
+                                            "sha256":  "49849088155b84b8635c763aaec785dd954ae37f9ae9370b59f51e39363d4c94"
                                         }
                                     ],
-                        "reason":  "Verified that start preserves normalized planned paths and refuses to reuse a governed workspace whose stored objective differs from the requested objective; isolated adaptive regressions cover both behaviors.",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4145e274a7a1daea8112754ab0575514046cf969",
-                        "reviewedAtUtc":  "2026-08-12T22:13:15.4414251Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:12:58.8157382Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -252,14 +256,14 @@
                         "pageSha256":  "037cc1091ca997ebc790af65de373c685931315349afb4750800c31f49bd7245",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-                                            "sha256":  "c9541cd9b6cd17a0cb574583321979932dcc8279d83ef396b2169f12c38dcc4b"
+                                            "path":  "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+                                            "sha256":  "c044930d115d697762d89eae22aaaddcbf954860658dffb12264f933613407cb"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:12.8292917Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:12:59.0636524Z"
                     },
                     {
                         "pageId":  "workflow-architecture-health-review",
@@ -268,21 +272,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "97fbabbfb974aa89ae3f5ff8b5cc51d2664372b94019c041c8e433e3836c065c"
+                                            "sha256":  "5fd6a43435c6e98ccd10442a486acb477ca042be14d6112724ccfe759c2d3287"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "a150abe3a8e862da8dae0c30cdb03d918731b9615fec3491428bd135de9c5ee8"
+                                            "sha256":  "72d6ea30455b53241fb563be14a352736a4a791f97a82e15febb44f9f6b45657"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "e4fb58dccdea9fba7805eb2d7d3680e86e66be633c4edaa5576acee26fdaa7f2"
+                                            "sha256":  "873f9f559aceda3fe5ba540eb996b0d4f84d6cb7e35fd179dc37cf7a38f1d34e"
                                         }
                                     ],
-                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
-                        "reviewedAtUtc":  "2026-08-13T11:27:49.8497588Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:12:59.4510382Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -291,13 +295,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "38bac99945b26726e278aa301f211e30dd256f318849e581f02d85c3d3657619"
+                                            "sha256":  "076a66d62043e72ed94b59b9a824991e8964015d227c14c95a112b73a2b811f5"
                                         }
                                     ],
-                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
-                        "reviewedAtUtc":  "2026-08-13T11:27:50.5492383Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:12:59.8895847Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -590,14 +594,14 @@
                         "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
+                                            "sha256":  "03e766fda53fcd5a7c7dc44fb591bea821300443313ec5d9882f5c42f69d6a59"
                                         }
                                     ],
-                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-                        "reviewedAtUtc":  "2026-08-12T21:30:33.7411349Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:00.6211221Z"
                     },
                     {
                         "pageId":  "workflow-implementation-plan",
@@ -731,13 +735,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "fc2b242a09848a5bfe073505d0cf61d747503d7579690a632f56c732579b85ff"
+                                            "sha256":  "19801482826c8005498550c0adb2aa333cbc5a1a3da3ec027f85dd5c3fa10eb8"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:27.1529259Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:00.9967872Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -745,14 +749,18 @@
                         "pageSha256":  "0d3f137f64fa7b1f3299dc26881c5bfc9dfd9ab2ed9f11a0d1507cbf324ff541",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
+                                            "path":  "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+                                            "sha256":  "87e3f1ec09488ecf6ae4e319293cd3a43b5b71cbff19186f09c5f1c52d1eccc3"
+                                        },
+                                        {
+                                            "path":  "docs/backend/BACKEND_PERFORMANCE_REVIEW.md",
+                                            "sha256":  "43990323011d5bd842a47067e25433af6bd1d10f393f6c787e287905ab87d6f8"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:57.3986134Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:01.3256421Z"
                     },
                     {
                         "pageId":  "workflow-plan-diff-conformance",
@@ -799,13 +807,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "5e054ae728705b1a3ae8e6b490e271874a5f76766d3249557b2fe515c6ae4018"
+                                            "sha256":  "2cff307f2c88d2f63ad92ca4331d96ee2db75047c9cb862587cd484d3f514da7"
                                         }
                                     ],
-                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
-                        "reviewedAtUtc":  "2026-08-13T11:27:51.2832598Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:01.7630892Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -813,14 +821,14 @@
                         "pageSha256":  "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "edf3653fb8a26ac9908d17a74dfa823f9475ae460c1482828c128ee6f89efc2c"
+                                            "path":  ".llm-wiki/knowledge/product-journeys.json",
+                                            "sha256":  "49849088155b84b8635c763aaec785dd954ae37f9ae9370b59f51e39363d4c94"
                                         }
                                     ],
-                        "reason":  "Reviewed the governed lifecycle fixes: next handles its distinct payload schema, start persists normalized planned paths, and delivery links completed checks only to single or behaviorally anchored criteria without auto-satisfying them.",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-                        "reviewedAtUtc":  "2026-08-12T21:24:21.6445314Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:02.1539240Z"
                     },
                     {
                         "pageId":  "workflow-proof-of-change",
@@ -848,13 +856,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "d78039699f14a9270ac52de4e812b4b829ff0e9f5ba8bd270325a66388e6846e"
+                                            "sha256":  "456626a6af434a18be716e91849dfca542a0a3a6c41cc3f70bcad6fb2bb81179"
                                         }
                                     ],
-                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
-                        "reviewedAtUtc":  "2026-08-13T11:27:52.0794683Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:02.5071161Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -1074,14 +1082,18 @@
                         "pageSha256":  "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1",
-                                            "sha256":  "dde51bf07962d0d752e1dfce0b50cf1b15e7196ee60d53c9bb852d88e7e1df06"
+                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
+                                            "sha256":  "99e35e859a32418b59935aec99d0243a1db3d990addf93aede27cc887ace2074"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/generated/frontend-index.json",
+                                            "sha256":  "165d3aa48e5cdc2505a74d516da5ff385002bdf858f00508ba2985c395542356"
                                         }
                                     ],
-                        "reason":  "Reviewed trace null-safety, canonical 36+5 module inventory generation, and objective-safe governed workspace selection against current workflow pages.",
+                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4145e274a7a1daea8112754ab0575514046cf969",
-                        "reviewedAtUtc":  "2026-08-12T22:06:16.0222544Z"
+                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+                        "reviewedAtUtc":  "2026-08-13T12:13:03.3931240Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

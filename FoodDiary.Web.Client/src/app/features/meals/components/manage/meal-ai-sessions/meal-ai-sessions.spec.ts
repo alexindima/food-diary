@@ -3,7 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../models/meal.data';
 import { MealAiSessionsComponent } from './meal-ai-sessions';
 
 describe('MealAiSessionsComponent rows', () => {
@@ -73,7 +73,7 @@ describe('MealAiSessionsComponent actions', () => {
 });
 
 async function setupComponentAsync(
-    aiSessions: ConsumptionAiSessionManageDto[],
+    aiSessions: MealAiSessionManageDto[],
 ): Promise<{ component: MealAiSessionsComponent; fixture: ComponentFixture<MealAiSessionsComponent> }> {
     await TestBed.configureTestingModule({
         imports: [MealAiSessionsComponent],
@@ -92,7 +92,7 @@ async function setupComponentAsync(
     };
 }
 
-function createSession(): ConsumptionAiSessionManageDto {
+function createSession(): MealAiSessionManageDto {
     return {
         imageUrl: 'https://example.test/meal.jpg',
         items: [
@@ -103,7 +103,7 @@ function createSession(): ConsumptionAiSessionManageDto {
     };
 }
 
-function createAiItem(values: Partial<ConsumptionAiItemManageDto>): ConsumptionAiItemManageDto {
+function createAiItem(values: Partial<MealAiItemManageDto>): MealAiItemManageDto {
     return {
         nameEn: '',
         amount: 0,

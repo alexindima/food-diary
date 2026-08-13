@@ -6,7 +6,7 @@ import { provideTranslateTesting } from '../../../../../../testing/translate-tes
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
-import { ConsumptionSourceType } from '../../../models/meal.data';
+import { MealSourceType } from '../../../models/meal.data';
 import { MealItemsListComponent, type MealItemsListItemState } from './meal-items-list';
 
 const PRODUCT_AMOUNT = 150;
@@ -21,7 +21,7 @@ describe('MealItemsListComponent rows', () => {
     it('should build product row with calculated nutrition totals', async () => {
         const product = createProduct();
         const { component } = await setupComponentAsync({
-            items: [createItemState({ sourceType: ConsumptionSourceType.Product, product, amount: PRODUCT_AMOUNT })],
+            items: [createItemState({ sourceType: MealSourceType.Product, product, amount: PRODUCT_AMOUNT })],
         });
 
         expect(component['manualItemRows']()).toEqual([
@@ -43,7 +43,7 @@ describe('MealItemsListComponent rows', () => {
         const recipe = createRecipe();
         const recipeWeight = { convertGramsToServings: vi.fn().mockReturnValue(2) };
         const { component } = await setupComponentAsync({
-            items: [createItemState({ sourceType: ConsumptionSourceType.Recipe, recipe, amount: RECIPE_AMOUNT_GRAMS })],
+            items: [createItemState({ sourceType: MealSourceType.Recipe, recipe, amount: RECIPE_AMOUNT_GRAMS })],
             recipeWeight,
         });
 
@@ -66,7 +66,7 @@ describe('MealItemsListComponent rows', () => {
     it('should hide empty manual item rows when only external items exist', async () => {
         const { component } = await setupComponentAsync({
             hasExternalItems: true,
-            items: [createItemState({ sourceType: ConsumptionSourceType.Product, product: null, amount: null })],
+            items: [createItemState({ sourceType: MealSourceType.Product, product: null, amount: null })],
         });
 
         expect(component['manualItemRows']()).toEqual([]);
@@ -83,7 +83,7 @@ describe('MealItemsListComponent validation', () => {
                     amount: null,
                     amountError: 'FORM_ERRORS.REQUIRED',
                     product: createProduct(),
-                    sourceType: ConsumptionSourceType.Product,
+                    sourceType: MealSourceType.Product,
                 }),
             ],
         });
@@ -96,11 +96,11 @@ describe('MealItemsListComponent validation', () => {
         const { component } = await setupComponentAsync({
             items: [
                 createItemState({
-                    sourceType: ConsumptionSourceType.Product,
+                    sourceType: MealSourceType.Product,
                     product: null,
                     amount: PRODUCT_AMOUNT,
                     productInvalid: true,
-                    sourceError: 'CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR',
+                    sourceError: 'MEAL_MANAGE.ITEM_SOURCE_ERROR',
                 }),
             ],
         });
@@ -108,7 +108,7 @@ describe('MealItemsListComponent validation', () => {
         expect(component['isProductInvalid'](0)).toBe(true);
         expect(component['isRecipeInvalid'](0)).toBe(false);
         expect(component['isItemSourceInvalid'](0)).toBe(true);
-        expect(component['getItemSourceError'](0)).toBe('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR');
+        expect(component['getItemSourceError'](0)).toBe('MEAL_MANAGE.ITEM_SOURCE_ERROR');
     });
 });
 
@@ -168,7 +168,7 @@ async function setupComponentAsync(
 
 function createItemState(values: Partial<MealItemsListItemState> = {}): MealItemsListItemState {
     return {
-        sourceType: values.sourceType ?? ConsumptionSourceType.Product,
+        sourceType: values.sourceType ?? MealSourceType.Product,
         product: values.product ?? null,
         recipe: values.recipe ?? null,
         amount: values.amount ?? null,

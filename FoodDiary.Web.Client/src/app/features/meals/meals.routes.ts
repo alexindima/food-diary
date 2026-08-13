@@ -13,7 +13,7 @@ const routes: Routes = [
             {
                 path: ':id/edit',
                 loadComponent: async () => import('./pages/manage/meal-edit/meal-edit').then(m => m.MealEditComponent),
-                resolve: { consumption: mealResolver },
+                resolve: { meal: mealResolver },
             },
         ],
     },

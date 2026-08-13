@@ -35,9 +35,9 @@ export class AiInputBarFacade {
             this.photo,
             this.aiFoodFacade.analyzeFoodImage({ imageAssetId: assetId }),
             {
-                premium: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM',
-                quota: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
-                generic: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC',
+                premium: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM',
+                quota: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
+                generic: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC',
             },
             items => {
                 this.calculatePhotoNutrition(items);
@@ -54,8 +54,8 @@ export class AiInputBarFacade {
 
     public calculatePhotoNutrition(items: FoodVisionItem[]): void {
         this.runNutrition(this.photo, items, {
-            quota: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
-            generic: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
+            quota: 'MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA',
+            generic: 'MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR',
         });
     }
 

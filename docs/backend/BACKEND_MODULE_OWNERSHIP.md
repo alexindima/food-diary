@@ -37,15 +37,15 @@ This map covers the governed business owners and composed read modules in the pr
 | --- | --- | --- | --- |
 | Users | user profile/lifecycle, credentials stored on User, roles and role audit | narrow profile, authentication, administration, notification and billing capabilities; current-user access; role membership | Images, Notifications/Profile composition, Dietologist relationship projection |
 | Identity | login/register/restore workflows, refresh sessions, login events and email templates | authentication commands, token/session lifecycle and email-template administration, grouped in `FoodDiary.Application.Identity` | Users authentication capabilities, Notifications, MailRelay and external identity validators |
-| Consumption Diary | `Meal`, meal items, AI sessions and consumption mutations | consumption commands, `IConsumptionReadService`, specialized activity/nutrition/export projections | Products/Recipes lookup APIs, Users, Images, FavoriteMeals, RecentItems, Nutrition |
-| RecentItems | recent product/recipe usage ordering | `IRecentItemUsageReadService`, `IRecentItemUsageRecorder` | Products and Recipes consume usage ordering; Consumption Diary records usage |
+| Meal Diary | `Meal`, meal items, AI sessions and meal mutations | meal commands, `IMealReadService`, specialized activity/nutrition/export projections | Products/Recipes lookup APIs, Users, Images, FavoriteMeals, RecentItems, Nutrition |
+| RecentItems | recent product/recipe usage ordering | `IRecentItemUsageReadService`, `IRecentItemUsageRecorder` | Products and Recipes consume usage ordering; Meal Diary records usage |
 | Products | products and product overview/search projections | product commands, `IProductLookupService`, `IProductOverviewReadService` | Users, Images, FavoriteProducts, RecentItems, external food sources |
 | Recipes | recipes, ingredients, steps and recipe overview/search projections | recipe commands, `IRecipeLookupService`, `IRecipeAccessService`, `IRecipeOverviewReadService`, `IRecipeNutritionWriter` | Products lookup API, Users, Images, FavoriteRecipes, RecentItems, Nutrition |
 | Fasting | fasting plans, occurrences, check-ins, legacy fasting sessions, fasting telemetry | Fasting commands/queries, `IFastingReadService`, analytics and notification scheduling | Users access contract, Notifications contracts; Dashboard is an approved read-only consumer |
 | Notifications | notifications, preferences, web-push subscriptions and notification web-push outbox | `INotificationWriter`, notification feed/preferences commands and queries, delivery scheduling contracts | Users access contracts, Resources |
 | Billing | subscriptions and billing transaction state | checkout, portal, webhook and entitlement operations | Users identity, billing provider adapter |
 | Images | image asset lifecycle and object-deletion outbox | presign, confirm, delete and cleanup operations | Object storage adapter |
-| Favorites | user-to-product, user-to-recipe and user-to-meal favorites | favorite commands and read services grouped in `FoodDiary.Application.Favorites` | Products/Recipes lookup APIs, Consumption Diary source-read API, Users access |
+| Favorites | user-to-product, user-to-recipe and user-to-meal favorites | favorite commands and read services grouped in `FoodDiary.Application.Favorites` | Products/Recipes lookup APIs, Meal Diary source-read API, Users access |
 | Dietologist Relationships | invitations, permissions and recommendations | relationship/recommendation commands and read services | Users directory/roles, Notifications writer/refresh, Email |
 | RecipeCommunity | recipe comments and likes | comment commands/read service and like toggle/status grouped in `FoodDiary.Application.RecipeCommunity` | Recipes access API, Users, Notifications writer |
 | Body Metrics | `WeightEntry` and `WaistEntry` measurements | measurement commands, `IWeightEntryReadService`, `IWaistEntryReadService` | Users access; Dashboard, Weekly Check-In and TDEE as read-only projection consumers |
@@ -59,7 +59,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Daily Advice | localized daily advice content | daily-advice query and `IDailyAdviceReadService` | Dashboard invokes the query as a read-only composed-view dependency |
 | Content Reports | user-submitted reports and moderation status | report creation command, `IContentReportAdministrationService`, moderation projections | Users access; Admin invokes owner moderation capability and read projections |
 | AI | AI usage, prompt templates and AI orchestration policy | isolated application capability in `FoodDiary.Application.Ai`, usage summaries, `IAiPromptAdministrationService` | Images access, Users access, provider adapters; Admin consumes projections |
-| USDA Catalog | imported USDA foods/nutrients and product-link relationships | USDA commands/read services and read-model search projection | Products may consume the suggestion projection; Consumption nutrition is a read-only calculation input |
+| USDA Catalog | imported USDA foods/nutrients and product-link relationships | USDA commands/read services and read-model search projection | Products may consume the suggestion projection; Meal nutrition is a read-only calculation input |
 | OpenFoodFacts Cache | cached external product documents and refresh lifecycle | cached product-search service in `FoodDiary.Application.OpenFoodFacts` | Products consumes the service; external provider remains an integration adapter |
 | Dashboard | composed user-facing read model; owns no source aggregates | dashboard query/read services | Approved read models from contributing modules |
 
@@ -192,7 +192,7 @@ Products and Recipes are separate modules, even though both participate in the f
 
 ### Products ownership and API
 
-Products owns `Product` mutations and product overview/search projections. Other modules must not acquire product aggregate repositories. Consumers such as Meals/Consumptions, FavoriteProducts and ShoppingLists use `IProductLookupService`; presentation-oriented product lists use the overview read service.
+Products owns `Product` mutations and product overview/search projections. Other modules must not acquire product aggregate repositories. Consumers such as Meals/Meals, FavoriteProducts and ShoppingLists use `IProductLookupService`; presentation-oriented product lists use the overview read service.
 
 Products may collaborate with Users, Images, FavoriteProducts, RecentItems and external catalog sources such as USDA/Open Food Facts through narrow contracts. Its persistence registrations and aggregate configuration are kept in Products-owned infrastructure modules.
 
@@ -206,24 +206,24 @@ Other modules use `IRecipeLookupService` or `IRecipeAccessService` for existence
 
 The historical `AddFoodPersistence` registration remains only as a composition aggregator. It delegates to Products, Recipes, RecentItems and Meals registration modules and may not contain registrations itself. Product and Recipe aggregate EF configurations live under their respective owned configuration folders.
 
-## Consumption Diary and RecentItems boundaries
+## Meal Diary and RecentItems boundaries
 
-### Consumption Diary ownership
+### Meal Diary ownership
 
-The application feature is named `Consumptions`, while its domain and persistence vocabulary uses `Meal`. Together they form one Consumption Diary module. It owns `Meal`, `MealItem`, `MealAiSession` and `MealAiItem` mutations.
+The physically isolated `FoodDiary.Application.Meals` project and its domain and persistence vocabulary consistently use `Meal`/`Meals`. The Meal Diary module owns `Meal`, `MealItem`, `MealAiSession` and `MealAiItem` mutations.
 
-Other modules must not acquire `IMealRepository`, `IMealReadRepository` or `IMealWriteRepository`. User-facing consumers use `IConsumptionReadService`; reporting and calculation modules use purpose-specific read projections such as consumption, activity and product-nutrition contracts. FavoriteMeals now reads the source meal through `IConsumptionReadService` rather than materializing a foreign aggregate.
+Other modules must not acquire `IMealRepository`, `IMealReadRepository` or `IMealWriteRepository`. User-facing consumers use `IMealReadService`; reporting and calculation modules use purpose-specific read projections such as meal, activity and product-nutrition contracts. FavoriteMeals now reads the source meal through `IMealReadService` rather than materializing a foreign aggregate.
 
-Consumption Diary may use Products and Recipes lookup APIs for nutrition resolution, Images for asset lifecycle, Users access contracts, FavoriteMeals projections, RecentItems usage recording and shared Nutrition validation.
+Meal Diary may use Products and Recipes lookup APIs for nutrition resolution, Images for asset lifecycle, Users access contracts, FavoriteMeals projections, RecentItems usage recording and shared nutrition validation rules from Application Abstractions.
 
 ### RecentItems ownership
 
 RecentItems owns `RecentItem` and its ordering/update semantics. It exposes two semantic capabilities:
 
 - `IRecentItemUsageReadService` for recent product/recipe ordering;
-- `IRecentItemUsageRecorder` for recording usage after consumption mutations.
+- `IRecentItemUsageRecorder` for recording usage after meal mutations.
 
-Products, Recipes and Consumptions must not acquire RecentItems repositories. Repository contracts remain adapter-facing persistence details behind those capabilities.
+Products, Recipes and Meals must not acquire RecentItems repositories. Repository contracts remain adapter-facing persistence details behind those capabilities.
 
 ### Infrastructure placement
 
@@ -260,9 +260,9 @@ User/role EF configurations live in `Configurations/Users`. Refresh-token sessio
 
 Images owns `ImageAsset`, upload validation, cleanup policy and the durable object-deletion outbox. Its application capability is physically isolated in `FoodDiary.Application.Images`. Other modules use `IImageAssetAccessService` and `IImageAssetCleanupService`; they must not acquire image repositories. AI image analysis now resolves and validates ownership through the Images capability rather than loading `ImageAsset` persistence directly.
 
-FavoriteProducts, FavoriteRecipes and FavoriteMeals are three cohesive feature slices inside the single physical `FoodDiary.Application.Favorites` module. Each slice owns its favorite entity and exposes commands plus a semantic read service, while sharing one composition boundary because they have the same lifecycle, dependency profile and relationship-focused responsibility. Products, Recipes and Consumption Diary consume those read services rather than favorite repositories.
+FavoriteProducts, FavoriteRecipes and FavoriteMeals are three cohesive feature slices inside the single physical `FoodDiary.Application.Favorites` module. Each slice owns its favorite entity and exposes commands plus a semantic read service, while sharing one composition boundary because they have the same lifecycle, dependency profile and relationship-focused responsibility. Products, Recipes and Meal Diary consume those read services rather than favorite repositories.
 
-FavoriteMeals uses the narrow `IFavoriteMealSourceReadService` abstraction when creating a favorite from a source meal. Consumption Diary implements that source projection. Consumption Diary also consumes the abstraction-owned `IConsumptionFavoriteReadService`, implemented by Favorites for favorite IDs and overview projections. Both projects depend on contracts in `FoodDiary.Application.Abstractions`, so the physical Application projects remain acyclic and avoid mutual repository or project references.
+FavoriteMeals uses the narrow `IFavoriteMealSourceReadService` abstraction when creating a favorite from a source meal. Meal Diary implements that source projection. Meal Diary also consumes the abstraction-owned `IMealFavoriteReadService`, implemented by Favorites for favorite IDs and overview projections. Both projects depend on contracts in `FoodDiary.Application.Abstractions`, so the physical Application projects remain acyclic and avoid mutual repository or project references.
 
 Image EF configuration and object-deletion outbox configuration live in `Configurations/Images`. Favorite relationship configurations live together in `Configurations/Favorites`, while their repositories remain separated by owned persistence folders.
 
@@ -285,7 +285,7 @@ Health Tracking is a product area composed of four independently owned modules r
 
 Only the owning module may acquire its aggregate or write repositories. Other modules perform mutations through commands and consume stable read services or dedicated projection contracts. Sharing a tracking screen or contributing to the same health calculation does not grant repository ownership.
 
-Dashboard is a composed read model. Its production infrastructure adapter may query the shared database to build an optimized projection, but it owns none of the contributing aggregates and exposes no mutation capability. The application fallback read path is likewise projection-only. Statistics is physically isolated in `FoodDiary.Application.Statistics` and composes Dashboard and Body Metrics projections without owning their aggregates. Weekly Check-In, TDEE and Gamification are calculation/read modules: they may consume Body Metrics, Hydration, Exercises, Consumption Diary and Dashboard statistics projections, but must not acquire their aggregate or write repositories.
+Dashboard is a composed read model. Its production infrastructure adapter may query the shared database to build an optimized projection, but it owns none of the contributing aggregates and exposes no mutation capability. The application fallback read path is likewise projection-only. Statistics is physically isolated in `FoodDiary.Application.Statistics` and composes Dashboard and Body Metrics projections without owning their aggregates. Weekly Check-In, TDEE and Gamification are calculation/read modules: they may consume Body Metrics, Hydration, Exercises, Meal Diary and Dashboard statistics projections, but must not acquire their aggregate or write repositories.
 
 The Dashboard application fallback now consumes `IWeightEntryReadService`, `IWaistEntryReadService`, `IHydrationEntryReadService` and `IExerciseEntryReadService`; it no longer acquires even read repositories from Health Tracking. Health repository isolation is therefore complete for all foreign Application modules.
 
@@ -319,7 +319,7 @@ Executable hosts, Presentation, Initializer, JobManager and Integrations may not
 
 Repository-shaped cross-module projections are no longer allowlisted. Admin reporting/content/audit screens, Gamification, Weekly Check-In, Export, USDA micronutrient calculation and USDA product suggestions all use semantic owner capabilities. Architecture tests reject new foreign repository consumers, including read-model repositories.
 
-Consumption Diary exposes `IMealActivityReadService`, `IConsumptionExportReadService` and `IMealProductNutritionReadService` for calculation/reporting consumers. USDA exposes `IUsdaProductSuggestionReadService` to Products. These APIs preserve optimized read paths without exporting persistence vocabulary.
+Meal Diary exposes `IMealActivityReadService`, `IMealExportReadService` and `IMealProductNutritionReadService` for calculation/reporting consumers. USDA exposes `IUsdaProductSuggestionReadService` to Products. These APIs preserve optimized read paths without exporting persistence vocabulary.
 
 ## Administrative content capabilities
 

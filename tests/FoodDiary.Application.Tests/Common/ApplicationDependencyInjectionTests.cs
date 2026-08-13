@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Services;
-using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications;

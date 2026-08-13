@@ -1,25 +1,25 @@
 <fd-ui-dialog size="lg">
-    <header fdUiDialogHeader class="consumption-detail__header">
-        <div class="consumption-detail__header-row">
-            <div class="consumption-detail__title-group">
+    <header fdUiDialogHeader class="meal-detail__header">
+        <div class="meal-detail__header-row">
+            <div class="meal-detail__title-group">
                 <fd-ui-button
-                    class="consumption-detail__favorite-btn fd-favorite-button fd-inline-center"
+                    class="meal-detail__favorite-btn fd-favorite-button fd-inline-center"
                     appearance="plain-icon"
                     variant="secondary"
                     fill="text"
                     iconSize="sm"
                     [icon]="favoriteIcon()"
-                    [class.consumption-detail__favorite-btn--active]="isFavorite()"
+                    [class.meal-detail__favorite-btn--active]="isFavorite()"
                     [class.fd-favorite-button--active]="isFavorite()"
                     [disabled]="isFavoriteLoading()"
                     [fdUiHint]="favoriteAriaLabelKey() | translate"
                     [ariaLabel]="favoriteAriaLabelKey() | translate"
                     (click)="toggleFavorite()"
                 />
-                <div class="consumption-detail__heading">
-                    <h2 class="consumption-detail__title">{{ 'CONSUMPTION_DETAIL.TITLE' | translate }}</h2>
+                <div class="meal-detail__heading">
+                    <h2 class="meal-detail__title">{{ 'MEAL_DETAIL.TITLE' | translate }}</h2>
                     @if (formattedDate) {
-                        <p class="consumption-detail__subtitle">
+                        <p class="meal-detail__subtitle">
                             {{ formattedDate }}
                             @if (mealTypeLabel) {
                                 <span aria-hidden="true"> &middot; </span>
@@ -29,23 +29,18 @@
                     }
                 </div>
             </div>
-            <button type="button" class="consumption-detail__close-button" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
+            <button type="button" class="meal-detail__close-button" [attr.aria-label]="'COMMON.CLOSE' | translate" (click)="close()">
                 <span class="material-icons" aria-hidden="true">close</span>
             </button>
         </div>
-        <fd-ui-tabs
-            class="consumption-detail__tabs"
-            [tabs]="tabs"
-            [selectedValue]="activeTab"
-            (selectedValueChange)="onTabChange($event)"
-        />
+        <fd-ui-tabs class="meal-detail__tabs" [tabs]="tabs" [selectedValue]="activeTab" (selectedValueChange)="onTabChange($event)" />
     </header>
 
-    <div class="consumption-detail fd-stack fd-gap-lg">
+    <div class="meal-detail fd-stack fd-gap-lg">
         @switch (activeTab) {
             @case ('summary') {
                 <fd-meal-detail-summary
-                    [consumption]="consumption"
+                    [meal]="meal"
                     [macroSummaryBlocks]="macroSummaryBlocks()"
                     [preMealSatietyMeta]="preMealSatietyMeta"
                     [postMealSatietyMeta]="postMealSatietyMeta"
@@ -55,26 +50,21 @@
                 />
             }
             @case ('nutrients') {
-                <fd-nutrition-editor
-                    class="consumption-detail__nutrients"
-                    [form]="nutritionForm"
-                    [macroState]="macroBarState"
-                    [readonly]="true"
-                />
+                <fd-nutrition-editor class="meal-detail__nutrients" [form]="nutritionForm" [macroState]="macroBarState" [readonly]="true" />
             }
         }
     </div>
 
-    <div fdUiDialogFooter class="consumption-detail__footer fd-stack fd-gap-sm">
-        <div class="consumption-detail__actions fd-ui-actions fd-ui-actions--end">
+    <div fdUiDialogFooter class="meal-detail__footer fd-stack fd-gap-sm">
+        <div class="meal-detail__actions fd-ui-actions fd-ui-actions--end">
             <fd-ui-button size="md" variant="secondary" icon="replay" (click)="onRepeat()">
-                {{ 'CONSUMPTION_DETAIL.REPEAT_BUTTON' | translate }}
+                {{ 'MEAL_DETAIL.REPEAT_BUTTON' | translate }}
             </fd-ui-button>
             <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
-                {{ 'CONSUMPTION_DETAIL.EDIT_BUTTON' | translate }}
+                {{ 'MEAL_DETAIL.EDIT_BUTTON' | translate }}
             </fd-ui-button>
             <fd-ui-button size="md" variant="danger" icon="delete" (click)="onDelete()">
-                {{ 'CONSUMPTION_DETAIL.DELETE_BUTTON' | translate }}
+                {{ 'MEAL_DETAIL.DELETE_BUTTON' | translate }}
             </fd-ui-button>
         </div>
     </div>

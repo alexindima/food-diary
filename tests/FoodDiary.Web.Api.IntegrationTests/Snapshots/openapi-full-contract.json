@@ -1587,7 +1587,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/consumptions",
+      "Path": "/api/v{version}/meals",
       "Operations": [
         {
           "Method": "get",
@@ -1690,7 +1690,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/consumptions/overview",
+      "Path": "/api/v{version}/meals/overview",
       "Operations": [
         {
           "Method": "get",
@@ -1781,7 +1781,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/consumptions/{id}",
+      "Path": "/api/v{version}/meals/{id}",
       "Operations": [
         {
           "Method": "delete",
@@ -1844,7 +1844,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/consumptions/{id}/repeat",
+      "Path": "/api/v{version}/meals/{id}/repeat",
       "Operations": [
         {
           "Method": "post",

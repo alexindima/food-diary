@@ -50,7 +50,7 @@ export class MealDetailComponent {
     protected readonly favoriteIcon = this.mealDetailFacade.favoriteIcon;
     protected readonly favoriteAriaLabelKey = this.mealDetailFacade.favoriteAriaLabelKey;
 
-    protected readonly consumption: Meal;
+    protected readonly meal: Meal;
     protected readonly calories: number;
     protected readonly proteins: number;
     protected readonly fats: number;
@@ -62,8 +62,8 @@ export class MealDetailComponent {
     protected readonly preMealSatietyMeta: MealSatietyMeta;
     protected readonly postMealSatietyMeta: MealSatietyMeta;
     protected readonly tabs: FdUiTab[] = [
-        { value: 'summary', labelKey: 'CONSUMPTION_DETAIL.TABS.SUMMARY' },
-        { value: 'nutrients', labelKey: 'CONSUMPTION_DETAIL.TABS.NUTRIENTS' },
+        { value: 'summary', labelKey: 'MEAL_DETAIL.TABS.SUMMARY' },
+        { value: 'nutrients', labelKey: 'MEAL_DETAIL.TABS.NUTRIENTS' },
     ];
     protected activeTab: 'summary' | 'nutrients' = 'summary';
     protected readonly isItemPreviewExpanded = signal(false);
@@ -77,14 +77,14 @@ export class MealDetailComponent {
         const meal = inject<Meal>(FD_UI_DIALOG_DATA);
         const viewModel = buildMealDetailViewModel(meal, key => this.translate.instant(key));
 
-        this.consumption = meal;
+        this.meal = meal;
         this.calories = viewModel.calories;
         this.proteins = viewModel.proteins;
         this.fats = viewModel.fats;
         this.carbs = viewModel.carbs;
         this.fiber = viewModel.fiber;
         this.alcohol = viewModel.alcohol;
-        this.formattedDate = this.datePipe.transform(this.consumption.date, 'dd.MM.yyyy, HH:mm');
+        this.formattedDate = this.datePipe.transform(this.meal.date, 'dd.MM.yyyy, HH:mm');
         this.mealTypeLabel = viewModel.mealTypeLabel;
         this.preMealSatietyMeta = viewModel.preMealSatietyMeta;
         this.postMealSatietyMeta = viewModel.postMealSatietyMeta;
@@ -97,11 +97,11 @@ export class MealDetailComponent {
     }
 
     protected close(): void {
-        this.mealDetailFacade.close(this.consumption);
+        this.mealDetailFacade.close(this.meal);
     }
 
     protected toggleFavorite(): void {
-        this.mealDetailFacade.toggleFavorite(this.consumption);
+        this.mealDetailFacade.toggleFavorite(this.meal);
     }
 
     protected onTabChange(tab: string): void {
@@ -115,14 +115,14 @@ export class MealDetailComponent {
     }
 
     protected onRepeat(): void {
-        this.mealDetailFacade.repeat(this.consumption);
+        this.mealDetailFacade.repeat(this.meal);
     }
 
     protected onEdit(): void {
-        this.mealDetailFacade.edit(this.consumption);
+        this.mealDetailFacade.edit(this.meal);
     }
 
     protected onDelete(): void {
-        this.mealDetailFacade.delete(this.consumption);
+        this.mealDetailFacade.delete(this.meal);
     }
 }

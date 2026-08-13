@@ -10,7 +10,7 @@ import { mealResolver } from './meal.resolver';
 
 describe('mealResolver', () => {
     let mealServiceSpy: { getById: ReturnType<typeof vi.fn> };
-    let navSpy: { navigateToConsumptionListAsync: ReturnType<typeof vi.fn> };
+    let navSpy: { navigateToMealListAsync: ReturnType<typeof vi.fn> };
 
     const mockMeal: Partial<Meal> = { id: 'meal-1' };
 
@@ -24,7 +24,7 @@ describe('mealResolver', () => {
 
     beforeEach(() => {
         mealServiceSpy = { getById: vi.fn() };
-        navSpy = { navigateToConsumptionListAsync: vi.fn().mockResolvedValue(void 0) };
+        navSpy = { navigateToMealListAsync: vi.fn().mockResolvedValue(void 0) };
 
         TestBed.configureTestingModule({
             providers: [
@@ -50,7 +50,7 @@ describe('mealResolver', () => {
         expect(mealServiceSpy.getById).toHaveBeenCalledWith('meal-1');
     });
 
-    it('should navigate to consumption list when meal is null', () => {
+    it('should navigate to meal list when meal is null', () => {
         mealServiceSpy.getById.mockReturnValue(of(null));
 
         let resolved: Meal | null | undefined;
@@ -63,10 +63,10 @@ describe('mealResolver', () => {
         });
 
         expect(resolved).toBeNull();
-        expect(navSpy.navigateToConsumptionListAsync).toHaveBeenCalled();
+        expect(navSpy.navigateToMealListAsync).toHaveBeenCalled();
     });
 
-    it('should navigate to consumption list when service throws error', () => {
+    it('should navigate to meal list when service throws error', () => {
         mealServiceSpy.getById.mockReturnValue(throwError(() => new Error('not found')));
 
         let resolved: Meal | null | undefined;
@@ -79,6 +79,6 @@ describe('mealResolver', () => {
         });
 
         expect(resolved).toBeNull();
-        expect(navSpy.navigateToConsumptionListAsync).toHaveBeenCalled();
+        expect(navSpy.navigateToMealListAsync).toHaveBeenCalled();
     });
 });

@@ -24,19 +24,14 @@ import type { Recipe } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
 import type {
     CalorieMismatchWarning,
-    ConsumptionFormValues,
-    ConsumptionItemFormValues,
+    MealFormValues,
+    MealItemFormValues,
     MealNutritionSummaryState,
     NutritionTotals,
 } from '../../components/manage/meal-manage-lib/meal-manage.types';
-import { createConsumptionItemValue } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
+import { createMealItemValue } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
 import type { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog';
-import {
-    type Consumption,
-    type ConsumptionAiSessionManageDto,
-    type ConsumptionManageDto,
-    ConsumptionSourceType,
-} from '../../models/meal.data';
+import { type Meal, type MealAiSessionManageDto, type MealManageDto, MealSourceType } from '../../models/meal.data';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MEAL_MANAGE_DEFAULT_ITEM_AMOUNT } from './meal-manage.config';
 
@@ -80,22 +75,20 @@ export class MealManageFacade {
         return false;
     }
 
-    public async submitConsumptionAsync(consumption: Consumption | null, consumptionData: ConsumptionManageDto): Promise<Consumption> {
-        const savedConsumption = await (consumption !== null
-            ? firstValueFrom(this.mealService.update(consumption.id, consumptionData))
-            : firstValueFrom(this.mealService.create(consumptionData)));
+    public async submitMealAsync(meal: Meal | null, mealData: MealManageDto): Promise<Meal> {
+        const savedMeal = await (meal !== null
+            ? firstValueFrom(this.mealService.update(meal.id, mealData))
+            : firstValueFrom(this.mealService.create(mealData)));
         this.invalidation.reportMealMutation();
-        return savedConsumption;
+        return savedMeal;
     }
 
     public async showSuccessToastAndRedirectAsync(isEdit: boolean): Promise<void> {
-        this.toastService.success(
-            this.translateService.instant(isEdit ? 'CONSUMPTION_MANAGE.EDIT_SUCCESS' : 'CONSUMPTION_MANAGE.CREATE_SUCCESS'),
-        );
-        await this.navigationService.navigateToConsumptionListAsync();
+        this.toastService.success(this.translateService.instant(isEdit ? 'MEAL_MANAGE.EDIT_SUCCESS' : 'MEAL_MANAGE.CREATE_SUCCESS'));
+        await this.navigationService.navigateToMealListAsync();
     }
 
-    public async openEditAiPhotoSessionDialogAsync(session: ConsumptionAiSessionManageDto): Promise<ConsumptionAiSessionManageDto | null> {
+    public async openEditAiPhotoSessionDialogAsync(session: MealAiSessionManageDto): Promise<MealAiSessionManageDto | null> {
         const { MealPhotoRecognitionDialogComponent } =
             await import('../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog');
         const selection: ImageSelection | null =
@@ -108,8 +101,8 @@ export class MealManageFacade {
                 this.fdDialogService
                     .open<
                         MealPhotoRecognitionDialogComponent,
-                        { initialSelection: ImageSelection | null; initialSession: ConsumptionAiSessionManageDto | null; mode: 'edit' },
-                        ConsumptionAiSessionManageDto | null
+                        { initialSelection: ImageSelection | null; initialSession: MealAiSessionManageDto | null; mode: 'edit' },
+                        MealAiSessionManageDto | null
                     >(MealPhotoRecognitionDialogComponent, {
                         size: 'lg',
                         data: { initialSelection: selection, initialSession: session, mode: 'edit' },
@@ -119,40 +112,37 @@ export class MealManageFacade {
         );
     }
 
-    public addAiSession(
-        sessions: ConsumptionAiSessionManageDto[],
-        session: ConsumptionAiSessionManageDto,
-    ): ConsumptionAiSessionManageDto[] {
+    public addAiSession(sessions: MealAiSessionManageDto[], session: MealAiSessionManageDto): MealAiSessionManageDto[] {
         return [...sessions, session];
     }
 
-    public removeAiSession(sessions: ConsumptionAiSessionManageDto[], index: number): ConsumptionAiSessionManageDto[] {
+    public removeAiSession(sessions: MealAiSessionManageDto[], index: number): MealAiSessionManageDto[] {
         return sessions.filter((_, currentIndex) => currentIndex !== index);
     }
 
     public replaceAiSession(
-        sessions: ConsumptionAiSessionManageDto[],
+        sessions: MealAiSessionManageDto[],
         index: number,
-        nextSession: ConsumptionAiSessionManageDto,
-    ): ConsumptionAiSessionManageDto[] {
+        nextSession: MealAiSessionManageDto,
+    ): MealAiSessionManageDto[] {
         return sessions.map((item, currentIndex) => (currentIndex === index ? nextSession : item));
     }
 
-    public createConsumptionItem(
+    public createMealItem(
         product: Product | null = null,
         recipe: Recipe | null = null,
         amount: number | null = null,
-        sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
-    ): ConsumptionItemFormValues {
-        return createConsumptionItemValue(product, recipe, amount, sourceType);
+        sourceType: MealSourceType = MealSourceType.Product,
+    ): MealItemFormValues {
+        return createMealItemValue(product, recipe, amount, sourceType);
     }
 
-    public createConsumptionItemValue(
+    public createMealItemValue(
         product: Product | null = null,
         recipe: Recipe | null = null,
         amount: number | null = null,
-        sourceType: ConsumptionSourceType = ConsumptionSourceType.Product,
-    ): ConsumptionItemFormValues {
+        sourceType: MealSourceType = MealSourceType.Product,
+    ): MealItemFormValues {
         return {
             sourceType,
             product,
@@ -161,21 +151,17 @@ export class MealManageFacade {
         };
     }
 
-    public configureItemType(
-        item: ConsumptionItemFormValues,
-        type: ConsumptionSourceType,
-        clearSelection = false,
-    ): ConsumptionItemFormValues {
+    public configureItemType(item: MealItemFormValues, type: MealSourceType, clearSelection = false): MealItemFormValues {
         return {
             ...item,
             sourceType: type,
-            product: clearSelection && type === ConsumptionSourceType.Recipe ? null : item.product,
-            recipe: clearSelection && type === ConsumptionSourceType.Product ? null : item.recipe,
+            product: clearSelection && type === MealSourceType.Recipe ? null : item.product,
+            recipe: clearSelection && type === MealSourceType.Product ? null : item.recipe,
             amount: clearSelection ? null : item.amount,
         };
     }
 
-    public async openItemSelectionDialogAsync(initialTab: 'Product' | 'Recipe'): Promise<ConsumptionItemFormValues | null> {
+    public async openItemSelectionDialogAsync(initialTab: 'Product' | 'Recipe'): Promise<MealItemFormValues | null> {
         const selection = await firstValueFrom(
             this.fdDialogService
                 .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
@@ -190,16 +176,11 @@ export class MealManageFacade {
         }
 
         if (selection.type === 'Product') {
-            return createConsumptionItemValue(
-                selection.product,
-                null,
-                this.resolveProductAmount(selection.product),
-                ConsumptionSourceType.Product,
-            );
+            return createMealItemValue(selection.product, null, this.resolveProductAmount(selection.product), MealSourceType.Product);
         }
 
         const amount = await this.resolveRecipeServingsToGramsAsync(selection.recipe, MEAL_MANAGE_DEFAULT_ITEM_AMOUNT);
-        return createConsumptionItemValue(null, selection.recipe, amount, ConsumptionSourceType.Recipe);
+        return createMealItemValue(null, selection.recipe, amount, MealSourceType.Recipe);
     }
 
     public async resolveRecipeServingsToGramsAsync(recipe: Recipe | null, servingsAmount: number): Promise<number> {
@@ -216,8 +197,8 @@ export class MealManageFacade {
     }
 
     public buildNutritionSummaryStateFromValues(
-        formValue: ConsumptionFormValues,
-        aiSessions: ConsumptionAiSessionManageDto[],
+        formValue: MealFormValues,
+        aiSessions: MealAiSessionManageDto[],
         calorieMismatchThreshold: number,
     ): MealNutritionSummaryState {
         const autoTotals = this.calculateAutoNutritionTotalsFromValues(formValue.items, aiSessions);
@@ -229,7 +210,7 @@ export class MealManageFacade {
         };
     }
 
-    public buildManualNutritionPatchFromTotals(totals: NutritionTotals): Partial<ConsumptionFormValues> {
+    public buildManualNutritionPatchFromTotals(totals: NutritionTotals): Partial<MealFormValues> {
         return {
             manualCalories: roundNutrient(totals.calories),
             manualProteins: roundNutrient(totals.proteins),
@@ -240,7 +221,7 @@ export class MealManageFacade {
         };
     }
 
-    public getManualNutritionTotalsFromValue(formValue: ConsumptionFormValues): NutritionTotals {
+    public getManualNutritionTotalsFromValue(formValue: MealFormValues): NutritionTotals {
         return {
             calories: this.getNumericValue(formValue.manualCalories),
             proteins: this.getNumericValue(formValue.manualProteins),
@@ -263,18 +244,15 @@ export class MealManageFacade {
         return MEAL_MANAGE_DEFAULT_ITEM_AMOUNT;
     }
 
-    private calculateAutoNutritionTotalsFromValues(
-        items: ConsumptionItemFormValues[],
-        aiSessions: ConsumptionAiSessionManageDto[],
-    ): NutritionTotals {
+    private calculateAutoNutritionTotalsFromValues(items: MealItemFormValues[], aiSessions: MealAiSessionManageDto[]): NutritionTotals {
         const aiTotals = this.getAiNutritionTotals(aiSessions);
         return items.reduce((totals, item) => this.addItemNutritionTotalsFromValue(totals, item), { ...aiTotals });
     }
 
-    private addItemNutritionTotalsFromValue(totals: NutritionTotals, item: ConsumptionItemFormValues): NutritionTotals {
+    private addItemNutritionTotalsFromValue(totals: NutritionTotals, item: MealItemFormValues): NutritionTotals {
         const amount = item.amount ?? 0;
 
-        if (item.sourceType === ConsumptionSourceType.Product) {
+        if (item.sourceType === MealSourceType.Product) {
             return this.addProductNutritionTotals(totals, item.product, amount);
         }
 
@@ -318,7 +296,7 @@ export class MealManageFacade {
         return totals;
     }
 
-    private getAiNutritionTotals(aiSessions: ConsumptionAiSessionManageDto[]): NutritionTotals {
+    private getAiNutritionTotals(aiSessions: MealAiSessionManageDto[]): NutritionTotals {
         return aiSessions.reduce(
             (totals, session) =>
                 session.items.reduce(
@@ -337,7 +315,7 @@ export class MealManageFacade {
     }
 
     private buildCalorieMismatchWarningFromValue(
-        formValue: ConsumptionFormValues,
+        formValue: MealFormValues,
         calorieMismatchThreshold: number,
     ): CalorieMismatchWarning | null {
         if (formValue.isNutritionAutoCalculated) {

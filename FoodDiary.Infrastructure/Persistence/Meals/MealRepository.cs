@@ -53,7 +53,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         IQueryable<Meal> query = context.Meals;
 
         if (includeItems) {
-            query = IncludeConsumptionGraph(query);
+            query = IncludeMealGraph(query);
         }
 
         if (!asTracking) {
@@ -83,7 +83,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         int totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
         int skip = (pageNumber - 1) * pageSize;
 
-        IOrderedQueryable<Meal> itemsQuery = IncludeConsumptionGraph(filteredQuery)
+        IOrderedQueryable<Meal> itemsQuery = IncludeMealGraph(filteredQuery)
             .OrderByDescending(m => m.Date)
             .ThenByDescending(m => m.CreatedOnUtc);
 
@@ -95,7 +95,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         return (items, totalItems);
     }
 
-    public async Task<(IReadOnlyList<MealConsumptionReadModel> Items, int TotalItems)> GetPagedConsumptionReadModelsAsync(
+    public async Task<(IReadOnlyList<MealProjectionReadModel> Items, int TotalItems)> GetPagedMealProjectionsAsync(
         UserId userId,
         int page,
         int limit,
@@ -113,25 +113,25 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         int totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
         int skip = (pageNumber - 1) * pageSize;
 
-        List<Meal> meals = await IncludeConsumptionGraph(filteredQuery)
+        List<Meal> meals = await IncludeMealGraph(filteredQuery)
             .OrderByDescending(m => m.Date)
             .ThenByDescending(m => m.CreatedOnUtc)
             .Skip(skip)
             .Take(pageSize)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        return ([.. meals.Select(ToConsumptionReadModel)], totalItems);
+        return ([.. meals.Select(ToMealProjectionReadModel)], totalItems);
     }
 
-    public async Task<MealConsumptionReadModel?> GetByIdConsumptionReadModelAsync(
+    public async Task<MealProjectionReadModel?> GetByIdMealProjectionAsync(
         MealId id,
         UserId userId,
         CancellationToken cancellationToken = default) {
-        Meal? meal = await IncludeConsumptionGraph(context.Meals.AsNoTracking())
+        Meal? meal = await IncludeMealGraph(context.Meals.AsNoTracking())
             .Where(m => m.Id == id && m.UserId == userId)
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
-        return meal is null ? null : ToConsumptionReadModel(meal);
+        return meal is null ? null : ToMealProjectionReadModel(meal);
     }
 
     public async Task<int> GetCountAsync(
@@ -188,7 +188,7 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         return query;
     }
 
-    private static IQueryable<Meal> IncludeConsumptionGraph(IQueryable<Meal> query) =>
+    private static IQueryable<Meal> IncludeMealGraph(IQueryable<Meal> query) =>
         query
             .AsSplitQuery()
             .Include(m => m.Items)
@@ -208,20 +208,20 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         DateTime from = StartOfUtcDay(dateFrom);
         DateTime toExclusive = StartOfNextUtcDay(dateTo);
 
-        return await IncludeConsumptionGraph(context.Meals.AsNoTracking())
+        return await IncludeMealGraph(context.Meals.AsNoTracking())
             .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
             .OrderBy(m => m.Date)
             .ThenBy(m => m.CreatedOnUtc)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<IReadOnlyList<MealConsumptionReadModel>> GetByPeriodConsumptionReadModelsAsync(
+    public async Task<IReadOnlyList<MealProjectionReadModel>> GetByPeriodMealProjectionsAsync(
         UserId userId,
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
         IReadOnlyList<Meal> meals = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-        return [.. meals.Select(ToConsumptionReadModel)];
+        return [.. meals.Select(ToMealProjectionReadModel)];
     }
 
     public async Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
@@ -287,8 +287,8 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private static MealConsumptionReadModel ToConsumptionReadModel(Meal meal) {
-        return new MealConsumptionReadModel(
+    private static MealProjectionReadModel ToMealProjectionReadModel(Meal meal) {
+        return new MealProjectionReadModel(
             meal.Id.Value,
             meal.Date,
             meal.MealType,
@@ -310,18 +310,18 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             meal.ManualAlcohol,
             meal.PreMealSatietyLevel,
             meal.PostMealSatietyLevel,
-            ToConsumptionItemReadModels(meal),
-            ToConsumptionAiSessionReadModels(meal));
+            ToMealItemProjectionReadModels(meal),
+            ToMealAiSessionProjectionReadModels(meal));
     }
 
-    private static List<MealConsumptionItemReadModel> ToConsumptionItemReadModels(Meal meal) {
+    private static List<MealItemProjectionReadModel> ToMealItemProjectionReadModels(Meal meal) {
         return [.. meal.Items
             .OrderBy(static item => item.Id.Value)
-            .Select(ToConsumptionItemReadModel)];
+            .Select(ToMealItemProjectionReadModel)];
     }
 
-    private static MealConsumptionItemReadModel ToConsumptionItemReadModel(MealItem item) {
-        return new MealConsumptionItemReadModel(
+    private static MealItemProjectionReadModel ToMealItemProjectionReadModel(MealItem item) {
+        return new MealItemProjectionReadModel(
             item.Id.Value,
             item.MealId.Value,
             item.Amount,
@@ -359,14 +359,14 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         return item.Recipe?.Servings;
     }
 
-    private static List<MealConsumptionAiSessionReadModel> ToConsumptionAiSessionReadModels(Meal meal) {
+    private static List<MealAiSessionProjectionReadModel> ToMealAiSessionProjectionReadModels(Meal meal) {
         return [.. meal.AiSessions
             .OrderBy(static session => session.RecognizedAtUtc)
-            .Select(ToConsumptionAiSessionReadModel)];
+            .Select(ToMealAiSessionProjectionReadModel)];
     }
 
-    private static MealConsumptionAiSessionReadModel ToConsumptionAiSessionReadModel(MealAiSession session) {
-        return new MealConsumptionAiSessionReadModel(
+    private static MealAiSessionProjectionReadModel ToMealAiSessionProjectionReadModel(MealAiSession session) {
+        return new MealAiSessionProjectionReadModel(
             session.Id.Value,
             session.MealId.Value,
             session.ImageAssetId?.Value,
@@ -377,11 +377,11 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             session.Notes,
             [.. session.Items
                 .OrderBy(static item => item.Id.Value)
-                .Select(ToConsumptionAiItemReadModel)]);
+                .Select(ToMealAiItemProjectionReadModel)]);
     }
 
-    private static MealConsumptionAiItemReadModel ToConsumptionAiItemReadModel(MealAiItem item) {
-        return new MealConsumptionAiItemReadModel(
+    private static MealAiItemProjectionReadModel ToMealAiItemProjectionReadModel(MealAiItem item) {
+        return new MealAiItemProjectionReadModel(
             item.Id.Value,
             item.MealAiSessionId.Value,
             item.NameEn,

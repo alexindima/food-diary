@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Gamification.Queries.GetGamification;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
-using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;

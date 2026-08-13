@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
+using FoodDiary.Presentation.Api.Features.Meals.Requests;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -181,16 +181,16 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
             new UpdateFavoriteProductHttpRequest("Favorite chicken", 185));
         updateFavoriteResponse.EnsureSuccessStatusCode();
 
-        HttpResponseMessage consumptionResponse = await client.PostAsJsonAsync(
-            "/api/v1/consumptions",
-            new CreateConsumptionHttpRequest(
+        HttpResponseMessage mealResponse = await client.PostAsJsonAsync(
+            "/api/v1/meals",
+            new CreateMealHttpRequest(
                 DateTime.UtcNow.Date,
                 "Lunch",
                 Comment: null,
                 ImageUrl: null,
                 ImageAssetId: null,
-                [new ConsumptionItemHttpRequest(favoriteProductId, RecipeId: null, 200)]));
-        consumptionResponse.EnsureSuccessStatusCode();
+                [new MealItemHttpRequest(favoriteProductId, RecipeId: null, 200)]));
+        mealResponse.EnsureSuccessStatusCode();
 
         HttpResponseMessage overviewResponse = await client.GetAsync("/api/v1/products/overview?page=1&limit=10&includePublic=true&recentLimit=10&favoriteLimit=10");
         HttpResponseMessage recentResponse = await client.GetAsync("/api/v1/products/recent?limit=10&includePublic=true");

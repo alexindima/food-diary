@@ -100,7 +100,7 @@ export function createNutrientBarsSignal(snapshot: Signal<DashboardSnapshot | nu
     });
 }
 
-export function createConsumptionRingSignal(
+export function createMealRingSignal(
     snapshot: Signal<DashboardSnapshot | null>,
     weeklyConsumed: Signal<number>,
     nutrientBars: Signal<NutrientBar[]>,

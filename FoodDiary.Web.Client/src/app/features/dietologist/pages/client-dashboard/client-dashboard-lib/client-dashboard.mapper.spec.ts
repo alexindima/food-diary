@@ -148,7 +148,7 @@ function createDashboardSnapshot(): unknown {
                     totalProteins: 42,
                     totalFats: 22,
                     totalCarbs: 64,
-                    items: [{ id: 'item-1', consumptionId: 'meal-1', amount: 150, product: { name: 'Chicken' } }],
+                    items: [{ id: 'item-1', mealId: 'meal-1', amount: 150, product: { name: 'Chicken' } }],
                 },
             ],
             total: 1,

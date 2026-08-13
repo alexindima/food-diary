@@ -5,7 +5,7 @@ import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
-import type { ConsumptionAiItem, Meal } from '../../../models/meal.data';
+import type { Meal,MealAiItem } from '../../../models/meal.data';
 import { MEAL_DETAIL_DEFAULT_SATIETY_EMOJI, MEAL_DETAIL_MIN_MACRO_BAR_PERCENT } from './meal-detail.config';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from './meal-detail.types';
 
@@ -139,9 +139,9 @@ function buildItemPreview(meal: Meal, translate: (key: string) => string): MealD
     const manualItems = meal.items.map(item => {
         const unit = item.product?.baseUnit;
         return {
-            name: item.product?.name ?? item.recipe?.name ?? translate('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM'),
+            name: item.product?.name ?? item.recipe?.name ?? translate('MEAL_DETAIL.SUMMARY.UNKNOWN_ITEM'),
             amount: item.amount,
-            unitKey: unit !== undefined ? `GENERAL.UNITS.${unit}` : 'CONSUMPTION_DETAIL.SERVINGS',
+            unitKey: unit !== undefined ? `GENERAL.UNITS.${unit}` : 'MEAL_DETAIL.SERVINGS',
             unitText: null,
         };
     });
@@ -160,9 +160,9 @@ function buildItemPreview(meal: Meal, translate: (key: string) => string): MealD
     return [...manualItems, ...aiItems];
 }
 
-function getAiItemName(item: ConsumptionAiItem, translate: (key: string) => string): string {
+function getAiItemName(item: MealAiItem, translate: (key: string) => string): string {
     const itemName = item.nameLocal?.trim() ?? item.nameEn.trim();
-    return itemName.length > 0 ? itemName : translate('CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM');
+    return itemName.length > 0 ? itemName : translate('MEAL_DETAIL.SUMMARY.UNKNOWN_ITEM');
 }
 
 function getAiItemUnitKey(unit: string): string | null {

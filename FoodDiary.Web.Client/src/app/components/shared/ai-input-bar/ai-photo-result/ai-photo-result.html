@@ -23,7 +23,7 @@
         class="ai-photo-result__workspace"
         [class.ai-photo-result__workspace--with-products]="resolvedImageUrl() || resolvedResults().length > 0"
     >
-        <section class="ai-photo-result__media" [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PHOTO_STAGE' | translate">
+        <section class="ai-photo-result__media" [attr.aria-label]="'MEAL_MANAGE.PHOTO_AI_DIALOG.PHOTO_STAGE' | translate">
             <fd-ai-photo-preview
                 [imageUrl]="resolvedImageUrl()"
                 [sourceText]="sourceText()"
@@ -42,19 +42,19 @@
         </section>
 
         @if (resolvedImageUrl() || (!resolvedIsAnalyzing() && resolvedResults().length)) {
-            <section class="ai-photo-result__products" [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCTS_PANEL' | translate">
+            <section class="ai-photo-result__products" [attr.aria-label]="'MEAL_MANAGE.PHOTO_AI_DIALOG.PRODUCTS_PANEL' | translate">
                 <header class="ai-photo-result__products-header">
                     <div>
                         <h2 class="ai-photo-result__products-title fd-ui-card-title">
-                            {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}
+                            {{ 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE' | translate }}
                         </h2>
                         @if (resolvedResults().length > 0) {
                             <span class="ai-photo-result__products-count fd-ui-caption">
-                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.PRODUCT_COUNT' | translate: { count: resolvedResults().length } }}
+                                {{ 'MEAL_MANAGE.PHOTO_AI_DIALOG.PRODUCT_COUNT' | translate: { count: resolvedResults().length } }}
                             </span>
                         } @else if (resolvedIsAnalyzing()) {
                             <span class="ai-photo-result__products-count fd-ui-caption" role="status" aria-live="polite">
-                                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
+                                {{ 'MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
                             </span>
                         }
                     </div>

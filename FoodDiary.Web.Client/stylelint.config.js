@@ -143,7 +143,7 @@ export default {
                 'src/app/components/shared/ai-input-bar/ai-input-bar.scss',
                 'src/app/components/shared/image-upload-field/image-upload-field.scss',
                 'src/app/features/dashboard/pages/_dashboard-shell.scss',
-                'src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.scss',
+                'src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.scss',
                 'projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.scss',
             ],
             rules: {

@@ -41,7 +41,7 @@ public sealed class AddFavoriteMealCommandHandler(
             .GetAsync(userId, mealId, cancellationToken)
             .ConfigureAwait(false);
         if (source is null) {
-            return Result.Failure<FavoriteMealModel>(Errors.Consumption.NotFound(command.MealId));
+            return Result.Failure<FavoriteMealModel>(Errors.Meal.NotFound(command.MealId));
         }
 
         FavoriteMeal? existing = await favoriteMealRepository.GetByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false);

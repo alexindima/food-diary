@@ -10,7 +10,7 @@
             "MIN_LENGTH": "Password must be at least 6 characters",
             "MATCH": "Passwords must be the same"
         },
-        "CONSUMPTION": {
+        "MEAL": {
             "INVALID_MIN_AMOUNT": "Value must be greater than 0"
         },
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
@@ -93,7 +93,7 @@
         "REGISTER": "Register",
         "PRODUCTS": "Products",
         "RECIPES": "Recipes",
-        "CONSUMPTION": "Consumption",
+        "MEAL": "Meal",
         "STATISTICS": "Statistics",
         "USER": "User",
         "ACCOUNT": "Account",
@@ -297,7 +297,7 @@
         "PRODUCTS": "Products",
         "PRODUCTS_DESCRIPTION": "Browse and manage your food products database.",
         "MEALS": "Meals",
-        "MEALS_DESCRIPTION": "View and manage your daily meals and consumption history.",
+        "MEALS_DESCRIPTION": "View and manage your daily meals and meal history.",
         "RECIPES": "Recipes",
         "RECIPES_DESCRIPTION": "Create and manage your favorite recipes with nutrition info.",
         "SHOPPING_LISTS": "Shopping Lists",
@@ -340,7 +340,7 @@
         "MEAL_PREP_PLANNER_PAGE": "Meal Prep Planner for Weekly Menus and Shopping",
         "MEAL_PREP_PLANNER_PAGE_DESCRIPTION": "Plan meal prep in Food Diary with repeatable recipes, weekly menus, shopping lists, and nutrition goals in one workflow."
     },
-    "CONSUMPTION_RING": {
+    "MEAL_RING": {
         "TITLE": "Calories: day & week",
         "UNIT": "kcal",
         "DAILY_PROGRESS": "Today",
@@ -382,7 +382,7 @@
         "OTHER": "Other"
     },
     "PRODUCT_CARD": {
-        "ADD_TO_CONSUMPTION": "Add to meal",
+        "ADD_TO_MEAL": "Add to meal",
         "NO_BARCODE": "No barcode",
         "QUALITY_SCORE": "Healthiness"
     },
@@ -529,7 +529,7 @@
         "CONFIRM_BUTTON": "Confirm",
         "CANCEL_BUTTON": "Cancel",
         "SERVING": "Serving",
-        "ADD_TO_CONSUMPTION": "Add to consumption",
+        "ADD_TO_MEAL": "Add to meal",
         "CREATE_SUCCESS": "Product created successfully!",
         "EDIT_SUCCESS": "Product edited successfully!",
         "GO_TO_HOME_BUTTON": "Go to Home",
@@ -558,12 +558,12 @@
     },
     "DASHBOARD": {
         "MEALS_TITLE": "Today's meals",
-        "MEALS_EMPTY": "No consumptions logged for this date yet.",
-        "MEALS_VIEW_ALL": "Open consumptions",
+        "MEALS_EMPTY": "No meals logged for this date yet.",
+        "MEALS_VIEW_ALL": "Open meals",
         "ADD_WITH_AI_BUTTON": "Add with AI",
         "SUBTITLE": "Daily overview",
-        "TITLE": "Consumption for today",
-        "TITLE_FOR_DATE": "Consumption for {{ date }}",
+        "TITLE": "Meal for today",
+        "TITLE_FOR_DATE": "Meal for {{ date }}",
         "PROGRESS_TITLE": "Daily progress",
         "CONSUMED_TODAY": "Consumed today",
         "GOAL_LABEL": "Daily goal",
@@ -610,9 +610,9 @@
             "PLANNING": "Planning"
         },
         "ACTIONS": {
-            "ADD_CONSUMPTION_TITLE": "Add consumption",
-            "ADD_CONSUMPTION_DESCRIPTION": "Log a meal in a few taps.",
-            "ADD_CONSUMPTION_BUTTON": "Add consumption",
+            "ADD_MEAL_TITLE": "Add meal",
+            "ADD_MEAL_DESCRIPTION": "Log a meal in a few taps.",
+            "ADD_MEAL_BUTTON": "Add meal",
             "OPEN_APPEARANCE": "Appearance",
             "OPEN_NOTIFICATION_SETTINGS": "Notifications",
             "OPEN_DATE_PICKER": "Choose date",
@@ -714,11 +714,11 @@
         "SATIETY_BEFORE": "Hunger before",
         "SATIETY_AFTER": "Satiety after"
     },
-    "CONSUMPTION_MANAGE": {
+    "MEAL_MANAGE": {
         "MANUAL_ITEM_EDIT": "Edit manual item",
         "MANUAL_ITEM_EDIT_NAMED": "Edit manual item: {{name}}",
-        "EDIT_TITLE": "Edit Consumption",
-        "ADD_TITLE": "Add Consumption",
+        "EDIT_TITLE": "Edit Meal",
+        "ADD_TITLE": "Add Meal",
         "SUBTITLE": "Log foods for this meal",
         "GENERAL_GROUP_TITLE": "General information",
         "SUMMARY_TITLE": "Summary",
@@ -756,10 +756,10 @@
         "SAVE_BUTTON": "Save",
         "ADD_BUTTON": "Add",
         "SUBMIT_DISABLED_ITEMS_HINT": "Add at least one product, recipe, or AI item before saving this meal.",
-        "EDIT_SUCCESS": "Consumption successfully updated!",
-        "CREATE_SUCCESS": "Consumption successfully created!",
+        "EDIT_SUCCESS": "Meal successfully updated!",
+        "CREATE_SUCCESS": "Meal successfully created!",
         "GO_TO_HOME_BUTTON": "Go to Home",
-        "GO_TO_CONSUMPTION_LIST_BUTTON": "Go to Consumptions List",
+        "GO_TO_MEAL_LIST_BUTTON": "Go to Meals List",
         "CHOOSE_DATE_TIME": "Choose date and time",
         "NO_PRODUCTS_ADDED": "No products added",
         "ADD_PRODUCT": "Add product",
@@ -886,7 +886,7 @@
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this form."
         }
     },
-    "QUICK_CONSUMPTION": {
+    "QUICK_MEAL": {
         "TITLE": "Meal draft",
         "ITEMS": "items",
         "AMOUNT": "Amount",
@@ -4001,10 +4001,10 @@
         "CONFIRM": "Delete",
         "CANCEL": "Cancel"
     },
-    "CONSUMPTION_LIST": {
+    "MEAL_LIST": {
         "TITLE": "Meals",
         "SUBTITLE": "Manage your logged meals and snacks",
-        "ADD_CONSUMPTION_BUTTON": "Add Consumption",
+        "ADD_MEAL_BUTTON": "Add Meal",
         "ADD_MANUALLY_BUTTON": "Add manually",
         "MANUAL_ADD_OR": "or",
         "EXPORT_CSV": "Export CSV",
@@ -4032,12 +4032,12 @@
         "FILTER_AI_WITHOUT": "Without AI",
         "ACTIVE_FILTERS_LABEL": "Active filters",
         "ACTIVE_FILTERS_EDIT": "Edit",
-        "NO_CONSUMPTIONS_FOUND": "No consumptions found",
+        "NO_MEALS_FOUND": "No meals found",
         "EMPTY_TITLE": "No meals logged yet",
         "EMPTY_COPY": "Start with your first meal or snack entry so this timeline can show your recent nutrition history.",
         "NO_RESULTS_TITLE": "No meals for this range",
         "NO_RESULTS_COPY": "Try another date range or clear the filter to see more meal entries.",
-        "ADD_FIRST_CONSUMPTION_BUTTON": "Add first meal",
+        "ADD_FIRST_MEAL_BUTTON": "Add first meal",
         "DATE": "Date",
         "ITEM_COUNT": "Item count",
         "MEAL_TYPE": "Meal type",
@@ -4096,8 +4096,8 @@
         "ACCEPT": "I Accept",
         "CANCEL": "Cancel"
     },
-    "CONSUMPTION_DETAIL": {
-        "TITLE": "Consumption Details",
+    "MEAL_DETAIL": {
+        "TITLE": "Meal Details",
         "ITEMS_LIST": "Items ({{count}} pcs):",
         "MEAL_TYPE": "Meal type",
         "TOTAL_CALORIES": "Total Calories:",
@@ -4111,7 +4111,7 @@
         "CONFIRM_DELETE_TITLE": "Are you sure you want to delete the record from",
         "CANCEL_BUTTON": "Cancel",
         "CONFIRM_BUTTON": "Confirm",
-        "ENTITY_NAME": "consumption",
+        "ENTITY_NAME": "meal",
         "ADD_FAVORITE": "Add to favorites",
         "REMOVE_FAVORITE": "Remove from favorites",
         "TABS": {
@@ -4633,13 +4633,13 @@
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
     },
-    "TODAY_CONSUMPTION": {
-        "TITLE": "Today's Consumption",
-        "TOTAL_CONSUMPTION": "Total Consumption",
+    "TODAY_MEAL": {
+        "TITLE": "Today's Meal",
+        "TOTAL_MEAL": "Total Meal",
         "NUTRIENTS": "Nutrients",
-        "ADD_CONSUMPTION": "Add Consumption",
+        "ADD_MEAL": "Add Meal",
         "ADD_PRODUCT": "Add Product",
-        "MANAGE_CONSUMPTIONS": "Manage Consumptions",
+        "MANAGE_MEALS": "Manage Meals",
         "MANAGE_PRODUCTS": "Manage Products",
         "VIEW_STATISTICS": "View Statistics"
     },
@@ -5696,10 +5696,10 @@
     },
     "QUICK_ACTIONS": {
         "TITLE": "Quick actions",
-        "ADD_CONSUMPTION": {
-            "TITLE": "Add consumption",
+        "ADD_MEAL": {
+            "TITLE": "Add meal",
             "DESCRIPTION": "Log a meal in a few taps.",
-            "BUTTON": "Add consumption"
+            "BUTTON": "Add meal"
         },
         "ADD_PRODUCT": {
             "TITLE": "Create product",

@@ -25,7 +25,7 @@ describe('MealListPlannedComponent', () => {
         const mealCard = fixture.debugElement.query(By.directive(MealCardComponent)).componentInstance as MealCardComponent;
         mealCard.open.emit();
 
-        expect(getFixtureText(fixture)).toContain('CONSUMPTION_LIST.PLANNED_TITLE');
+        expect(getFixtureText(fixture)).toContain('MEAL_LIST.PLANNED_TITLE');
         expect(getFixtureText(fixture)).toContain('(1)');
         expect(mealCard.showDate()).toBe(true);
         expect(mealCard.favoriteLoading()).toBe(true);

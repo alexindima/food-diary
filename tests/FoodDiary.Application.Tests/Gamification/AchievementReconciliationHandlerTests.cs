@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Gamification.Services;

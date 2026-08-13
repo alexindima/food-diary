@@ -21,9 +21,9 @@ foreach ($extractedModule in @($catalog.extractedApplicationModules)) {
         throw "Extracted module '$module' is not represented as an isolated source project."
     }
 }
-if ('Meals' -notin @($manifest.modules.Consumptions.sourceMappings.domainAreas) -or
-    'Meals' -notin @($manifest.modules.Consumptions.sourceMappings.persistenceAreas)) {
-    throw 'Consumptions does not map its Meals domain/persistence vocabulary explicitly.'
+if ('Meals' -notin @($manifest.modules.Meals.sourceMappings.domainAreas) -or
+    'Meals' -notin @($manifest.modules.Meals.sourceMappings.persistenceAreas)) {
+    throw 'Meals does not map its Meals domain/persistence vocabulary explicitly.'
 }
 $owners = @{}
 foreach ($property in @($manifest.modules.PSObject.Properties)) {

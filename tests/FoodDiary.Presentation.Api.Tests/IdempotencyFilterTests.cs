@@ -43,7 +43,7 @@ public sealed class IdempotencyFilterTests {
     public async Task OnActionExecutionAsync_WhenStoreMisses_ExecutesNextAndCompletesReservation() {
         var store = new InMemoryIdempotencyStore(TimeProvider.System);
         var filter = new IdempotencyFilter(store);
-        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/consumptions", "key-2", userId: "user-456");
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/meals", "key-2", userId: "user-456");
         ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
         bool nextCalled = false;
 

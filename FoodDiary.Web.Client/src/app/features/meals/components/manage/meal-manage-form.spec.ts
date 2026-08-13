@@ -10,15 +10,15 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { NavigationService } from '../../../../services/navigation.service';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
 import {
-    type Consumption,
-    type ConsumptionAiSessionManageDto,
-    type ConsumptionManageDto,
-    ConsumptionSourceType,
     createEmptyProductSnapshot,
+    type Meal,
+    type MealAiSessionManageDto,
+    type MealManageDto,
+    MealSourceType,
 } from '../../models/meal.data';
 import { MealManageFormComponent } from './meal-manage-form';
-import type { ConsumptionItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
-import { createConsumptionItemValue } from './meal-manage-lib/meal-manage-form.mapper';
+import type { MealItemFormValues, MealNutritionSummaryState, NutritionTotals } from './meal-manage-lib/meal-manage.types';
+import { createMealItemValue } from './meal-manage-lib/meal-manage-form.mapper';
 
 const PRODUCT_AMOUNT = 150;
 const TOTAL_CALORIES = 300;
@@ -41,14 +41,14 @@ type MealManageFacadeMock = {
     convertRecipeServingsToGrams: ReturnType<typeof vi.fn>;
     configureItemType: ReturnType<typeof vi.fn>;
     confirmDiscardChangesAsync: ReturnType<typeof vi.fn>;
-    createConsumptionItem: ReturnType<typeof vi.fn>;
+    createMealItem: ReturnType<typeof vi.fn>;
     ensurePremiumAccess: ReturnType<typeof vi.fn>;
     getManualNutritionTotalsFromValue: ReturnType<typeof vi.fn>;
     openEditAiPhotoSessionDialogAsync: ReturnType<typeof vi.fn>;
     removeAiSession: ReturnType<typeof vi.fn>;
     replaceAiSession: ReturnType<typeof vi.fn>;
     showSuccessToastAndRedirectAsync: ReturnType<typeof vi.fn>;
-    submitConsumptionAsync: ReturnType<typeof vi.fn>;
+    submitMealAsync: ReturnType<typeof vi.fn>;
 };
 
 type MealManageFormSetup = {
@@ -56,42 +56,42 @@ type MealManageFormSetup = {
     fixture: ComponentFixture<MealManageFormComponent>;
     mealManageFacade: MealManageFacadeMock;
     navigationService: {
-        navigateToConsumptionListAsync: ReturnType<typeof vi.fn>;
+        navigateToMealListAsync: ReturnType<typeof vi.fn>;
     };
 };
 
 describe('MealManageFormComponent input behavior', () => {
-    it('should repopulate form when consumption with the same id is refreshed', async () => {
+    it('should repopulate form when meal with the same id is refreshed', async () => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
         mealManageFacade.buildNutritionSummaryStateFromValues
             .mockReturnValueOnce(createNutritionSummaryStateWithCalories(TOTAL_CALORIES))
             .mockReturnValueOnce(createNutritionSummaryStateWithCalories(UPDATED_TOTAL_CALORIES));
 
-        fixture.componentRef.setInput('consumption', createConsumption({ totalCalories: TOTAL_CALORIES }));
+        fixture.componentRef.setInput('meal', createMeal({ totalCalories: TOTAL_CALORIES }));
         fixture.detectChanges();
-        expect(component['consumptionFormModel']().comment).toBe('Comment');
+        expect(component['mealFormModel']().comment).toBe('Comment');
 
-        fixture.componentRef.setInput('consumption', createConsumption({ totalCalories: UPDATED_TOTAL_CALORIES }));
+        fixture.componentRef.setInput('meal', createMeal({ totalCalories: UPDATED_TOTAL_CALORIES }));
         fixture.detectChanges();
 
-        expect(component['consumptionFormModel']().comment).toBe('Updated comment');
+        expect(component['mealFormModel']().comment).toBe('Updated comment');
     });
 });
 
 describe('MealManageFormComponent native submit behavior', () => {
     it('should prevent native form submit when saving', async () => {
         const { component, fixture, mealManageFacade } = await setupComponentAsync();
-        mealManageFacade.submitConsumptionAsync.mockResolvedValue(createConsumption({ totalCalories: TOTAL_CALORIES }));
-        component['patchConsumptionFormModel']({
+        mealManageFacade.submitMealAsync.mockResolvedValue(createMeal({ totalCalories: TOTAL_CALORIES }));
+        component['patchMealFormModel']({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'BREAKFAST',
             items: [
-                createConsumptionItemValue(
+                createMealItemValue(
                     { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
-                    ConsumptionSourceType.Product,
+                    MealSourceType.Product,
                 ),
             ],
         });
@@ -106,27 +106,27 @@ describe('MealManageFormComponent native submit behavior', () => {
 
         expect(wasNotCancelled).toBe(false);
         expect(submitEvent.defaultPrevented).toBe(true);
-        expect(mealManageFacade.submitConsumptionAsync).toHaveBeenCalledOnce();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
     });
 });
 
 describe('MealManageFormComponent submit behavior', () => {
     it('should submit create DTO and reset add form after successful create', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        mealManageFacade.submitConsumptionAsync.mockResolvedValue(createConsumption({ totalCalories: TOTAL_CALORIES }));
-        component['patchConsumptionFormModel']({
+        mealManageFacade.submitMealAsync.mockResolvedValue(createMeal({ totalCalories: TOTAL_CALORIES }));
+        component['patchMealFormModel']({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'BREAKFAST',
             comment: 'Lunch',
         });
-        component['patchConsumptionFormModel']({
+        component['patchMealFormModel']({
             items: [
-                createConsumptionItemValue(
+                createMealItemValue(
                     { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
-                    ConsumptionSourceType.Product,
+                    MealSourceType.Product,
                 ),
             ],
         });
@@ -134,9 +134,9 @@ describe('MealManageFormComponent submit behavior', () => {
         await component['onSubmitAsync']();
         await waitForAsyncTasksAsync();
 
-        expect(mealManageFacade.submitConsumptionAsync).toHaveBeenCalledWith(
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledWith(
             null,
-            expect.objectContaining<Partial<ConsumptionManageDto>>({
+            expect.objectContaining<Partial<MealManageDto>>({
                 mealType: 'BREAKFAST',
                 comment: 'Lunch',
                 isNutritionAutoCalculated: true,
@@ -150,14 +150,14 @@ describe('MealManageFormComponent submit behavior', () => {
 
     it('should show global error and skip submit when form is invalid', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        component['patchConsumptionFormModel']({
+        component['patchMealFormModel']({
             date: '',
             items: [
-                createConsumptionItemValue(
+                createMealItemValue(
                     { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
-                    ConsumptionSourceType.Product,
+                    MealSourceType.Product,
                 ),
             ],
         });
@@ -165,26 +165,26 @@ describe('MealManageFormComponent submit behavior', () => {
         await component['onSubmitAsync']();
         await waitForAsyncTasksAsync();
 
-        expect(mealManageFacade.submitConsumptionAsync).not.toHaveBeenCalled();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
         expect(component['globalError']()).toBe('FORM_ERRORS.UNKNOWN');
     });
 
     it('should show backend validation message when submit fails', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
         const serverMessage = 'Product is not accessible.';
-        mealManageFacade.submitConsumptionAsync.mockRejectedValue(new HttpErrorResponse({ error: { message: serverMessage } }));
-        component['patchConsumptionFormModel']({
+        mealManageFacade.submitMealAsync.mockRejectedValue(new HttpErrorResponse({ error: { message: serverMessage } }));
+        component['patchMealFormModel']({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'BREAKFAST',
         });
-        component['patchConsumptionFormModel']({
+        component['patchMealFormModel']({
             items: [
-                createConsumptionItemValue(
+                createMealItemValue(
                     { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
-                    ConsumptionSourceType.Product,
+                    MealSourceType.Product,
                 ),
             ],
         });
@@ -200,7 +200,7 @@ describe('MealManageFormComponent submit behavior', () => {
 describe('MealManageFormComponent item validation', () => {
     it('should show a specific error and skip submit when no items are added', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        component['patchConsumptionFormModel']({
+        component['patchMealFormModel']({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'BREAKFAST',
@@ -210,7 +210,7 @@ describe('MealManageFormComponent item validation', () => {
         await component['onSubmitAsync']();
         await waitForAsyncTasksAsync();
 
-        expect(mealManageFacade.submitConsumptionAsync).not.toHaveBeenCalled();
+        expect(mealManageFacade.submitMealAsync).not.toHaveBeenCalled();
         expect(component['globalError']()).toBe('FORM_ERRORS.NON_EMPTY_ARRAY');
     });
 });
@@ -218,22 +218,22 @@ describe('MealManageFormComponent item validation', () => {
 describe('MealManageFormComponent duplicate submit guard', () => {
     it('should ignore repeated submit while create is in progress', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        let resolveSubmit: ((value: Consumption) => void) | undefined;
-        mealManageFacade.submitConsumptionAsync.mockReturnValue(
-            new Promise<Consumption>(resolve => {
+        let resolveSubmit: ((value: Meal) => void) | undefined;
+        mealManageFacade.submitMealAsync.mockReturnValue(
+            new Promise<Meal>(resolve => {
                 resolveSubmit = resolve;
             }),
         );
-        component['patchConsumptionFormModel']({
+        component['patchMealFormModel']({
             date: '2026-04-05',
             time: '10:30',
             mealType: 'BREAKFAST',
             items: [
-                createConsumptionItemValue(
+                createMealItemValue(
                     { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
                     null,
                     PRODUCT_AMOUNT,
-                    ConsumptionSourceType.Product,
+                    MealSourceType.Product,
                 ),
             ],
         });
@@ -241,10 +241,10 @@ describe('MealManageFormComponent duplicate submit guard', () => {
         const firstSubmit = component['onSubmitAsync']();
         await component['onSubmitAsync']();
 
-        expect(mealManageFacade.submitConsumptionAsync).toHaveBeenCalledOnce();
+        expect(mealManageFacade.submitMealAsync).toHaveBeenCalledOnce();
         expect(component['isSubmitting']()).toBe(true);
 
-        resolveSubmit?.(createConsumption({ totalCalories: TOTAL_CALORIES }));
+        resolveSubmit?.(createMeal({ totalCalories: TOTAL_CALORIES }));
         await firstSubmit;
 
         expect(component['isSubmitting']()).toBe(false);
@@ -255,7 +255,7 @@ describe('MealManageFormComponent item and AI behavior', () => {
     it('should open manual item dialog for a reusable empty item', async () => {
         const { component } = await setupComponentAsync();
 
-        component['addConsumptionItem']();
+        component['addMealItem']();
         await waitForAsyncTasksAsync();
 
         expect(component['items'].length).toBe(1);
@@ -263,7 +263,7 @@ describe('MealManageFormComponent item and AI behavior', () => {
 
     it('should append AI sessions and remove them by index', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        const session: ConsumptionAiSessionManageDto = { notes: 'recognized', items: [] };
+        const session: MealAiSessionManageDto = { notes: 'recognized', items: [] };
         mealManageFacade.addAiSession.mockReturnValue([session]);
         mealManageFacade.removeAiSession.mockReturnValue([]);
 
@@ -296,8 +296,8 @@ describe('MealManageFormComponent item and AI behavior', () => {
 
     it('should replace AI session after successful edit', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        const session: ConsumptionAiSessionManageDto = { notes: 'recognized', items: [] };
-        const updatedSession: ConsumptionAiSessionManageDto = { notes: 'updated', items: [] };
+        const session: MealAiSessionManageDto = { notes: 'recognized', items: [] };
+        const updatedSession: MealAiSessionManageDto = { notes: 'updated', items: [] };
         component['aiSessions'].set([session]);
         mealManageFacade.openEditAiPhotoSessionDialogAsync.mockResolvedValueOnce(updatedSession);
         mealManageFacade.replaceAiSession.mockReturnValueOnce([updatedSession]);
@@ -318,8 +318,8 @@ describe('MealManageFormComponent nutrition and satiety behavior', () => {
         component['onNutritionModeChange']('manual');
 
         expect(component['nutritionMode']()).toBe('manual');
-        expect(component['consumptionFormModel']().isNutritionAutoCalculated).toBe(false);
-        expect(component['consumptionFormModel']().manualCalories).toBe(TOTAL_CALORIES);
+        expect(component['mealFormModel']().isNutritionAutoCalculated).toBe(false);
+        expect(component['mealFormModel']().manualCalories).toBe(TOTAL_CALORIES);
     });
 
     it('should normalize satiety level changes and mark control dirty', async () => {
@@ -327,46 +327,46 @@ describe('MealManageFormComponent nutrition and satiety behavior', () => {
 
         component['onSatietyLevelChange']('preMealSatietyLevel', NORMALIZED_SATIETY_LEVEL);
 
-        expect(component['consumptionFormModel']().preMealSatietyLevel).toBe(NORMALIZED_SATIETY_LEVEL);
+        expect(component['mealFormModel']().preMealSatietyLevel).toBe(NORMALIZED_SATIETY_LEVEL);
         expect(component['preMealSatietyLevel']()).toBe(NORMALIZED_SATIETY_LEVEL);
     });
 });
 
 describe('MealManageFormComponent navigation', () => {
-    it('should navigate to consumption list on cancel', async () => {
+    it('should navigate to meal list on cancel', async () => {
         const { component, navigationService } = await setupComponentAsync();
 
         await component['onCancelAsync']();
 
-        expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalled();
+        expect(navigationService.navigateToMealListAsync).toHaveBeenCalled();
     });
 
     it('should stay on the form when discarding dirty changes is cancelled', async () => {
         const { component, mealManageFacade, navigationService } = await setupComponentAsync();
-        component['consumptionSignalForm'].comment().markAsDirty();
+        component['mealSignalForm'].comment().markAsDirty();
         mealManageFacade.confirmDiscardChangesAsync.mockResolvedValueOnce(false);
 
         await component['onCancelAsync']();
 
         expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
-        expect(navigationService.navigateToConsumptionListAsync).not.toHaveBeenCalled();
+        expect(navigationService.navigateToMealListAsync).not.toHaveBeenCalled();
     });
 
     it('should leave the form when discarding dirty changes is confirmed', async () => {
         const { component, mealManageFacade, navigationService } = await setupComponentAsync();
-        component['consumptionSignalForm'].comment().markAsDirty();
+        component['mealSignalForm'].comment().markAsDirty();
 
         await component['onCancelAsync']();
 
         expect(mealManageFacade.confirmDiscardChangesAsync).toHaveBeenCalledOnce();
-        expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalledOnce();
+        expect(navigationService.navigateToMealListAsync).toHaveBeenCalledOnce();
     });
 });
 
 async function setupComponentAsync(): Promise<MealManageFormSetup> {
     const mealManageFacade = createMealManageFacadeMock();
     const navigationService = {
-        navigateToConsumptionListAsync: vi.fn().mockResolvedValue(true),
+        navigateToMealListAsync: vi.fn().mockResolvedValue(true),
     };
 
     await TestBed.configureTestingModule({
@@ -414,7 +414,7 @@ async function setupComponentAsync(): Promise<MealManageFormSetup> {
 
 function createMealManageFacadeMock(): MealManageFacadeMock {
     return {
-        addAiSession: vi.fn((_sessions: ConsumptionAiSessionManageDto[], session: ConsumptionAiSessionManageDto) => [session]),
+        addAiSession: vi.fn((_sessions: MealAiSessionManageDto[], session: MealAiSessionManageDto) => [session]),
         buildManualNutritionPatchFromTotals: vi.fn((totals: NutritionTotals) => ({
             manualCalories: totals.calories,
             manualProteins: totals.proteins,
@@ -425,19 +425,19 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
         })),
         buildNutritionSummaryStateFromValues: vi.fn((_formValue, _aiSessions, _threshold) => createNutritionSummaryState()),
         confirmDiscardChangesAsync: vi.fn().mockResolvedValue(true),
-        configureItemType: vi.fn((item: ConsumptionItemFormValues) => item),
+        configureItemType: vi.fn((item: MealItemFormValues) => item),
         convertRecipeGramsToServings: vi.fn((_recipe, amount: number) => amount),
         convertRecipeServingsToGrams: vi.fn((_recipe, amount: number) => amount),
-        createConsumptionItem: vi.fn(() => createConsumptionItemValue()),
+        createMealItem: vi.fn(() => createMealItemValue()),
         ensurePremiumAccess: vi.fn().mockReturnValue(true),
         getManualNutritionTotalsFromValue: vi.fn().mockReturnValue(EMPTY_TOTALS),
         openEditAiPhotoSessionDialogAsync: vi.fn().mockResolvedValue(null),
-        removeAiSession: vi.fn((sessions: ConsumptionAiSessionManageDto[], index: number) =>
+        removeAiSession: vi.fn((sessions: MealAiSessionManageDto[], index: number) =>
             sessions.filter((_session, currentIndex) => currentIndex !== index),
         ),
         replaceAiSession: vi.fn(),
         showSuccessToastAndRedirectAsync: vi.fn().mockResolvedValue(void 0),
-        submitConsumptionAsync: vi.fn().mockResolvedValue(null),
+        submitMealAsync: vi.fn().mockResolvedValue(null),
     };
 }
 
@@ -459,10 +459,10 @@ function createNutritionSummaryStateWithCalories(calories: number): MealNutritio
     };
 }
 
-function createConsumption(overrides: Partial<Consumption> = {}): Consumption {
+function createMeal(overrides: Partial<Meal> = {}): Meal {
     const totalCalories = overrides.totalCalories ?? TOTAL_CALORIES;
     return {
-        id: 'consumption-1',
+        id: 'meal-1',
         date: '2026-04-05T10:30:00',
         mealType: 'Breakfast',
         comment: totalCalories === UPDATED_TOTAL_CALORIES ? 'Updated comment' : 'Comment',

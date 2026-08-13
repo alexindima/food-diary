@@ -1,9 +1,6 @@
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
-using FoodDiary.Application.Consumptions.Common;
-using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Export.Services;
-using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Application.Products.Services;
@@ -17,14 +14,6 @@ namespace FoodDiary.Application;
 
 public static partial class DependencyInjection {
     private static void AddFoodModules(this IServiceCollection services) {
-        services.AddScoped<IConsumptionReadService, ConsumptionReadService>();
-        services.AddScoped<IFavoriteMealSourceReadService>(static provider =>
-            provider.GetRequiredService<IConsumptionReadService>() as IFavoriteMealSourceReadService
-            ?? throw new InvalidOperationException($"{nameof(IConsumptionReadService)} must implement {nameof(IFavoriteMealSourceReadService)}."));
-        services.AddScoped<IMealActivityReadService, MealActivityReadService>();
-        services.AddScoped<IConsumptionExportReadService, ConsumptionExportReadService>();
-        services.AddScoped<IMealProductNutritionReadService, MealProductNutritionReadService>();
-        services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.AddScoped<IExportDiaryReadService, ExportDiaryReadService>();
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();

@@ -42,7 +42,7 @@ describe('MealListContentComponent', () => {
         const button = host.querySelector<HTMLElement>('fd-ui-button');
         button?.click();
 
-        expect(getFixtureText(fixture)).toContain('CONSUMPTION_LIST.EMPTY_TITLE');
+        expect(getFixtureText(fixture)).toContain('MEAL_LIST.EMPTY_TITLE');
         expect(mealAddSpy).toHaveBeenCalledOnce();
     });
 
@@ -51,8 +51,8 @@ describe('MealListContentComponent', () => {
 
         fixture.detectChanges();
 
-        expect(getFixtureText(fixture)).toContain('CONSUMPTION_LIST.NO_RESULTS_TITLE');
-        expect(getFixtureText(fixture)).not.toContain('CONSUMPTION_LIST.ADD_FIRST_CONSUMPTION_BUTTON');
+        expect(getFixtureText(fixture)).toContain('MEAL_LIST.NO_RESULTS_TITLE');
+        expect(getFixtureText(fixture)).not.toContain('MEAL_LIST.ADD_FIRST_MEAL_BUTTON');
     });
 
     it('should pass meal loading state and emit card events with selected meal', async () => {

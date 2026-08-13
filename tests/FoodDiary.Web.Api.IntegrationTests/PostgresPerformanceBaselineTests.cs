@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
+using FoodDiary.Presentation.Api.Features.Meals.Requests;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
@@ -26,7 +26,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     private static readonly TimeSpan RefreshLatencyBudget = TimeSpan.FromMilliseconds(1800);
     private static readonly TimeSpan ProductListLatencyBudget = TimeSpan.FromMilliseconds(400);
     private static readonly TimeSpan RecipeListLatencyBudget = TimeSpan.FromMilliseconds(400);
-    private static readonly TimeSpan ConsumptionListLatencyBudget = TimeSpan.FromMilliseconds(500);
+    private static readonly TimeSpan MealListLatencyBudget = TimeSpan.FromMilliseconds(500);
     private static readonly TimeSpan ImageUploadUrlLatencyBudget = TimeSpan.FromMilliseconds(300);
     private static readonly TimeSpan BillingOverviewLatencyBudget = TimeSpan.FromMilliseconds(300);
 
@@ -112,15 +112,15 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     }
 
     [RequiresDockerFact]
-    public async Task Consumptions_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget() {
+    public async Task Meals_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget() {
         HttpClient client = factory.CreateClient();
-        string email = $"perf-consumptions-{Guid.NewGuid():N}@example.com";
+        string email = $"perf-meals-{Guid.NewGuid():N}@example.com";
         AuthPayload authPayload = await RegisterAsync(client, email);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
-        await SeedConsumptionsAsync(client, SeedCount);
+        await SeedMealsAsync(client, SeedCount);
 
-        const string url = "/api/v1/consumptions?page=1&limit=25&dateFrom=2026-03-01&dateTo=2026-03-31";
+        const string url = "/api/v1/meals?page=1&limit=25&dateFrom=2026-03-01&dateTo=2026-03-31";
 
         _ = await client.GetAsync(url);
 
@@ -135,8 +135,8 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.Equal(31, payload.TotalItems);
         Assert.Equal(25, payload.Data.Count);
         Assert.True(
-            stopwatch.Elapsed <= ConsumptionListLatencyBudget,
-            string.Create(CultureInfo.InvariantCulture, $"Expected GET /api/v1/consumptions first page within monthly range to stay within {ConsumptionListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
+            stopwatch.Elapsed <= MealListLatencyBudget,
+            string.Create(CultureInfo.InvariantCulture, $"Expected GET /api/v1/meals first page within monthly range to stay within {MealListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     [RequiresDockerFact]
@@ -258,12 +258,12 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         }
     }
 
-    private static async Task SeedConsumptionsAsync(HttpClient client, int count) {
+    private static async Task SeedMealsAsync(HttpClient client, int count) {
         HttpResponseMessage createProductResponse = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
                 Barcode: null,
-                "Perf Consumption Product",
+                "Perf Meal Product",
                 Brand: null,
                 "Unknown",
                 Category: null,
@@ -289,17 +289,17 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         MealType[] mealTypes = [MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack];
 
         foreach (int index in Enumerable.Range(0, count)) {
-            HttpResponseMessage createConsumptionResponse = await client.PostAsJsonAsync(
-                "/api/v1/consumptions",
-                new CreateConsumptionHttpRequest(
+            HttpResponseMessage createMealResponse = await client.PostAsJsonAsync(
+                "/api/v1/meals",
+                new CreateMealHttpRequest(
                     startDate.AddDays(index),
                     mealTypes[index % mealTypes.Length].ToString(),
                     string.Create(CultureInfo.InvariantCulture, $"Perf Meal {index:D4}"),
                     ImageUrl: null,
                     ImageAssetId: null,
-                    [new ConsumptionItemHttpRequest(product.Id, RecipeId: null, 100)],
+                    [new MealItemHttpRequest(product.Id, RecipeId: null, 100)],
                     IsNutritionAutoCalculated: true)).ConfigureAwait(false);
-            await AssertStatusCodeAsync(HttpStatusCode.Created, createConsumptionResponse).ConfigureAwait(false);
+            await AssertStatusCodeAsync(HttpStatusCode.Created, createMealResponse).ConfigureAwait(false);
         }
     }
 

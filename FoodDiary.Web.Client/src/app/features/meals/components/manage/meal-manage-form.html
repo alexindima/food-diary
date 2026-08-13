@@ -1,8 +1,8 @@
-<div class="consumption-manage fd-stack" fdPageContainer>
+<div class="meal-manage fd-stack" fdPageContainer>
     <fd-page-header
-        class="consumption-manage__header"
+        class="meal-manage__header"
         [title]="manageHeaderState().titleKey | translate"
-        [subtitle]="'CONSUMPTION_MANAGE.SUBTITLE' | translate"
+        [subtitle]="'MEAL_MANAGE.SUBTITLE' | translate"
         [backVisible]="true"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
@@ -13,20 +13,20 @@
             variant="secondary"
             fill="outline"
             icon="help_outline"
-            [fdUiHint]="'CONSUMPTION_MANAGE.TOUR.START_TOUR' | translate"
-            [ariaLabel]="'CONSUMPTION_MANAGE.TOUR.START_TOUR' | translate"
+            [fdUiHint]="'MEAL_MANAGE.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'MEAL_MANAGE.TOUR.START_TOUR' | translate"
             (click)="startMealManageTour()"
         />
     </fd-page-header>
 
     <fd-page-body>
-        <form class="consumption-manage__form fd-stack fd-gap-lg" [formRoot]="consumptionSignalForm" [attr.aria-busy]="isSubmitting()">
+        <form class="meal-manage__form fd-stack fd-gap-lg" [formRoot]="mealSignalForm" [attr.aria-busy]="isSubmitting()">
             @let generalErrors = generalFieldErrors();
-            <div class="consumption-manage__grid fd-grid fd-gap-xl">
-                <div class="consumption-manage__column consumption-manage__column--primary fd-stack fd-gap-lg">
+            <div class="meal-manage__grid fd-grid fd-gap-xl">
+                <div class="meal-manage__column meal-manage__column--primary fd-stack fd-gap-lg">
                     <fd-meal-general-info
                         data-tour-id="meal-manage-general"
-                        [consumptionForm]="consumptionSignalForm"
+                        [mealForm]="mealSignalForm"
                         [mealTypeSelectOptions]="mealTypeSelectOptions"
                         [generalErrors]="generalErrors"
                     />
@@ -40,7 +40,7 @@
                         [isProcessing]="false"
                         [renderVersion]="0"
                         (mealRecognized)="onAiMealRecognized($event)"
-                        (addItem)="addConsumptionItem()"
+                        (addItem)="addMealItem()"
                         (editItem)="openManualItemDialog($event)"
                         (removeItem)="removeItem($event)"
                         (openItemSelect)="onItemSourceClick($event)"
@@ -57,16 +57,16 @@
                     />
                 </div>
 
-                <div class="consumption-manage__column consumption-manage__column--secondary fd-stack fd-gap-lg">
+                <div class="meal-manage__column meal-manage__column--secondary fd-stack fd-gap-lg">
                     <fd-meal-nutrition-sidebar
                         data-tour-id="meal-manage-nutrition"
-                        [consumptionForm]="consumptionSignalForm"
+                        [mealForm]="mealSignalForm"
                         [macroBarState]="macroBarState()"
                         [nutritionMode]="nutritionMode()"
                         [nutritionWarning]="nutritionWarning()"
                         [caloriesError]="caloriesError()"
                         [macrosError]="macrosError()"
-                        [isEditMode]="consumption() !== null"
+                        [isEditMode]="meal() !== null"
                         [isSubmitting]="isSubmitting()"
                         [submitDisabled]="isSubmitDisabled()"
                         [globalError]="globalError()"

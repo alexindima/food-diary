@@ -4,19 +4,19 @@ using FoodDiary.Application.Abstractions.Meals.Models;
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
-    private static double EffectiveCalories(MealConsumptionReadModel meal) =>
+    private static double EffectiveCalories(MealProjectionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalCalories : meal.ManualCalories ?? meal.TotalCalories;
 
-    private static double EffectiveProteins(MealConsumptionReadModel meal) =>
+    private static double EffectiveProteins(MealProjectionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalProteins : meal.ManualProteins ?? meal.TotalProteins;
 
-    private static double EffectiveFats(MealConsumptionReadModel meal) =>
+    private static double EffectiveFats(MealProjectionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalFats : meal.ManualFats ?? meal.TotalFats;
 
-    private static double EffectiveCarbs(MealConsumptionReadModel meal) =>
+    private static double EffectiveCarbs(MealProjectionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalCarbs : meal.ManualCarbs ?? meal.TotalCarbs;
 
-    private static double EffectiveFiber(MealConsumptionReadModel meal) =>
+    private static double EffectiveFiber(MealProjectionReadModel meal) =>
         meal.IsNutritionAutoCalculated ? meal.TotalFiber : meal.ManualFiber ?? meal.TotalFiber;
 
     private static string FormatNumber(double value, int decimals) =>

@@ -113,7 +113,7 @@ function Get-ScopeAlignment([string]$ObjectiveText, [string[]]$Paths) {
     $normalizedObjective = ([string]$ObjectiveText).ToLowerInvariant()
     $aliases = @{
         'dashboard' = @('dashboard')
-        'meal' = @('meal', 'meals', 'consumption')
+        'meal' = @('meal', 'meals', 'meal')
         'food' = @('food', 'meal', 'meals', 'products')
         'photo' = @('photo', 'image', 'vision')
         'annotation' = @('annotation', 'photo', 'image', 'vision')

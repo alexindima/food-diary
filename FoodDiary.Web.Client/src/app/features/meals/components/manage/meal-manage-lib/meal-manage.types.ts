@@ -1,13 +1,13 @@
 import type { ImageSelection } from '../../../../../shared/models/image-upload.data';
 import type { Product } from '../../../../products/models/product.data';
 import type { Recipe } from '../../../../recipes/models/recipe.data';
-import type { ConsumptionSourceType } from '../../../models/meal.data';
+import type { MealSourceType } from '../../../models/meal.data';
 
-export type ConsumptionFormValues = {
+export type MealFormValues = {
     date: string;
     time: string;
     mealType: string | null;
-    items: ConsumptionItemFormValues[];
+    items: MealItemFormValues[];
     comment: string | null;
     imageUrl: ImageSelection | null;
     isNutritionAutoCalculated: boolean;
@@ -21,8 +21,8 @@ export type ConsumptionFormValues = {
     postMealSatietyLevel: number | null;
 };
 
-export type ConsumptionItemFormValues = {
-    sourceType: ConsumptionSourceType;
+export type MealItemFormValues = {
+    sourceType: MealSourceType;
     product: Product | null;
     recipe: Recipe | null;
     amount: number | null;

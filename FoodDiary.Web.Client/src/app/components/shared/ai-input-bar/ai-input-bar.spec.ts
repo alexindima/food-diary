@@ -374,7 +374,7 @@ describe('AiInputBarComponent photo recognition', () => {
 
         component['onPhotoSelected']({ url: 'https://example.com/photo.jpg', assetId: 'asset-1' });
 
-        expect(component['photoNutritionErrorKey']()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+        expect(component['photoNutritionErrorKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
         expect(component['photoIsNutritionLoading']()).toBe(false);
     });
 });

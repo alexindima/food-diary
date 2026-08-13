@@ -2,7 +2,7 @@ namespace FoodDiary.Application.Abstractions.Meals.Common;
 
 public interface IMealRepository :
     IMealReadRepository,
-    IMealConsumptionReadRepository,
+    IMealProjectionReadRepository,
     IMealActivityReadRepository,
     IMealProductNutritionReadRepository,
     IMealWriteRepository;

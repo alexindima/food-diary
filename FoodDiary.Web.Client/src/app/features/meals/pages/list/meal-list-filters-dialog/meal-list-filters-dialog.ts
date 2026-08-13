@@ -65,9 +65,9 @@ export class MealListFiltersDialogComponent {
     protected caloriesFromValue: number | string | null = this.data.caloriesFrom ?? null;
     protected caloriesToValue: number | string | null = this.data.caloriesTo ?? null;
     protected readonly binaryOptions: FdUiSegmentedToggleOption[] = [
-        { value: 'any', label: this.translate.instant('CONSUMPTION_LIST.FILTER_ANY') },
-        { value: 'yes', label: this.translate.instant('CONSUMPTION_LIST.FILTER_YES') },
-        { value: 'no', label: this.translate.instant('CONSUMPTION_LIST.FILTER_NO') },
+        { value: 'any', label: this.translate.instant('MEAL_LIST.FILTER_ANY') },
+        { value: 'yes', label: this.translate.instant('MEAL_LIST.FILTER_YES') },
+        { value: 'no', label: this.translate.instant('MEAL_LIST.FILTER_NO') },
     ];
     protected imageValue: 'any' | 'yes' | 'no' = this.toBinaryValue(this.data.hasImage ?? null);
     protected aiValue: 'any' | 'yes' | 'no' = this.toBinaryValue(this.data.hasAiSession ?? null);

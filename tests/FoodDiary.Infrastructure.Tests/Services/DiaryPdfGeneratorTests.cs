@@ -126,7 +126,7 @@ public sealed class DiaryPdfGeneratorTests {
 
     [Fact]
     public void CalculateMealItemNutrition_WhenItemHasNoProductOrRecipe_ReturnsZeroNutrition() {
-        var item = new MealConsumptionItemReadModel(
+        var item = new MealItemProjectionReadModel(
             Guid.NewGuid(),
             Guid.NewGuid(),
             Amount: 1,
@@ -169,7 +169,7 @@ public sealed class DiaryPdfGeneratorTests {
     public void LayoutComposer_RendersImageCardAndEmptyMealsTableBranches() {
         var userId = UserId.New();
         Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
-        MealConsumptionReadModel mealReadModel = ToReadModel(meal);
+        MealProjectionReadModel mealReadModel = ToReadModel(meal);
         byte[] imageBytes = CreatePngBytes(width: 12, height: 12);
         object cardReport = CreateReportData([mealReadModel], mealImages: new Dictionary<Guid, byte[]> {
             [mealReadModel.Id] = imageBytes,
@@ -487,7 +487,7 @@ public sealed class DiaryPdfGeneratorTests {
     public void MealItemFormatting_ReturnsFallbacksSuffixesAndNutrition() {
         var userId = UserId.New();
         Meal emptyMeal = CreateMeal(userId, DateTime.UtcNow, 0, 0, 0, 0, 0);
-        MealConsumptionReadModel emptyMealReadModel = ToReadModel(emptyMeal);
+        MealProjectionReadModel emptyMealReadModel = ToReadModel(emptyMeal);
         object report = CreateReportData([emptyMealReadModel]);
 
         Assert.Equal("not specified", InvokePrivateStatic<string>("FormatMealItemsList", emptyMealReadModel, report));
@@ -785,11 +785,11 @@ public sealed class DiaryPdfGeneratorTests {
         meal.UpdateImage(dataUrl);
         var generator = new DiaryPdfGenerator();
 
-        MealConsumptionReadModel mealReadModel = ToReadModel(meal);
+        MealProjectionReadModel mealReadModel = ToReadModel(meal);
         IReadOnlyDictionary<Guid, byte[]> images = await InvokePrivateInstance<Task<IReadOnlyDictionary<Guid, byte[]>>>(
             generator,
             "LoadMealImagesAsync",
-            (IReadOnlyList<MealConsumptionReadModel>)[mealReadModel],
+            (IReadOnlyList<MealProjectionReadModel>)[mealReadModel],
             CancellationToken.None);
 
         Assert.True(images.ContainsKey(mealReadModel.Id));
@@ -823,7 +823,7 @@ public sealed class DiaryPdfGeneratorTests {
         return meal;
     }
 
-    private static MealConsumptionReadModel ToReadModel(Meal meal) =>
+    private static MealProjectionReadModel ToReadModel(Meal meal) =>
         new(
             meal.Id.Value,
             meal.Date,
@@ -849,7 +849,7 @@ public sealed class DiaryPdfGeneratorTests {
             [.. meal.Items.OrderBy(static item => item.Id.Value).Select(ToReadModel)],
             [.. meal.AiSessions.OrderBy(static session => session.RecognizedAtUtc).Select(ToReadModel)]);
 
-    private static MealConsumptionItemReadModel ToReadModel(MealItem item) =>
+    private static MealItemProjectionReadModel ToReadModel(MealItem item) =>
         new(
             item.Id.Value,
             item.MealId.Value,
@@ -879,7 +879,7 @@ public sealed class DiaryPdfGeneratorTests {
             item.SourceAiItemId?.Value,
             item.Origin);
 
-    private static MealConsumptionAiSessionReadModel ToReadModel(MealAiSession session) =>
+    private static MealAiSessionProjectionReadModel ToReadModel(MealAiSession session) =>
         new(
             session.Id.Value,
             session.MealId.Value,
@@ -891,7 +891,7 @@ public sealed class DiaryPdfGeneratorTests {
             session.Notes,
             [.. session.Items.OrderBy(static item => item.Id.Value).Select(ToReadModel)]);
 
-    private static MealConsumptionAiItemReadModel ToReadModel(MealAiItem item) =>
+    private static MealAiItemProjectionReadModel ToReadModel(MealAiItem item) =>
         new(
             item.Id.Value,
             item.MealAiSessionId.Value,
@@ -980,7 +980,7 @@ public sealed class DiaryPdfGeneratorTests {
     }
 
     private static object CreateReportData(
-        IReadOnlyList<MealConsumptionReadModel> meals,
+        IReadOnlyList<MealProjectionReadModel> meals,
         DateTime? dateFrom = null,
         DateTime? dateTo = null,
         string cultureName = "en",

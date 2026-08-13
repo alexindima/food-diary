@@ -45,11 +45,11 @@ export class NavigationService {
         await this.router.navigate([`/products/${id}/edit`]);
     }
 
-    public async navigateToConsumptionListAsync(): Promise<void> {
+    public async navigateToMealListAsync(): Promise<void> {
         await this.router.navigate(['/meals']);
     }
 
-    public async navigateToConsumptionAddAsync(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<boolean> {
+    public async navigateToMealAddAsync(mealType?: string, extras?: { state?: Record<string, unknown> }): Promise<boolean> {
         const navigationExtras =
             mealType !== undefined && mealType.length > 0
                 ? {
@@ -60,7 +60,7 @@ export class NavigationService {
         return this.router.navigate(['/meals/add'], navigationExtras);
     }
 
-    public async navigateToConsumptionEditAsync(id: string): Promise<void> {
+    public async navigateToMealEditAsync(id: string): Promise<void> {
         await this.router.navigate([`/meals/${id}/edit`]);
     }
 

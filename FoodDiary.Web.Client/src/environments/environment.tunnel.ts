@@ -7,7 +7,7 @@ export const environment: AppConfig = {
         auth: `${serverUrl}/api/v1/auth`,
         billing: `${serverUrl}/api/v1/billing`,
         products: `${serverUrl}/api/v1/products`,
-        consumptions: `${serverUrl}/api/v1/consumptions`,
+        meals: `${serverUrl}/api/v1/meals`,
         statistics: `${serverUrl}/api/v1/statistics`,
         users: `${serverUrl}/api/v1/users`,
         recipes: `${serverUrl}/api/v1/recipes`,

@@ -150,7 +150,7 @@ public sealed class TelegramBotWorker(
         string? webAppUrl = BotUriHelper.NormalizeWebAppUrl(_options.WebAppUrl);
         if (!string.IsNullOrWhiteSpace(webAppUrl)) {
             webAppButtons.Add(InlineKeyboardButton.WithWebApp("Open diary", webAppUrl));
-            webAppButtons.Add(InlineKeyboardButton.WithWebApp("Add meal", $"{webAppUrl}/consumptions/add"));
+            webAppButtons.Add(InlineKeyboardButton.WithWebApp("Add meal", $"{webAppUrl}/meals/add"));
         }
 
         if (webAppButtons.Count > 0) {

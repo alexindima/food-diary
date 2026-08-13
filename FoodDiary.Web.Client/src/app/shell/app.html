@@ -10,7 +10,7 @@
     @if (usesAuthenticatedShell()) {
         @defer (when usesAuthenticatedShell()) {
             <fd-sidebar class="fd-root__sidebar" [isCollapsed]="isSidebarCollapsed()" (collapsedToggle)="toggleSidebar()" />
-            <fd-quick-consumption-drawer />
+            <fd-quick-meal-drawer />
         } @placeholder {
             <div class="fd-root__sidebar fd-root__sidebar--placeholder" aria-hidden="true"></div>
         }

@@ -1,9 +1,9 @@
 <div class="photo-ai-dialog__upload">
     <fd-image-upload-field
         appearance="preview"
-        [label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_LABEL' | translate"
-        [description]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_DESC' | translate"
-        [recommendedSize]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED' | translate"
+        [label]="'MEAL_MANAGE.PHOTO_AI_DIALOG.UPLOAD_LABEL' | translate"
+        [description]="'MEAL_MANAGE.PHOTO_AI_DIALOG.UPLOAD_DESC' | translate"
+        [recommendedSize]="'MEAL_MANAGE.PHOTO_AI_DIALOG.UPLOAD_RECOMMENDED' | translate"
         [cropEnabled]="false"
         [resizeMaxDimension]="1536"
         [deleteOnClear]="true"
@@ -14,17 +14,12 @@
     @if (selection()?.url && annotations().length > 0) {
         <button class="photo-ai-dialog__annotation-toggle fd-ui-body-sm" type="button" (click)="annotationsToggled.emit()">
             {{
-                (annotationsVisible()
-                    ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.HIDE_ANNOTATIONS'
-                    : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SHOW_ANNOTATIONS'
-                ) | translate
+                (annotationsVisible() ? 'MEAL_MANAGE.PHOTO_AI_DIALOG.HIDE_ANNOTATIONS' : 'MEAL_MANAGE.PHOTO_AI_DIALOG.SHOW_ANNOTATIONS')
+                    | translate
             }}
         </button>
         @if (annotationsVisible()) {
-            <div
-                class="photo-ai-dialog__annotations"
-                [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL' | translate"
-            >
+            <div class="photo-ai-dialog__annotations" [attr.aria-label]="'MEAL_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL' | translate">
                 <div class="photo-ai-dialog__annotation-frame">
                     <img class="photo-ai-dialog__annotation-sizer" alt="" [src]="selection()?.url" />
                     <svg class="photo-ai-dialog__annotation-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">

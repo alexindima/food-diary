@@ -10,20 +10,18 @@ import type { PageOf } from '../../../shared/models/page-of.data';
 import { MeasurementUnit, type Product } from '../../products/models/product.data';
 import type { Recipe } from '../../recipes/models/recipe.data';
 import {
-    type Consumption,
-    type ConsumptionAiSession,
-    type ConsumptionAiSessionResponseDto,
-    type ConsumptionItem,
-    type ConsumptionItemResponseDto,
-    type ConsumptionOverview,
-    type ConsumptionResponseDto,
-    ConsumptionSourceType,
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
     type Meal,
+    type MealAiSession,
+    type MealAiSessionResponseDto,
     type MealFilters,
+    type MealItem,
+    type MealItemResponseDto,
     type MealManageDto,
     type MealOverview,
+    type MealResponseDto,
+    MealSourceType,
 } from '../models/meal.data';
 import {
     MEAL_API_DEFAULT_FAVORITE_LIMIT,
@@ -39,15 +37,15 @@ type NutritionTotals = Record<NutritionField, number>;
 
 @Service()
 export class MealService extends ApiService {
-    protected readonly baseUrl = environment.apiUrls.consumptions;
+    protected readonly baseUrl = environment.apiUrls.meals;
 
     public query(page: number, limit: number, filters: MealFilters): Observable<PageOf<Meal>> {
         const params: Record<string, string | number | boolean> = { page, limit };
         this.applyMealFilters(params, filters);
-        return this.get<PageOf<ConsumptionResponseDto>>('', params).pipe(
+        return this.get<PageOf<MealResponseDto>>('', params).pipe(
             map(pageData => ({
                 ...pageData,
-                data: pageData.data.map(response => this.mapConsumption(response)),
+                data: pageData.data.map(response => this.mapMeal(response)),
             })),
             catchError((error: unknown) => rethrowApiError('Query meals error', error)),
         );
@@ -61,11 +59,11 @@ export class MealService extends ApiService {
     ): Observable<MealOverview> {
         const params: Record<string, string | number | boolean> = { page, limit, favoriteLimit };
         this.applyMealFilters(params, filters);
-        return this.get<ConsumptionOverview>('overview', params).pipe(
+        return this.get<MealOverview>('overview', params).pipe(
             map(response => ({
-                allConsumptions: {
-                    ...response.allConsumptions,
-                    data: response.allConsumptions.data.map(item => this.mapConsumption(item)),
+                allMeals: {
+                    ...response.allMeals,
+                    data: response.allMeals.data.map(item => this.mapMeal(item)),
                 },
                 favoriteItems: response.favoriteItems,
                 favoriteTotalCount: response.favoriteTotalCount,
@@ -75,22 +73,22 @@ export class MealService extends ApiService {
     }
 
     public getById(id: string): Observable<Meal | null> {
-        return this.get<ConsumptionResponseDto>(id).pipe(
-            map(response => this.mapConsumption(response)),
+        return this.get<MealResponseDto>(id).pipe(
+            map(response => this.mapMeal(response)),
             catchError(() => of(null)),
         );
     }
 
     public create(data: MealManageDto): Observable<Meal> {
-        return this.post<ConsumptionResponseDto>('', data).pipe(
-            map(response => this.mapConsumption(response)),
+        return this.post<MealResponseDto>('', data).pipe(
+            map(response => this.mapMeal(response)),
             catchError((error: unknown) => rethrowApiError('Create meal error', error)),
         );
     }
 
     public update(id: string, data: MealManageDto): Observable<Meal> {
-        return this.patch<ConsumptionResponseDto>(id, data).pipe(
-            map(response => this.mapConsumption(response)),
+        return this.patch<MealResponseDto>(id, data).pipe(
+            map(response => this.mapMeal(response)),
             catchError((error: unknown) => rethrowApiError('Update meal error', error)),
         );
     }
@@ -100,8 +98,8 @@ export class MealService extends ApiService {
     }
 
     public repeat(id: string, targetDate: string, mealType?: string): Observable<Meal> {
-        return this.post<ConsumptionResponseDto>(`${id}/repeat`, { targetDate, mealType }).pipe(
-            map(response => this.mapConsumption(response)),
+        return this.post<MealResponseDto>(`${id}/repeat`, { targetDate, mealType }).pipe(
+            map(response => this.mapMeal(response)),
             catchError((error: unknown) => rethrowApiError('Repeat meal error', error)),
         );
     }
@@ -130,7 +128,7 @@ export class MealService extends ApiService {
         }
     }
 
-    private mapConsumption(response: ConsumptionResponseDto): Consumption {
+    private mapMeal(response: MealResponseDto): Meal {
         const isNutritionAutoCalculated = this.resolveIsNutritionAutoCalculated(response);
 
         return {
@@ -159,12 +157,12 @@ export class MealService extends ApiService {
             qualityGrade: this.toNullable(response.qualityGrade),
             isFavorite: this.withDefault(response.isFavorite, false),
             favoriteMealId: this.toNullable(response.favoriteMealId),
-            items: response.items.map(item => this.mapConsumptionItem(item)),
+            items: response.items.map(item => this.mapMealItem(item)),
             aiSessions: this.mapOptionalArray(response.aiSessions, session => this.mapAiSession(session)),
         };
     }
 
-    private resolveIsNutritionAutoCalculated(response: ConsumptionResponseDto): boolean {
+    private resolveIsNutritionAutoCalculated(response: MealResponseDto): boolean {
         const isAuto = response.isNutritionAutoCalculated;
         if (this.shouldUseServerNutritionAutoCalculated(response, isAuto)) {
             return isAuto;
@@ -174,11 +172,11 @@ export class MealService extends ApiService {
         return MEAL_NUTRITION_FIELDS.every(field => this.areClose(this.resolveResponseNutrition(response, field), aiTotals[field]));
     }
 
-    private shouldUseServerNutritionAutoCalculated(response: ConsumptionResponseDto, isAuto: boolean): boolean {
+    private shouldUseServerNutritionAutoCalculated(response: MealResponseDto, isAuto: boolean): boolean {
         return isAuto || response.items.length > 0 || !this.hasAiItems(response);
     }
 
-    private resolveResponseNutrition(response: ConsumptionResponseDto, field: NutritionField): number {
+    private resolveResponseNutrition(response: MealResponseDto, field: NutritionField): number {
         const nutrition: NutritionTotals = {
             calories: response.manualCalories ?? response.totalCalories,
             proteins: response.manualProteins ?? response.totalProteins,
@@ -191,11 +189,11 @@ export class MealService extends ApiService {
         return nutrition[field];
     }
 
-    private hasAiItems(response: ConsumptionResponseDto): boolean {
+    private hasAiItems(response: MealResponseDto): boolean {
         return response.aiSessions?.some(session => session.items.length > 0) ?? false;
     }
 
-    private calculateAiTotals(response: ConsumptionResponseDto): NutritionTotals {
+    private calculateAiTotals(response: MealResponseDto): NutritionTotals {
         return (
             response.aiSessions?.reduce(
                 (totals, session) =>
@@ -219,7 +217,7 @@ export class MealService extends ApiService {
         return Math.abs(left - right) <= MEAL_API_NUTRITION_CLOSE_TOLERANCE;
     }
 
-    private mapConsumptionItem(response: ConsumptionItemResponseDto): ConsumptionItem {
+    private mapMealItem(response: MealItemResponseDto): MealItem {
         const product =
             response.productId !== null && response.productId !== undefined && response.productId.length > 0
                 ? this.createProductFromSnapshot(response)
@@ -228,11 +226,11 @@ export class MealService extends ApiService {
             response.recipeId !== null && response.recipeId !== undefined && response.recipeId.length > 0
                 ? this.createRecipeFromSnapshot(response)
                 : null;
-        const sourceType = product !== null ? ConsumptionSourceType.Product : ConsumptionSourceType.Recipe;
+        const sourceType = product !== null ? MealSourceType.Product : MealSourceType.Recipe;
 
         return {
             id: response.id,
-            consumptionId: response.consumptionId,
+            mealId: response.mealId,
             amount: response.amount,
             sourceType,
             sourceAiItemId: response.sourceAiItemId ?? null,
@@ -242,7 +240,7 @@ export class MealService extends ApiService {
         };
     }
 
-    private createProductFromSnapshot(response: ConsumptionItemResponseDto): Product {
+    private createProductFromSnapshot(response: MealItemResponseDto): Product {
         const base = createEmptyProductSnapshot();
         return {
             ...base,
@@ -261,7 +259,7 @@ export class MealService extends ApiService {
         };
     }
 
-    private createRecipeFromSnapshot(response: ConsumptionItemResponseDto): Recipe {
+    private createRecipeFromSnapshot(response: MealItemResponseDto): Recipe {
         const base = createEmptyRecipeSnapshot();
         return {
             ...base,
@@ -278,10 +276,10 @@ export class MealService extends ApiService {
         };
     }
 
-    private mapAiSession(response: ConsumptionAiSessionResponseDto): ConsumptionAiSession {
+    private mapAiSession(response: MealAiSessionResponseDto): MealAiSession {
         return {
             id: response.id,
-            consumptionId: response.consumptionId,
+            mealId: response.mealId,
             imageAssetId: response.imageAssetId ?? null,
             imageUrl: response.imageUrl ?? null,
             status: response.status ?? null,

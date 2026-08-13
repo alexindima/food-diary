@@ -1,7 +1,7 @@
-using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Meals.Models;
 
 namespace FoodDiary.Application.Dashboard.Models;
 
 public sealed record DashboardMealsModel(
-    IReadOnlyList<ConsumptionModel> Items,
+    IReadOnlyList<MealModel> Items,
     int Total);

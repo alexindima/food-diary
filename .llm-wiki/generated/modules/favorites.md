@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Consumptions, FavoriteMeals, FavoriteProducts, FavoriteRecipes, Products, Recipes, Users
+- Abstraction-contract dependencies: FavoriteMeals, FavoriteProducts, FavoriteRecipes, Meals, Products, Recipes, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.

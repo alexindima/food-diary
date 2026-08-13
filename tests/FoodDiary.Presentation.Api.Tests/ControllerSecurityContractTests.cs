@@ -4,7 +4,7 @@ using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Admin;
 using FoodDiary.Presentation.Api.Features.Ai;
-using FoodDiary.Presentation.Api.Features.Consumptions;
+using FoodDiary.Presentation.Api.Features.Meals;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Images;
 using FoodDiary.Presentation.Api.Features.Products;
@@ -94,7 +94,7 @@ public sealed class ControllerSecurityContractTests {
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ProductsController), nameof(ProductsController.Duplicate));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Create));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(RecipesController), nameof(RecipesController.Duplicate));
-        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ConsumptionsController), nameof(ConsumptionsController.Create));
+        AssertHasAttribute<EnableIdempotencyAttribute>(typeof(MealsController), nameof(MealsController.Create));
         AssertHasAttribute<EnableIdempotencyAttribute>(typeof(ImagesController), nameof(ImagesController.GetUploadUrl));
     }
 

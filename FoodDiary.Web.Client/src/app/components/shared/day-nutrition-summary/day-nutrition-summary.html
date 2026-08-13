@@ -16,10 +16,10 @@
                         </div>
                         <div class="day-summary__calorie-value fd-ui-stat-value">
                             {{ data().dailyConsumed | number: '1.0-0' }} / {{ data().dailyGoal | number: '1.0-0' }}
-                            {{ 'CONSUMPTION_RING.UNIT' | translate }}
+                            {{ 'MEAL_RING.UNIT' | translate }}
                         </div>
                         <div class="day-summary__weekly fd-ui-body-sm">
-                            {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
+                            {{ 'MEAL_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
                         </div>
                     </div>
                     <span id="day-summary-calorie-tooltip" class="day-summary__tooltip" role="tooltip">

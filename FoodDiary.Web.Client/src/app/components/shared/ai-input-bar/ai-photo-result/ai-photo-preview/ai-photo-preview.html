@@ -13,15 +13,15 @@
                 <button class="ai-photo-result__annotation-toggle" type="button" (click)="annotationsToggled.emit()">
                     {{
                         (annotationsVisible()
-                            ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.HIDE_ANNOTATIONS'
-                            : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SHOW_ANNOTATIONS'
+                            ? 'MEAL_MANAGE.PHOTO_AI_DIALOG.HIDE_ANNOTATIONS'
+                            : 'MEAL_MANAGE.PHOTO_AI_DIALOG.SHOW_ANNOTATIONS'
                         ) | translate
                     }}
                 </button>
                 @if (annotationsVisible()) {
                     <div
                         class="ai-photo-result__annotations"
-                        [attr.aria-label]="'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL' | translate"
+                        [attr.aria-label]="'MEAL_MANAGE.PHOTO_AI_DIALOG.ANNOTATIONS_LABEL' | translate"
                     >
                         <div
                             class="ai-photo-result__annotation-frame"
@@ -148,15 +148,15 @@
         }
         @if (isPreparing()) {
             <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
-                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING' | translate }}
+                {{ 'MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING' | translate }}
             </div>
         } @else if (isAnalyzing()) {
             <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
-                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
+                {{ 'MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING' | translate }}
             </div>
         } @else if (isNutritionLoading()) {
             <div class="ai-photo-result__status fd-ui-pill fd-ui-pill--compact fd-ui-stat-value" role="status" aria-live="polite">
-                {{ 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION' | translate }}
+                {{ 'MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION' | translate }}
             </div>
         }
     </div>

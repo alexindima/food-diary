@@ -10,7 +10,7 @@
             "MIN_LENGTH": "Пароль должен содержать не менее 6 символов",
             "MATCH": "Пароли должны совпадать"
         },
-        "CONSUMPTION": {
+        "MEAL": {
             "INVALID_MIN_AMOUNT": "Значение должно быть больше 0"
         },
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Значение должно быть больше 0",
@@ -93,7 +93,7 @@
         "REGISTER": "Регистрация",
         "PRODUCTS": "Продукты",
         "RECIPES": "Рецепты",
-        "CONSUMPTION": "Приём пищи",
+        "MEAL": "Приём пищи",
         "STATISTICS": "Статистика",
         "USER": "Пользователь",
         "ACCOUNT": "Аккаунт",
@@ -340,7 +340,7 @@
         "MEAL_PREP_PLANNER_PAGE": "Планировщик заготовки питания для меню и покупок",
         "MEAL_PREP_PLANNER_PAGE_DESCRIPTION": "Планируйте заготовки питания в Food Diary: выбирайте блюда, повторяйте рецепты, готовьте список покупок и держите цели рядом."
     },
-    "CONSUMPTION_RING": {
+    "MEAL_RING": {
         "TITLE": "Калории: день и неделя",
         "UNIT": "ккал",
         "DAILY_PROGRESS": "Сегодня",
@@ -382,7 +382,7 @@
         "OTHER": "Другое"
     },
     "PRODUCT_CARD": {
-        "ADD_TO_CONSUMPTION": "Добавить к приёму",
+        "ADD_TO_MEAL": "Добавить к приёму",
         "NO_BARCODE": "Без штрихкода",
         "QUALITY_SCORE": "Полезность"
     },
@@ -485,7 +485,7 @@
         "CONFIRM_BUTTON": "Подтвердить",
         "CANCEL_BUTTON": "Отмена",
         "SERVING": "Порция",
-        "ADD_TO_CONSUMPTION": "Добавить к приёму пищи",
+        "ADD_TO_MEAL": "Добавить к приёму пищи",
         "CREATE_SUCCESS": "Продукт успешно создан!",
         "EDIT_SUCCESS": "Продукт успешно отредактирован!",
         "GO_TO_HOME_BUTTON": "На главную",
@@ -527,11 +527,11 @@
         "SATIETY_BEFORE": "Голод до",
         "SATIETY_AFTER": "Сытость после"
     },
-    "CONSUMPTION_MANAGE": {
+    "MEAL_MANAGE": {
         "MANUAL_ITEM_EDIT": "Редактировать ручную позицию",
         "MANUAL_ITEM_EDIT_NAMED": "Редактировать ручную позицию: {{name}}"
     },
-    "QUICK_CONSUMPTION": {
+    "QUICK_MEAL": {
         "TITLE": "Черновик приёма пищи",
         "ITEMS": "позиций",
         "AMOUNT": "Количество",

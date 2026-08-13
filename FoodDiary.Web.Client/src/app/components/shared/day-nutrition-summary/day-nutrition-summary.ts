@@ -45,11 +45,7 @@ export class DayNutritionSummaryComponent {
     protected readonly calorieComparisonText = computed(() => {
         this.translationChange();
 
-        return this.buildComparisonText(
-            this.data().dailyConsumed,
-            this.data().dailyGoal,
-            this.translateService.instant('CONSUMPTION_RING.UNIT'),
-        );
+        return this.buildComparisonText(this.data().dailyConsumed, this.data().dailyGoal, this.translateService.instant('MEAL_RING.UNIT'));
     });
     protected readonly scaleMax = computed(() => resolveDaySummaryScaleMax(this.data().nutrientBars ?? []));
     protected readonly showGoalMarkers = computed(() => this.scaleMax() > PERCENT);

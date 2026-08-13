@@ -73,8 +73,8 @@ describe('NavigationService', () => {
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/products/abc-123/edit']);
     });
 
-    it('should navigate to consumption add with mealType', async () => {
-        await service.navigateToConsumptionAddAsync('breakfast');
+    it('should navigate to meal add with mealType', async () => {
+        await service.navigateToMealAddAsync('breakfast');
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/meals/add'], {
             state: { mealType: 'breakfast' },
             queryParams: { mealType: 'breakfast' },

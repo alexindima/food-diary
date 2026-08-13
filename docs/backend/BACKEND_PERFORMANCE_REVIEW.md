@@ -108,10 +108,10 @@ The next regression gates sit one layer higher than the repository checks and ex
 - Threshold: measured request must complete within `300 ms`
 - Test: `PostgresPerformanceBaselineTests.ImageUploadUrl_WithAuthenticatedUser_StaysWithinLatencyBudget`
 
-- Path: `GET /api/v1/consumptions?page=1&limit=25&dateFrom=2026-03-01&dateTo=2026-03-31`
-- Scenario: first page of a monthly meal history range for a user with `1500` API-created consumptions backed by a valid private product
+- Path: `GET /api/v1/meals?page=1&limit=25&dateFrom=2026-03-01&dateTo=2026-03-31`
+- Scenario: first page of a monthly meal history range for a user with `1500` API-created meals backed by a valid private product
 - Threshold: second measured execution must complete within `500 ms`
-- Test: `PostgresPerformanceBaselineTests.Consumptions_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget`
+- Test: `PostgresPerformanceBaselineTests.Meals_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget`
 - Test: `PostgresPerformanceBaselineTests.BillingOverview_WithAuthenticatedUser_StaysWithinLatencyBudget`
 
 These are intentionally smoke-sized performance baselines:

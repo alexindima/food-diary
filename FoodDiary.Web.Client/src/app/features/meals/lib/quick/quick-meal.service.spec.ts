@@ -223,7 +223,7 @@ describe('QuickMealService saving', () => {
                 postMealSatietyLevel: 4,
             }),
         );
-        expect(toastService.success).toHaveBeenCalledWith('QUICK_CONSUMPTION.SAVE_SUCCESS');
+        expect(toastService.success).toHaveBeenCalledWith('QUICK_MEAL.SAVE_SUCCESS');
         expect(toastService.error).not.toHaveBeenCalled();
         expect(service.items()).toEqual([]);
     });
@@ -252,8 +252,8 @@ describe('QuickMealService saving', () => {
 
         service.saveDraft();
 
-        expect(toastService.error).toHaveBeenCalledWith('QUICK_CONSUMPTION.SAVE_ERROR');
-        expect(toastService.success).not.toHaveBeenCalledWith('QUICK_CONSUMPTION.SAVE_SUCCESS');
+        expect(toastService.error).toHaveBeenCalledWith('QUICK_MEAL.SAVE_ERROR');
+        expect(toastService.success).not.toHaveBeenCalledWith('QUICK_MEAL.SAVE_SUCCESS');
         expect(service.items()).toHaveLength(1);
     });
 

@@ -24,6 +24,7 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0007](0007-backend-side-effect-transaction-semantics.md) | Backend side-effect and transaction semantics | Accepted | 2026-07-05 |
 | [0008](0008-product-recipe-read-model-query-paths.md) | Product and recipe read-model query paths | Accepted | 2026-07-05 |
 | [0009](0009-executable-application-module-dependency-graph.md) | Executable Application module dependency graph | Accepted | 2026-07-13 |
+| [0010](0010-meals-terminology-and-application-boundary.md) | Meals terminology and application boundary | Accepted | 2026-08-13 |
 
 ## Creating A Record
 

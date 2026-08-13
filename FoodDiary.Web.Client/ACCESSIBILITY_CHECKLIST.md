@@ -35,7 +35,7 @@ Status meanings:
 
 - `[x]` Icon-only buttons in shared kit accept `ariaLabel`
 - `[x]` Sidebar/user-menu actions have explicit names
-- `[x]` Quick consumption drawer actions have explicit names
+- `[x]` Quick meal drawer actions have explicit names
 - `[x]` AI photo result destructive and dismiss actions have explicit names
 - `[x]` Image upload controls have explicit names
 - `[~]` Long-tail icon-only actions across rarely used screens still need manual review
@@ -88,7 +88,7 @@ Status meanings:
 
 - `[x]` List page has loading/error/empty patterns
 - `[x]` Filters dialog follows form semantics
-- `[x]` Quick consumption drawer has better labels and live feedback
+- `[x]` Quick meal drawer has better labels and live feedback
 - `[~]` Meal add/edit/detail still need final manual audit for tab order and destructive actions
 
 ### Products

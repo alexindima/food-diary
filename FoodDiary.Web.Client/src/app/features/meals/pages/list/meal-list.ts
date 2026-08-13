@@ -66,7 +66,7 @@ export class MealListComponent {
         hasImage: null,
         hasAiSession: null,
     });
-    protected readonly consumptionData = this.mealListFacade.consumptionData;
+    protected readonly mealData = this.mealListFacade.mealData;
     protected readonly errorKey = this.mealListFacade.errorKey;
     protected readonly favorites = this.mealListFacade.favorites;
     protected readonly favoriteViews = computed<FavoriteMealView[]>(() =>
@@ -75,7 +75,7 @@ export class MealListComponent {
             return {
                 favorite,
                 displayName: favorite.name,
-                displayNameKey: mealType === null ? 'CONSUMPTION_LIST.FAVORITE_UNNAMED' : `MEAL_TYPES.${mealType}`,
+                displayNameKey: mealType === null ? 'MEAL_LIST.FAVORITE_UNNAMED' : `MEAL_TYPES.${mealType}`,
             };
         }),
     );
@@ -86,11 +86,11 @@ export class MealListComponent {
     protected readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
     protected readonly plannedGroups = computed(() => {
         this.languageVersion();
-        return this.groupByDate(this.plannedConsumptions(), 'asc');
+        return this.groupByDate(this.plannedMeals(), 'asc');
     });
-    protected readonly groupedConsumptions = computed(() => {
+    protected readonly groupedMeals = computed(() => {
         this.languageVersion();
-        return this.groupByDate(this.currentConsumptions(), 'desc');
+        return this.groupByDate(this.currentMeals(), 'desc');
     });
     protected readonly isFavoritesOpen = signal(false);
     protected readonly isPlannedOpen = signal(true);
@@ -112,22 +112,22 @@ export class MealListComponent {
         const model = this.searchModel();
         const keys: string[] = [];
         if (model.mealTypes.length > 0) {
-            keys.push('CONSUMPTION_LIST.FILTER_MEAL_TYPES_ACTIVE');
+            keys.push('MEAL_LIST.FILTER_MEAL_TYPES_ACTIVE');
         }
         if (model.caloriesFrom !== null || model.caloriesTo !== null) {
-            keys.push('CONSUMPTION_LIST.FILTER_CALORIES_ACTIVE');
+            keys.push('MEAL_LIST.FILTER_CALORIES_ACTIVE');
         }
         if (model.hasImage === true) {
-            keys.push('CONSUMPTION_LIST.FILTER_IMAGE_WITH');
+            keys.push('MEAL_LIST.FILTER_IMAGE_WITH');
         }
         if (model.hasImage === false) {
-            keys.push('CONSUMPTION_LIST.FILTER_IMAGE_WITHOUT');
+            keys.push('MEAL_LIST.FILTER_IMAGE_WITHOUT');
         }
         if (model.hasAiSession === true) {
-            keys.push('CONSUMPTION_LIST.FILTER_AI_WITH');
+            keys.push('MEAL_LIST.FILTER_AI_WITH');
         }
         if (model.hasAiSession === false) {
-            keys.push('CONSUMPTION_LIST.FILTER_AI_WITHOUT');
+            keys.push('MEAL_LIST.FILTER_AI_WITHOUT');
         }
 
         return keys;
@@ -135,7 +135,7 @@ export class MealListComponent {
     protected readonly activeDateFilterStart = computed(() => this.formatDateFilterValue(this.searchModel().dateRange?.start));
     protected readonly activeDateFilterEnd = computed(() => this.formatDateFilterValue(this.searchModel().dateRange?.end));
     protected readonly emptyState = computed<MealListEmptyState | null>(() => {
-        if (this.consumptionData.items().length > 0) {
+        if (this.mealData.items().length > 0) {
             return null;
         }
 
@@ -200,8 +200,8 @@ export class MealListComponent {
             });
     }
 
-    protected loadConsumptions(page: number): Observable<void> {
-        return this.mealListFacade.loadConsumptions(page, this.structuredFilters);
+    protected loadMeals(page: number): Observable<void> {
+        return this.mealListFacade.loadMeals(page, this.structuredFilters);
     }
 
     protected loadInitialOverview(): Observable<void> {
@@ -210,24 +210,24 @@ export class MealListComponent {
 
     protected onPageChange(pageIndex: number): void {
         this.scrollToTop();
-        this.loadConsumptions(pageIndex + 1)
+        this.loadMeals(pageIndex + 1)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }
 
     protected retryLoad(): void {
-        const request = this.hasActiveFilters() ? this.loadConsumptions(1) : this.loadInitialOverview();
+        const request = this.hasActiveFilters() ? this.loadMeals(1) : this.loadInitialOverview();
         request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
-    protected async openMealDetailsAsync(consumption: Meal): Promise<void> {
-        if (await this.mealListFacade.handleMealDetailsAsync(consumption, this.structuredFilters)) {
+    protected async openMealDetailsAsync(meal: Meal): Promise<void> {
+        if (await this.mealListFacade.handleMealDetailsAsync(meal, this.structuredFilters)) {
             this.scrollToTop();
         }
     }
 
     protected async goToMealAddAsync(): Promise<void> {
-        await this.navigationService.navigateToConsumptionAddAsync();
+        await this.navigationService.navigateToMealAddAsync();
     }
 
     protected openFilters(): void {
@@ -276,7 +276,7 @@ export class MealListComponent {
             hasImage: result.hasImage,
             hasAiSession: result.hasAiSession,
         }));
-        this.loadConsumptions(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        this.loadMeals(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     private hasSameDateRange(left: FdUiDateRangeValue | null, right: FdUiDateRangeValue | null): boolean {
@@ -299,7 +299,7 @@ export class MealListComponent {
     }
 
     protected reloadCurrentPage(): void {
-        this.loadConsumptions(this.currentPageIndex() + 1)
+        this.loadMeals(this.currentPageIndex() + 1)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }
@@ -335,14 +335,14 @@ export class MealListComponent {
         return right.every(value => leftValues.has(value));
     }
 
-    private plannedConsumptions(): Meal[] {
+    private plannedMeals(): Meal[] {
         const today = normalizeStartOfLocalDay(new Date());
-        return this.consumptionData.items().filter(item => normalizeStartOfLocalDay(new Date(item.date)).getTime() > today.getTime());
+        return this.mealData.items().filter(item => normalizeStartOfLocalDay(new Date(item.date)).getTime() > today.getTime());
     }
 
-    private currentConsumptions(): Meal[] {
+    private currentMeals(): Meal[] {
         const today = normalizeStartOfLocalDay(new Date());
-        return this.consumptionData.items().filter(item => normalizeStartOfLocalDay(new Date(item.date)).getTime() <= today.getTime());
+        return this.mealData.items().filter(item => normalizeStartOfLocalDay(new Date(item.date)).getTime() <= today.getTime());
     }
 
     private groupByDate(items: Meal[], sortDirection: 'asc' | 'desc'): MealDateGroupView[] {

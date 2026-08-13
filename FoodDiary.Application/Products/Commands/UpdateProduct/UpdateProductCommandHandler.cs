@@ -47,7 +47,7 @@ public sealed class UpdateProductCommandHandler(
         if (usageCount > 0) {
             return Result.Failure<ProductModel>(Errors.Validation.Invalid(
                 nameof(command.ProductId),
-                "Product is already used in consumptions or recipes and cannot be updated"));
+                "Product is already used in meals or recipes and cannot be updated"));
         }
 
         Result limitsResult = ProductUpdateLimitValidator.Validate(product, command, values);

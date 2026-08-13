@@ -76,7 +76,7 @@ export class AiPhotoResultComponent {
     private readonly dialogState = inject<AiPhotoResultDialogState | null>(FD_UI_DIALOG_DATA, { optional: true });
     private readonly unitOptions = ['g', 'ml', 'pcs'] as const;
 
-    public readonly titleKey = input<string>('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE');
+    public readonly titleKey = input<string>('MEAL_MANAGE.PHOTO_AI_DIALOG.RESULTS_TITLE');
     public readonly imageUrl = input<string | null>(null);
     public readonly sourceText = input<string | null>(null);
     public readonly sourceTextLabelKey = input<string>('AI_INPUT_BAR.TEXT_PREVIEW_LABEL');
@@ -175,12 +175,12 @@ export class AiPhotoResultComponent {
             ? {
                   variant: 'primary',
                   fill: 'solid',
-                  labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE',
+                  labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE',
               }
             : {
                   variant: 'secondary',
                   fill: 'outline',
-                  labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
+                  labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
               },
     );
     protected readonly detailsToggleView = computed<AiDetailsToggleView>(() =>

@@ -38,6 +38,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Lessons",
             "FoodDiary.Application.Marketing",
             "FoodDiary.Application.MealPlanning",
+            "FoodDiary.Application.Meals",
             "FoodDiary.Application.Notifications",
             "FoodDiary.Application.OpenFoodFacts",
             "FoodDiary.Application.RecipeCommunity",

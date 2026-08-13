@@ -1,55 +1,55 @@
 <fd-ui-card
-    class="consumption-manage__card"
+    class="meal-manage__card"
     tone="editor"
     density="relaxed"
     headerAlign="center"
-    [title]="'CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE' | translate"
+    [title]="'MEAL_MANAGE.GENERAL_GROUP_TITLE' | translate"
 >
-    <div class="consumption-manage__hero fd-grid fd-gap-lg">
-        <div class="consumption-manage__image">
+    <div class="meal-manage__hero fd-grid fd-gap-lg">
+        <div class="meal-manage__image">
             <fd-image-upload-field
                 appearance="compact"
-                [formField]="consumptionForm().imageUrl"
-                [description]="'CONSUMPTION_MANAGE.IMAGE_DESCRIPTION' | translate"
+                [formField]="mealForm().imageUrl"
+                [description]="'MEAL_MANAGE.IMAGE_DESCRIPTION' | translate"
             />
         </div>
-        <div class="consumption-manage__hero-fields fd-stack fd-gap-lg">
-            <div class="consumption-manage__field-row fd-grid fd-gap-lg">
-                <div class="consumption-manage__field fd-stack fd-gap-xs">
+        <div class="meal-manage__hero-fields fd-stack fd-gap-lg">
+            <div class="meal-manage__field-row fd-grid fd-gap-lg">
+                <div class="meal-manage__field fd-stack fd-gap-xs">
                     <fd-ui-date-input
                         size="lg"
-                        [formField]="consumptionForm().date"
-                        [label]="'CONSUMPTION_MANAGE.CHOOSE_DATE' | translate"
+                        [formField]="mealForm().date"
+                        [label]="'MEAL_MANAGE.CHOOSE_DATE' | translate"
                         [error]="generalErrors().date"
                     />
                 </div>
-                <div class="consumption-manage__field fd-stack fd-gap-xs">
+                <div class="meal-manage__field fd-stack fd-gap-xs">
                     <fd-ui-time-input
                         size="lg"
-                        [formField]="consumptionForm().time"
-                        [label]="'CONSUMPTION_MANAGE.CHOOSE_TIME' | translate"
+                        [formField]="mealForm().time"
+                        [label]="'MEAL_MANAGE.CHOOSE_TIME' | translate"
                         [error]="generalErrors().time"
                     />
                 </div>
             </div>
-            <div class="consumption-manage__field fd-stack fd-gap-xs">
+            <div class="meal-manage__field fd-stack fd-gap-xs">
                 <fd-ui-select
                     size="lg"
-                    [formField]="consumptionForm().mealType"
-                    [label]="'CONSUMPTION_MANAGE.MEAL_TYPE_LABEL' | translate"
-                    [placeholder]="'CONSUMPTION_MANAGE.MEAL_TYPE_PLACEHOLDER' | translate"
+                    [formField]="mealForm().mealType"
+                    [label]="'MEAL_MANAGE.MEAL_TYPE_LABEL' | translate"
+                    [placeholder]="'MEAL_MANAGE.MEAL_TYPE_PLACEHOLDER' | translate"
                     [options]="mealTypeSelectOptions()"
                     [error]="generalErrors().mealType"
                 />
             </div>
         </div>
     </div>
-    <div class="consumption-manage__field consumption-manage__field--full fd-stack fd-gap-xs">
+    <div class="meal-manage__field meal-manage__field--full fd-stack fd-gap-xs">
         <fd-ui-textarea
             size="lg"
-            [formField]="consumptionForm().comment"
-            [label]="'CONSUMPTION_MANAGE.COMMENT' | translate"
-            [placeholder]="'CONSUMPTION_MANAGE.COMMENT_PLACEHOLDER' | translate"
+            [formField]="mealForm().comment"
+            [label]="'MEAL_MANAGE.COMMENT' | translate"
+            [placeholder]="'MEAL_MANAGE.COMMENT_PLACEHOLDER' | translate"
             [rows]="3"
         />
     </div>

@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Meals.Models;
-using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Usda.Mappings;

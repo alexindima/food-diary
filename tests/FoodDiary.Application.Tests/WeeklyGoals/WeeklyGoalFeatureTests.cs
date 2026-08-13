@@ -1,7 +1,7 @@
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.WeeklyGoals.Common;
-using FoodDiary.Application.Consumptions.Common;
+using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
 using FoodDiary.Application.WeeklyGoals.Common;

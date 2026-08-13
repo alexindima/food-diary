@@ -24,8 +24,8 @@ import { getDashboardDateUtc, getHydrationDateUtc, normalizeDate } from './dashb
 import { DASHBOARD_TREND_DAYS } from './dashboard-facade.config';
 import { DashboardLayoutService } from './dashboard-layout.service';
 import {
-    createConsumptionRingSignal,
     createMealPreviewSignal,
+    createMealRingSignal,
     createNutrientBarsSignal,
     placeholderIcon,
     placeholderLabel,
@@ -89,7 +89,7 @@ export class DashboardFacade {
     public readonly weightTrend = createWeightTrendSignals(this.weightTrendPoints, this.latestWeight);
     public readonly waistTrend = createWaistTrendSignals(this.waistTrendPoints, this.latestWaist);
     public readonly nutrientBars = createNutrientBarsSignal(this.snapshot);
-    public readonly consumptionRingData = createConsumptionRingSignal(this.snapshot, this.weeklyConsumed, this.nutrientBars);
+    public readonly mealRingData = createMealRingSignal(this.snapshot, this.weeklyConsumed, this.nutrientBars);
     public readonly mealPreviewEntries = createMealPreviewSignal(this.meals, this.isTodaySelected);
     public readonly fastingIsActive = computed(() => {
         const session = this.currentFastingSession();

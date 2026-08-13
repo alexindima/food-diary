@@ -61,7 +61,7 @@ Current critical idempotent POST paths:
 
 - `POST /api/v1/products`
 - `POST /api/v1/recipes`
-- `POST /api/v1/consumptions`
+- `POST /api/v1/meals`
 - `POST /api/v1/images/upload-url`
 - `POST /api/v1/auth/refresh`
 

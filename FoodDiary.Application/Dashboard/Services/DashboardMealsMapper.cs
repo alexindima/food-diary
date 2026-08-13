@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Dashboard.Models;
-using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Domain.ValueObjects;
 
@@ -8,14 +8,14 @@ namespace FoodDiary.Application.Dashboard.Services;
 internal static class DashboardMealsMapper {
     public static DashboardMealsModel ToModel(DashboardMealsReadModel response) {
         return new DashboardMealsModel(
-            [.. response.Items.Select(ToConsumptionModel)],
+            [.. response.Items.Select(ToMealModel)],
             response.TotalItems);
     }
 
-    private static ConsumptionModel ToConsumptionModel(DashboardMealReadModel meal) {
+    private static MealModel ToMealModel(DashboardMealReadModel meal) {
         FoodQualityScore quality = CalculateMealQuality(meal);
 
-        return new ConsumptionModel(
+        return new MealModel(
             meal.Id,
             meal.Date,
             meal.MealType,
@@ -41,8 +41,8 @@ internal static class DashboardMealsMapper {
             quality.Grade.ToString().ToLowerInvariant(),
             meal.IsFavorite,
             meal.FavoriteMealId,
-            [.. meal.Items.OrderBy(item => item.Id).Select(ToConsumptionItemModel)],
-            [.. meal.AiSessions.OrderBy(session => session.RecognizedAtUtc).Select(ToConsumptionAiSessionModel)]);
+            [.. meal.Items.OrderBy(item => item.Id).Select(ToMealItemModel)],
+            [.. meal.AiSessions.OrderBy(session => session.RecognizedAtUtc).Select(ToMealAiSessionModel)]);
     }
 
     private static FoodQualityScore CalculateMealQuality(DashboardMealReadModel meal) {
@@ -62,8 +62,8 @@ internal static class DashboardMealsMapper {
             effectiveAlcohol);
     }
 
-    private static ConsumptionItemModel ToConsumptionItemModel(DashboardMealItemReadModel item) {
-        return new ConsumptionItemModel(
+    private static MealItemModel ToMealItemModel(DashboardMealItemReadModel item) {
+        return new MealItemModel(
             item.Id,
             item.MealId,
             item.Amount,
@@ -94,8 +94,8 @@ internal static class DashboardMealsMapper {
             item.Origin);
     }
 
-    private static ConsumptionAiSessionModel ToConsumptionAiSessionModel(DashboardMealAiSessionReadModel session) {
-        return new ConsumptionAiSessionModel(
+    private static MealAiSessionModel ToMealAiSessionModel(DashboardMealAiSessionReadModel session) {
+        return new MealAiSessionModel(
             session.Id,
             session.MealId,
             session.ImageAssetId,
@@ -104,11 +104,11 @@ internal static class DashboardMealsMapper {
             session.Status,
             session.RecognizedAtUtc,
             session.Notes,
-            [.. session.Items.OrderBy(item => item.Id).Select(ToConsumptionAiItemModel)]);
+            [.. session.Items.OrderBy(item => item.Id).Select(ToMealAiItemModel)]);
     }
 
-    private static ConsumptionAiItemModel ToConsumptionAiItemModel(DashboardMealAiItemReadModel item) {
-        return new ConsumptionAiItemModel(
+    private static MealAiItemModel ToMealAiItemModel(DashboardMealAiItemReadModel item) {
+        return new MealAiItemModel(
             item.Id,
             item.SessionId,
             item.NameEn,

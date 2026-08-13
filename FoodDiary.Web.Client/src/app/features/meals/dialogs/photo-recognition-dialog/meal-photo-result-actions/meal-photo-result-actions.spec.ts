@@ -15,7 +15,7 @@ describe('MealPhotoResultActionsComponent', () => {
         expect(component['editActionState']()).toEqual({
             variant: 'secondary',
             fill: 'outline',
-            labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
+            labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
         });
     });
 
@@ -27,7 +27,7 @@ describe('MealPhotoResultActionsComponent', () => {
         expect(component['editActionState']()).toEqual({
             variant: 'primary',
             fill: 'solid',
-            labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE',
+            labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE',
         });
     });
 

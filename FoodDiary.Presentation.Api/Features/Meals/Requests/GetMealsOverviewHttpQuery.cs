@@ -1,0 +1,13 @@
+namespace FoodDiary.Presentation.Api.Features.Meals.Requests;
+
+public sealed record GetMealsOverviewHttpQuery(
+    int Page = 1,
+    int Limit = 10,
+    DateTime? DateFrom = null,
+    DateTime? DateTo = null,
+    int FavoriteLimit = 10,
+    string? MealTypes = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null,
+    bool? HasAiSession = null);

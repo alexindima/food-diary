@@ -1,26 +1,26 @@
 @if (favoriteViews().length > 0) {
     <fd-favorites-section
-        class="consumption-list__favorites"
+        class="meal-list__favorites"
         data-tour-id="meal-list-favorites"
-        [title]="'CONSUMPTION_LIST.FAVORITES_TITLE' | translate"
+        [title]="'MEAL_LIST.FAVORITES_TITLE' | translate"
         [count]="count()"
         [isOpen]="isOpen()"
         [showLoadMore]="showLoadMore()"
         [isLoadingMore]="isLoadingMore()"
-        [loadMoreLabel]="'CONSUMPTION_LIST.FAVORITES_LOAD_MORE' | translate"
+        [loadMoreLabel]="'MEAL_LIST.FAVORITES_LOAD_MORE' | translate"
         (toggleRequested)="toggleRequested.emit()"
         (loadMore)="loadMore.emit()"
     >
-        <div class="consumption-list__grid fd-grid fd-gap-card-profile">
+        <div class="meal-list__grid fd-grid fd-gap-card-profile">
             @for (favoriteView of favoriteViews(); track favoriteView.favorite.id) {
                 @let fav = favoriteView.favorite;
                 <fd-meal-card
-                    class="consumption-card consumption-card--favorite"
+                    class="meal-card meal-card--favorite"
                     actionIcon="replay"
                     [meal]="toMealCardItem(favoriteView)"
                     [showDate]="true"
                     [showAction]="true"
-                    [actionAriaLabel]="'CONSUMPTION_LIST.FAVORITE_REPEAT' | translate"
+                    [actionAriaLabel]="'MEAL_LIST.FAVORITE_REPEAT' | translate"
                     [favoriteLoading]="favoriteLoadingIds().has(fav.mealId)"
                     (open)="favoriteRepeated.emit(fav)"
                     (action)="favoriteRepeated.emit(fav)"

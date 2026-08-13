@@ -8,17 +8,17 @@ describe('MealEditComponent', () => {
     it('should default meal input to null', () => {
         const { component } = setupComponent();
 
-        expect(component['consumption']()).toBeNull();
+        expect(component['meal']()).toBeNull();
     });
 
     it('should accept meal input for edit form wrapper', () => {
         const meal = createMeal();
         const { component, fixture } = setupComponent();
 
-        fixture.componentRef.setInput('consumption', meal);
+        fixture.componentRef.setInput('meal', meal);
         fixture.detectChanges();
 
-        expect(component['consumption']()).toEqual(meal);
+        expect(component['meal']()).toEqual(meal);
     });
 });
 

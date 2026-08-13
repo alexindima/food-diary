@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3182,
-                    "symbols":  3202,
+                    "sourceFiles":  3189,
+                    "symbols":  3208,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1625,
+                                  "class":  1631,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1166,
+                                  "Other":  1171,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -41,7 +41,7 @@
                                   "Request":  124,
                                   "Response":  171,
                                   "Service":  262,
-                                  "Validator":  181,
+                                  "Validator":  182,
                                   "ValueObject":  123,
                                   "WriteRepository":  47
                               }
@@ -1115,20 +1115,6 @@
                         "name":  "Errors",
                         "kind":  "class",
                         "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Consumption.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "Consumption",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Consumption.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "Errors",
-                        "kind":  "class",
-                        "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.ContentReport.cs",
                         "line":  6
                     },
@@ -1332,6 +1318,20 @@
                         "name":  "Errors",
                         "kind":  "class",
                         "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Meal.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "Meal",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.Meal.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "Errors",
+                        "kind":  "class",
+                        "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Common/Abstractions/Results/Errors.MealPlan.cs",
                         "line":  6
                     },
@@ -1509,27 +1509,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Common/Validation/UserIdParser.cs",
                         "line":  6
-                    },
-                    {
-                        "name":  "ConsumptionErrors",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Consumptions/Common/ConsumptionErrors.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IConsumptionFavoriteReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application.Abstractions/Consumptions/Common/IConsumptionFavoriteReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ConsumptionFavoriteMealModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Consumptions/Models/ConsumptionFavoriteMealModel.cs",
-                        "line":  2
                     },
                     {
                         "name":  "ContentReportErrors",
@@ -2876,10 +2855,10 @@
                         "line":  4
                     },
                     {
-                        "name":  "IMealConsumptionReadRepository",
+                        "name":  "IMealFavoriteReadService",
                         "kind":  "interface",
-                        "role":  "ReadRepository",
-                        "path":  "FoodDiary.Application.Abstractions/Meals/Common/IMealConsumptionReadRepository.cs",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Meals/Common/IMealFavoriteReadService.cs",
                         "line":  5
                     },
                     {
@@ -2887,6 +2866,13 @@
                         "kind":  "interface",
                         "role":  "ReadRepository",
                         "path":  "FoodDiary.Application.Abstractions/Meals/Common/IMealProductNutritionReadRepository.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IMealProjectionReadRepository",
+                        "kind":  "interface",
+                        "role":  "ReadRepository",
+                        "path":  "FoodDiary.Application.Abstractions/Meals/Common/IMealProjectionReadRepository.cs",
                         "line":  5
                     },
                     {
@@ -2911,6 +2897,13 @@
                         "line":  4
                     },
                     {
+                        "name":  "MealErrors",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Meals/Common/MealErrors.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "MealQueryFilters",
                         "kind":  "record",
                         "role":  "Other",
@@ -2918,31 +2911,31 @@
                         "line":  4
                     },
                     {
-                        "name":  "MealConsumptionAiItemReadModel",
+                        "name":  "MealAiItemProjectionReadModel",
                         "kind":  "record",
                         "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionAiItemReadModel.cs",
+                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealAiItemProjectionReadModel.cs",
                         "line":  4
                     },
                     {
-                        "name":  "MealConsumptionAiSessionReadModel",
+                        "name":  "MealAiSessionProjectionReadModel",
                         "kind":  "record",
                         "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionAiSessionReadModel.cs",
+                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealAiSessionProjectionReadModel.cs",
                         "line":  4
                     },
                     {
-                        "name":  "MealConsumptionItemReadModel",
+                        "name":  "MealFavoriteMealModel",
                         "kind":  "record",
                         "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionItemReadModel.cs",
-                        "line":  4
+                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealFavoriteMealModel.cs",
+                        "line":  2
                     },
                     {
-                        "name":  "MealConsumptionReadModel",
+                        "name":  "MealItemProjectionReadModel",
                         "kind":  "record",
                         "role":  "Other",
-                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
                         "line":  4
                     },
                     {
@@ -2951,6 +2944,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProductNutritionReadModel.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "MealProjectionReadModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
+                        "line":  4
                     },
                     {
                         "name":  "DietologistInvitationDecisionNotificationPayload",
@@ -3223,6 +3223,13 @@
                         "kind":  "record",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Notifications/Models/WebPushSubscriptionReadModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ManualNutritionLimits",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Nutrition/Common/ManualNutritionLimits.cs",
                         "line":  2
                     },
                     {
@@ -8455,6 +8462,440 @@
                         "line":  9
                     },
                     {
+                        "name":  "CreateMealCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "CreateMealCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommandHandler.cs",
+                        "line":  16
+                    },
+                    {
+                        "name":  "CreateMealCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommandValidator.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "CreateMealValuePreparer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealValuePreparer.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "CreateMealValues",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealValues.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DeleteMealCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Meals/Commands/DeleteMeal/DeleteMealCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeleteMealCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Meals/Commands/DeleteMeal/DeleteMealCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "RepeatMealCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Meals/Commands/RepeatMeal/RepeatMealCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "RepeatMealCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Meals/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
+                        "line":  19
+                    },
+                    {
+                        "name":  "RepeatMealCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Commands/RepeatMeal/RepeatMealCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpdateMealApplier",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealApplier.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "UpdateMealCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "UpdateMealCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommandHandler.cs",
+                        "line":  15
+                    },
+                    {
+                        "name":  "UpdateMealCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommandValidator.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "UpdateMealImageCleanup",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealImageCleanup.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "UpdateMealValuePreparer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealValuePreparer.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "UpdateMealValues",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealValues.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "IMealActivityReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IMealExportReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Common/IMealExportReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IMealProductNutritionReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Common/IMealProductNutritionReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IMealReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Common/IMealReadService.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "ManualNutritionInput",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/ManualNutritionInput.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealAiItemInput",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/MealAiItemInput.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealAiSessionInput",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/MealAiSessionInput.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealItemInput",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/MealItemInput.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "NullAchievementEvaluationOutbox",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/NullAchievementEvaluationOutbox.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "UtcDateNormalizer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/Time/UtcDateNormalizer.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "EnumFilterParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/Validation/EnumFilterParser.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "EnumValueParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/Validation/EnumValueParser.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "OptionalEntityIdValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Common/Validation/OptionalEntityIdValidator.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "RequiredIdParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Common/Validation/RequiredIdParser.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "MealAiItemInputValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Common/Validators/MealAiItemInputValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "MealAiSessionInputValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Common/Validators/MealAiSessionInputValidator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/DependencyInjection.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "MealMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Mappings/MealMappings.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "MealAiItemModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Models/MealAiItemModel.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "MealAiSessionModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Models/MealAiSessionModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealItemModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Models/MealItemModel.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "MealModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "MealOverviewModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Models/MealOverviewModel.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "GetMealByIdQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Meals/Queries/GetMealById/GetMealByIdQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetMealByIdQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Meals/Queries/GetMealById/GetMealByIdQueryHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "GetMealsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQuery.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "GetMealsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Meals/Queries/GetMeals/GetMealsQueryHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "GetMealsOverviewQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Meals/Queries/GetMealsOverview/GetMealsOverviewQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetMealsOverviewQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Meals/Queries/GetMealsOverview/GetMealsOverviewQueryHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "GetMealsOverviewQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Queries/GetMealsOverview/GetMealsOverviewQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IMealNutritionService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Services/IMealNutritionService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ManualNutritionValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Services/ManualNutritionValidator.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "MealActivityReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Services/MealActivityReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "MealAiSessionAppender",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Services/MealAiSessionAppender.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "MealExportReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Services/MealExportReadService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "MealItemValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Services/MealItemValidator.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "MealManualItemAppender",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Services/MealManualItemAppender.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "MealNutritionApplier",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Services/MealNutritionApplier.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "MealNutritionCalculator",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Services/MealNutritionCalculator.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "MealNutritionInput",
+                        "kind":  "record struct",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Services/MealNutritionInput.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealNutritionService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Services/MealNutritionService.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "MealNutritionSummary",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Meals/Services/MealNutritionSummary.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealProductNutritionReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Services/MealProductNutritionReadService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "MealReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Meals/Services/MealReadService.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "SatietyLevelValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Meals/Services/SatietyLevelValidator.cs",
+                        "line":  5
+                    },
+                    {
                         "name":  "DeliverTestNotificationCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -10702,398 +11143,6 @@
                         "line":  5
                     },
                     {
-                        "name":  "CreateConsumptionCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "CreateConsumptionCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
-                        "line":  16
-                    },
-                    {
-                        "name":  "CreateConsumptionCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandValidator.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "CreateConsumptionValuePreparer",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionValuePreparer.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "CreateConsumptionValues",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionValues.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "DeleteConsumptionCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/DeleteConsumption/DeleteConsumptionCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeleteConsumptionCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/DeleteConsumption/DeleteConsumptionCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "RepeatMealCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "RepeatMealCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandHandler.cs",
-                        "line":  19
-                    },
-                    {
-                        "name":  "RepeatMealCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/RepeatMeal/RepeatMealCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpdateConsumptionApplier",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionApplier.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "UpdateConsumptionCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "UpdateConsumptionCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommandHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "UpdateConsumptionCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommandValidator.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "UpdateConsumptionImageCleanup",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionImageCleanup.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "UpdateConsumptionValuePreparer",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionValuePreparer.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "UpdateConsumptionValues",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionValues.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "ConsumptionAiItemInput",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionAiItemInput.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionAiSessionInput",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionAiSessionInput.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionItemInput",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionItemInput.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "IConsumptionExportReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Common/IConsumptionExportReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IConsumptionReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Common/IConsumptionReadService.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "IMealActivityReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Common/IMealActivityReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IMealProductNutritionReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Common/IMealProductNutritionReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ManualNutritionInput",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Common/ManualNutritionInput.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "NullAchievementEvaluationOutbox",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Common/NullAchievementEvaluationOutbox.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ConsumptionAiItemInputValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Common/Validators/ConsumptionAiItemInputValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ConsumptionAiSessionInputValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Common/Validators/ConsumptionAiSessionInputValidator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ConsumptionMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Mappings/ConsumptionMappings.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "ConsumptionAiItemModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionAiItemModel.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ConsumptionAiSessionModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionAiSessionModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionItemModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ConsumptionModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ConsumptionOverviewModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionOverviewModel.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "GetConsumptionByIdQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionById/GetConsumptionByIdQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetConsumptionByIdQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionById/GetConsumptionByIdQueryHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "GetConsumptionsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptions/GetConsumptionsQuery.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "GetConsumptionsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptions/GetConsumptionsQueryHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "GetConsumptionsOverviewQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionsOverview/GetConsumptionsOverviewQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetConsumptionsOverviewQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionsOverview/GetConsumptionsOverviewQueryHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "GetConsumptionsOverviewQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionsOverview/GetConsumptionsOverviewQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "ConsumptionAiSessionAppender",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionAiSessionAppender.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "ConsumptionExportReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionExportReadService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "ConsumptionItemValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionItemValidator.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "ConsumptionManualItemAppender",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionManualItemAppender.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "ConsumptionNutritionApplier",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionNutritionApplier.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "ConsumptionNutritionInput",
-                        "kind":  "record struct",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionNutritionInput.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionReadService.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "IMealNutritionService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Services/IMealNutritionService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ManualNutritionValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Services/ManualNutritionValidator.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "MealActivityReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Services/MealActivityReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "MealNutritionCalculator",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Services/MealNutritionCalculator.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "MealNutritionService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Services/MealNutritionService.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "MealNutritionSummary",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Consumptions/Services/MealNutritionSummary.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "MealProductNutritionReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Consumptions/Services/MealProductNutritionReadService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "SatietyLevelValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Consumptions/Services/SatietyLevelValidator.cs",
-                        "line":  5
-                    },
-                    {
                         "name":  "CreateContentReportCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -11455,7 +11504,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                        "line":  17
+                        "line":  14
                     },
                     {
                         "name":  "DependencyInjection",
@@ -11687,13 +11736,6 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Gamification/Services/GamificationUserProfileService.cs",
                         "line":  9
-                    },
-                    {
-                        "name":  "ManualNutritionLimits",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Nutrition/Common/ManualNutritionLimits.cs",
-                        "line":  2
                     },
                     {
                         "name":  "CreateProductCommand",
@@ -16348,7 +16390,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  368
+                        "line":  370
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16705,7 +16747,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  78
+                        "line":  80
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -17961,125 +18003,6 @@
                         "line":  2
                     },
                     {
-                        "name":  "ConsumptionsController",
-                        "kind":  "class",
-                        "role":  "Controller",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/ConsumptionsController.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "ConsumptionHttpMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Mappings/ConsumptionHttpMappings.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "ConsumptionHttpQueryMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Mappings/ConsumptionHttpQueryMappings.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "ConsumptionHttpResponseMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Mappings/ConsumptionHttpResponseMappings.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "ConsumptionAiItemHttpRequest",
-                        "kind":  "record",
-                        "role":  "Request",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiItemHttpRequest.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionAiSessionHttpRequest",
-                        "kind":  "record",
-                        "role":  "Request",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiSessionHttpRequest.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionItemHttpRequest",
-                        "kind":  "record",
-                        "role":  "Request",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionItemHttpRequest.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "CreateConsumptionHttpRequest",
-                        "kind":  "record",
-                        "role":  "Request",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/CreateConsumptionHttpRequest.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetConsumptionsHttpQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/GetConsumptionsHttpQuery.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetConsumptionsOverviewHttpQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/GetConsumptionsOverviewHttpQuery.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "RepeatMealHttpRequest",
-                        "kind":  "record",
-                        "role":  "Request",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/RepeatMealHttpRequest.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "UpdateConsumptionHttpRequest",
-                        "kind":  "record",
-                        "role":  "Request",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/UpdateConsumptionHttpRequest.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionAiItemHttpResponse",
-                        "kind":  "record",
-                        "role":  "Response",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiItemHttpResponse.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionAiSessionHttpResponse",
-                        "kind":  "record",
-                        "role":  "Response",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiSessionHttpResponse.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionHttpResponse",
-                        "kind":  "record",
-                        "role":  "Response",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionItemHttpResponse",
-                        "kind":  "record",
-                        "role":  "Response",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionItemHttpResponse.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ConsumptionOverviewHttpResponse",
-                        "kind":  "record",
-                        "role":  "Response",
-                        "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionOverviewHttpResponse.cs",
-                        "line":  5
-                    },
-                    {
                         "name":  "ContentReportsController",
                         "kind":  "class",
                         "role":  "Controller",
@@ -19142,6 +19065,125 @@
                         "role":  "Response",
                         "path":  "FoodDiary.Presentation.Api/Features/MealPlans/Responses/MealPlanSummaryHttpResponse.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "MealHttpMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Mappings/MealHttpMappings.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "MealHttpQueryMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Mappings/MealHttpQueryMappings.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "MealHttpResponseMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Mappings/MealHttpResponseMappings.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "MealsController",
+                        "kind":  "class",
+                        "role":  "Controller",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/MealsController.cs",
+                        "line":  15
+                    },
+                    {
+                        "name":  "CreateMealHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/CreateMealHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetMealsHttpQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/GetMealsHttpQuery.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetMealsOverviewHttpQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/GetMealsOverviewHttpQuery.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealAiItemHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiItemHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealAiSessionHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiSessionHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealItemHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealItemHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "RepeatMealHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/RepeatMealHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UpdateMealHttpRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealAiItemHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealAiSessionHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealItemHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "MealOverviewHttpResponse",
+                        "kind":  "record",
+                        "role":  "Response",
+                        "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealOverviewHttpResponse.cs",
+                        "line":  5
                     },
                     {
                         "name":  "NotificationHttpMappings",
@@ -20492,7 +20534,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  36
+                        "line":  37
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22723,20 +22765,6 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
-                                         "interface":  "IConsumptionExportReadService",
-                                         "interfacePath":  "FoodDiary.Application/Consumptions/Common/IConsumptionExportReadService.cs",
-                                         "implementation":  "ConsumptionExportReadService",
-                                         "implementationPath":  "FoodDiary.Application/Consumptions/Services/ConsumptionExportReadService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
-                                         "interface":  "IConsumptionReadService",
-                                         "interfacePath":  "FoodDiary.Application/Consumptions/Common/IConsumptionReadService.cs",
-                                         "implementation":  "ConsumptionReadService",
-                                         "implementationPath":  "FoodDiary.Application/Consumptions/Services/ConsumptionReadService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
                                          "interface":  "IContentReportAdministrationReadService",
                                          "interfacePath":  "FoodDiary.Application/ContentReports/Common/IContentReportAdministrationReadService.cs",
                                          "implementation":  "ContentReportAdministrationReadService",
@@ -23396,16 +23424,23 @@
                                      },
                                      {
                                          "interface":  "IMealActivityReadService",
-                                         "interfacePath":  "FoodDiary.Application/Consumptions/Common/IMealActivityReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs",
                                          "implementation":  "MealActivityReadService",
-                                         "implementationPath":  "FoodDiary.Application/Consumptions/Services/MealActivityReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Meals/Services/MealActivityReadService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IMealExportReadService",
+                                         "interfacePath":  "FoodDiary.Application.Meals/Common/IMealExportReadService.cs",
+                                         "implementation":  "MealExportReadService",
+                                         "implementationPath":  "FoodDiary.Application.Meals/Services/MealExportReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IMealNutritionService",
-                                         "interfacePath":  "FoodDiary.Application/Consumptions/Services/IMealNutritionService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Meals/Services/IMealNutritionService.cs",
                                          "implementation":  "MealNutritionService",
-                                         "implementationPath":  "FoodDiary.Application/Consumptions/Services/MealNutritionService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Meals/Services/MealNutritionService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23424,9 +23459,16 @@
                                      },
                                      {
                                          "interface":  "IMealProductNutritionReadService",
-                                         "interfacePath":  "FoodDiary.Application/Consumptions/Common/IMealProductNutritionReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Meals/Common/IMealProductNutritionReadService.cs",
                                          "implementation":  "MealProductNutritionReadService",
-                                         "implementationPath":  "FoodDiary.Application/Consumptions/Services/MealProductNutritionReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Meals/Services/MealProductNutritionReadService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
+                                         "interface":  "IMealReadService",
+                                         "interfacePath":  "FoodDiary.Application.Meals/Common/IMealReadService.cs",
+                                         "implementation":  "MealReadService",
+                                         "implementationPath":  "FoodDiary.Application.Meals/Services/MealReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24419,6 +24461,41 @@
                                                  "line":  19
                                              },
                                              {
+                                                 "service":  "IMealReadService",
+                                                 "implementation":  "MealReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Meals/DependencyInjection.cs",
+                                                 "line":  15
+                                             },
+                                             {
+                                                 "service":  "IMealActivityReadService",
+                                                 "implementation":  "MealActivityReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Meals/DependencyInjection.cs",
+                                                 "line":  19
+                                             },
+                                             {
+                                                 "service":  "IMealExportReadService",
+                                                 "implementation":  "MealExportReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Meals/DependencyInjection.cs",
+                                                 "line":  20
+                                             },
+                                             {
+                                                 "service":  "IMealProductNutritionReadService",
+                                                 "implementation":  "MealProductNutritionReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Meals/DependencyInjection.cs",
+                                                 "line":  21
+                                             },
+                                             {
+                                                 "service":  "IMealNutritionService",
+                                                 "implementation":  "MealNutritionService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Meals/DependencyInjection.cs",
+                                                 "line":  22
+                                             },
+                                             {
                                                  "service":  "INotificationCleanupService",
                                                  "implementation":  "NotificationCleanupService",
                                                  "lifetime":  "Scoped",
@@ -24650,95 +24727,60 @@
                                                  "line":  23
                                              },
                                              {
-                                                 "service":  "IConsumptionReadService",
-                                                 "implementation":  "ConsumptionReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  20
-                                             },
-                                             {
-                                                 "service":  "IMealActivityReadService",
-                                                 "implementation":  "MealActivityReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  24
-                                             },
-                                             {
-                                                 "service":  "IConsumptionExportReadService",
-                                                 "implementation":  "ConsumptionExportReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  25
-                                             },
-                                             {
-                                                 "service":  "IMealProductNutritionReadService",
-                                                 "implementation":  "MealProductNutritionReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  26
-                                             },
-                                             {
-                                                 "service":  "IMealNutritionService",
-                                                 "implementation":  "MealNutritionService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  27
-                                             },
-                                             {
                                                  "service":  "IExportDiaryReadService",
                                                  "implementation":  "ExportDiaryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  28
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "OpenFoodFactsProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  29
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "UsdaProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  30
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IRecentProductReadService",
                                                  "implementation":  "RecentProductReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  31
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IRecentRecipeReadService",
                                                  "implementation":  "RecentRecipeReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  32
+                                                 "line":  21
                                              },
                                              {
                                                  "service":  "IUsdaDailyMicronutrientReadService",
                                                  "implementation":  "UsdaDailyMicronutrientReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  33
+                                                 "line":  22
                                              },
                                              {
                                                  "service":  "IUsdaFoodReadService",
                                                  "implementation":  "UsdaFoodReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  34
+                                                 "line":  23
                                              },
                                              {
                                                  "service":  "IUsdaProductSuggestionReadService",
                                                  "implementation":  "UsdaProductSuggestionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  35
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IDashboardStatisticsReadService",
@@ -25452,14 +25494,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  98
+                                                 "line":  100
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  99
+                                                 "line":  101
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25550,7 +25592,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  70
+                                                 "line":  72
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25606,35 +25648,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  47
+                                                 "line":  48
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  78
+                                                 "line":  80
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  79
+                                                 "line":  81
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  80
+                                                 "line":  82
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  103
+                                                 "line":  105
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

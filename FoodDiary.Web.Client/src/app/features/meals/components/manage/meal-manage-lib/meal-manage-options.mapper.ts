@@ -17,11 +17,11 @@ export function buildMealNutritionModeOptions(translateService: TranslateService
     return [
         {
             value: 'auto',
-            label: translateService.instant('CONSUMPTION_MANAGE.NUTRITION_MODE.AUTO'),
+            label: translateService.instant('MEAL_MANAGE.NUTRITION_MODE.AUTO'),
         },
         {
             value: 'manual',
-            label: translateService.instant('CONSUMPTION_MANAGE.NUTRITION_MODE.MANUAL'),
+            label: translateService.instant('MEAL_MANAGE.NUTRITION_MODE.MANUAL'),
         },
     ];
 }

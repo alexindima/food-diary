@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Consumptions.Models;
-using FoodDiary.Application.Abstractions.Consumptions.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.FavoriteMeals.Mappings;
@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.FavoriteMeals.Services;
 
 public sealed class FavoriteMealReadService(IFavoriteMealReadModelRepository favoriteMealReadModelRepository)
-    : IFavoriteMealReadService, IConsumptionFavoriteReadService {
+    : IFavoriteMealReadService, IMealFavoriteReadService {
     public async Task<IReadOnlyList<FavoriteMealModel>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default) {
@@ -39,8 +39,8 @@ public sealed class FavoriteMealReadService(IFavoriteMealReadModelRepository fav
         return ([.. favorites.Take(limit).Select(favorite => favorite.ToModel())], favorites.Count);
     }
 
-    async Task<(IReadOnlyList<ConsumptionFavoriteMealModel> Items, int TotalItems)>
-        IConsumptionFavoriteReadService.GetOverviewAsync(
+    async Task<(IReadOnlyList<MealFavoriteMealModel> Items, int TotalItems)>
+        IMealFavoriteReadService.GetOverviewAsync(
             UserId userId,
             int limit,
             CancellationToken cancellationToken) {
@@ -48,10 +48,10 @@ public sealed class FavoriteMealReadService(IFavoriteMealReadModelRepository fav
             .GetAllReadModelsAsync(userId, cancellationToken)
             .ConfigureAwait(false);
 
-        return ([.. favorites.Take(limit).Select(ToConsumptionModel)], favorites.Count);
+        return ([.. favorites.Take(limit).Select(ToMealModel)], favorites.Count);
     }
 
-    private static ConsumptionFavoriteMealModel ToConsumptionModel(FavoriteMealReadModel favorite) =>
+    private static MealFavoriteMealModel ToMealModel(FavoriteMealReadModel favorite) =>
         new(
             favorite.Id,
             favorite.MealId,

@@ -52,14 +52,14 @@ describe('MealListFavoritesComponent', () => {
         const fallbackFavorite = createFavoriteView({
             favorite: createFavorite({ id: 'favorite-2', mealId: 'meal-2' }),
             displayName: null,
-            displayNameKey: 'CONSUMPTION_LIST.FAVORITE_UNNAMED',
+            displayNameKey: 'MEAL_LIST.FAVORITE_UNNAMED',
         });
         const { fixture } = await setupComponentAsync({ favoriteViews: [namedFavorite, fallbackFavorite], isOpen: true });
 
         fixture.detectChanges();
 
         expect(getFixtureText(fixture)).toContain('Lunch box');
-        expect(getFixtureText(fixture)).toContain('CONSUMPTION_LIST.FAVORITE_UNNAMED');
+        expect(getFixtureText(fixture)).toContain('MEAL_LIST.FAVORITE_UNNAMED');
     });
 
     it('should render favorites as meal cards and emit repeat and remove actions', async () => {
@@ -132,7 +132,7 @@ function createFavoriteView(overrides: Partial<FavoriteMealView> = {}): Favorite
     return {
         favorite: createFavorite(),
         displayName: 'Favorite meal',
-        displayNameKey: 'CONSUMPTION_LIST.FAVORITE_UNNAMED',
+        displayNameKey: 'MEAL_LIST.FAVORITE_UNNAMED',
         ...overrides,
     };
 }

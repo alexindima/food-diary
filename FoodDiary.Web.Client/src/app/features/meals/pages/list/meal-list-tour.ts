@@ -2,7 +2,7 @@ import type { LocalizedTourConfig } from '../../../../shared/tours/localized-tou
 
 export const MEAL_LIST_TOUR: LocalizedTourConfig = {
     id: 'meal-list',
-    translationRoot: 'CONSUMPTION_LIST.TOUR',
+    translationRoot: 'MEAL_LIST.TOUR',
     steps: [
         {
             id: 'filters',

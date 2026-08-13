@@ -7,7 +7,7 @@ using FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 using FoodDiary.Application.Usda.Queries.GetMicronutrients;
 using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 using FoodDiary.Application.Usda.Services;
-using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Meals.Services;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;

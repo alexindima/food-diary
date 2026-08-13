@@ -63,7 +63,7 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/weight-entries/page-summary'), createResponse: createWeightHistoryPageSummary },
     { matches: pathname => pathname.endsWith('/waist-entries/page-summary'), createResponse: createWaistHistoryPageSummary },
     { matches: pathname => pathname.endsWith('/dashboard'), createResponse: createDashboardSnapshot },
-    { matches: pathname => pathname.endsWith('/consumptions/overview'), createResponse: createMealsOverview },
+    { matches: pathname => pathname.endsWith('/meals/overview'), createResponse: createMealsOverview },
     { matches: pathname => pathname.endsWith('/cycles/current'), createResponse: () => null },
     { matches: pathname => pathname.endsWith('/tdee/insight'), createResponse: createTdeeInsight },
     { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
@@ -201,7 +201,7 @@ test.describe('authenticated client smoke', () => {
 
         await expect(page).toHaveURL(/\/dashboard$/);
         await expect(page.locator('fd-dashboard')).toBeVisible();
-        await expect(page.getByRole('heading', { name: 'Consumption for today' })).toBeVisible();
+        await expect(page.getByRole('heading', { name: 'Meal for today' })).toBeVisible();
     });
 });
 
@@ -419,7 +419,7 @@ test.describe('authenticated feature smoke', () => {
         await expect(page.getByRole('heading', { level: 1 })).toContainText('Privacy Policy');
         await expect(page.locator('.fd-root')).toHaveClass(/fd-root--no-sidebar/);
         await expect(page.locator('fd-sidebar')).toHaveCount(0);
-        await expect(page.locator('fd-quick-consumption-drawer')).toHaveCount(0);
+        await expect(page.locator('fd-quick-meal-drawer')).toHaveCount(0);
     });
 
     test('renders not found page for unknown route', async ({ page }) => {
@@ -772,7 +772,7 @@ function createRecommendations(): Array<Record<string, unknown>> {
 
 function createMealsOverview(): Record<string, unknown> {
     return {
-        allConsumptions: {
+        allMeals: {
             data: [
                 createMeal('meal-1', '2026-05-07T20:40:00.000Z', [
                     createMealItem('meal-1-item-1', 'meal-1', 'Carrots', TEST_IMAGE_URLS[0]),
@@ -827,10 +827,10 @@ function createMeal(id: string, date: string, items: unknown[]): Record<string, 
     };
 }
 
-function createMealItem(id: string, consumptionId: string, productName: string, productImageUrl: string): Record<string, unknown> {
+function createMealItem(id: string, mealId: string, productName: string, productImageUrl: string): Record<string, unknown> {
     return {
         id,
-        consumptionId,
+        mealId,
         amount: 100,
         productId: `${id}-product`,
         productName,

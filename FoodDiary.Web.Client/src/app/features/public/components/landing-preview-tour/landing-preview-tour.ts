@@ -9,7 +9,7 @@ import { NutritionWeeklyTrendCardComponent } from '../../../../components/shared
 import { ProductCardComponent } from '../../../../components/shared/product-card/product-card';
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card';
 import { AuthService } from '../../../../services/auth.service';
-import { QuickConsumptionDrawerComponent } from '../../../meals/components/quick-consumption-drawer/quick-consumption-drawer';
+import { QuickMealDrawerComponent } from '../../../meals/components/quick-meal-drawer/quick-meal-drawer';
 import { type QuickMealItem, QuickMealService } from '../../../meals/lib/quick/quick-meal.service';
 import type { Product } from '../../../products/models/product.data';
 import type { Recipe } from '../../../recipes/models/recipe.data';
@@ -26,7 +26,7 @@ import { buildLandingPreviewContent, type LandingPreviewContent } from './landin
         MealsPreviewComponent,
         ProductCardComponent,
         RecipeCardComponent,
-        QuickConsumptionDrawerComponent,
+        QuickMealDrawerComponent,
     ],
     templateUrl: './landing-preview-tour.html',
     styleUrls: ['./landing-preview-tour.scss'],
@@ -35,7 +35,7 @@ import { buildLandingPreviewContent, type LandingPreviewContent } from './landin
 export class LandingPreviewTourComponent {
     private readonly authService = inject(AuthService);
     private readonly authNavigationService = inject(PublicAuthNavigationService);
-    private readonly quickConsumptionService = inject(QuickMealService);
+    private readonly quickMealService = inject(QuickMealService);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly draftBlock = viewChild<ElementRef<HTMLElement>>('draftBlock');
@@ -51,7 +51,7 @@ export class LandingPreviewTourComponent {
     public constructor() {
         effect(() => {
             if (this.isAuthenticated()) {
-                this.quickConsumptionService.exitPreview();
+                this.quickMealService.exitPreview();
             }
         });
 
@@ -62,12 +62,12 @@ export class LandingPreviewTourComponent {
     }
 
     protected addPreviewProduct(product: Product): void {
-        this.quickConsumptionService.addProduct(product);
+        this.quickMealService.addProduct(product);
         this.scrollDraftIntoView();
     }
 
     protected addPreviewRecipe(recipe: Recipe): void {
-        this.quickConsumptionService.addRecipe(recipe);
+        this.quickMealService.addRecipe(recipe);
         this.scrollDraftIntoView();
     }
 
@@ -88,7 +88,7 @@ export class LandingPreviewTourComponent {
             return;
         }
 
-        this.quickConsumptionService.setPreviewItems(this.previewQuickItems);
+        this.quickMealService.setPreviewItems(this.previewQuickItems);
     }
 
     private scrollDraftIntoView(): void {

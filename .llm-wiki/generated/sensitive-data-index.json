@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  70
+                       "line":  71
                    },
                    {
                        "category":  "credential",
@@ -1386,21 +1386,21 @@
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionAiItemReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealAiItemProjectionReadModel.cs",
                        "line":  10
                    },
                    {
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionItemReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
                        "line":  8
                    },
                    {
                        "category":  "financial",
                        "name":  "ProductBaseAmount",
                        "type":  "double?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionItemReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
                        "line":  13
                    },
                    {
@@ -1624,35 +1624,35 @@
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionAiItemInput.cs",
+                       "path":  "FoodDiary.Application.Meals/Common/MealAiItemInput.cs",
                        "line":  6
                    },
                    {
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionItemInput.cs",
+                       "path":  "FoodDiary.Application.Meals/Common/MealItemInput.cs",
                        "line":  6
                    },
                    {
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionAiItemModel.cs",
+                       "path":  "FoodDiary.Application.Meals/Models/MealAiItemModel.cs",
                        "line":  11
                    },
                    {
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
+                       "path":  "FoodDiary.Application.Meals/Models/MealItemModel.cs",
                        "line":  9
                    },
                    {
                        "category":  "financial",
                        "name":  "ProductBaseAmount",
                        "type":  "double?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
+                       "path":  "FoodDiary.Application.Meals/Models/MealItemModel.cs",
                        "line":  14
                    },
                    {
@@ -2287,41 +2287,6 @@
                    },
                    {
                        "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiItemHttpRequest.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionItemHttpRequest.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiItemHttpResponse.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionItemHttpResponse.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "ProductBaseAmount",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionItemHttpResponse.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "financial",
                        "name":  "PreferredPortionAmount",
                        "type":  "double",
                        "path":  "FoodDiary.Presentation.Api/Features/FavoriteProducts/Requests/UpdateFavoriteProductHttpRequest.cs",
@@ -2361,6 +2326,41 @@
                        "type":  "int",
                        "path":  "FoodDiary.Presentation.Api/Features/Hydration/Responses/HydrationEntryHttpResponse.cs",
                        "line":  6
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiItemHttpRequest.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealItemHttpRequest.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "ProductBaseAmount",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
+                       "line":  11
                    },
                    {
                        "category":  "financial",
@@ -2487,13 +2487,6 @@
                        "type":  "decimal",
                        "path":  "FoodDiary.Application.Abstractions/Ai/Models/FoodNutritionModel.cs",
                        "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application.Abstractions/Consumptions/Models/ConsumptionFavoriteMealModel.cs",
-                       "line":  10
                    },
                    {
                        "category":  "health",
@@ -2863,56 +2856,63 @@
                        "category":  "health",
                        "name":  "Calories",
                        "type":  "double",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionAiItemReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealAiItemProjectionReadModel.cs",
                        "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealFavoriteMealModel.cs",
+                       "line":  10
                    },
                    {
                        "category":  "health",
                        "name":  "ProductCaloriesPerBase",
                        "type":  "double?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionItemReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
                        "line":  14
                    },
                    {
                        "category":  "health",
                        "name":  "RecipeTotalCalories",
                        "type":  "double?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionItemReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
                        "line":  25
                    },
                    {
                        "category":  "health",
                        "name":  "TotalCalories",
                        "type":  "double",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
                        "line":  12
                    },
                    {
                        "category":  "health",
                        "name":  "IsNutritionAutoCalculated",
                        "type":  "bool",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
                        "line":  18
                    },
                    {
                        "category":  "health",
                        "name":  "ManualCalories",
                        "type":  "double?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
                        "line":  19
                    },
                    {
                        "category":  "health",
                        "name":  "PreMealSatietyLevel",
                        "type":  "int",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
                        "line":  25
                    },
                    {
                        "category":  "health",
                        "name":  "PostMealSatietyLevel",
                        "type":  "int",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
                        "line":  26
                    },
                    {
@@ -3827,6 +3827,153 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "IsNutritionAutoCalculated",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ManualCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "PreMealSatietyLevel",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
+                       "line":  24
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "PostMealSatietyLevel",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
+                       "line":  25
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IsNutritionAutoCalculated",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ManualCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
+                       "line":  19
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "PreMealSatietyLevel",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
+                       "line":  25
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "PostMealSatietyLevel",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
+                       "line":  26
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Meals/Common/ManualNutritionInput.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Meals/Common/MealAiItemInput.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Meals/Models/MealAiItemModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ProductCaloriesPerBase",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealItemModel.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "RecipeTotalCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealItemModel.cs",
+                       "line":  25
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IsNutritionAutoCalculated",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                       "line":  19
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ManualCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                       "line":  20
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "PreMealSatietyLevel",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                       "line":  26
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "PostMealSatietyLevel",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                       "line":  27
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IsNutritionAutoCalculated",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Meals/Services/MealNutritionInput.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ManualCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Meals/Services/MealNutritionInput.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Meals/Services/MealNutritionSummary.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
                        "name":  "FastingPushNotificationsEnabled",
                        "type":  "bool?",
                        "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
@@ -4195,153 +4342,6 @@
                        "type":  "int",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                        "line":  46
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IsNutritionAutoCalculated",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ManualCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "PreMealSatietyLevel",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
-                       "line":  24
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "PostMealSatietyLevel",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
-                       "line":  25
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IsNutritionAutoCalculated",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommand.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ManualCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommand.cs",
-                       "line":  19
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "PreMealSatietyLevel",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommand.cs",
-                       "line":  25
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "PostMealSatietyLevel",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommand.cs",
-                       "line":  26
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionAiItemInput.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Common/ManualNutritionInput.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionAiItemModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ProductCaloriesPerBase",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "RecipeTotalCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
-                       "line":  25
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IsNutritionAutoCalculated",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                       "line":  19
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ManualCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                       "line":  20
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "PreMealSatietyLevel",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                       "line":  26
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "PostMealSatietyLevel",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                       "line":  27
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IsNutritionAutoCalculated",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionNutritionInput.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ManualCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionNutritionInput.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Services/MealNutritionSummary.cs",
-                       "line":  4
                    },
                    {
                        "category":  "health",
@@ -5920,69 +5920,6 @@
                    },
                    {
                        "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiItemHttpRequest.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiItemHttpResponse.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IsNutritionAutoCalculated",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ManualCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "PreMealSatietyLevel",
-                       "type":  "int",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                       "line":  23
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "PostMealSatietyLevel",
-                       "type":  "int",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                       "line":  24
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ProductCaloriesPerBase",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionItemHttpResponse.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "RecipeTotalCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionItemHttpResponse.cs",
-                       "line":  22
-                   },
-                   {
-                       "category":  "health",
                        "name":  "AverageCycleLength",
                        "type":  "int?",
                        "path":  "FoodDiary.Presentation.Api/Features/Cycles/Requests/CreateCycleHttpRequest.cs",
@@ -6330,6 +6267,69 @@
                        "type":  "double?",
                        "path":  "FoodDiary.Presentation.Api/Features/MealPlans/Responses/MealPlanSummaryHttpResponse.cs",
                        "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiItemHttpRequest.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IsNutritionAutoCalculated",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ManualCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "PreMealSatietyLevel",
+                       "type":  "int",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                       "line":  23
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "PostMealSatietyLevel",
+                       "type":  "int",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                       "line":  24
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ProductCaloriesPerBase",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "RecipeTotalCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
+                       "line":  22
                    },
                    {
                        "category":  "health",
@@ -8155,56 +8155,56 @@
                        "category":  "privateContent",
                        "name":  "ImageAssetId",
                        "type":  "Guid?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionAiSessionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealAiSessionProjectionReadModel.cs",
                        "line":  8
                    },
                    {
                        "category":  "privateContent",
                        "name":  "ImageUrl",
                        "type":  "string?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionAiSessionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealAiSessionProjectionReadModel.cs",
                        "line":  9
                    },
                    {
                        "category":  "privateContent",
                        "name":  "Notes",
                        "type":  "string?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionAiSessionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealAiSessionProjectionReadModel.cs",
                        "line":  13
                    },
                    {
                        "category":  "privateContent",
                        "name":  "ProductImageUrl",
                        "type":  "string?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionItemReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
                        "line":  11
                    },
                    {
                        "category":  "privateContent",
                        "name":  "RecipeImageUrl",
                        "type":  "string?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionItemReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealItemProjectionReadModel.cs",
                        "line":  23
                    },
                    {
                        "category":  "privateContent",
                        "name":  "Comment",
                        "type":  "string?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
                        "line":  9
                    },
                    {
                        "category":  "privateContent",
                        "name":  "ImageUrl",
                        "type":  "string?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
                        "line":  10
                    },
                    {
                        "category":  "privateContent",
                        "name":  "ImageAssetId",
                        "type":  "Guid?",
-                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealConsumptionReadModel.cs",
+                       "path":  "FoodDiary.Application.Abstractions/Meals/Models/MealProjectionReadModel.cs",
                        "line":  11
                    },
                    {
@@ -8433,6 +8433,146 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealCommand.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealValues.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAsset",
+                       "type":  "ImageAsset?",
+                       "path":  "FoodDiary.Application.Meals/Commands/CreateMeal/CreateMealValues.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealCommand.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealValues.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAsset",
+                       "type":  "ImageAsset?",
+                       "path":  "FoodDiary.Application.Meals/Commands/UpdateMeal/UpdateMealValues.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Meals/Common/MealAiSessionInput.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Common/MealAiSessionInput.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealAiSessionModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealAiSessionModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealAiSessionModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ProductImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealItemModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "RecipeImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealItemModel.cs",
+                       "line":  23
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Meals/Models/MealModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "CommentId",
                        "type":  "Guid",
                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
@@ -8479,146 +8619,6 @@
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                        "line":  37
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionValues.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAsset",
-                       "type":  "ImageAsset?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionValues.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommand.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommand.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionCommand.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionValues.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAsset",
-                       "type":  "ImageAsset?",
-                       "path":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionValues.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionAiSessionInput.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionAiSessionInput.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionAiSessionModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionAiSessionModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionAiSessionModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ProductImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "RecipeImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
-                       "line":  23
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
-                       "line":  12
                    },
                    {
                        "category":  "privateContent",
@@ -9546,118 +9546,6 @@
                    },
                    {
                        "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiSessionHttpRequest.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiSessionHttpRequest.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/CreateConsumptionHttpRequest.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/CreateConsumptionHttpRequest.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/CreateConsumptionHttpRequest.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/UpdateConsumptionHttpRequest.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/UpdateConsumptionHttpRequest.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/UpdateConsumptionHttpRequest.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiSessionHttpResponse.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiSessionHttpResponse.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiSessionHttpResponse.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ProductImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionItemHttpResponse.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "RecipeImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionItemHttpResponse.cs",
-                       "line":  20
-                   },
-                   {
-                       "category":  "privateContent",
                        "name":  "Notes",
                        "type":  "string?",
                        "path":  "FoodDiary.Presentation.Api/Features/Cycles/Requests/BleedingLogHttpModel.cs",
@@ -9809,6 +9697,118 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Presentation.Api/Features/FavoriteRecipes/Responses/FavoriteRecipeHttpResponse.cs",
                        "line":  9
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/CreateMealHttpRequest.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/CreateMealHttpRequest.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/CreateMealHttpRequest.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiSessionHttpRequest.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiSessionHttpRequest.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ProductImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "RecipeImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
+                       "line":  20
                    },
                    {
                        "category":  "privateContent",
@@ -10412,74 +10412,6 @@
                               "fieldCount":  4
                           },
                           {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiItemHttpRequest.cs",
-                              "categories":  [
-                                                 "financial",
-                                                 "health"
-                                             ],
-                              "fieldCount":  2
-                          },
-                          {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiSessionHttpRequest.cs",
-                              "categories":  [
-                                                 "privateContent"
-                                             ],
-                              "fieldCount":  2
-                          },
-                          {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionItemHttpRequest.cs",
-                              "categories":  [
-                                                 "financial"
-                                             ],
-                              "fieldCount":  1
-                          },
-                          {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/CreateConsumptionHttpRequest.cs",
-                              "categories":  [
-                                                 "privateContent"
-                                             ],
-                              "fieldCount":  3
-                          },
-                          {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/UpdateConsumptionHttpRequest.cs",
-                              "categories":  [
-                                                 "privateContent"
-                                             ],
-                              "fieldCount":  3
-                          },
-                          {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiItemHttpResponse.cs",
-                              "categories":  [
-                                                 "financial",
-                                                 "health"
-                                             ],
-                              "fieldCount":  2
-                          },
-                          {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionAiSessionHttpResponse.cs",
-                              "categories":  [
-                                                 "privateContent"
-                                             ],
-                              "fieldCount":  3
-                          },
-                          {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionHttpResponse.cs",
-                              "categories":  [
-                                                 "health",
-                                                 "privateContent"
-                                             ],
-                              "fieldCount":  8
-                          },
-                          {
-                              "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Responses/ConsumptionItemHttpResponse.cs",
-                              "categories":  [
-                                                 "financial",
-                                                 "health",
-                                                 "privateContent"
-                                             ],
-                              "fieldCount":  6
-                          },
-                          {
                               "path":  "FoodDiary.Presentation.Api/Features/Cycles/Requests/BleedingLogHttpModel.cs",
                               "categories":  [
                                                  "privateContent"
@@ -10798,6 +10730,74 @@
                                                  "health"
                                              ],
                               "fieldCount":  1
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/CreateMealHttpRequest.cs",
+                              "categories":  [
+                                                 "privateContent"
+                                             ],
+                              "fieldCount":  3
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiItemHttpRequest.cs",
+                              "categories":  [
+                                                 "financial",
+                                                 "health"
+                                             ],
+                              "fieldCount":  2
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealAiSessionHttpRequest.cs",
+                              "categories":  [
+                                                 "privateContent"
+                                             ],
+                              "fieldCount":  2
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/MealItemHttpRequest.cs",
+                              "categories":  [
+                                                 "financial"
+                                             ],
+                              "fieldCount":  1
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Requests/UpdateMealHttpRequest.cs",
+                              "categories":  [
+                                                 "privateContent"
+                                             ],
+                              "fieldCount":  3
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiItemHttpResponse.cs",
+                              "categories":  [
+                                                 "financial",
+                                                 "health"
+                                             ],
+                              "fieldCount":  2
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealAiSessionHttpResponse.cs",
+                              "categories":  [
+                                                 "privateContent"
+                                             ],
+                              "fieldCount":  3
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealHttpResponse.cs",
+                              "categories":  [
+                                                 "health",
+                                                 "privateContent"
+                                             ],
+                              "fieldCount":  8
+                          },
+                          {
+                              "path":  "FoodDiary.Presentation.Api/Features/Meals/Responses/MealItemHttpResponse.cs",
+                              "categories":  [
+                                                 "financial",
+                                                 "health",
+                                                 "privateContent"
+                                             ],
+                              "fieldCount":  6
                           },
                           {
                               "path":  "FoodDiary.Presentation.Api/Features/Notifications/Requests/UpdateNotificationPreferencesHttpRequest.cs",

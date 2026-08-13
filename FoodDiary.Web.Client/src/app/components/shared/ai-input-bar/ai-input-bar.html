@@ -13,8 +13,8 @@
     <input
         type="text"
         class="ai-input-bar__input fd-ui-body-sm"
-        [placeholder]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
-        [attr.aria-label]="'CONSUMPTION_LIST.VOICE_PLACEHOLDER' | translate"
+        [placeholder]="'MEAL_LIST.VOICE_PLACEHOLDER' | translate"
+        [attr.aria-label]="'MEAL_LIST.VOICE_PLACEHOLDER' | translate"
         [value]="voiceText()"
         [disabled]="isDisabled()"
         (input)="onTextInput($event)"
@@ -43,8 +43,8 @@
                 [icon]="microphoneIcon()"
                 [class.ai-input-bar__action-btn--mic-active]="isListening()"
                 [disabled]="isDisabled()"
-                [fdUiHint]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
-                [ariaLabel]="'CONSUMPTION_LIST.VOICE_MIC_TITLE' | translate"
+                [fdUiHint]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
+                [ariaLabel]="'MEAL_LIST.VOICE_MIC_TITLE' | translate"
                 (click)="toggleMicAsync()"
             />
         }
@@ -66,7 +66,7 @@
 @if (hasTextResult()) {
     <fd-ai-photo-result
         class="ai-input-bar__result-panel"
-        titleKey="CONSUMPTION_LIST.VOICE_RESULT_TITLE"
+        titleKey="MEAL_LIST.VOICE_RESULT_TITLE"
         sourceTextLabelKey="AI_INPUT_BAR.TEXT_PREVIEW_LABEL"
         [sourceText]="textSubmittedQuery()"
         [submitLabelKey]="submitLabelKey()"

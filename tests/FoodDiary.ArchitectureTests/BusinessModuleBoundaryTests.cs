@@ -280,17 +280,17 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Common",
         "FoodDiary.Application.Abstractions.FavoriteRecipes",
         "FoodDiary.Application.Images.Common",
-        "FoodDiary.Application.Nutrition.Common",
+        "FoodDiary.Application.Abstractions.Nutrition.Common",
         "FoodDiary.Application.RecentItems.Common",
         "FoodDiary.Application.Recipes",
         "FoodDiary.Application.Users.Common",
     };
 
-    private static readonly HashSet<string> ApprovedConsumptionsApplicationDependencies = new(StringComparer.Ordinal) {
+    private static readonly HashSet<string> ApprovedMealsApplicationDependencies = new(StringComparer.Ordinal) {
         "FoodDiary.Application.Abstractions.Achievements.Common",
         "FoodDiary.Application.Abstractions.Common",
-        "FoodDiary.Application.Abstractions.Consumptions",
-        "FoodDiary.Application.Consumptions.Common",
+        "FoodDiary.Application.Abstractions.Meals",
+        "FoodDiary.Application.Meals.Common",
         "FoodDiary.Application.Abstractions.FavoriteMeals",
         "FoodDiary.Application.Abstractions.Images.Common",
         "FoodDiary.Application.Abstractions.Meals",
@@ -299,9 +299,9 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Recipes.Common",
         "FoodDiary.Application.Abstractions.Users.Common",
         "FoodDiary.Application.Common",
-        "FoodDiary.Application.Consumptions",
+        "FoodDiary.Application.Meals",
         "FoodDiary.Application.Images.Common",
-        "FoodDiary.Application.Nutrition.Common",
+        "FoodDiary.Application.Abstractions.Nutrition.Common",
         "FoodDiary.Application.Users.Common",
     };
 
@@ -688,15 +688,15 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Fact]
-    public void ConsumptionsApplication_DoesNotDependOnUnapprovedApplicationFeatures() {
+    public void MealsApplication_DoesNotDependOnUnapprovedApplicationFeatures() {
         string moduleRoot = Path.Combine(
             ArchitectureTestPaths.RepositoryRoot,
             "FoodDiary.Application",
-            "Consumptions");
+            "Meals");
 
         string[] violations = [.. SourceScanner.SourceFiles(moduleRoot)
             .SelectMany(ReadApplicationNamespaceDependencies)
-            .Where(dependency => !ApprovedConsumptionsApplicationDependencies.Any(approved =>
+            .Where(dependency => !ApprovedMealsApplicationDependencies.Any(approved =>
                 dependency.Namespace.Equals(approved, StringComparison.Ordinal) ||
                 dependency.Namespace.StartsWith($"{approved}.", StringComparison.Ordinal)))
             .Select(dependency => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, dependency.Path)}:{dependency.Line.ToString(System.Globalization.CultureInfo.InvariantCulture)} references unapproved module namespace {dependency.Namespace}")
@@ -708,14 +708,14 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotAcquireMealPersistenceRepositories() {
         string applicationRoot = Path.Combine(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application");
-        string ownerRoot = Path.Combine(applicationRoot, "Consumptions");
+        string ownerRoot = Path.Combine(applicationRoot, "Meals");
         string compositionRoot = Path.Combine(applicationRoot, "DependencyInjection.cs");
         string[] forbiddenContracts = [
             "IMealRepository",
             "IMealReadRepository",
             "IMealWriteRepository",
             "IMealActivityReadRepository",
-            "IMealConsumptionReadRepository",
+            "IMealProjectionReadRepository",
             "IMealProductNutritionReadRepository",
         ];
 
@@ -725,7 +725,7 @@ public sealed class BusinessModuleBoundaryTests {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenContracts.Any(contract => entry.line.Contains(contract, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Consumption-owned Meal repository; use a semantic Consumption read capability")
+            .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)} acquires a Meal-owned Meal repository; use a semantic Meal read capability")
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
@@ -758,7 +758,7 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("MealAiSessionConfiguration.cs", "Configurations/Meals")]
     [InlineData("MealAiItemConfiguration.cs", "Configurations/Meals")]
     [InlineData("RecentItemConfiguration.cs", "Configurations/RecentItems")]
-    public void ConsumptionAndRecentItemConfigurations_StayInOwnedFolders(
+    public void MealAndRecentItemConfigurations_StayInOwnedFolders(
         string fileName,
         string expectedRelativeDirectory) {
         string expectedPath = Path.Combine(

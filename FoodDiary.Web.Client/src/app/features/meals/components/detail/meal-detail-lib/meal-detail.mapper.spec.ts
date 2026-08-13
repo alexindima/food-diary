@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../products/models/product.data';
-import { ConsumptionSourceType, type Meal } from '../../../models/meal.data';
+import { type Meal,MealSourceType } from '../../../models/meal.data';
 import { buildMealDetailViewModel } from './meal-detail.mapper';
 
 const BASE_AMOUNT = 100;
@@ -71,23 +71,23 @@ function createMealWithItemPreview(): Meal {
         items: [
             {
                 id: 'item-product',
-                consumptionId: 'meal-1',
+                mealId: 'meal-1',
                 amount: BASE_AMOUNT,
-                sourceType: ConsumptionSourceType.Product,
+                sourceType: MealSourceType.Product,
                 product: createProduct('Oatmeal'),
             },
             {
                 id: 'item-unknown',
-                consumptionId: 'meal-1',
+                mealId: 'meal-1',
                 amount: BASE_AMOUNT,
-                sourceType: ConsumptionSourceType.Product,
+                sourceType: MealSourceType.Product,
                 product: null,
             },
         ],
         aiSessions: [
             {
                 id: 'session-1',
-                consumptionId: 'meal-1',
+                mealId: 'meal-1',
                 recognizedAtUtc: '2026-05-14T08:05:00Z',
                 items: [
                     {
@@ -182,14 +182,14 @@ describe('buildMealDetailViewModel item preview state', () => {
         expect(viewModel.itemPreview).toEqual([
             { name: 'Oatmeal', amount: BASE_AMOUNT, unitKey: 'GENERAL.UNITS.G', unitText: null },
             {
-                name: 'translated:CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM',
+                name: 'translated:MEAL_DETAIL.SUMMARY.UNKNOWN_ITEM',
                 amount: BASE_AMOUNT,
-                unitKey: 'CONSUMPTION_DETAIL.SERVINGS',
+                unitKey: 'MEAL_DETAIL.SERVINGS',
                 unitText: null,
             },
             { name: 'Local coffee', amount: AI_ITEM_AMOUNT, unitKey: 'GENERAL.UNITS.ML', unitText: null },
             {
-                name: 'translated:CONSUMPTION_DETAIL.SUMMARY.UNKNOWN_ITEM',
+                name: 'translated:MEAL_DETAIL.SUMMARY.UNKNOWN_ITEM',
                 amount: UNKNOWN_UNIT_AI_ITEM_AMOUNT,
                 unitKey: null,
                 unitText: 'bowl',

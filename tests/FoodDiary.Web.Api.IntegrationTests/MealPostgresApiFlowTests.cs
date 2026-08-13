@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
-using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
+using FoodDiary.Presentation.Api.Features.Meals.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
@@ -39,7 +39,7 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
             TotalAlcohol: 0);
 
         HttpResponseMessage createResponse = await client.PostAsJsonAsync(
-            "/api/v1/consumptions",
+            "/api/v1/meals",
             CreateMealRequest(createdExpected, product.Id));
         MealPayload? meal = await createResponse.Content.ReadFromJsonAsync<MealPayload>(JsonOptions);
 
@@ -65,7 +65,7 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
             TotalAlcohol: 0);
 
         HttpResponseMessage updateResponse = await client.PatchAsJsonAsync(
-            $"/api/v1/consumptions/{meal.Id}",
+            $"/api/v1/meals/{meal.Id}",
             UpdateMealRequest(updatedExpected, product.Id));
 
         await AssertStatusCodeAsync(HttpStatusCode.OK, updateResponse);
@@ -74,14 +74,14 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
         await AssertMealOverviewAsync(client, meal.Id, product.Id, updatedExpected);
     }
 
-    private static CreateConsumptionHttpRequest CreateMealRequest(ExpectedMeal expected, Guid productId) =>
+    private static CreateMealHttpRequest CreateMealRequest(ExpectedMeal expected, Guid productId) =>
         new(
             expected.Date,
             expected.MealType,
             expected.Comment,
             ImageUrl: null,
             ImageAssetId: null,
-            [new ConsumptionItemHttpRequest(productId, RecipeId: null, expected.Amount)],
+            [new MealItemHttpRequest(productId, RecipeId: null, expected.Amount)],
             AiSessions: null,
             IsNutritionAutoCalculated: true,
             ManualCalories: null,
@@ -93,14 +93,14 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
             expected.PreMealSatietyLevel,
             expected.PostMealSatietyLevel);
 
-    private static UpdateConsumptionHttpRequest UpdateMealRequest(ExpectedMeal expected, Guid productId) =>
+    private static UpdateMealHttpRequest UpdateMealRequest(ExpectedMeal expected, Guid productId) =>
         new(
             expected.Date,
             expected.MealType,
             expected.Comment,
             ImageUrl: null,
             ImageAssetId: null,
-            [new ConsumptionItemHttpRequest(productId, RecipeId: null, expected.Amount)],
+            [new MealItemHttpRequest(productId, RecipeId: null, expected.Amount)],
             AiSessions: null,
             IsNutritionAutoCalculated: true,
             ManualCalories: null,
@@ -113,7 +113,7 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
             expected.PostMealSatietyLevel);
 
     private static async Task AssertMealDetailAsync(HttpClient client, Guid mealId, Guid productId, ExpectedMeal expected) {
-        HttpResponseMessage response = await client.GetAsync($"/api/v1/consumptions/{mealId}").ConfigureAwait(false);
+        HttpResponseMessage response = await client.GetAsync($"/api/v1/meals/{mealId}").ConfigureAwait(false);
         await AssertStatusCodeAsync(HttpStatusCode.OK, response).ConfigureAwait(false);
 
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
@@ -121,7 +121,7 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
     }
 
     private static async Task AssertMealListAsync(HttpClient client, Guid mealId, Guid productId, ExpectedMeal expected) {
-        HttpResponseMessage response = await client.GetAsync("/api/v1/consumptions?page=1&limit=10").ConfigureAwait(false);
+        HttpResponseMessage response = await client.GetAsync("/api/v1/meals?page=1&limit=10").ConfigureAwait(false);
         await AssertStatusCodeAsync(HttpStatusCode.OK, response).ConfigureAwait(false);
 
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
@@ -134,12 +134,12 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
     }
 
     private static async Task AssertMealOverviewAsync(HttpClient client, Guid mealId, Guid productId, ExpectedMeal expected) {
-        HttpResponseMessage response = await client.GetAsync("/api/v1/consumptions/overview?page=1&limit=10&favoriteLimit=10").ConfigureAwait(false);
+        HttpResponseMessage response = await client.GetAsync("/api/v1/meals/overview?page=1&limit=10&favoriteLimit=10").ConfigureAwait(false);
         await AssertStatusCodeAsync(HttpStatusCode.OK, response).ConfigureAwait(false);
 
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
         JsonElement meal = json.RootElement
-            .GetProperty("allConsumptions")
+            .GetProperty("allMeals")
             .GetProperty("data")
             .EnumerateArray()
             .Single(item => item.GetProperty("id").GetGuid() == mealId);
@@ -162,7 +162,7 @@ public sealed class MealPostgresApiFlowTests(PostgresApiWebApplicationFactory fa
         Assert.Equal(expected.TotalAlcohol, meal.GetProperty("totalAlcohol").GetDouble(), precision: 2);
 
         JsonElement item = Assert.Single(meal.GetProperty("items").EnumerateArray());
-        Assert.Equal(mealId, item.GetProperty("consumptionId").GetGuid());
+        Assert.Equal(mealId, item.GetProperty("mealId").GetGuid());
         Assert.Equal(productId, item.GetProperty("productId").GetGuid());
         Assert.Equal(expected.Amount, item.GetProperty("amount").GetDouble(), precision: 2);
         Assert.Equal("Postgres Meal Ingredient", item.GetProperty("productName").GetString());

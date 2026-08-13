@@ -3,7 +3,7 @@ import type { QualityGrade } from '../../../shared/models/quality-grade.data';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../recipes/models/recipe.data';
 
-export type Consumption = {
+export type Meal = {
     id: string;
     date: string;
     mealType?: string | null;
@@ -29,33 +29,33 @@ export type Consumption = {
     qualityGrade?: QualityGrade | null;
     isFavorite?: boolean;
     favoriteMealId?: string | null;
-    items: ConsumptionItem[];
-    aiSessions?: ConsumptionAiSession[];
+    items: MealItem[];
+    aiSessions?: MealAiSession[];
 };
 
-export type ConsumptionItem = {
+export type MealItem = {
     id: string;
-    consumptionId: string;
+    mealId: string;
     amount: number;
-    sourceType: ConsumptionSourceType;
+    sourceType: MealSourceType;
     sourceAiItemId?: string | null;
     origin?: string | null;
     product?: Product | null;
     recipe?: Recipe | null;
 };
 
-export type ConsumptionAiSession = {
+export type MealAiSession = {
     id: string;
-    consumptionId: string;
+    mealId: string;
     imageAssetId?: string | null;
     imageUrl?: string | null;
     status?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;
-    items: ConsumptionAiItem[];
+    items: MealAiItem[];
 };
 
-export type ConsumptionAiItem = {
+export type MealAiItem = {
     id: string;
     sessionId: string;
     nameEn: string;
@@ -72,7 +72,7 @@ export type ConsumptionAiItem = {
     resolution?: string | null;
 };
 
-export type ConsumptionResponseDto = {
+export type MealResponseDto = {
     id: string;
     date: string;
     mealType?: string | null;
@@ -98,19 +98,19 @@ export type ConsumptionResponseDto = {
     qualityGrade?: QualityGrade | null;
     isFavorite?: boolean;
     favoriteMealId?: string | null;
-    items: ConsumptionItemResponseDto[];
-    aiSessions?: ConsumptionAiSessionResponseDto[];
+    items: MealItemResponseDto[];
+    aiSessions?: MealAiSessionResponseDto[];
 };
 
-export type ConsumptionOverview = {
-    allConsumptions: PageOf<Meal>;
+export type MealOverview = {
+    allMeals: PageOf<Meal>;
     favoriteItems: FavoriteMeal[];
     favoriteTotalCount: number;
 };
 
-export type ConsumptionItemResponseDto = {
+export type MealItemResponseDto = {
     id: string;
-    consumptionId: string;
+    mealId: string;
     amount: number;
     productId?: string | null;
     productName?: string | null;
@@ -139,18 +139,18 @@ export type ConsumptionItemResponseDto = {
     origin?: string | null;
 };
 
-export type ConsumptionAiSessionResponseDto = {
+export type MealAiSessionResponseDto = {
     id: string;
-    consumptionId: string;
+    mealId: string;
     imageAssetId?: string | null;
     imageUrl?: string | null;
     status?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;
-    items: ConsumptionAiItemResponseDto[];
+    items: MealAiItemResponseDto[];
 };
 
-export type ConsumptionAiItemResponseDto = {
+export type MealAiItemResponseDto = {
     id: string;
     sessionId: string;
     nameEn: string;
@@ -167,12 +167,12 @@ export type ConsumptionAiItemResponseDto = {
     resolution?: string | null;
 };
 
-export enum ConsumptionSourceType {
+export enum MealSourceType {
     Product = 'Product',
     Recipe = 'Recipe',
 }
 
-export type ConsumptionFilters = {
+export type MealFilters = {
     dateFrom?: string;
     dateTo?: string;
     mealTypes?: string;
@@ -182,13 +182,13 @@ export type ConsumptionFilters = {
     hasAiSession?: boolean;
 };
 
-export type ConsumptionManageDto = {
+export type MealManageDto = {
     date: Date;
     mealType?: string | null;
     comment?: string;
     imageUrl?: string | null;
     imageAssetId?: string | null;
-    items: ConsumptionItemManageDto[];
+    items: MealItemManageDto[];
     isNutritionAutoCalculated: boolean;
     manualCalories?: number | null;
     manualProteins?: number | null;
@@ -198,10 +198,10 @@ export type ConsumptionManageDto = {
     manualAlcohol?: number | null;
     preMealSatietyLevel?: number | null;
     postMealSatietyLevel?: number | null;
-    aiSessions?: ConsumptionAiSessionManageDto[];
+    aiSessions?: MealAiSessionManageDto[];
 };
 
-export type ConsumptionItemManageDto = {
+export type MealItemManageDto = {
     productId?: string | null;
     recipeId?: string | null;
     amount: number;
@@ -209,17 +209,17 @@ export type ConsumptionItemManageDto = {
     origin?: string | null;
 };
 
-export type ConsumptionAiSessionManageDto = {
+export type MealAiSessionManageDto = {
     imageAssetId?: string | null;
     imageUrl?: string | null;
     source?: string | null;
     status?: string | null;
     recognizedAtUtc?: string | null;
     notes?: string | null;
-    items: ConsumptionAiItemManageDto[];
+    items: MealAiItemManageDto[];
 };
 
-export type ConsumptionAiItemManageDto = {
+export type MealAiItemManageDto = {
     nameEn: string;
     nameLocal?: string | null;
     amount: number;
@@ -267,15 +267,6 @@ export const createEmptyRecipeSnapshot = (): Recipe => ({
     isNutritionAutoCalculated: true,
     steps: [],
 });
-
-export type Meal = Consumption;
-export type MealItem = ConsumptionItem;
-export type MealAiSession = ConsumptionAiSession;
-export type MealAiItem = ConsumptionAiItem;
-export type MealFilters = ConsumptionFilters;
-export type MealManageDto = ConsumptionManageDto;
-export type MealAiSessionManageDto = ConsumptionAiSessionManageDto;
-export type MealOverview = ConsumptionOverview;
 
 export type FavoriteMeal = {
     id: string;

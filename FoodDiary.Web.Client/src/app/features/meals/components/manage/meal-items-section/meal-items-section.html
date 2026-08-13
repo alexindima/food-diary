@@ -1,12 +1,12 @@
-<div class="consumption-manage__items-section fd-stack fd-gap-md">
-    <div class="consumption-manage__items-header fd-row fd-wrap fd-justify-between fd-gap-md">
-        <h2 class="consumption-manage__section-title fd-ui-section-title">{{ 'CONSUMPTION_MANAGE.ITEMS_GROUP_TITLE' | translate }}</h2>
+<div class="meal-manage__items-section fd-stack fd-gap-md">
+    <div class="meal-manage__items-header fd-row fd-wrap fd-justify-between fd-gap-md">
+        <h2 class="meal-manage__section-title fd-ui-section-title">{{ 'MEAL_MANAGE.ITEMS_GROUP_TITLE' | translate }}</h2>
     </div>
-    <div class="consumption-manage__items-grid fd-grid fd-gap-lg">
+    <div class="meal-manage__items-grid fd-grid fd-gap-lg">
         <fd-ai-input-action-bar
             mode="emit"
-            manualPrefixLabelKey="CONSUMPTION_MANAGE.ITEMS_OR_MANUAL"
-            manualActionLabelKey="CONSUMPTION_MANAGE.CHOOSE_ITEM"
+            manualPrefixLabelKey="MEAL_MANAGE.ITEMS_OR_MANUAL"
+            manualActionLabelKey="MEAL_MANAGE.CHOOSE_ITEM"
             manualActionIcon="search"
             [mealType]="selectedMealType()"
             [isProcessing]="isProcessing()"

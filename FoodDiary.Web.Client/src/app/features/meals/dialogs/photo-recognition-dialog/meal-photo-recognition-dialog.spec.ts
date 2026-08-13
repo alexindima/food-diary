@@ -75,7 +75,7 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({ items: [visionItem] });
         expect(component['results']()).toEqual([visionItem]);
         expect(component['nutrition']()).toEqual(nutrition);
-        expect(component['statusKey']()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_DONE');
+        expect(component['statusKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_DONE');
     });
 
     it('should build photo annotations and let the user hide them', async () => {
@@ -103,7 +103,7 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
 
         component['onImageChanged']({ assetId: 'asset-1', url: null });
 
-        expect(component['errorKey']()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
+        expect(component['errorKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
         expect(component['hasAnalyzed']()).toBe(true);
         expect(component['isLoading']()).toBe(false);
     });
@@ -114,7 +114,7 @@ describe('MealPhotoRecognitionDialogComponent analysis', () => {
 
         component['onImageChanged']({ assetId: 'asset-1', url: null });
 
-        expect(component['nutritionErrorKey']()).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+        expect(component['nutritionErrorKey']()).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
         expect(component['nutrition']()).toBeNull();
         expect(component['isNutritionLoading']()).toBe(false);
     });

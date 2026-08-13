@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Nutrition.Common;
+using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;

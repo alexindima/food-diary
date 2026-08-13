@@ -1,28 +1,28 @@
 @if (groups().length > 0) {
     <fd-favorites-section
-        class="consumption-list__planned"
+        class="meal-list__planned"
         icon="calendar_today"
-        [title]="'CONSUMPTION_LIST.PLANNED_TITLE' | translate"
+        [title]="'MEAL_LIST.PLANNED_TITLE' | translate"
         [count]="plannedItemCount()"
         [isOpen]="isOpen()"
         (toggleRequested)="toggleRequested.emit()"
     >
-        <div class="consumption-list__planned-groups fd-stack fd-gap-sm">
+        <div class="meal-list__planned-groups fd-stack fd-gap-sm">
             @for (group of groups(); track group.date) {
-                <div class="consumption-list__day fd-stack fd-gap-sm">
-                    <div class="consumption-list__day-header fd-row fd-gap-sm">
-                        <span class="consumption-list__day-label"> {{ group.dateLabel }} </span>
-                        <span class="consumption-list__day-line"></span>
+                <div class="meal-list__day fd-stack fd-gap-sm">
+                    <div class="meal-list__day-header fd-row fd-gap-sm">
+                        <span class="meal-list__day-label"> {{ group.dateLabel }} </span>
+                        <span class="meal-list__day-line"></span>
                     </div>
-                    <div class="consumption-list__grid fd-grid fd-gap-card-profile">
-                        @for (consumption of group.items; track consumption.id) {
+                    <div class="meal-list__grid fd-grid fd-gap-card-profile">
+                        @for (meal of group.items; track meal.id) {
                             <fd-meal-card
-                                class="consumption-card consumption-card--planned"
-                                [meal]="consumption"
+                                class="meal-card meal-card--planned"
+                                [meal]="meal"
                                 [showDate]="true"
-                                [favoriteLoading]="favoriteLoadingIds().has(consumption.id)"
-                                (open)="mealOpened.emit(consumption)"
-                                (favoriteToggle)="mealFavoriteToggle.emit(consumption)"
+                                [favoriteLoading]="favoriteLoadingIds().has(meal.id)"
+                                (open)="mealOpened.emit(meal)"
+                                (favoriteToggle)="mealFavoriteToggle.emit(meal)"
                             />
                         }
                     </div>

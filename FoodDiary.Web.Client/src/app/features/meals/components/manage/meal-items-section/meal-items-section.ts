@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { AiInputActionBarComponent } from '../../../../../components/shared/ai-input-bar/ai-input-action-bar';
 import type { AiInputBarResult } from '../../../../../components/shared/ai-input-bar/ai-input-bar.types';
-import type { ConsumptionAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiSessionManageDto } from '../../../models/meal.data';
 import { MealAiSessionsComponent } from '../meal-ai-sessions/meal-ai-sessions';
 import { MealItemsListComponent, type MealItemsListItemState } from '../meal-items-list/meal-items-list';
 
@@ -16,7 +16,7 @@ import { MealItemsListComponent, type MealItemsListItemState } from '../meal-ite
 })
 export class MealItemsSectionComponent {
     public readonly items = input.required<readonly MealItemsListItemState[]>();
-    public readonly aiSessions = input.required<ConsumptionAiSessionManageDto[]>();
+    public readonly aiSessions = input.required<MealAiSessionManageDto[]>();
     public readonly selectedMealType = input.required<string | null>();
     public readonly isProcessing = input.required<boolean>();
     public readonly itemsError = input<string | null>(null);

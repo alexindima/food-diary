@@ -20,7 +20,7 @@ import {
     type NutritionEditorWarning,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
-import type { CalorieMismatchWarning, ConsumptionFormValues, MacroBarState, NutritionMode } from '../meal-manage-lib/meal-manage.types';
+import type { CalorieMismatchWarning, MacroBarState, MealFormValues, NutritionMode } from '../meal-manage-lib/meal-manage.types';
 import { buildMealNutritionModeOptions } from '../meal-manage-lib/meal-manage-options.mapper';
 
 @Component({
@@ -43,7 +43,7 @@ export class MealNutritionSidebarComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
-    public readonly consumptionForm = input.required<FieldTree<ConsumptionFormValues>>();
+    public readonly mealForm = input.required<FieldTree<MealFormValues>>();
     public readonly macroBarState = input.required<MacroBarState>();
     public readonly nutritionMode = input.required<NutritionMode>();
     public readonly nutritionWarning = input.required<CalorieMismatchWarning | null>();
@@ -60,7 +60,7 @@ export class MealNutritionSidebarComponent {
     protected readonly maxNutrient = MANUAL_NUTRITION_MAX_NUTRIENT;
     private readonly activeLang = signal(this.translateService.getCurrentLang());
     protected readonly nutritionForm = computed<NutritionEditorSignalForm>(() => {
-        const form = this.consumptionForm();
+        const form = this.mealForm();
         return {
             calories: form.manualCalories,
             proteins: form.manualProteins,
@@ -83,7 +83,7 @@ export class MealNutritionSidebarComponent {
             return {};
         }
 
-        const form = this.consumptionForm();
+        const form = this.mealForm();
         return {
             calories: this.getFieldError(form.manualCalories),
             proteins: this.getFieldError(form.manualProteins),

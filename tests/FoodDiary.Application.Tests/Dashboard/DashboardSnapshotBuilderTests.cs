@@ -16,8 +16,8 @@ using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Meals.Models;
+using FoodDiary.Application.Meals.Queries.GetMeals;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Fasting.Models;
 using FoodDiary.Application.Statistics.Models;
@@ -251,9 +251,9 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [Fact]
-    public async Task BuildAsync_NormalizesMealPagingBeforeLoadingConsumptions() {
+    public async Task BuildAsync_NormalizesMealPagingBeforeLoadingMeals() {
         var user = User.Create("dashboard-paging@example.com", "hash");
-        var sender = new RecordingConsumptionsSender();
+        var sender = new RecordingMealsSender();
         DashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
             sender,
             new AccessibleUserContextService(user),
@@ -288,9 +288,9 @@ public sealed class DashboardSnapshotBuilderTests {
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.NotNull(sender.LastConsumptionsQuery);
-        Assert.Equal(1, sender.LastConsumptionsQuery.Page);
-        Assert.Equal(100, sender.LastConsumptionsQuery.Limit);
+        Assert.NotNull(sender.LastMealsQuery);
+        Assert.Equal(1, sender.LastMealsQuery.Page);
+        Assert.Equal(100, sender.LastMealsQuery.Limit);
     }
 
     [Fact]
@@ -343,7 +343,7 @@ public sealed class DashboardSnapshotBuilderTests {
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
-        Assert.NotNull(sender.LastConsumptionsQuery);
+        Assert.NotNull(sender.LastMealsQuery);
     }
 
     [Fact]
@@ -505,7 +505,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Error? SecondStatisticsError { get; init; }
         public Error? MealsError { get; init; }
         public List<GetStatisticsQuery> StatisticsQueries { get; } = [];
-        public GetConsumptionsQuery? LastConsumptionsQuery { get; private set; }
+        public GetMealsQuery? LastMealsQuery { get; private set; }
 
         public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : IRequest =>
@@ -532,13 +532,13 @@ public sealed class DashboardSnapshotBuilderTests {
                     ]));
             }
 
-            if (request is GetConsumptionsQuery consumptionsQuery) {
-                LastConsumptionsQuery = consumptionsQuery;
+            if (request is GetMealsQuery mealsQuery) {
+                LastMealsQuery = mealsQuery;
                 if (MealsError is not null) {
-                    return Task.FromResult((TResponse)(object)Result.Failure<PagedResponse<ConsumptionModel>>(MealsError));
+                    return Task.FromResult((TResponse)(object)Result.Failure<PagedResponse<MealModel>>(MealsError));
                 }
 
-                var response = new PagedResponse<ConsumptionModel>([], consumptionsQuery.Page, consumptionsQuery.Limit, 0, 0);
+                var response = new PagedResponse<MealModel>([], mealsQuery.Page, mealsQuery.Limit, 0, 0);
                 return Task.FromResult((TResponse)(object)Result.Success(response));
             }
 
@@ -581,8 +581,8 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingConsumptionsSender : ISender {
-        public GetConsumptionsQuery? LastConsumptionsQuery { get; private set; }
+    private sealed class RecordingMealsSender : ISender {
+        public GetMealsQuery? LastMealsQuery { get; private set; }
 
         public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
             where TRequest : IRequest =>
@@ -592,9 +592,9 @@ public sealed class DashboardSnapshotBuilderTests {
             throw new NotSupportedException();
 
         public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
-            if (request is GetConsumptionsQuery query) {
-                LastConsumptionsQuery = query;
-                var response = new PagedResponse<ConsumptionModel>([], query.Page, query.Limit, 0, 0);
+            if (request is GetMealsQuery query) {
+                LastMealsQuery = query;
+                var response = new PagedResponse<MealModel>([], query.Page, query.Limit, 0, 0);
                 return Task.FromResult((TResponse)(object)Result.Success(response));
             }
 

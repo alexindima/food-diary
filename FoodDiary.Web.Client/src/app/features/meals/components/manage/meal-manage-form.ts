@@ -44,21 +44,15 @@ import { LocalizedTourDefinitionService } from '../../../../shared/tours/localiz
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
-import {
-    type Consumption,
-    type ConsumptionAiSessionManageDto,
-    type ConsumptionItem,
-    type ConsumptionManageDto,
-    ConsumptionSourceType,
-} from '../../models/meal.data';
+import { type Meal, type MealAiSessionManageDto, type MealItem, type MealManageDto, MealSourceType } from '../../models/meal.data';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info/meal-general-info';
 import type { MealItemsListItemState } from './meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section/meal-items-section';
 import type {
     CalorieMismatchWarning,
-    ConsumptionFormValues,
-    ConsumptionItemFormValues,
     MacroBarState,
+    MealFormValues,
+    MealItemFormValues,
     MealNutritionSummaryState,
     NutritionMode,
     NutritionTotals,
@@ -69,8 +63,8 @@ import {
     buildMealManageFormPatchValue,
     createMealManageFormValue,
     findReusableEmptyMealItemIndex,
-    getConsumptionItemInitialAmount,
     getDateInputValue,
+    getMealItemInitialAmount,
     getTimeInputValue,
     hasSelectedMealItems,
 } from './meal-manage-lib/meal-manage-form.mapper';
@@ -115,7 +109,7 @@ export class MealManageFormComponent {
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly languageVersion = signal(0);
 
-    public readonly consumption = input<Consumption | null>(null);
+    public readonly meal = input<Meal | null>(null);
     protected readonly totalCalories = signal<number>(0);
     protected readonly totalFiber = signal<number>(0);
     protected readonly totalAlcohol = signal<number>(0);
@@ -127,7 +121,7 @@ export class MealManageFormComponent {
     protected readonly globalError = signal<string | null>(null);
     protected readonly isSubmitting = signal(false);
     protected readonly isSubmitDisabled = computed(() => this.isSubmitting() || !this.hasSelectedItems());
-    protected readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
+    protected readonly aiSessions = signal<MealAiSessionManageDto[]>([]);
     private readonly itemsTouchedState = createCollectionTouchedState({
         hasItems: () => this.hasSelectedItems(),
         errorMessage: () => this.translateService.instant('FORM_ERRORS.NON_EMPTY_ARRAY'),
@@ -143,16 +137,16 @@ export class MealManageFormComponent {
         this.languageVersion();
 
         return GENERAL_ERROR_FIELDS.reduce<MealGeneralFieldErrors>((errors, field) => {
-            errors[field] = resolveSignalFormFieldError(this.consumptionSignalForm[field], this.validationErrors, this.translateService);
+            errors[field] = resolveSignalFormFieldError(this.mealSignalForm[field], this.validationErrors, this.translateService);
             return errors;
         }, this.createEmptyGeneralFieldErrors());
     });
-    protected readonly consumptionFormModel = signal<ConsumptionFormValues>(createMealManageFormValue());
-    private readonly submitConsumptionFormAsync = async (): Promise<void> => {
+    protected readonly mealFormModel = signal<MealFormValues>(createMealManageFormValue());
+    private readonly submitMealFormAsync = async (): Promise<void> => {
         await this.onSubmitAsync();
     };
-    protected readonly consumptionSignalForm = form(
-        this.consumptionFormModel,
+    protected readonly mealSignalForm = form(
+        this.mealFormModel,
         path => {
             required(path.date);
             required(path.time);
@@ -165,7 +159,7 @@ export class MealManageFormComponent {
         },
         {
             submission: {
-                action: this.submitConsumptionFormAsync,
+                action: this.submitMealFormAsync,
                 onInvalid: () => {
                     this.handleInvalidSubmit();
                 },
@@ -173,9 +167,9 @@ export class MealManageFormComponent {
         },
     );
     protected readonly manageHeaderState = computed(() => ({
-        titleKey: this.consumption() !== null ? 'CONSUMPTION_MANAGE.EDIT_TITLE' : 'CONSUMPTION_MANAGE.ADD_TITLE',
+        titleKey: this.meal() !== null ? 'MEAL_MANAGE.EDIT_TITLE' : 'MEAL_MANAGE.ADD_TITLE',
     }));
-    private populatedConsumption: Consumption | null = null;
+    private populatedMeal: Meal | null = null;
 
     protected readonly macroBarState = computed<MacroBarState>(() => {
         const nutrients = this.nutrientChartData();
@@ -184,11 +178,10 @@ export class MealManageFormComponent {
     protected readonly itemListItems = computed<readonly MealItemsListItemState[]>(() => {
         const touched = this.itemsTouched();
 
-        return this.consumptionFormModel().items.map(value => {
-            const productInvalid = touched && value.sourceType === ConsumptionSourceType.Product && value.product === null;
-            const recipeInvalid = touched && value.sourceType === ConsumptionSourceType.Recipe && value.recipe === null;
-            const sourceError =
-                productInvalid || recipeInvalid ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR') : null;
+        return this.mealFormModel().items.map(value => {
+            const productInvalid = touched && value.sourceType === MealSourceType.Product && value.product === null;
+            const recipeInvalid = touched && value.sourceType === MealSourceType.Recipe && value.recipe === null;
+            const sourceError = productInvalid || recipeInvalid ? this.translateService.instant('MEAL_MANAGE.ITEM_SOURCE_ERROR') : null;
             const amountError = this.getItemAmountError(value, touched);
             return {
                 ...value,
@@ -210,14 +203,14 @@ export class MealManageFormComponent {
 
         const presetMealType = this.resolvePresetMealType();
         if (presetMealType !== null) {
-            this.patchConsumptionFormModel({ mealType: presetMealType });
-        } else if (this.consumption() === null) {
+            this.patchMealFormModel({ mealType: presetMealType });
+        } else if (this.meal() === null) {
             this.setAutoMealTypeFromDate();
         }
 
-        this.watchConsumptionInput();
+        this.watchMealInput();
 
-        if (presetMealType === null && this.consumption() === null) {
+        if (presetMealType === null && this.meal() === null) {
             this.watchAutoMealTypeChanges();
         }
     }
@@ -231,7 +224,7 @@ export class MealManageFormComponent {
 
     private watchSignalFormModelChanges(): void {
         effect(() => {
-            const value = this.consumptionFormModel();
+            const value = this.mealFormModel();
             untracked(() => {
                 this.selectedMealType.set(value.mealType);
                 this.nutritionMode.set(value.isNutritionAutoCalculated ? 'auto' : 'manual');
@@ -243,21 +236,21 @@ export class MealManageFormComponent {
         });
     }
 
-    private watchConsumptionInput(): void {
+    private watchMealInput(): void {
         effect(() => {
-            const consumption = this.consumption();
+            const meal = this.meal();
             untracked(() => {
-                if (consumption === null) {
-                    this.populatedConsumption = null;
+                if (meal === null) {
+                    this.populatedMeal = null;
                     return;
                 }
 
-                if (this.populatedConsumption === consumption) {
+                if (this.populatedMeal === meal) {
                     return;
                 }
 
-                this.populatedConsumption = consumption;
-                this.populateForm(consumption);
+                this.populatedMeal = meal;
+                this.populateForm(meal);
                 this.updateSummary();
             });
         });
@@ -270,7 +263,7 @@ export class MealManageFormComponent {
     }
 
     protected async onCancelAsync(): Promise<void> {
-        if (this.consumptionSignalForm().dirty()) {
+        if (this.mealSignalForm().dirty()) {
             const shouldLeave = await this.mealManageFacade.confirmDiscardChangesAsync({
                 title: this.translateService.instant('UNSAVED_CHANGES.TITLE'),
                 message: this.translateService.instant('UNSAVED_CHANGES.MESSAGE'),
@@ -283,26 +276,26 @@ export class MealManageFormComponent {
             }
         }
 
-        await this.navigationService.navigateToConsumptionListAsync();
+        await this.navigationService.navigateToMealListAsync();
     }
 
     protected startMealManageTour(force = true): void {
         this.tourService.start(this.localizedTour.build(MEAL_MANAGE_TOUR), { force });
     }
 
-    protected get items(): ConsumptionItemFormValues[] {
-        return this.consumptionFormModel().items;
+    protected get items(): MealItemFormValues[] {
+        return this.mealFormModel().items;
     }
 
     // --- Item management (delegated from MealItemsListComponent events) ---
 
-    protected addConsumptionItem(): void {
+    protected addMealItem(): void {
         const reusableIndex = this.findReusableEmptyItemIndex();
         const itemIndex = reusableIndex >= 0 ? reusableIndex : this.items.length;
 
         if (reusableIndex < 0) {
-            this.patchConsumptionFormModel({
-                items: [...this.items, this.mealManageFacade.createConsumptionItem()],
+            this.patchMealFormModel({
+                items: [...this.items, this.mealManageFacade.createMealItem()],
             });
         }
 
@@ -315,7 +308,7 @@ export class MealManageFormComponent {
     }
 
     protected removeItem(index: number): void {
-        this.patchConsumptionFormModel({
+        this.patchMealFormModel({
             items: this.items.filter((_, currentIndex) => currentIndex !== index),
         });
     }
@@ -328,20 +321,17 @@ export class MealManageFormComponent {
         const item = this.items[index];
         void firstValueFrom(
             this.fdDialogService
-                .open<MealManualItemDialogComponent, MealManualItemDialogData, ConsumptionItemFormValues | null>(
-                    MealManualItemDialogComponent,
-                    {
-                        preset: 'form',
-                        data: { item },
-                    },
-                )
+                .open<MealManualItemDialogComponent, MealManualItemDialogData, MealItemFormValues | null>(MealManualItemDialogComponent, {
+                    preset: 'form',
+                    data: { item },
+                })
                 .afterClosed(),
         ).then(selectedItem => {
             if (selectedItem === null || selectedItem === undefined) {
                 return;
             }
 
-            this.replaceConsumptionItem(index, this.mealManageFacade.configureItemType(selectedItem, selectedItem.sourceType));
+            this.replaceMealItem(index, this.mealManageFacade.configureItemType(selectedItem, selectedItem.sourceType));
             this.itemsTouchedState.markTouched();
             this.updateSummary();
         });
@@ -373,7 +363,7 @@ export class MealManageFormComponent {
             return;
         }
 
-        const session = (this.aiSessions() as Array<ConsumptionAiSessionManageDto | undefined>)[index];
+        const session = (this.aiSessions() as Array<MealAiSessionManageDto | undefined>)[index];
         if (session === undefined) {
             return;
         }
@@ -397,7 +387,7 @@ export class MealManageFormComponent {
 
         this.nutritionMode.set(resolvedMode);
         const isAuto = resolvedMode === 'auto';
-        this.patchConsumptionFormModel({ isNutritionAutoCalculated: isAuto });
+        this.patchMealFormModel({ isNutritionAutoCalculated: isAuto });
         if (!isAuto) {
             this.populateManualNutritionFromCurrentSummary();
         }
@@ -405,7 +395,7 @@ export class MealManageFormComponent {
     }
 
     protected caloriesError(): string | null {
-        if (this.consumptionFormModel().isNutritionAutoCalculated) {
+        if (this.mealFormModel().isNutritionAutoCalculated) {
             return null;
         }
 
@@ -415,7 +405,7 @@ export class MealManageFormComponent {
     }
 
     protected macrosError(): string | null {
-        if (this.consumptionFormModel().isNutritionAutoCalculated) {
+        if (this.mealFormModel().isNutritionAutoCalculated) {
             return null;
         }
 
@@ -433,7 +423,7 @@ export class MealManageFormComponent {
 
     protected onSatietyLevelChange(controlName: MealSatietyControlName, value: number | null): void {
         const normalizedValue = normalizeSatietyLevel(value);
-        this.patchConsumptionFormModel({ [controlName]: normalizedValue });
+        this.patchMealFormModel({ [controlName]: normalizedValue });
 
         if (controlName === 'preMealSatietyLevel') {
             this.preMealSatietyLevel.set(normalizedValue);
@@ -460,7 +450,7 @@ export class MealManageFormComponent {
             return;
         }
 
-        this.consumptionSignalForm().markAsTouched();
+        this.mealSignalForm().markAsTouched();
         this.itemsTouchedState.markTouched();
 
         if (this.macrosError() !== null) {
@@ -472,16 +462,16 @@ export class MealManageFormComponent {
             return;
         }
 
-        if (this.consumptionSignalForm().invalid()) {
+        if (this.mealSignalForm().invalid()) {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }
 
-        const consumptionData = this.buildConsumptionManageDto();
-        const consumption = this.consumption();
+        const mealData = this.buildMealManageDto();
+        const meal = this.meal();
         this.isSubmitting.set(true);
         try {
-            await (consumption !== null ? this.updateConsumptionAsync(consumptionData) : this.addConsumptionAsync(consumptionData));
+            await (meal !== null ? this.updateMealAsync(mealData) : this.addMealAsync(mealData));
         } catch (error: unknown) {
             this.handleSubmitError(error instanceof HttpErrorResponse ? error : new HttpErrorResponse({ error }));
         } finally {
@@ -494,12 +484,12 @@ export class MealManageFormComponent {
         this.setGlobalError('FORM_ERRORS.UNKNOWN');
     }
 
-    private buildConsumptionManageDto(): ConsumptionManageDto {
-        return buildMealManageDto(this.getConsumptionFormValue(), {
+    private buildMealManageDto(): MealManageDto {
+        return buildMealManageDto(this.getMealFormValue(), {
             aiSessions: this.aiSessions(),
             buildDateTime: () => this.buildDateTime(),
             convertRecipeGramsToServings: (recipe, amount) => this.mealManageFacade.convertRecipeGramsToServings(recipe, amount),
-            manualTotals: this.mealManageFacade.getManualNutritionTotalsFromValue(this.consumptionFormModel()),
+            manualTotals: this.mealManageFacade.getManualNutritionTotalsFromValue(this.mealFormModel()),
         });
     }
 
@@ -513,11 +503,11 @@ export class MealManageFormComponent {
     }
 
     private setAutoMealTypeFromDate(): void {
-        if (this.consumption() !== null) {
+        if (this.meal() !== null) {
             return;
         }
 
-        if (this.consumptionSignalForm.mealType().dirty()) {
+        if (this.mealSignalForm.mealType().dirty()) {
             return;
         }
 
@@ -527,38 +517,38 @@ export class MealManageFormComponent {
         }
 
         const mealType = resolveMealTypeByTime(date);
-        if (this.consumptionFormModel().mealType === mealType) {
+        if (this.mealFormModel().mealType === mealType) {
             return;
         }
 
-        this.patchConsumptionFormModel({ mealType });
+        this.patchMealFormModel({ mealType });
         this.selectedMealType.set(mealType);
     }
 
-    private populateForm(consumption: Consumption): void {
-        const patch = buildMealManageFormPatchValue(consumption);
-        this.patchConsumptionFormModel(patch);
-        this.aiSessions.set(consumption.aiSessions ?? []);
+    private populateForm(meal: Meal): void {
+        const patch = buildMealManageFormPatchValue(meal);
+        this.patchMealFormModel(patch);
+        this.aiSessions.set(meal.aiSessions ?? []);
 
-        if (consumption.items.length === 0) {
-            this.patchConsumptionFormModel({ items: [this.mealManageFacade.createConsumptionItem()] });
+        if (meal.items.length === 0) {
+            this.patchMealFormModel({ items: [this.mealManageFacade.createMealItem()] });
             return;
         }
 
-        this.patchConsumptionFormModel({
-            items: consumption.items.map(item => this.createConsumptionItemFromConsumption(item)),
+        this.patchMealFormModel({
+            items: meal.items.map(item => this.createMealItemFromMeal(item)),
         });
     }
 
-    private createConsumptionItemFromConsumption(item: ConsumptionItem): ConsumptionItemFormValues {
+    private createMealItemFromMeal(item: MealItem): MealItemFormValues {
         const sourceType = item.sourceType;
-        const initialAmount = getConsumptionItemInitialAmount(item, value =>
+        const initialAmount = getMealItemInitialAmount(item, value =>
             this.mealManageFacade.convertRecipeServingsToGrams(value.recipe ?? null, value.amount),
         );
 
-        return this.mealManageFacade.createConsumptionItem(
-            sourceType === ConsumptionSourceType.Product ? (item.product ?? null) : null,
-            sourceType === ConsumptionSourceType.Recipe ? (item.recipe ?? null) : null,
+        return this.mealManageFacade.createMealItem(
+            sourceType === MealSourceType.Product ? (item.product ?? null) : null,
+            sourceType === MealSourceType.Recipe ? (item.recipe ?? null) : null,
             initialAmount,
             sourceType,
         );
@@ -566,14 +556,14 @@ export class MealManageFormComponent {
 
     private updateSummary(): void {
         const nutritionState = this.mealManageFacade.buildNutritionSummaryStateFromValues(
-            this.getConsumptionFormValue(),
+            this.getMealFormValue(),
             this.aiSessions(),
             this.calorieMismatchThreshold,
         );
 
         this.applySummary(nutritionState);
 
-        if (this.consumptionFormModel().isNutritionAutoCalculated) {
+        if (this.mealFormModel().isNutritionAutoCalculated) {
             this.patchManualNutritionFromTotals(nutritionState.autoTotals);
         }
     }
@@ -611,7 +601,7 @@ export class MealManageFormComponent {
 
     private populateManualNutritionFromCurrentSummary(): void {
         const nutritionState = this.mealManageFacade.buildNutritionSummaryStateFromValues(
-            this.getConsumptionFormValue(),
+            this.getMealFormValue(),
             this.aiSessions(),
             this.calorieMismatchThreshold,
         );
@@ -619,22 +609,22 @@ export class MealManageFormComponent {
     }
 
     private patchManualNutritionFromTotals(totals: NutritionTotals): void {
-        this.patchConsumptionFormModel(this.mealManageFacade.buildManualNutritionPatchFromTotals(totals));
+        this.patchMealFormModel(this.mealManageFacade.buildManualNutritionPatchFromTotals(totals));
     }
 
-    private async addConsumptionAsync(consumptionData: ConsumptionManageDto): Promise<void> {
-        const response = await this.mealManageFacade.submitConsumptionAsync(null, consumptionData);
+    private async addMealAsync(mealData: MealManageDto): Promise<void> {
+        const response = await this.mealManageFacade.submitMealAsync(null, mealData);
         await this.handleSubmitResponseAsync(response);
     }
 
-    private async updateConsumptionAsync(consumptionData: ConsumptionManageDto): Promise<void> {
-        const response = await this.mealManageFacade.submitConsumptionAsync(this.consumption() ?? null, consumptionData);
+    private async updateMealAsync(mealData: MealManageDto): Promise<void> {
+        const response = await this.mealManageFacade.submitMealAsync(this.meal() ?? null, mealData);
         await this.handleSubmitResponseAsync(response);
     }
 
-    private async handleSubmitResponseAsync(response: Consumption | null): Promise<void> {
+    private async handleSubmitResponseAsync(response: Meal | null): Promise<void> {
         if (response !== null) {
-            if (this.consumption() === null) {
+            if (this.meal() === null) {
                 const resetValue = {
                     date: this.getDateInputValue(new Date()),
                     time: this.getTimeInputValue(new Date()),
@@ -648,7 +638,7 @@ export class MealManageFormComponent {
                     manualFiber: null,
                     manualAlcohol: null,
                 };
-                this.consumptionFormModel.set({
+                this.mealFormModel.set({
                     ...createMealManageFormValue(),
                     ...resetValue,
                 });
@@ -656,7 +646,7 @@ export class MealManageFormComponent {
                 this.itemsTouchedState.reset();
                 this.updateSummary();
             }
-            await this.mealManageFacade.showSuccessToastAndRedirectAsync(Boolean(this.consumption()));
+            await this.mealManageFacade.showSuccessToastAndRedirectAsync(Boolean(this.meal()));
         } else {
             this.handleSubmitError();
         }
@@ -706,26 +696,26 @@ export class MealManageFormComponent {
     }
 
     private buildDateTime(): Date {
-        const formValue = this.consumptionFormModel();
+        const formValue = this.mealFormModel();
         return buildMealDateTime(formValue.date, formValue.time, new Date());
     }
 
-    private getConsumptionFormValue(): ConsumptionFormValues {
-        return this.consumptionFormModel();
+    private getMealFormValue(): MealFormValues {
+        return this.mealFormModel();
     }
 
-    private patchConsumptionFormModel(patch: Partial<ConsumptionFormValues>): void {
-        patchSignalFormModel(this.consumptionFormModel, patch);
+    private patchMealFormModel(patch: Partial<MealFormValues>): void {
+        patchSignalFormModel(this.mealFormModel, patch);
     }
 
     private getSignalNutritionControlState(
-        field: keyof Pick<ConsumptionFormValues, 'manualCalories' | 'manualProteins' | 'manualFats' | 'manualCarbs' | 'manualAlcohol'>,
+        field: keyof Pick<MealFormValues, 'manualCalories' | 'manualProteins' | 'manualFats' | 'manualCarbs' | 'manualAlcohol'>,
     ): {
         value: number | null;
         touched: boolean;
         dirty: boolean;
     } {
-        const state = this.consumptionSignalForm[field]();
+        const state = this.mealSignalForm[field]();
         return {
             value: state.value(),
             touched: state.touched(),
@@ -733,8 +723,8 @@ export class MealManageFormComponent {
         };
     }
 
-    private replaceConsumptionItem(index: number, item: ConsumptionItemFormValues): void {
-        this.patchConsumptionFormModel({
+    private replaceMealItem(index: number, item: MealItemFormValues): void {
+        this.patchMealFormModel({
             items: this.items.map((currentItem, currentIndex) => (currentIndex === index ? item : currentItem)),
         });
     }
@@ -743,7 +733,7 @@ export class MealManageFormComponent {
         return hasSelectedMealItems(this.items, this.aiSessions());
     }
 
-    private getItemAmountError(item: ConsumptionItemFormValues, touched: boolean): string | null {
+    private getItemAmountError(item: MealItemFormValues, touched: boolean): string | null {
         if (!touched || (item.product === null && item.recipe === null)) {
             return null;
         }

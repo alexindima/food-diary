@@ -42,7 +42,7 @@ export const WithError: Story = {
 
 export const Required: Story = {
     args: {
-        label: 'Consumption Time',
+        label: 'Meal Time',
         required: true,
         size: 'md',
     },

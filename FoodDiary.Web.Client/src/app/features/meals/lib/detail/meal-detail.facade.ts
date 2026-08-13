@@ -24,9 +24,7 @@ export class MealDetailFacade {
     public readonly isFavorite = signal(false);
     public readonly isFavoriteLoading = signal(false);
     public readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
-    public readonly favoriteAriaLabelKey = computed(() =>
-        this.isFavorite() ? 'CONSUMPTION_DETAIL.REMOVE_FAVORITE' : 'CONSUMPTION_DETAIL.ADD_FAVORITE',
-    );
+    public readonly favoriteAriaLabelKey = computed(() => (this.isFavorite() ? 'MEAL_DETAIL.REMOVE_FAVORITE' : 'MEAL_DETAIL.ADD_FAVORITE'));
 
     private initialFavoriteState = false;
     private favoriteMealId: string | null = null;
@@ -63,11 +61,11 @@ export class MealDetailFacade {
         const formattedDate = this.datePipe.transform(meal.date, 'dd.MM.yyyy');
         const data: ConfirmDeleteDialogData = {
             title: this.translate.instant('CONFIRM_DELETE.TITLE', {
-                type: this.translate.instant('CONSUMPTION_DETAIL.ENTITY_NAME'),
+                type: this.translate.instant('MEAL_DETAIL.ENTITY_NAME'),
             }),
             message: this.translate.instant('CONFIRM_DELETE.MESSAGE', { name: formattedDate ?? '' }),
             name: formattedDate ?? '',
-            entityType: this.translate.instant('CONSUMPTION_DETAIL.ENTITY_NAME'),
+            entityType: this.translate.instant('MEAL_DETAIL.ENTITY_NAME'),
             confirmLabel: this.translate.instant('CONFIRM_DELETE.CONFIRM'),
             cancelLabel: this.translate.instant('CONFIRM_DELETE.CANCEL'),
         };

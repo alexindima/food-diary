@@ -9,14 +9,14 @@ import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { NutritionDataInvalidationService } from '../../../../shared/state/nutrition-data-invalidation.service';
 import { MealService } from '../../api/meal.service';
-import type { ConsumptionFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
+import type { MealFormValues } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import {
-    type Consumption,
-    type ConsumptionAiSessionManageDto,
-    type ConsumptionManageDto,
-    ConsumptionSourceType,
     createEmptyProductSnapshot,
     createEmptyRecipeSnapshot,
+    type Meal,
+    type MealAiSessionManageDto,
+    type MealManageDto,
+    MealSourceType,
 } from '../../models/meal.data';
 import { RecipeServingWeightService } from '../recipe-serving/recipe-serving-weight.service';
 import { MealManageFacade } from './meal-manage.facade';
@@ -59,7 +59,7 @@ const EXPECTED_AUTO_TOTALS = {
     fiber: 15,
     alcohol: 2,
 } as const;
-const AI_RECOGNITION_SESSIONS: ConsumptionAiSessionManageDto[] = [
+const AI_RECOGNITION_SESSIONS: MealAiSessionManageDto[] = [
     {
         items: [
             {
@@ -98,14 +98,14 @@ let mealService: { create: ReturnType<typeof vi.fn>; update: ReturnType<typeof v
 let authService: { isPremium: ReturnType<typeof vi.fn> };
 let navigationService: {
     navigateToHomeAsync: ReturnType<typeof vi.fn>;
-    navigateToConsumptionListAsync: ReturnType<typeof vi.fn>;
+    navigateToMealListAsync: ReturnType<typeof vi.fn>;
     navigateToPremiumAccessAsync: ReturnType<typeof vi.fn>;
 };
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let toastService: { success: ReturnType<typeof vi.fn> };
 let recipeWeightService: { loadServingWeight: ReturnType<typeof vi.fn>; convertGramsToServings: ReturnType<typeof vi.fn> };
 
-const consumption: Consumption = {
+const meal: Meal = {
     id: 'c1',
     date: '2026-04-02T12:00:00Z',
     totalCalories: 0,
@@ -117,7 +117,7 @@ const consumption: Consumption = {
     isNutritionAutoCalculated: true,
     items: [],
 };
-const consumptionData: ConsumptionManageDto = {
+const mealData: MealManageDto = {
     date: new Date('2026-04-02T12:00:00Z'),
     items: [],
     isNutritionAutoCalculated: true,
@@ -134,7 +134,7 @@ describe('MealManageFacade', () => {
         };
         navigationService = {
             navigateToHomeAsync: vi.fn(),
-            navigateToConsumptionListAsync: vi.fn(),
+            navigateToMealListAsync: vi.fn(),
             navigateToPremiumAccessAsync: vi.fn(),
         };
         dialogService = {
@@ -148,14 +148,14 @@ describe('MealManageFacade', () => {
             convertGramsToServings: vi.fn(),
         };
 
-        mealService.create.mockReturnValue(of(consumption));
-        mealService.update.mockReturnValue(of(consumption));
+        mealService.create.mockReturnValue(of(meal));
+        mealService.update.mockReturnValue(of(meal));
         authService.isPremium.mockReturnValue(true);
-        dialogService.open.mockReturnValue({ afterClosed: () => of('ConsumptionList') });
+        dialogService.open.mockReturnValue({ afterClosed: () => of('MealList') });
         recipeWeightService.loadServingWeight.mockReturnValue(of(RECIPE_SERVING_WEIGHT));
         recipeWeightService.convertGramsToServings.mockImplementation((_recipe: unknown, amount: number) => amount / RECIPE_SERVING_WEIGHT);
         navigationService.navigateToHomeAsync.mockResolvedValue(true);
-        navigationService.navigateToConsumptionListAsync.mockResolvedValue(true);
+        navigationService.navigateToMealListAsync.mockResolvedValue(true);
         navigationService.navigateToPremiumAccessAsync.mockResolvedValue(true);
 
         TestBed.configureTestingModule({
@@ -182,34 +182,34 @@ describe('MealManageFacade', () => {
 
 function registerSubmitAndNavigationTests(): void {
     describe('submit and navigation', () => {
-        it('should create consumption when original consumption is null', async () => {
-            const result = await facade.submitConsumptionAsync(null, consumptionData);
+        it('should create meal when original meal is null', async () => {
+            const result = await facade.submitMealAsync(null, mealData);
 
             expect(mealService.create).toHaveBeenCalled();
-            expect(result).toEqual(consumption);
+            expect(result).toEqual(meal);
             expect(TestBed.inject(NutritionDataInvalidationService).dashboardVersion()).toBe(1);
         });
 
-        it('should update consumption when editing existing consumption', async () => {
-            const result = await facade.submitConsumptionAsync(consumption, consumptionData);
+        it('should update meal when editing existing meal', async () => {
+            const result = await facade.submitMealAsync(meal, mealData);
 
-            expect(mealService.update).toHaveBeenCalledWith('c1', consumptionData);
-            expect(result).toEqual(consumption);
+            expect(mealService.update).toHaveBeenCalledWith('c1', mealData);
+            expect(result).toEqual(meal);
         });
 
         it('should toast and redirect to list after create', async () => {
             await facade.showSuccessToastAndRedirectAsync(false);
 
-            expect(toastService.success).toHaveBeenCalledWith('CONSUMPTION_MANAGE.CREATE_SUCCESS');
-            expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalled();
+            expect(toastService.success).toHaveBeenCalledWith('MEAL_MANAGE.CREATE_SUCCESS');
+            expect(navigationService.navigateToMealListAsync).toHaveBeenCalled();
             expect(dialogService.open).not.toHaveBeenCalled();
         });
 
         it('should toast and redirect to list after update', async () => {
             await facade.showSuccessToastAndRedirectAsync(true);
 
-            expect(toastService.success).toHaveBeenCalledWith('CONSUMPTION_MANAGE.EDIT_SUCCESS');
-            expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalled();
+            expect(toastService.success).toHaveBeenCalledWith('MEAL_MANAGE.EDIT_SUCCESS');
+            expect(navigationService.navigateToMealListAsync).toHaveBeenCalled();
             expect(dialogService.open).not.toHaveBeenCalled();
         });
     });
@@ -218,7 +218,7 @@ function registerSubmitAndNavigationTests(): void {
 function registerAiSessionTests(): void {
     describe('ai sessions', () => {
         it('should append ai session', () => {
-            const sessions: ConsumptionAiSessionManageDto[] = [{ notes: 's1', items: [] }];
+            const sessions: MealAiSessionManageDto[] = [{ notes: 's1', items: [] }];
             const next = facade.addAiSession(sessions, { notes: 's2', items: [] });
 
             expect(next).toEqual([
@@ -228,7 +228,7 @@ function registerAiSessionTests(): void {
         });
 
         it('should remove ai session by index', () => {
-            const sessions: ConsumptionAiSessionManageDto[] = [
+            const sessions: MealAiSessionManageDto[] = [
                 { notes: 's1', items: [] },
                 { notes: 's2', items: [] },
             ];
@@ -238,7 +238,7 @@ function registerAiSessionTests(): void {
         });
 
         it('should replace ai session by index', () => {
-            const sessions: ConsumptionAiSessionManageDto[] = [
+            const sessions: MealAiSessionManageDto[] = [
                 { notes: 's1', items: [] },
                 { notes: 's2', items: [] },
             ];
@@ -254,11 +254,11 @@ function registerAiSessionTests(): void {
 
 function registerItemSelectionTests(): void {
     describe('item selection', () => {
-        it('should create product-based consumption item value', () => {
-            const item = facade.createConsumptionItem(null, null, null, ConsumptionSourceType.Product);
+        it('should create product-based meal item value', () => {
+            const item = facade.createMealItem(null, null, null, MealSourceType.Product);
 
             expect(item).toEqual({
-                sourceType: ConsumptionSourceType.Product,
+                sourceType: MealSourceType.Product,
                 product: null,
                 recipe: null,
                 amount: null,
@@ -356,20 +356,20 @@ function createNutritionRecipe(): ReturnType<typeof createEmptyRecipeSnapshot> {
     };
 }
 
-function createNutritionFormValue(isAuto: boolean): ConsumptionFormValues {
+function createNutritionFormValue(isAuto: boolean): MealFormValues {
     return {
         date: '2026-04-02',
         time: '12:00',
         mealType: null,
         items: [
             {
-                sourceType: ConsumptionSourceType.Product,
+                sourceType: MealSourceType.Product,
                 product: createNutritionProduct(),
                 recipe: null,
                 amount: PRODUCT_AMOUNT,
             },
             {
-                sourceType: ConsumptionSourceType.Recipe,
+                sourceType: MealSourceType.Recipe,
                 product: null,
                 recipe: createNutritionRecipe(),
                 amount: RECIPE_AMOUNT,

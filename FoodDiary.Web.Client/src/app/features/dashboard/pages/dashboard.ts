@@ -131,7 +131,7 @@ export class DashboardComponent {
     protected readonly desiredWeight = this.facade.desiredWeight;
     protected readonly waistTrend = this.facade.waistTrend;
     protected readonly nutrientBars = this.facade.nutrientBars;
-    protected readonly consumptionRingData = this.facade.consumptionRingData;
+    protected readonly mealRingData = this.facade.mealRingData;
     protected readonly mealPreviewEntries = this.facade.mealPreviewEntries;
     protected readonly placeholderIcon = this.facade.placeholderIcon;
     protected readonly placeholderLabel = this.facade.placeholderLabel;
@@ -198,7 +198,7 @@ export class DashboardComponent {
         };
     });
     protected readonly dashboardSummaryData = computed<DashboardSummaryData>(() => {
-        const ringData = this.consumptionRingData();
+        const ringData = this.mealRingData();
 
         return {
             dailyGoal: ringData.dailyGoal,
@@ -316,12 +316,12 @@ export class DashboardComponent {
         this.tourService.start(this.localizedTour.build(DASHBOARD_WELCOME_TOUR), { force });
     }
 
-    protected async addConsumptionAsync(mealType?: string | null): Promise<void> {
-        await this.navigationService.navigateToConsumptionAddAsync(mealType ?? undefined);
+    protected async addMealAsync(mealType?: string | null): Promise<void> {
+        await this.navigationService.navigateToMealAddAsync(mealType ?? undefined);
     }
 
-    protected async manageConsumptionsAsync(): Promise<void> {
-        await this.navigationService.navigateToConsumptionListAsync();
+    protected async manageMealsAsync(): Promise<void> {
+        await this.navigationService.navigateToMealListAsync();
     }
 
     protected onMealCreated(): void {
@@ -339,8 +339,8 @@ export class DashboardComponent {
             });
     }
 
-    protected openConsumption(consumption: { id: string }): void {
-        void this.navigationService.navigateToConsumptionEditAsync(consumption.id);
+    protected openMeal(meal: { id: string }): void {
+        void this.navigationService.navigateToMealEditAsync(meal.id);
     }
 
     protected addHydration(amount: number): void {
@@ -370,7 +370,7 @@ export class DashboardComponent {
                 break;
             }
             case 'meal': {
-                void this.addConsumptionAsync();
+                void this.addMealAsync();
                 break;
             }
             case 'weight': {

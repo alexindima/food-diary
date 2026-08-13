@@ -8,8 +8,8 @@ import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
-import { ConsumptionSourceType } from '../../../models/meal.data';
-import type { ConsumptionItemFormValues, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
+import { MealSourceType } from '../../../models/meal.data';
+import type { MealItemFormValues, NutritionTotals } from '../meal-manage-lib/meal-manage.types';
 import { formatMealManageAmount, formatMealManageMacro, getEmptyNutritionTotals } from '../meal-manage-lib/meal-manage-view.utils';
 
 @Component({
@@ -64,11 +64,11 @@ export class MealItemsListComponent {
     }
 
     protected isProductItem(index: number): boolean {
-        return this.getItem(index)?.sourceType === ConsumptionSourceType.Product;
+        return this.getItem(index)?.sourceType === MealSourceType.Product;
     }
 
     protected isRecipeItem(index: number): boolean {
-        return this.getItem(index)?.sourceType === ConsumptionSourceType.Recipe;
+        return this.getItem(index)?.sourceType === MealSourceType.Recipe;
     }
 
     protected getProductName(index: number): string {
@@ -109,17 +109,17 @@ export class MealItemsListComponent {
     }
 
     private getItemSourceName(item: MealItemsListItemState): string {
-        if (item.sourceType === ConsumptionSourceType.Recipe) {
+        if (item.sourceType === MealSourceType.Recipe) {
             return item.recipe?.name ?? '';
         }
         return item.product?.name ?? '';
     }
 
     private getItemSourceIcon(item: MealItemsListItemState): string {
-        if (item.sourceType === ConsumptionSourceType.Recipe && item.recipe !== null) {
+        if (item.sourceType === MealSourceType.Recipe && item.recipe !== null) {
             return 'menu_book';
         }
-        if (item.sourceType === ConsumptionSourceType.Product && item.product !== null) {
+        if (item.sourceType === MealSourceType.Product && item.product !== null) {
             return 'restaurant';
         }
         return 'search';
@@ -132,14 +132,14 @@ export class MealItemsListComponent {
     private getManualItemTotals(item: MealItemsListItemState): NutritionTotals {
         const amount = item.amount ?? 0;
 
-        if (item.sourceType === ConsumptionSourceType.Product) {
+        if (item.sourceType === MealSourceType.Product) {
             return this.getProductManualItemTotals(item.product, amount);
         }
 
         return this.getRecipeManualItemTotals(item.recipe, amount);
     }
 
-    private getProductManualItemTotals(product: ConsumptionItemFormValues['product'], amount: number): NutritionTotals {
+    private getProductManualItemTotals(product: MealItemFormValues['product'], amount: number): NutritionTotals {
         if (product === null || product.baseAmount <= 0) {
             return getEmptyNutritionTotals();
         }
@@ -155,7 +155,7 @@ export class MealItemsListComponent {
         };
     }
 
-    private getRecipeManualItemTotals(recipe: ConsumptionItemFormValues['recipe'], amount: number): NutritionTotals {
+    private getRecipeManualItemTotals(recipe: MealItemFormValues['recipe'], amount: number): NutritionTotals {
         if (recipe === null || recipe.servings <= 0) {
             return getEmptyNutritionTotals();
         }
@@ -178,7 +178,7 @@ export class MealItemsListComponent {
     }
 
     private getManualItemImageUrl(item: MealItemsListItemState): string | null {
-        if (item.sourceType === ConsumptionSourceType.Recipe) {
+        if (item.sourceType === MealSourceType.Recipe) {
             return item.recipe?.imageUrl ?? null;
         }
 
@@ -210,7 +210,7 @@ export class MealItemsListComponent {
     }
 
     private getAmountUnitLabelForItem(item: MealItemsListItemState): string | null {
-        if (item.sourceType === ConsumptionSourceType.Product) {
+        if (item.sourceType === MealSourceType.Product) {
             const unit = item.product?.baseUnit;
             return unit !== undefined ? this.translateService.instant(`GENERAL.UNITS.${unit.toUpperCase()}`) : null;
         }
@@ -219,7 +219,7 @@ export class MealItemsListComponent {
     }
 }
 
-export type MealItemsListItemState = ConsumptionItemFormValues & {
+export type MealItemsListItemState = MealItemFormValues & {
     amountError: string | null;
     productInvalid: boolean;
     recipeInvalid: boolean;

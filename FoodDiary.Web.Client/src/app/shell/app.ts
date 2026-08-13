@@ -7,7 +7,7 @@ import { FdTourHostComponent } from 'fd-tour';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
 import { filter, from, mergeMap } from 'rxjs';
 
-import { QuickConsumptionDrawerComponent } from '../features/meals/components/quick-consumption-drawer/quick-consumption-drawer';
+import { QuickMealDrawerComponent } from '../features/meals/components/quick-meal-drawer/quick-meal-drawer';
 import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
@@ -27,7 +27,7 @@ type AppShellMode = 'authenticated' | 'public';
     imports: [
         RouterOutlet,
         SidebarComponent,
-        QuickConsumptionDrawerComponent,
+        QuickMealDrawerComponent,
         FdUiToastHostComponent,
         FdUiTopLoaderComponent,
         FdTourHostComponent,

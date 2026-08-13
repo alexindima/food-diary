@@ -28,7 +28,7 @@ This document defines the minimum critical backend flows that must remain covere
 | CF08 | Product delete preserves shopping-list item text and clears FK | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
 | CF09 | Recipe image asset cannot be deleted while referenced | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresCriticalApiFlowTests.cs` |
 | CF10 | Recipe duplicate remains independent after original deletion | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
-| CF11 | Product -> consumption -> dashboard nutrition path | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
+| CF11 | Product -> meal -> dashboard nutrition path | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
 | CF12 | Hydration daily aggregation | API + Postgres | covered | `tests/FoodDiary.Web.Api.IntegrationTests/PostgresUserFlowTests.cs` |
 | CF13 | User repository loads active user with roles | Infrastructure + Postgres | covered | `tests/FoodDiary.Infrastructure.Tests/Integration/UserRepositoryIntegrationTests.cs` |
 | CF14 | User repository paging and search normalization | Infrastructure + Postgres | covered | `tests/FoodDiary.Infrastructure.Tests/Integration/UserRepositoryIntegrationTests.cs` |

@@ -1,7 +1,7 @@
 import type { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { ConsumptionAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiSessionManageDto } from '../../../models/meal.data';
 import {
     formatMealAiAmount,
     formatMealAiName,
@@ -41,7 +41,7 @@ describe('meal manage view formatting', () => {
 
 describe('meal manage view totals', () => {
     it('should sum AI session nutrition totals', () => {
-        const session: ConsumptionAiSessionManageDto = {
+        const session: MealAiSessionManageDto = {
             items: [
                 createAiItem({ calories: 10, proteins: 2, fats: 1, carbs: 3, fiber: 4, alcohol: 0 }),
                 createAiItem({ calories: 20, proteins: 3, fats: 2, carbs: 4, fiber: 5, alcohol: 1 }),
@@ -100,7 +100,7 @@ function createAiItem(values: {
     carbs: number;
     fiber: number;
     alcohol: number;
-}): ConsumptionAiSessionManageDto['items'][number] {
+}): MealAiSessionManageDto['items'][number] {
     return {
         nameEn: 'Item',
         amount: 1,

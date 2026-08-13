@@ -18,6 +18,7 @@ public sealed class ApplicationGuardrailTests {
             "FoodDiary.Application.Hydration",
             "FoodDiary.Application.Images",
             "FoodDiary.Application.Lessons",
+            "FoodDiary.Application.Meals",
             "FoodDiary.Application.OpenFoodFacts",
             "FoodDiary.Application.Statistics",
             "FoodDiary.Application.Tdee",
@@ -233,7 +234,7 @@ public sealed class ApplicationGuardrailTests {
             "Admin",
             "Authentication",
             "ContentReports",
-            "Consumptions",
+            "Meals",
             "DailyAdvices",
             "Dashboard",
             "Dietologist",
@@ -638,7 +639,7 @@ public sealed class ApplicationGuardrailTests {
         ];
         string[] migratedFacadeFiles = [
             "Errors.Ai.cs",
-            "Errors.Consumption.cs",
+            "Errors.Meal.cs",
             "Errors.ContentReport.cs",
             "Errors.Cycle.cs",
             "Errors.CycleDay.cs",
@@ -702,7 +703,7 @@ public sealed class ApplicationGuardrailTests {
     [InlineData("Errors.Ai.cs", "Ai", "Common", "AiErrors.cs", "AiErrors.", "Ai.")]
     [InlineData("Errors.Dietologist.cs", "Dietologist", "Common", "DietologistErrors.cs", "DietologistErrors.", "Dietologist.")]
     [InlineData("Errors.User.cs", "Users", "Common", "UserErrors.cs", "UserErrors.", "User.")]
-    [InlineData("Errors.Consumption.cs", "Consumptions", "Common", "ConsumptionErrors.cs", "ConsumptionErrors.", "Consumption.")]
+    [InlineData("Errors.Meal.cs", "Meals", "Common", "MealErrors.cs", "MealErrors.", "Meal.")]
     [InlineData("Errors.MailInbox.cs", "Admin", "Common", "AdminMailInboxErrors.cs", "AdminMailInboxErrors.", "MailInbox.")]
     public void MigratedErrorsFacades_DelegateToFeatureOwnedErrorFactories(
         string facadeFileName,
@@ -1182,8 +1183,8 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Ai", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Consumptions", "Commands", "DeleteConsumption", "DeleteConsumptionCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Consumptions", "Queries", "GetConsumptionById", "GetConsumptionByIdQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Meals", "Commands", "DeleteMeal", "DeleteMealCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Meals", "Queries", "GetMealById", "GetMealByIdQueryHandler.cs"),
             Path.Combine(applicationRoot, "ContentReports", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dashboard", "Queries", "GetDashboardSnapshot", "GetDashboardSnapshotQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
@@ -1377,7 +1378,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] serviceFiles = [
-            Path.Combine(applicationRoot, "Consumptions", "Services", "ConsumptionReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application.Meals", "Services", "MealReadService.cs"),
             Path.Combine(applicationRoot, "Export", "Services", "ExportDiaryReadService.cs"),
             Path.Combine(applicationRoot, "Gamification", "Services", "GamificationReadService.cs"),
             Path.Combine(applicationRoot, "Usda", "Services", "UsdaDailyMicronutrientReadService.cs"),
@@ -1452,29 +1453,28 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ConsumptionQueries_UseDedicatedReadServiceInsteadOfMealRepository() {
+    public void MealQueries_UseDedicatedReadServiceInsteadOfMealRepository() {
         string root = GetRepositoryRoot();
-        string consumptionQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Consumptions", "Queries");
-        string[] consumptionQueryFiles = [.. SourceScanner.SourceFiles(consumptionQueriesRoot)];
+        string mealQueriesRoot = Path.Combine(root, "FoodDiary.Application.Meals", "Queries");
+        string[] mealQueryFiles = [.. SourceScanner.SourceFiles(mealQueriesRoot)];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, consumptionQueryFiles, "IMealReadRepository"),
-            .. FindReferencesInFiles(root, consumptionQueryFiles, "FoodDiary.Domain.Entities.Meals"),
-            .. FindReferencesInFiles(root, consumptionQueryFiles, "mealRepository"),
+            .. FindReferencesInFiles(root, mealQueryFiles, "IMealReadRepository"),
+            .. FindReferencesInFiles(root, mealQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, mealQueryFiles, "mealRepository"),
         ];
 
         Assert.Empty(violations);
     }
 
     [Fact]
-    public void ConsumptionReadService_UsesReadModelsInsteadOfMealAggregates() {
+    public void MealReadService_UsesReadModelsInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Consumptions",
+            "FoodDiary.Application.Meals",
             "Services",
-            "ConsumptionReadService.cs");
+            "MealReadService.cs");
         string[] serviceFiles = [servicePath];
 
         string[] violations = [
@@ -1518,21 +1518,21 @@ public sealed class ApplicationGuardrailTests {
         string contractRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Meals", "Common");
         string[] contractFiles = [
             Path.Combine(contractRoot, "IMealReadRepository.cs"),
-            Path.Combine(contractRoot, "IMealConsumptionReadRepository.cs"),
+            Path.Combine(contractRoot, "IMealProjectionReadRepository.cs"),
             Path.Combine(contractRoot, "IMealActivityReadRepository.cs"),
             Path.Combine(contractRoot, "IMealProductNutritionReadRepository.cs"),
             Path.Combine(contractRoot, "IMealRepository.cs"),
         ];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, contractFiles, "async Task<(IReadOnlyList<MealConsumptionReadModel>"),
-            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<MealConsumptionReadModel>>"),
-            .. FindReferencesInFiles(root, contractFiles, "async Task<MealConsumptionReadModel?>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<(IReadOnlyList<MealProjectionReadModel>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<MealProjectionReadModel>>"),
+            .. FindReferencesInFiles(root, contractFiles, "async Task<MealProjectionReadModel?>"),
             .. FindReferencesInFiles(root, contractFiles, "async Task<IReadOnlyList<MealProductNutritionReadModel>>"),
-            .. FindReferencesInFiles(root, contractFiles, "private static MealConsumptionReadModel"),
-            .. FindReferencesInFiles(root, contractFiles, "private static MealConsumptionItemReadModel"),
-            .. FindReferencesInFiles(root, contractFiles, "private static MealConsumptionAiSessionReadModel"),
-            .. FindReferencesInFiles(root, contractFiles, "private static MealConsumptionAiItemReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "private static MealProjectionReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "private static MealItemProjectionReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "private static MealAiSessionProjectionReadModel"),
+            .. FindReferencesInFiles(root, contractFiles, "private static MealAiItemProjectionReadModel"),
         ];
 
         Assert.Empty(violations);
@@ -1733,20 +1733,19 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ConsumptionMappings_DoNotExposePagedMealAggregateReadModels() {
+    public void MealMappings_DoNotExposePagedMealAggregateReadModels() {
         string root = GetRepositoryRoot();
         string mappingPath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Consumptions",
+            "FoodDiary.Application.Meals",
             "Mappings",
-            "ConsumptionMappings.cs");
+            "MealMappings.cs");
         string[] mappingFiles = [mappingPath];
 
         string[] violations = [
             .. FindReferencesInFiles(root, mappingFiles, "IReadOnlyList<Meal>"),
             .. FindReferencesInFiles(root, mappingFiles, "(IReadOnlyList<Meal> Items, int TotalItems)"),
-            .. FindReferencesInFiles(root, mappingFiles, "PagedResponse<ConsumptionModel>"),
+            .. FindReferencesInFiles(root, mappingFiles, "PagedResponse<MealModel>"),
         ];
 
         Assert.Empty(violations);
@@ -3327,7 +3326,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine("Admin", "Common", "IAdminImpersonationSessionReadRepository.cs"),
             Path.Combine("Admin", "Common", "IAdminUserRoleAuditReadRepository.cs"),
             Path.Combine("Authentication", "Common", "IUserLoginEventReadRepository.cs"),
-            Path.Combine("Meals", "Common", "IMealConsumptionReadRepository.cs"),
+            Path.Combine("Meals", "Common", "IMealProjectionReadRepository.cs"),
             Path.Combine("Meals", "Common", "IMealProductNutritionReadRepository.cs"),
         ];
         HashSet<string> allowed = [.. allowedRelativePaths.Select(path => Path.Combine(abstractionsRoot, path))];

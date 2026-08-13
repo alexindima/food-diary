@@ -1,0 +1,33 @@
+using System.Diagnostics.CodeAnalysis;
+
+namespace FoodDiary.Application.Meals.Models;
+
+[ExcludeFromCodeCoverage]
+public sealed record MealModel(
+    Guid Id,
+    DateTime Date,
+    string? MealType,
+    string? Comment,
+    string? ImageUrl,
+    Guid? ImageAssetId,
+    double TotalCalories,
+    double TotalProteins,
+    double TotalFats,
+    double TotalCarbs,
+    double TotalFiber,
+    double TotalAlcohol,
+    bool IsNutritionAutoCalculated,
+    double? ManualCalories,
+    double? ManualProteins,
+    double? ManualFats,
+    double? ManualCarbs,
+    double? ManualFiber,
+    double? ManualAlcohol,
+    int PreMealSatietyLevel,
+    int PostMealSatietyLevel,
+    int QualityScore,
+    string QualityGrade,
+    bool IsFavorite,
+    Guid? FavoriteMealId,
+    IReadOnlyList<MealItemModel> Items,
+    IReadOnlyList<MealAiSessionModel> AiSessions);

@@ -55,7 +55,7 @@ export class ProductListFacade {
     private readonly productService = inject(ProductService);
     public readonly navigationService = inject(NavigationService);
     public readonly fdDialogService = inject(FdUiDialogService);
-    private readonly quickConsumptionService = inject(QuickMealService);
+    private readonly quickMealService = inject(QuickMealService);
     private readonly favoriteProductService = inject(FavoriteProductService);
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
@@ -348,7 +348,7 @@ export class ProductListFacade {
     }
 
     public onAddToMeal(product: Product): void {
-        this.quickConsumptionService.addProduct(product);
+        this.quickMealService.addProduct(product);
     }
 
     public loadFavorites(): void {
@@ -409,7 +409,7 @@ export class ProductListFacade {
     }
 
     public addFavoriteProductToMeal(favorite: FavoriteProduct): void {
-        this.quickConsumptionService.addProduct(buildFavoriteProductSnapshot(favorite), favorite.defaultPortionAmount);
+        this.quickMealService.addProduct(buildFavoriteProductSnapshot(favorite), favorite.defaultPortionAmount);
     }
 
     public removeFavorite(favorite: FavoriteProduct): void {

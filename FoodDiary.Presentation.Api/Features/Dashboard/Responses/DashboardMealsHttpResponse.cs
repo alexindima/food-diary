@@ -1,7 +1,7 @@
-using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
+using FoodDiary.Presentation.Api.Features.Meals.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 
 public sealed record DashboardMealsHttpResponse(
-    IReadOnlyList<ConsumptionHttpResponse> Items,
+    IReadOnlyList<MealHttpResponse> Items,
     int Total);

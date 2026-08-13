@@ -5,10 +5,10 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import type { ConsumptionManageDto, ConsumptionResponseDto, MealFilters } from '../models/meal.data';
+import type { MealFilters,MealManageDto, MealResponseDto } from '../models/meal.data';
 import { MealService } from './meal.service';
 
-const BASE_URL = 'http://localhost:5300/api/v1/consumptions';
+const BASE_URL = 'http://localhost:5300/api/v1/meals';
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
 const TOTAL_CALORIES = 500;
@@ -20,7 +20,7 @@ const AI_TOTAL_FATS = 4.8;
 const AI_TOTAL_CARBS = 67.09;
 const AI_TOTAL_FIBER = 13.79;
 const MANUAL_TOTAL_CALORIES = 350;
-const MOCK_CONSUMPTION_DTO: ConsumptionResponseDto = {
+const MOCK_MEAL_DTO: MealResponseDto = {
     id: 'm1',
     date: '2026-03-28',
     mealType: 'Lunch',
@@ -45,8 +45,8 @@ const MOCK_CONSUMPTION_DTO: ConsumptionResponseDto = {
     items: [],
     aiSessions: [],
 };
-const MOCK_PAGE_DTO: PageOf<ConsumptionResponseDto> = {
-    data: [MOCK_CONSUMPTION_DTO],
+const MOCK_PAGE_DTO: PageOf<MealResponseDto> = {
+    data: [MOCK_MEAL_DTO],
     page: DEFAULT_PAGE,
     limit: DEFAULT_LIMIT,
     totalPages: 1,
@@ -95,7 +95,7 @@ describe('MealService query', () => {
         req.flush(MOCK_PAGE_DTO);
     });
 
-    it('should map consumption response to meal on query', () => {
+    it('should map meal response to meal on query', () => {
         service.query(DEFAULT_PAGE, DEFAULT_LIMIT, DEFAULT_FILTERS).subscribe(result => {
             const meal = result.data[0];
             expect(meal.totalCalories).toBe(TOTAL_CALORIES);
@@ -137,7 +137,7 @@ describe('MealService reads', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
         expect(req.request.method).toBe('GET');
-        req.flush(MOCK_CONSUMPTION_DTO);
+        req.flush(MOCK_MEAL_DTO);
     });
 
     it('should return null on getById error', () => {
@@ -155,7 +155,7 @@ describe('MealService reads', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
-        req.flush({ ...MOCK_CONSUMPTION_DTO, mealType: 'Lunch' });
+        req.flush({ ...MOCK_MEAL_DTO, mealType: 'Lunch' });
     });
 });
 
@@ -166,7 +166,7 @@ describe('MealService AI nutrition mapping', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
-        req.flush(createAiOnlyConsumption(AI_TOTAL_CALORIES));
+        req.flush(createAiOnlyMeal(AI_TOTAL_CALORIES));
     });
 
     it('should keep manual mode when AI meal nutrition differs from AI totals', () => {
@@ -175,13 +175,13 @@ describe('MealService AI nutrition mapping', () => {
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
-        req.flush(createAiOnlyConsumption(MANUAL_TOTAL_CALORIES));
+        req.flush(createAiOnlyMeal(MANUAL_TOTAL_CALORIES));
     });
 });
 
 describe('MealService create', () => {
     it('should create meal', () => {
-        const createData = createConsumptionManageDto('2026-03-28');
+        const createData = createMealManageDto('2026-03-28');
 
         service.create(createData).subscribe(result => {
             expect(result).not.toBeNull();
@@ -191,11 +191,11 @@ describe('MealService create', () => {
         const req = httpMock.expectOne(`${BASE_URL}/`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(createData);
-        req.flush(MOCK_CONSUMPTION_DTO);
+        req.flush(MOCK_MEAL_DTO);
     });
 
     it('should rethrow create errors', () => {
-        const createData = createConsumptionManageDto();
+        const createData = createMealManageDto();
 
         service.create(createData).subscribe({
             next: () => {
@@ -213,7 +213,7 @@ describe('MealService create', () => {
 
 describe('MealService update', () => {
     it('should update meal via PATCH', () => {
-        const updateData: ConsumptionManageDto = {
+        const updateData: MealManageDto = {
             date: new Date('2026-03-28'),
             comment: 'Updated',
             items: [],
@@ -228,11 +228,11 @@ describe('MealService update', () => {
         const req = httpMock.expectOne(`${BASE_URL}/m1`);
         expect(req.request.method).toBe('PATCH');
         expect(req.request.body).toEqual(updateData);
-        req.flush(MOCK_CONSUMPTION_DTO);
+        req.flush(MOCK_MEAL_DTO);
     });
 
     it('should rethrow update errors', () => {
-        const updateData: ConsumptionManageDto = {
+        const updateData: MealManageDto = {
             date: new Date(),
             comment: 'fail',
             items: [],
@@ -277,7 +277,7 @@ describe('MealService delete', () => {
     });
 });
 
-function createConsumptionManageDto(date?: string): ConsumptionManageDto {
+function createMealManageDto(date?: string): MealManageDto {
     return {
         date: date === undefined ? new Date() : new Date(date),
         mealType: 'lunch',
@@ -286,9 +286,9 @@ function createConsumptionManageDto(date?: string): ConsumptionManageDto {
     };
 }
 
-function createAiOnlyConsumption(totalCalories: number): ConsumptionResponseDto {
+function createAiOnlyMeal(totalCalories: number): MealResponseDto {
     return {
-        ...MOCK_CONSUMPTION_DTO,
+        ...MOCK_MEAL_DTO,
         items: [],
         isNutritionAutoCalculated: false,
         totalCalories,
@@ -306,7 +306,7 @@ function createAiOnlyConsumption(totalCalories: number): ConsumptionResponseDto 
         aiSessions: [
             {
                 id: 's1',
-                consumptionId: 'm1',
+                mealId: 'm1',
                 recognizedAtUtc: '2026-05-03T00:29:00Z',
                 items: [
                     {

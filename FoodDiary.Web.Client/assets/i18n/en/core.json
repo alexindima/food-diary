@@ -10,7 +10,7 @@
             "MIN_LENGTH": "Password must be at least 6 characters",
             "MATCH": "Passwords must be the same"
         },
-        "CONSUMPTION": {
+        "MEAL": {
             "INVALID_MIN_AMOUNT": "Value must be greater than 0"
         },
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
@@ -93,7 +93,7 @@
         "REGISTER": "Register",
         "PRODUCTS": "Products",
         "RECIPES": "Recipes",
-        "CONSUMPTION": "Consumption",
+        "MEAL": "Meal",
         "STATISTICS": "Statistics",
         "USER": "User",
         "ACCOUNT": "Account",
@@ -297,7 +297,7 @@
         "PRODUCTS": "Products",
         "PRODUCTS_DESCRIPTION": "Browse and manage your food products database.",
         "MEALS": "Meals",
-        "MEALS_DESCRIPTION": "View and manage your daily meals and consumption history.",
+        "MEALS_DESCRIPTION": "View and manage your daily meals and meal history.",
         "RECIPES": "Recipes",
         "RECIPES_DESCRIPTION": "Create and manage your favorite recipes with nutrition info.",
         "SHOPPING_LISTS": "Shopping Lists",
@@ -340,7 +340,7 @@
         "MEAL_PREP_PLANNER_PAGE": "Meal Prep Planner for Weekly Menus and Shopping",
         "MEAL_PREP_PLANNER_PAGE_DESCRIPTION": "Plan meal prep in Food Diary with repeatable recipes, weekly menus, shopping lists, and nutrition goals in one workflow."
     },
-    "CONSUMPTION_RING": {
+    "MEAL_RING": {
         "TITLE": "Calories: day & week",
         "UNIT": "kcal",
         "DAILY_PROGRESS": "Today",
@@ -382,7 +382,7 @@
         "OTHER": "Other"
     },
     "PRODUCT_CARD": {
-        "ADD_TO_CONSUMPTION": "Add to meal",
+        "ADD_TO_MEAL": "Add to meal",
         "NO_BARCODE": "No barcode",
         "QUALITY_SCORE": "Healthiness"
     },
@@ -485,7 +485,7 @@
         "CONFIRM_BUTTON": "Confirm",
         "CANCEL_BUTTON": "Cancel",
         "SERVING": "Serving",
-        "ADD_TO_CONSUMPTION": "Add to consumption",
+        "ADD_TO_MEAL": "Add to meal",
         "CREATE_SUCCESS": "Product created successfully!",
         "EDIT_SUCCESS": "Product edited successfully!",
         "GO_TO_HOME_BUTTON": "Go to Home",
@@ -514,8 +514,8 @@
     },
     "DASHBOARD": {
         "MEALS_TITLE": "Today's meals",
-        "MEALS_EMPTY": "No consumptions logged for this date yet.",
-        "MEALS_VIEW_ALL": "Open consumptions",
+        "MEALS_EMPTY": "No meals logged for this date yet.",
+        "MEALS_VIEW_ALL": "Open meals",
         "ADD_WITH_AI_BUTTON": "Add with AI"
     },
     "MEAL_DETAILS": {
@@ -527,11 +527,11 @@
         "SATIETY_BEFORE": "Hunger before",
         "SATIETY_AFTER": "Satiety after"
     },
-    "CONSUMPTION_MANAGE": {
+    "MEAL_MANAGE": {
         "MANUAL_ITEM_EDIT": "Edit manual item",
         "MANUAL_ITEM_EDIT_NAMED": "Edit manual item: {{name}}"
     },
-    "QUICK_CONSUMPTION": {
+    "QUICK_MEAL": {
         "TITLE": "Meal draft",
         "ITEMS": "items",
         "AMOUNT": "Amount",

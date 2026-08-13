@@ -86,7 +86,7 @@ function createPageOf(meals: Meal[], page = 1): PageOf<Meal> {
 
 function createOverview(meals: Meal[]): MealOverview {
     return {
-        allConsumptions: createPageOf(meals),
+        allMeals: createPageOf(meals),
         favoriteItems: [],
         favoriteTotalCount: 0,
     };
@@ -101,8 +101,8 @@ const mockMealService = {
 };
 
 const mockNavigationService = {
-    navigateToConsumptionAddAsync: vi.fn().mockResolvedValue(true),
-    navigateToConsumptionEditAsync: vi.fn().mockResolvedValue(true),
+    navigateToMealAddAsync: vi.fn().mockResolvedValue(true),
+    navigateToMealEditAsync: vi.fn().mockResolvedValue(true),
 };
 
 const mockDialogRef = {
@@ -233,11 +233,11 @@ function registerLoadingTests(context: TestContext): void {
         it('should expose load errors for retry state', () => {
             context.mockMealService.query.mockReturnValue(throwError(() => new Error('Network error')));
 
-            context.component()['loadConsumptions'](1).subscribe();
+            context.component()['loadMeals'](1).subscribe();
 
             expect(context.component()['errorKey']()).toBe('ERRORS.LOAD_FAILED_TITLE');
-            expect(context.component()['consumptionData'].isLoading()).toBe(false);
-            expect(context.component()['consumptionData'].items()).toEqual([]);
+            expect(context.component()['mealData'].isLoading()).toBe(false);
+            expect(context.component()['mealData'].items()).toEqual([]);
         });
     });
 }
@@ -247,7 +247,7 @@ function registerNavigationTests(context: TestContext): void {
         it('should navigate to add meal', async () => {
             await context.component()['goToMealAddAsync']();
 
-            expect(context.mockNavigationService.navigateToConsumptionAddAsync).toHaveBeenCalled();
+            expect(context.mockNavigationService.navigateToMealAddAsync).toHaveBeenCalled();
         });
 
         it('should handle page change', () => {
@@ -267,7 +267,7 @@ function registerNavigationTests(context: TestContext): void {
 
 function registerGroupingTests(context: TestContext): void {
     describe('grouping', () => {
-        it('should group consumptions by date', () => {
+        it('should group meals by date', () => {
             const meal1 = createMockMeal({
                 id: '1',
                 date: new Date(LOCAL_GROUP_YEAR, LOCAL_GROUP_MONTH, LOCAL_GROUP_DAY_15, MORNING_HOUR).toISOString(),
@@ -282,9 +282,9 @@ function registerGroupingTests(context: TestContext): void {
             });
 
             context.mockMealService.query.mockReturnValue(of(createPageOf([meal1, meal2, meal3])));
-            context.component()['loadConsumptions'](1).subscribe();
+            context.component()['loadMeals'](1).subscribe();
 
-            const grouped = context.component()['groupedConsumptions']();
+            const grouped = context.component()['groupedMeals']();
             expect(grouped.length).toBe(NEXT_PAGE_NUMBER);
 
             const march16Group = grouped.find(
@@ -316,9 +316,9 @@ function registerGroupingTests(context: TestContext): void {
             });
 
             context.mockMealService.query.mockReturnValue(of(createPageOf([afterMidnightMeal, lateMeal])));
-            context.component()['loadConsumptions'](1).subscribe();
+            context.component()['loadMeals'](1).subscribe();
 
-            const grouped = context.component()['groupedConsumptions']();
+            const grouped = context.component()['groupedMeals']();
             expect(grouped.length).toBe(NEXT_PAGE_NUMBER);
             expect(grouped[0].date.getFullYear()).toBe(CURRENT_YEAR);
             expect(grouped[0].date.getMonth()).toBe(MAY_MONTH_INDEX);
@@ -345,10 +345,10 @@ function registerGroupingTests(context: TestContext): void {
             });
 
             context.mockMealService.query.mockReturnValue(of(createPageOf([laterFutureMeal, currentMeal, nearerFutureMeal])));
-            context.component()['loadConsumptions'](1).subscribe();
+            context.component()['loadMeals'](1).subscribe();
 
-            expect(context.component()['groupedConsumptions']()).toHaveLength(1);
-            expect(context.component()['groupedConsumptions']()[0].items).toEqual([currentMeal]);
+            expect(context.component()['groupedMeals']()).toHaveLength(1);
+            expect(context.component()['groupedMeals']()[0].items).toEqual([currentMeal]);
             expect(context.component()['plannedGroups']()).toHaveLength(1);
             expect(context.component()['plannedGroups']()[0].items).toEqual([nearerFutureMeal, laterFutureMeal]);
         });
@@ -364,7 +364,7 @@ function registerRangeTests(context: TestContext): void {
             context.component()['searchModel'].update(value => ({ ...value, dateRange: { start, end } }));
             context.mockMealService.query.mockClear();
 
-            context.component()['loadConsumptions'](1).subscribe();
+            context.component()['loadMeals'](1).subscribe();
 
             expect(context.mockMealService.query).toHaveBeenCalledWith(1, PAGE_LIMIT, {
                 dateFrom: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, 0, 0, 0, 0).toISOString(),
@@ -405,7 +405,7 @@ function registerFavoriteTests(context: TestContext): void {
 
             context.component()['repeatFavorite'](favorite);
 
-            expect(context.mockToastService.error).toHaveBeenCalledWith('CONSUMPTION_LIST.OPERATION_ERROR_MESSAGE');
+            expect(context.mockToastService.error).toHaveBeenCalledWith('MEAL_LIST.OPERATION_ERROR_MESSAGE');
             expect(context.component()['errorKey']()).toBeNull();
             expect(context.mockMealService.query).not.toHaveBeenCalled();
         });
@@ -413,7 +413,7 @@ function registerFavoriteTests(context: TestContext): void {
         it('should sync favorite count and meal card state when favorite is removed', () => {
             const favorite = createFavorite();
             const meal = createMockMeal({ id: favorite.mealId, isFavorite: true, favoriteMealId: favorite.id });
-            context.component()['consumptionData'].setData(createPageOf([meal]));
+            context.component()['mealData'].setData(createPageOf([meal]));
             context.component()['favorites'].set([favorite]);
             context.component()['favoriteTotalCount'].set(1);
 
@@ -421,17 +421,17 @@ function registerFavoriteTests(context: TestContext): void {
 
             expect(context.component()['favorites']()).toEqual([]);
             expect(context.component()['favoriteTotalCount']()).toBe(0);
-            expect(context.component()['consumptionData'].items()[0]).toMatchObject({ isFavorite: false, favoriteMealId: null });
+            expect(context.component()['mealData'].items()[0]).toMatchObject({ isFavorite: false, favoriteMealId: null });
         });
 
         it('should add meal favorite and refresh favorites', () => {
             const meal = createMockMeal({ id: 'meal-1', isFavorite: false, favoriteMealId: null });
-            context.component()['consumptionData'].setData(createPageOf([meal]));
+            context.component()['mealData'].setData(createPageOf([meal]));
 
             context.component()['onMealFavoriteToggle'](meal);
 
             expect(context.mockFavoriteMealService.add).toHaveBeenCalledWith('meal-1');
-            expect(context.component()['consumptionData'].items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: 'favorite-1' });
+            expect(context.component()['mealData'].items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: 'favorite-1' });
             expect(context.mockFavoriteMealService.getAll).toHaveBeenCalled();
         });
 
@@ -448,7 +448,7 @@ function registerFavoriteTests(context: TestContext): void {
                     .component()
                     ['favoriteViews']()
                     .map(view => view.displayNameKey),
-            ).toEqual(['MEAL_TYPES.DINNER', 'CONSUMPTION_LIST.FAVORITE_UNNAMED']);
+            ).toEqual(['MEAL_TYPES.DINNER', 'MEAL_LIST.FAVORITE_UNNAMED']);
         });
     });
 }

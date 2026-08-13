@@ -38,7 +38,7 @@ export class MealListFacade {
     private readonly invalidation = inject(NutritionDataInvalidationService);
 
     public readonly pageSize = MEAL_LIST_PAGE_SIZE;
-    public readonly consumptionData = new PagedData<Meal>();
+    public readonly mealData = new PagedData<Meal>();
     public readonly currentPageIndex = signal(0);
     public readonly errorKey = signal<string | null>(null);
     public readonly favorites = signal<FavoriteMeal[]>([]);
@@ -66,24 +66,24 @@ export class MealListFacade {
             });
     }
 
-    public loadConsumptions(page: number, filtersModel: MealListStructuredFilters): Observable<void> {
-        this.consumptionData.setLoading(true);
+    public loadMeals(page: number, filtersModel: MealListStructuredFilters): Observable<void> {
+        this.mealData.setLoading(true);
         const filters = this.buildFilters(filtersModel);
 
         return this.mealService.query(page, this.pageSize, filters).pipe(
             tap(pageData => {
-                this.consumptionData.setData(pageData);
+                this.mealData.setData(pageData);
                 this.currentPageIndex.set(pageData.page - 1);
                 this.clearError();
             }),
             map(() => void 0),
             catchError((_error: unknown) => {
-                this.consumptionData.clearData();
+                this.mealData.clearData();
                 this.showLoadError();
                 return of(void 0);
             }),
             finalize(() => {
-                this.consumptionData.setLoading(false);
+                this.mealData.setLoading(false);
             }),
         );
     }
@@ -103,11 +103,11 @@ export class MealListFacade {
         }
         if (result.action === 'FavoriteChanged') {
             this.loadFavorites();
-            await firstValueFrom(this.loadConsumptions(this.currentPageIndex() + 1, filters));
+            await firstValueFrom(this.loadMeals(this.currentPageIndex() + 1, filters));
             return false;
         }
         if (result.action === 'Edit') {
-            await this.navigationService.navigateToConsumptionEditAsync(result.id);
+            await this.navigationService.navigateToMealEditAsync(result.id);
             return false;
         }
         if (result.action === 'Repeat') {
@@ -118,27 +118,27 @@ export class MealListFacade {
     }
 
     public loadInitialOverview(filtersModel: MealListStructuredFilters): Observable<void> {
-        this.consumptionData.setLoading(true);
+        this.mealData.setLoading(true);
         const filters = this.buildFilters(filtersModel);
 
         return this.mealService.queryOverview(1, this.pageSize, filters, MEAL_LIST_OVERVIEW_FAVORITES_LIMIT).pipe(
             tap(data => {
-                this.consumptionData.setData(data.allConsumptions);
+                this.mealData.setData(data.allMeals);
                 this.favorites.set(data.favoriteItems);
                 this.favoriteTotalCount.set(data.favoriteTotalCount);
-                this.currentPageIndex.set(data.allConsumptions.page - 1);
+                this.currentPageIndex.set(data.allMeals.page - 1);
                 this.clearError();
             }),
             map(() => void 0),
             catchError((_error: unknown) => {
-                this.consumptionData.clearData();
+                this.mealData.clearData();
                 this.favorites.set([]);
                 this.favoriteTotalCount.set(0);
                 this.showLoadError();
                 return of(void 0);
             }),
             finalize(() => {
-                this.consumptionData.setLoading(false);
+                this.mealData.setLoading(false);
             }),
         );
     }
@@ -148,7 +148,7 @@ export class MealListFacade {
             tap(() => {
                 this.invalidation.reportMealMutation();
             }),
-            switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, filtersModel)),
+            switchMap(() => this.loadMeals(this.currentPageIndex() + 1, filtersModel)),
             map(() => true),
             catchError(() => {
                 this.showOperationError();
@@ -162,7 +162,7 @@ export class MealListFacade {
             tap(() => {
                 this.invalidation.reportMealMutation();
             }),
-            switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, filtersModel)),
+            switchMap(() => this.loadMeals(this.currentPageIndex() + 1, filtersModel)),
             map(() => true),
             catchError(() => {
                 this.showOperationError();
@@ -219,9 +219,7 @@ export class MealListFacade {
     }
 
     public syncMealFavoriteState(mealId: string, isFavorite: boolean, favoriteMealId: string | null): void {
-        this.consumptionData.items.update(items =>
-            items.map(item => (item.id === mealId ? { ...item, isFavorite, favoriteMealId } : item)),
-        );
+        this.mealData.items.update(items => items.map(item => (item.id === mealId ? { ...item, isFavorite, favoriteMealId } : item)));
     }
 
     private removeMealFavorite(meal: Meal): void {
@@ -301,6 +299,6 @@ export class MealListFacade {
     }
 
     private showOperationError(): void {
-        this.toastService.error(this.translateService.instant('CONSUMPTION_LIST.OPERATION_ERROR_MESSAGE'));
+        this.toastService.error(this.translateService.instant('MEAL_LIST.OPERATION_ERROR_MESSAGE'));
     }
 }

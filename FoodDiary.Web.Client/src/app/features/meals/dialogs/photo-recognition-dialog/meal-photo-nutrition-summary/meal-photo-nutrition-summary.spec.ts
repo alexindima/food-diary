@@ -12,7 +12,7 @@ describe('MealPhotoNutritionSummaryComponent', () => {
         fixture.detectChanges();
 
         const text = getFixtureText(fixture);
-        expect(text).toContain('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE');
+        expect(text).toContain('MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_TITLE');
         expect(text).toContain('NUTRIENTS.CALORIES');
         expect(text).toContain('GENERAL.UNITS.KCAL');
     });

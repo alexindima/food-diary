@@ -20,12 +20,12 @@ export class MealPhotoResultActionsComponent {
             ? {
                   variant: 'primary' as const,
                   fill: 'solid' as const,
-                  labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE',
+                  labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE',
               }
             : {
                   variant: 'secondary' as const,
                   fill: 'outline' as const,
-                  labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
+                  labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON',
               },
     );
 

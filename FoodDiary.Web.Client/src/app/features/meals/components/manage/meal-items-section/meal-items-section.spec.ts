@@ -2,7 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import { ConsumptionSourceType } from '../../../models/meal.data';
+import { MealSourceType } from '../../../models/meal.data';
 import type { MealItemsListItemState } from '../meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section';
 
@@ -81,7 +81,7 @@ async function setupComponentAsync(): Promise<MealItemsSectionSetup> {
 
 function createItemState(): MealItemsListItemState {
     return {
-        sourceType: ConsumptionSourceType.Product,
+        sourceType: MealSourceType.Product,
         product: null,
         recipe: null,
         amount: null,

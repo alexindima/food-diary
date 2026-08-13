@@ -42,11 +42,11 @@ export class ItemSelectDialogComponent {
     protected readonly tabs: FdUiTab[] = [
         {
             value: 'Product',
-            labelKey: 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.PRODUCTS_TAB',
+            labelKey: 'MEAL_MANAGE.ITEM_SELECT_DIALOG.PRODUCTS_TAB',
         },
         {
             value: 'Recipe',
-            labelKey: 'CONSUMPTION_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB',
+            labelKey: 'MEAL_MANAGE.ITEM_SELECT_DIALOG.RECIPES_TAB',
         },
     ];
     protected readonly activeTab = signal<'Product' | 'Recipe'>(this.dialogData?.initialTab === 'Recipe' ? 'Recipe' : 'Product');

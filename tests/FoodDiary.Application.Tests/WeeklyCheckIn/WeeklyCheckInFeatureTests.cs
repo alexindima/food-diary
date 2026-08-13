@@ -9,7 +9,7 @@ using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.WaistEntries.Services;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
-using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Services;

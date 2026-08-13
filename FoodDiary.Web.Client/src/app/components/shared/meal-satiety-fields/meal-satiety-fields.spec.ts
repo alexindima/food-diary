@@ -28,10 +28,10 @@ describe('MealSatietyFieldsComponent', () => {
 
     it('should build translated aria labels from configured label keys', async () => {
         const { component, fixture } = await setupComponentAsync();
-        fixture.componentRef.setInput('labelBeforeKey', 'CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL');
+        fixture.componentRef.setInput('labelBeforeKey', 'MEAL_MANAGE.HUNGER_BEFORE_LABEL');
         fixture.detectChanges();
 
-        expect(component['preMealSatietyAriaLabel']()).toContain('CONSUMPTION_MANAGE.HUNGER_BEFORE_LABEL');
+        expect(component['preMealSatietyAriaLabel']()).toContain('MEAL_MANAGE.HUNGER_BEFORE_LABEL');
     });
 });
 

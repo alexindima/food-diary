@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 14,
-    "extractedModules": 21,
-    "totalModules": 35
+    "folderModules": 12,
+    "extractedModules": 22,
+    "totalModules": 34
   },
   "analysis": {
     "compileTime": "Roslyn/syntax and project-reference evidence; unresolved or runtime-only DI edges are reported separately.",
@@ -108,10 +108,10 @@
         ]
       }
     },
-    "Consumptions": {
+    "Meals": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "explicit-boundary-tests",
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "Meal",
         "MealItem",
@@ -119,8 +119,10 @@
         "MealAiItem"
       ],
       "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Meals"
+        ],
         "abstractionAreas": [
-          "Consumptions",
           "Meals"
         ],
         "domainAreas": [
@@ -375,13 +377,6 @@
         "WebPushSubscription",
         "NotificationWebPushOutboxMessage"
       ],
-      "sourceMappings": {}
-    },
-    "Nutrition": {
-      "role": "domain-service",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [],
       "sourceMappings": {}
     },
     "OpenFoodFacts": {

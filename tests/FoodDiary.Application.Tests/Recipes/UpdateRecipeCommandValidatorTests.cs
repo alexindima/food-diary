@@ -1,4 +1,4 @@
-using FoodDiary.Application.Nutrition.Common;
+using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Enums;

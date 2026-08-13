@@ -8,7 +8,7 @@ import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared
 import type { Product } from '../../../products/models/product.data';
 import type { Recipe } from '../../../recipes/models/recipe.data';
 import { MealService } from '../../api/meal.service';
-import type { ConsumptionItemManageDto, MealManageDto } from '../../models/meal.data';
+import type { MealItemManageDto, MealManageDto } from '../../models/meal.data';
 import { getDateInputValue, getTimeInputValue } from '../meal-date-input.utils';
 import { QUICK_MEAL_DEFAULT_ITEM_AMOUNT } from './quick-meal.config';
 
@@ -77,7 +77,7 @@ export class QuickMealService {
             return;
         }
 
-        this.toastService.success(this.translateService.instant('QUICK_CONSUMPTION.ADDED_PRODUCT'));
+        this.toastService.success(this.translateService.instant('QUICK_MEAL.ADDED_PRODUCT'));
     }
 
     public addRecipe(recipe: Recipe): void {
@@ -98,7 +98,7 @@ export class QuickMealService {
             return;
         }
 
-        this.toastService.success(this.translateService.instant('QUICK_CONSUMPTION.ADDED_RECIPE'));
+        this.toastService.success(this.translateService.instant('QUICK_MEAL.ADDED_RECIPE'));
     }
 
     public removeItem(key: string): void {
@@ -156,7 +156,7 @@ export class QuickMealService {
 
         const payload = this.toMealDto(items);
         if (payload.items.length === 0) {
-            this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
+            this.toastService.error(this.translateService.instant('QUICK_MEAL.SAVE_ERROR'));
             return;
         }
 
@@ -164,12 +164,12 @@ export class QuickMealService {
         this.mealService.create(payload).subscribe({
             next: () => {
                 this.isSavingSignal.set(false);
-                this.toastService.success(this.translateService.instant('QUICK_CONSUMPTION.SAVE_SUCCESS'));
+                this.toastService.success(this.translateService.instant('QUICK_MEAL.SAVE_SUCCESS'));
                 this.clear();
             },
             error: () => {
                 this.isSavingSignal.set(false);
-                this.toastService.error(this.translateService.instant('QUICK_CONSUMPTION.SAVE_ERROR'));
+                this.toastService.error(this.translateService.instant('QUICK_MEAL.SAVE_ERROR'));
             },
         });
     }
@@ -237,7 +237,7 @@ export class QuickMealService {
     }
 
     private toMealDto(items: QuickMealItem[]): MealManageDto {
-        const mappedItems = items.reduce<ConsumptionItemManageDto[]>((result, item) => {
+        const mappedItems = items.reduce<MealItemManageDto[]>((result, item) => {
             if (item.type === 'product' && item.product !== undefined) {
                 result.push({
                     productId: item.product.id,

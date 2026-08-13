@@ -52,11 +52,11 @@ const UNIT_OPTIONS: readonly UnitOptionView[] = [
     { value: 'pcs', labelKey: 'GENERAL.UNITS.PCS' },
 ];
 const RESOLUTION_OPTIONS: readonly ResolutionOptionView[] = [
-    { value: 'Accepted', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_ACCEPTED' },
-    { value: 'Rejected', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REJECTED' },
-    { value: 'Replaced', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REPLACED' },
-    { value: 'Split', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_SPLIT' },
-    { value: 'Merged', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_MERGED' },
+    { value: 'Accepted', labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_ACCEPTED' },
+    { value: 'Rejected', labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REJECTED' },
+    { value: 'Replaced', labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REPLACED' },
+    { value: 'Split', labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_SPLIT' },
+    { value: 'Merged', labelKey: 'MEAL_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_MERGED' },
 ];
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
 const LOCATION_CONFIDENCE_THRESHOLD = 0.35;
@@ -136,7 +136,7 @@ export class MealPhotoRecognitionDialogComponent {
         ];
     });
     protected readonly submitLabelKey = computed(() =>
-        this.isEditMode() ? 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL',
+        this.isEditMode() ? 'MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE' : 'MEAL_MANAGE.PHOTO_AI_DIALOG.ADD_TO_MEAL',
     );
     protected readonly statusKey = computed(() => {
         if (this.selection() === null) {
@@ -144,15 +144,15 @@ export class MealPhotoRecognitionDialogComponent {
         }
 
         if (this.isLoading()) {
-            return 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING';
+            return 'MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_ANALYZING';
         }
 
         if (this.isNutritionLoading()) {
-            return 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION';
+            return 'MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_NUTRITION';
         }
 
         if (this.hasAnalyzed()) {
-            return 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_DONE';
+            return 'MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_DONE';
         }
 
         return null;
@@ -353,11 +353,11 @@ export class MealPhotoRecognitionDialogComponent {
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
                     if (status === HttpStatusCode.Forbidden) {
-                        this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
+                        this.errorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_PREMIUM');
                     } else if (status === HttpStatusCode.TooManyRequests) {
-                        this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+                        this.errorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
-                        this.errorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
+                        this.errorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_GENERIC');
                     }
                     return of(null);
                 }),
@@ -388,9 +388,9 @@ export class MealPhotoRecognitionDialogComponent {
                 catchError((err: unknown) => {
                     const status = getNumberProperty(err, 'status');
                     if (status === HttpStatusCode.TooManyRequests) {
-                        this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
+                        this.nutritionErrorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.ERROR_QUOTA');
                     } else {
-                        this.nutritionErrorKey.set('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
+                        this.nutritionErrorKey.set('MEAL_MANAGE.PHOTO_AI_DIALOG.NUTRITION_ERROR');
                     }
                     return of(null);
                 }),

@@ -220,7 +220,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         min-height: calc(var(--fd-size-control-xl) + var(--fd-space-card-profile-gap) + var(--fd-size-control-sm));
     }
 
-    .consumption-card__meta {
+    .meal-card__meta {
         font-size: var(--fd-text-caption-size);
         line-height: var(--fd-text-caption-line-height);
         font-weight: var(--fd-text-caption-weight);
@@ -240,7 +240,7 @@ $color-text-secondary: var(--fd-color-text-muted);
             flex: none;
         }
 
-        .consumption-card__comment {
+        .meal-card__comment {
             font-style: italic;
             text-align: right;
             overflow: hidden;

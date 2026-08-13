@@ -5,21 +5,21 @@ using FoodDiary.Application.Abstractions.Meals.Models;
 namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
-    private static string FormatMealItems(MealConsumptionReadModel meal, DiaryReportData report) {
+    private static string FormatMealItems(MealProjectionReadModel meal, DiaryReportData report) {
         string items = FormatMealItemsList(meal, report);
         return string.Equals(items, report.Texts.ItemsNotSpecified, StringComparison.Ordinal)
             ? $"{report.Texts.ItemsPrefix}: {report.Texts.ItemsNotSpecified}"
             : $"{report.Texts.ItemsPrefix}: {items}";
     }
 
-    private static string FormatMealItemsList(MealConsumptionReadModel meal, DiaryReportData report) {
+    private static string FormatMealItemsList(MealProjectionReadModel meal, DiaryReportData report) {
         IReadOnlyList<string> itemLabels = FormatMealItemLabels(meal, report, maxItems: 6);
         return itemLabels.Count == 0
             ? report.Texts.ItemsNotSpecified
             : Truncate(string.Join(", ", itemLabels), 220);
     }
 
-    private static IReadOnlyList<string> FormatMealItemLabels(MealConsumptionReadModel meal, DiaryReportData report, int maxItems) {
+    private static IReadOnlyList<string> FormatMealItemLabels(MealProjectionReadModel meal, DiaryReportData report, int maxItems) {
         IReadOnlyList<MealCompositionItem> compositionItems = GetMealCompositionItems(meal, report);
         string[] itemLabels = [.. compositionItems
             .Select(item => item.Label)
@@ -39,7 +39,7 @@ internal sealed partial class DiaryPdfGenerator {
             : [.. itemLabels, suffix.TrimStart()];
     }
 
-    private static IReadOnlyList<MealCompositionItem> GetMealCompositionItems(MealConsumptionReadModel meal, DiaryReportData report) {
+    private static IReadOnlyList<MealCompositionItem> GetMealCompositionItems(MealProjectionReadModel meal, DiaryReportData report) {
         MealCompositionItem[] manualItems = [.. meal.Items
             .OrderBy(item => item.Id)
             .Select(item => FormatMealItem(item, report))];
@@ -52,7 +52,7 @@ internal sealed partial class DiaryPdfGenerator {
         return [.. manualItems, .. aiItems];
     }
 
-    private static MealCompositionItem FormatMealItem(MealConsumptionItemReadModel item, DiaryReportData report) {
+    private static MealCompositionItem FormatMealItem(MealItemProjectionReadModel item, DiaryReportData report) {
         bool isRecipe = item.RecipeId.HasValue;
         string? name = item.ProductName ?? item.RecipeName;
         if (string.IsNullOrWhiteSpace(name)) {
@@ -74,10 +74,10 @@ internal sealed partial class DiaryPdfGenerator {
             Fiber: nutrition.Fiber);
     }
 
-    private static string FormatProductUnit(MealConsumptionItemReadModel item, DiaryReportData report) =>
+    private static string FormatProductUnit(MealItemProjectionReadModel item, DiaryReportData report) =>
         FormatUnit(item.ProductBaseUnit, report);
 
-    private static MealCompositionItem FormatMealAiItem(MealConsumptionAiItemReadModel item, DiaryReportData report) {
+    private static MealCompositionItem FormatMealAiItem(MealAiItemProjectionReadModel item, DiaryReportData report) {
         string name = ResolveAiItemName(item, report);
         string unit = FormatUnit(item.Unit, report);
         string amount = $"{FormatNumber(item.Amount, 0, report.Culture)} {unit}";
@@ -93,7 +93,7 @@ internal sealed partial class DiaryPdfGenerator {
             Fiber: item.Fiber);
     }
 
-    private static string ResolveAiItemName(MealConsumptionAiItemReadModel item, DiaryReportData report) {
+    private static string ResolveAiItemName(MealAiItemProjectionReadModel item, DiaryReportData report) {
         if (!string.Equals(report.Culture.TwoLetterISOLanguageName, "en", StringComparison.Ordinal) && !string.IsNullOrWhiteSpace(item.NameLocal)) {
             return item.NameLocal.Trim();
         }
@@ -126,7 +126,7 @@ internal sealed partial class DiaryPdfGenerator {
         return firstTextElement.ToUpper(culture) + normalized[firstTextElement.Length..];
     }
 
-    private static MealCompositionNutrition CalculateMealItemNutrition(MealConsumptionItemReadModel item) {
+    private static MealCompositionNutrition CalculateMealItemNutrition(MealItemProjectionReadModel item) {
         if (item.ProductId.HasValue) {
             double baseAmount = item.ProductBaseAmount is > 0 ? item.ProductBaseAmount.Value : 1;
             double multiplier = item.Amount / baseAmount;

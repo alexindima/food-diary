@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Consumptions, Hydration
+- Business-module dependencies: Hydration, Meals
 - Abstraction-contract dependencies: Dashboard, Meals, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Presentation.Api

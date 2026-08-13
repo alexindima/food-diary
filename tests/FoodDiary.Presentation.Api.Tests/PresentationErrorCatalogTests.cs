@@ -14,7 +14,7 @@ public sealed class PresentationErrorCatalogTests {
             "Authentication.GoogleNotConfigured",
             "Authentication.TelegramNotConfigured",
             "Authentication.TelegramBotNotConfigured",
-            "Consumption.InvalidData",
+            "Meal.InvalidData",
             "Product.InvalidData",
             "Recipe.InvalidData",
             "Wearable.ProviderNotConfigured",

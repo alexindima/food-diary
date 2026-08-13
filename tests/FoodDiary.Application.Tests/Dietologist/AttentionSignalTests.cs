@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.Audit.Common;
 using FoodDiary.Application.Abstractions.Audit.Models;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Models;
-using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Meals.Models;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dietologist.Commands.SetAttentionSignalState;
 using FoodDiary.Application.Dietologist.Common;
@@ -565,7 +565,7 @@ public sealed class AttentionSignalTests {
         new(meals, statistics, weight, false, false, false, false, false);
 
     private static DashboardSnapshotModel CreateDashboard(
-        IReadOnlyList<ConsumptionModel>? meals = null,
+        IReadOnlyList<MealModel>? meals = null,
         double dailyGoal = 2000,
         IReadOnlyList<DailyCaloriesModel>? weeklyCalories = null,
         IReadOnlyList<WeightEntrySummaryModel>? weightTrend = null) =>
@@ -581,7 +581,7 @@ public sealed class AttentionSignalTests {
             new DashboardMealsModel(meals ?? [], meals?.Count ?? 0),
             WeightTrend: weightTrend);
 
-    private static ConsumptionModel CreateMeal(DateTime date) =>
+    private static MealModel CreateMeal(DateTime date) =>
         new(
             Guid.NewGuid(),
             date,

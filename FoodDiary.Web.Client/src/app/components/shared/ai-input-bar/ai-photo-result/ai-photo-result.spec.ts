@@ -110,13 +110,13 @@ describe('AiPhotoResultComponent view models', () => {
         const { component, fixture } = await setupAiPhotoResultAsync();
         fixture.detectChanges();
 
-        expect(component['editActionView']().labelKey).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON');
+        expect(component['editActionView']().labelKey).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.EDIT_BUTTON');
         expect(component['detailsToggleView']().icon).toBe('expand_more');
 
         component['startEditing']();
         component['toggleDetails']();
 
-        expect(component['editActionView']().labelKey).toBe('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.SAVE');
+        expect(component['editActionView']().labelKey).toBe('MEAL_MANAGE.PHOTO_AI_DIALOG.SAVE');
         expect(component['detailsToggleView']().icon).toBe('expand_less');
     });
 

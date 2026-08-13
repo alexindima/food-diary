@@ -130,7 +130,7 @@
         }
     },
     "PRODUCT_CARD": {
-        "ADD_TO_CONSUMPTION": "Добавить к приёму",
+        "ADD_TO_MEAL": "Добавить к приёму",
         "NO_BARCODE": "Без штрихкода",
         "QUALITY_SCORE": "Полезность"
     },
@@ -352,7 +352,7 @@
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Добавить в приём пищи"
     },
-    "QUICK_CONSUMPTION": {
+    "QUICK_MEAL": {
         "TITLE": "Черновик приёма пищи",
         "ITEMS": "позиций",
         "AMOUNT": "Количество",
@@ -548,7 +548,7 @@
         "CONFIRM_BUTTON": "Подтвердить",
         "CANCEL_BUTTON": "Отмена",
         "SERVING": "Порция",
-        "ADD_TO_CONSUMPTION": "Добавить к приёму пищи",
+        "ADD_TO_MEAL": "Добавить к приёму пищи",
         "CREATE_SUCCESS": "Продукт успешно создан!",
         "EDIT_SUCCESS": "Продукт успешно отредактирован!",
         "GO_TO_HOME_BUTTON": "На главную",
@@ -756,20 +756,20 @@
         "CONFIRM": "Удалить",
         "CANCEL": "Отмена"
     },
-    "CONSUMPTION_LIST": {
+    "MEAL_LIST": {
         "TITLE": "Приёмы пищи",
         "SUBTITLE": "Управляйте записанными приёмами и перекусами",
-        "ADD_CONSUMPTION_BUTTON": "Добавить",
+        "ADD_MEAL_BUTTON": "Добавить",
         "ADD_MANUALLY_BUTTON": "Добавить вручную",
         "MANUAL_ADD_OR": "или",
         "EXPORT_CSV": "Экспорт CSV",
         "EXPORT_PDF": "Экспорт PDF",
-        "NO_CONSUMPTIONS_FOUND": "Приёмы пищи не найдены",
+        "NO_MEALS_FOUND": "Приёмы пищи не найдены",
         "EMPTY_TITLE": "Записей о приёмах пищи пока нет",
         "EMPTY_COPY": "Добавьте первый приём пищи или перекус, чтобы здесь появилась ваша недавняя история питания.",
         "NO_RESULTS_TITLE": "За этот период записей нет",
         "NO_RESULTS_COPY": "Попробуйте другой диапазон дат или сбросьте фильтр, чтобы увидеть больше записей.",
-        "ADD_FIRST_CONSUMPTION_BUTTON": "Добавить первый приём пищи",
+        "ADD_FIRST_MEAL_BUTTON": "Добавить первый приём пищи",
         "DATE": "Дата",
         "ITEM_COUNT": "Количество позиций",
         "MEAL_TYPE": "Тип приёма пищи",
@@ -851,7 +851,7 @@
         "ACCEPT": "Принимаю",
         "CANCEL": "Отмена"
     },
-    "CONSUMPTION_DETAIL": {
+    "MEAL_DETAIL": {
         "TITLE": "Детали приёма пищи",
         "ITEMS_LIST": "Позиции ({{count}} шт):",
         "MEAL_TYPE": "Тип приёма пищи",
@@ -894,7 +894,7 @@
         "SNACK": "Перекус",
         "OTHER": "Другое"
     },
-    "CONSUMPTION_MANAGE": {
+    "MEAL_MANAGE": {
         "EDIT_TITLE": "Редактировать приём пищи",
         "ADD_TITLE": "Новый приём пищи",
         "SUBTITLE": "Добавьте продукты и рецепты",
@@ -935,7 +935,7 @@
         "EDIT_SUCCESS": "Приём пищи успешно обновлён!",
         "CREATE_SUCCESS": "Приём пищи успешно создан!",
         "GO_TO_HOME_BUTTON": "На главную",
-        "GO_TO_CONSUMPTION_LIST_BUTTON": "К списку приёмов пищи",
+        "GO_TO_MEAL_LIST_BUTTON": "К списку приёмов пищи",
         "CHOOSE_DATE_TIME": "Выберите дату и время",
         "NO_PRODUCTS_ADDED": "Продукты не добавлены",
         "ADD_PRODUCT": "Добавить продукт",
@@ -1164,13 +1164,13 @@
         "MY_RECIPE_BADGE": "Мой",
         "SHARED_RECIPE_BADGE": "Общий"
     },
-    "TODAY_CONSUMPTION": {
+    "TODAY_MEAL": {
         "TITLE": "Приёмы пищи за сегодня",
-        "TOTAL_CONSUMPTION": "Общее потребление",
+        "TOTAL_MEAL": "Общее потребление",
         "NUTRIENTS": "Нутриенты",
-        "ADD_CONSUMPTION": "Добавить приём пищи",
+        "ADD_MEAL": "Добавить приём пищи",
         "ADD_PRODUCT": "Добавить продукт",
-        "MANAGE_CONSUMPTIONS": "Управлять потреблением",
+        "MANAGE_MEALS": "Управлять потреблением",
         "MANAGE_PRODUCTS": "Управлять продуктами",
         "VIEW_STATISTICS": "Посмотреть статистику"
     },
@@ -1231,9 +1231,9 @@
             "PLANNING": "Планирование"
         },
         "ACTIONS": {
-            "ADD_CONSUMPTION_TITLE": "Добавить приём пищи",
-            "ADD_CONSUMPTION_DESCRIPTION": "Зафиксируйте очередной приём еды.",
-            "ADD_CONSUMPTION_BUTTON": "Добавить приём",
+            "ADD_MEAL_TITLE": "Добавить приём пищи",
+            "ADD_MEAL_DESCRIPTION": "Зафиксируйте очередной приём еды.",
+            "ADD_MEAL_BUTTON": "Добавить приём",
             "OPEN_APPEARANCE": "Внешний вид",
             "OPEN_NOTIFICATION_SETTINGS": "Уведомления",
             "OPEN_DATE_PICKER": "Выбрать дату",
@@ -2671,7 +2671,7 @@
             "ABOVE_200": "Сильно выше плана ({{ percent }}%). Подумайте, как отрегулировать завтра."
         }
     },
-    "CONSUMPTION_RING": {
+    "MEAL_RING": {
         "TITLE": "Калории: день и неделя",
         "UNIT": "ккал",
         "DAILY_PROGRESS": "Сегодня",
@@ -2722,7 +2722,7 @@
     },
     "QUICK_ACTIONS": {
         "TITLE": "Быстрые действия",
-        "ADD_CONSUMPTION": {
+        "ADD_MEAL": {
             "TITLE": "Добавить приём пищи",
             "DESCRIPTION": "Запишите приём еды за пару кликов.",
             "BUTTON": "Добавить приём"

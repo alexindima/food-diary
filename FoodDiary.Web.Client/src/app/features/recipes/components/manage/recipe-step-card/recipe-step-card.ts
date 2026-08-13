@@ -70,8 +70,8 @@ export class RecipeStepCardComponent {
 
     protected readonly isStepTitleEditing = signal(false);
     protected readonly ingredientTypeOptions: FdUiSegmentedToggleOption[] = [
-        { value: 'Product', label: this.translateService.instant('CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.Product') },
-        { value: 'Recipe', label: this.translateService.instant('CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.Recipe') },
+        { value: 'Product', label: this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Product') },
+        { value: 'Recipe', label: this.translateService.instant('MEAL_MANAGE.ITEM_TYPE_OPTIONS.Recipe') },
     ];
     protected readonly ingredientsCount = computed(() => this.ingredients.length);
     protected readonly descriptionSummary = computed(() => {

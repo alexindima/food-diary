@@ -964,11 +964,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: DateTime.SpecifyKind(now.Date, DateTimeKind.Local), DateTo: null))).Items);
         Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: null, DateTo: now.Date.AddHours(23)))).Items);
         Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: DateTime.SpecifyKind(now.Date, DateTimeKind.Unspecified), DateTo: null))).Items);
-        Assert.NotEmpty((await repository.GetPagedConsumptionReadModelsAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: null, DateTo: null))).Items);
-        Assert.NotNull(await repository.GetByIdConsumptionReadModelAsync(meal.Id, userId));
+        Assert.NotEmpty((await repository.GetPagedMealProjectionsAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: null, DateTo: null))).Items);
+        Assert.NotNull(await repository.GetByIdMealProjectionAsync(meal.Id, userId));
         Assert.True(await repository.GetCountAsync(userId, new MealQueryFilters(DateFrom: null, DateTo: null)) >= 1);
         Assert.NotEmpty(await repository.GetByPeriodAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
-        Assert.NotEmpty(await repository.GetByPeriodConsumptionReadModelsAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
+        Assert.NotEmpty(await repository.GetByPeriodMealProjectionsAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
         Assert.NotEmpty(await repository.GetDistinctMealDatesAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
         Assert.True(await repository.GetTotalMealCountAsync(userId) >= 1);
         Assert.NotNull(await repository.GetWithItemsAndProductsAsync(userId, now.Date));

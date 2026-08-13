@@ -1,57 +1,57 @@
-<div #container class="consumption-list" fdPageContainer>
+<div #container class="meal-list" fdPageContainer>
     <fd-page-header
-        class="consumption-list__header"
-        [title]="'CONSUMPTION_LIST.TITLE' | translate"
-        [subtitle]="'CONSUMPTION_LIST.SUBTITLE' | translate"
+        class="meal-list__header"
+        [title]="'MEAL_LIST.TITLE' | translate"
+        [subtitle]="'MEAL_LIST.SUBTITLE' | translate"
         [compactActions]="true"
     >
         @if (isMobileView()) {
-            <div class="consumption-list__mobile-toolbar" data-tour-id="meal-list-filters">
+            <div class="meal-list__mobile-toolbar" data-tour-id="meal-list-filters">
                 <fd-ui-button
-                    class="consumption-list__icon-button consumption-list__filter-button"
+                    class="meal-list__icon-button meal-list__filter-button"
                     appearance="toolbar"
                     variant="secondary"
                     fill="outline"
                     icon="filter_alt"
-                    [fdUiHint]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                    [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                    [class.consumption-list__filter-button--active]="hasActiveFilters()"
+                    [fdUiHint]="'MEAL_LIST.DATE_FILTER_BUTTON' | translate"
+                    [ariaLabel]="'MEAL_LIST.DATE_FILTER_BUTTON' | translate"
+                    [class.meal-list__filter-button--active]="hasActiveFilters()"
                     (click)="openFilters()"
                 />
                 <fd-ui-button
-                    class="consumption-list__icon-button"
+                    class="meal-list__icon-button"
                     data-tour-id="meal-list-tour-help"
                     appearance="toolbar"
                     variant="secondary"
                     fill="outline"
                     icon="help_outline"
-                    [fdUiHint]="'CONSUMPTION_LIST.TOUR.START_TOUR' | translate"
-                    [ariaLabel]="'CONSUMPTION_LIST.TOUR.START_TOUR' | translate"
+                    [fdUiHint]="'MEAL_LIST.TOUR.START_TOUR' | translate"
+                    [ariaLabel]="'MEAL_LIST.TOUR.START_TOUR' | translate"
                     (click)="startMealListTour()"
                 />
             </div>
         } @else {
-            <div class="consumption-list__header-actions" data-tour-id="meal-list-filters">
+            <div class="meal-list__header-actions" data-tour-id="meal-list-filters">
                 <fd-ui-button
-                    class="consumption-list__icon-button consumption-list__filter-button"
+                    class="meal-list__icon-button meal-list__filter-button"
                     appearance="toolbar"
                     variant="secondary"
                     fill="outline"
                     icon="filter_alt"
-                    [fdUiHint]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                    [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                    [class.consumption-list__filter-button--active]="hasActiveFilters()"
+                    [fdUiHint]="'MEAL_LIST.DATE_FILTER_BUTTON' | translate"
+                    [ariaLabel]="'MEAL_LIST.DATE_FILTER_BUTTON' | translate"
+                    [class.meal-list__filter-button--active]="hasActiveFilters()"
                     (click)="openFilters()"
                 />
                 <fd-ui-button
-                    class="consumption-list__icon-button"
+                    class="meal-list__icon-button"
                     data-tour-id="meal-list-tour-help"
                     appearance="toolbar"
                     variant="secondary"
                     fill="outline"
                     icon="help_outline"
-                    [fdUiHint]="'CONSUMPTION_LIST.TOUR.START_TOUR' | translate"
-                    [ariaLabel]="'CONSUMPTION_LIST.TOUR.START_TOUR' | translate"
+                    [fdUiHint]="'MEAL_LIST.TOUR.START_TOUR' | translate"
+                    [ariaLabel]="'MEAL_LIST.TOUR.START_TOUR' | translate"
                     (click)="startMealListTour()"
                 />
             </div>
@@ -69,37 +69,37 @@
                 (manualAction)="goToMealAddAsync()"
             />
         } @placeholder {
-            <div class="consumption-list__ai-placeholder" aria-hidden="true"></div>
+            <div class="meal-list__ai-placeholder" aria-hidden="true"></div>
         }
 
         @if (hasActiveFilters()) {
-            <section class="consumption-list__active-filters" [attr.aria-label]="'CONSUMPTION_LIST.ACTIVE_FILTERS_LABEL' | translate">
-                <span class="consumption-list__active-filters-label">{{ 'CONSUMPTION_LIST.ACTIVE_FILTERS_LABEL' | translate }}</span>
-                <div class="consumption-list__active-filter-chips">
+            <section class="meal-list__active-filters" [attr.aria-label]="'MEAL_LIST.ACTIVE_FILTERS_LABEL' | translate">
+                <span class="meal-list__active-filters-label">{{ 'MEAL_LIST.ACTIVE_FILTERS_LABEL' | translate }}</span>
+                <div class="meal-list__active-filter-chips">
                     @if (activeDateFilterStart(); as startDate) {
-                        <button type="button" class="consumption-list__active-filter-chip" (click)="openFilters()">
-                            {{ 'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate }}: {{ startDate }}
+                        <button type="button" class="meal-list__active-filter-chip" (click)="openFilters()">
+                            {{ 'MEAL_LIST.DATE_FILTER_FROM_LABEL' | translate }}: {{ startDate }}
                         </button>
                     }
                     @if (activeDateFilterEnd(); as endDate) {
-                        <button type="button" class="consumption-list__active-filter-chip" (click)="openFilters()">
-                            {{ 'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate }}: {{ endDate }}
+                        <button type="button" class="meal-list__active-filter-chip" (click)="openFilters()">
+                            {{ 'MEAL_LIST.DATE_FILTER_TO_LABEL' | translate }}: {{ endDate }}
                         </button>
                     }
                     @for (filterKey of activeFilterKeys(); track filterKey) {
-                        <button type="button" class="consumption-list__active-filter-chip" (click)="openFilters()">
+                        <button type="button" class="meal-list__active-filter-chip" (click)="openFilters()">
                             {{ filterKey | translate }}
                         </button>
                     }
                 </div>
                 <fd-ui-button
-                    class="consumption-list__active-filters-edit"
+                    class="meal-list__active-filters-edit"
                     appearance="toolbar"
                     variant="secondary"
                     fill="outline"
                     icon="tune"
-                    [fdUiHint]="'CONSUMPTION_LIST.ACTIVE_FILTERS_EDIT' | translate"
-                    [ariaLabel]="'CONSUMPTION_LIST.ACTIVE_FILTERS_EDIT' | translate"
+                    [fdUiHint]="'MEAL_LIST.ACTIVE_FILTERS_EDIT' | translate"
+                    [ariaLabel]="'MEAL_LIST.ACTIVE_FILTERS_EDIT' | translate"
                     (click)="openFilters()"
                 />
             </section>
@@ -121,13 +121,13 @@
         <fd-meal-list-content
             data-tour-id="meal-list-results"
             [errorKey]="errorKey()"
-            [isLoading]="consumptionData.isLoading()"
+            [isLoading]="mealData.isLoading()"
             [emptyState]="emptyState()"
             [plannedGroups]="plannedGroups()"
             [isPlannedOpen]="isPlannedOpen()"
-            [groups]="groupedConsumptions()"
-            [totalPages]="consumptionData.totalPages"
-            [totalItems]="consumptionData.totalItems"
+            [groups]="groupedMeals()"
+            [totalPages]="mealData.totalPages"
+            [totalItems]="mealData.totalItems"
             [currentPageIndex]="currentPageIndex()"
             [favoriteLoadingIds]="favoriteLoadingIds()"
             (retry)="retryLoad()"

@@ -1,7 +1,7 @@
 # API Load-Test Baseline
 
 This k6 scenario exercises the authenticated dashboard, product, recipe, and
-consumption read paths. It is a release-regression baseline, not a capacity
+meal read paths. It is a release-regression baseline, not a capacity
 claim for production.
 
 Run it only against an isolated environment with disposable test data:

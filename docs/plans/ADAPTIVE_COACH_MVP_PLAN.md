@@ -17,7 +17,7 @@ The repository already has the core pieces needed for an Adaptive Coach MVP:
   - `FoodDiary.Web.Client/src/app/features/goals/`
 - existing weight and meal data sources:
   - `FoodDiary.Application/WeightEntries/`
-  - `FoodDiary.Application/Consumptions/`
+  - `FoodDiary.Application/Meals/`
 
 This means the best direction is not to build a brand new "coach" subsystem from scratch.
 

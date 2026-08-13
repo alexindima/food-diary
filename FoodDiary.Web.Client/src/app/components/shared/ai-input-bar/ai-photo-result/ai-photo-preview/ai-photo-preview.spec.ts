@@ -67,7 +67,7 @@ describe('AiPhotoPreviewComponent', () => {
 
         const host = fixture.nativeElement as HTMLElement;
         expect(host.querySelector('.ai-photo-result__scan-overlay')).not.toBeNull();
-        expect(host.querySelector('[role="status"]')?.textContent).toContain('CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING');
+        expect(host.querySelector('[role="status"]')?.textContent).toContain('MEAL_MANAGE.PHOTO_AI_DIALOG.STATUS_PREPARING');
     });
 
     it('renders source text preview when image is absent', async () => {

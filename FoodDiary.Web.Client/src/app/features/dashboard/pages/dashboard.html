@@ -98,7 +98,7 @@
                         [isAiMealSaving]="isAiMealSaving()"
                         [aiMealClearToken]="aiMealClearToken()"
                         (mealCreateRequested)="onAiMealCreateRequested($event)"
-                        (manualAdd)="addConsumptionAsync()"
+                        (manualAdd)="addMealAsync()"
                     />
                 }
 
@@ -150,10 +150,10 @@
                             [isAiMealSaving]="isAiMealSaving()"
                             [aiMealClearToken]="aiMealClearToken()"
                             (blockToggle)="layout.toggleBlock('meals')"
-                            (viewAll)="manageConsumptionsAsync()"
-                            (add)="addConsumptionAsync($event)"
+                            (viewAll)="manageMealsAsync()"
+                            (add)="addMealAsync($event)"
                             (aiMealCreateRequested)="onAiMealCreateRequested($event)"
-                            (open)="openConsumption($event)"
+                            (open)="openMeal($event)"
                         />
                     </div>
 

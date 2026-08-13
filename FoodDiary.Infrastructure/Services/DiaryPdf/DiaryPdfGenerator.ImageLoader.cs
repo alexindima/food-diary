@@ -6,7 +6,7 @@ namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private async Task<IReadOnlyDictionary<Guid, byte[]>> LoadMealImagesAsync(
-        IReadOnlyList<MealConsumptionReadModel> meals,
+        IReadOnlyList<MealProjectionReadModel> meals,
         CancellationToken cancellationToken) {
         using var gate = new SemaphoreSlim(MaxParallelMealImageDownloads);
         var cache = new Dictionary<string, Lazy<Task<byte[]?>>>(StringComparer.Ordinal);
@@ -22,7 +22,7 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private async Task<MealImageEntry> LoadMealImageEntryAsync(
-        MealConsumptionReadModel meal,
+        MealProjectionReadModel meal,
         Dictionary<string, Lazy<Task<byte[]?>>> cache,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
@@ -52,7 +52,7 @@ internal sealed partial class DiaryPdfGenerator {
         };
 
     private async Task<byte[]?> LoadMealImageForReportAsync(
-        MealConsumptionReadModel meal,
+        MealProjectionReadModel meal,
         Dictionary<string, Lazy<Task<byte[]?>>> cache,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
@@ -142,7 +142,7 @@ internal sealed partial class DiaryPdfGenerator {
     [StructLayout(LayoutKind.Auto)]
     private readonly record struct MealImageEntry(Guid MealId, byte[]? Image);
 
-    private static IReadOnlyList<string> GetCompositionImageUrls(MealConsumptionReadModel meal) =>
+    private static IReadOnlyList<string> GetCompositionImageUrls(MealProjectionReadModel meal) =>
         meal.Items
             .OrderBy(item => item.Id)
             .Select(item => item.ProductImageUrl ?? item.RecipeImageUrl)

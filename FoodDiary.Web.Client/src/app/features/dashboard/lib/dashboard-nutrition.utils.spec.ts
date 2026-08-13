@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 
 import type { DashboardSnapshot, DashboardStatistics } from '../models/dashboard.data';
 import {
-    createConsumptionRingSignal,
     createMealPreviewSignal,
+    createMealRingSignal,
     createNutrientBarsSignal,
     placeholderIcon,
     placeholderLabel,
@@ -55,7 +55,7 @@ function buildSnapshot(
 describe('dashboard-nutrition.utils', () => {
     registerPlaceholderTests();
     registerNutrientSignalTests();
-    registerConsumptionRingTests();
+    registerMealRingTests();
     registerMealPreviewTests();
 });
 
@@ -145,8 +145,8 @@ function registerNutrientSignalTests(): void {
     });
 }
 
-function registerConsumptionRingTests(): void {
-    describe('createConsumptionRingSignal', () => {
+function registerMealRingTests(): void {
+    describe('createMealRingSignal', () => {
         it('should compute ring data from snapshot', () => {
             const snapshot = signal<DashboardSnapshot | null>(
                 buildSnapshot({
@@ -158,7 +158,7 @@ function registerConsumptionRingTests(): void {
             const weeklyConsumed = signal(WEEKLY_CONSUMED);
             const nutrientBars = signal([]);
 
-            const ring = createConsumptionRingSignal(snapshot, weeklyConsumed, nutrientBars);
+            const ring = createMealRingSignal(snapshot, weeklyConsumed, nutrientBars);
             const result = ring();
 
             expect(result.dailyGoal).toBe(CALORIES);
@@ -168,7 +168,7 @@ function registerConsumptionRingTests(): void {
         });
 
         it('should handle null snapshot', () => {
-            const ring = createConsumptionRingSignal(signal(null), signal(0), signal([]));
+            const ring = createMealRingSignal(signal(null), signal(0), signal([]));
             expect(ring().dailyGoal).toBe(0);
             expect(ring().weeklyGoal).toBe(0);
         });

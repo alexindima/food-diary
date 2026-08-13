@@ -12,7 +12,7 @@ describe('MealGeneralInfoComponent', () => {
         const { fixture } = await setupComponentAsync();
         const element = fixture.nativeElement as HTMLElement;
 
-        expect(element.textContent).toContain('CONSUMPTION_MANAGE.GENERAL_GROUP_TITLE');
+        expect(element.textContent).toContain('MEAL_MANAGE.GENERAL_GROUP_TITLE');
     });
 });
 
@@ -27,7 +27,7 @@ async function setupComponentAsync(): Promise<MealGeneralInfoSetup> {
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealGeneralInfoComponent);
-    fixture.componentRef.setInput('consumptionForm', createConsumptionForm());
+    fixture.componentRef.setInput('mealForm', createMealForm());
     fixture.componentRef.setInput('mealTypeSelectOptions', [{ value: 'BREAKFAST', label: 'Breakfast' }]);
     fixture.componentRef.setInput('generalErrors', createEmptyGeneralErrors());
     fixture.detectChanges();
@@ -35,7 +35,7 @@ async function setupComponentAsync(): Promise<MealGeneralInfoSetup> {
     return { fixture };
 }
 
-function createConsumptionForm(): ReturnType<typeof form> {
+function createMealForm(): ReturnType<typeof form> {
     return TestBed.runInInjectionContext(() =>
         form(signal({ ...createMealManageFormValue(), date: '2026-04-05', time: '10:30', mealType: 'BREAKFAST' }), path => {
             required(path.date);

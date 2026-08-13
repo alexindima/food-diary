@@ -1,5 +1,5 @@
 using FluentValidation.Results;
-using FoodDiary.Application.Nutrition.Common;
+using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Enums;

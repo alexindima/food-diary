@@ -16,11 +16,11 @@ describe('meal manage option mapping', () => {
         expect(buildMealNutritionModeOptions(translateService)).toEqual([
             {
                 value: 'auto',
-                label: 'CONSUMPTION_MANAGE.NUTRITION_MODE.AUTO',
+                label: 'MEAL_MANAGE.NUTRITION_MODE.AUTO',
             },
             {
                 value: 'manual',
-                label: 'CONSUMPTION_MANAGE.NUTRITION_MODE.MANUAL',
+                label: 'MEAL_MANAGE.NUTRITION_MODE.MANUAL',
             },
         ]);
     });

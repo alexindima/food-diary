@@ -19,7 +19,7 @@ internal sealed partial class DiaryPdfGenerator(
     }
 
     public async Task<byte[]> GenerateAsync(
-        IReadOnlyList<MealConsumptionReadModel> meals,
+        IReadOnlyList<MealProjectionReadModel> meals,
         DateTime dateFrom,
         DateTime dateTo,
         string? locale,

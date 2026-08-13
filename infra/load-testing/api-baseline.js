@@ -23,7 +23,7 @@ export const options = {
         'http_req_duration{endpoint:dashboard}': ['p(95)<750'],
         'http_req_duration{endpoint:products}': ['p(95)<500'],
         'http_req_duration{endpoint:recipes}': ['p(95)<500'],
-        'http_req_duration{endpoint:consumptions}': ['p(95)<650'],
+        'http_req_duration{endpoint:meals}': ['p(95)<650'],
     },
 };
 
@@ -58,7 +58,7 @@ export default function (data) {
     request('/api/v1/dashboard', 'dashboard', params);
     request('/api/v1/products?page=1&limit=25&includePublic=false', 'products', params);
     request('/api/v1/recipes?page=1&limit=25&includePublic=false', 'recipes', params);
-    request('/api/v1/consumptions?page=1&limit=25', 'consumptions', params);
+    request('/api/v1/meals?page=1&limit=25', 'meals', params);
     sleep(Number(__ENV.ITERATION_PAUSE_SECONDS || 1));
 }
 

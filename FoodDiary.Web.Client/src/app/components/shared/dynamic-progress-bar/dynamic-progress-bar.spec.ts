@@ -236,7 +236,7 @@ function registerTextColorClassTests({ component, setInputs }: TestContext): voi
             expect(component()['textColorClass']()).toBe('text-black');
         });
 
-        it('should return text-white when overconsumption', () => {
+        it('should return text-white when overmeal', () => {
             setInputs(CURRENT_200, MAX_PERCENT);
             expect(component()['textColorClass']()).toBe('text-white');
         });

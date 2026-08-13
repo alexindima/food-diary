@@ -11,8 +11,8 @@ using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Meals.Models;
+using FoodDiary.Application.Meals.Queries.GetMeals;
 using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Models;
@@ -266,7 +266,7 @@ public class DashboardFeatureTests {
 
         DashboardMealsModel model = DashboardMapping.ToMealsModel(new DashboardMealsReadModel([meal], Page: 1, Limit: 10, TotalPages: 1, TotalItems: 1));
 
-        ConsumptionModel mappedMeal = Assert.Single(model.Items);
+        MealModel mappedMeal = Assert.Single(model.Items);
         Assert.Equal(1, model.Total);
         Assert.Equal(mealId, mappedMeal.Id);
         Assert.Equal(["manual", "ai"], mappedMeal.Items.Select(item => item.Origin), StringComparer.Ordinal);
@@ -280,16 +280,16 @@ public class DashboardFeatureTests {
     public async Task MediatorDashboardMealsReadService_WhenQuerySucceeds_MapsPagedMeals() {
         var userId = Guid.NewGuid();
         var mealId = Guid.NewGuid();
-        ConsumptionModel meal = CreateConsumptionModel(mealId, [
-            CreateConsumptionItemModel(Guid.NewGuid(), mealId, amount: 150, origin: "Manual"),
+        MealModel meal = CreateMealModel(mealId, [
+            CreateMealItemModel(Guid.NewGuid(), mealId, amount: 150, origin: "Manual"),
         ], [
-            CreateConsumptionAiSessionModel(Guid.NewGuid(), mealId, [
-                CreateConsumptionAiItemModel(Guid.NewGuid(), Guid.NewGuid(), "toast"),
+            CreateMealAiSessionModel(Guid.NewGuid(), mealId, [
+                CreateMealAiItemModel(Guid.NewGuid(), Guid.NewGuid(), "toast"),
             ]),
         ]);
-        ISender sender = CreateConsumptionSender(
-            Result.Success(new PagedResponse<ConsumptionModel>([meal], Page: 2, Limit: 5, TotalPages: 3, TotalItems: 11)),
-            out Func<GetConsumptionsQuery?> getLastQuery,
+        ISender sender = CreateMealSender(
+            Result.Success(new PagedResponse<MealModel>([meal], Page: 2, Limit: 5, TotalPages: 3, TotalItems: 11)),
+            out Func<GetMealsQuery?> getLastQuery,
             out Func<CancellationToken> getLastCancellationToken);
         var service = new MediatorDashboardMealsReadService(sender);
         using var cancellationTokenSource = new CancellationTokenSource();
@@ -313,7 +313,7 @@ public class DashboardFeatureTests {
         Assert.Equal(meal.Id, mappedMeal.Id);
         Assert.Equal(meal.Items[0].ProductName, mappedMeal.Items[0].ProductName);
         Assert.Equal(meal.AiSessions[0].Items[0].NameEn, mappedMeal.AiSessions[0].Items[0].NameEn);
-        GetConsumptionsQuery query = Assert.IsType<GetConsumptionsQuery>(getLastQuery());
+        GetMealsQuery query = Assert.IsType<GetMealsQuery>(getLastQuery());
         Assert.Equal(userId, query.UserId);
         Assert.Equal(2, query.Page);
         Assert.Equal(5, query.Limit);
@@ -325,8 +325,8 @@ public class DashboardFeatureTests {
     [Fact]
     public async Task MediatorDashboardMealsReadService_WhenQueryFails_ReturnsFailure() {
         Error error = Errors.Validation.Invalid("dashboard", "Could not read meals.");
-        ISender sender = CreateConsumptionSender(
-            Result.Failure<PagedResponse<ConsumptionModel>>(error),
+        ISender sender = CreateMealSender(
+            Result.Failure<PagedResponse<MealModel>>(error),
             out _,
             out _);
         var service = new MediatorDashboardMealsReadService(sender);
@@ -561,16 +561,16 @@ public class DashboardFeatureTests {
         return repository;
     }
 
-    private static ISender CreateConsumptionSender(
-        Result<PagedResponse<ConsumptionModel>> result,
-        out Func<GetConsumptionsQuery?> getLastQuery,
+    private static ISender CreateMealSender(
+        Result<PagedResponse<MealModel>> result,
+        out Func<GetMealsQuery?> getLastQuery,
         out Func<CancellationToken> getLastCancellationToken) {
         ISender sender = Substitute.For<ISender>();
-        GetConsumptionsQuery? lastQuery = null;
+        GetMealsQuery? lastQuery = null;
         CancellationToken lastCancellationToken = default;
         sender
             .Send(
-                Arg.Do<IRequest<Result<PagedResponse<ConsumptionModel>>>>(request => lastQuery = Assert.IsType<GetConsumptionsQuery>(request)),
+                Arg.Do<IRequest<Result<PagedResponse<MealModel>>>>(request => lastQuery = Assert.IsType<GetMealsQuery>(request)),
                 Arg.Do<CancellationToken>(cancellationToken => lastCancellationToken = cancellationToken))
             .Returns(Task.FromResult(result));
         getLastQuery = () => lastQuery;
@@ -578,10 +578,10 @@ public class DashboardFeatureTests {
         return sender;
     }
 
-    private static ConsumptionModel CreateConsumptionModel(
+    private static MealModel CreateMealModel(
         Guid mealId,
-        IReadOnlyList<ConsumptionItemModel> items,
-        IReadOnlyList<ConsumptionAiSessionModel> sessions) =>
+        IReadOnlyList<MealItemModel> items,
+        IReadOnlyList<MealAiSessionModel> sessions) =>
         new(
             mealId,
             new DateTime(2026, 3, 3, 12, 0, 0, DateTimeKind.Utc),
@@ -611,7 +611,7 @@ public class DashboardFeatureTests {
             items,
             sessions);
 
-    private static ConsumptionItemModel CreateConsumptionItemModel(Guid itemId, Guid mealId, double amount, string origin) =>
+    private static MealItemModel CreateMealItemModel(Guid itemId, Guid mealId, double amount, string origin) =>
         new(
             itemId,
             mealId,
@@ -642,10 +642,10 @@ public class DashboardFeatureTests {
             SourceAiItemId: Guid.NewGuid(),
             origin);
 
-    private static ConsumptionAiSessionModel CreateConsumptionAiSessionModel(
+    private static MealAiSessionModel CreateMealAiSessionModel(
         Guid sessionId,
         Guid mealId,
-        IReadOnlyList<ConsumptionAiItemModel> items) =>
+        IReadOnlyList<MealAiItemModel> items) =>
         new(
             sessionId,
             mealId,
@@ -657,7 +657,7 @@ public class DashboardFeatureTests {
             Notes: "looks right",
             items);
 
-    private static ConsumptionAiItemModel CreateConsumptionAiItemModel(Guid itemId, Guid sessionId, string name) =>
+    private static MealAiItemModel CreateMealAiItemModel(Guid itemId, Guid sessionId, string name) =>
         new(
             itemId,
             sessionId,

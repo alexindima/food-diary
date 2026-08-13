@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  207,
+                    "productionProjectEdges":  216,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
-                    "backendBusinessModules":  35,
+                    "backendBusinessModules":  34,
                     "moduleHotspotReviewCandidates":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
@@ -29,18 +29,18 @@
                          ],
     "moduleHotspots":  [
                            {
-                               "module":  "Consumptions",
-                               "fanIn":  6,
-                               "fanOut":  2,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Dashboard",
                                "fanIn":  0,
                                "fanOut":  7,
                                "level":  "informational",
                                "role":  "read-composer"
+                           },
+                           {
+                               "module":  "Meals",
+                               "fanIn":  6,
+                               "fanOut":  1,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Admin",
@@ -60,13 +60,6 @@
                                "module":  "Images",
                                "fanIn":  3,
                                "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Recipes",
-                               "fanIn":  0,
-                               "fanOut":  3,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -106,16 +99,16 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "Nutrition",
-                               "fanIn":  2,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "domain-service"
-                           },
-                           {
                                "module":  "RecentItems",
                                "fanIn":  2,
                                "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Recipes",
+                               "fanIn":  0,
+                               "fanOut":  2,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -5554,26 +5547,6 @@
                                                                         ]
                                                  },
                                                  {
-                                                     "name":  "ConsumptionAiItemInputValidator",
-                                                     "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/Consumptions/Common/Validators/ConsumptionAiItemInputValidator.cs",
-                                                     "line":  6,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "ConsumptionAiSessionInputValidator",
-                                                     "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/Consumptions/Common/Validators/ConsumptionAiSessionInputValidator.cs",
-                                                     "line":  6,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
                                                      "name":  "EnqueueMailRelayEmailCommandValidator",
                                                      "role":  "Validator",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/EnqueueMailRelayEmailCommandValidator.cs",
@@ -5638,6 +5611,26 @@
                                                      "role":  "Validator",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandValidator.cs",
                                                      "line":  4,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "MealAiItemInputValidator",
+                                                     "role":  "Validator",
+                                                     "path":  "FoodDiary.Application.Meals/Common/Validators/MealAiItemInputValidator.cs",
+                                                     "line":  6,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "MealAiSessionInputValidator",
+                                                     "role":  "Validator",
+                                                     "path":  "FoodDiary.Application.Meals/Common/Validators/MealAiSessionInputValidator.cs",
+                                                     "line":  6,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 

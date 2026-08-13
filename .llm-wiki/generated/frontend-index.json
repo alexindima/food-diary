@@ -704,7 +704,7 @@
                                          "MealSatietyCardComponent",
                                          "MealSatietyLevelDialogComponent",
                                          "MealService",
-                                         "QuickConsumptionDrawerComponent",
+                                         "QuickMealDrawerComponent",
                                          "QuickMealService",
                                          "RecipeServingWeightService"
                                      ],
@@ -731,7 +731,7 @@
                                        "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-nutrition-sidebar/meal-nutrition-sidebar.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-satiety-card/meal-satiety-card.spec.ts",
-                                       "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.spec.ts",
+                                       "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-edit-list/meal-photo-edit-list.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-nutrition-summary/meal-photo-nutrition-summary.spec.ts",
                                        "FoodDiary.Web.Client/src/app/features/meals/dialogs/photo-recognition-dialog/meal-photo-recognition-dialog.spec.ts",
@@ -3596,7 +3596,7 @@
                         "role":  "Service",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
-                        "line":  41
+                        "line":  39
                     },
                     {
                         "name":  "MealDetailItemPreviewComponent",
@@ -3659,7 +3659,7 @@
                         "role":  "Component",
                         "selector":  "fd-meal-manage-form",
                         "path":  "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manage-form.ts",
-                        "line":  103
+                        "line":  97
                     },
                     {
                         "name":  "MealManualItemDialogComponent",
@@ -3683,10 +3683,10 @@
                         "line":  14
                     },
                     {
-                        "name":  "QuickConsumptionDrawerComponent",
+                        "name":  "QuickMealDrawerComponent",
                         "role":  "Component",
-                        "selector":  "fd-quick-consumption-drawer",
-                        "path":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.ts",
+                        "selector":  "fd-quick-meal-drawer",
+                        "path":  "FoodDiary.Web.Client/src/app/features/meals/components/quick-meal-drawer/quick-meal-drawer.ts",
                         "line":  41
                     },
                     {
@@ -3771,7 +3771,7 @@
                         "role":  "Facade",
                         "selector":  null,
                         "path":  "FoodDiary.Web.Client/src/app/features/meals/lib/manage/meal-manage.facade.ts",
-                        "line":  44
+                        "line":  39
                     },
                     {
                         "name":  "QuickMealService",

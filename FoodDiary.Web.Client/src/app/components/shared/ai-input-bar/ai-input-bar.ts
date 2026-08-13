@@ -103,7 +103,7 @@ export class AiInputBarComponent {
 
     protected readonly showDetails = computed(() => this.mode() === 'create');
     protected readonly submitLabelKey = computed(() =>
-        this.mode() === 'create' ? 'CONSUMPTION_LIST.VOICE_CREATE_MEAL' : 'AI_INPUT_BAR.ADD_ACTION',
+        this.mode() === 'create' ? 'MEAL_LIST.VOICE_CREATE_MEAL' : 'AI_INPUT_BAR.ADD_ACTION',
     );
 
     public constructor() {

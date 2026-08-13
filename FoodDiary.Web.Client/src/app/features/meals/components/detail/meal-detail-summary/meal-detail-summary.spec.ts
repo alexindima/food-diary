@@ -16,7 +16,7 @@ const DEFAULT_UNKNOWN_QUALITY_SCORE = 50;
 describe('MealDetailSummaryComponent', () => {
     it('should compute calories and quality hint from meal', async () => {
         const { component, fixture } = await setupComponentAsync({
-            consumption: createMeal({ qualityScore: QUALITY_SCORE, qualityGrade: 'green' }),
+            meal: createMeal({ qualityScore: QUALITY_SCORE, qualityGrade: 'green' }),
         });
 
         fixture.detectChanges();
@@ -29,7 +29,7 @@ describe('MealDetailSummaryComponent', () => {
 
     it('should fall back quality grade and normalize missing quality score', async () => {
         const { component, fixture } = await setupComponentAsync({
-            consumption: createMeal({ qualityScore: null, qualityGrade: null }),
+            meal: createMeal({ qualityScore: null, qualityGrade: null }),
         });
 
         fixture.detectChanges();
@@ -41,7 +41,7 @@ describe('MealDetailSummaryComponent', () => {
 
     it('should render macros, satiety metadata and comment', async () => {
         const { fixture } = await setupComponentAsync({
-            consumption: createMeal({ comment: 'Late lunch' }),
+            meal: createMeal({ comment: 'Late lunch' }),
             macroSummaryBlocks: [
                 { labelKey: 'NUTRIENTS.PROTEINS', value: 30, unitKey: 'GENERAL.UNITS.GRAM_SHORT', color: '#111', percent: 40 },
             ],
@@ -77,7 +77,7 @@ describe('MealDetailSummaryComponent', () => {
 
 async function setupComponentAsync(
     overrides: Partial<{
-        consumption: Meal;
+        meal: Meal;
         isItemPreviewExpanded: boolean;
         itemPreview: readonly MealDetailItemPreview[];
         macroSummaryBlocks: readonly MealMacroBlock[];
@@ -96,7 +96,7 @@ async function setupComponentAsync(
         .compileComponents();
 
     const fixture = TestBed.createComponent(MealDetailSummaryComponent);
-    fixture.componentRef.setInput('consumption', overrides.consumption ?? createMeal());
+    fixture.componentRef.setInput('meal', overrides.meal ?? createMeal());
     fixture.componentRef.setInput('macroSummaryBlocks', overrides.macroSummaryBlocks ?? []);
     fixture.componentRef.setInput('preMealSatietyMeta', overrides.preMealSatietyMeta ?? createSatietyMeta('Before'));
     fixture.componentRef.setInput('postMealSatietyMeta', overrides.postMealSatietyMeta ?? createSatietyMeta('After'));

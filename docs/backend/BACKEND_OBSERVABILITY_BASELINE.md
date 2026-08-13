@@ -290,7 +290,7 @@ relaxed when an alert becomes noisy.
 | Capability | SLI | Initial objective | Page threshold |
 | --- | --- | --- | --- |
 | Authenticated API availability | successful non-4xx requests / eligible requests | 99.9% | 5-minute server-error ratio above 2% |
-| High-value read latency | p95 duration for dashboard/products/recipes/consumptions | below 750 ms | p95 above 1.5 s for 10 minutes |
+| High-value read latency | p95 duration for dashboard/products/recipes/meals | below 750 ms | p95 above 1.5 s for 10 minutes |
 | Critical outbox delivery | time from record creation to processed state | 99% below 5 minutes | oldest pending message above 10 minutes |
 | Critical outbox correctness | dead-lettered / claimed messages | below 0.1% | any dead letter for auth, billing, or account email; otherwise above 1% for 10 minutes |
 | Recurring job freshness | time since last successful execution | schedule interval plus 5 minutes | two missed expected executions |

@@ -1,0 +1,133 @@
+@if (shouldRender()) {
+    <div
+        class="quick-meal fd-grid fd-gap-sm"
+        role="region"
+        [class.quick-meal--inline]="isInline()"
+        [class.quick-meal--collapsed]="isCollapsed()"
+        [attr.aria-labelledby]="titleId"
+    >
+        <div class="quick-meal__header fd-row fd-justify-between fd-gap-xs">
+            <div>
+                <div class="quick-meal__title fd-ui-card-title" [id]="titleId">{{ 'QUICK_MEAL.TITLE' | translate }}</div>
+                <div class="quick-meal__subtitle fd-ui-action-text" aria-live="polite">
+                    {{ items().length }} {{ 'QUICK_MEAL.ITEMS' | translate }}
+                </div>
+            </div>
+            <div class="quick-meal__header-actions fd-row fd-gap-xs">
+                <fd-ui-button
+                    class="quick-meal__header-action"
+                    variant="secondary"
+                    fill="outline"
+                    [icon]="collapsedToggleView().icon"
+                    [fdUiHint]="collapsedToggleView().labelKey | translate"
+                    [ariaLabel]="collapsedToggleView().labelKey | translate"
+                    (click)="toggleCollapsed()"
+                />
+                <fd-ui-button
+                    class="quick-meal__header-action"
+                    variant="secondary"
+                    fill="outline"
+                    icon="close"
+                    [fdUiHint]="'QUICK_MEAL.CLEAR' | translate"
+                    [ariaLabel]="'QUICK_MEAL.CLEAR' | translate"
+                    (click)="clear()"
+                />
+            </div>
+        </div>
+
+        <div
+            class="quick-meal__body fd-grid fd-gap-sm"
+            [class.quick-meal__body--collapsed]="isCollapsed()"
+            [attr.aria-hidden]="isCollapsed()"
+            [attr.inert]="bodyInert()"
+        >
+            @if (hasItems()) {
+                <div class="quick-meal__list fd-grid fd-gap-xs">
+                    @for (itemView of itemViews(); track itemView.trackingKey) {
+                        <div
+                            class="quick-meal__item fd-grid fd-gap-xs fd-align-center"
+                            [class.quick-meal__item--flash]="!!itemView.item.flashId"
+                        >
+                            <div class="quick-meal__thumb fd-place-center">
+                                <img width="44" height="44" alt="" loading="lazy" [attr.src]="itemView.imageUrl" />
+                            </div>
+                            <div class="quick-meal__info fd-grid fd-gap-xxs">
+                                <div class="quick-meal__name fd-ui-action-text">{{ itemView.name }}</div>
+                                <div class="quick-meal__meta fd-ui-body-sm">
+                                    {{ 'QUICK_MEAL.AMOUNT' | translate }}: {{ itemView.amount | number: '1.0-1' }}
+                                    {{ itemView.unitKey | translate }}
+                                </div>
+                            </div>
+                            <div class="quick-meal__item-actions fd-row fd-gap-xxs">
+                                <fd-ui-button
+                                    class="quick-meal__item-action"
+                                    variant="secondary"
+                                    fill="text"
+                                    icon="edit"
+                                    [fdUiHint]="'MEAL_MANAGE.MANUAL_ITEM_EDIT' | translate"
+                                    [ariaLabel]="'MEAL_MANAGE.MANUAL_ITEM_EDIT_NAMED' | translate: { name: itemView.name }"
+                                    (click)="edit(itemView.item)"
+                                />
+                                <fd-ui-button
+                                    class="quick-meal__item-action quick-meal__item-action--danger"
+                                    variant="danger"
+                                    fill="text"
+                                    icon="delete"
+                                    [fdUiHint]="'QUICK_MEAL.REMOVE_ITEM' | translate"
+                                    [ariaLabel]="'QUICK_MEAL.REMOVE_ITEM_NAMED' | translate: { name: itemView.name }"
+                                    (click)="remove(itemView.item.key)"
+                                />
+                            </div>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <p class="quick-meal__empty fd-ui-body-sm">{{ 'QUICK_MEAL.PREVIEW_EMPTY' | translate }}</p>
+            }
+
+            <div class="quick-meal__details fd-grid fd-gap-xs">
+                <fd-ui-button
+                    class="quick-meal__details-toggle"
+                    variant="secondary"
+                    fill="text"
+                    [icon]="detailsToggleView().icon"
+                    [ariaLabel]="detailsToggleView().labelKey | translate"
+                    (click)="toggleDetails()"
+                >
+                    {{ detailsToggleView().labelKey | translate }}
+                </fd-ui-button>
+
+                @if (isDetailsExpanded()) {
+                    <fd-meal-details-fields
+                        [date]="details().date"
+                        [time]="details().time"
+                        [comment]="details().comment"
+                        [preMealSatietyLevel]="details().preMealSatietyLevel"
+                        [postMealSatietyLevel]="details().postMealSatietyLevel"
+                        [textareaRows]="2"
+                        (dateChange)="updateDate($event)"
+                        (timeChange)="updateTime($event)"
+                        (commentChange)="updateComment($event)"
+                        (preMealSatietyLevelChange)="updatePreMealSatietyLevel($event)"
+                        (postMealSatietyLevelChange)="updatePostMealSatietyLevel($event)"
+                    />
+                }
+            </div>
+
+            <div class="quick-meal__actions fd-grid fd-gap-xs">
+                <fd-ui-button
+                    class="quick-meal__save"
+                    appearance="brand-action"
+                    variant="primary"
+                    icon="check"
+                    [fullWidth]="true"
+                    [ariaLabel]="'QUICK_MEAL.SAVE_ARIA' | translate"
+                    [loading]="isSaving()"
+                    (click)="save()"
+                >
+                    {{ 'QUICK_MEAL.SAVE' | translate }}
+                </fd-ui-button>
+            </div>
+        </div>
+    </div>
+}

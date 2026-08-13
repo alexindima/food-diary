@@ -743,7 +743,7 @@ public sealed class DependencyInjectionTests {
             "FoodDiary.Application.Abstractions.Meals.Common.IMealRepository",
             [
                 "FoodDiary.Application.Abstractions.Meals.Common.IMealReadRepository",
-                "FoodDiary.Application.Abstractions.Meals.Common.IMealConsumptionReadRepository",
+                "FoodDiary.Application.Abstractions.Meals.Common.IMealProjectionReadRepository",
                 "FoodDiary.Application.Abstractions.Meals.Common.IMealActivityReadRepository",
                 "FoodDiary.Application.Abstractions.Meals.Common.IMealProductNutritionReadRepository",
                 "FoodDiary.Application.Abstractions.Meals.Common.IMealWriteRepository",

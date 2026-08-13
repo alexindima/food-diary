@@ -5,7 +5,7 @@ import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
-import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
+import type { MealAiItemManageDto, MealAiSessionManageDto } from '../../../models/meal.data';
 import { formatMealAiAmount, formatMealAiName, formatMealManageMacro, getAiSessionTotals } from '../meal-manage-lib/meal-manage-view.utils';
 
 @Component({
@@ -19,7 +19,7 @@ export class MealAiSessionsComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
 
-    public readonly aiSessions = input.required<ConsumptionAiSessionManageDto[]>();
+    public readonly aiSessions = input.required<MealAiSessionManageDto[]>();
 
     public readonly editSession = output<number>();
     public readonly deleteSession = output<number>();
@@ -73,11 +73,11 @@ export class MealAiSessionsComponent {
         });
     }
 
-    private visibleAiItems(items: ConsumptionAiItemManageDto[], maxVisible: number): ConsumptionAiItemManageDto[] {
+    private visibleAiItems(items: MealAiItemManageDto[], maxVisible: number): MealAiItemManageDto[] {
         return items.slice(0, Math.max(0, maxVisible));
     }
 
-    private getHiddenAiItemsCount(items: ConsumptionAiItemManageDto[], maxVisible: number): number {
+    private getHiddenAiItemsCount(items: MealAiItemManageDto[], maxVisible: number): number {
         return Math.max(0, items.length - Math.max(0, maxVisible));
     }
 
@@ -91,7 +91,7 @@ export class MealAiSessionsComponent {
 }
 
 type AiSessionRowViewModel = {
-    session: ConsumptionAiSessionManageDto;
+    session: MealAiSessionManageDto;
     index: number;
     itemCount: number;
     isExpanded: boolean;
