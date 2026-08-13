@@ -4,8 +4,6 @@ using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
-using FoodDiary.Application.WeeklyCheckIn.Common;
-using FoodDiary.Application.WeeklyCheckIn.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -28,7 +26,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IAchievementAwardService, AchievementAwardService>();
         services.AddScoped<IAchievementReconciliationHandler, AchievementReconciliationHandler>();
         services.AddScoped<IAchievementDefinitionAdministrationService, AchievementDefinitionAdministrationService>();
-        services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
-        services.AddScoped<IWeeklyCheckInReadService, WeeklyCheckInReadService>();
     }
 }

@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  83,
+                    "dotnetProjects":  84,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  10,
-                    "extractedApplicationModules":  24,
+                    "applicationModules":  9,
+                    "extractedApplicationModules":  25,
                     "backendBusinessModules":  34,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  65,
+                    "agentGuides":  66,
                     "documentationPages":  44
                 },
     "dotnet":  {
@@ -747,6 +747,38 @@
                                                               ]
                                     },
                                     {
+                                        "name":  "FoodDiary.Application.WeeklyCheckIn",
+                                        "assemblyName":  "FoodDiary.Application.WeeklyCheckIn",
+                                        "path":  "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "FluentValidation",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "FluentValidation.DependencyInjectionExtensions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
                                         "name":  "FoodDiary.Application.WeeklyGoals",
                                         "assemblyName":  "FoodDiary.Application.WeeklyGoals",
                                         "path":  "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj",
@@ -963,6 +995,7 @@
                                                                   "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
+                                                                  "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
                                                                   "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
@@ -1075,6 +1108,7 @@
                                                                   "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
+                                                                  "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
                                                                   "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
@@ -1158,6 +1192,7 @@
                                                                   "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
+                                                                  "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
                                                                   "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj"
                                                               ],
@@ -1247,6 +1282,7 @@
                                                                   "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
+                                                                  "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
                                                                   "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
@@ -2325,6 +2361,7 @@
                                                                   "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
+                                                                  "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
                                                                   "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj"
@@ -2722,6 +2759,7 @@
                                                                   "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
                                                                   "FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
+                                                                  "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
                                                                   "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj",
@@ -3142,13 +3180,6 @@
                                                         "Images",
                                                         "RecentItems"
                                                     ]
-                               },
-                               {
-                                   "name":  "WeeklyCheckIn",
-                                   "dependencies":  [
-                                                        "Hydration",
-                                                        "Meals"
-                                                    ]
                                }
                            ],
     "extractedApplicationModules":  [
@@ -3243,6 +3274,10 @@
                                         {
                                             "name":  "Wearables",
                                             "project":  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj"
+                                        },
+                                        {
+                                            "name":  "WeeklyCheckIn",
+                                            "project":  "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj"
                                         },
                                         {
                                             "name":  "WeeklyGoals",
@@ -5232,6 +5267,7 @@
                                                  "FoodDiary.Application.Usda/AGENTS.md",
                                                  "FoodDiary.Application.Users/AGENTS.md",
                                                  "FoodDiary.Application.Wearables/AGENTS.md",
+                                                 "FoodDiary.Application.WeeklyCheckIn/AGENTS.md",
                                                  "FoodDiary.Application.WeeklyGoals/AGENTS.md",
                                                  "FoodDiary.Application/AGENTS.md",
                                                  "FoodDiary.Domain/AGENTS.md",

@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  73
+                       "line":  74
                    },
                    {
                        "category":  "credential",
@@ -4219,6 +4219,90 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AvgDailyCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeightStart",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeightEnd",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WaistStart",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WaistEnd",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalHydrationMl",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AvgDailyHydrationMl",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekSummaryModel.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeightChange",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekTrendModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WaistChange",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekTrendModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "HydrationChange",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Models/WeekTrendModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
+                       "line":  65
+                   },
+                   {
+                       "category":  "health",
                        "name":  "BirthDate",
                        "type":  "DateTime?",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
@@ -4601,90 +4685,6 @@
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Recipes/Services/RecipeNutritionSummary.cs",
                        "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AvgDailyCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeightStart",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeightEnd",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WaistStart",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WaistEnd",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalHydrationMl",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AvgDailyHydrationMl",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekSummaryModel.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeightChange",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekTrendModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WaistChange",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekTrendModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "HydrationChange",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Models/WeekTrendModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
-                       "line":  65
                    },
                    {
                        "category":  "health",

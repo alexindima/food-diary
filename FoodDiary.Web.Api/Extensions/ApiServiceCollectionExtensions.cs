@@ -23,6 +23,7 @@ using FoodDiary.Application.Users;
 using FoodDiary.Application.Wearables;
 using FoodDiary.Application.WeeklyGoals;
 using FoodDiary.Application.Usda;
+using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -74,6 +75,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddWearablesModule()
                 .AddWeeklyGoalsModule()
                 .AddUsdaModule()
+                .AddWeeklyCheckInModule()
                 .AddNotificationsModule()
                 .AddOpenFoodFactsModule()
                 .AddUsersModule()

@@ -14,16 +14,17 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Hydration, Meals
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj`
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: Dashboard, Meals, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application/WeeklyCheckIn`
+- `FoodDiary.Application.WeeklyCheckIn`
 - `FoodDiary.Presentation.Api/Features/WeeklyCheckIn`
 
 ## HTTP Surface
@@ -37,11 +38,11 @@ Source: `FoodDiary.Presentation.Api/Features/WeeklyCheckIn/WeeklyCheckInControll
 ## Boundary Health
 
 - Role: read-composer
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 0
-- Observed external consumer groups: 1
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -60,6 +61,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInCalculatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WeeklyCheckInModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/WeeklyCheckInHttpMappingsTests.cs`
 
 ## Working Rule

@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 10 folder modules and 24 extracted application modules.
+This index unifies 9 folder modules and 25 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
@@ -32,13 +32,13 @@ are reported separately; `none observed` never means proven isolation.
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
 | [Favorites](favorites.md) | aggregate-owner | 0 | 7 | 0 | 4 | project-reference-matrix |
 | [Gamification](gamification.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |
-| [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 2 | 5 | project-reference-matrix |
+| [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 1 | 6 | project-reference-matrix |
 | [Identity](identity.md) | aggregate-owner | 0 | 5 | 0 | 4 | assembly-isolated |
 | [Images](images.md) | aggregate-owner | 0 | 0 | 2 | 7 | project-reference-matrix |
 | [Lessons](lessons.md) | aggregate-owner | 0 | 2 | 1 | 5 | project-reference-matrix |
 | [Marketing](marketing.md) | aggregate-owner | 0 | 1 | 0 | 4 | assembly-isolated |
 | [MealPlanning](meal-planning.md) | aggregate-owner | 0 | 4 | 0 | 4 | project-reference-matrix |
-| [Meals](meals.md) | aggregate-owner | 0 | 8 | 4 | 7 | project-reference-matrix |
+| [Meals](meals.md) | aggregate-owner | 0 | 8 | 3 | 8 | project-reference-matrix |
 | [Notifications](notifications.md) | aggregate-owner | 0 | 0 | 0 | 5 | project-reference-matrix |
 | [OpenFoodFacts](open-food-facts.md) | adapter | 0 | 0 | 1 | 6 | project-reference-matrix |
 | [Products](products.md) | aggregate-owner | 4 | 6 | 0 | 1 | explicit-boundary-tests |
@@ -50,5 +50,5 @@ are reported separately; `none observed` never means proven isolation.
 | [Usda](usda.md) | adapter | 0 | 2 | 1 | 6 | project-reference-matrix |
 | [Users](users.md) | aggregate-owner | 0 | 0 | 0 | 4 | explicit-boundary-tests |
 | [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
-| [WeeklyCheckIn](weekly-check-in.md) | read-composer | 2 | 5 | 0 | 1 | graph-only |
+| [WeeklyCheckIn](weekly-check-in.md) | read-composer | 0 | 5 | 0 | 4 | project-reference-matrix |
 | [WeeklyGoals](weekly-goals.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |

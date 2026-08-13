@@ -25,7 +25,7 @@ The rules are intentionally evolutionary:
 
 ## Governed ownership map
 
-The canonical ownership inventory and cross-layer mappings live in `docs/architecture/backend-modules.json`. It currently unifies 10 folder modules with 24 extracted application modules (34 primary backend modules total). The executable module API graph remains in `docs/architecture/module-dependencies.json`; architecture tests derive direct `FoodDiary.Application.<Module>` dependencies with Roslyn syntax traversal and require an exact manifest match. Every new in-process Module API dependency is therefore an explicit architecture decision; unknown modules, self-edges and unacknowledged strongly connected components fail the build.
+The canonical ownership inventory and cross-layer mappings live in `docs/architecture/backend-modules.json`. It currently unifies 9 folder modules with 25 extracted application modules (34 primary backend modules total). The executable module API graph remains in `docs/architecture/module-dependencies.json`; architecture tests derive direct `FoodDiary.Application.<Module>` dependencies with Roslyn syntax traversal and require an exact manifest match. Every new in-process Module API dependency is therefore an explicit architecture decision; unknown modules, self-edges and unacknowledged strongly connected components fail the build.
 
 Generated Wiki pages must keep business-module dependencies, abstraction-contract dependencies, project/host consumers and runtime composition evidence separate. An empty observed edge set is not proof of isolation; enforceability is declared per module in the ownership manifest.
 

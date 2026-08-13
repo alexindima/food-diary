@@ -8,13 +8,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "02d3ecd226cdd334e8ff337aac9849ddd726da185ffdaf98071b09d067438f21"
+                                            "sha256":  "8f0bd5842965d366f029714b4c69e1e0abaa378bfd0098d59a94341f723cb558"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:45.4912797Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:31.2354697Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -42,17 +42,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "958fa78fae467f8b533b05cae4a314d7e9aae15fd69c0873e9f13042b2db358f"
+                                            "sha256":  "de6ffc5e5c8a198b340e884d14b0d4051f07f3dd50442c822ade0b5795018352"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "5e460e3f65334278f0d0953da0e5738228ea9ac2248bd78b24d8e61124d2ed22"
+                                            "sha256":  "29371ebf1818282968d4f4691eca2893673356420deb7f3bcbfe604c463efd6a"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:46.0112817Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:31.6517433Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -61,17 +61,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "958fa78fae467f8b533b05cae4a314d7e9aae15fd69c0873e9f13042b2db358f"
+                                            "sha256":  "de6ffc5e5c8a198b340e884d14b0d4051f07f3dd50442c822ade0b5795018352"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "3f33926acdac6501f19f081bc596bb837c50f1fb87c5a0849096e243a992e7a2"
+                                            "sha256":  "8d0db03e1bab5acd29f35ff43d3d831f78d07cc5228db7e070e1b00049a40713"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:46.5230994Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:32.0827350Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -95,13 +95,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "02d3ecd226cdd334e8ff337aac9849ddd726da185ffdaf98071b09d067438f21"
+                                            "sha256":  "8f0bd5842965d366f029714b4c69e1e0abaa378bfd0098d59a94341f723cb558"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:47.1910387Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:32.5602364Z"
                     },
                     {
                         "pageId":  "system.repository-catalog",
@@ -110,13 +110,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "958fa78fae467f8b533b05cae4a314d7e9aae15fd69c0873e9f13042b2db358f"
+                                            "sha256":  "de6ffc5e5c8a198b340e884d14b0d4051f07f3dd50442c822ade0b5795018352"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:47.8034907Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:33.0234877Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -125,13 +125,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "02d3ecd226cdd334e8ff337aac9849ddd726da185ffdaf98071b09d067438f21"
+                                            "sha256":  "8f0bd5842965d366f029714b4c69e1e0abaa378bfd0098d59a94341f723cb558"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:49.8676222Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:34.5307758Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -189,17 +189,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "ed7318460b371b29aeb8b1e08e4d9277b9936d6a2395bcd11ebba31630091061"
+                                            "sha256":  "8cb52bcf148f619f7ac2002d180f537536a6725daecd85cce38f59773ea009aa"
                                         },
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "02d3ecd226cdd334e8ff337aac9849ddd726da185ffdaf98071b09d067438f21"
+                                            "sha256":  "8f0bd5842965d366f029714b4c69e1e0abaa378bfd0098d59a94341f723cb558"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:52.0934992Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:36.2075228Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -208,13 +208,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "02d3ecd226cdd334e8ff337aac9849ddd726da185ffdaf98071b09d067438f21"
+                                            "sha256":  "8f0bd5842965d366f029714b4c69e1e0abaa378bfd0098d59a94341f723cb558"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:52.7566636Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:36.7216294Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -268,21 +268,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "e7d69678fbf5aa832462107a7609494bf4f30a7176dd041a660bb79f5596dfb4"
+                                            "sha256":  "a87c23dc784fda3515d7c97d89bbf288a5bf3ef7cfe613f429cc609861940aa0"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "958fa78fae467f8b533b05cae4a314d7e9aae15fd69c0873e9f13042b2db358f"
+                                            "sha256":  "de6ffc5e5c8a198b340e884d14b0d4051f07f3dd50442c822ade0b5795018352"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "3f33926acdac6501f19f081bc596bb837c50f1fb87c5a0849096e243a992e7a2"
+                                            "sha256":  "8d0db03e1bab5acd29f35ff43d3d831f78d07cc5228db7e070e1b00049a40713"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:48.5003759Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:33.4741434Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -291,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "5ca56a7ccf823ab5d3f6516ab2ae0bf9df6d32778050e0d31ff655001771dd9c"
+                                            "sha256":  "502847ebe5d2b38a02b4b9cc0aa0b38b7b72095a48b29fb87d1641eb49048f22"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:49.2376563Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:34.0270850Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -795,13 +795,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "98dcb8791f3ad2323743385089fb6b0ef2703599f22a137c18c1e0a874ffe0ff"
+                                            "sha256":  "77f9a6982772680a779b4b115e698bcdd437f739314eaa98f2b8a8cf616e9f23"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:50.5636228Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:35.0801536Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -844,13 +844,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "d690478bd915f066487004f16823db3c1a3a03306502dde0cd53ee087df44d6d"
+                                            "sha256":  "447b398058b7ff725640af9f604fec6e7f4808be0152f68730f95865b6add6ac"
                                         }
                                     ],
-                        "reason":  "USDA was physically extracted under the executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated adapter assembly and its sole Meals dependency; existing HTTP contracts, persistence schema, provider contracts, configuration, and runtime behavior are unchanged. Full solution build, focused application and presentation tests, extraction compile probe, and architecture tests provide the review evidence.",
+                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "814604ca5d918f8d97aa7687e45755d71ec7a54b",
-                        "reviewedAtUtc":  "2026-08-13T15:38:51.3349181Z"
+                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
+                        "reviewedAtUtc":  "2026-08-13T16:01:35.6472331Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

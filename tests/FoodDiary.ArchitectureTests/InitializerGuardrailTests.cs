@@ -32,6 +32,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.Usda",
             "FoodDiary.Application.Users",
             "FoodDiary.Application.Wearables",
+            "FoodDiary.Application.WeeklyCheckIn",
             "FoodDiary.Application.WeeklyGoals",
             "FoodDiary.Infrastructure",
         ];
