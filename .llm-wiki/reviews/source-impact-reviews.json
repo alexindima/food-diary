@@ -42,17 +42,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "42cba00fccd027d3cbcdfc61449a77e73bb445b2fb2398dea93b6b93579bbe01"
+                                            "sha256":  "cc08c1959785bd8091c10f5f61df875567d263361ff8c2d56c438e78b00d900c"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "1da7243ac671ba86b820aa8ad5164e0ddccdb71027ad4f7e37cac43611d084a3"
+                                            "sha256":  "5d868f054b59abcbb0c313024b0ead8b581f856744dc670b5e616b9a8b90056f"
                                         }
                                     ],
-                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
+                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
-                        "reviewedAtUtc":  "2026-08-13T10:45:54.2470633Z"
+                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
+                        "reviewedAtUtc":  "2026-08-13T11:12:32.6069049Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -61,17 +61,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "42cba00fccd027d3cbcdfc61449a77e73bb445b2fb2398dea93b6b93579bbe01"
+                                            "sha256":  "cc08c1959785bd8091c10f5f61df875567d263361ff8c2d56c438e78b00d900c"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "3d030c7e99879ebb34f96269f972300be0586e9665cf803caeba41488a41a0ac"
+                                            "sha256":  "01353c9d54d556d292148d5e4c37d92a2df3a8d697a531a4d1d59d8226d35fc5"
                                         }
                                     ],
-                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
+                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
-                        "reviewedAtUtc":  "2026-08-13T10:45:54.7252567Z"
+                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
+                        "reviewedAtUtc":  "2026-08-13T11:12:33.2101293Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -110,13 +110,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "42cba00fccd027d3cbcdfc61449a77e73bb445b2fb2398dea93b6b93579bbe01"
+                                            "sha256":  "cc08c1959785bd8091c10f5f61df875567d263361ff8c2d56c438e78b00d900c"
                                         }
                                     ],
-                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
+                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
-                        "reviewedAtUtc":  "2026-08-13T10:45:55.8133641Z"
+                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
+                        "reviewedAtUtc":  "2026-08-13T11:12:33.8332632Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -189,17 +189,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "43a118b35709c5d17c218c8eda7134ab6dfcef02a493aaa3ecdb8105019c62cc"
-                                        },
-                                        {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "54f26f1cca1e4962d338e7b70387a0531938f21856fa869da1adf1275ffbb22a"
+                                            "sha256":  "39164537e1bd2b832c80de1f5215860676ab8d3ed1688734845cf77aed013652"
                                         }
                                     ],
-                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
+                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
-                        "reviewedAtUtc":  "2026-08-13T10:45:59.5423525Z"
+                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
+                        "reviewedAtUtc":  "2026-08-13T11:12:37.5005072Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -272,21 +268,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "88286ba4d63a7f9f9b12dee62206e2f727b135ba31df3984fb33412e757cabb8"
+                                            "sha256":  "22bf6c3ccc39b99e65ec926dc18a0658eb91a7fd8ee2997a2629183372cb1e39"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "42cba00fccd027d3cbcdfc61449a77e73bb445b2fb2398dea93b6b93579bbe01"
+                                            "sha256":  "cc08c1959785bd8091c10f5f61df875567d263361ff8c2d56c438e78b00d900c"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "3d030c7e99879ebb34f96269f972300be0586e9665cf803caeba41488a41a0ac"
+                                            "sha256":  "01353c9d54d556d292148d5e4c37d92a2df3a8d697a531a4d1d59d8226d35fc5"
                                         }
                                     ],
-                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
+                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
-                        "reviewedAtUtc":  "2026-08-13T10:45:56.2816031Z"
+                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
+                        "reviewedAtUtc":  "2026-08-13T11:12:34.5712626Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -295,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "2b9f748a2fc1178debb3b8023c7882565c8d37322f81c0bc445ddaadda4d5315"
+                                            "sha256":  "7ee5eb207e37f9d09472c6e8061ae0c0e1061885717e50ad3365f983d82714f7"
                                         }
                                     ],
-                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
+                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
-                        "reviewedAtUtc":  "2026-08-13T10:45:56.9478743Z"
+                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
+                        "reviewedAtUtc":  "2026-08-13T11:12:35.3492469Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -803,13 +799,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "1309abc6567278dd7145cd6e75efefcd895f9033ace904ad49432039d1bd25fc"
+                                            "sha256":  "33036b084f4a00bce272e9b7d78409d5f6134418cfa0af4734b3468c852e3728"
                                         }
                                     ],
-                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
+                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
-                        "reviewedAtUtc":  "2026-08-13T10:45:58.1505288Z"
+                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
+                        "reviewedAtUtc":  "2026-08-13T11:12:36.0368345Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -852,13 +848,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "0afcf65bd74daefbce062a73ec03882d1140f0d6fd729bf5947c96e2f6d63b97"
+                                            "sha256":  "d3059a3dde6543c06576b39cfdec829c3aea76c0d0072049d6169f746cf86351"
                                         }
                                     ],
-                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
+                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
-                        "reviewedAtUtc":  "2026-08-13T10:45:58.7880056Z"
+                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
+                        "reviewedAtUtc":  "2026-08-13T11:12:36.7960001Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

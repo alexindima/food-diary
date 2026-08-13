@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -24,16 +23,13 @@ public sealed class GetLessonByIdQueryHandler(
             return CurrentUserAccessResolver.ToFailure<LessonDetailModel>(userIdResult);
         }
 
-        Result<NutritionLessonId> lessonIdResult = RequiredIdParser.Parse(
-            query.LessonId,
-            nameof(query.LessonId),
-            "Lesson id must not be empty.",
-            value => new NutritionLessonId(value));
-        if (lessonIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<LessonDetailModel, NutritionLessonId>(lessonIdResult);
+        if (query.LessonId == Guid.Empty) {
+            return Result.Failure<LessonDetailModel>(Errors.Validation.Invalid(
+                nameof(query.LessonId),
+                "Lesson id must not be empty."));
         }
 
-        NutritionLessonId lessonId = lessonIdResult.Value;
+        var lessonId = new NutritionLessonId(query.LessonId);
         LessonDetailModel? lesson = await lessonReadService.GetByIdAsync(userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure<LessonDetailModel>(Errors.Lesson.NotFound(query.LessonId));

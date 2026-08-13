@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Lessons.Common;
 using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Domain.Enums;
@@ -25,9 +24,9 @@ public sealed class GetLessonsQueryHandler(
             return CurrentUserAccessResolver.ToFailure<LessonPageModel>(userIdResult);
         }
 
-        LessonCategory? categoryFilter = EnumFilterParser.ParseOptional<LessonCategory>(query.Category);
-        LessonDifficulty? difficultyFilter = EnumFilterParser.ParseOptional<LessonDifficulty>(query.Difficulty);
-        LessonSortOption sort = EnumFilterParser.ParseOptional<LessonSortOption>(query.Sort)
+        LessonCategory? categoryFilter = ParseOptional<LessonCategory>(query.Category);
+        LessonDifficulty? difficultyFilter = ParseOptional<LessonDifficulty>(query.Difficulty);
+        LessonSortOption sort = ParseOptional<LessonSortOption>(query.Sort)
             ?? LessonSortOption.Recommended;
 
         string locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale.Trim().ToLowerInvariant();
@@ -46,4 +45,10 @@ public sealed class GetLessonsQueryHandler(
 
         return Result.Success(model);
     }
+
+    private static TEnum? ParseOptional<TEnum>(string? value)
+        where TEnum : struct, Enum =>
+        !string.IsNullOrWhiteSpace(value) && Enum.TryParse(value, ignoreCase: true, out TEnum parsed)
+            ? parsed
+            : null;
 }

@@ -4,8 +4,6 @@ using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Application.ContentReports.Services;
 using FoodDiary.Application.DailyAdvices.Common;
 using FoodDiary.Application.DailyAdvices.Services;
-using FoodDiary.Application.Lessons.Common;
-using FoodDiary.Application.Lessons.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application;
@@ -22,8 +20,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IContentReportAdministrationService, ContentReportAdministrationService>();
         services.AddScoped<IContentReportAdministrationReadService, ContentReportAdministrationReadService>();
         services.AddScoped<IDailyAdviceReadService, DailyAdviceReadService>();
-        services.AddScoped<ILessonReadService, LessonReadService>();
-        services.AddScoped<ILessonAdministrationService, LessonAdministrationService>();
-        services.AddScoped<ILessonAdministrationReadService, LessonAdministrationReadService>();
     }
 }

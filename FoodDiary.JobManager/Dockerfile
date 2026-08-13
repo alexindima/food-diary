@@ -27,6 +27,7 @@ COPY FoodDiary.Application.Tdee/*.csproj FoodDiary.Application.Tdee/
 COPY FoodDiary.Application.OpenFoodFacts/*.csproj FoodDiary.Application.OpenFoodFacts/
 COPY FoodDiary.Application.Images/*.csproj FoodDiary.Application.Images/
 COPY FoodDiary.Application.Ai/*.csproj FoodDiary.Application.Ai/
+COPY FoodDiary.Application.Lessons/*.csproj FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Hydration/*.csproj FoodDiary.Application.Hydration/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
@@ -61,6 +62,7 @@ COPY FoodDiary.Application.Tdee/ FoodDiary.Application.Tdee/
 COPY FoodDiary.Application.OpenFoodFacts/ FoodDiary.Application.OpenFoodFacts/
 COPY FoodDiary.Application.Images/ FoodDiary.Application.Images/
 COPY FoodDiary.Application.Ai/ FoodDiary.Application.Ai/
+COPY FoodDiary.Application.Lessons/ FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Hydration/ FoodDiary.Application.Hydration/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/

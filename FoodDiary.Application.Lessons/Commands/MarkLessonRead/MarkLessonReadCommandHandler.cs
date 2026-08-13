@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Content;
@@ -28,16 +27,13 @@ public sealed class MarkLessonReadCommandHandler(
             return Result.Failure(userIdResult.Error);
         }
 
-        Result<NutritionLessonId> lessonIdResult = RequiredIdParser.Parse(
-            command.LessonId,
-            nameof(command.LessonId),
-            "Lesson id must not be empty.",
-            value => new NutritionLessonId(value));
-        if (lessonIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure(lessonIdResult);
+        if (command.LessonId == Guid.Empty) {
+            return Result.Failure(Errors.Validation.Invalid(
+                nameof(command.LessonId),
+                "Lesson id must not be empty."));
         }
 
-        NutritionLessonId lessonId = lessonIdResult.Value;
+        var lessonId = new NutritionLessonId(command.LessonId);
         NutritionLesson? lesson = await readRepository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure(Errors.Lesson.NotFound(command.LessonId));

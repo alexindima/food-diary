@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  68
+                       "line":  69
                    },
                    {
                        "category":  "credential",

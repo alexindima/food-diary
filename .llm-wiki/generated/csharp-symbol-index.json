@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3177,
-                    "symbols":  3199,
+                    "sourceFiles":  3179,
+                    "symbols":  3200,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1622,
+                                  "class":  1623,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1163,
+                                  "Other":  1164,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -7825,6 +7825,139 @@
                         "line":  8
                     },
                     {
+                        "name":  "MarkLessonReadCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "MarkLessonReadCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "ILessonAdministrationReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ILessonAdministrationService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "ILessonReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Lessons/Common/ILessonReadService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "LessonAdministrationItem",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Lessons/Common/LessonAdministrationItem.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Lessons/DependencyInjection.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "LessonMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Lessons/Mappings/LessonMappings.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "LessonDetailModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Lessons/Models/LessonDetailModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "LessonPageModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Lessons/Models/LessonPageModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "LessonSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Lessons/Models/LessonSummaryModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetLessonByIdQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetLessonByIdQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "GetLessonsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetLessonsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "GetLessonsQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "LessonAdministrationReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "LessonAdministrationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Lessons/Services/LessonAdministrationService.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "LessonReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Lessons/Services/LessonReadService.cs",
+                        "line":  10
+                    },
+                    {
                         "name":  "RecordMarketingAttributionCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -11238,7 +11371,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                        "line":  12
+                        "line":  10
                     },
                     {
                         "name":  "DependencyInjection",
@@ -11484,132 +11617,6 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Gamification/Services/GamificationUserProfileService.cs",
                         "line":  9
-                    },
-                    {
-                        "name":  "MarkLessonReadCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "MarkLessonReadCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "ILessonAdministrationReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Lessons/Common/ILessonAdministrationReadService.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "ILessonAdministrationService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Lessons/Common/ILessonAdministrationService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "ILessonReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Lessons/Common/ILessonReadService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "LessonAdministrationItem",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Lessons/Common/LessonAdministrationItem.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "LessonMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Lessons/Mappings/LessonMappings.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "LessonDetailModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Lessons/Models/LessonDetailModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "LessonPageModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Lessons/Models/LessonPageModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "LessonSummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Lessons/Models/LessonSummaryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetLessonByIdQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetLessonByIdQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "GetLessonsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetLessonsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "GetLessonsQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "LessonAdministrationReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Lessons/Services/LessonAdministrationReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "LessonAdministrationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Lessons/Services/LessonAdministrationService.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "LessonReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Lessons/Services/LessonReadService.cs",
-                        "line":  10
                     },
                     {
                         "name":  "ManualNutritionLimits",
@@ -16327,7 +16334,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  364
+                        "line":  366
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16684,7 +16691,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  74
+                        "line":  76
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20471,7 +20478,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  34
+                        "line":  35
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23263,23 +23270,23 @@
                                      },
                                      {
                                          "interface":  "ILessonAdministrationReadService",
-                                         "interfacePath":  "FoodDiary.Application/Lessons/Common/ILessonAdministrationReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs",
                                          "implementation":  "LessonAdministrationReadService",
-                                         "implementationPath":  "FoodDiary.Application/Lessons/Services/LessonAdministrationReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "ILessonAdministrationService",
-                                         "interfacePath":  "FoodDiary.Application/Lessons/Common/ILessonAdministrationService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs",
                                          "implementation":  "LessonAdministrationService",
-                                         "implementationPath":  "FoodDiary.Application/Lessons/Services/LessonAdministrationService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Lessons/Services/LessonAdministrationService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "ILessonReadService",
-                                         "interfacePath":  "FoodDiary.Application/Lessons/Common/ILessonReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Lessons/Common/ILessonReadService.cs",
                                          "implementation":  "LessonReadService",
-                                         "implementationPath":  "FoodDiary.Application/Lessons/Services/LessonReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Lessons/Services/LessonReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24342,6 +24349,27 @@
                                                  "line":  13
                                              },
                                              {
+                                                 "service":  "ILessonReadService",
+                                                 "implementation":  "LessonReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Lessons/DependencyInjection.cs",
+                                                 "line":  14
+                                             },
+                                             {
+                                                 "service":  "ILessonAdministrationService",
+                                                 "implementation":  "LessonAdministrationService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Lessons/DependencyInjection.cs",
+                                                 "line":  15
+                                             },
+                                             {
+                                                 "service":  "ILessonAdministrationReadService",
+                                                 "implementation":  "LessonAdministrationReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Lessons/DependencyInjection.cs",
+                                                 "line":  16
+                                             },
+                                             {
                                                  "service":  "IMarketingAttributionCleanupService",
                                                  "implementation":  "MarketingAttributionCleanupService",
                                                  "lifetime":  "Scoped",
@@ -24535,91 +24563,70 @@
                                                  "implementation":  "AdminAiUsageReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  15
+                                                 "line":  13
                                              },
                                              {
                                                  "service":  "IAdminAuditReadService",
                                                  "implementation":  "AdminAuditReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  16
+                                                 "line":  14
                                              },
                                              {
                                                  "service":  "IAdminBillingReadService",
                                                  "implementation":  "AdminBillingReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  17
+                                                 "line":  15
                                              },
                                              {
                                                  "service":  "IAdminContentReadService",
                                                  "implementation":  "AdminContentReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  18
+                                                 "line":  16
                                              },
                                              {
                                                  "service":  "IAdminDashboardReadService",
                                                  "implementation":  "AdminDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  19
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IAdminUserReadService",
                                                  "implementation":  "AdminUserReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  20
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IAdminUserLoginReadService",
                                                  "implementation":  "AdminUserLoginReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  21
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IContentReportAdministrationService",
                                                  "implementation":  "ContentReportAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  22
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IContentReportAdministrationReadService",
                                                  "implementation":  "ContentReportAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  23
+                                                 "line":  21
                                              },
                                              {
                                                  "service":  "IDailyAdviceReadService",
                                                  "implementation":  "DailyAdviceReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  24
-                                             },
-                                             {
-                                                 "service":  "ILessonReadService",
-                                                 "implementation":  "LessonReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  25
-                                             },
-                                             {
-                                                 "service":  "ILessonAdministrationService",
-                                                 "implementation":  "LessonAdministrationService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  26
-                                             },
-                                             {
-                                                 "service":  "ILessonAdministrationReadService",
-                                                 "implementation":  "LessonAdministrationReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  27
+                                                 "line":  22
                                              },
                                              {
                                                  "service":  "IPostCommitActionQueue",
@@ -25431,14 +25438,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  94
+                                                 "line":  96
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  95
+                                                 "line":  97
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25529,7 +25536,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  66
+                                                 "line":  68
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25585,35 +25592,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  45
+                                                 "line":  46
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  74
+                                                 "line":  76
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  75
+                                                 "line":  77
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  76
+                                                 "line":  78
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  99
+                                                 "line":  101
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4185,
+                    "productionFiles":  4187,
                     "criticalSymbols":  539,
                     "criticalSymbolsWithTestReferences":  510,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -294,11 +294,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  329,
+                         "nonBlankLines":  331,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  68.08
+                         "structuralRiskScore":  68.12
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
@@ -9567,6 +9567,166 @@
                       "structuralRiskScore":  11.5
                   },
                   {
+                      "path":  "FoodDiary.Application.Lessons/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+                      "nonBlankLines":  48,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.96
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Common/ILessonAdministrationReadService.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Common/ILessonAdministrationService.cs",
+                      "nonBlankLines":  32,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.64
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Common/ILessonReadService.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Common/LessonAdministrationItem.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/DependencyInjection.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Mappings/LessonMappings.cs",
+                      "nonBlankLines":  55,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Models/LessonDetailModel.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Models/LessonPageModel.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Models/LessonSummaryModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
+                      "nonBlankLines":  35,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQuery.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
+                      "nonBlankLines":  48,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.46
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Services/LessonAdministrationReadService.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Services/LessonAdministrationService.cs",
+                      "nonBlankLines":  85,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.7
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Lessons/Services/LessonReadService.cs",
+                      "nonBlankLines":  60,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.7
+                  },
+                  {
                       "path":  "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
                       "nonBlankLines":  18,
                       "decisionPoints":  0,
@@ -13528,11 +13688,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                      "nonBlankLines":  27,
+                      "nonBlankLines":  22,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.54
+                      "structuralRiskScore":  0.44
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
@@ -13813,150 +13973,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  1.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-                      "nonBlankLines":  52,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Common/ILessonAdministrationReadService.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Common/ILessonAdministrationService.cs",
-                      "nonBlankLines":  32,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.64
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Common/ILessonReadService.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Common/LessonAdministrationItem.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Mappings/LessonMappings.cs",
-                      "nonBlankLines":  55,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Models/LessonDetailModel.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Models/LessonPageModel.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Models/LessonSummaryModel.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Queries/GetLessonById/GetLessonByIdQuery.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-                      "nonBlankLines":  39,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQuery.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-                      "nonBlankLines":  44,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.88
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Services/LessonAdministrationReadService.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Services/LessonAdministrationService.cs",
-                      "nonBlankLines":  85,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Lessons/Services/LessonReadService.cs",
-                      "nonBlankLines":  60,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.7
                   },
                   {
                       "path":  "FoodDiary.Application/Nutrition/Common/ManualNutritionLimits.cs",
@@ -19248,11 +19264,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  329,
+                      "nonBlankLines":  331,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  68.08
+                      "structuralRiskScore":  68.12
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19672,11 +19688,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  67,
+                      "nonBlankLines":  69,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.84
+                      "structuralRiskScore":  2.88
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -24016,11 +24032,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  99,
+                      "nonBlankLines":  101,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.98
+                      "structuralRiskScore":  5.02
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -35135,8 +35151,8 @@
                             {
                                 "name":  "MarkLessonReadCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
-                                "line":  12,
+                                "path":  "FoodDiary.Application.Lessons/Commands/MarkLessonRead/MarkLessonReadCommandHandler.cs",
+                                "line":  11,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
@@ -37450,8 +37466,8 @@
                             {
                                 "name":  "GetLessonByIdQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
-                                "line":  11,
+                                "path":  "FoodDiary.Application.Lessons/Queries/GetLessonById/GetLessonByIdQueryHandler.cs",
+                                "line":  10,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
@@ -37461,8 +37477,8 @@
                             {
                                 "name":  "GetLessonsQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
-                                "line":  12,
+                                "path":  "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryHandler.cs",
+                                "line":  11,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Lessons/LessonsFeatureTests.cs",
@@ -38885,7 +38901,7 @@
                             {
                                 "name":  "GetLessonsQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Lessons/Queries/GetLessons/GetLessonsQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
