@@ -9038,7 +9038,7 @@
                        "name":  "SnapshotImageUrlMaxLength",
                        "type":  "imageUrl,",
                        "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                       "line":  173
+                       "line":  197
                    },
                    {
                        "category":  "privateContent",

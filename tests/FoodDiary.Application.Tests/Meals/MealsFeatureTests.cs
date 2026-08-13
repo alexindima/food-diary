@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
@@ -19,7 +20,6 @@ using FoodDiary.Application.FavoriteMeals.Services;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -630,11 +630,11 @@ public partial class MealsFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class NoopProductLookupService : IProductLookupService {
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+        public Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
             UserId userId,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
+            Task.FromResult<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>>(new Dictionary<ProductId, ProductOverviewReadItem>());
     }
 
     [ExcludeFromCodeCoverage]

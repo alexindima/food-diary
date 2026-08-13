@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Meals.Services;
@@ -29,7 +29,7 @@ public sealed class MealNutritionService(
             .Distinct()
             .ToList();
 
-        IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
         if (products.Count != productIds.Count) {
             ProductId missingProduct = productIds.First(id => !products.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(Errors.Product.NotAccessible(missingProduct.Value));
@@ -48,15 +48,25 @@ public sealed class MealNutritionService(
 
     private static void ApplyItemSnapshots(
         Meal meal,
-        IReadOnlyDictionary<ProductId, Product> products,
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products,
         IReadOnlyDictionary<RecipeId, Recipe> recipes) {
         foreach (MealItem item in meal.Items) {
             if (item.HasNutritionSnapshot) {
                 continue;
             }
 
-            if (item.ProductId is { } productId && products.TryGetValue(productId, out Product? product)) {
-                item.ApplyProductSnapshot(product);
+            if (item.ProductId is { } productId && products.TryGetValue(productId, out ProductOverviewReadItem? product)) {
+                item.ApplyProductSnapshot(
+                    product.Name,
+                    product.ImageUrl,
+                    product.BaseUnit,
+                    product.BaseAmount,
+                    product.CaloriesPerBase,
+                    product.ProteinsPerBase,
+                    product.FatsPerBase,
+                    product.CarbsPerBase,
+                    product.FiberPerBase,
+                    product.AlcoholPerBase);
                 continue;
             }
 

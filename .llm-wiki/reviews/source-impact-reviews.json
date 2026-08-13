@@ -291,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "2728f47380b5355097f58e3cd77a74dcea8554e2a382930d36ee217d8a727bb5"
+                                            "sha256":  "8576116aff6d4a0934b9f4c9bcc110b0927acd860d268038fa1441507ac40642"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:18.3946879Z"
+                        "gitHead":  "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
+                        "reviewedAtUtc":  "2026-08-13T19:18:26.9568690Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -538,13 +538,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/domain-data-index.json",
-                                            "sha256":  "63952420b12ab0eaf314be5ac9884d7d6b90a55591b0d31e5956464a48da56b4"
+                                            "sha256":  "739397631c6f3eb6d611cbbdca0c40e49f89e5c3a544eb19ec003081d2d58a17"
                                         }
                                     ],
-                        "reason":  "Reviewed after achievement engine, persistence, outbox, API, and admin UI changes; generated indexes and guidance remain accurate.",
+                        "reason":  "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "5099cf5f6be2eea3fa668b370229adb0549b890c",
-                        "reviewedAtUtc":  "2026-08-09T22:10:54.0868838Z"
+                        "gitHead":  "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
+                        "reviewedAtUtc":  "2026-08-13T19:18:27.1964617Z"
                     },
                     {
                         "pageId":  "workflow-durable-memory",
@@ -803,13 +803,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "af53b09e792bb364d77a3ee6a50923197306bf4fbe3b839bd7ebe197cc005c13"
+                                            "sha256":  "db29a252e7049410a19bada9353ba5bce5f337f1a4b4bdcc433ea6a0b93d8893"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:19.0613821Z"
+                        "gitHead":  "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
+                        "reviewedAtUtc":  "2026-08-13T19:18:27.5965062Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -852,13 +852,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "0786571e61262901075b926307d3890e4279c3a07ee77a677989b0a9941c22a1"
+                                            "sha256":  "2a795d81e33b0a48accf8fc1057c7502dd19677920e081bf764df7821bdf1c02"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:19.5815628Z"
+                        "gitHead":  "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
+                        "reviewedAtUtc":  "2026-08-13T19:18:27.9509052Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

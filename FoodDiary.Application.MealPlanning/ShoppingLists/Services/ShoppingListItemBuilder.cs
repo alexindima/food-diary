@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.MealPlanning.Common.Validation;
 using FoodDiary.Application.ShoppingLists.Common;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -31,7 +31,7 @@ public static class ShoppingListItemBuilder {
 
         IReadOnlyList<ProductId> productIds = productIdsResult.Value;
 
-        IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
         if (products.Count == productIds.Count) {
             return BuildNormalizedItems(items, products);
         }
@@ -62,7 +62,7 @@ public static class ShoppingListItemBuilder {
 
     private static Result<IReadOnlyList<ShoppingListItemData>> BuildNormalizedItems(
         IReadOnlyList<ShoppingListItemInput> items,
-        IReadOnlyDictionary<ProductId, Product> products) {
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products) {
         var normalized = new List<ShoppingListItemData>(items.Count);
         for (int index = 0; index < items.Count; index++) {
             ShoppingListItemInput item = items[index];
@@ -81,7 +81,7 @@ public static class ShoppingListItemBuilder {
     private static Result<ShoppingListItemData> BuildItem(
         ShoppingListItemInput item,
         int index,
-        IReadOnlyDictionary<ProductId, Product> products) {
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products) {
         Error? amountError = ValidateAmount(item);
         if (amountError is not null) {
             return Result.Failure<ShoppingListItemData>(amountError);
@@ -105,7 +105,7 @@ public static class ShoppingListItemBuilder {
     private static Result<ShoppingListItemData> BuildProductItem(
         ShoppingListItemInput item,
         int index,
-        IReadOnlyDictionary<ProductId, Product> products) {
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products) {
         Result<ProductId?> productIdResult = OptionalEntityIdValidator.Parse(
             item.ProductId,
             nameof(ShoppingListItemInput.ProductId),
@@ -116,7 +116,7 @@ public static class ShoppingListItemBuilder {
         }
 
         ProductId productId = productIdResult.Value!.Value;
-        Product product = products[productId];
+        ProductOverviewReadItem product = products[productId];
         return Result.Success(new ShoppingListItemData(
             ToItemId(item.Id),
             product.Name,

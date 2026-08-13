@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
@@ -206,12 +207,12 @@ public partial class UpdateRecipeCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class AllowAllProductLookupService : IProductLookupService {
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+        public Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
             UserId userId,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(
-                ids.Distinct().ToDictionary(id => id, id => CreateProduct(userId, id)));
+            Task.FromResult<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>>(
+                ids.Distinct().ToDictionary(id => id, id => TestProductOverview.From(CreateProduct(userId, id), userId)));
     }
 
     [ExcludeFromCodeCoverage]

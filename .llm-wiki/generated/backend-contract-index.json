@@ -70908,6 +70908,19 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Services/ProductLookupService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductOverviewReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  3
@@ -70987,19 +71000,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IProductReadRepository",
-                              "roles":  [
-                                            "ReadRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductReadRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Infrastructure/Services/ProductLookupService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },

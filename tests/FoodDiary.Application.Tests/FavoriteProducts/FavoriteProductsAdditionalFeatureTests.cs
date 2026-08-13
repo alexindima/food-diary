@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
@@ -558,13 +559,13 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class SingleProductRepository(Product? product) : IProductLookupService {
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+        public Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
             UserId userId,
             CancellationToken cancellationToken = default) {
-            IReadOnlyDictionary<ProductId, Product> products = product is not null && ids.Contains(product.Id)
-                ? new[] { product }.ToDictionary(item => item.Id)
-                : Array.Empty<Product>().ToDictionary(item => item.Id);
+            IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = product is not null && ids.Contains(product.Id)
+                ? new[] { TestProductOverview.From(product, userId) }.ToDictionary(item => item.Id)
+                : [];
             return Task.FromResult(products);
         }
     }

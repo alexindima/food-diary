@@ -1,5 +1,5 @@
 using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Meals.Services;
 public static class MealNutritionCalculator {
     public static MealNutritionSummary Calculate(
         Meal meal,
-        IReadOnlyDictionary<ProductId, Product> products,
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products,
         IReadOnlyDictionary<RecipeId, Recipe> recipes) {
         double calories = 0;
         double proteins = 0;
@@ -48,7 +48,7 @@ public static class MealNutritionCalculator {
 
     private static MealNutritionSummary CalculateItem(
         MealItem item,
-        IReadOnlyDictionary<ProductId, Product> products,
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products,
         IReadOnlyDictionary<RecipeId, Recipe> recipes) {
         if (item.HasNutritionSnapshot) {
             double baseAmount = item.SnapshotBaseAmount!.Value <= 0 ? 1 : item.SnapshotBaseAmount.Value;
@@ -62,7 +62,7 @@ public static class MealNutritionCalculator {
                 item.SnapshotAlcoholPerBase!.Value * snapshotMultiplier);
         }
 
-        if (item.ProductId is { } productId && products.TryGetValue(productId, out Product? product)) {
+        if (item.ProductId is { } productId && products.TryGetValue(productId, out ProductOverviewReadItem? product)) {
             double baseAmount = product.BaseAmount <= 0 ? 1 : product.BaseAmount;
             double productMultiplier = item.Amount / baseAmount;
             return new MealNutritionSummary(

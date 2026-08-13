@@ -725,20 +725,20 @@
                          "structuralRiskScore":  44.54
                      },
                      {
+                         "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
+                         "nonBlankLines":  238,
+                         "decisionPoints":  26,
+                         "criticalSymbols":  0,
+                         "unreferencedCriticalSymbols":  0,
+                         "structuralRiskScore":  43.76
+                     },
+                     {
                          "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/emoji-picker/fd-ui-emoji-picker.ts",
                          "nonBlankLines":  141,
                          "decisionPoints":  27,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  43.32
-                     },
-                     {
-                         "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                         "nonBlankLines":  215,
-                         "decisionPoints":  26,
-                         "criticalSymbols":  0,
-                         "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  43.3
                      },
                      {
                          "path":  "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
@@ -10192,11 +10192,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Mappings/FavoriteProductMappings.cs",
-                      "nonBlankLines":  69,
-                      "decisionPoints":  2,
+                      "nonBlankLines":  94,
+                      "decisionPoints":  3,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.38
+                      "structuralRiskScore":  6.38
                   },
                   {
                       "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
@@ -12536,11 +12536,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Meals/Services/MealNutritionService.cs",
-                      "nonBlankLines":  58,
+                      "nonBlankLines":  68,
                       "decisionPoints":  8,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  13.16
+                      "structuralRiskScore":  13.36
                   },
                   {
                       "path":  "FoodDiary.Application.Meals/Services/MealNutritionSummary.cs",
@@ -15656,11 +15656,11 @@
                   },
                   {
                       "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                      "nonBlankLines":  215,
+                      "nonBlankLines":  238,
                       "decisionPoints":  26,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  43.3
+                      "structuralRiskScore":  43.76
                   },
                   {
                       "path":  "FoodDiary.Domain/Entities/Notifications/Notification.cs",

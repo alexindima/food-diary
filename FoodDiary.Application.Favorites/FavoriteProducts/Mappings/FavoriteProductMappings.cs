@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects;
@@ -33,6 +34,31 @@ public static class FavoriteProductMappings {
             quality.Score,
             quality.Grade.ToString().ToLowerInvariant(),
             isOwnedByCurrentUser,
+            product.BaseUnit.ToString(),
+            favorite.PreferredPortionAmount ?? product.DefaultPortionAmount,
+            product.DefaultPortionAmount);
+    }
+
+    public static FavoriteProductModel ToModel(this FavoriteProduct favorite, ProductOverviewReadItem product) {
+        return new(
+            favorite.Id.Value,
+            favorite.ProductId.Value,
+            favorite.Name,
+            favorite.CreatedAtUtc,
+            product.Name,
+            product.Brand,
+            product.Barcode,
+            product.IsOwnedByCurrentUser ? product.Comment : null,
+            product.ImageUrl,
+            product.CaloriesPerBase,
+            product.ProteinsPerBase,
+            product.FatsPerBase,
+            product.CarbsPerBase,
+            product.FiberPerBase,
+            product.AlcoholPerBase,
+            product.QualityScore,
+            product.QualityGrade,
+            product.IsOwnedByCurrentUser,
             product.BaseUnit.ToString(),
             favorite.PreferredPortionAmount ?? product.DefaultPortionAmount,
             product.DefaultPortionAmount);

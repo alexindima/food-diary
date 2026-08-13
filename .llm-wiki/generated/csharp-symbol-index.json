@@ -8368,7 +8368,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Mappings/FavoriteProductMappings.cs",
-                        "line":  7
+                        "line":  8
                     },
                     {
                         "name":  "GetFavoriteProductsQuery",

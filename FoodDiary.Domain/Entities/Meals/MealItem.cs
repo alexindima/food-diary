@@ -89,6 +89,30 @@ public sealed class MealItem : Entity<MealItemId> {
             product.AlcoholPerBase);
     }
 
+    public void ApplyProductSnapshot(
+        string name,
+        string? imageUrl,
+        MeasurementUnit unit,
+        double baseAmount,
+        double caloriesPerBase,
+        double proteinsPerBase,
+        double fatsPerBase,
+        double carbsPerBase,
+        double fiberPerBase,
+        double alcoholPerBase) {
+        ApplySnapshot(
+            name,
+            imageUrl,
+            unit.ToString(),
+            baseAmount,
+            caloriesPerBase,
+            proteinsPerBase,
+            fatsPerBase,
+            carbsPerBase,
+            fiberPerBase,
+            alcoholPerBase);
+    }
+
     public void ApplyRecipeSnapshot(Recipe recipe) {
         ArgumentNullException.ThrowIfNull(recipe);
         int servings = recipe.Servings <= 0 ? 1 : recipe.Servings;

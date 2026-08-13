@@ -1,5 +1,6 @@
 using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -148,7 +149,8 @@ public class MealNutritionServiceTests {
         IProductLookupService lookup = Substitute.For<IProductLookupService>();
         lookup
             .GetAccessibleByIdsAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(products));
+            .Returns(call => Task.FromResult<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>>(
+                products.ToDictionary(pair => pair.Key, pair => TestProductOverview.From(pair.Value, call.ArgAt<UserId>(1)))));
         return lookup;
     }
 

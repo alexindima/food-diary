@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Models;
@@ -182,18 +183,18 @@ public partial class ShoppingListsFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class NoopProductLookupService : IProductLookupService {
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+        public Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
             UserId userId,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
+            Task.FromResult<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>>(new Dictionary<ProductId, ProductOverviewReadItem>());
     }
 
     private static IProductLookupService CreateThrowingProductLookupService() {
         IProductLookupService service = Substitute.For<IProductLookupService>();
         service
             .GetAccessibleByIdsAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns<Task<IReadOnlyDictionary<ProductId, Product>>>(_ => throw new InvalidOperationException("Product lookup should not be called."));
+            .Returns<Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>>>(_ => throw new InvalidOperationException("Product lookup should not be called."));
 
         return service;
     }
@@ -202,12 +203,12 @@ public partial class ShoppingListsFeatureTests {
     private sealed class ProductLookupService(params Product[] products) : IProductLookupService {
         private readonly Dictionary<ProductId, Product> _products = products.ToDictionary(product => product.Id);
 
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+        public Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>> GetAccessibleByIdsAsync(
             IEnumerable<ProductId> ids,
             UserId userId,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(
-                ids.Where(_products.ContainsKey).ToDictionary(id => id, id => _products[id]));
+            Task.FromResult<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>>(
+                ids.Where(_products.ContainsKey).ToDictionary(id => id, id => TestProductOverview.From(_products[id], userId)));
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {

@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -26,7 +26,7 @@ public static class RecipeIngredientAccessValidator {
         IReadOnlyList<ProductId> productIds = productIdsResult.Value;
 
         if (productIds.Count > 0) {
-            IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+            IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
             if (products.Count != productIds.Count) {
                 return Result.Failure(Errors.Validation.Invalid(
                     nameof(RecipeIngredientInput.ProductId),

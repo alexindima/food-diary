@@ -68,7 +68,7 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 4
+- Contracts referencing domain entities: 3
 - `class ProductErrors`
 - `interface IProductLookupService`
 - `interface IProductOverviewReadService`

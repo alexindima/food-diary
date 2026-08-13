@@ -2453,91 +2453,91 @@
                            "type":  "ArgumentNullException.ThrowIfNull",
                            "message":  "ArgumentNullException.ThrowIfNull(recipe)",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  93
+                           "line":  117
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentException",
                            "message":  "throw new ArgumentException(\"AI source item cannot be attached to a manual meal item.\", nameof(origin))",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  122
+                           "line":  146
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentNullException.ThrowIfNull",
                            "message":  "ArgumentNullException.ThrowIfNull(source)",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  135
+                           "line":  159
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"Amount must be a finite number.\")",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  187
+                           "line":  211
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Amount must be in range (0, {MaxAmount}].\"))",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  191
+                           "line":  215
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(nameof(origin), \"Unknown meal item origin.\")",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  200
+                           "line":  224
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentException",
                            "message":  "throw new ArgumentException(\"Source AI item id must not be empty.\", nameof(sourceAiItemId))",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  205
+                           "line":  229
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be a finite number.\")",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  211
+                           "line":  235
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, \"Value must be non-negative.\")",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  215
+                           "line":  239
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentOutOfRangeException",
                            "message":  "throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\"))",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  226
+                           "line":  250
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentException",
                            "message":  "throw new ArgumentException(\"MealId is required.\", nameof(mealId))",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  232
+                           "line":  256
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentException",
                            "message":  "throw new ArgumentException(\"ProductId is required.\", nameof(productId))",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  238
+                           "line":  262
                        },
                        {
                            "area":  "FoodDiary",
                            "type":  "ArgumentException",
                            "message":  "throw new ArgumentException(\"RecipeId is required.\", nameof(recipeId))",
                            "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                           "line":  244
+                           "line":  268
                        },
                        {
                            "area":  "FoodDiary",

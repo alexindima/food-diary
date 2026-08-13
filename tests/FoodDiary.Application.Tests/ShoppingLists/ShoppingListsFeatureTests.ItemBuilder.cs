@@ -1,5 +1,6 @@
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Services;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -190,7 +191,7 @@ public partial class ShoppingListsFeatureTests {
 
         var result = (Result<ShoppingListItemData>)method.Invoke(
             obj: null,
-            [input, 0, new Dictionary<ProductId, Product>()])!;
+            [input, 0, new Dictionary<ProductId, ProductOverviewReadItem>()])!;
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);

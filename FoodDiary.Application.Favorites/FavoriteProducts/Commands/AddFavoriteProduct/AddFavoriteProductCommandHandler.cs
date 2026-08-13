@@ -4,12 +4,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteProducts.Mappings;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 
@@ -39,10 +39,10 @@ public sealed class AddFavoriteProductCommandHandler(
 
         UserId userId = userIdResult.Value;
         ProductId productId = productIdResult.Value;
-        IReadOnlyDictionary<ProductId, Product> products = await productLookupService
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products = await productLookupService
             .GetAccessibleByIdsAsync([productId], userId, cancellationToken)
             .ConfigureAwait(false);
-        Product? product = products.GetValueOrDefault(productId);
+        ProductOverviewReadItem? product = products.GetValueOrDefault(productId);
         if (product is null) {
             return Result.Failure<FavoriteProductModel>(Errors.Product.NotFound(command.ProductId));
         }
