@@ -4,14 +4,24 @@ param(
     [string]$Contract,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
-    [switch]$IncludeTests
+    [switch]$IncludeTests,
+    [switch]$Fast
 )
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 $escapedContract = [regex]::Escape($Contract)
-$sourcePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs') -FailureMessage "Unable to search consumers of $Contract.")
+$sourcePaths = if ($Fast) {
+    $graph = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action trace -Query $Contract -Limit 500 -Format Json | ConvertFrom-Json
+    @(
+        @($graph.symbols | ForEach-Object path) + @($graph.consumers | ForEach-Object path) |
+            Where-Object { $_ -and $_ -match '\.cs$' } |
+            Sort-Object -Unique
+    )
+} else {
+    @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs') -FailureMessage "Unable to search consumers of $Contract.")
+}
 $searchMatches = @(
     foreach ($path in $sourcePaths | Sort-Object -Unique) {
         $absolutePath = Join-Path $repositoryRoot $path
@@ -76,6 +86,7 @@ $consumers = foreach ($path in $consumerPaths) {
 
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
+    mode = $(if ($Fast) { 'sqlite-graph-prefilter' } else { 'repository-scan' })
     contract = $Contract
     declarationPath = $declarationPath
     owningAssembly = $owningAssembly
@@ -101,6 +112,7 @@ $result = [pscustomobject][ordered]@{
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 8; exit 0 }
 Write-Host "Contract extraction readiness: $Contract"
+Write-Host "Discovery: $($result.mode)"
 Write-Host "Declaration: $declarationPath ($owningAssembly)"
 Write-Host "Consumers: $($result.readiness.productionConsumers); business=$($result.readiness.businessConsumers); external=$($result.readiness.externalModuleConsumers); owner-internal=$($result.readiness.internalOwnerConsumers); composition=$($result.readiness.compositionRegistrations); empty=$($result.readiness.emptyReferenceMatches)"
 Write-Host "Extraction blockers: aggregate=$($result.readiness.aggregateConsumers); mutation=$($result.readiness.mutationConsumers); extraction-safe=$($result.readiness.extractionSafeConsumers)"

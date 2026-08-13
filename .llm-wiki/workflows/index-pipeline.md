@@ -28,6 +28,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiChangedTools.ps1
   - .llm-wiki/tools/Test-LlmWikiStrictAffected.ps1
   - .llm-wiki/tools/Invoke-LlmWikiObservedStage.ps1
+  - .llm-wiki/tools/Start-LlmWikiVerifyWorker.ps1
   - .llm-wiki/tools/LlmWikiIndexCache.ps1
   - .llm-wiki/tools/LlmWikiIndexTiming.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1
@@ -130,7 +131,7 @@ accumulated affected indexes and execute the uncached strict affected gate.
 
 `verify -Fast` is a supported compatibility spelling of `verify-fast`. Ordinary
 `verify` runs every stage through an observed runner: it prints stage start and
-duration, emits a heartbeat every 30 seconds, applies a stage-specific timeout,
+duration, emits a heartbeat every 10 seconds, applies a stage-specific timeout,
 and reports the exact standalone diagnostic command when a stage fails or times
 out. Its tool-regression stage is affected-aware and executes independent focused
 groups concurrently: product-only changes skip Wiki evals, known Wiki tools map
@@ -139,6 +140,18 @@ contract instead of falling back to the monolithic tools suite. When adaptive
 evals are selected, their shards subsume separate routing and experience runs so
 the same workflow is not replayed twice. `verify-full`/CI retain every focused
 regression group. Cheap contract, policy, and impact stages use shorter limits.
+
+The observed child owns an atomic result receipt and the canonical passed-stage
+receipt. If a terminal or API client stops waiting, completed work therefore
+remains resumable even when the parent process cannot publish its final status.
+Use `wiki.ps1 verify -Detached` for a background run and
+`wiki.ps1 verify-status` for its current stage, worker liveness, log, and resume
+command. Recovery never kills a still-running worker merely because its owner
+shell disappeared.
+
+Contract-consumer smoke and extraction compile-probe smoke are separate groups.
+Changing consumer discovery no longer pays for a temporary-project build; edits
+to extraction simulation still run that stronger compile proof.
 
 Each index worker also emits its own heartbeat and has an independent timeout.
 Timeout handling terminates the complete process tree on Windows and modern

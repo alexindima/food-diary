@@ -1,9 +1,10 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'status', 'symbol', 'consumers', 'trace', 'impact')]
+    [ValidateSet('build', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage')]
     [string]$Action = 'status',
     [string]$Query,
     [string[]]$ChangedPath,
+    [string[]]$RelationKind,
     [ValidateRange(1, 500)]
     [int]$Limit = 50,
     [switch]$Force,
@@ -22,6 +23,8 @@ $arguments = @($scriptPath, $Action, "--limit=$Limit")
 if (-not [string]::IsNullOrWhiteSpace($Query)) { $arguments += "--query=$Query" }
 $normalizedChangedPaths = [string[]]@($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
 if ($normalizedChangedPaths.Length -gt 0) { $arguments += "--path=$($normalizedChangedPaths -join ';')" }
+$normalizedRelationKinds = [string[]]@($RelationKind | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
+if ($normalizedRelationKinds.Length -gt 0) { $arguments += "--kind=$($normalizedRelationKinds -join ';')" }
 if ($Force) { $arguments += '--force=true' }
 $json = & node @arguments
 if ($LASTEXITCODE -ne 0) { throw "Code graph action '$Action' failed with exit code $LASTEXITCODE." }
@@ -30,7 +33,7 @@ if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12; return }
 
 switch ($Action) {
     'build' { Write-Host "Code graph: $($result.files) files, $($result.symbols) symbols; scanned=$($result.scanned), updated=$($result.updated), unchanged=$($result.unchanged), removed=$($result.removed), $($result.durationMs)ms." }
-    'status' { Write-Host "Code graph: $($result.files) files, $($result.symbols) symbols, $($result.tokens) file-token edges; parser=$($result.parserVersion)." }
+    'status' { Write-Host "Code graph: $($result.files) files, $($result.symbols) symbols, $($result.tokens) file-token edges, $($result.typedEdges) typed edges; parser=$($result.parserVersion)." }
     'symbol' { foreach ($item in @($result.symbols)) { Write-Host "$($item.name) [$($item.kind)] $($item.path):$($item.line)" } }
     'consumers' {
         Write-Host "Code graph consumers for '$Query': $(@($result.consumers).Count)"
@@ -45,5 +48,14 @@ switch ($Action) {
         Write-Host "Code graph impact: $(@($result.declaredSymbols).Count) declaration(s), $(@($result.consumers).Count) consumer(s), $(@($result.references).Count) referenced declaration(s)."
         foreach ($item in @($result.consumers)) { Write-Host " - downstream: $($item.path) [$($item.symbol)]" }
         foreach ($item in @($result.references)) { Write-Host " - dependency: $($item.declarationPath) [$($item.symbol)]" }
+    }
+    'relations' {
+        Write-Host "Code graph relations: $(@($result.relations).Count) edge(s)."
+        foreach ($item in @($result.relations)) { Write-Host " - $($item.kind): $($item.path):$($item.line) -> $($item.target) [$($item.confidence)]" }
+    }
+    'coverage' {
+        Write-Host "Code graph coverage: $($result.files) files, $($result.symbols) symbols, $($result.typedEdges) typed edges; parser=$($result.parserVersion)."
+        foreach ($item in @($result.relationKinds)) { Write-Host " - $($item.kind): $($item.count) edge(s) across $($item.files) file(s)" }
+        foreach ($item in @($result.legacySymbolCoverage)) { Write-Host " - shadow $($item.index): $($item.covered)/$($item.total) covered, missing=$($item.missing)" }
     }
 }

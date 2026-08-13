@@ -20,9 +20,9 @@ $allFocusedGroups = @(
     'adaptive-evals', 'change-policy', 'dependency-analysis',
     'facade-contract', 'read-only-guard', 'trace-output', 'task-baseline', 'git-paths', 'task-scope',
     'index-selection', 'ui-continuation', 'research-confidence', 'implementation-plan',
-    'reporting', 'verification-cache', 'verification-receipts', 'query-cache', 'contract-consumers',
+    'reporting', 'verification-cache', 'verification-receipts', 'query-cache', 'contract-consumers', 'extraction-readiness',
     'knowledge-isolation', 'memory', 'context-bundle', 'context-feedback',
-    'strict-shapes', 'test-only-governance', 'governed-delivery'
+    'strict-shapes', 'test-only-governance', 'governed-delivery', 'code-graph'
 )
 
 if ($AllGroups) {
@@ -44,6 +44,7 @@ $durationPriority = @{
     'trace-output' = 65
     'ui-continuation' = 60
     'contract-consumers' = 55
+    'extraction-readiness' = 85
     'context-bundle' = 50
     'implementation-plan' = 45
 }
@@ -55,9 +56,9 @@ $parallelSafeGroups = @(
     'adaptive-routing', 'adaptive-experience', 'adaptive-evals', 'change-policy', 'dependency-analysis',
     'facade-contract', 'trace-output', 'task-baseline', 'git-paths', 'index-selection',
     'ui-continuation', 'research-confidence', 'implementation-plan', 'reporting',
-    'verification-cache', 'verification-receipts', 'query-cache', 'contract-consumers', 'knowledge-isolation',
+    'verification-cache', 'verification-receipts', 'query-cache', 'contract-consumers', 'extraction-readiness', 'knowledge-isolation',
     'memory', 'context-bundle', 'context-feedback', 'strict-shapes', 'test-only-governance',
-    'governed-delivery', 'task-scope', 'tool-contract'
+    'governed-delivery', 'task-scope', 'tool-contract', 'code-graph'
 )
 $parallelGroups = @(
     $groups |

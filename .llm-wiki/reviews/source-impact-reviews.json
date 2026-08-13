@@ -208,13 +208,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "5285b00925b7b544047ca382209e8b1ce667540bdc54b91977125387fe1842b4"
+                                            "sha256":  "673874d85cf797a2ae059af0a35a4d0e471d71b48dabf9806ced2ed9faf3ab3d"
                                         }
                                     ],
-                        "reason":  "Reviewed fast SQLite graph research and trace routing, focused smoke selection, and verification fingerprints; bounded graph scans remain optional and governed delivery behavior is unchanged.",
+                        "reason":  "Reviewed promotion of reconstructable code intelligence into the typed SQLite graph, zero-drift shadow coverage, graph-only test planning, and preserved Git authority for policy and evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6f3c62feaca0244203364ad14425c14f8d39fb2f",
-                        "reviewedAtUtc":  "2026-08-13T20:16:56.8338715Z"
+                        "gitHead":  "6cb6c37d688e890d92682ba8960b246f7f44cd41",
+                        "reviewedAtUtc":  "2026-08-13T20:59:58.7237552Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -1003,13 +1003,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "5285b00925b7b544047ca382209e8b1ce667540bdc54b91977125387fe1842b4"
+                                            "sha256":  "673874d85cf797a2ae059af0a35a4d0e471d71b48dabf9806ced2ed9faf3ab3d"
                                         }
                                     ],
-                        "reason":  "Reviewed fast SQLite graph research and trace routing, focused smoke selection, and verification fingerprints; bounded graph scans remain optional and governed delivery behavior is unchanged.",
+                        "reason":  "Reviewed promotion of reconstructable code intelligence into the typed SQLite graph, zero-drift shadow coverage, graph-only test planning, and preserved Git authority for policy and evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6f3c62feaca0244203364ad14425c14f8d39fb2f",
-                        "reviewedAtUtc":  "2026-08-13T20:16:57.5606017Z"
+                        "gitHead":  "6cb6c37d688e890d92682ba8960b246f7f44cd41",
+                        "reviewedAtUtc":  "2026-08-13T20:59:59.5282169Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
@@ -1066,18 +1066,18 @@
                         "pageSha256":  "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "99e35e859a32418b59935aec99d0243a1db3d990addf93aede27cc887ace2074"
+                                            "path":  ".llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1",
+                                            "sha256":  "fdd324fe8cdc5a36a36fc6fede1d23c96ce1b8e7d3c03e458a5c7b3b4b342d12"
                                         },
                                         {
-                                            "path":  ".llm-wiki/generated/frontend-index.json",
-                                            "sha256":  "165d3aa48e5cdc2505a74d516da5ff385002bdf858f00508ba2985c395542356"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
+                                            "sha256":  "24297b367f5c0600c52e7164973e78c33456c5a30023b39b7717a422ad34a00c"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "Reviewed final frontend index schema-version guard and actionable regeneration diagnostic; trace semantics remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:03.3931240Z"
+                        "gitHead":  "6cb6c37d688e890d92682ba8960b246f7f44cd41",
+                        "reviewedAtUtc":  "2026-08-13T20:51:02.1543953Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

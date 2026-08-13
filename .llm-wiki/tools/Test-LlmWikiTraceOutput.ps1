@@ -15,6 +15,18 @@ $frontendFull = @(& $frontendTraceScript -Query 'FdUiSelectComponent' 6>&1 | For
 if ($frontendCompact -notcontains '  Compact trace: use -FullTrace for every match and consumer.') { throw 'Frontend compact trace omitted its expansion hint.' }
 if ($frontendCompact.Count -ge $frontendFull.Count) { throw 'Frontend compact trace did not reduce output.' }
 
+$invalidRoot = Join-Path ([IO.Path]::GetTempPath()) "llm-wiki-trace-schema-$PID"
+$null = New-Item -ItemType Directory -Path $invalidRoot -Force
+try {
+    [IO.File]::WriteAllText((Join-Path $invalidRoot 'frontend-index.json'), '{"schemaVersion":0,"symbols":[{"name":"Old"}],"routes":[]}', [Text.UTF8Encoding]::new($false))
+    [IO.File]::WriteAllText((Join-Path $invalidRoot 'frontend-contract-index.json'), '{"schemaVersion":0,"components":[],"apiCalls":[],"consumerEdges":[]}', [Text.UTF8Encoding]::new($false))
+    $schemaError = $null
+    try { & $frontendTraceScript -Query Old -IndexRoot $invalidRoot 2>&1 | Out-Null } catch { $schemaError = $_.Exception.Message }
+    if ($schemaError -notmatch 'unsupported schemaVersion.*expected 1' -or $schemaError -notmatch 'update -AffectedOnly') {
+        throw "Frontend trace did not provide an actionable stale-schema diagnostic: $schemaError"
+    }
+} finally { Remove-Item -LiteralPath $invalidRoot -Recurse -Force -ErrorAction SilentlyContinue }
+
 $backendCompact = @(& $backendTraceScript -Query 'StartPremiumTrial' -Compact 6>&1 | ForEach-Object { $_.ToString() })
 $backendFull = @(& $backendTraceScript -Query 'StartPremiumTrial' 6>&1 | ForEach-Object { $_.ToString() })
 if ($backendCompact -notcontains '  Compact trace: use -FullTrace for every match and consumer.') { throw 'Backend compact trace omitted its expansion hint.' }

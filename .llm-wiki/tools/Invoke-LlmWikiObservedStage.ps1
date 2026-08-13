@@ -5,7 +5,10 @@ param(
     [string]$ArgumentsBase64,
     [string]$ArgumentsPath,
     [string]$StageName = 'wiki-stage',
-    [string]$LogPath
+    [string]$LogPath,
+    [string]$ResultPath,
+    [string]$Fingerprint,
+    [string]$PassedReceiptPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -22,6 +25,24 @@ foreach ($property in $argumentObject.PSObject.Properties) {
     $arguments[$property.Name] = $property.Value
 }
 
+function Write-StageResult([string]$Status, [int]$ExitCode, [string]$Detail) {
+    if ([string]::IsNullOrWhiteSpace($ResultPath)) { return }
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $ResultPath) -Force
+    $payload = [ordered]@{
+        schemaVersion = 1
+        stage = $StageName
+        fingerprint = $Fingerprint
+        status = $Status
+        exitCode = $ExitCode
+        detail = $Detail
+        workerProcessId = $PID
+        completedAtUtc = [DateTime]::UtcNow.ToString('o')
+    }
+    $temporary = "$ResultPath.$PID.tmp"
+    [IO.File]::WriteAllText($temporary, (($payload | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    Move-Item -LiteralPath $temporary -Destination $ResultPath -Force
+}
+
 if ($LogPath) {
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $LogPath) -Force
     if (Test-Path -LiteralPath $LogPath) { Remove-Item -LiteralPath $LogPath -Force }
@@ -34,6 +55,14 @@ try {
     if (-not $? -or ($null -ne $LASTEXITCODE -and $LASTEXITCODE -ne 0)) {
         throw "Observed Wiki tool failed with exit code $LASTEXITCODE."
     }
+    if (-not [string]::IsNullOrWhiteSpace($PassedReceiptPath)) {
+        $null = New-Item -ItemType Directory -Path (Split-Path -Parent $PassedReceiptPath) -Force
+        [IO.File]::WriteAllText($PassedReceiptPath, ([DateTime]::UtcNow.ToString('o') + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    }
+    Write-StageResult 'passed' 0 ''
+} catch {
+    Write-StageResult 'failed' 1 $_.Exception.Message
+    throw
 } finally {
     if ($LogPath) { Stop-Transcript | Out-Null }
 }

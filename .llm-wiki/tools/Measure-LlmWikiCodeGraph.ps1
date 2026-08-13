@@ -32,6 +32,15 @@ $null = Measure-Graph 'research-recipes' {
         -Limit 100 `
         -Format Json | ConvertFrom-Json
 }
+$null = Measure-Graph 'test-plan-recipes' {
+    & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') `
+        -ProposedPath 'FoodDiary.Application/Recipes' -Limit 100 -Format Json | ConvertFrom-Json
+}
+$null = Measure-Graph 'typed-relations-recipes' {
+    & $manager relations -ChangedPath 'FoodDiary.Application/Recipes' `
+        -RelationKind mediator-handler,di-service -Limit 500 -Format Json | ConvertFrom-Json
+}
+$null = Measure-Graph 'coverage-shadow' { & $manager coverage -Format Json | ConvertFrom-Json }
 $absoluteOutputPath = if ([IO.Path]::IsPathRooted($OutputPath)) { $OutputPath } else { Join-Path $repositoryRoot $OutputPath }
 $directory = Split-Path -Parent $absoluteOutputPath
 if (-not (Test-Path -LiteralPath $directory)) { New-Item -ItemType Directory -Path $directory | Out-Null }

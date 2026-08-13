@@ -2,9 +2,9 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
-        'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact',
+        'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
@@ -77,6 +77,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [string[]]$RelationKind,
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
     [switch]$AffectedOnly,
@@ -87,6 +88,7 @@ param(
     [switch]$VisualUiCompletion,
     [switch]$FullTrace,
     [switch]$Fast,
+    [switch]$Detached,
     [switch]$Compact,
     [switch]$FailOnUnreviewed,
     [switch]$Check,
@@ -281,8 +283,8 @@ if ($Fast) {
     if ($Command -eq 'verify') {
         $Command = 'verify-fast'
         Write-Host 'Compatibility alias: verify -Fast -> verify-fast'
-    } elseif ($Command -notin @('trace', 'research')) {
-        throw '-Fast is supported only with the verify, trace, and research commands.'
+    } elseif ($Command -notin @('trace', 'research', 'contract-consumers', 'test-plan')) {
+        throw '-Fast is supported only with the verify, trace, research, test-plan, and contract-consumers commands.'
     }
 }
 
@@ -373,10 +375,12 @@ function Invoke-ObservedWikiStage {
         [IO.File]::WriteAllText($temporary, (($payload | ConvertTo-Json -Depth 4) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
         Move-Item -LiteralPath $temporary -Destination $progressPath -Force
     }
+    $fingerprint = & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage $Name -Arguments $ToolArguments
+    $resultRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/verify-stage-results'
+    $null = New-Item -ItemType Directory -Path $resultRoot -Force
+    $resultPath = Join-Path $resultRoot "$safeStageName-$fingerprint.json"
     $receiptPath = $null
     if ($ResumePassedStages) {
-        $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
-        $fingerprint = & (Join-Path $toolsRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') -Stage $Name -Arguments $ToolArguments
         $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
         $script:verifyReceiptRoot = Join-Path $gitDirectory 'llm-wiki/verification-stages/wiki'
         $null = New-Item -ItemType Directory -Path $script:verifyReceiptRoot -Force
@@ -404,17 +408,18 @@ function Invoke-ObservedWikiStage {
     $startInfo.FileName = $shellPath
     $startInfo.WorkingDirectory = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
     $startInfo.UseShellExecute = $false
-    $startInfo.Arguments = "-NoLogo -NoProfile -File `"$stageWrapper`" -ToolPath `"$toolPath`" -ArgumentsPath `"$argumentsPath`" -StageName `"$Name`" -LogPath `"$logPath`""
+    $receiptArgument = if ($receiptPath) { " -PassedReceiptPath `"$receiptPath`"" } else { '' }
+    $startInfo.Arguments = "-NoLogo -NoProfile -File `"$stageWrapper`" -ToolPath `"$toolPath`" -ArgumentsPath `"$argumentsPath`" -StageName `"$Name`" -LogPath `"$logPath`" -ResultPath `"$resultPath`" -Fingerprint `"$fingerprint`"$receiptArgument"
     $process = New-Object Diagnostics.Process
     $process.StartInfo = $startInfo
     if (-not $process.Start()) { throw "Unable to start Wiki verify stage: $Name" }
-    $nextHeartbeat = 30
+    $nextHeartbeat = 10
     try {
         while (-not $process.WaitForExit(1000)) {
             if ($stopwatch.Elapsed.TotalSeconds -ge $nextHeartbeat) {
                 Write-Host "[$script:verifyStageOrdinal/$script:verifyStageTotal] Wiki verify stage still running: $Name ($([Math]::Round($stopwatch.Elapsed.TotalSeconds))s elapsed, expected~${expectedSeconds}s)"
                 Write-VerifyProgress 'running' ([int][Math]::Round($stopwatch.Elapsed.TotalSeconds)) 'Heartbeat: child process is still active.'
-                $nextHeartbeat += 30
+                $nextHeartbeat += 10
             }
             if ($stopwatch.Elapsed.TotalSeconds -ge $TimeoutSeconds) {
                 Stop-LlmWikiProcessTree -Process $process
@@ -431,7 +436,7 @@ function Invoke-ObservedWikiStage {
         $stopwatch.Stop()
         Remove-Item -LiteralPath $argumentsPath -Force -ErrorAction SilentlyContinue
     }
-    if ($receiptPath) {
+    if ($receiptPath -and -not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) {
         [IO.File]::WriteAllText($receiptPath, ([DateTime]::UtcNow.ToString('o') + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
         $stagePrefix = (($Name -replace '[^a-zA-Z0-9_.-]', '-') + '-')
         Get-ChildItem -LiteralPath $script:verifyReceiptRoot -Filter "$stagePrefix*.passed" -File |
@@ -444,6 +449,27 @@ function Invoke-ObservedWikiStage {
 }
 
 switch ($Command) {
+    'verify-status' {
+        $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+        $progressPath = Join-Path $repositoryRoot '.artifacts/llm-wiki/verify-progress.json'
+        if (-not (Test-Path -LiteralPath $progressPath -PathType Leaf)) { Write-Host 'No Wiki verify run has been recorded.'; break }
+        $progress = Get-Content -LiteralPath $progressPath -Raw | ConvertFrom-Json
+        $ownerAlive = $false
+        $childAlive = $false
+        if ($progress.ownerProcessId) { $ownerAlive = $null -ne (Get-Process -Id ([int]$progress.ownerProcessId) -ErrorAction SilentlyContinue) }
+        if ($progress.childProcessId) { $childAlive = $null -ne (Get-Process -Id ([int]$progress.childProcessId) -ErrorAction SilentlyContinue) }
+        $statusResult = [pscustomobject]([ordered]@{
+            status = [string]$progress.status; stage = [string]$progress.stage
+            elapsedSeconds = $progress.elapsedSeconds; updatedAtUtc = $progress.updatedAtUtc
+            ownerAlive = $ownerAlive; workerAlive = $childAlive
+            logPath = $progress.logPath; resumeCommand = $progress.resumeCommand
+        })
+        if ($Format -eq 'Json') { $statusResult | ConvertTo-Json -Depth 4 } else {
+            Write-Host "Wiki verify: $($statusResult.status); stage=$($statusResult.stage); ownerAlive=$ownerAlive; workerAlive=$childAlive; updated=$($statusResult.updatedAtUtc)"
+            Write-Host "Log: $($statusResult.logPath)"
+            if ($statusResult.status -ne 'passed' -and -not $ownerAlive -and -not $childAlive) { Write-Host "Resume: $($statusResult.resumeCommand)" }
+        }
+    }
     'update' {
         $indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
@@ -479,6 +505,27 @@ switch ($Command) {
         }
     }
     'verify' {
+        if ($Detached) {
+            $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+            $workerRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/verify-worker'
+            $null = New-Item -ItemType Directory -Path $workerRoot -Force
+            $workerArguments = @{ BaseRef = $BaseRef; ResumePassedStages = $true }
+            if ($AffectedOnly) { $workerArguments.AffectedOnly = $true }
+            if ($ContractIndexesOnly) { $workerArguments.ContractIndexesOnly = $true }
+            if ($PSBoundParameters.ContainsKey('ChangedPath')) { $workerArguments.ChangedPath = @($ChangedPath) }
+            if ($PSBoundParameters.ContainsKey('Stage')) { $workerArguments.Stage = $Stage }
+            if ($PSBoundParameters.ContainsKey('MaxConcurrency')) { $workerArguments.MaxConcurrency = [int]$MaxConcurrency }
+            $requestPath = Join-Path $workerRoot "request-$([DateTime]::UtcNow.ToString('yyyyMMddHHmmss'))-$PID.json"
+            $logPath = Join-Path $workerRoot "verify-$([DateTime]::UtcNow.ToString('yyyyMMddHHmmss'))-$PID.log"
+            [IO.File]::WriteAllText($requestPath, (($workerArguments | ConvertTo-Json -Depth 5) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+            $worker = Join-Path $toolsRoot 'Start-LlmWikiVerifyWorker.ps1'
+            $shellPath = [IO.Path]::GetFullPath((Get-Process -Id $PID).Path)
+            $process = Start-Process -FilePath $shellPath -ArgumentList @('-NoLogo','-NoProfile','-File',"`"$worker`"",'-WikiPath',"`"$PSCommandPath`"",'-ArgumentsPath',"`"$requestPath`"",'-LogPath',"`"$logPath`"") -WorkingDirectory $repositoryRoot -WindowStyle Hidden -PassThru
+            Write-Host "Wiki verify started in background (PID $($process.Id))."
+            Write-Host 'Observe with: ./.llm-wiki/wiki.ps1 verify-status'
+            Write-Host "Worker log: $($logPath.Replace($repositoryRoot + [IO.Path]::DirectorySeparatorChar, '').Replace('\','/'))"
+            break
+        }
         $progressPath = Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path '.artifacts/llm-wiki/verify-progress.json'
         if (Test-Path -LiteralPath $progressPath -PathType Leaf) {
             try {
@@ -492,9 +539,8 @@ switch ($Command) {
                         if ($previousProgress.childProcessId) {
                             $orphanedChild = Get-Process -Id ([int]$previousProgress.childProcessId) -ErrorAction SilentlyContinue
                             if ($orphanedChild) {
-                                try { Stop-LlmWikiProcessTree -Process $orphanedChild } catch {
-                                    Write-Warning "Orphaned Wiki child cleanup reported: $($_.Exception.Message)"
-                                }
+                                Write-Warning "Previous verify owner exited, but stage worker $($orphanedChild.Id) is still running. It owns the durable result receipt; inspect it with verify-status instead of replaying the stage."
+                                break
                             }
                         }
                         $previousProgress.status = 'interrupted'
@@ -758,7 +804,7 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiAdaptiveWorkflow.ps1' $workflowArguments
     }
-    { $_ -in @('graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact') } {
+    { $_ -in @('graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage') } {
         $graphAction = @{
             'graph-build' = 'build'
             'graph-status' = 'status'
@@ -766,11 +812,14 @@ switch ($Command) {
             'graph-consumers' = 'consumers'
             'graph-trace' = 'trace'
             'graph-impact' = 'impact'
+            'graph-relations' = 'relations'
+            'graph-coverage' = 'coverage'
         }[$Command]
         $graphArguments = @{
             Action = $graphAction
             Query = $Query
-            ChangedPath = $ChangedPath
+            ChangedPath = $(if ($PSBoundParameters.ContainsKey('ProposedPath')) { $ProposedPath } else { $ChangedPath })
+            RelationKind = $RelationKind
             Limit = [Math]::Min($Limit, 500)
             Format = $Format
         }
@@ -878,7 +927,7 @@ switch ($Command) {
     'contract-consumers' {
         $contractName = if (-not [string]::IsNullOrWhiteSpace($Query)) { $Query } elseif (-not [string]::IsNullOrWhiteSpace($Objective)) { $Objective } else { $null }
         if (-not $contractName) { throw 'contract-consumers requires -Query <contract type>.' }
-        Invoke-WikiTool 'Get-LlmWikiContractConsumers.ps1' @{ Contract = $contractName; Format = $Format }
+        Invoke-WikiTool 'Get-LlmWikiContractConsumers.ps1' @{ Contract = $contractName; Format = $Format; Fast = $Fast }
     }
     'extraction' {
         if ([string]::IsNullOrWhiteSpace($Module)) { throw 'extraction requires -Module <module name>.' }
@@ -971,6 +1020,13 @@ switch ($Command) {
         Invoke-WikiTool 'Get-LlmWikiImplementationPlan.ps1' $implementationPlanArguments
     }
     'test-plan' {
+        if ($Fast) {
+            $graphTestArguments = @{ Limit = [Math]::Min($Limit, 500); Format = $Format }
+            if ($PSBoundParameters.ContainsKey('ChangedPath')) { $graphTestArguments.ChangedPath = $ChangedPath }
+            if ($PSBoundParameters.ContainsKey('ProposedPath')) { $graphTestArguments.ProposedPath = $ProposedPath }
+            Invoke-WikiTool 'Get-LlmWikiGraphTestPlan.ps1' $graphTestArguments
+            break
+        }
         $testPlanArguments = @{ BaseRef = $BaseRef; Format = $Format; Limit = [Math]::Min($Limit, 30) }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $testPlanArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $testPlanArguments.ChangedPath = $ChangedPath }

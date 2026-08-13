@@ -6,7 +6,7 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '1';
+const parserVersion = '4';
 
 function gitPaths() {
   const output = execFileSync('git', ['-C', repositoryRoot, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], {
@@ -17,9 +17,11 @@ function gitPaths() {
     .split('\0')
     .map((path) => path.replaceAll('\\', '/'))
     .filter(Boolean)
-    .filter((path) => /\.(?:cs|csproj|ts|html)$/.test(path))
-    .filter((path) => !/(^|\/)(?:bin|obj|node_modules|\.artifacts|Migrations|TestResults)(\/|$)/.test(path))
-    .filter((path) => !/\.(?:Designer|g)\.cs$/.test(path));
+    .filter((path) => /\.(?:cs|csproj|props|targets|ts|html)$/.test(path)
+      || /(^|\/)(?:appsettings(?:\.[^.\/]+)?|package|angular|backend-modules)\.json$/.test(path)
+      || /^\.github\/workflows\/[^/]+\.ya?ml$/.test(path))
+    .filter((path) => !/(^|\/)(?:bin|obj|node_modules|\.artifacts|TestResults)(\/|$)/.test(path))
+    .filter((path) => !/\.(?:Designer|g)\.cs$/.test(path) && !/ModelSnapshot\.cs$/.test(path));
 }
 
 function sha256(text) {
@@ -35,8 +37,10 @@ function lineAt(text, offset) {
 function languageOf(path) {
   const extension = extname(path);
   if (extension === '.cs') return 'csharp';
-  if (extension === '.csproj') return 'msbuild';
+  if (['.csproj', '.props', '.targets'].includes(extension)) return 'msbuild';
   if (extension === '.html') return 'html';
+  if (extension === '.json') return 'json';
+  if (extension === '.yml' || extension === '.yaml') return 'yaml';
   return 'typescript';
 }
 
@@ -45,6 +49,14 @@ function extract(path, text) {
   const symbols = [];
   const tokens = new Set();
   const projectReferences = [];
+  const edges = [];
+  const addEdges = (pattern, kind, targetGroup = 'target', confidence = 'high') => {
+    for (const match of text.matchAll(pattern)) {
+      const target = match.groups?.[targetGroup];
+      if (!target) continue;
+      edges.push({ kind, target, line: lineAt(text, match.index), evidence: match[0].trim(), confidence });
+    }
+  };
   const addMatches = (pattern, kindGroup = 'kind', nameGroup = 'name') => {
     for (const match of text.matchAll(pattern)) {
       symbols.push({ kind: match.groups[kindGroup], name: match.groups[nameGroup], line: lineAt(text, match.index) });
@@ -56,26 +68,48 @@ function extract(path, text) {
     for (const match of text.matchAll(/^[ \t]*(?:public|internal|protected|private)\s+(?:static\s+|virtual\s+|override\s+|async\s+|sealed\s+|new\s+)*(?:[\w.<>,?\[\]]+\s+)+(?<name>[A-Za-z_]\w*)\s*\(/gm)) {
       symbols.push({ kind: 'method', name: match.groups.name, line: lineAt(text, match.index) });
     }
+    addEdges(/^\s*using\s+(?<target>[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+)\s*;/gm, 'namespace-import');
+    addEdges(/\.Add(?:Scoped|Transient|Singleton|KeyedScoped|KeyedTransient|KeyedSingleton)\s*<\s*(?<target>[A-Za-z_]\w*)/g, 'di-service');
+    addEdges(/\.Add(?:Scoped|Transient|Singleton|KeyedScoped|KeyedTransient|KeyedSingleton)\s*<\s*[A-Za-z_]\w*\s*,\s*(?<target>[A-Za-z_]\w*)/g, 'di-implementation');
+    addEdges(/(?:IRequestHandler|ICommandHandler|IQueryHandler|INotificationHandler)\s*<\s*(?<target>[A-Za-z_]\w*)/g, 'mediator-handler');
+    addEdges(/\b(?:Send|Publish)\s*\(\s*new\s+(?<target>[A-Za-z_]\w*)/g, 'mediator-dispatch', 'target', 'medium');
+    addEdges(/\.(?:MapGet|MapPost|MapPut|MapPatch|MapDelete)\s*\(\s*["'`](?<target>[^"'`]+)["'`]/g, 'http-route');
+    addEdges(/\[(?:HttpGet|HttpPost|HttpPut|HttpPatch|HttpDelete)(?:\(\s*["'`](?<target>[^"'`]+)["'`])?/g, 'http-attribute', 'target', 'medium');
+    addEdges(/migrationBuilder\.(?:CreateTable|DropTable|RenameTable)\s*\(\s*name:\s*["'](?<target>[^"']+)["']/g, 'migration-table');
+    addEdges(/migrationBuilder\.(?:AddColumn|DropColumn|RenameColumn|AlterColumn)[^;]*?table:\s*["'](?<target>[^"']+)["']/gs, 'migration-column');
   } else if (language === 'typescript') {
-    addMatches(/^[ \t]*(?:export\s+)?(?:default\s+)?(?<kind>class|interface|type|enum|function)\s+(?<name>[A-Za-z_$][\w$]*)/gm);
+    addMatches(/^[ \t]*(?:export\s+)?(?:default\s+)?(?:abstract\s+|declare\s+)?(?<kind>class|interface|type|enum|function)\s+(?<name>[A-Za-z_$][\w$]*)/gm);
     for (const match of text.matchAll(/selector\s*:\s*['"](?<name>[^'"]+)['"]/g)) {
       symbols.push({ kind: 'selector', name: match.groups.name, line: lineAt(text, match.index) });
     }
+    addEdges(/from\s+['"](?<target>[^'"]+)['"]/g, 'module-import');
+    addEdges(/(?:loadComponent|loadChildren)\s*:\s*\(\)\s*=>\s*import\(['"](?<target>[^'"]+)['"]\)/g, 'angular-lazy-route');
+    addEdges(/\.(?:get|post|put|patch|delete)\s*(?:<[^>]+>)?\s*\(\s*[`'"](?<target>[^`'"]+)[`'"]/g, 'http-client', 'target', 'medium');
   } else if (language === 'html') {
     for (const match of text.matchAll(/<(?<name>(?:fd|app)-[a-z0-9-]+)/g)) {
       tokens.add(match.groups.name);
+      edges.push({ kind: 'template-component', target: match.groups.name, line: lineAt(text, match.index), evidence: match[0], confidence: 'high' });
     }
   } else if (language === 'msbuild') {
     for (const match of text.matchAll(/<ProjectReference\s+Include="(?<name>[^"]+)"/g)) {
       projectReferences.push(match.groups.name.replaceAll('\\', '/'));
+      edges.push({ kind: 'project-reference', target: match.groups.name.replaceAll('\\', '/'), line: lineAt(text, match.index), evidence: match[0].trim(), confidence: 'high' });
     }
+  } else if (language === 'json') {
+    addEdges(/"(?<target>[A-Za-z_][A-Za-z0-9_.:-]*)"\s*:/g, 'configuration-key');
+  } else if (language === 'yaml') {
+    addEdges(/^\s*(?<target>[A-Za-z_][A-Za-z0-9_.-]*)\s*:/gm, 'configuration-key');
+    addEdges(/\buses\s*:\s*(?<target>[^\s#]+)/g, 'workflow-action');
   }
 
   for (const match of text.matchAll(/\b[A-Za-z_$][A-Za-z0-9_$]{2,}\b/g)) {
     const token = match[0];
     if (/^[A-ZI]/.test(token) || token.endsWith('Async')) tokens.add(token);
   }
-  return { language, symbols, tokens: [...tokens], projectReferences };
+  if (/(^|\/)(?:tests?|[^/]+\.Tests?)(\/|$)|\.(?:spec|test)\.(?:ts|js)$/.test(path)) {
+    edges.push({ kind: 'test-ownership', target: path, line: 1, evidence: path, confidence: 'high' });
+  }
+  return { language, symbols, tokens: [...tokens], projectReferences, edges };
 }
 
 function openDatabase(databasePath) {
@@ -111,15 +145,27 @@ function openDatabase(databasePath) {
       target_path TEXT NOT NULL,
       PRIMARY KEY(file_id, target_path)
     ) WITHOUT ROWID;
+    CREATE TABLE IF NOT EXISTS typed_edges(
+      file_id INTEGER NOT NULL REFERENCES files(id) ON DELETE CASCADE,
+      kind TEXT NOT NULL,
+      target TEXT NOT NULL,
+      line INTEGER NOT NULL,
+      evidence TEXT NOT NULL,
+      confidence TEXT NOT NULL,
+      PRIMARY KEY(file_id, kind, target, line)
+    ) WITHOUT ROWID;
     CREATE INDEX IF NOT EXISTS ix_symbols_name ON symbols(name COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_symbols_file ON symbols(file_id);
     CREATE INDEX IF NOT EXISTS ix_tokens_token ON file_tokens(token COLLATE NOCASE);
+    CREATE INDEX IF NOT EXISTS ix_edges_kind_target ON typed_edges(kind, target COLLATE NOCASE);
   `);
   return database;
 }
 
 function build(database, force = false) {
   const started = performance.now();
+  const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
+  if (storedParserVersion !== parserVersion) force = true;
   const knownPaths = new Set(gitPaths());
   const existing = new Map(database.prepare('SELECT id, path, size, mtime_ms, content_hash FROM files').all().map((item) => [item.path, item]));
   const deleteFile = database.prepare('DELETE FROM files WHERE id = ?');
@@ -127,6 +173,7 @@ function build(database, force = false) {
   const insertSymbol = database.prepare('INSERT INTO symbols(file_id, kind, name, line) VALUES (?, ?, ?, ?)');
   const insertToken = database.prepare('INSERT OR IGNORE INTO file_tokens(file_id, token) VALUES (?, ?)');
   const insertReference = database.prepare('INSERT OR IGNORE INTO project_references(file_id, target_path) VALUES (?, ?)');
+  const insertEdge = database.prepare('INSERT OR IGNORE INTO typed_edges(file_id, kind, target, line, evidence, confidence) VALUES (?, ?, ?, ?, ?, ?)');
   let scanned = 0;
   let updated = 0;
   let unchanged = 0;
@@ -162,6 +209,7 @@ function build(database, force = false) {
       for (const symbol of extracted.symbols) insertSymbol.run(fileId, symbol.kind, symbol.name, symbol.line);
       for (const token of extracted.tokens) insertToken.run(fileId, token);
       for (const reference of extracted.projectReferences) insertReference.run(fileId, reference);
+      for (const edge of extracted.edges) insertEdge.run(fileId, edge.kind, edge.target, edge.line, edge.evidence, edge.confidence);
       updated += 1;
     }
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('parser_version', parserVersion);
@@ -181,6 +229,7 @@ function build(database, force = false) {
     removed,
     symbols: database.prepare('SELECT COUNT(*) count FROM symbols').get().count,
     tokens: database.prepare('SELECT COUNT(*) count FROM file_tokens').get().count,
+    typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
     durationMs: Math.round((performance.now() - started) * 100) / 100,
   };
 }
@@ -251,6 +300,49 @@ function trace(database, query, limit) {
   return { query, ...direct, impact: impact(database, paths, limit) };
 }
 
+function relations(database, paths, kinds, limit) {
+  const requested = paths.map((path) => path.replaceAll('\\', '/').replace(/\/$/, ''));
+  const pathClauses = requested.length > 0 ? requested.map(() => '(f.path = ? OR f.path LIKE ?)').join(' OR ') : '1=1';
+  const pathArguments = requested.flatMap((path) => [path, `${path}/%`]);
+  const kindList = kinds.filter(Boolean);
+  const kindClause = kindList.length > 0 ? `AND e.kind IN (${kindList.map(() => '?').join(',')})` : '';
+  const rows = database.prepare(`
+    SELECT f.path, e.kind, e.target, e.line, e.evidence, e.confidence
+    FROM typed_edges e JOIN files f ON f.id = e.file_id
+    WHERE (${pathClauses}) ${kindClause}
+    ORDER BY f.path, e.line, e.kind LIMIT ?
+  `).all(...pathArguments, ...kindList, limit);
+  return { requestedPaths: requested, kinds: kindList, relations: rows };
+}
+
+function coverage(database) {
+  const symbolExists = database.prepare('SELECT 1 found FROM symbols s JOIN files f ON f.id=s.file_id WHERE s.name=? COLLATE NOCASE AND f.path=? LIMIT 1');
+  const compareIndex = (relativePath) => {
+    try {
+      const index = JSON.parse(readFileSync(resolve(repositoryRoot, relativePath), 'utf8'));
+      const symbols = Array.isArray(index.symbols) ? index.symbols.filter((item) => item?.name && item?.path) : [];
+      const missing = symbols.filter((item) => !symbolExists.get(item.name, item.path));
+      return { index: relativePath, total: symbols.length, covered: symbols.length - missing.length, missing: missing.length, missingSamples: missing.slice(0, 10).map((item) => ({ name: item.name, path: item.path })) };
+    } catch (error) {
+      return { index: relativePath, error: error.message, total: 0, covered: 0, missing: 0, missingSamples: [] };
+    }
+  };
+  const byKind = database.prepare('SELECT kind, COUNT(*) count, COUNT(DISTINCT file_id) files FROM typed_edges GROUP BY kind ORDER BY kind').all();
+  const languages = database.prepare('SELECT language, COUNT(*) files FROM files GROUP BY language ORDER BY language').all();
+  return {
+    parserVersion,
+    files: database.prepare('SELECT COUNT(*) count FROM files').get().count,
+    symbols: database.prepare('SELECT COUNT(*) count FROM symbols').get().count,
+    typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
+    languages,
+    relationKinds: byKind,
+    legacySymbolCoverage: [
+      compareIndex('.llm-wiki/generated/csharp-symbol-index.json'),
+      compareIndex('.llm-wiki/generated/frontend-index.json'),
+    ],
+  };
+}
+
 const [action = 'status', ...argumentsList] = process.argv.slice(2);
 const options = Object.fromEntries(argumentsList.map((argument) => {
   const separator = argument.indexOf('=');
@@ -265,6 +357,8 @@ try {
   else if (action === 'consumers') result = consumers(database, options.query ?? '', Number(options.limit ?? 50));
   else if (action === 'impact') result = impact(database, (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
   else if (action === 'trace') result = trace(database, options.query ?? '', Number(options.limit ?? 50));
+  else if (action === 'relations') result = relations(database, (options.path ?? '').split(';').filter(Boolean), (options.kind ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
+  else if (action === 'coverage') result = coverage(database);
   else result = {
     action: 'status',
     databasePath,
@@ -272,6 +366,7 @@ try {
     files: database.prepare('SELECT COUNT(*) count FROM files').get().count,
     symbols: database.prepare('SELECT COUNT(*) count FROM symbols').get().count,
     tokens: database.prepare('SELECT COUNT(*) count FROM file_tokens').get().count,
+    typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
   };
   process.stdout.write(`${JSON.stringify(result)}\n`);
 } finally {

@@ -6,13 +6,49 @@ param(
     [string]$Format = 'Text',
     [ValidateRange(1, 30)]
     [int]$Limit = 10,
-    [switch]$Compact
+    [switch]$Compact,
+    [string]$IndexRoot
 )
 
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
-$frontendIndex = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-index.json') -Raw | ConvertFrom-Json
-$contractIndex = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/frontend-contract-index.json') -Raw | ConvertFrom-Json
+if ([string]::IsNullOrWhiteSpace($IndexRoot)) { $IndexRoot = Join-Path $wikiRoot 'generated' }
+$frontendIndexPath = Join-Path $IndexRoot 'frontend-index.json'
+$contractIndexPath = Join-Path $IndexRoot 'frontend-contract-index.json'
+
+function Read-FrontendIndex([string]$Path, [string[]]$RootProperties, [hashtable]$CollectionContracts) {
+    try { $index = Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json } catch {
+        throw "Wiki index '$Path' is unreadable: $($_.Exception.Message). Run ./.llm-wiki/wiki.ps1 update -AffectedOnly."
+    }
+    $missingRoot = @($RootProperties | Where-Object { -not $index.PSObject.Properties[$_] })
+    if ($missingRoot.Count -gt 0) {
+        throw "Wiki index '$Path' has an incompatible schema (missing: $($missingRoot -join ', ')). Run ./.llm-wiki/wiki.ps1 update -AffectedOnly."
+    }
+    if ([int]$index.schemaVersion -ne 1) {
+        throw "Wiki index '$Path' has unsupported schemaVersion '$($index.schemaVersion)' (expected 1). Run ./.llm-wiki/wiki.ps1 update -AffectedOnly."
+    }
+    foreach ($collectionName in $CollectionContracts.Keys) {
+        $ordinal = 0
+        foreach ($item in @($index.$collectionName)) {
+            $missing = @($CollectionContracts[$collectionName] | Where-Object { -not $item.PSObject.Properties[$_] })
+            if ($missing.Count -gt 0) {
+                throw "Wiki index '$Path' has an incompatible '$collectionName' item at index $ordinal (missing: $($missing -join ', ')). Run ./.llm-wiki/wiki.ps1 update -AffectedOnly."
+            }
+            $ordinal++
+        }
+    }
+    return $index
+}
+
+$frontendIndex = Read-FrontendIndex $frontendIndexPath @('schemaVersion','symbols','routes') @{
+    symbols = @('name','role','path','line')
+    routes = @('path','source','line')
+}
+$contractIndex = Read-FrontendIndex $contractIndexPath @('schemaVersion','components','apiCalls','consumerEdges') @{
+    components = @('class','path')
+    apiCalls = @('path','line')
+    consumerEdges = @('component','consumerPath')
+}
 
 $queryText = $Query.ToLowerInvariant()
 $queryTerms = @(
@@ -25,10 +61,11 @@ $symbols = @($frontendIndex.symbols)
 $matches = @(
     $symbols |
         ForEach-Object {
-            $searchable = "$($_.name) $($_.selector) $($_.path)".ToLowerInvariant()
+            $selector = if ($_.PSObject.Properties['selector']) { [string]$_.selector } else { '' }
+            $searchable = "$($_.name) $selector $($_.path)".ToLowerInvariant()
             $matchedTerms = @($queryTerms | Where-Object { $searchable.Contains($_) })
             $score = $matchedTerms.Count * 10
-            if ($_.name.ToLowerInvariant() -eq $queryText -or $_.selector -eq $queryText) { $score += 100 }
+            if ($_.name.ToLowerInvariant() -eq $queryText -or $selector -eq $queryText) { $score += 100 }
             if ($score -gt 0) {
                 [pscustomobject]@{ symbol = $_; score = $score; matchedTerms = $matchedTerms }
             }
