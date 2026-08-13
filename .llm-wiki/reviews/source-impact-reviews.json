@@ -42,17 +42,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "72d6ea30455b53241fb563be14a352736a4a791f97a82e15febb44f9f6b45657"
+                                            "sha256":  "73f23685ad95d8a06574120f15165f802da968e3caa4a831c457b65e9d1b45a4"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "44687148064d23d01b4040c6caef7f8ae16cce89301b979bf15102cd2fe103e1"
+                                            "sha256":  "54d663bee1cc1d34ac699817eefaeb086dd55610f864b835d6c0443a95f91b9c"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "WeeklyGoals was physically extracted under the existing executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated assembly and its sole Meals dependency; HTTP contracts, persistence schema, configuration, and runtime behavior are unchanged. Full solution build, focused application/presentation/job tests, extraction compile probe, and architecture tests provide the review evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:12:57.9816200Z"
+                        "gitHead":  "1d09c1ad5cbb0f637aab91859cd689760b3fe099",
+                        "reviewedAtUtc":  "2026-08-13T13:09:27.5599548Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -61,21 +61,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "72d6ea30455b53241fb563be14a352736a4a791f97a82e15febb44f9f6b45657"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "19801482826c8005498550c0adb2aa333cbc5a1a3da3ec027f85dd5c3fa10eb8"
+                                            "sha256":  "73f23685ad95d8a06574120f15165f802da968e3caa4a831c457b65e9d1b45a4"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "873f9f559aceda3fe5ba540eb996b0d4f84d6cb7e35fd179dc37cf7a38f1d34e"
+                                            "sha256":  "7820843d376a271fbce55978d820b6a08b8078cfb329890932b66f852793a950"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "WeeklyGoals was physically extracted under the existing executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated assembly and its sole Meals dependency; HTTP contracts, persistence schema, configuration, and runtime behavior are unchanged. Full solution build, focused application/presentation/job tests, extraction compile probe, and architecture tests provide the review evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:12:58.2726387Z"
+                        "gitHead":  "1d09c1ad5cbb0f637aab91859cd689760b3fe099",
+                        "reviewedAtUtc":  "2026-08-13T13:09:28.0453432Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -114,17 +110,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "72d6ea30455b53241fb563be14a352736a4a791f97a82e15febb44f9f6b45657"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "19801482826c8005498550c0adb2aa333cbc5a1a3da3ec027f85dd5c3fa10eb8"
+                                            "sha256":  "73f23685ad95d8a06574120f15165f802da968e3caa4a831c457b65e9d1b45a4"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "WeeklyGoals was physically extracted under the existing executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated assembly and its sole Meals dependency; HTTP contracts, persistence schema, configuration, and runtime behavior are unchanged. Full solution build, focused application/presentation/job tests, extraction compile probe, and architecture tests provide the review evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:12:58.5378104Z"
+                        "gitHead":  "1d09c1ad5cbb0f637aab91859cd689760b3fe099",
+                        "reviewedAtUtc":  "2026-08-13T13:09:28.5157989Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -197,13 +189,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "5b35bb5f0205f6d4fe533d03a616bfbf06ab7a12bdd820f80ad34f7294b4e4cf"
+                                            "sha256":  "abbdac858303a2434e8ece7c4d5ff4ac610297aabcfb107040ed9bd0e77be47c"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "WeeklyGoals was physically extracted under the existing executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated assembly and its sole Meals dependency; HTTP contracts, persistence schema, configuration, and runtime behavior are unchanged. Full solution build, focused application/presentation/job tests, extraction compile probe, and architecture tests provide the review evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:02.9661233Z"
+                        "gitHead":  "1d09c1ad5cbb0f637aab91859cd689760b3fe099",
+                        "reviewedAtUtc":  "2026-08-13T13:09:31.9927462Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -272,21 +264,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "5fd6a43435c6e98ccd10442a486acb477ca042be14d6112724ccfe759c2d3287"
+                                            "sha256":  "49b220264ae8b6d1fad54e70ca9366ae76700284eba9581d8d8c5f5ec1cd69e9"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "72d6ea30455b53241fb563be14a352736a4a791f97a82e15febb44f9f6b45657"
+                                            "sha256":  "73f23685ad95d8a06574120f15165f802da968e3caa4a831c457b65e9d1b45a4"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "873f9f559aceda3fe5ba540eb996b0d4f84d6cb7e35fd179dc37cf7a38f1d34e"
+                                            "sha256":  "7820843d376a271fbce55978d820b6a08b8078cfb329890932b66f852793a950"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "WeeklyGoals was physically extracted under the existing executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated assembly and its sole Meals dependency; HTTP contracts, persistence schema, configuration, and runtime behavior are unchanged. Full solution build, focused application/presentation/job tests, extraction compile probe, and architecture tests provide the review evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:12:59.4510382Z"
+                        "gitHead":  "1d09c1ad5cbb0f637aab91859cd689760b3fe099",
+                        "reviewedAtUtc":  "2026-08-13T13:09:29.1271810Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -295,13 +287,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "076a66d62043e72ed94b59b9a824991e8964015d227c14c95a112b73a2b811f5"
+                                            "sha256":  "8cc45286199cc957bb49662654ddce222dc38b15b4bbe7b32762762dde0052e1"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "WeeklyGoals was physically extracted under the existing executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated assembly and its sole Meals dependency; HTTP contracts, persistence schema, configuration, and runtime behavior are unchanged. Full solution build, focused application/presentation/job tests, extraction compile probe, and architecture tests provide the review evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:12:59.8895847Z"
+                        "gitHead":  "1d09c1ad5cbb0f637aab91859cd689760b3fe099",
+                        "reviewedAtUtc":  "2026-08-13T13:09:29.7851424Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -799,13 +791,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "2cff307f2c88d2f63ad92ca4331d96ee2db75047c9cb862587cd484d3f514da7"
+                                            "sha256":  "bf39398b5a81adb5f475bc2c710e22c309f4b8fa98be484310365ccf86de99ed"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "WeeklyGoals was physically extracted under the existing executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated assembly and its sole Meals dependency; HTTP contracts, persistence schema, configuration, and runtime behavior are unchanged. Full solution build, focused application/presentation/job tests, extraction compile probe, and architecture tests provide the review evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:01.7630892Z"
+                        "gitHead":  "1d09c1ad5cbb0f637aab91859cd689760b3fe099",
+                        "reviewedAtUtc":  "2026-08-13T13:09:30.4853096Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -848,13 +840,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "456626a6af434a18be716e91849dfca542a0a3a6c41cc3f70bcad6fb2bb81179"
+                                            "sha256":  "f553f8e57fbccf5eaa70b24d97af0ebfd67b59a6ffd55626ca8651f5c26522f0"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "WeeklyGoals was physically extracted under the existing executable application-module policy in ADR 0009. Ownership and project-reference manifests now record the isolated assembly and its sole Meals dependency; HTTP contracts, persistence schema, configuration, and runtime behavior are unchanged. Full solution build, focused application/presentation/job tests, extraction compile probe, and architecture tests provide the review evidence.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:02.5071161Z"
+                        "gitHead":  "1d09c1ad5cbb0f637aab91859cd689760b3fe099",
+                        "reviewedAtUtc":  "2026-08-13T13:09:31.2337132Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

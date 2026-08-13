@@ -5670,7 +5670,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
+                                                  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -12682,7 +12682,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/WeeklyGoals/Common/IWeeklyGoalReadService.cs"
+                                                  "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -15947,7 +15947,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
+                                                  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -38951,10 +38951,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -38964,10 +38964,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -38977,7 +38977,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/Mappings/WeeklyGoalHttpMappings.cs",
@@ -38990,7 +38990,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
@@ -39003,7 +39003,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs",
@@ -46598,6 +46598,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -46950,19 +46963,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48379,6 +48379,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -48731,19 +48744,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -51174,6 +51174,32 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/ContentReports/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51591,32 +51617,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Services/WeeklyCheckInUserProfileService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -64668,6 +64668,19 @@
                                                       "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalProgressReader.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IMealActivityReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Gamification/Services/AchievementReconciliationHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -64695,19 +64708,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IMealActivityReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Meals/Common/IMealActivityReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Common/WeeklyGoalProgressReader.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -68671,7 +68671,7 @@
                                                       "FoodDiary.Application.Abstractions/Notifications/Common/INotificationWriter.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72935,6 +72935,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73443,19 +73456,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74404,6 +74404,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -74912,19 +74925,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83166,6 +83166,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUnitOfWork",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -83180,19 +83193,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUnitOfWork",
-                              "roles":  [
-                                            "Other"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -88756,6 +88756,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/ContentReports/Commands/CreateContentReport/CreateContentReportCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -89108,32 +89134,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91860,10 +91860,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Common/IWeeklyGoalReadService.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91873,10 +91873,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Common/IWeeklyGoalReadService.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91886,10 +91886,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Common/IWeeklyGoalReadService.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91899,7 +91899,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Common/IWeeklyGoalReadService.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
@@ -91915,7 +91915,7 @@
                                                       "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91928,7 +91928,7 @@
                                                       "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91941,7 +91941,7 @@
                                                       "FoodDiary.Application.Abstractions/WeeklyGoals/Common/IWeeklyGoalRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -106823,10 +106823,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -106836,10 +106836,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -106849,7 +106849,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/WeeklyGoals/Mappings/WeeklyGoalHttpMappings.cs",
@@ -106862,7 +106862,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/WeeklyGoals/WeeklyGoalFeatureTests.cs",
@@ -106875,7 +106875,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
+                                                      "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs",

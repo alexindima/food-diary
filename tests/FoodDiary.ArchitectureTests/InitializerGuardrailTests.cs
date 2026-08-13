@@ -31,6 +31,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.Tdee",
             "FoodDiary.Application.Users",
             "FoodDiary.Application.Wearables",
+            "FoodDiary.Application.WeeklyGoals",
             "FoodDiary.Infrastructure",
         ];
         string[] expectedPackageReferences = [

@@ -30,6 +30,7 @@ COPY FoodDiary.Application.Ai/*.csproj FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Lessons/*.csproj FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Statistics/*.csproj FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/*.csproj FoodDiary.Application.Meals/
+COPY FoodDiary.Application.WeeklyGoals/*.csproj FoodDiary.Application.WeeklyGoals/
 COPY FoodDiary.Application.Hydration/*.csproj FoodDiary.Application.Hydration/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
@@ -68,6 +69,7 @@ COPY FoodDiary.Application.Ai/ FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Lessons/ FoodDiary.Application.Lessons/
 COPY FoodDiary.Application.Statistics/ FoodDiary.Application.Statistics/
 COPY FoodDiary.Application.Meals/ FoodDiary.Application.Meals/
+COPY FoodDiary.Application.WeeklyGoals/ FoodDiary.Application.WeeklyGoals/
 COPY FoodDiary.Application.Hydration/ FoodDiary.Application.Hydration/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/

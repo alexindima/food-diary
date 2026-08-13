@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4197,
+                    "productionFiles":  4198,
                     "criticalSymbols":  540,
                     "criticalSymbolsWithTestReferences":  511,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -286,11 +286,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  335,
+                         "nonBlankLines":  337,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  68.2
+                         "structuralRiskScore":  68.24
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
@@ -12359,6 +12359,118 @@
                       "structuralRiskScore":  17.24
                   },
                   {
+                      "path":  "FoodDiary.Application.WeeklyGoals/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+                      "nonBlankLines":  52,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  6.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Common/IWeeklyGoalReadService.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalMapping.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Common/WeeklyGoalProgressReader.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/DependencyInjection.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Models/WeeklyGoalModel.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReadService.cs",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.98
+                  },
+                  {
+                      "path":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
+                      "nonBlankLines":  61,
+                      "decisionPoints":  9,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  14.72
+                  },
+                  {
                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs",
                       "nonBlankLines":  6,
                       "decisionPoints":  0,
@@ -13871,20 +13983,12 @@
                       "structuralRiskScore":  0.64
                   },
                   {
-                      "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
                       "path":  "FoodDiary.Application/DependencyInjection.cs",
-                      "nonBlankLines":  28,
+                      "nonBlankLines":  27,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.56
+                      "structuralRiskScore":  0.54
                   },
                   {
                       "path":  "FoodDiary.Application/Export/Models/ExportFormat.cs",
@@ -15157,102 +15261,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  1.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-                      "nonBlankLines":  52,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  6.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
-                      "nonBlankLines":  17,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Common/IWeeklyGoalReadService.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Common/WeeklyGoalMapping.cs",
-                      "nonBlankLines":  20,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Common/WeeklyGoalProgressReader.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Models/WeeklyGoalModel.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReadService.cs",
-                      "nonBlankLines":  24,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.98
-                  },
-                  {
-                      "path":  "FoodDiary.Application/WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
-                      "nonBlankLines":  61,
-                      "decisionPoints":  9,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  14.72
                   },
                   {
                       "path":  "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -19344,11 +19352,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  335,
+                      "nonBlankLines":  337,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  68.2
+                      "structuralRiskScore":  68.24
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19768,11 +19776,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  73,
+                      "nonBlankLines":  75,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.96
+                      "structuralRiskScore":  3
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -24112,11 +24120,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  105,
+                      "nonBlankLines":  107,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.1
+                      "structuralRiskScore":  5.14
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -35956,7 +35964,7 @@
                             {
                                 "name":  "UpsertWeeklyGoalCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
+                                "path":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38083,7 +38091,7 @@
                             {
                                 "name":  "GetWeeklyGoalQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
+                                "path":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39219,7 +39227,7 @@
                             {
                                 "name":  "GetWeeklyGoalQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
+                                "path":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -40034,7 +40042,7 @@
                             {
                                 "name":  "UpsertWeeklyGoalCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
+                                "path":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
