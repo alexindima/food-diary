@@ -1587,287 +1587,6 @@
       ]
     },
     {
-      "Path": "/api/v{version}/meals",
-      "Operations": [
-        {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "400",
-            "401",
-            "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "CaloriesFrom",
-              "Location": "query",
-              "Required": false,
-              "Type": "number",
-              "Format": "double"
-            },
-            {
-              "Name": "CaloriesTo",
-              "Location": "query",
-              "Required": false,
-              "Type": "number",
-              "Format": "double"
-            },
-            {
-              "Name": "DateFrom",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "date-time"
-            },
-            {
-              "Name": "DateTo",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "date-time"
-            },
-            {
-              "Name": "HasAiSession",
-              "Location": "query",
-              "Required": false,
-              "Type": "boolean"
-            },
-            {
-              "Name": "HasImage",
-              "Location": "query",
-              "Required": false,
-              "Type": "boolean"
-            },
-            {
-              "Name": "Limit",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32"
-            },
-            {
-              "Name": "MealTypes",
-              "Location": "query",
-              "Required": false,
-              "Type": "string"
-            },
-            {
-              "Name": "Page",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32"
-            },
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
-          ]
-        },
-        {
-          "Method": "post",
-          "HasRequestBody": true,
-          "ResponseCodes": [
-            "201",
-            "400",
-            "401",
-            "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Path": "/api/v{version}/meals/overview",
-      "Operations": [
-        {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "400",
-            "401",
-            "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "CaloriesFrom",
-              "Location": "query",
-              "Required": false,
-              "Type": "number",
-              "Format": "double"
-            },
-            {
-              "Name": "CaloriesTo",
-              "Location": "query",
-              "Required": false,
-              "Type": "number",
-              "Format": "double"
-            },
-            {
-              "Name": "DateFrom",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "date-time"
-            },
-            {
-              "Name": "DateTo",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "date-time"
-            },
-            {
-              "Name": "FavoriteLimit",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32"
-            },
-            {
-              "Name": "HasAiSession",
-              "Location": "query",
-              "Required": false,
-              "Type": "boolean"
-            },
-            {
-              "Name": "HasImage",
-              "Location": "query",
-              "Required": false,
-              "Type": "boolean"
-            },
-            {
-              "Name": "Limit",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32"
-            },
-            {
-              "Name": "MealTypes",
-              "Location": "query",
-              "Required": false,
-              "Type": "string"
-            },
-            {
-              "Name": "Page",
-              "Location": "query",
-              "Required": false,
-              "Type": "integer",
-              "Format": "int32"
-            },
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Path": "/api/v{version}/meals/{id}",
-      "Operations": [
-        {
-          "Method": "delete",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "204",
-            "401",
-            "404",
-            "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
-          ]
-        },
-        {
-          "Method": "get",
-          "HasRequestBody": false,
-          "ResponseCodes": [
-            "200",
-            "401",
-            "404",
-            "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
-          ]
-        },
-        {
-          "Method": "patch",
-          "HasRequestBody": true,
-          "ResponseCodes": [
-            "200",
-            "400",
-            "401",
-            "404",
-            "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "Path": "/api/v{version}/meals/{id}/repeat",
-      "Operations": [
-        {
-          "Method": "post",
-          "HasRequestBody": true,
-          "ResponseCodes": [
-            "201",
-            "401",
-            "404",
-            "500"
-          ],
-          "QueryParameters": [
-            {
-              "Name": "userId",
-              "Location": "query",
-              "Required": false,
-              "Type": "string",
-              "Format": "uuid"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "Path": "/api/v{version}/cycles",
       "Operations": [
         {
@@ -4142,6 +3861,287 @@
           "ResponseCodes": [
             "201",
             "401",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/meals",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CaloriesFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "CaloriesTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "HasAiSession",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "HasImage",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "MealTypes",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        },
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "201",
+            "400",
+            "401",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/meals/overview",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "CaloriesFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "CaloriesTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "number",
+              "Format": "double"
+            },
+            {
+              "Name": "DateFrom",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "DateTo",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "date-time"
+            },
+            {
+              "Name": "FavoriteLimit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "HasAiSession",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "HasImage",
+              "Location": "query",
+              "Required": false,
+              "Type": "boolean"
+            },
+            {
+              "Name": "Limit",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "MealTypes",
+              "Location": "query",
+              "Required": false,
+              "Type": "string"
+            },
+            {
+              "Name": "Page",
+              "Location": "query",
+              "Required": false,
+              "Type": "integer",
+              "Format": "int32"
+            },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/meals/{id}",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "404",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        },
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "404",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        },
+        {
+          "Method": "patch",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/meals/{id}/repeat",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "201",
+            "401",
+            "404",
             "500"
           ],
           "QueryParameters": [
