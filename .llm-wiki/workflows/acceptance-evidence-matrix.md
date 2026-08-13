@@ -39,6 +39,10 @@ Matched product journeys such as `FD-AUTH` are exposed beside generated test
 scenarios and may be mapped directly. Empty scenario, check, review, or changed
 path catalogs are valid pre-implementation state: mapping reports a specific
 unknown evidence identifier instead of failing on a missing object property.
+For structural work, Git rename destinations are also valid change evidence
+when their source path was already present in the task packet. The matrix
+records the rename provenance and accepts newly created files below a detected
+rename destination instead of forcing a stale-topology workaround.
 
 For a packet containing only test sources, initialization automatically maps
 each criterion to the changed test bundle, focused test paths, and required

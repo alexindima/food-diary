@@ -30,6 +30,7 @@ foreach ($requiredPath in @($acceptancePath, $evidencePath, $manifestPath, $pack
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $proofPolicy = $policy.proofOfChange
 . (Join-Path $PSScriptRoot 'LlmWikiRequirementCriteria.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitRenames.ps1')
 $requirementPolicy = $policy.requirementModel
 
 function Get-Hash([object]$Value) {
@@ -66,6 +67,7 @@ function Get-Assessment {
     $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
     $actualPaths = @($packet.diff.changedPaths | Sort-Object -Unique)
+    $renames = if ($acceptance.availableEvidence.PSObject.Properties['renames']) { @($acceptance.availableEvidence.renames) } else { @() }
     $pending = @($acceptance.criteria | Where-Object status -eq 'pending')
     $applicable = $pending.Count -eq 0
     $criterionProofs = [Collections.Generic.List[object]]::new()
@@ -77,7 +79,11 @@ function Get-Assessment {
         $checkIds = @(Get-MappedValues $criterion.mapping 'checkIds')
         $reviewIds = @(Get-MappedValues $criterion.mapping 'reviewIds')
         $testPaths = @(Get-MappedValues $criterion.mapping 'testPaths')
-        $pathsOutsideDiff = @($changedPaths | Where-Object { $_ -notin $actualPaths })
+        $pathsOutsideDiff = @($changedPaths | Where-Object {
+            $mappedPath = [string]$_
+            if ($mappedPath -in $actualPaths) { return $false }
+            -not (Test-LlmWikiRenameDestination -Path $mappedPath -Renames $renames -KnownPaths $actualPaths)
+        })
         $missingTestPaths = @($testPaths | Where-Object { -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_) -PathType Leaf) })
         $verifiedChecks = @($checkIds | Where-Object {
             $id = $_

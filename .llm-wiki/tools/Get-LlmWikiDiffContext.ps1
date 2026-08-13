@@ -14,6 +14,7 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitRenames.ps1')
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
 $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
@@ -29,6 +30,7 @@ function ConvertTo-Slug {
     return [regex]::Replace($Name, '([a-z0-9])([A-Z])', '$1-$2').ToLowerInvariant()
 }
 
+$renames = @()
 if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $gitArguments = @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef)
     if (-not [string]::IsNullOrWhiteSpace($HeadRef)) {
@@ -40,6 +42,7 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     if ([string]::IsNullOrWhiteSpace($HeadRef)) {
         $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'git ls-files failed while collecting untracked paths.')
     }
+    $renames = @(Get-LlmWikiGitRenames -RepositoryRoot $repositoryRoot -BaseRef $BaseRef -HeadRef $HeadRef)
 }
 
 $changedPaths = @(
@@ -62,6 +65,7 @@ if (@($baselineExcludedPaths | Where-Object { $_ -match 'Infrastructure/.*(Persi
 if ($changedPaths.Count -eq 0) {
     $emptyResult = [ordered]@{
         changedPaths = @()
+        renames = @($renames)
         baselineExcludedPaths = $baselineExcludedPaths
         workspaceContextScopes = @($workspaceContextScopes | Sort-Object -Unique)
         scopes = @()
@@ -421,6 +425,7 @@ $uniqueChecks = @($recommendedChecks | Sort-Object -Unique)
 
 $result = [ordered]@{
     changedPaths = $changedPaths
+    renames = @($renames)
     baselineExcludedPaths = $baselineExcludedPaths
     workspaceContextScopes = @($workspaceContextScopes | Sort-Object -Unique)
     scopes = $activeScopes

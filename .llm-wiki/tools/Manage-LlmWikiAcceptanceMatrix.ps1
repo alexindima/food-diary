@@ -29,6 +29,7 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiRequirementCriteria.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiGitRenames.ps1')
 $requirementPolicy = (Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json).requirementModel
 $absolutePath = if ([System.IO.Path]::IsPathRooted($Path)) { $Path } else { Join-Path $repositoryRoot $Path }
 $absoluteEvidencePath = if ([System.IO.Path]::IsPathRooted($EvidencePath)) { $EvidencePath } else { Join-Path $repositoryRoot $EvidencePath }
@@ -154,6 +155,7 @@ switch ($Action) {
             git = [ordered]@{ base = $BaseRef; headAtInit = $packet.inputs.gitHead }
             availableEvidence = [ordered]@{
                 changedPaths = @($packet.diff.changedPaths)
+                renames = @($(if ($packet.diff.PSObject.Properties['renames']) { @($packet.diff.renames) } else { @() }))
                 scenarios = @(Get-AvailableScenarios $packet $Objective)
                 checks = @($packet.policy.requiredChecks | ForEach-Object { [ordered]@{ id = $_.id; command = $_.command } })
                 reviews = @($packet.policy.reviewObligations | ForEach-Object { [ordered]@{ id = $_.id; description = $_.description } })
@@ -180,10 +182,21 @@ switch ($Action) {
         $availableChangedPaths = if ($matrix.availableEvidence.PSObject.Properties['changedPaths']) {
             @($matrix.availableEvidence.changedPaths | ForEach-Object { ([string]$_).Replace('\', '/') })
         } else { @() }
+        $knownRenames = if ($matrix.availableEvidence.PSObject.Properties['renames']) { @($matrix.availableEvidence.renames) } else { @() }
+        $baseRef = if ($matrix.git.PSObject.Properties['base']) { [string]$matrix.git.base } else { '' }
+        if (-not [string]::IsNullOrWhiteSpace($baseRef)) {
+            $knownRenames = @($knownRenames) + @(Get-LlmWikiGitRenames -RepositoryRoot $repositoryRoot -BaseRef $baseRef)
+        }
         $normalizedChangedPaths = @($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/') })
         $normalizedTestPaths = @($TestPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/') })
         foreach ($path in $normalizedChangedPaths) {
-            if ($path -notin $availableChangedPaths) { throw "Changed path is not present in the task packet: $path" }
+            if ($path -notin $availableChangedPaths) {
+                if (Test-LlmWikiRenameDestination -Path $path -Renames $knownRenames -KnownPaths $availableChangedPaths) {
+                    $availableChangedPaths = Merge-Unique $availableChangedPaths @($path)
+                } else {
+                    throw "Changed path is not present in the task packet: $path. Run task-refresh; rename destinations detected by Git are accepted automatically."
+                }
+            }
         }
         foreach ($id in @($ScenarioId | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
             if ($id -notin $availableScenarioIds) { throw "Unknown scenario id: $id" }
@@ -202,6 +215,8 @@ switch ($Action) {
         $item.mapping.checkIds = Merge-Unique @($item.mapping.checkIds) @($CheckId)
         $item.mapping.reviewIds = Merge-Unique @($item.mapping.reviewIds) @($ReviewId)
         $item.mapping.testPaths = Merge-Unique @($item.mapping.testPaths) $normalizedTestPaths
+        $matrix.availableEvidence | Add-Member -NotePropertyName changedPaths -NotePropertyValue @($availableChangedPaths) -Force
+        $matrix.availableEvidence | Add-Member -NotePropertyName renames -NotePropertyValue @($knownRenames | Sort-Object from, to -Unique) -Force
         Write-Matrix $matrix
         Write-Host "Mapped acceptance criterion: $CriterionId"
     }

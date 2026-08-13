@@ -218,6 +218,13 @@ $autoLinkedPaths = @{}
 $newProductPaths = @($newPacket.diff.changedPaths | Where-Object {
     $_ -notin @($oldPacket.diff.changedPaths) -and -not (Test-GovernanceArtifactPath $_)
 })
+$packetRenames = if ($newPacket.diff.PSObject.Properties['renames']) { @($newPacket.diff.renames) } else { @() }
+$renameDestinations = @{}
+foreach ($rename in $packetRenames) {
+    if ($null -ne $rename -and $rename.PSObject.Properties['from'] -and $rename.PSObject.Properties['to']) {
+        $renameDestinations[([string]$rename.from).Replace('\', '/')] = ([string]$rename.to).Replace('\', '/')
+    }
+}
 foreach ($newPath in $newProductPaths) {
     $ranked = foreach ($candidate in @($acceptance.criteria)) {
         $scores = @($candidate.mapping.changedPaths | ForEach-Object { Get-PathAffinity $_ $newPath })
@@ -233,6 +240,10 @@ foreach ($newPath in $newProductPaths) {
 }
 foreach ($criterion in @($acceptance.criteria)) {
     $mappedChangedPaths = if ($null -ne $criterion.mapping.PSObject.Properties['changedPaths']) { @($criterion.mapping.changedPaths) } else { @() }
+    $mappedChangedPaths = @($mappedChangedPaths | ForEach-Object {
+        $normalizedMappedPath = ([string]$_).Replace('\', '/')
+        if ($renameDestinations.ContainsKey($normalizedMappedPath)) { $renameDestinations[$normalizedMappedPath] } else { $normalizedMappedPath }
+    })
     $mappedChangedPaths += @($autoLinkedPaths.GetEnumerator() | Where-Object Value -eq $criterion.id | Select-Object -ExpandProperty Key)
     $mappedChangedPaths = @($mappedChangedPaths | Sort-Object -Unique)
     $mappedChecks = @($criterion.mapping.checkIds)
@@ -287,6 +298,7 @@ $combinedHistory = @($priorHistory) + @($history)
 $evidence | Add-Member -NotePropertyName invalidationHistory -NotePropertyValue $combinedHistory -Force
 $acceptance.availableEvidence.scenarios = $newAvailableScenarios
 $acceptance.availableEvidence | Add-Member -NotePropertyName changedPaths -NotePropertyValue @($newPacket.diff.changedPaths) -Force
+$acceptance.availableEvidence | Add-Member -NotePropertyName renames -NotePropertyValue @($(if ($newPacket.diff.PSObject.Properties['renames']) { @($newPacket.diff.renames) } else { @() })) -Force
 $acceptance.availableEvidence.checks = @($newPacket.policy.requiredChecks | ForEach-Object {
     [pscustomobject][ordered]@{ id = $_.id; command = $_.command }
 })

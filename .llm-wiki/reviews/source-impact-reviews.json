@@ -139,14 +139,14 @@
                         "pageSha256":  "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
-                                            "sha256":  "87a2bc5f65c33fe55d63035ec361d2c978ac7128e1a5e2b8b606d0c145747566"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+                                            "sha256":  "782e64b5f13606801130aa5e69c40f173073bb011e45656ccdc8e4ba42473871"
                                         }
                                     ],
-                        "reason":  "Reviewed optional-field normalization for static and promoted eval cases; expectations remain strict when declared.",
+                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2c158142caaff6421211c35f28d13f32fe688431",
-                        "reviewedAtUtc":  "2026-08-12T11:38:10.4236087Z"
+                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
+                        "reviewedAtUtc":  "2026-08-13T18:57:48.8258818Z"
                     },
                     {
                         "pageId":  "workflow.evidence-bundle",
@@ -207,14 +207,14 @@
                         "pageSha256":  "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+                                            "sha256":  "782e64b5f13606801130aa5e69c40f173073bb011e45656ccdc8e4ba42473871"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:20.4259396Z"
+                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
+                        "reviewedAtUtc":  "2026-08-13T18:57:50.6101190Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -867,13 +867,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
+                                            "sha256":  "6b3dfdf272d220a0abf3ce06f28007fabb3305239b6eef8478954973c42d004d"
                                         }
                                     ],
-                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
-                        "reviewedAtUtc":  "2026-08-13T18:25:02.3405125Z"
+                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
+                        "reviewedAtUtc":  "2026-08-13T18:57:49.3279010Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -882,17 +882,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
-                                            "sha256":  "664123efb96775a3933e7ccae4befa7116de780a0e1ed8fcaacd19ec27a08ff7"
+                                            "sha256":  "6b3dfdf272d220a0abf3ce06f28007fabb3305239b6eef8478954973c42d004d"
                                         }
                                     ],
-                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
-                        "reviewedAtUtc":  "2026-08-13T18:25:02.8146485Z"
+                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
+                        "reviewedAtUtc":  "2026-08-13T18:57:50.0005326Z"
                     },
                     {
                         "pageId":  "workflow-review-report",
@@ -968,14 +964,14 @@
                         "pageSha256":  "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+                                            "sha256":  "782e64b5f13606801130aa5e69c40f173073bb011e45656ccdc8e4ba42473871"
                                         }
                                     ],
-                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
+                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-                        "reviewedAtUtc":  "2026-08-12T21:30:34.6075061Z"
+                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
+                        "reviewedAtUtc":  "2026-08-13T18:57:51.2475948Z"
                     },
                     {
                         "pageId":  "workflow-task-contract",

@@ -37,6 +37,10 @@ one current changed path. It also checks that mapped test paths exist and that
 the criterion has verified evidence: a passed check, a completed review, or an
 explicit evidence note.
 
+A Git-confirmed rename destination is equivalent to its source path for this
+check. The acceptance matrix keeps the `from`/`to` provenance, so extraction
+tasks can prove the new project path without weakening the current-diff rule.
+
 ```powershell
 ./.llm-wiki/wiki.ps1 task-proof-assess `
   -WorkspacePath .artifacts/llm-wiki/tasks/<name> `

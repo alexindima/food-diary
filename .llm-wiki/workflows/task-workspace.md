@@ -360,6 +360,13 @@ affinity with the existing mapping. Ambiguous files remain deliberately
 unmapped and require `acceptance-map`; the refresh report lists every automatic
 link and its reason.
 
+Refresh is rename-aware. It records Git rename pairs, migrates an existing
+change link from the old path to its destination, and adds rename destinations
+to the current evidence catalog while preserving compatible resolutions and
+verification evidence. `acceptance-map` can also accept a detected destination
+before refresh and explains that refresh is the normal repair when a path is
+neither current nor a proven rename.
+
 Use `task-verification-plan` followed by `task-verification-run` for governed
 checks. The runner executes canonical policy commands, records exit code,
 duration, content lineage, and a hashed log, and applies configured supersedence
