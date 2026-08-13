@@ -854,7 +854,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
+                                                  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2166,7 +2166,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2710,7 +2710,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -3526,7 +3526,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+                                                  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4246,7 +4246,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4934,7 +4934,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
+                                                  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4950,7 +4950,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
+                                                  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5398,7 +5398,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5414,7 +5414,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -9526,7 +9526,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/MealPlans/Common/IMealPlanReadService.cs"
+                                                  "FoodDiary.Application.MealPlanning/MealPlans/Common/IMealPlanReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11418,7 +11418,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Common/IShoppingListCreationService.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListCreationService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11466,7 +11466,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Common/IShoppingListReadService.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -14731,7 +14731,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Common/ShoppingListCreationRequest.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationRequest.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -15643,7 +15643,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
+                                                  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -19347,10 +19347,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -19360,10 +19360,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -19373,7 +19373,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/MealPlans/Mappings/MealPlanHttpMappings.cs",
@@ -19386,7 +19386,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
@@ -19399,7 +19399,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansValidatorTests.cs",
@@ -19412,7 +19412,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -19425,7 +19425,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanHttpMappingsTests.cs",
@@ -24859,10 +24859,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -24872,10 +24872,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -24885,7 +24885,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
@@ -24898,7 +24898,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.CreateCommand.cs",
@@ -24911,7 +24911,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs",
@@ -24924,7 +24924,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -24937,7 +24937,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ShoppingListHttpMappingsTests.cs",
@@ -27069,10 +27069,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -27082,10 +27082,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -27095,7 +27095,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
@@ -27108,7 +27108,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.DeleteCommand.cs",
@@ -27121,7 +27121,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs",
@@ -27134,7 +27134,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -27147,7 +27147,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ShoppingListHttpMappingsTests.cs",
@@ -30293,10 +30293,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -30306,10 +30306,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -30319,7 +30319,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/MealPlans/Mappings/MealPlanHttpMappings.cs",
@@ -30332,7 +30332,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
@@ -30345,7 +30345,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansValidatorTests.cs",
@@ -30358,7 +30358,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -32880,10 +32880,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -32893,10 +32893,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -32906,7 +32906,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
@@ -32919,7 +32919,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Queries.cs",
@@ -32932,7 +32932,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs",
@@ -32945,7 +32945,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -32958,7 +32958,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ShoppingListHttpMappingsTests.cs",
@@ -35844,10 +35844,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -35857,10 +35857,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -35870,7 +35870,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/MealPlans/Mappings/MealPlanHttpMappings.cs",
@@ -35883,7 +35883,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
@@ -35896,7 +35896,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansValidatorTests.cs",
@@ -35909,7 +35909,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -35922,7 +35922,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanHttpMappingsTests.cs",
@@ -35935,10 +35935,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -35948,10 +35948,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -35961,7 +35961,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/MealPlans/Mappings/MealPlanHttpMappings.cs",
@@ -35974,7 +35974,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
@@ -35987,7 +35987,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansValidatorTests.cs",
@@ -36000,7 +36000,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -36013,7 +36013,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanHttpMappingsTests.cs",
@@ -37651,10 +37651,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -37664,10 +37664,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -37677,7 +37677,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
@@ -37690,7 +37690,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Queries.cs",
@@ -37703,7 +37703,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs",
@@ -37716,7 +37716,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -37729,7 +37729,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ShoppingListHttpMappingsTests.cs",
@@ -37742,10 +37742,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -37755,10 +37755,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -37768,7 +37768,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
@@ -37781,7 +37781,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.Queries.cs",
@@ -37794,7 +37794,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs",
@@ -37807,7 +37807,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -37820,7 +37820,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ShoppingListHttpMappingsTests.cs",
@@ -46390,6 +46390,71 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47196,32 +47261,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47314,45 +47353,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48171,6 +48171,71 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -48977,32 +49042,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -49095,45 +49134,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -50810,6 +50810,136 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51694,58 +51824,6 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51994,84 +52072,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -65565,7 +65565,7 @@
                                                       "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Services/MealPlanReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Services/MealPlanReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -65643,7 +65643,7 @@
                                                       "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -65705,10 +65705,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Common/IMealPlanReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Common/IMealPlanReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -65718,10 +65718,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Common/IMealPlanReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Common/IMealPlanReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -65731,10 +65731,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Common/IMealPlanReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Common/IMealPlanReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -65744,10 +65744,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Common/IMealPlanReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Common/IMealPlanReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Services/MealPlanReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Services/MealPlanReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -65757,7 +65757,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/MealPlans/Common/IMealPlanReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/MealPlans/Common/IMealPlanReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
@@ -65864,7 +65864,7 @@
                                                       "FoodDiary.Application.Abstractions/MealPlans/Common/IMealPlanWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71466,6 +71466,45 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductLookupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductLookupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemBuilder.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductLookupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Services/MealNutritionService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -71519,45 +71558,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Services/RecipeIngredientAccessValidator.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IProductLookupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IProductLookupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IProductLookupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Services/ShoppingListItemBuilder.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72870,6 +72870,71 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73572,32 +73637,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73742,45 +73781,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74327,6 +74327,71 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75041,32 +75106,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -75211,45 +75250,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82318,10 +82318,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListCreationService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListCreationService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82331,10 +82331,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListCreationService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListCreationService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82344,10 +82344,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListCreationService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListCreationService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Services/ShoppingListCreationService.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListCreationService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82357,7 +82357,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListCreationService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListCreationService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
@@ -82386,7 +82386,7 @@
                                                       "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Services/ShoppingListReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82513,10 +82513,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82526,10 +82526,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82539,10 +82539,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82552,10 +82552,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82565,10 +82565,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/IShoppingListReadService.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Services/ShoppingListReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82685,7 +82685,7 @@
                                                       "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82698,7 +82698,7 @@
                                                       "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82711,7 +82711,7 @@
                                                       "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82724,7 +82724,7 @@
                                                       "FoodDiary.Application.Abstractions/ShoppingLists/Common/IShoppingListWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Services/ShoppingListCreationService.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListCreationService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -88171,6 +88171,136 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -89107,58 +89237,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Queries/GetMealPlans/GetMealPlansQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -89368,84 +89446,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/CreateShoppingList/CreateShoppingListCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/DeleteShoppingList/DeleteShoppingListCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetCurrentShoppingList/GetCurrentShoppingListQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingListById/GetShoppingListByIdQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Queries/GetShoppingLists/GetShoppingListsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -101480,10 +101480,10 @@
                                             "Request"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/ShoppingListCreationRequest.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -101493,10 +101493,10 @@
                                             "Request"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/ShoppingListCreationRequest.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Common/IShoppingListCreationService.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Common/IShoppingListCreationService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -101506,10 +101506,10 @@
                                             "Request"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/ShoppingListCreationRequest.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Services/ShoppingListCreationService.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListCreationService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -101519,7 +101519,7 @@
                                             "Request"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/ShoppingListCreationRequest.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/MealPlans/MealPlansFeatureTests.cs",
@@ -101532,7 +101532,7 @@
                                             "Request"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Common/ShoppingListCreationRequest.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListCreationServiceTests.cs",
@@ -105484,10 +105484,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  5
                           },
@@ -105497,10 +105497,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -105510,7 +105510,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/ShoppingLists/Mappings/ShoppingListHttpMappings.cs",
@@ -105523,7 +105523,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsFeatureTests.UpdateCommand.cs",
@@ -105536,7 +105536,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/ShoppingLists/ShoppingListsValidatorTests.cs",
@@ -105549,7 +105549,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -105562,7 +105562,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
+                                                      "FoodDiary.Application.MealPlanning/ShoppingLists/Commands/UpdateShoppingList/UpdateShoppingListCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ShoppingListHttpMappingsTests.cs",

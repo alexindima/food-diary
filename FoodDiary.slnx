@@ -38,6 +38,7 @@
   <Project Path="FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj" />
   <Project Path="FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj" />
   <Project Path="FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj" />
+  <Project Path="FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj" />
   <Project Path="FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj" />
   <Project Path="FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj" />
   <Project Path="FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj" />

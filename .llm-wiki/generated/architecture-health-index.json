@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  127,
+                    "productionProjectEdges":  134,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
-                    "backendBusinessModules":  36,
+                    "backendBusinessModules":  35,
                     "moduleHotspotReviewCandidates":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
@@ -169,25 +169,11 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "MealPlans",
-                               "fanIn":  0,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "OpenFoodFacts",
                                "fanIn":  1,
                                "fanOut":  0,
                                "level":  "informational",
                                "role":  "adapter"
-                           },
-                           {
-                               "module":  "ShoppingLists",
-                               "fanIn":  1,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Statistics",
@@ -233,6 +219,13 @@
                            },
                            {
                                "module":  "Identity",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "MealPlanning",
                                "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",

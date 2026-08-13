@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 25,
-    "extractedModules": 11,
-    "totalModules": 36
+    "folderModules": 23,
+    "extractedModules": 12,
+    "totalModules": 35
   },
   "analysis": {
     "compileTime": "Roslyn/syntax and project-reference evidence; unresolved or runtime-only DI edges are reported separately.",
@@ -286,12 +286,35 @@
         ]
       }
     },
-    "MealPlans": {
+    "MealPlanning": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [],
-      "sourceMappings": {}
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
+      "ownedEntities": [
+        "MealPlan",
+        "MealPlanDay",
+        "MealPlanMeal",
+        "ShoppingList",
+        "ShoppingListItem",
+        "ShoppingListItemSource"
+      ],
+      "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.MealPlanning"
+        ],
+        "abstractionAreas": [
+          "MealPlans",
+          "ShoppingLists"
+        ],
+        "domainAreas": [
+          "MealPlans",
+          "Shopping"
+        ],
+        "persistenceAreas": [
+          "MealPlans",
+          "ShoppingLists"
+        ]
+      }
     },
     "Notifications": {
       "role": "aggregate-owner",
@@ -366,13 +389,6 @@
         "RecipeIngredient",
         "RecipeStep"
       ],
-      "sourceMappings": {}
-    },
-    "ShoppingLists": {
-      "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [],
       "sourceMappings": {}
     },
     "Statistics": {

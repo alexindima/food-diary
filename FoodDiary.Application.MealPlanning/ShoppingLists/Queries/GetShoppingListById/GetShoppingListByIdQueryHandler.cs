@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.MealPlanning.Common.Validation;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Domain.ValueObjects.Ids;

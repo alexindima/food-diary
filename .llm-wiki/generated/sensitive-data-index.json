@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  60
+                       "line":  61
                    },
                    {
                        "category":  "credential",
@@ -1545,6 +1545,62 @@
                    },
                    {
                        "category":  "financial",
+                       "name":  "TotalAmount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+                       "line":  139
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
+                       "line":  150
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationItem.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListCreationSource.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.MealPlanning/ShoppingLists/Common/ShoppingListItemInput.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListItemModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.MealPlanning/ShoppingLists/Models/ShoppingListItemSourceModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "Amount",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.MealPlanning/ShoppingLists/Services/ShoppingListItemData.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
                        "path":  "FoodDiary.Application/Consumptions/Common/ConsumptionAiItemInput.cs",
@@ -1598,20 +1654,6 @@
                        "type":  "int",
                        "path":  "FoodDiary.Application/Hydration/Models/HydrationEntryModel.cs",
                        "line":  6
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "TotalAmount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-                       "line":  139
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/MealPlans/Commands/GenerateShoppingList/GenerateShoppingListCommandHandler.cs",
-                       "line":  150
                    },
                    {
                        "category":  "financial",
@@ -1675,48 +1717,6 @@
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Recipes/Models/RecipeIngredientModel.cs",
                        "line":  12
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/ShoppingLists/Common/ShoppingListCreationItem.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/ShoppingLists/Common/ShoppingListCreationSource.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/ShoppingLists/Common/ShoppingListItemInput.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/ShoppingLists/Models/ShoppingListItemModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/ShoppingLists/Models/ShoppingListItemSourceModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "Amount",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/ShoppingLists/Services/ShoppingListItemData.cs",
-                       "line":  10
                    },
                    {
                        "category":  "financial",
@@ -3638,6 +3638,27 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanMealModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TargetCaloriesPerDay",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TargetCaloriesPerDay",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanSummaryModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
                        "name":  "FastingPushNotificationsEnabled",
                        "type":  "bool?",
                        "path":  "FoodDiary.Application.Notifications/Commands/UpdateNotificationPreferences/UpdateNotificationPreferencesCommand.cs",
@@ -4348,27 +4369,6 @@
                        "name":  "HydrationEntryId",
                        "type":  "Guid",
                        "path":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/MealPlans/Models/MealPlanMealModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TargetCaloriesPerDay",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/MealPlans/Models/MealPlanModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TargetCaloriesPerDay",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/MealPlans/Models/MealPlanSummaryModel.cs",
                        "line":  9
                    },
                    {

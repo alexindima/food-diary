@@ -50,17 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "ab5cee0ceceb2dd9bf81b22cc5c037f38879899d622322e02e0621e2a3d01a5d"
+                                            "sha256":  "ab24257b1d06f9ce67b34bae407576901033e882e29a12069d3b95f977440e9a"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "2dfe8f9ace5493f3838c2dfcea951586731d88bef7294575ad071dee06fcf377"
+                                            "sha256":  "e51b6e0d3a8014fed796921d8532cdc7d9e5cc24e335b1da087680a57f16aaf8"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:34.1077932Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:25.8992931Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -69,21 +69,21 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "ab5cee0ceceb2dd9bf81b22cc5c037f38879899d622322e02e0621e2a3d01a5d"
+                                            "sha256":  "ab24257b1d06f9ce67b34bae407576901033e882e29a12069d3b95f977440e9a"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "92eb649fc244eab6de819a24fada95c105592746541da151066c49f7f7f758be"
+                                            "sha256":  "fc2b242a09848a5bfe073505d0cf61d747503d7579690a632f56c732579b85ff"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "77d2361b1e8d8da095d3999e555b76b43a50a8599a8a5a72df6098c7dd7ce4a6"
+                                            "sha256":  "bf580afdc9f64e9a3acd7d27bac05c59b700a7e02ca86d8f620f0020115e7664"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:34.3081593Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:26.1426083Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -122,17 +122,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "ab5cee0ceceb2dd9bf81b22cc5c037f38879899d622322e02e0621e2a3d01a5d"
+                                            "sha256":  "ab24257b1d06f9ce67b34bae407576901033e882e29a12069d3b95f977440e9a"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "92eb649fc244eab6de819a24fada95c105592746541da151066c49f7f7f758be"
+                                            "sha256":  "fc2b242a09848a5bfe073505d0cf61d747503d7579690a632f56c732579b85ff"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:34.4952061Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:26.3965784Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -205,13 +205,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "ef166c0f745891d124bb907ee6b6426429836a442ef3008a4aa1c50e52129402"
+                                            "sha256":  "e01afde25d46902493b97ff5aa7f45a139ead754508ba137c1d65aec140cd159"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:36.2895555Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:28.0589599Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -284,21 +284,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "b1a4f02f65206b4161b4591aa62c4279dc825ac354d35b591f51468fd8614225"
+                                            "sha256":  "689bc289686a3a69e105c0be1644b47c32f22b7ecdb1b93f123e7a1a4488d539"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "ab5cee0ceceb2dd9bf81b22cc5c037f38879899d622322e02e0621e2a3d01a5d"
+                                            "sha256":  "ab24257b1d06f9ce67b34bae407576901033e882e29a12069d3b95f977440e9a"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "77d2361b1e8d8da095d3999e555b76b43a50a8599a8a5a72df6098c7dd7ce4a6"
+                                            "sha256":  "bf580afdc9f64e9a3acd7d27bac05c59b700a7e02ca86d8f620f0020115e7664"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:34.6819186Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:26.6058478Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -307,13 +307,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "8a7e4b03bd68c36f2f12ea62500e824191b1a0c5bde2352f03ec66d5945b56fe"
+                                            "sha256":  "4c3e00838bc93b39b878fda84817e84d0ce5ea0034cfb9519c5e66657e8a841e"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:34.9439957Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:26.8973516Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -747,13 +747,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "92eb649fc244eab6de819a24fada95c105592746541da151066c49f7f7f758be"
+                                            "sha256":  "fc2b242a09848a5bfe073505d0cf61d747503d7579690a632f56c732579b85ff"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:35.2155466Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:27.1529259Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -815,13 +815,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "346684fba028c25bd50f7aa764e8b784473a522cdb8f18d6b4d4d7af8407ec4c"
+                                            "sha256":  "9fc2c1e03c38207649dacc90d7db4ea7e0ae9579c312989f676cfe28c4fa14c8"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:35.5776838Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:27.4481528Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -864,13 +864,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "076ac3a2769440ded54cf5d6d2e66890ed6c8784658981db3b9271633ad06f71"
+                                            "sha256":  "6b8b2921c8ad1e979b349582412b8c92d779dbe029da32ce5abbda1f3c3ac463"
                                         }
                                     ],
-                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
+                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
-                        "reviewedAtUtc":  "2026-08-13T01:03:35.9539793Z"
+                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
+                        "reviewedAtUtc":  "2026-08-13T08:10:27.7614549Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

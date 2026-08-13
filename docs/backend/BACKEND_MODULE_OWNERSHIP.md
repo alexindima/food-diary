@@ -52,8 +52,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Hydration | `HydrationEntry` and hydration totals | hydration commands, `IHydrationEntryReadService`, hydration-goal capability | Users access; Dashboard and Weekly Check-In as read-only projection consumers |
 | Exercises | `ExerciseEntry` and burned-calorie measurements | exercise commands and `IExerciseEntryReadService` | Users access; Dashboard and TDEE as read-only projection consumers |
 | Cycles | cycle profile, factors, symptoms, bleeding entries and fertility signals | cycle commands and `ICycleReadService` | Users access; Dashboard as a read-only query consumer |
-| Shopping Lists | shopping lists, items and their provenance | shopping-list commands/read service, `IShoppingListCreationService` | Users access; Meal Plans submits a creation request through the owner capability |
-| Meal Plans | meal plans, days and scheduled meals | meal-plan commands and `IMealPlanReadService` | Users access, Recipes/Product projections, Shopping Lists creation capability |
+| MealPlanning | meal plans plus shopping lists, items and provenance | MealPlans and ShoppingLists use cases grouped in `FoodDiary.Application.MealPlanning`; `IMealPlanReadService`, `IShoppingListCreationService`, `IShoppingListReadService` | Users access, Recipes/Product projections |
 | Wearables | provider connections and synchronization entries | connection/sync commands and `IWearableReadService` | Users access, provider client adapters |
 | Marketing Attribution | attribution events and conversion state | attribution command, conversion recorder and summary read service | Authentication and Billing call semantic capabilities |
 | Lessons | nutrition lessons and user lesson progress | lesson queries/progress command, `ILessonAdministrationService` | Users access; Admin invokes the owner administration capability and consumes admin projections |
@@ -294,7 +293,7 @@ Body Metrics configurations live in `Configurations/BodyMetrics`, while Hydratio
 
 ## Planning, Wearables and Marketing boundaries
 
-Shopping Lists and Meal Plans are separate owners even though a meal plan can generate a shopping list. Meal Plans reads its own aggregate and submits a `ShoppingListCreationRequest` through `IShoppingListCreationService`; Shopping Lists alone constructs and persists the `ShoppingList` aggregate. This prevents workflow convenience from transferring write ownership. Their EF configurations live in `Configurations/ShoppingLists` and `Configurations/MealPlans`.
+MealPlanning is the shared physical application boundary for the separate MealPlans and ShoppingLists logical owners. Meal Plans reads its own aggregate and submits a `ShoppingListCreationRequest` through `IShoppingListCreationService`; Shopping Lists alone constructs and persists the `ShoppingList` aggregate. Grouping the related planning workflow in one assembly does not transfer write ownership between its aggregates. Their EF configurations remain separated in `Configurations/ShoppingLists` and `Configurations/MealPlans`.
 
 Wearables owns provider connections and synchronization history and is physically isolated in `FoodDiary.Application.Wearables`. The assembly registers its handlers and internal read service through `AddWearablesModule`; executable composition roots reference it explicitly, while core `FoodDiary.Application` has no reverse project reference. Provider APIs remain infrastructure/integration adapters. Connection and sync repositories are private to the Wearables application module, and their configurations live in `Configurations/Wearables`.
 
