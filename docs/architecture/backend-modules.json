@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 2,
-    "extractedModules": 32,
+    "folderModules": 1,
+    "extractedModules": 33,
     "totalModules": 34
   },
   "analysis": {
@@ -465,14 +465,18 @@
     },
     "Recipes": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "explicit-boundary-tests",
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "Recipe",
         "RecipeIngredient",
         "RecipeStep"
       ],
-      "sourceMappings": {}
+      "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Recipes"
+        ]
+      }
     },
     "Statistics": {
       "role": "read-composer",

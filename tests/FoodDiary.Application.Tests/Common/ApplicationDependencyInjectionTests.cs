@@ -8,6 +8,9 @@ using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products;
+using FoodDiary.Application.Recipes;
+using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application.Tests.Common;
@@ -18,7 +21,7 @@ public sealed class ApplicationDependencyInjectionTests {
     public void AddApplication_RegistersCoreApplicationServices() {
         var services = new ServiceCollection();
 
-        DependencyInjection.AddApplication(services);
+        FoodDiary.Application.DependencyInjection.AddApplication(services);
 
         Assert.Contains(services, ServiceDescriptorMatches<IPostCommitActionQueue, PostCommitActionQueue>(ServiceLifetime.Scoped));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(INotificationCleanupService));
@@ -27,7 +30,8 @@ public sealed class ApplicationDependencyInjectionTests {
             descriptor.Lifetime == ServiceLifetime.Singleton &&
             ReferenceEquals(descriptor.ImplementationInstance, TimeProvider.System));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IProductSearchSuggestionProvider));
-        Assert.Contains(services, d => d.ServiceType.IsGenericType && string.Equals(d.ServiceType.GetGenericTypeDefinition().FullName, "FluentValidation.IValidator`1", StringComparison.Ordinal));
+        Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(IRecentRecipeReadService));
+        Assert.DoesNotContain(services, d => d.ServiceType.IsGenericType && string.Equals(d.ServiceType.GetGenericTypeDefinition().FullName, "FluentValidation.IValidator`1", StringComparison.Ordinal));
         Assert.Contains(services, d => d.ImplementationType == typeof(LoggingBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(ValidationBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(CommandTransactionBehavior<,>));
@@ -40,6 +44,15 @@ public sealed class ApplicationDependencyInjectionTests {
         services.AddProductsModule();
 
         Assert.Equal(2, services.Count(descriptor => descriptor.ServiceType == typeof(IProductSearchSuggestionProvider)));
+    }
+
+    [Fact]
+    public void AddRecipesModule_RegistersRecipeServices() {
+        var services = new ServiceCollection();
+
+        services.AddRecipesModule();
+
+        Assert.Contains(services, ServiceDescriptorMatches<IRecentRecipeReadService, RecentRecipeReadService>(ServiceLifetime.Scoped));
     }
 
     [Fact]

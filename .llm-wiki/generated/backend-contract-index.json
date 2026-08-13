@@ -3,9 +3,9 @@
     "summary":  {
                     "contracts":  1023,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7065,
+                    "consumerEdges":  7066,
                     "productionConsumerEdges":  4328,
-                    "testConsumerEdges":  2737,
+                    "testConsumerEdges":  2738,
                     "consumedContracts":  1023,
                     "unconsumedContracts":  0
                 },
@@ -1894,7 +1894,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2550,7 +2550,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2886,7 +2886,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2998,7 +2998,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5110,7 +5110,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5126,7 +5126,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5206,7 +5206,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5222,7 +5222,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -10602,7 +10602,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Common/IRecentRecipeReadService.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -15467,7 +15467,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -23632,10 +23632,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -23645,10 +23645,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -23658,10 +23658,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -23671,10 +23671,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/RecipeCreateFactory.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/RecipeCreateFactory.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -23684,7 +23684,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpMappings.cs",
@@ -23697,7 +23697,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/CreateRecipeCommandValidatorTests.cs",
@@ -23710,7 +23710,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.CreateCommandTests.cs",
@@ -23723,7 +23723,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
@@ -23736,7 +23736,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
@@ -26427,10 +26427,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -26440,10 +26440,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -26453,7 +26453,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpMappings.cs",
@@ -26466,7 +26466,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DeleteCommandTests.cs",
@@ -27714,10 +27714,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -27727,10 +27727,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -27740,7 +27740,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpMappings.cs",
@@ -27753,7 +27753,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
@@ -27766,7 +27766,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.DuplicateCommandTests.cs",
@@ -28286,10 +28286,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  3
                           },
@@ -28299,10 +28299,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -28312,7 +28312,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpQueryMappings.cs",
@@ -28325,7 +28325,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/ExploreRecipesQueryValidatorTests.cs",
@@ -28338,7 +28338,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
@@ -28351,7 +28351,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/RecipeExploreControllerTests.cs",
@@ -28364,7 +28364,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
@@ -36476,10 +36476,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -36489,10 +36489,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -36502,7 +36502,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpQueryMappings.cs",
@@ -36515,7 +36515,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
@@ -36528,7 +36528,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
@@ -36541,7 +36541,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
@@ -36554,10 +36554,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -36567,10 +36567,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -36580,7 +36580,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpQueryMappings.cs",
@@ -36593,7 +36593,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
@@ -36606,7 +36606,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
@@ -36619,7 +36619,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
@@ -36840,10 +36840,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  3
                           },
@@ -36853,10 +36853,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -36866,7 +36866,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpQueryMappings.cs",
@@ -36879,7 +36879,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
@@ -36892,7 +36892,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
@@ -36905,7 +36905,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
@@ -36918,10 +36918,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -36931,10 +36931,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -36944,7 +36944,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpQueryMappings.cs",
@@ -36957,7 +36957,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesAdditionalValidatorTests.cs",
@@ -36970,7 +36970,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.ReadQueryTests.cs",
@@ -36983,7 +36983,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",
@@ -46606,6 +46606,58 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -46802,58 +46854,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48387,6 +48387,58 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -48583,58 +48635,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -50844,6 +50844,136 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51170,136 +51300,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60061,7 +60061,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61296,74 +61296,74 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Services/RecipeStepAppender.cs",
+                              "isTest":  false,
+                              "referenceCount":  3
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeValuePreparer.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Services/RecipeStepAppender.cs",
-                              "isTest":  false,
-                              "referenceCount":  3
                           },
                           {
                               "contract":  "IImageAssetAccessService",
@@ -61543,46 +61543,46 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetCleanupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetCleanupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetCleanupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetCleanupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetCleanupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetCleanupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70642,7 +70642,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70655,7 +70655,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70668,7 +70668,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70681,7 +70681,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Services/RecipeIngredientAccessValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Services/RecipeIngredientAccessValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72787,6 +72787,71 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73009,71 +73074,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74256,6 +74256,71 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -74482,71 +74547,6 @@
                               "referenceCount":  1
                           },
                           {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
                               "contract":  "IRecentItemReadRepository",
                               "roles":  [
                                             "ReadRepository"
@@ -74750,7 +74750,7 @@
                                                       "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Services/RecentRecipeReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Services/RecentRecipeReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74968,10 +74968,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Common/IRecentRecipeReadService.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74981,10 +74981,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Common/IRecentRecipeReadService.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74994,10 +74994,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Common/IRecentRecipeReadService.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75007,10 +75007,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Common/IRecentRecipeReadService.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Services/RecentRecipeReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Services/RecentRecipeReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75020,7 +75020,20 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Common/IRecentRecipeReadService.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Common/ApplicationDependencyInjectionTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IRecentRecipeReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Recipes/Recipes/Common/IRecentRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -75816,7 +75829,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75829,7 +75842,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75842,7 +75855,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75855,7 +75868,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Services/RecipeIngredientAccessValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Services/RecipeIngredientAccessValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75959,7 +75972,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeNutritionWriter.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75972,7 +75985,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeNutritionWriter.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75985,7 +75998,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeNutritionWriter.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75998,7 +76011,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeNutritionWriter.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Services/RecipeNutritionUpdater.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionUpdater.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76037,7 +76050,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76050,7 +76063,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76063,7 +76076,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76076,7 +76089,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76089,7 +76102,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Services/RecentRecipeReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Services/RecentRecipeReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76193,7 +76206,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76206,7 +76219,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76219,7 +76232,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76232,7 +76245,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -76427,7 +76440,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76440,7 +76453,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76453,7 +76466,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -76466,7 +76479,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -88010,6 +88023,123 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -88414,123 +88544,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DeleteRecipe/DeleteRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/DuplicateRecipe/DuplicateRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecentRecipes/GetRecentRecipesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -95758,7 +95771,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Models/RecipeOverviewModel.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeOverviewModel.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -95771,7 +95784,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -95784,7 +95797,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  4
                           },
@@ -95797,7 +95810,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -95810,7 +95823,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipes/GetRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  4
                           },
@@ -95823,7 +95836,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -104452,10 +104465,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/RecipeUpdateApplier.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/RecipeUpdateApplier.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -104465,10 +104478,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/RecipeUpdateAssetCleanup.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -104478,10 +104491,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -104491,10 +104504,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -104504,10 +104517,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
+                              "consumerPath":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValuePreparer.cs",
                               "isTest":  false,
                               "referenceCount":  4
                           },
@@ -104517,7 +104530,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Recipes/Mappings/RecipeHttpMappings.cs",
@@ -104530,7 +104543,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.UpdateCommandTests.cs",
@@ -104543,7 +104556,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs",
@@ -104556,7 +104569,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Media.cs",
@@ -104569,7 +104582,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.NestedIngredients.cs",
@@ -104582,7 +104595,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.UpdateFlow.cs",
@@ -104595,7 +104608,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs",
@@ -104608,7 +104621,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs",
@@ -104621,7 +104634,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
+                                                      "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/RecipeHttpMappingsTests.cs",

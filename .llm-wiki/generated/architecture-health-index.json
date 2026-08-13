@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  311,
+                    "productionProjectEdges":  319,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
@@ -99,13 +99,6 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "Recipes",
-                               "fanIn":  0,
-                               "fanOut":  2,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Tdee",
                                "fanIn":  1,
                                "fanOut":  1,
@@ -162,9 +155,9 @@
                                "role":  "adapter"
                            },
                            {
-                               "module":  "RecentItems",
-                               "fanIn":  1,
-                               "fanOut":  0,
+                               "module":  "Recipes",
+                               "fanIn":  0,
+                               "fanOut":  1,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -226,6 +219,13 @@
                            },
                            {
                                "module":  "Notifications",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "RecentItems",
                                "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",
@@ -5649,7 +5649,7 @@
                                                  {
                                                      "name":  "RecipeIngredientInputValidator",
                                                      "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
+                                                     "path":  "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeIngredientInputValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
@@ -5659,7 +5659,7 @@
                                                  {
                                                      "name":  "RecipeStepInputValidator",
                                                      "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/Recipes/Common/Validators/RecipeStepInputValidator.cs",
+                                                     "path":  "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeStepInputValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

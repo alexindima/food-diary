@@ -17,7 +17,7 @@ sources:
 - Origin: module-graph
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
-- Business-module consumers: Recipes
+- Business-module consumers: none observed
 - Host/adapter consumers: none observed
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -38,7 +38,7 @@ No literal attribute-routed controller was associated with this module.
 - Architecture guardrails: graph-only
 - Declared owned entities: RecentItem
 - Public contract files: 7
-- Observed external consumer groups: 1
+- Observed external consumer groups: 0
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

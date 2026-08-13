@@ -624,7 +624,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  81
+                       "line":  82
                    },
                    {
                        "category":  "credential",
@@ -1708,21 +1708,21 @@
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Recipes/Common/RecipeIngredientInput.cs",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Common/RecipeIngredientInput.cs",
                        "line":  6
                    },
                    {
                        "category":  "financial",
                        "name":  "Amount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeIngredientModel.cs",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeIngredientModel.cs",
                        "line":  8
                    },
                    {
                        "category":  "financial",
                        "name":  "ProductBaseAmount",
                        "type":  "double?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeIngredientModel.cs",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeIngredientModel.cs",
                        "line":  12
                    },
                    {
@@ -4324,6 +4324,90 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "CalculateNutritionAutomatically",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
+                       "line":  20
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ManualCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
+                       "line":  21
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CalculateNutritionAutomatically",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                       "line":  26
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ManualCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                       "line":  27
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ProductCaloriesPerBase",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeIngredientModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "NestedRecipeTotalCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeIngredientModel.cs",
+                       "line":  22
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeModel.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IsNutritionAutoCalculated",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeModel.cs",
+                       "line":  23
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ManualCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeModel.cs",
+                       "line":  24
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Services/RecipeManualNutritionValidator.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionApplier.cs",
+                       "line":  21
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Services/RecipeNutritionSummary.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
                        "name":  "TotalCalories",
                        "type":  "double",
                        "path":  "FoodDiary.Application.Statistics/Models/AggregatedStatisticsModel.cs",
@@ -4608,90 +4692,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
                        "line":  65
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CalculateNutritionAutomatically",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-                       "line":  20
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ManualCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-                       "line":  21
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CalculateNutritionAutomatically",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                       "line":  26
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ManualCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                       "line":  27
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ProductCaloriesPerBase",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeIngredientModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "NestedRecipeTotalCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeIngredientModel.cs",
-                       "line":  22
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeModel.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IsNutritionAutoCalculated",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeModel.cs",
-                       "line":  23
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ManualCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeModel.cs",
-                       "line":  24
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Recipes/Services/RecipeManualNutritionValidator.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Recipes/Services/RecipeNutritionApplier.cs",
-                       "line":  21
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Recipes/Services/RecipeNutritionSummary.cs",
-                       "line":  4
                    },
                    {
                        "category":  "health",
@@ -8762,6 +8762,146 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeValues.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAsset",
+                       "type":  "ImageAsset?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/CreateRecipe/CreateRecipeValues.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearComment",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearImageUrl",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                       "line":  19
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                       "line":  20
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearImageAssetId",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
+                       "line":  21
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValues.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAsset",
+                       "type":  "ImageAsset?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Commands/UpdateRecipe/UpdateRecipeValues.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Common/RecipeStepInput.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Common/RecipeStepInput.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeStepModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Recipes/Recipes/Models/RecipeStepModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "ProfileImageAssetId",
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
@@ -8773,146 +8913,6 @@
                        "type":  "ImageAssetId?",
                        "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
                        "line":  30
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeCommand.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeValues.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAsset",
-                       "type":  "ImageAsset?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/CreateRecipe/CreateRecipeValues.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearComment",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearImageUrl",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                       "line":  19
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                       "line":  20
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearImageAssetId",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                       "line":  21
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeValues.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAsset",
-                       "type":  "ImageAsset?",
-                       "path":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeValues.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Recipes/Common/RecipeStepInput.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Recipes/Common/RecipeStepInput.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeStepModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Recipes/Models/RecipeStepModel.cs",
-                       "line":  9
                    },
                    {
                        "category":  "privateContent",

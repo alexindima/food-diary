@@ -23,7 +23,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
         services.AddSingleton(TimeProvider.System);
 
-        services.AddFoodModules();
         services.AddCommunicationServices();
         return services;
     }

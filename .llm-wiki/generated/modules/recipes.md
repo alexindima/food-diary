@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Images, RecentItems
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj`
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: FavoriteRecipes, Images, Nutrition, Products, RecentItems, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Recipes`
-- `FoodDiary.Application/Recipes`
+- `FoodDiary.Application.Recipes`
 - `FoodDiary.Domain/Entities/Recipes`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Recipes`
 - `FoodDiary.Infrastructure/Persistence/Recipes`
@@ -54,11 +55,11 @@ Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: explicit-boundary-tests
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: Recipe, RecipeIngredient, RecipeStep
 - Public contract files: 12
-- Observed external consumer groups: 1
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -103,6 +104,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.Validation.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Recipes/UpdateRecipeCommandValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/RecipesModuleExtractionTests.cs`
 
 ## Working Rule
 

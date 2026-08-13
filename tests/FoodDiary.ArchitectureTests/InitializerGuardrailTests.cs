@@ -34,6 +34,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.OpenFoodFacts",
             "FoodDiary.Application.Products",
             "FoodDiary.Application.RecipeCommunity",
+            "FoodDiary.Application.Recipes",
             "FoodDiary.Application.Statistics",
             "FoodDiary.Application.Tdee",
             "FoodDiary.Application.Usda",

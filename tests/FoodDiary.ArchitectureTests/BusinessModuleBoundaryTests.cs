@@ -13,7 +13,6 @@ public sealed class BusinessModuleBoundaryTests {
             "DependencyInjection.cs");
         string source = File.ReadAllText(dependencyInjectionPath);
         string[] expectedModuleCalls = [
-            "services.AddFoodModules();",
             "services.AddCommunicationServices();",
         ];
 
