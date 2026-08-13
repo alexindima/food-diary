@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4173,
+                    "productionFiles":  4177,
                     "criticalSymbols":  539,
                     "criticalSymbolsWithTestReferences":  510,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -294,11 +294,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  319,
+                         "nonBlankLines":  321,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  67.88
+                         "structuralRiskScore":  67.92
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
@@ -7479,6 +7479,150 @@
                       "structuralRiskScore":  0.42
                   },
                   {
+                      "path":  "FoodDiary.Application.Exercises/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
+                      "nonBlankLines":  40,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
+                      "nonBlankLines":  41,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
+                      "nonBlankLines":  56,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.62
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/DependencyInjection.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Internal/EnumValueParser.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Internal/RequiredIdParser.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Mappings/ExerciseMappings.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.52
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
+                      "nonBlankLines":  29,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Exercises/Services/ExerciseEntryReadService.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.52
+                  },
+                  {
                       "path":  "FoodDiary.Application.Fasting/AssemblyInfo.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -13120,11 +13264,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                      "nonBlankLines":  38,
+                      "nonBlankLines":  35,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.76
+                      "structuralRiskScore":  0.7
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
@@ -13141,118 +13285,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.56
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
-                      "nonBlankLines":  40,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-                      "nonBlankLines":  41,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.32
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-                      "nonBlankLines":  15,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.3
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-                      "nonBlankLines":  56,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.62
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Mappings/ExerciseMappings.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.52
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
-                      "nonBlankLines":  29,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Exercises/Services/ExerciseEntryReadService.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.52
                   },
                   {
                       "path":  "FoodDiary.Application/Export/Models/ExportFormat.cs",
@@ -19152,11 +19184,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  319,
+                      "nonBlankLines":  321,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  67.88
+                      "structuralRiskScore":  67.92
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19576,11 +19608,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  57,
+                      "nonBlankLines":  59,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.64
+                      "structuralRiskScore":  2.68
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23920,11 +23952,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  89,
+                      "nonBlankLines":  91,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.78
+                      "structuralRiskScore":  4.82
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34498,7 +34530,7 @@
                             {
                                 "name":  "CreateExerciseEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
                                 "line":  13,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -34683,7 +34715,7 @@
                             {
                                 "name":  "DeleteExerciseEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -35558,7 +35590,7 @@
                             {
                                 "name":  "UpdateExerciseEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
                                 "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37164,7 +37196,7 @@
                             {
                                 "name":  "GetExerciseEntriesQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38287,7 +38319,7 @@
                             {
                                 "name":  "CreateExerciseEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38687,7 +38719,7 @@
                             {
                                 "name":  "GetExerciseEntriesQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

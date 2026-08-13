@@ -22,6 +22,7 @@ COPY FoodDiary.Application.Wearables/*.csproj FoodDiary.Application.Wearables/
 COPY FoodDiary.Application.Notifications/*.csproj FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/*.csproj FoodDiary.Application.BodyMetrics/
 COPY FoodDiary.Application.Cycles/*.csproj FoodDiary.Application.Cycles/
+COPY FoodDiary.Application.Exercises/*.csproj FoodDiary.Application.Exercises/
 COPY FoodDiary.Application.Hydration/*.csproj FoodDiary.Application.Hydration/
 COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
@@ -51,6 +52,7 @@ COPY FoodDiary.Application.Wearables/ FoodDiary.Application.Wearables/
 COPY FoodDiary.Application.Notifications/ FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/ FoodDiary.Application.BodyMetrics/
 COPY FoodDiary.Application.Cycles/ FoodDiary.Application.Cycles/
+COPY FoodDiary.Application.Exercises/ FoodDiary.Application.Exercises/
 COPY FoodDiary.Application.Hydration/ FoodDiary.Application.Hydration/
 COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
 COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/

@@ -50,17 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "c48eb7e33ae2ee86be3dcd885125c07b51d7762793ca5a1fa743e81968894ad3"
+                                            "sha256":  "b8230e806346e79f28ce03571255594e87cb07a72512dbec62acb1fa74059941"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "f0e865d84fd736d9a46583795fdc006803b467605d09e78b5f204beec243ab57"
+                                            "sha256":  "373883f7f9be5d3e011c5200f4379cf00aa9482d936e1df0afde6f525a589d75"
                                         }
                                     ],
-                        "reason":  "Hydration application use cases moved unchanged into FoodDiary.Application.Hydration; composition roots and explicit dependency matrix were updated, consumers remain one-way through narrow contracts, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "38fc65041b9c2ee2f3d6eb2fa23a3a59d0257078",
-                        "reviewedAtUtc":  "2026-08-13T08:48:12.7986156Z"
+                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
+                        "reviewedAtUtc":  "2026-08-13T09:24:00.2225945Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -69,21 +69,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "c48eb7e33ae2ee86be3dcd885125c07b51d7762793ca5a1fa743e81968894ad3"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "fc2b242a09848a5bfe073505d0cf61d747503d7579690a632f56c732579b85ff"
+                                            "sha256":  "b8230e806346e79f28ce03571255594e87cb07a72512dbec62acb1fa74059941"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "06c8a0e1846bbd9d631d0fd50f20220c86653be65f3088b8120d0f0c0e27eea1"
+                                            "sha256":  "1e0d8118cdec3bc6a9a271a2cad95b0a728fd47a62b52e325aafe29b1657dc34"
                                         }
                                     ],
-                        "reason":  "Hydration application use cases moved unchanged into FoodDiary.Application.Hydration; composition roots and explicit dependency matrix were updated, consumers remain one-way through narrow contracts, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "38fc65041b9c2ee2f3d6eb2fa23a3a59d0257078",
-                        "reviewedAtUtc":  "2026-08-13T08:48:13.0311373Z"
+                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
+                        "reviewedAtUtc":  "2026-08-13T09:24:00.7268165Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -122,17 +118,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "c48eb7e33ae2ee86be3dcd885125c07b51d7762793ca5a1fa743e81968894ad3"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "fc2b242a09848a5bfe073505d0cf61d747503d7579690a632f56c732579b85ff"
+                                            "sha256":  "b8230e806346e79f28ce03571255594e87cb07a72512dbec62acb1fa74059941"
                                         }
                                     ],
-                        "reason":  "Hydration application use cases moved unchanged into FoodDiary.Application.Hydration; composition roots and explicit dependency matrix were updated, consumers remain one-way through narrow contracts, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "38fc65041b9c2ee2f3d6eb2fa23a3a59d0257078",
-                        "reviewedAtUtc":  "2026-08-13T08:48:13.2586143Z"
+                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
+                        "reviewedAtUtc":  "2026-08-13T09:24:01.2472922Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -205,13 +197,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "3e096ee26878a01852af4294d7866664b7fc8b6811204c087140a3d31a788d7f"
+                                            "sha256":  "65acfc073c1eebb0a66f16a621829e46e8cf2223d3aeec80d2956b9e7ce8690e"
                                         }
                                     ],
-                        "reason":  "Hydration application use cases moved unchanged into FoodDiary.Application.Hydration; composition roots and explicit dependency matrix were updated, consumers remain one-way through narrow contracts, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "38fc65041b9c2ee2f3d6eb2fa23a3a59d0257078",
-                        "reviewedAtUtc":  "2026-08-13T08:48:14.6658721Z"
+                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
+                        "reviewedAtUtc":  "2026-08-13T09:24:04.3327668Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -284,21 +276,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "280e5447d1cf5377b6f6d1a87eed3b0b822431f5b0807765679f3f0398e91b90"
+                                            "sha256":  "a37eb77999e12f6c9a41b637d398f5f43242165e8e8ffb04014f5901184ec9f3"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "c48eb7e33ae2ee86be3dcd885125c07b51d7762793ca5a1fa743e81968894ad3"
+                                            "sha256":  "b8230e806346e79f28ce03571255594e87cb07a72512dbec62acb1fa74059941"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "06c8a0e1846bbd9d631d0fd50f20220c86653be65f3088b8120d0f0c0e27eea1"
+                                            "sha256":  "1e0d8118cdec3bc6a9a271a2cad95b0a728fd47a62b52e325aafe29b1657dc34"
                                         }
                                     ],
-                        "reason":  "Hydration application use cases moved unchanged into FoodDiary.Application.Hydration; composition roots and explicit dependency matrix were updated, consumers remain one-way through narrow contracts, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "38fc65041b9c2ee2f3d6eb2fa23a3a59d0257078",
-                        "reviewedAtUtc":  "2026-08-13T08:48:13.4475762Z"
+                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
+                        "reviewedAtUtc":  "2026-08-13T09:24:01.8486663Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -307,13 +299,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "00c651653dbf000aae308d1e13635eac093b6a76a849116901c39b63ad172023"
+                                            "sha256":  "c17f56a78be88e1dfd199039d5a04ab3ee28d40b88442b57bc9c6822bf179126"
                                         }
                                     ],
-                        "reason":  "Hydration application use cases moved unchanged into FoodDiary.Application.Hydration; composition roots and explicit dependency matrix were updated, consumers remain one-way through narrow contracts, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "38fc65041b9c2ee2f3d6eb2fa23a3a59d0257078",
-                        "reviewedAtUtc":  "2026-08-13T08:48:13.6986405Z"
+                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
+                        "reviewedAtUtc":  "2026-08-13T09:24:02.4438382Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -815,13 +807,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "2a24f637683897650c98b3bb66a1abfb0644169ab9dfdb7a2faee582c9930aa3"
+                                            "sha256":  "55bf72f321817bfc40e3946bc8aa2fd68d22fc07e7ca635956fbf66ca8d89244"
                                         }
                                     ],
-                        "reason":  "Hydration application use cases moved unchanged into FoodDiary.Application.Hydration; composition roots and explicit dependency matrix were updated, consumers remain one-way through narrow contracts, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "38fc65041b9c2ee2f3d6eb2fa23a3a59d0257078",
-                        "reviewedAtUtc":  "2026-08-13T08:48:13.9688069Z"
+                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
+                        "reviewedAtUtc":  "2026-08-13T09:24:03.0227826Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -864,13 +856,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "3d366cae35c4988cb54f56f55824dc6aa4e512bfbbf30d1f81645e86d4844cd4"
+                                            "sha256":  "563acbd7deccf6951a4850d53dcf0845ac8551f38ad5193825025358c9333e9f"
                                         }
                                     ],
-                        "reason":  "Hydration application use cases moved unchanged into FoodDiary.Application.Hydration; composition roots and explicit dependency matrix were updated, consumers remain one-way through narrow contracts, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "38fc65041b9c2ee2f3d6eb2fa23a3a59d0257078",
-                        "reviewedAtUtc":  "2026-08-13T08:48:14.3234699Z"
+                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
+                        "reviewedAtUtc":  "2026-08-13T09:24:03.6451447Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

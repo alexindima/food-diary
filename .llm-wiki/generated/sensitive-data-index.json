@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  63
+                       "line":  64
                    },
                    {
                        "category":  "credential",
@@ -3694,6 +3694,48 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "ExerciseType",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesBurned",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ExerciseType",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesBurned",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ExerciseType",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesBurned",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
                        "name":  "FastingOccurrence",
                        "type":  "FastingPlan,",
                        "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/FastingStartFactory.cs",
@@ -4328,48 +4370,6 @@
                        "type":  "bool",
                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
                        "line":  14
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ExerciseType",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesBurned",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ExerciseType",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesBurned",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ExerciseType",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesBurned",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
-                       "line":  9
                    },
                    {
                        "category":  "health",
@@ -8365,6 +8365,34 @@
                        "category":  "privateContent",
                        "name":  "Notes",
                        "type":  "string?",
+                       "path":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearNotes",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Exercises/Models/ExerciseEntryModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
                        "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
                        "line":  16
                    },
@@ -8577,34 +8605,6 @@
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
                        "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearNotes",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
-                       "line":  10
                    },
                    {
                        "category":  "privateContent",

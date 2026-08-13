@@ -1878,7 +1878,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
+                                                  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2614,7 +2614,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
+                                                  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4406,7 +4406,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
+                                                  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -8102,7 +8102,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
+                                                  "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -15355,7 +15355,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
+                                                  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -23364,10 +23364,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -23377,10 +23377,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -23390,7 +23390,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Exercises/Mappings/ExerciseHttpMappings.cs",
@@ -23403,7 +23403,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs",
@@ -23416,7 +23416,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Exercises/ExercisesValidatorTests.cs",
@@ -23429,7 +23429,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExerciseHttpMappingsTests.cs",
@@ -23442,7 +23442,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExercisesControllerTests.cs",
@@ -26666,10 +26666,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -26679,7 +26679,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Exercises/Mappings/ExerciseHttpMappings.cs",
@@ -26692,7 +26692,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs",
@@ -26705,7 +26705,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExerciseHttpMappingsTests.cs",
@@ -26718,7 +26718,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExercisesControllerTests.cs",
@@ -33647,10 +33647,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
+                                                      "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -33660,10 +33660,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
+                                                      "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -33673,7 +33673,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
+                                                      "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Exercises/Mappings/ExerciseHttpMappings.cs",
@@ -33686,7 +33686,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
+                                                      "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs",
@@ -33699,7 +33699,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
+                                                      "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Exercises/ExercisesValidatorTests.cs",
@@ -33712,7 +33712,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
+                                                      "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExerciseHttpMappingsTests.cs",
@@ -33725,7 +33725,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
+                                                      "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExercisesControllerTests.cs",
@@ -46026,6 +46026,45 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47183,45 +47222,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47795,6 +47795,45 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Dietologist/Commands/UpdateRecommendationTemplate/UpdateRecommendationTemplateCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48952,45 +48991,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -50550,6 +50550,58 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51682,58 +51734,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardUserContextService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -58025,7 +58025,7 @@
                                                       "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Services/ExerciseEntryReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Services/ExerciseEntryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -58077,7 +58077,7 @@
                                                       "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Services/ExerciseEntryReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Services/ExerciseEntryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -58139,7 +58139,46 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
+                                                      "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/DependencyInjection.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IExerciseEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IExerciseEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Services/ExerciseEntryReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IExerciseEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardSectionDataLoader.cs",
@@ -58152,7 +58191,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
+                                                      "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotBuilder.cs",
@@ -58165,46 +58204,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IExerciseEntryReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IExerciseEntryReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Services/ExerciseEntryReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IExerciseEntryReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
+                                                      "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
@@ -58217,7 +58217,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
+                                                      "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs",
@@ -58230,7 +58230,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Common/IExerciseEntryReadService.cs"
+                                                      "FoodDiary.Application.Exercises/Common/IExerciseEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs",
@@ -58363,7 +58363,7 @@
                                                       "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -58376,7 +58376,7 @@
                                                       "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -58389,7 +58389,7 @@
                                                       "FoodDiary.Application.Abstractions/Exercises/Common/IExerciseEntryWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72740,6 +72740,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73559,19 +73572,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -74197,6 +74197,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Dietologist/Queries/SearchRecommendationTemplates/SearchRecommendationTemplatesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75016,19 +75029,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -87950,6 +87950,58 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -89095,58 +89147,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -104119,10 +104119,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -104132,7 +104132,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Exercises/Mappings/ExerciseHttpMappings.cs",
@@ -104145,7 +104145,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Exercises/ExercisesFeatureTests.cs",
@@ -104158,7 +104158,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExerciseHttpMappingsTests.cs",
@@ -104171,7 +104171,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
+                                                      "FoodDiary.Application.Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExercisesControllerTests.cs",
