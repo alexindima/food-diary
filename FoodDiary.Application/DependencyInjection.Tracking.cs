@@ -1,8 +1,6 @@
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Application.Cycles.Common;
-using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Exercises.Common;
@@ -22,7 +20,6 @@ namespace FoodDiary.Application;
 
 public static partial class DependencyInjection {
     private static void AddTrackingModules(this IServiceCollection services) {
-        services.AddScoped<ICycleReadService, CycleReadService>();
         services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
         services.TryAddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();
         services.TryAddScoped<IDashboardMealsReadService, MediatorDashboardMealsReadService>();

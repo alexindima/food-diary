@@ -1,6 +1,7 @@
 using FoodDiary.Application;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.BodyMetrics;
+using FoodDiary.Application.Cycles;
 using FoodDiary.Application.Dietologist;
 using FoodDiary.Application.Fasting;
 using FoodDiary.Application.Favorites;
@@ -44,6 +45,7 @@ public static class ApiServiceCollectionExtensions {
             return services
                 .AddApplication()
                 .AddBodyMetricsModule()
+                .AddCyclesModule()
                 .AddDietologistModule()
                 .AddFastingModule()
                 .AddFavoritesModule()

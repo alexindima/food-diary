@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3157,
-                    "symbols":  3186,
+                    "sourceFiles":  3161,
+                    "symbols":  3189,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1609,
+                                  "class":  1612,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1150,
+                                  "Other":  1153,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -5002,6 +5002,251 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application.BodyMetrics/WeightEntries/Services/WeightEntryReadService.cs",
                         "line":  7
+                    },
+                    {
+                        "name":  "ClearCycleDayCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "ClearCycleDayCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "ClearCycleDayCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CreateCycleCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateCycleCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "CreateCycleCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "BleedingLogCommandModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "FertilitySignalCommandModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "SymptomLogCommandModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/SymptomLogCommandModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UpsertCycleDayCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpsertCycleDayCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "UpsertCycleDayCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UpsertCycleFactorCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpsertCycleFactorCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
+                        "line":  15
+                    },
+                    {
+                        "name":  "UpsertCycleFactorCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "ICycleReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Cycles/Common/ICycleReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/DependencyInjection.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "RequiredIdParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Internal/RequiredIdParser.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "UtcDateNormalizer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Internal/UtcDateNormalizer.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "CycleMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Mappings/CycleMappings.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "BleedingEntryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Models/BleedingEntryModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CycleFactorModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Models/CycleFactorModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CycleLogDayModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Models/CycleLogDayModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "CycleModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Models/CycleModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CycleNutritionSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "CyclePredictionsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Models/CyclePredictionsModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "CycleSymptomEntryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Models/CycleSymptomEntryModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "FertilitySignalModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Cycles/Models/FertilitySignalModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetCurrentCycleQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Cycles/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetCurrentCycleQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Cycles/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetCycleNutritionSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetCycleNutritionSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "GetCycleNutritionSummaryQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CyclePredictionService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Cycles/Services/CyclePredictionService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "CycleReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+                        "line":  13
                     },
                     {
                         "name":  "AcceptInvitationCommand",
@@ -10184,230 +10429,6 @@
                         "line":  9
                     },
                     {
-                        "name":  "ClearCycleDayCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ClearCycleDayCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "ClearCycleDayCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CreateCycleCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateCycleCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "CreateCycleCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "BleedingLogCommandModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FertilitySignalCommandModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "SymptomLogCommandModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/SymptomLogCommandModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "UpsertCycleDayCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpsertCycleDayCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "UpsertCycleDayCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UpsertCycleFactorCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpsertCycleFactorCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "UpsertCycleFactorCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ICycleReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Cycles/Common/ICycleReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CycleMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Mappings/CycleMappings.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "BleedingEntryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Models/BleedingEntryModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CycleFactorModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Models/CycleFactorModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CycleLogDayModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Models/CycleLogDayModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "CycleModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Models/CycleModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CycleNutritionSummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Models/CycleNutritionSummaryModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "CyclePredictionsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Models/CyclePredictionsModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "CycleSymptomEntryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Models/CycleSymptomEntryModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "FertilitySignalModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Cycles/Models/FertilitySignalModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetCurrentCycleQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Cycles/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetCurrentCycleQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Cycles/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetCycleNutritionSummaryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetCycleNutritionSummaryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "GetCycleNutritionSummaryQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CyclePredictionService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Cycles/Services/CyclePredictionService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "CycleReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Cycles/Services/CycleReadService.cs",
-                        "line":  13
-                    },
-                    {
                         "name":  "IDailyAdviceReadService",
                         "kind":  "interface",
                         "role":  "Service",
@@ -10727,7 +10748,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                        "line":  22
+                        "line":  20
                     },
                     {
                         "name":  "DependencyInjection",
@@ -16236,7 +16257,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  350
+                        "line":  352
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16593,7 +16614,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  60
+                        "line":  62
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20380,7 +20401,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  27
+                        "line":  28
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22647,9 +22668,9 @@
                                      },
                                      {
                                          "interface":  "ICycleReadService",
-                                         "interfacePath":  "FoodDiary.Application/Cycles/Common/ICycleReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Cycles/Common/ICycleReadService.cs",
                                          "implementation":  "CycleReadService",
-                                         "implementationPath":  "FoodDiary.Application/Cycles/Services/CycleReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24013,6 +24034,13 @@
                                                  "line":  18
                                              },
                                              {
+                                                 "service":  "ICycleReadService",
+                                                 "implementation":  "CycleReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Cycles/DependencyInjection.cs",
+                                                 "line":  14
+                                             },
+                                             {
                                                  "service":  "IDietologistClientReadService",
                                                  "implementation":  "DietologistClientReadService",
                                                  "lifetime":  "Scoped",
@@ -24594,130 +24622,123 @@
                                                  "line":  13
                                              },
                                              {
-                                                 "service":  "ICycleReadService",
-                                                 "implementation":  "CycleReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  25
-                                             },
-                                             {
                                                  "service":  "IDashboardStatisticsReadService",
                                                  "implementation":  "MediatorDashboardStatisticsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  26
+                                                 "line":  23
                                              },
                                              {
                                                  "service":  "IDashboardBodyReadService",
                                                  "implementation":  "RepositoryDashboardBodyReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  27
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IDashboardMealsReadService",
                                                  "implementation":  "MediatorDashboardMealsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  28
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "IDashboardReadService",
                                                  "implementation":  "ComposedDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  29
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IDashboardUserContextService",
                                                  "implementation":  "DashboardUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  30
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IDashboardSectionDataLoader",
                                                  "implementation":  "DashboardSectionDataLoader",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  31
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "IHydrationEntryReadService",
                                                  "implementation":  "HydrationEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  36
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IHydrationGoalService",
                                                  "implementation":  "HydrationGoalService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  37
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IGamificationReadService",
                                                  "implementation":  "GamificationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  38
+                                                 "line":  35
                                              },
                                              {
                                                  "service":  "IGamificationUserProfileService",
                                                  "implementation":  "GamificationUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  39
+                                                 "line":  36
                                              },
                                              {
                                                  "service":  "IAchievementAwardService",
                                                  "implementation":  "AchievementAwardService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  40
+                                                 "line":  37
                                              },
                                              {
                                                  "service":  "IAchievementReconciliationHandler",
                                                  "implementation":  "AchievementReconciliationHandler",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  41
+                                                 "line":  38
                                              },
                                              {
                                                  "service":  "IAchievementDefinitionAdministrationService",
                                                  "implementation":  "AchievementDefinitionAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  42
+                                                 "line":  39
                                              },
                                              {
                                                  "service":  "IExerciseEntryReadService",
                                                  "implementation":  "ExerciseEntryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  43
+                                                 "line":  40
                                              },
                                              {
                                                  "service":  "ITdeeUserProfileService",
                                                  "implementation":  "TdeeUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  44
+                                                 "line":  41
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInUserProfileService",
                                                  "implementation":  "WeeklyCheckInUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  45
+                                                 "line":  42
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInReadService",
                                                  "implementation":  "WeeklyCheckInReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  46
+                                                 "line":  43
                                              },
                                              {
                                                  "service":  "IWeeklyGoalReadService",
@@ -25340,14 +25361,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  80
+                                                 "line":  82
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  81
+                                                 "line":  83
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25438,7 +25459,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  52
+                                                 "line":  54
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25494,35 +25515,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  38
+                                                 "line":  39
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  60
+                                                 "line":  62
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  61
+                                                 "line":  63
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  62
+                                                 "line":  64
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  85
+                                                 "line":  87
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

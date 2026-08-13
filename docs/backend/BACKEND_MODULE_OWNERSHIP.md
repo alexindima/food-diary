@@ -51,7 +51,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Body Metrics | `WeightEntry` and `WaistEntry` measurements | measurement commands, `IWeightEntryReadService`, `IWaistEntryReadService` | Users access; Dashboard, Weekly Check-In and TDEE as read-only projection consumers |
 | Hydration | `HydrationEntry` and hydration totals | hydration commands, `IHydrationEntryReadService`, hydration-goal capability | Users access; Dashboard and Weekly Check-In as read-only projection consumers |
 | Exercises | `ExerciseEntry` and burned-calorie measurements | exercise commands and `IExerciseEntryReadService` | Users access; Dashboard and TDEE as read-only projection consumers |
-| Cycles | cycle profile, factors, symptoms, bleeding entries and fertility signals | cycle commands and `ICycleReadService` | Users access; Dashboard as a read-only query consumer |
+| Cycles | cycle profile, factors, symptoms, bleeding entries and fertility signals | cycle commands and `ICycleReadService` in `FoodDiary.Application.Cycles` | Users access; Dashboard as a read-only query consumer |
 | MealPlanning | meal plans plus shopping lists, items and provenance | MealPlans and ShoppingLists use cases grouped in `FoodDiary.Application.MealPlanning`; `IMealPlanReadService`, `IShoppingListCreationService`, `IShoppingListReadService` | Users access, Recipes/Product projections |
 | Wearables | provider connections and synchronization entries | connection/sync commands and `IWearableReadService` | Users access, provider client adapters |
 | Marketing Attribution | attribution events and conversion state | attribution command, conversion recorder and summary read service | Authentication and Billing call semantic capabilities |

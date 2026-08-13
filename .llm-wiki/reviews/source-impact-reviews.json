@@ -50,17 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "ab24257b1d06f9ce67b34bae407576901033e882e29a12069d3b95f977440e9a"
+                                            "sha256":  "722a5a4d9ea13f7de9fd5423c4d62e913c308a8de5cf35dbd666aece351aae79"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "e51b6e0d3a8014fed796921d8532cdc7d9e5cc24e335b1da087680a57f16aaf8"
+                                            "sha256":  "0d9ae57c364e4dcfa05a77e00c056c7ed638266b9bb2ba180cabba88b935f7f7"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Cycles application use cases moved unchanged into FoodDiary.Application.Cycles; composition roots and explicit dependency matrix were updated, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:25.8992931Z"
+                        "gitHead":  "d7410d43ce04669f48819e2fe9b95b4bbdef14f2",
+                        "reviewedAtUtc":  "2026-08-13T08:26:52.0129354Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -69,7 +69,7 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "ab24257b1d06f9ce67b34bae407576901033e882e29a12069d3b95f977440e9a"
+                                            "sha256":  "722a5a4d9ea13f7de9fd5423c4d62e913c308a8de5cf35dbd666aece351aae79"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
@@ -77,13 +77,13 @@
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "bf580afdc9f64e9a3acd7d27bac05c59b700a7e02ca86d8f620f0020115e7664"
+                                            "sha256":  "2ecb3ad029bd2bdc7e91e12fdd97e2454d9379da9fcedd8129043783610a9b11"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Cycles application use cases moved unchanged into FoodDiary.Application.Cycles; composition roots and explicit dependency matrix were updated, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:26.1426083Z"
+                        "gitHead":  "d7410d43ce04669f48819e2fe9b95b4bbdef14f2",
+                        "reviewedAtUtc":  "2026-08-13T08:26:52.1996681Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -122,17 +122,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "ab24257b1d06f9ce67b34bae407576901033e882e29a12069d3b95f977440e9a"
+                                            "sha256":  "722a5a4d9ea13f7de9fd5423c4d62e913c308a8de5cf35dbd666aece351aae79"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
                                             "sha256":  "fc2b242a09848a5bfe073505d0cf61d747503d7579690a632f56c732579b85ff"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Cycles application use cases moved unchanged into FoodDiary.Application.Cycles; composition roots and explicit dependency matrix were updated, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:26.3965784Z"
+                        "gitHead":  "d7410d43ce04669f48819e2fe9b95b4bbdef14f2",
+                        "reviewedAtUtc":  "2026-08-13T08:26:52.4010795Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -205,13 +205,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "e01afde25d46902493b97ff5aa7f45a139ead754508ba137c1d65aec140cd159"
+                                            "sha256":  "3ea9d91c86374582b14d9238e7a47f4757f14711a227da2e4eb874422da6811c"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Cycles application use cases moved unchanged into FoodDiary.Application.Cycles; composition roots and explicit dependency matrix were updated, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:28.0589599Z"
+                        "gitHead":  "d7410d43ce04669f48819e2fe9b95b4bbdef14f2",
+                        "reviewedAtUtc":  "2026-08-13T08:26:53.7159191Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -284,21 +284,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "689bc289686a3a69e105c0be1644b47c32f22b7ecdb1b93f123e7a1a4488d539"
+                                            "sha256":  "98f51c667e48d55e9bf0fcbc095fff03b72b1ec643e3fcb81f5ad0130f2fc1c6"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "ab24257b1d06f9ce67b34bae407576901033e882e29a12069d3b95f977440e9a"
+                                            "sha256":  "722a5a4d9ea13f7de9fd5423c4d62e913c308a8de5cf35dbd666aece351aae79"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "bf580afdc9f64e9a3acd7d27bac05c59b700a7e02ca86d8f620f0020115e7664"
+                                            "sha256":  "2ecb3ad029bd2bdc7e91e12fdd97e2454d9379da9fcedd8129043783610a9b11"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Cycles application use cases moved unchanged into FoodDiary.Application.Cycles; composition roots and explicit dependency matrix were updated, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:26.6058478Z"
+                        "gitHead":  "d7410d43ce04669f48819e2fe9b95b4bbdef14f2",
+                        "reviewedAtUtc":  "2026-08-13T08:26:52.5978724Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -307,13 +307,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "4c3e00838bc93b39b878fda84817e84d0ce5ea0034cfb9519c5e66657e8a841e"
+                                            "sha256":  "c55434c67bacba314850771660f97a1c66b665974ae40da6a76465e55a0fb47f"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Cycles application use cases moved unchanged into FoodDiary.Application.Cycles; composition roots and explicit dependency matrix were updated, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:26.8973516Z"
+                        "gitHead":  "d7410d43ce04669f48819e2fe9b95b4bbdef14f2",
+                        "reviewedAtUtc":  "2026-08-13T08:26:52.8611834Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -815,13 +815,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "9fc2c1e03c38207649dacc90d7db4ea7e0ae9579c312989f676cfe28c4fa14c8"
+                                            "sha256":  "09aed456f3e4b1d6c525f354496f2fc58e3f741de0dbe8269d444c84f5d8a840"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Cycles application use cases moved unchanged into FoodDiary.Application.Cycles; composition roots and explicit dependency matrix were updated, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:27.4481528Z"
+                        "gitHead":  "d7410d43ce04669f48819e2fe9b95b4bbdef14f2",
+                        "reviewedAtUtc":  "2026-08-13T08:26:53.1174658Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -864,13 +864,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "6b8b2921c8ad1e979b349582412b8c92d779dbe029da32ce5abbda1f3c3ac463"
+                                            "sha256":  "56132eb35cd96121b267783b9198d53392a1d5d2c850bbb8fe27c74c365dd092"
                                         }
                                     ],
-                        "reason":  "MealPlanning extraction groups MealPlans and ShoppingLists in one application project while retaining separate aggregate ownership and the IShoppingListCreationService boundary; module-local validation removes the core Application dependency; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate current sources.",
+                        "reason":  "Cycles application use cases moved unchanged into FoodDiary.Application.Cycles; composition roots and explicit dependency matrix were updated, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "c88118af55c9fa9340397057c442a8092416f738",
-                        "reviewedAtUtc":  "2026-08-13T08:10:27.7614549Z"
+                        "gitHead":  "d7410d43ce04669f48819e2fe9b95b4bbdef14f2",
+                        "reviewedAtUtc":  "2026-08-13T08:26:53.3781053Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

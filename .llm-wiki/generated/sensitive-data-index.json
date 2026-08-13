@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  61
+                       "line":  62
                    },
                    {
                        "category":  "credential",
@@ -3519,6 +3519,118 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "CycleProfileId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AverageCycleLength",
+                       "type":  "int?",
+                       "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CycleProfileId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CycleProfileId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CycleProfileId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Cycles/Models/BleedingEntryModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CycleProfileId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleFactorModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CycleProfileId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleLogDayModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AverageCycleLength",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "LoggedCycleDays",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AverageCaloriesOnBleedingDays",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AverageCaloriesOnNonBleedingCycleDays",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AverageFiberOnNonBleedingCycleDays",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "HasEnoughNutritionData",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CycleProfileId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleSymptomEntryModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CycleProfileId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Cycles/Models/FertilitySignalModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+                       "line":  136
+                   },
+                   {
+                       "category":  "health",
                        "name":  "BirthDate",
                        "type":  "DateTime?",
                        "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
@@ -4076,118 +4188,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application/Consumptions/Services/MealNutritionSummary.cs",
                        "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleProfileId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AverageCycleLength",
-                       "type":  "int?",
-                       "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleProfileId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleProfileId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleProfileId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Cycles/Models/BleedingEntryModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleProfileId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleFactorModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleProfileId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleLogDayModel.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AverageCycleLength",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "LoggedCycleDays",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleNutritionSummaryModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AverageCaloriesOnBleedingDays",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleNutritionSummaryModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AverageCaloriesOnNonBleedingCycleDays",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleNutritionSummaryModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AverageFiberOnNonBleedingCycleDays",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleNutritionSummaryModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "HasEnoughNutritionData",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleNutritionSummaryModel.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleProfileId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleSymptomEntryModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CycleProfileId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Cycles/Models/FertilitySignalModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Cycles/Services/CycleReadService.cs",
-                       "line":  136
                    },
                    {
                        "category":  "health",
@@ -8288,6 +8288,83 @@
                        "category":  "privateContent",
                        "name":  "Notes",
                        "type":  "string?",
+                       "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearNotes",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearNotes",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearNotes",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Cycles/Models/BleedingEntryModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleFactorModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Cycles/Models/CycleModel.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Cycles/Models/FertilitySignalModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Notes",
+                       "type":  "string?",
                        "path":  "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs",
                        "line":  16
                    },
@@ -8500,83 +8577,6 @@
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
                        "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearNotes",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearNotes",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearNotes",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Cycles/Models/BleedingEntryModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleFactorModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Cycles/Models/CycleModel.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Notes",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Cycles/Models/FertilitySignalModel.cs",
-                       "line":  13
                    },
                    {
                        "category":  "privateContent",

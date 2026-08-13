@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4165,
+                    "productionFiles":  4169,
                     "criticalSymbols":  539,
                     "criticalSymbolsWithTestReferences":  510,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -294,11 +294,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  315,
+                         "nonBlankLines":  317,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  67.8
+                         "structuralRiskScore":  67.84
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
@@ -6261,6 +6261,294 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  7.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
+                      "nonBlankLines":  47,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.94
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.86
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
+                      "nonBlankLines":  62,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  6.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
+                      "nonBlankLines":  34,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/SymptomLogCommandModel.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
+                      "nonBlankLines":  91,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  12.82
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
+                      "nonBlankLines":  65,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
+                      "nonBlankLines":  53,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  9.06
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
+                      "nonBlankLines":  32,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.64
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Common/ICycleReadService.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/DependencyInjection.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Internal/RequiredIdParser.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Internal/UtcDateNormalizer.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.68
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Mappings/CycleMappings.cs",
+                      "nonBlankLines":  138,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.76
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Models/BleedingEntryModel.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Models/CycleFactorModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Models/CycleLogDayModel.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Models/CycleModel.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Models/CyclePredictionsModel.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Models/CycleSymptomEntryModel.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Models/FertilitySignalModel.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
+                      "nonBlankLines":  41,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Services/CyclePredictionService.cs",
+                      "nonBlankLines":  109,
+                      "decisionPoints":  9,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  15.68
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+                      "nonBlankLines":  123,
+                      "decisionPoints":  12,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  20.46
                   },
                   {
                       "path":  "FoodDiary.Application.Dietologist/AssemblyInfo.cs",
@@ -12271,262 +12559,6 @@
                       "structuralRiskScore":  2.2
                   },
                   {
-                      "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-                      "nonBlankLines":  47,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.94
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.86
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
-                      "nonBlankLines":  17,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
-                      "nonBlankLines":  62,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  6.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
-                      "nonBlankLines":  34,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/BleedingLogCommandModel.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/FertilitySignalCommandModel.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/SymptomLogCommandModel.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommand.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
-                      "nonBlankLines":  91,
-                      "decisionPoints":  6,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  12.82
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
-                      "nonBlankLines":  65,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommand.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
-                      "nonBlankLines":  53,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.06
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
-                      "nonBlankLines":  32,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.64
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Common/ICycleReadService.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Mappings/CycleMappings.cs",
-                      "nonBlankLines":  138,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.76
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Models/BleedingEntryModel.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Models/CycleFactorModel.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Models/CycleLogDayModel.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Models/CycleModel.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Models/CycleNutritionSummaryModel.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Models/CyclePredictionsModel.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Models/CycleSymptomEntryModel.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Models/FertilitySignalModel.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Queries/GetCurrentCycle/GetCurrentCycleQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQuery.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-                      "nonBlankLines":  41,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.32
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Services/CyclePredictionService.cs",
-                      "nonBlankLines":  109,
-                      "decisionPoints":  9,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  15.68
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Cycles/Services/CycleReadService.cs",
-                      "nonBlankLines":  123,
-                      "decisionPoints":  12,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  20.46
-                  },
-                  {
                       "path":  "FoodDiary.Application/DailyAdvices/Common/IDailyAdviceReadService.cs",
                       "nonBlankLines":  9,
                       "decisionPoints":  0,
@@ -12880,11 +12912,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                      "nonBlankLines":  46,
+                      "nonBlankLines":  43,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.92
+                      "structuralRiskScore":  0.86
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
@@ -19088,11 +19120,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  315,
+                      "nonBlankLines":  317,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  67.8
+                      "structuralRiskScore":  67.84
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19512,11 +19544,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  53,
+                      "nonBlankLines":  55,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.56
+                      "structuralRiskScore":  2.6
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23856,11 +23888,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  85,
+                      "nonBlankLines":  87,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.7
+                      "structuralRiskScore":  4.74
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34319,7 +34351,7 @@
                             {
                                 "name":  "ClearCycleDayCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -34424,7 +34456,7 @@
                             {
                                 "name":  "CreateCycleCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
                                 "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -35670,7 +35702,7 @@
                             {
                                 "name":  "UpsertCycleDayCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
                                 "line":  14,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -35680,7 +35712,7 @@
                             {
                                 "name":  "UpsertCycleFactorCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandHandler.cs",
                                 "line":  15,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -36991,7 +37023,7 @@
                             {
                                 "name":  "GetCurrentCycleQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Cycles/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Cycles/Queries/GetCurrentCycle/GetCurrentCycleQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37023,7 +37055,7 @@
                             {
                                 "name":  "GetCycleNutritionSummaryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38091,7 +38123,7 @@
                             {
                                 "name":  "ClearCycleDayCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Cycles/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38212,7 +38244,7 @@
                             {
                                 "name":  "CreateCycleCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
                                 "line":  5,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38569,7 +38601,7 @@
                             {
                                 "name":  "GetCycleNutritionSummaryQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39735,7 +39767,7 @@
                             {
                                 "name":  "UpsertCycleDayCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -39746,7 +39778,7 @@
                             {
                                 "name":  "UpsertCycleFactorCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Cycles/Commands/UpsertCycleFactor/UpsertCycleFactorCommandValidator.cs",
                                 "line":  5,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

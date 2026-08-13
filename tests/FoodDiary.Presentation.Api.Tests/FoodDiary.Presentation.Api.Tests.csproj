@@ -36,6 +36,7 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Wearables\FoodDiary.Application.Wearables.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Notifications\FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.BodyMetrics\FoodDiary.Application.BodyMetrics.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Application.Cycles\FoodDiary.Application.Cycles.csproj" />
   </ItemGroup>
 
 </Project>

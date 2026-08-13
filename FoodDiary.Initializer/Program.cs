@@ -3,6 +3,7 @@ using System.Globalization;
 using FoodDiary.Application;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.BodyMetrics;
+using FoodDiary.Application.Cycles;
 using FoodDiary.Application.Dietologist;
 using FoodDiary.Application.Fasting;
 using FoodDiary.Application.Favorites;
@@ -64,6 +65,7 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
 
 builder.Services.AddApplication();
 builder.Services.AddBodyMetricsModule();
+builder.Services.AddCyclesModule();
 builder.Services.AddDietologistModule();
 builder.Services.AddFastingModule();
 builder.Services.AddFavoritesModule();

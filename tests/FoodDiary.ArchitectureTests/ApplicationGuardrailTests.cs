@@ -12,6 +12,7 @@ public sealed class ApplicationGuardrailTests {
         const string relativeProjectPath = "FoodDiary.Application/FoodDiary.Application.csproj";
         string[] allowedProjectReferences = [
             "FoodDiary.Application.Abstractions",
+            "FoodDiary.Application.Cycles",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
         ];
@@ -225,7 +226,6 @@ public sealed class ApplicationGuardrailTests {
             "Authentication",
             "ContentReports",
             "Consumptions",
-            "Cycles",
             "DailyAdvices",
             "Dashboard",
             "Dietologist",
@@ -1290,7 +1290,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void CycleNutritionQueries_UseStatisticsReadServiceInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
-        string cycleQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Cycles", "Queries");
+        string cycleQueriesRoot = Path.Combine(root, "FoodDiary.Application.Cycles", "Queries");
         string[] cycleQueryFiles = [.. SourceScanner.SourceFiles(cycleQueriesRoot)];
 
         string[] violations = [
@@ -1907,8 +1907,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Cycles",
+            "FoodDiary.Application.Cycles",
             "Services",
             "CycleReadService.cs");
         string[] serviceFiles = [servicePath];
