@@ -8,6 +8,7 @@ COPY Shared/FoodDiary.Mediator/*.csproj Shared/FoodDiary.Mediator/
 COPY Shared/FoodDiary.Results/*.csproj Shared/FoodDiary.Results/
 COPY FoodDiary.Domain/*.csproj FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/*.csproj FoodDiary.Application.Abstractions/
+COPY FoodDiary.Application.Admin/*.csproj FoodDiary.Application.Admin/
 COPY FoodDiary.Application/*.csproj FoodDiary.Application/
 COPY FoodDiary.Application.Billing/*.csproj FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/*.csproj FoodDiary.Application.Marketing/
@@ -52,6 +53,7 @@ COPY Shared/FoodDiary.Mediator/ Shared/FoodDiary.Mediator/
 COPY Shared/FoodDiary.Results/ Shared/FoodDiary.Results/
 COPY FoodDiary.Domain/ FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/ FoodDiary.Application.Abstractions/
+COPY FoodDiary.Application.Admin/ FoodDiary.Application.Admin/
 COPY FoodDiary.Application/ FoodDiary.Application/
 COPY FoodDiary.Application.Billing/ FoodDiary.Application.Billing/
 COPY FoodDiary.Application.Marketing/ FoodDiary.Application.Marketing/

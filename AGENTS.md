@@ -9,6 +9,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 
 - Build-time analyzers: `FoodDiary.Analyzers/AGENTS.md`
 - Application abstractions: `FoodDiary.Application.Abstractions/AGENTS.md`
+- Admin application module: `FoodDiary.Application.Admin/AGENTS.md`
 - Frontend app: `FoodDiary.Web.Client/AGENTS.md`
 - Frontend admin app: `FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md`
 - UI kit: `FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md`

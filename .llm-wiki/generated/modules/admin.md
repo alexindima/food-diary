@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Ai, ContentReports, Gamification, Lessons
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj`
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: Ai, Audit, Authentication, ContentReports, Email, Lessons, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Admin`
-- `FoodDiary.Application/Admin`
+- `FoodDiary.Application.Admin`
 - `FoodDiary.Domain/Entities/Admin`
 - `FoodDiary.Infrastructure/Persistence/Admin`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Admin`
@@ -155,11 +156,11 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 ## Boundary Health
 
 - Role: orchestrator
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 30
-- Observed external consumer groups: 2
+- Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -216,6 +217,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandValidatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/GetCollaborationAuditQueryHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AdminModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AdminInvariantTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Authentication/AdminSsoServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/AdminAchievementDefinitionsControllerTests.cs`

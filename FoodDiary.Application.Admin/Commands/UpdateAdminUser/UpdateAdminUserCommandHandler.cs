@@ -6,7 +6,7 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Admin.Internal.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 

@@ -8,13 +8,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2762e5b1507d0479d2ede8330a459a796318ed6e87a37d61264b42e9ed15fafd"
+                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:41.3628834Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:16.6803027Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -42,17 +42,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "333edd674b32c02459bfe02136b31b9dc58bfc024d5ac1cabc8d5357b94bd4dd"
+                                            "sha256":  "289201effe0a8abe590cdef0cdf35210c2325984b28e93367172de600236149d"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "ff9ab3c6d6211d3a0cd991de0fe52cfcd650d6cefb5a5639c9e9ff81692b01f1"
+                                            "sha256":  "c4a6c32faf0782328bb63f7b280042c5b7b351caecd7ddd02149d05b1f6686ab"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:41.6227015Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:16.9102378Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -61,17 +61,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "333edd674b32c02459bfe02136b31b9dc58bfc024d5ac1cabc8d5357b94bd4dd"
+                                            "sha256":  "289201effe0a8abe590cdef0cdf35210c2325984b28e93367172de600236149d"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "7853dd9311a2d0e28cf5b1823cde24210548866a22637f98d90418cbeaabd1ea"
+                                            "sha256":  "deaf9bd292b1f8bb0e88ad70ca8104c9f7250b5fa057fb4b322e0d9e2469c170"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:41.9092921Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:17.1652590Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -95,13 +95,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2762e5b1507d0479d2ede8330a459a796318ed6e87a37d61264b42e9ed15fafd"
+                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:42.1147377Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:17.4066947Z"
                     },
                     {
                         "pageId":  "system.repository-catalog",
@@ -110,13 +110,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "333edd674b32c02459bfe02136b31b9dc58bfc024d5ac1cabc8d5357b94bd4dd"
+                                            "sha256":  "289201effe0a8abe590cdef0cdf35210c2325984b28e93367172de600236149d"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:42.3180695Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:17.6416705Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -125,13 +125,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2762e5b1507d0479d2ede8330a459a796318ed6e87a37d61264b42e9ed15fafd"
+                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:43.3823430Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:18.6945136Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -189,17 +189,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "2da3ed0c7d60476fde4cc1e79db5f3bca05f88f2300099df83444bf83916ad6e"
+                                            "sha256":  "48aed18d90836fe2ec74dbbaa070f1acb45c8d3f7c21183ed617533191c3bf42"
                                         },
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2762e5b1507d0479d2ede8330a459a796318ed6e87a37d61264b42e9ed15fafd"
+                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:44.5015676Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:19.9971246Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -208,13 +208,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "2762e5b1507d0479d2ede8330a459a796318ed6e87a37d61264b42e9ed15fafd"
+                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:44.7944810Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:20.4259396Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -268,21 +268,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "1845f29a19a2d36fb7edf3eb2a2042ed37827c2b05682dbff0af6eb9f5b74fd4"
+                                            "sha256":  "228977e96047484ab84229d6e6af248e2eb59e65bca02175fc46059c93f53c06"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "333edd674b32c02459bfe02136b31b9dc58bfc024d5ac1cabc8d5357b94bd4dd"
+                                            "sha256":  "289201effe0a8abe590cdef0cdf35210c2325984b28e93367172de600236149d"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "7853dd9311a2d0e28cf5b1823cde24210548866a22637f98d90418cbeaabd1ea"
+                                            "sha256":  "deaf9bd292b1f8bb0e88ad70ca8104c9f7250b5fa057fb4b322e0d9e2469c170"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:42.6257989Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:17.9348246Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -291,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "41b0c9b091ea70dfc32ab6ac4f5bbda921381f8427115450dbf2ad547470a57f"
+                                            "sha256":  "2728f47380b5355097f58e3cd77a74dcea8554e2a382930d36ee217d8a727bb5"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:43.0371500Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:18.3946879Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -803,13 +803,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "ae0f2bb7fdfdd86a99bf93cfb32a265559e376ab5385f568ae0945ef8744d091"
+                                            "sha256":  "af53b09e792bb364d77a3ee6a50923197306bf4fbe3b839bd7ebe197cc005c13"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:43.6645226Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:19.0613821Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -852,13 +852,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "d5015f8a094e3010e0e593235f5a58090c2000daae1e2bc8b18683a1333264ea"
+                                            "sha256":  "0786571e61262901075b926307d3890e4279c3a07ee77a677989b0a9941c22a1"
                                         }
                                     ],
-                        "reason":  "Extract Dashboard into an isolated composition-focused application module",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "f1aa600f51b8258a8cd27d1316e63a9ca77e9ff6",
-                        "reviewedAtUtc":  "2026-08-13T17:59:44.0856580Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:19.5815628Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -934,14 +934,14 @@
                         "pageSha256":  "f76e9e0aeb3642ca5dbda529bb9b4b9598b30d636df9df042d6a0d0edd2e9233",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/policies/change-policies.json",
-                                            "sha256":  "43b4b5ceb2f76baf206b23d39c8afb23727ebf99cc79c7305375ea4a452845d2"
+                                            "path":  ".llm-wiki/generated/runtime-topology.json",
+                                            "sha256":  "d5c2a7b26c329c34ff9a2625bf01c741f2d35fb07d4a5f7b1b477146cf0edc57"
                                         }
                                     ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+                        "reason":  "Extract Admin into an isolated orchestration application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:58.9398531Z"
+                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+                        "reviewedAtUtc":  "2026-08-13T18:41:20.8485054Z"
                     },
                     {
                         "pageId":  "workflow-similar-task-plan-reuse",

@@ -1830,8 +1830,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Admin",
+            "FoodDiary.Application.Admin",
             "Services",
             "AdminUserReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1850,8 +1849,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Admin",
+            "FoodDiary.Application.Admin",
             "Services",
             "AdminContentReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1870,8 +1868,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Admin",
+            "FoodDiary.Application.Admin",
             "Services",
             "AdminContentReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1889,8 +1886,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Admin",
+            "FoodDiary.Application.Admin",
             "Services",
             "AdminContentReadService.cs");
         string[] serviceFiles = [servicePath];

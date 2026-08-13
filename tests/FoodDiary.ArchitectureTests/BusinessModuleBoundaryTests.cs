@@ -13,7 +13,6 @@ public sealed class BusinessModuleBoundaryTests {
             "DependencyInjection.cs");
         string source = File.ReadAllText(dependencyInjectionPath);
         string[] expectedModuleCalls = [
-            "services.AddAdministrationModules();",
             "services.AddFoodModules();",
             "services.AddCommunicationServices();",
         ];
@@ -145,10 +144,10 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void AdminUserMutationHandlers_DoNotDependOnUsersAggregateAccess() {
         string[] handlerPaths = [
-            "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-            "FoodDiary.Application/Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
-            "FoodDiary.Application/Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
-            "FoodDiary.Application/Admin/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
+            "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
+            "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommandHandler.cs",
+            "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommandHandler.cs",
+            "FoodDiary.Application.Admin/Commands/UpdateAdminUser/UpdateAdminUserCommandHandler.cs",
         ];
         string[] forbiddenReferences = [
             "FoodDiary.Domain.Entities.Users",

@@ -15,7 +15,7 @@ This inventory tracks backend `Common` areas that should stay cross-cutting vers
 
 Feature or domain-purpose helpers should not live under root `Common`. `ManualNutritionLimits` was moved to `FoodDiary.Application/Nutrition/Common` because it is a nutrition-domain policy shared by meal and recipe features, not a generic application primitive.
 `ImageAssetIdParser` was moved to `FoodDiary.Application/Images/Common` because it is an image-domain helper shared by product, recipe, meal, and user flows.
-User preference code parsing lives in `FoodDiary.Application/Users/Common/UserPreferenceCodeParser.cs`; admin-required locale parsing lives in `FoodDiary.Application/Admin/Common/AdminLocaleParser.cs`.
+User preference code parsing lives in `FoodDiary.Application/Users/Common/UserPreferenceCodeParser.cs`; admin-required locale parsing lives in `FoodDiary.Application.Admin/Common/AdminLocaleParser.cs`.
 
 ## Application Abstractions
 

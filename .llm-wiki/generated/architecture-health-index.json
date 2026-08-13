@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  290,
+                    "productionProjectEdges":  301,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
@@ -5389,7 +5389,7 @@
                                                  {
                                                      "name":  "CreateAdminAchievementDefinitionCommandHandler",
                                                      "role":  "CommandHandler",
-                                                     "path":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
+                                                     "path":  "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
                                                      "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
@@ -5419,7 +5419,7 @@
                                                  {
                                                      "name":  "UpdateAdminAchievementDefinitionCommandHandler",
                                                      "role":  "CommandHandler",
-                                                     "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
+                                                     "path":  "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
                                                      "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
@@ -5499,7 +5499,7 @@
                                                  {
                                                      "name":  "GetAdminAchievementDefinitionsQueryHandler",
                                                      "role":  "QueryHandler",
-                                                     "path":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
+                                                     "path":  "FoodDiary.Application.Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
                                                      "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
@@ -5509,7 +5509,7 @@
                                                  {
                                                      "name":  "GetAdminUsersQueryHandler",
                                                      "role":  "QueryHandler",
-                                                     "path":  "FoodDiary.Application/Admin/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
+                                                     "path":  "FoodDiary.Application.Admin/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
                                                      "line":  8,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

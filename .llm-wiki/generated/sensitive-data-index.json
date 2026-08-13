@@ -145,6 +145,69 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "TemporaryPassword",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "GeneratePassword",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "SendCredentialsEmail",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "RequirePasswordChange",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "NewPassword",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "AccessToken",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminImpersonationStartModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "TemporaryPassword",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserCreationModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "CredentialsEmailQueued",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserCreationModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "HasPassword",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "PaddleClientToken",
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Billing/Models/BillingOverviewModel.cs",
@@ -275,69 +338,6 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
                        "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "TemporaryPassword",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "GeneratePassword",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "SendCredentialsEmail",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "RequirePasswordChange",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "NewPassword",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Commands/SetAdminUserPassword/SetAdminUserPasswordCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "AccessToken",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminImpersonationStartModel.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "TemporaryPassword",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserCreationModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "CredentialsEmailQueued",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserCreationModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "HasPassword",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  9
                    },
                    {
                        "category":  "credential",
@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  79
+                       "line":  80
                    },
                    {
                        "category":  "credential",
@@ -3463,6 +3463,132 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "BirthDate",
+                       "type":  "DateTime?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Gender",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Height",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ActivityLevel",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  19
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "HydrationGoal",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  27
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "MondayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  29
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TuesdayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  30
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WednesdayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  31
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "ThursdayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  32
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FridayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  33
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "SaturdayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  34
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "SundayCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  35
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingPushNotificationsEnabled",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  43
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingCheckInReminderHours",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  45
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "FastingCheckInFollowUpReminderHours",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  46
+                   },
+                   {
+                       "category":  "health",
                        "name":  "WaistEntryId",
                        "type":  "Guid",
                        "path":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/DeleteWaistEntry/DeleteWaistEntryCommand.cs",
@@ -4426,132 +4552,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
                        "line":  65
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "BirthDate",
-                       "type":  "DateTime?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Gender",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWaist",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Height",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ActivityLevel",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  19
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "HydrationGoal",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  27
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "MondayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  29
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TuesdayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  30
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WednesdayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  31
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "ThursdayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  32
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FridayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  33
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "SaturdayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  34
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "SundayCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  35
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingPushNotificationsEnabled",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  43
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingCheckInReminderHours",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  45
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "FastingCheckInFollowUpReminderHours",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  46
                    },
                    {
                        "category":  "health",
@@ -7210,6 +7210,104 @@
                        "category":  "identity",
                        "name":  "Email",
                        "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "IsEmailConfirmed",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "ToEmail",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "ActorIpAddress",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "ActorUserAgent",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "IsEmailConfirmed",
+                       "type":  "bool?",
+                       "path":  "FoodDiary.Application.Admin/Commands/UpdateAdminUser/UpdateAdminUserCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminAiUsageUserModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "TargetEmail",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminImpersonationStartModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "UserEmail",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserLoginEventModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "MaskedIpAddress",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserLoginEventModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "UserAgent",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserLoginEventModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "TelegramUserId",
+                       "type":  "long?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  47
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "IsEmailConfirmed",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  49
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
                        "path":  "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
                        "line":  7
                    },
@@ -7324,104 +7422,6 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Notifications/Models/WebPushSubscriptionModel.cs",
                        "line":  8
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "IsEmailConfirmed",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommand.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "ToEmail",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommand.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "ActorIpAddress",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "ActorUserAgent",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Admin/Commands/StartAdminImpersonation/StartAdminImpersonationCommand.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "IsEmailConfirmed",
-                       "type":  "bool?",
-                       "path":  "FoodDiary.Application/Admin/Commands/UpdateAdminUser/UpdateAdminUserCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminAiUsageUserModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "TargetEmail",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminImpersonationStartModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "UserEmail",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserLoginEventModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "MaskedIpAddress",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserLoginEventModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "UserAgent",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserLoginEventModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "TelegramUserId",
-                       "type":  "long?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  47
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "IsEmailConfirmed",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  49
                    },
                    {
                        "category":  "identity",
@@ -8286,6 +8286,27 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "PromptText",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "PromptText",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminAiPromptModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ProfileImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Admin/Models/AdminUserModel.cs",
+                       "line":  37
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "ImageAssetId",
                        "type":  "Guid",
                        "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
@@ -8598,27 +8619,6 @@
                        "type":  "ImageAssetId?",
                        "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
                        "line":  30
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "PromptText",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "PromptText",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminAiPromptModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ProfileImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
-                       "line":  37
                    },
                    {
                        "category":  "privateContent",

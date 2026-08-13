@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Lessons.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Admin.Internal.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Commands.DeleteAdminLesson;

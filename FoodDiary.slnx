@@ -33,6 +33,7 @@
   </Folder>
   <Project Path="FoodDiary.Analyzers/FoodDiary.Analyzers.csproj" />
   <Project Path="FoodDiary.Application/FoodDiary.Application.csproj" />
+  <Project Path="FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj" />
   <Project Path="FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj" />
   <Project Path="FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj" />
   <Project Path="FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj" />

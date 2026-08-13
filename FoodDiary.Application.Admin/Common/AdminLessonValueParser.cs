@@ -1,5 +1,5 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Admin.Internal.Validation;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Common;
