@@ -22,6 +22,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Users application module: `FoodDiary.Application.Users/AGENTS.md`
 - Content reports application module: `FoodDiary.Application.ContentReports/AGENTS.md`
 - Gamification application module: `FoodDiary.Application.Gamification/AGENTS.md`
+- Export application module: `FoodDiary.Application.Export/AGENTS.md`
 - Weekly goals application module: `FoodDiary.Application.WeeklyGoals/AGENTS.md`
 - USDA application module: `FoodDiary.Application.Usda/AGENTS.md`
 - Weekly check-in application module: `FoodDiary.Application.WeeklyCheckIn/AGENTS.md`

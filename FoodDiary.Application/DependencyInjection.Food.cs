@@ -1,5 +1,3 @@
-using FoodDiary.Application.Abstractions.Export.Common;
-using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Application.Products.Services;
@@ -11,7 +9,6 @@ namespace FoodDiary.Application;
 
 public static partial class DependencyInjection {
     private static void AddFoodModules(this IServiceCollection services) {
-        services.AddScoped<IExportDiaryReadService, ExportDiaryReadService>();
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();
         services.AddScoped<IRecentProductReadService, RecentProductReadService>();

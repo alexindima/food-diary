@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4205,
+                    "productionFiles":  4208,
                     "criticalSymbols":  540,
                     "criticalSymbolsWithTestReferences":  511,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -286,11 +286,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  347,
+                         "nonBlankLines":  349,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  68.44
+                         "structuralRiskScore":  68.48
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts",
@@ -7959,6 +7959,118 @@
                       "structuralRiskScore":  0.52
                   },
                   {
+                      "path":  "FoodDiary.Application.Export/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/DependencyInjection.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.68
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Models/ExportFormat.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Models/FileExportResult.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+                      "nonBlankLines":  60,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.7
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+                      "nonBlankLines":  85,
+                      "decisionPoints":  8,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  15.7
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Services/CycleCsvGenerator.cs",
+                      "nonBlankLines":  158,
+                      "decisionPoints":  21,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  34.66
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs",
+                      "nonBlankLines":  68,
+                      "decisionPoints":  14,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  22.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.92
+                  },
+                  {
                       "path":  "FoodDiary.Application.Fasting/AssemblyInfo.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -14392,11 +14504,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                      "nonBlankLines":  18,
+                      "nonBlankLines":  15,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.36
+                      "structuralRiskScore":  0.3
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
@@ -14421,94 +14533,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.54
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Models/ExportFormat.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Models/FileExportResult.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-                      "nonBlankLines":  60,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-                      "nonBlankLines":  85,
-                      "decisionPoints":  8,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  15.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Services/CycleCsvGenerator.cs",
-                      "nonBlankLines":  158,
-                      "decisionPoints":  21,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  34.66
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Services/DiaryCsvGenerator.cs",
-                      "nonBlankLines":  68,
-                      "decisionPoints":  14,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  22.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Export/Services/ExportDiaryReadService.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.92
                   },
                   {
                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
@@ -19408,11 +19432,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  347,
+                      "nonBlankLines":  349,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  68.44
+                      "structuralRiskScore":  68.48
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19832,11 +19856,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  85,
+                      "nonBlankLines":  87,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.2
+                      "structuralRiskScore":  3.24
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -24176,11 +24200,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  117,
+                      "nonBlankLines":  119,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.34
+                      "structuralRiskScore":  5.38
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -37016,7 +37040,7 @@
                             {
                                 "name":  "ExportCycleQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
                                 "line":  14,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37026,7 +37050,7 @@
                             {
                                 "name":  "ExportDiaryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
                                 "line":  14,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38758,7 +38782,7 @@
                             {
                                 "name":  "ExportCycleQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38768,7 +38792,7 @@
                             {
                                 "name":  "ExportDiaryQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

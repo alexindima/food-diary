@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3197,
-                    "symbols":  3210,
+                    "sourceFiles":  3200,
+                    "symbols":  3212,
                     "interfaceImplementationLinks":  229,
                     "dependencyInjectionRegistrations":  229,
                     "kinds":  {
-                                  "class":  1637,
+                                  "class":  1639,
                                   "enum":  49,
                                   "interface":  410,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1177,
+                                  "Other":  1179,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -6446,6 +6446,97 @@
                         "line":  9
                     },
                     {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Export/DependencyInjection.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "UtcDateNormalizer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Export/Internal/UtcDateNormalizer.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ExportFormat",
+                        "kind":  "enum",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Export/Models/ExportFormat.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "FileExportResult",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Export/Models/FileExportResult.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ExportCycleQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ExportCycleQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "ExportCycleQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ExportDiaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ExportDiaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "ExportDiaryQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CycleCsvGenerator",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Export/Services/CycleCsvGenerator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DiaryCsvGenerator",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Export/Services/DiaryCsvGenerator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ExportDiaryReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "EndFastingCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -11938,7 +12029,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                        "line":  11
+                        "line":  9
                     },
                     {
                         "name":  "DependencyInjection",
@@ -11952,83 +12043,6 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "ExportFormat",
-                        "kind":  "enum",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Export/Models/ExportFormat.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "FileExportResult",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Export/Models/FileExportResult.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ExportCycleQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ExportCycleQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "ExportCycleQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "ExportDiaryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ExportDiaryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "ExportDiaryQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CycleCsvGenerator",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Export/Services/CycleCsvGenerator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "DiaryCsvGenerator",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Export/Services/DiaryCsvGenerator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ExportDiaryReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Export/Services/ExportDiaryReadService.cs",
                         "line":  8
                     },
                     {
@@ -16404,7 +16418,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  382
+                        "line":  384
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16761,7 +16775,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  92
+                        "line":  94
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20548,7 +20562,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  43
+                        "line":  44
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23104,7 +23118,7 @@
                                          "interface":  "IExportDiaryReadService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Export/Common/IExportDiaryReadService.cs",
                                          "implementation":  "ExportDiaryReadService",
-                                         "implementationPath":  "FoodDiary.Application/Export/Services/ExportDiaryReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24300,6 +24314,13 @@
                                                  "line":  14
                                              },
                                              {
+                                                 "service":  "IExportDiaryReadService",
+                                                 "implementation":  "ExportDiaryReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Export/DependencyInjection.cs",
+                                                 "line":  14
+                                             },
+                                             {
                                                  "service":  "IFastingAnalyticsService",
                                                  "implementation":  "FastingAnalyticsService",
                                                  "lifetime":  "Scoped",
@@ -24804,39 +24825,32 @@
                                                  "line":  23
                                              },
                                              {
-                                                 "service":  "IExportDiaryReadService",
-                                                 "implementation":  "ExportDiaryReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  14
-                                             },
-                                             {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "OpenFoodFactsProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  15
+                                                 "line":  12
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "UsdaProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  16
+                                                 "line":  13
                                              },
                                              {
                                                  "service":  "IRecentProductReadService",
                                                  "implementation":  "RecentProductReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  17
+                                                 "line":  14
                                              },
                                              {
                                                  "service":  "IRecentRecipeReadService",
                                                  "implementation":  "RecentRecipeReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  18
+                                                 "line":  15
                                              },
                                              {
                                                  "service":  "IDashboardStatisticsReadService",
@@ -25487,14 +25501,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  112
+                                                 "line":  114
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  113
+                                                 "line":  115
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25585,7 +25599,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  84
+                                                 "line":  86
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25641,35 +25655,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  54
+                                                 "line":  55
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  92
+                                                 "line":  94
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  93
+                                                 "line":  95
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  94
+                                                 "line":  96
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  117
+                                                 "line":  119
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

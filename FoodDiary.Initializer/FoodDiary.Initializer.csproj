@@ -36,6 +36,7 @@
     <ProjectReference Include="..\FoodDiary.Application.DailyAdvices\FoodDiary.Application.DailyAdvices.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.ContentReports\FoodDiary.Application.ContentReports.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Gamification\FoodDiary.Application.Gamification.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.Export\FoodDiary.Application.Export.csproj" />
   </ItemGroup>
 
   <ItemGroup>

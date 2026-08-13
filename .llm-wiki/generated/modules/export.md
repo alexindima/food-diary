@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Cycles, Meals
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Export/FoodDiary.Application.Export.csproj`
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: Meals, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Export`
-- `FoodDiary.Application/Export`
+- `FoodDiary.Application.Export`
 - `FoodDiary.Presentation.Api/Features/Export`
 
 ## HTTP Surface
@@ -39,11 +40,11 @@ Source: `FoodDiary.Presentation.Api/Features/Export/ExportController.cs`
 ## Boundary Health
 
 - Role: read-composer
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 5
-- Observed external consumer groups: 2
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -66,6 +67,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Export/ExportValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ExportModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs`
 
 ## Working Rule

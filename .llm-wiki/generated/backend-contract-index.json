@@ -3014,7 +3014,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs"
+                                                  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -3030,7 +3030,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs"
+                                                  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -28409,10 +28409,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -28422,10 +28422,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -28435,7 +28435,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Export/Mappings/ExportHttpMappings.cs",
@@ -28448,7 +28448,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
@@ -28461,7 +28461,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Export/ExportValidatorTests.cs",
@@ -28474,7 +28474,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs",
@@ -28487,10 +28487,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -28500,10 +28500,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -28513,7 +28513,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Export/Mappings/ExportHttpMappings.cs",
@@ -28526,7 +28526,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs",
@@ -28539,7 +28539,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Export/ExportValidatorTests.cs",
@@ -28552,7 +28552,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs"
+                                                      "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ExportControllerTests.cs",
@@ -49784,6 +49784,32 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51071,32 +51097,6 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -52098,7 +52098,7 @@
                                                       "FoodDiary.Application.Cycles/Common/ICycleReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -53255,7 +53255,7 @@
                                                       "FoodDiary.Application.Abstractions/Export/Common/IDiaryPdfGenerator.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -57467,7 +57467,7 @@
                                                       "FoodDiary.Application.Abstractions/Export/Common/IExportDiaryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -57480,7 +57480,7 @@
                                                       "FoodDiary.Application.Abstractions/Export/Common/IExportDiaryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -57493,7 +57493,7 @@
                                                       "FoodDiary.Application.Abstractions/Export/Common/IExportDiaryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Services/ExportDiaryReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -64357,6 +64357,19 @@
                                                       "FoodDiary.Application.Meals/Common/IMealExportReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Services/ExportDiaryReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IMealExportReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Meals/Common/IMealExportReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Meals/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -64371,19 +64384,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Meals/Services/MealExportReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IMealExportReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Meals/Common/IMealExportReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Services/ExportDiaryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71961,6 +71961,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Fasting/Queries/GetCurrentFasting/GetCurrentFastingQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -72923,32 +72949,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73418,6 +73418,32 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Exercises/Queries/GetExerciseEntries/GetExerciseEntriesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74380,32 +74406,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -87223,6 +87223,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Export/Queries/ExportDiary/ExportDiaryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Fasting/Commands/EndFasting/EndFastingCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -88498,32 +88524,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportCycle/ExportCycleQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },

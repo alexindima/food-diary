@@ -1335,7 +1335,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ExportDiaryQuery_UsesDedicatedExportReadServiceInsteadOfMealRepository() {
         string root = GetRepositoryRoot();
-        string exportDiaryQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Export", "Queries", "ExportDiary");
+        string exportDiaryQueriesRoot = Path.Combine(root, "FoodDiary.Application.Export", "Queries", "ExportDiary");
         string[] exportDiaryQueryFiles = [.. SourceScanner.SourceFiles(exportDiaryQueriesRoot)];
 
         string[] violations = [
@@ -1350,7 +1350,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ExportCycleQuery_UsesDedicatedCycleReadServiceInsteadOfCycleRepository() {
         string root = GetRepositoryRoot();
-        string exportCycleQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Export", "Queries", "ExportCycle");
+        string exportCycleQueriesRoot = Path.Combine(root, "FoodDiary.Application.Export", "Queries", "ExportCycle");
         string[] exportCycleQueryFiles = [.. SourceScanner.SourceFiles(exportCycleQueriesRoot)];
 
         string[] violations = [
@@ -1383,7 +1383,7 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] serviceFiles = [
             Path.Combine(root, "FoodDiary.Application.Meals", "Services", "MealReadService.cs"),
-            Path.Combine(applicationRoot, "Export", "Services", "ExportDiaryReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application.Export", "Services", "ExportDiaryReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.Gamification", "Services", "GamificationReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.Usda", "Services", "UsdaDailyMicronutrientReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn", "Services", "WeeklyCheckInReadService.cs"),
@@ -1951,8 +1951,8 @@ public sealed class ApplicationGuardrailTests {
     public void ExportDiaryReadAndGenerationServices_UseMealReadModelsInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
         string[] serviceFiles = [
-            Path.Combine(root, "FoodDiary.Application", "Export", "Services", "ExportDiaryReadService.cs"),
-            Path.Combine(root, "FoodDiary.Application", "Export", "Services", "DiaryCsvGenerator.cs"),
+            Path.Combine(root, "FoodDiary.Application.Export", "Services", "ExportDiaryReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application.Export", "Services", "DiaryCsvGenerator.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Export", "Common", "IDiaryPdfGenerator.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Export", "Models", "ExportDiaryMealsReadModel.cs"),
         ];

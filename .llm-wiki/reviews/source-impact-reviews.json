@@ -8,13 +8,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "acd23f05736a1008980e6354c5499d70b2650890b9b01052088c7b834c423b4c"
+                                            "sha256":  "a388bc4b17a301fdaa125c041b91134f7e091332efca68ae8561a4e91d372c71"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:39.1227478Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:32.9046870Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -42,17 +42,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "7f5ff3c2871d69ef9ef1532512c29403b60f7ca427800d42668bbe4ae7d23d9f"
+                                            "sha256":  "96382ceaad9c46b091e873c4cec5a0776de0695bd90069e2a54a0b66ef14c81e"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "30d61ccf91a8654f8f111781f785652c8fd45f4717cecc28136c0a35c3b9bd91"
+                                            "sha256":  "4edea7ff08de350e8d0cb3c1b90b2caf4b368be5f04aa437a52472c68c9a7f65"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:39.4028367Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:33.1972904Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -61,17 +61,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "7f5ff3c2871d69ef9ef1532512c29403b60f7ca427800d42668bbe4ae7d23d9f"
+                                            "sha256":  "96382ceaad9c46b091e873c4cec5a0776de0695bd90069e2a54a0b66ef14c81e"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "00a2fac5c36b95fcbe39f92ad36dc1e648d5056f843cf295c522337c42e5d941"
+                                            "sha256":  "ad230941569679a67690b030881cd41c1255b98e5715cd36cc01563aa59e8f67"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:39.6745546Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:33.4409543Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -95,13 +95,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "acd23f05736a1008980e6354c5499d70b2650890b9b01052088c7b834c423b4c"
+                                            "sha256":  "a388bc4b17a301fdaa125c041b91134f7e091332efca68ae8561a4e91d372c71"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:39.9340063Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:33.6693197Z"
                     },
                     {
                         "pageId":  "system.repository-catalog",
@@ -110,13 +110,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "7f5ff3c2871d69ef9ef1532512c29403b60f7ca427800d42668bbe4ae7d23d9f"
+                                            "sha256":  "96382ceaad9c46b091e873c4cec5a0776de0695bd90069e2a54a0b66ef14c81e"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:40.2085658Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:33.9012590Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -125,13 +125,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "acd23f05736a1008980e6354c5499d70b2650890b9b01052088c7b834c423b4c"
+                                            "sha256":  "a388bc4b17a301fdaa125c041b91134f7e091332efca68ae8561a4e91d372c71"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:41.5505752Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:34.9248846Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -189,17 +189,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "8777275db0a7c7d83e59df9079da7b0f4bfe5f707ae515dc99fc49b402dcc5a2"
+                                            "sha256":  "bfcc7b6c05f814f3c35398be674b625cadc0e07cf6e69c728bb08b79566622d9"
                                         },
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "acd23f05736a1008980e6354c5499d70b2650890b9b01052088c7b834c423b4c"
+                                            "sha256":  "a388bc4b17a301fdaa125c041b91134f7e091332efca68ae8561a4e91d372c71"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:43.4658934Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:36.0044748Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -208,13 +208,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "acd23f05736a1008980e6354c5499d70b2650890b9b01052088c7b834c423b4c"
+                                            "sha256":  "a388bc4b17a301fdaa125c041b91134f7e091332efca68ae8561a4e91d372c71"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:44.0888901Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:36.3290794Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -268,21 +268,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "7b5afe4fa34b1e06b66b1d36520e081197e24be4778369e86d138c5f4d3644fc"
+                                            "sha256":  "5feb7705929a5ff741aa0ca1028c16286f3ac1409869a62ea673b2640eec1c64"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "7f5ff3c2871d69ef9ef1532512c29403b60f7ca427800d42668bbe4ae7d23d9f"
+                                            "sha256":  "96382ceaad9c46b091e873c4cec5a0776de0695bd90069e2a54a0b66ef14c81e"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "00a2fac5c36b95fcbe39f92ad36dc1e648d5056f843cf295c522337c42e5d941"
+                                            "sha256":  "ad230941569679a67690b030881cd41c1255b98e5715cd36cc01563aa59e8f67"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:40.6029002Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:34.2233091Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -291,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "fadea4372aee079b1688178bf457a625b8b62faf9b0109160818fb1c6fde5232"
+                                            "sha256":  "a8a99e3bff7ececdac4e6f3004ea5bae6ad86eda832e6cc73c3aedda8551fdd0"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:41.0732782Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:34.6522648Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -795,13 +795,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "d1e81d0cbadaa9908e5806ea8ca14408b97f33823ff67475e15be899be58876e"
+                                            "sha256":  "3bb42507bd92aed8324ec7a6ffe569abc11fe460bfc9597d5fe897b669a5a1fd"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:42.2204838Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:35.2251596Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -844,13 +844,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "899529152bdf190eaa8a4d4689844e7e3641c3ec6012f7bb4c074e7c06e890fe"
+                                            "sha256":  "26df225d26c190f9cd0e4a5c0237f11d645a5a32cf5a94cd4c311892594a28de"
                                         }
                                     ],
-                        "reason":  "Reviewed Gamification extraction against current module sources, its explicit Meals dependency, host composition, project-reference matrix, full build, architecture tests, and focused application/presentation tests.",
+                        "reason":  "Extract Export into an isolated application module",
                         "baseRef":  "HEAD",
-                        "gitHead":  "020f1c2119968125424c02522995930eccdf48d0",
-                        "reviewedAtUtc":  "2026-08-13T17:17:42.8752899Z"
+                        "gitHead":  "8d3aee4ef1ec782c4937bdb63d593ddfc0d5f51e",
+                        "reviewedAtUtc":  "2026-08-13T17:33:35.6250523Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

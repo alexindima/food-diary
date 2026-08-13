@@ -27,6 +27,7 @@ using FoodDiary.Application.WeeklyCheckIn;
 using FoodDiary.Application.DailyAdvices;
 using FoodDiary.Application.ContentReports;
 using FoodDiary.Application.Gamification;
+using FoodDiary.Application.Export;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -82,6 +83,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddDailyAdvicesModule()
                 .AddContentReportsModule()
                 .AddGamificationModule()
+                .AddExportModule()
                 .AddNotificationsModule()
                 .AddOpenFoodFactsModule()
                 .AddUsersModule()
