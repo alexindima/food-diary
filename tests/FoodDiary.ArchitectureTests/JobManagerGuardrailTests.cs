@@ -34,6 +34,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Fasting",
             "FoodDiary.Application.Favorites",
+            "FoodDiary.Application.Gamification",
             "FoodDiary.Application.Hydration",
             "FoodDiary.Application.Identity",
             "FoodDiary.Application.Images",

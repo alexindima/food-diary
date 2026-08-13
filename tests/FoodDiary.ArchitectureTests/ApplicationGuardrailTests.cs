@@ -17,6 +17,7 @@ public sealed class ApplicationGuardrailTests {
             "FoodDiary.Application.Cycles",
             "FoodDiary.Application.DailyAdvices",
             "FoodDiary.Application.Exercises",
+            "FoodDiary.Application.Gamification",
             "FoodDiary.Application.Hydration",
             "FoodDiary.Application.Images",
             "FoodDiary.Application.Lessons",
@@ -123,7 +124,7 @@ public sealed class ApplicationGuardrailTests {
         string[] calculatorFiles = [
             Path.Combine(root, "FoodDiary.Application.Tdee", "Services", "TdeeCalculator.cs"),
             Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn", "Services", "WeeklyCheckInCalculator.cs"),
-            Path.Combine(applicationRoot, "Gamification", "Services", "GamificationCalculator.cs"),
+            Path.Combine(root, "FoodDiary.Application.Gamification", "Services", "GamificationCalculator.cs"),
         ];
         string[] forbiddenPatterns = [
             "FoodDiary.Domain.Entities.Meals",
@@ -1157,7 +1158,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Queries", "GetMealPlanById", "GetMealPlanByIdQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Queries", "GetMealPlans", "GetMealPlansQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Tdee", "Queries", "GetTdeeInsight", "GetTdeeInsightQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Gamification", "Queries", "GetGamification", "GetGamificationQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Gamification", "Queries", "GetGamification", "GetGamificationQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeLikes", "Commands", "ToggleRecipeLike", "ToggleRecipeLikeCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeLikes", "Queries", "GetRecipeLikeStatus", "GetRecipeLikeStatusQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "CreateRecipeComment", "CreateRecipeCommentCommandHandler.cs"),
@@ -1283,7 +1284,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void GamificationQueries_DoNotLoadMealAggregatesForWeeklyNutrition() {
         string root = GetRepositoryRoot();
-        string gamificationQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Gamification", "Queries");
+        string gamificationQueriesRoot = Path.Combine(root, "FoodDiary.Application.Gamification", "Queries");
         string[] gamificationQueryFiles = [.. SourceScanner.SourceFiles(gamificationQueriesRoot)];
 
         string[] violations = [
@@ -1383,7 +1384,7 @@ public sealed class ApplicationGuardrailTests {
         string[] serviceFiles = [
             Path.Combine(root, "FoodDiary.Application.Meals", "Services", "MealReadService.cs"),
             Path.Combine(applicationRoot, "Export", "Services", "ExportDiaryReadService.cs"),
-            Path.Combine(applicationRoot, "Gamification", "Services", "GamificationReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application.Gamification", "Services", "GamificationReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.Usda", "Services", "UsdaDailyMicronutrientReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn", "Services", "WeeklyCheckInReadService.cs"),
         ];
@@ -3095,7 +3096,7 @@ public sealed class ApplicationGuardrailTests {
         (string SliceRoot, string AllowedRelativePath)[] slices = [
             (Path.Combine(root, "FoodDiary.Application.Ai"), Path.Combine("Services", "AiUserContextService.cs")),
             (Path.Combine(applicationRoot, "Dashboard"), Path.Combine("Services", "DashboardUserContextService.cs")),
-            (Path.Combine(applicationRoot, "Gamification"), Path.Combine("Services", "GamificationUserProfileService.cs")),
+            (Path.Combine(root, "FoodDiary.Application.Gamification"), Path.Combine("Services", "GamificationUserProfileService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Hydration"), Path.Combine("Services", "HydrationGoalService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Tdee"), Path.Combine("Services", "TdeeUserProfileService.cs")),
             (Path.Combine(root, "FoodDiary.Application.WeeklyCheckIn"), Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),

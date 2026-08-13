@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  86,
+                    "dotnetProjects":  87,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  7,
-                    "extractedApplicationModules":  27,
+                    "applicationModules":  6,
+                    "extractedApplicationModules":  28,
                     "backendBusinessModules":  34,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  68,
+                    "agentGuides":  69,
                     "documentationPages":  44
                 },
     "dotnet":  {
@@ -352,6 +352,37 @@
                                         "isTestProject":  false,
                                         "projectReferences":  [
                                                                   "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "FluentValidation",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "FluentValidation.DependencyInjectionExtensions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
+                                        "name":  "FoodDiary.Application.Gamification",
+                                        "assemblyName":  "FoodDiary.Application.Gamification",
+                                        "path":  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj",
                                                                   "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
                                                               ],
@@ -886,6 +917,7 @@
                                                                   "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
                                                                   "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj",
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
+                                                                  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.Lessons/FoodDiary.Application.Lessons.csproj",
@@ -1044,6 +1076,7 @@
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
+                                                                  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
@@ -1159,6 +1192,7 @@
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
+                                                                  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
@@ -1245,6 +1279,7 @@
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
+                                                                  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
@@ -1337,6 +1372,7 @@
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
+                                                                  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
@@ -2418,6 +2454,7 @@
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
+                                                                  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
@@ -2820,6 +2857,7 @@
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
+                                                                  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
@@ -3216,12 +3254,6 @@
                                                     ]
                                },
                                {
-                                   "name":  "Gamification",
-                                   "dependencies":  [
-                                                        "Meals"
-                                                    ]
-                               },
-                               {
                                    "name":  "Products",
                                    "dependencies":  [
                                                         "Images",
@@ -3284,6 +3316,10 @@
                                         {
                                             "name":  "Favorites",
                                             "project":  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj"
+                                        },
+                                        {
+                                            "name":  "Gamification",
+                                            "project":  "FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj"
                                         },
                                         {
                                             "name":  "Hydration",
@@ -5324,6 +5360,7 @@
                                                  "FoodDiary.Application.Exercises/AGENTS.md",
                                                  "FoodDiary.Application.Fasting/AGENTS.md",
                                                  "FoodDiary.Application.Favorites/AGENTS.md",
+                                                 "FoodDiary.Application.Gamification/AGENTS.md",
                                                  "FoodDiary.Application.Hydration/AGENTS.md",
                                                  "FoodDiary.Application.Identity/AGENTS.md",
                                                  "FoodDiary.Application.Images/AGENTS.md",

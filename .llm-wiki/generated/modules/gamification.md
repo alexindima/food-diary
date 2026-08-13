@@ -14,16 +14,20 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Meals
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Gamification/FoodDiary.Application.Gamification.csproj`
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: Achievements, Dashboard, Users
 - Business-module consumers: Admin
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Application, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application/Gamification`
+- `FoodDiary.Application.Abstractions/Achievements`
+- `FoodDiary.Application.Gamification`
+- `FoodDiary.Infrastructure/Persistence/Achievements`
+- `FoodDiary.Infrastructure/Persistence/Configurations/Achievements`
 - `FoodDiary.Presentation.Api/Features/Gamification`
 
 ## HTTP Surface
@@ -37,22 +41,29 @@ Source: `FoodDiary.Presentation.Api/Features/Gamification/GamificationController
 ## Boundary Health
 
 - Role: read-composer
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 0
-- Observed external consumer groups: 2
+- Public contract files: 8
+- Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 0
-- Interfaces: 0
-- DTO/read-model/projection types: 0
+- Public contract types: 8
+- Interfaces: 6
+- DTO/read-model/projection types: 1
 - Enums: 0
-- Exported repository-shaped contracts: 0
-- Contracts referencing domain entities: 0
-- No public declaration was found in the mapped abstraction areas.
+- Exported repository-shaped contracts: 2
+- Contracts referencing domain entities: 2
+- `class AchievementDefinitionErrors`
+- `interface IAchievementDefinitionStore`
+- `interface IAchievementEvaluationOutbox`
+- `interface IAchievementEvaluationOutboxProcessor`
+- `interface IAchievementMetricReader`
+- `interface IAchievementReconciliationHandler`
+- `interface IUserAchievementStore`
+- `record AchievementGrantModel`
 
 ## Focused Tests
 
@@ -63,6 +74,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Gamification/GamificationCalculatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Gamification/GamificationFeatureTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/GamificationModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/GamificationHttpMappingsTests.cs`
 
 ## Working Rule

@@ -19,6 +19,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Fasting",
             "FoodDiary.Application.Favorites",
+            "FoodDiary.Application.Gamification",
             "FoodDiary.Application.Hydration",
             "FoodDiary.Application.Identity",
             "FoodDiary.Application.Images",

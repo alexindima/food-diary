@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Achievements;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -68,7 +67,10 @@ public sealed class AchievementDefinitionAdministrationService(IAchievementDefin
     }
 
     private static Result<AchievementMetric> ParseMetric(string value) =>
-        EnumValueParser.ParseRequired<AchievementMetric>(value, "metric", "Unsupported achievement metric.");
+        Enum.TryParse(value, ignoreCase: true, out AchievementMetric metric)
+            ? Result.Success(metric)
+            : Result.Failure<AchievementMetric>(
+                Errors.Validation.Invalid("metric", "Unsupported achievement metric."));
 
     private static AchievementDefinitionAdminModel ToModel(AchievementDefinition definition) => new(
         definition.Id.Value, definition.Key, definition.Category, definition.Metric.ToString(), definition.Threshold,
