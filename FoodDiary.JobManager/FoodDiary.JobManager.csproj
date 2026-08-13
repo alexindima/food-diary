@@ -39,6 +39,7 @@
     <ProjectReference Include="..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />
     <ProjectReference Include="..\FoodDiary.Resources\FoodDiary.Resources.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.Images\FoodDiary.Application.Images.csproj" />
   </ItemGroup>
 
 </Project>

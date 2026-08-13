@@ -3,4 +3,4 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Images.Common;
 
-internal sealed record ImageAssetResolution(ImageAssetId? ImageAssetId, ImageAsset? ImageAsset);
+public sealed record ImageAssetResolution(ImageAssetId? ImageAssetId, ImageAsset? ImageAsset);

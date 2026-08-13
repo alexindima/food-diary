@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -20,12 +20,11 @@ public sealed class DeleteImageAssetCommandHandler(
             return UserIdParser.ToFailure(userIdResult);
         }
 
-        Result<ImageAssetId> assetIdResult = RequiredIdParser.Parse(
+        Result<ImageAssetId> assetIdResult = ImageAssetIdParser.ParseRequired(
             request.AssetId,
-            Errors.Image.InvalidData("AssetId is required."),
-            value => new ImageAssetId(value));
+            Errors.Image.InvalidData("AssetId is required."));
         if (assetIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure(assetIdResult);
+            return Result.Failure(assetIdResult.Error);
         }
 
         UserId userId = userIdResult.Value;

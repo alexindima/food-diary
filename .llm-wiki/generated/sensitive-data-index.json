@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  66
+                       "line":  67
                    },
                    {
                        "category":  "credential",
@@ -8412,6 +8412,20 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "ImageAsset",
+                       "type":  "ImageAsset?",
+                       "path":  "FoodDiary.Application.Images/Common/ImageAssetResolution.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Images/Common/ImageAssetResolution.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "CommentId",
                        "type":  "Guid",
                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
@@ -8605,20 +8619,6 @@
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionModel.cs",
                        "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAsset",
-                       "type":  "ImageAsset?",
-                       "path":  "FoodDiary.Application/Images/Common/ImageAssetResolution.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Images/Common/ImageAssetResolution.cs",
-                       "line":  6
                    },
                    {
                        "category":  "privateContent",

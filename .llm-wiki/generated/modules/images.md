@@ -14,17 +14,19 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Images/FoodDiary.Application.Images.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: none observed
 - Business-module consumers: Consumptions, Products, Recipes
-- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Application, FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Images`
-- `FoodDiary.Application/Images`
+- `FoodDiary.Application.Images`
+- `FoodDiary.Domain/Entities/Assets`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Images`
 - `FoodDiary.Infrastructure/Persistence/Images`
 - `FoodDiary.Presentation.Api/Features/Images`
@@ -41,11 +43,11 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: explicit-boundary-tests
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: ImageAsset, ImageObjectDeletionOutboxMessage
 - Public contract files: 12
-- Observed external consumer groups: 6
+- Observed external consumer groups: 9
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -74,6 +76,7 @@ Source: `FoodDiary.Presentation.Api/Features/Images/ImagesController.cs`
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ImagesModuleExtractionTests.cs`
 
 ## Working Rule
 

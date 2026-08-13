@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3173,
-                    "symbols":  3197,
+                    "sourceFiles":  3175,
+                    "symbols":  3198,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1620,
+                                  "class":  1621,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1161,
+                                  "Other":  1162,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -7580,6 +7580,83 @@
                         "line":  6
                     },
                     {
+                        "name":  "DeleteImageAssetCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeleteImageAssetCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "GetImageUploadUrlCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "GetImageUploadUrlCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "GetImageUploadUrlResult",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlResult.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ImageAssetIdParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Images/Common/ImageAssetIdParser.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ImageAssetResolution",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Images/Common/ImageAssetResolution.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "ImageAssetResolver",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Images/Common/ImageAssetResolver.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Images/DependencyInjection.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "ImageAssetAccessService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "ImageAssetCleanupService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "RecordMarketingAttributionCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -11175,7 +11252,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                        "line":  8
+                        "line":  6
                     },
                     {
                         "name":  "DependencyInjection",
@@ -11400,76 +11477,6 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Gamification/Services/GamificationUserProfileService.cs",
                         "line":  9
-                    },
-                    {
-                        "name":  "DeleteImageAssetCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeleteImageAssetCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "GetImageUploadUrlCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "GetImageUploadUrlCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "GetImageUploadUrlResult",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlResult.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ImageAssetIdParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Images/Common/ImageAssetIdParser.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ImageAssetResolution",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Images/Common/ImageAssetResolution.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ImageAssetResolver",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Images/Common/ImageAssetResolver.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "ImageAssetAccessService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Images/Services/ImageAssetAccessService.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "ImageAssetCleanupService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Images/Services/ImageAssetCleanupService.cs",
-                        "line":  8
                     },
                     {
                         "name":  "MarkLessonReadCommand",
@@ -16313,7 +16320,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  360
+                        "line":  362
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16670,7 +16677,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  70
+                        "line":  72
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20457,7 +20464,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  32
+                        "line":  33
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23195,14 +23202,14 @@
                                          "interface":  "IImageAssetAccessService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs",
                                          "implementation":  "ImageAssetAccessService",
-                                         "implementationPath":  "FoodDiary.Application/Images/Services/ImageAssetAccessService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IImageAssetCleanupService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs",
                                          "implementation":  "ImageAssetCleanupService",
-                                         "implementationPath":  "FoodDiary.Application/Images/Services/ImageAssetCleanupService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24279,6 +24286,20 @@
                                                  "line":  25
                                              },
                                              {
+                                                 "service":  "IImageAssetAccessService",
+                                                 "implementation":  "ImageAssetAccessService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Images/DependencyInjection.cs",
+                                                 "line":  12
+                                             },
+                                             {
+                                                 "service":  "IImageAssetCleanupService",
+                                                 "implementation":  "ImageAssetCleanupService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Images/DependencyInjection.cs",
+                                                 "line":  13
+                                             },
+                                             {
                                                  "service":  "IMarketingAttributionCleanupService",
                                                  "implementation":  "MarketingAttributionCleanupService",
                                                  "lifetime":  "Scoped",
@@ -24685,25 +24706,11 @@
                                                  "line":  35
                                              },
                                              {
-                                                 "service":  "IImageAssetAccessService",
-                                                 "implementation":  "ImageAssetAccessService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  11
-                                             },
-                                             {
-                                                 "service":  "IImageAssetCleanupService",
-                                                 "implementation":  "ImageAssetCleanupService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  12
-                                             },
-                                             {
                                                  "service":  "IOpenAiFoodService",
                                                  "implementation":  "OpenAiFoodService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  13
+                                                 "line":  9
                                              },
                                              {
                                                  "service":  "IDashboardStatisticsReadService",
@@ -25417,14 +25424,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  90
+                                                 "line":  92
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  91
+                                                 "line":  93
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25515,7 +25522,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  62
+                                                 "line":  64
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25571,35 +25578,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  43
+                                                 "line":  44
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  70
+                                                 "line":  72
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  71
+                                                 "line":  73
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  72
+                                                 "line":  74
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  95
+                                                 "line":  97
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

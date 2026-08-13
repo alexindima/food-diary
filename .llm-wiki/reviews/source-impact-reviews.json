@@ -50,17 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "7f599957f1442371a05cc1352815b35a1ae1f1a2fb1b0bbed0b1c571802f29d1"
+                                            "sha256":  "c878239ebfaa8e9acf596e26c749c7787226ec87a8010eb2971e6c1dbd978bdd"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "2d3183d09ac811a264b5e30aa14df55515cce1f8495297912a7b0591eb4ce126"
+                                            "sha256":  "5248ac7baa8f4b83595c3c559576c5c52fb613a3ff8b048484b2ca564af186eb"
                                         }
                                     ],
-                        "reason":  "OpenFoodFacts cached search and query use cases moved unchanged into FoodDiary.Application.OpenFoodFacts; Products remains a one-way consumer, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d82cec95dd5da676eaca582c769c052368b09c8c",
-                        "reviewedAtUtc":  "2026-08-13T10:04:07.5015389Z"
+                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
+                        "reviewedAtUtc":  "2026-08-13T10:22:37.8606545Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -69,17 +69,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "7f599957f1442371a05cc1352815b35a1ae1f1a2fb1b0bbed0b1c571802f29d1"
+                                            "sha256":  "c878239ebfaa8e9acf596e26c749c7787226ec87a8010eb2971e6c1dbd978bdd"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "7d1f79df0fa53dc689496f3f0d45e0e85f1ffe0a6cf0adc24cc8346ba96772ea"
+                                            "sha256":  "cbcf2a1a634cedcf6fea8b60f5b54c4aafa07015e055ce33715df052060539e3"
                                         }
                                     ],
-                        "reason":  "OpenFoodFacts cached search and query use cases moved unchanged into FoodDiary.Application.OpenFoodFacts; Products remains a one-way consumer, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d82cec95dd5da676eaca582c769c052368b09c8c",
-                        "reviewedAtUtc":  "2026-08-13T10:04:07.9627158Z"
+                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
+                        "reviewedAtUtc":  "2026-08-13T10:22:38.4185570Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -118,13 +118,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "7f599957f1442371a05cc1352815b35a1ae1f1a2fb1b0bbed0b1c571802f29d1"
+                                            "sha256":  "c878239ebfaa8e9acf596e26c749c7787226ec87a8010eb2971e6c1dbd978bdd"
                                         }
                                     ],
-                        "reason":  "OpenFoodFacts cached search and query use cases moved unchanged into FoodDiary.Application.OpenFoodFacts; Products remains a one-way consumer, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d82cec95dd5da676eaca582c769c052368b09c8c",
-                        "reviewedAtUtc":  "2026-08-13T10:04:08.4326049Z"
+                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
+                        "reviewedAtUtc":  "2026-08-13T10:22:38.9493425Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -197,13 +197,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "9351d37d3466487f5f8b407570aa6a9f4d2684c411e5e21bdb039a0bc3b12207"
+                                            "sha256":  "73891e570f4b408a0cca91d34fbd2b92a47f6210fde414ec90c7cc937baf98ff"
                                         }
                                     ],
-                        "reason":  "OpenFoodFacts cached search and query use cases moved unchanged into FoodDiary.Application.OpenFoodFacts; Products remains a one-way consumer, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d82cec95dd5da676eaca582c769c052368b09c8c",
-                        "reviewedAtUtc":  "2026-08-13T10:04:11.4424745Z"
+                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
+                        "reviewedAtUtc":  "2026-08-13T10:22:42.0510066Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -276,21 +276,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "7da6a57c18aa63e6a2ece38d2d1494578bc8559eeb1a721d35795d2df4037da7"
+                                            "sha256":  "e9c8daba63d15e1488705036845eb3559d6fd3cdde741c9cf221da3ef1270e6b"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "7f599957f1442371a05cc1352815b35a1ae1f1a2fb1b0bbed0b1c571802f29d1"
+                                            "sha256":  "c878239ebfaa8e9acf596e26c749c7787226ec87a8010eb2971e6c1dbd978bdd"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "7d1f79df0fa53dc689496f3f0d45e0e85f1ffe0a6cf0adc24cc8346ba96772ea"
+                                            "sha256":  "cbcf2a1a634cedcf6fea8b60f5b54c4aafa07015e055ce33715df052060539e3"
                                         }
                                     ],
-                        "reason":  "OpenFoodFacts cached search and query use cases moved unchanged into FoodDiary.Application.OpenFoodFacts; Products remains a one-way consumer, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d82cec95dd5da676eaca582c769c052368b09c8c",
-                        "reviewedAtUtc":  "2026-08-13T10:04:09.0240642Z"
+                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
+                        "reviewedAtUtc":  "2026-08-13T10:22:39.5805252Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -299,13 +299,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "997bc41069e9914c5fdf616ba90b470d02fbd58f2846cb5d4c7eb18b277eb07a"
+                                            "sha256":  "aec2f5aeccc0ab970c725865bc7799d61c89dc1109263666003b137b89818545"
                                         }
                                     ],
-                        "reason":  "OpenFoodFacts cached search and query use cases moved unchanged into FoodDiary.Application.OpenFoodFacts; Products remains a one-way consumer, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d82cec95dd5da676eaca582c769c052368b09c8c",
-                        "reviewedAtUtc":  "2026-08-13T10:04:09.5715645Z"
+                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
+                        "reviewedAtUtc":  "2026-08-13T10:22:40.1708219Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -807,13 +807,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "fb789550da9e1a4ae4b434d67bf98db28f5d771745f48ba0c468c868c8726563"
+                                            "sha256":  "62fbf5e7e31994fc04ff08e641714f51b295961d2441f0d53c0c81c27cc3c1dc"
                                         }
                                     ],
-                        "reason":  "OpenFoodFacts cached search and query use cases moved unchanged into FoodDiary.Application.OpenFoodFacts; Products remains a one-way consumer, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d82cec95dd5da676eaca582c769c052368b09c8c",
-                        "reviewedAtUtc":  "2026-08-13T10:04:10.1316520Z"
+                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
+                        "reviewedAtUtc":  "2026-08-13T10:22:40.7441650Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -856,13 +856,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "71b730953b42461e743ba1ead82b5d5f2323ae9b07ee66225c66479e1554b6f0"
+                                            "sha256":  "0a51cc624d4797b4c08697353bfc949e2224b149325ef71bcb915d0be9675282"
                                         }
                                     ],
-                        "reason":  "OpenFoodFacts cached search and query use cases moved unchanged into FoodDiary.Application.OpenFoodFacts; Products remains a one-way consumer, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d82cec95dd5da676eaca582c769c052368b09c8c",
-                        "reviewedAtUtc":  "2026-08-13T10:04:10.7306244Z"
+                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
+                        "reviewedAtUtc":  "2026-08-13T10:22:41.3733554Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

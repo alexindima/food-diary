@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  76,
+                    "dotnetProjects":  77,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  18,
-                    "extractedApplicationModules":  17,
+                    "applicationModules":  17,
+                    "extractedApplicationModules":  18,
                     "backendBusinessModules":  35,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  58,
+                    "agentGuides":  59,
                     "documentationPages":  43
                 },
     "dotnet":  {
@@ -345,6 +345,32 @@
                                                               ]
                                     },
                                     {
+                                        "name":  "FoodDiary.Application.Images",
+                                        "assemblyName":  "FoodDiary.Application.Images",
+                                        "path":  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.Logging.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
                                         "name":  "FoodDiary.Application.Marketing",
                                         "assemblyName":  "FoodDiary.Application.Marketing",
                                         "path":  "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
@@ -583,6 +609,7 @@
                                                                   "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
                                                                   "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj",
@@ -734,6 +761,7 @@
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
@@ -839,6 +867,7 @@
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
@@ -915,6 +944,7 @@
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
@@ -997,6 +1027,7 @@
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
@@ -2068,6 +2099,7 @@
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
@@ -2364,6 +2396,7 @@
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
@@ -2458,6 +2491,7 @@
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
+                                                                  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj",
                                                                   "FoodDiary.Application.MealPlanning/FoodDiary.Application.MealPlanning.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj",
@@ -2876,12 +2910,6 @@
                                                     ]
                                },
                                {
-                                   "name":  "Images",
-                                   "dependencies":  [
-
-                                                    ]
-                               },
-                               {
                                    "name":  "Lessons",
                                    "dependencies":  [
 
@@ -2978,6 +3006,10 @@
                                         {
                                             "name":  "Identity",
                                             "project":  "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj"
+                                        },
+                                        {
+                                            "name":  "Images",
+                                            "project":  "FoodDiary.Application.Images/FoodDiary.Application.Images.csproj"
                                         },
                                         {
                                             "name":  "Marketing",
@@ -4981,6 +5013,7 @@
                                                  "FoodDiary.Application.Favorites/AGENTS.md",
                                                  "FoodDiary.Application.Hydration/AGENTS.md",
                                                  "FoodDiary.Application.Identity/AGENTS.md",
+                                                 "FoodDiary.Application.Images/AGENTS.md",
                                                  "FoodDiary.Application.Marketing/AGENTS.md",
                                                  "FoodDiary.Application.MealPlanning/AGENTS.md",
                                                  "FoodDiary.Application.Notifications/AGENTS.md",

@@ -5,6 +5,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Images.Common;
 
 public static class ImageAssetIdParser {
+    public static Result<ImageAssetId> ParseRequired(Guid value, Error requiredError) =>
+        value == Guid.Empty
+            ? Result.Failure<ImageAssetId>(requiredError)
+            : Result.Success(new ImageAssetId(value));
+
     public static Result<ImageAssetId?> ParseOptional(Guid? value, string fieldName) {
         if (!value.HasValue) {
             return Result.Success<ImageAssetId?>(value: null);

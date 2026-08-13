@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4181,
+                    "productionFiles":  4183,
                     "criticalSymbols":  539,
                     "criticalSymbolsWithTestReferences":  510,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -294,11 +294,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  325,
+                         "nonBlankLines":  327,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  68
+                         "structuralRiskScore":  68.04
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
@@ -9271,6 +9271,102 @@
                       "structuralRiskScore":  0.5
                   },
                   {
+                      "path":  "FoodDiary.Application.Images/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+                      "nonBlankLines":  47,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  11.94
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+                      "nonBlankLines":  55,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  12.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlResult.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Common/ImageAssetIdParser.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.86
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Common/ImageAssetResolution.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Common/ImageAssetResolver.cs",
+                      "nonBlankLines":  25,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/DependencyInjection.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
+                      "nonBlankLines":  31,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
+                      "nonBlankLines":  50,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  11.5
+                  },
+                  {
                       "path":  "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
                       "nonBlankLines":  18,
                       "decisionPoints":  0,
@@ -13432,11 +13528,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                      "nonBlankLines":  13,
+                      "nonBlankLines":  9,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
+                      "structuralRiskScore":  0.18
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
@@ -13701,86 +13797,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  1.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-                      "nonBlankLines":  48,
-                      "decisionPoints":  6,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  11.96
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
-                      "nonBlankLines":  55,
-                      "decisionPoints":  6,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  12.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlResult.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Common/ImageAssetIdParser.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Common/ImageAssetResolution.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Common/ImageAssetResolver.cs",
-                      "nonBlankLines":  25,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Services/ImageAssetAccessService.cs",
-                      "nonBlankLines":  31,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Images/Services/ImageAssetCleanupService.cs",
-                      "nonBlankLines":  50,
-                      "decisionPoints":  7,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  11.5
                   },
                   {
                       "path":  "FoodDiary.Application/Lessons/Commands/MarkLessonRead/MarkLessonReadCommand.cs",
@@ -19216,11 +19232,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  325,
+                      "nonBlankLines":  327,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  68
+                      "structuralRiskScore":  68.04
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19640,11 +19656,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  63,
+                      "nonBlankLines":  65,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.76
+                      "structuralRiskScore":  2.8
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23984,11 +24000,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  95,
+                      "nonBlankLines":  97,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.9
+                      "structuralRiskScore":  4.94
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34769,7 +34785,7 @@
                             {
                                 "name":  "DeleteImageAssetCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -34961,7 +34977,7 @@
                             {
                                 "name":  "GetImageUploadUrlCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
                                 "line":  10,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

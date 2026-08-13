@@ -2646,7 +2646,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
+                                                  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4646,7 +4646,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
+                                                  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -26822,10 +26822,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
+                                                      "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -26835,7 +26835,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
+                                                      "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Images/Mappings/ImageHttpMappings.cs",
@@ -26848,7 +26848,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
+                                                      "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs",
@@ -26861,7 +26861,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
+                                                      "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ImageHttpMappingsTests.cs",
@@ -34700,10 +34700,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
+                                                      "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  3
                           },
@@ -34713,7 +34713,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
+                                                      "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Images/Mappings/ImageHttpMappings.cs",
@@ -34726,7 +34726,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
+                                                      "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Images/ImagesFeatureTests.cs",
@@ -34739,7 +34739,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
+                                                      "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ImageHttpMappingsTests.cs",
@@ -46520,6 +46520,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47210,32 +47236,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48301,6 +48301,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -48991,32 +49017,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62120,6 +62120,45 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Common/ImageAssetResolver.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/DependencyInjection.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -62214,45 +62253,6 @@
                               "consumerPath":  "FoodDiary.Application/Consumptions/Services/ConsumptionAiSessionAppender.cs",
                               "isTest":  false,
                               "referenceCount":  2
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Common/ImageAssetResolver.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Services/ImageAssetAccessService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
                           },
                           {
                               "contract":  "IImageAssetAccessService",
@@ -62471,6 +62471,45 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetCleanupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/DependencyInjection.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetCleanupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetCleanupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -62498,45 +62537,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/UpdateConsumption/UpdateConsumptionImageCleanup.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetCleanupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetCleanupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetCleanupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Services/ImageAssetCleanupService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62757,7 +62757,7 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/DeleteImageAsset/DeleteImageAssetCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62770,7 +62770,7 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Services/ImageAssetAccessService.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62913,7 +62913,7 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62926,7 +62926,7 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Services/ImageAssetCleanupService.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62965,7 +62965,7 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageObjectDeletionOutbox.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Services/ImageAssetCleanupService.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -63134,7 +63134,7 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageStorageService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Commands/GetUploadUrl/GetImageUploadUrlCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -63147,7 +63147,7 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageStorageService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Services/ImageAssetAccessService.cs",
+                              "consumerPath":  "FoodDiary.Application.Images/Services/ImageAssetAccessService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83543,6 +83543,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Images/Services/ImageAssetCleanupService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUnitOfWork",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -83596,19 +83609,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUnitOfWork",
-                              "roles":  [
-                                            "Other"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Images/Services/ImageAssetCleanupService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },

@@ -15,6 +15,7 @@ public sealed class ApplicationGuardrailTests {
             "FoodDiary.Application.Cycles",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Hydration",
+            "FoodDiary.Application.Images",
             "FoodDiary.Application.OpenFoodFacts",
             "FoodDiary.Application.Tdee",
             "FoodDiary.Domain",

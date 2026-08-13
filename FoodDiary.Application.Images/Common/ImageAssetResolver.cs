@@ -5,7 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Images.Common;
 
-internal static class ImageAssetResolver {
+public static class ImageAssetResolver {
     public static async Task<Result<ImageAssetResolution>> ResolveOptionalAsync(
         Guid? imageAssetId,
         string propertyName,

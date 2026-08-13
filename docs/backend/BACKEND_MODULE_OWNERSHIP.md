@@ -258,7 +258,7 @@ User/role EF configurations live in `Configurations/Users`. Refresh-token sessio
 
 ## Images and Favorites boundaries
 
-Images owns `ImageAsset`, upload validation, cleanup policy and the durable object-deletion outbox. Other modules use `IImageAssetAccessService` and `IImageAssetCleanupService`; they must not acquire image repositories. AI image analysis now resolves and validates ownership through the Images capability rather than loading `ImageAsset` persistence directly.
+Images owns `ImageAsset`, upload validation, cleanup policy and the durable object-deletion outbox. Its application capability is physically isolated in `FoodDiary.Application.Images`. Other modules use `IImageAssetAccessService` and `IImageAssetCleanupService`; they must not acquire image repositories. AI image analysis now resolves and validates ownership through the Images capability rather than loading `ImageAsset` persistence directly.
 
 FavoriteProducts, FavoriteRecipes and FavoriteMeals are three cohesive feature slices inside the single physical `FoodDiary.Application.Favorites` module. Each slice owns its favorite entity and exposes commands plus a semantic read service, while sharing one composition boundary because they have the same lifecycle, dependency profile and relationship-focused responsibility. Products, Recipes and Consumption Diary consume those read services rather than favorite repositories.
 
