@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { getNumberProperty } from '../../../shared/lib/unknown-value.utils';
 import type { PageOf } from '../../../shared/models/page-of.data';
-import type { MealFilters,MealManageDto, MealResponseDto } from '../models/meal.data';
+import type { MealFilters, MealManageDto, MealResponseDto } from '../models/meal.data';
 import { MealService } from './meal.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/meals';

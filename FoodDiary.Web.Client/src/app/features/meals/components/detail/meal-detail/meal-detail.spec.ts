@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../products/models/product.data';
-import { type Meal,MealSourceType } from '../../../models/meal.data';
+import { type Meal, MealSourceType } from '../../../models/meal.data';
 import { MealDetailComponent } from './meal-detail';
 
 const BASE_AMOUNT = 100;

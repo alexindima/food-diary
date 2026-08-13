@@ -5,7 +5,7 @@ import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
-import type { Meal,MealAiItem } from '../../../models/meal.data';
+import type { Meal, MealAiItem } from '../../../models/meal.data';
 import { MEAL_DETAIL_DEFAULT_SATIETY_EMOJI, MEAL_DETAIL_MIN_MACRO_BAR_PERCENT } from './meal-detail.config';
 import type { MealDetailItemPreview, MealMacroBlock, MealSatietyMeta } from './meal-detail.types';
 

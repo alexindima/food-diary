@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../products/models/product.data';
-import { type Meal,MealSourceType } from '../../../models/meal.data';
+import { type Meal, MealSourceType } from '../../../models/meal.data';
 import { buildMealDetailViewModel } from './meal-detail.mapper';
 
 const BASE_AMOUNT = 100;
