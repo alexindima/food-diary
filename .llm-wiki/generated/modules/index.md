@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 30 folder modules and 8 extracted application modules.
+This index unifies 29 folder modules and 9 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
@@ -53,6 +53,6 @@ are reported separately; `none observed` never means proven isolation.
 | [Tdee](tdee.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |
 | [Usda](usda.md) | adapter | 1 | 2 | 1 | 2 | graph-only |
 | [Users](users.md) | aggregate-owner | 0 | 0 | 0 | 4 | explicit-boundary-tests |
-| [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 3 | explicit-boundary-tests |
+| [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
 | [WeeklyCheckIn](weekly-check-in.md) | read-composer | 2 | 5 | 0 | 1 | graph-only |
 | [WeeklyGoals](weekly-goals.md) | aggregate-owner | 1 | 2 | 0 | 2 | graph-only |

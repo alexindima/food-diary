@@ -8,7 +8,7 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3147,
+                    "sourceFiles":  3148,
                     "symbols":  3180,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
@@ -7475,6 +7475,118 @@
                         "line":  10
                     },
                     {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Wearables/DependencyInjection.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "ConnectWearableCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ConnectWearableCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "DisconnectWearableCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DisconnectWearableCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "SyncWearableDataCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "SyncWearableDataCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "IWearableReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "WearableProviderParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Common/WearableProviderParser.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWearableAuthUrlQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "GetWearableAuthUrlQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "GetWearableConnectionsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWearableConnectionsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetWearableDailySummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetWearableDailySummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "WearableReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "CreateAdminAchievementDefinitionCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -10047,13 +10159,6 @@
                         "name":  "DependencyInjection",
                         "kind":  "class",
                         "role":  "Other",
-                        "path":  "FoodDiary.Application/DependencyInjection.Wearables.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "DependencyInjection",
-                        "kind":  "class",
-                        "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
                         "line":  6
                     },
@@ -12261,111 +12366,6 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Usda/Services/UsdaProductSuggestionReadService.cs",
                         "line":  6
-                    },
-                    {
-                        "name":  "ConnectWearableCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ConnectWearableCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "DisconnectWearableCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DisconnectWearableCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "SyncWearableDataCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "SyncWearableDataCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "IWearableReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Wearables/Common/IWearableReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "WearableProviderParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Wearables/Common/WearableProviderParser.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWearableAuthUrlQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "GetWearableAuthUrlQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "GetWearableConnectionsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWearableConnectionsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetWearableDailySummaryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetWearableDailySummaryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "WearableReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Wearables/Services/WearableReadService.cs",
-                        "line":  8
                     },
                     {
                         "name":  "IWeeklyCheckInReadService",
@@ -16194,7 +16194,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  342
+                        "line":  344
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16551,7 +16551,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  52
+                        "line":  54
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20338,7 +20338,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  23
+                        "line":  24
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23830,9 +23830,9 @@
                                      },
                                      {
                                          "interface":  "IWearableReadService",
-                                         "interfacePath":  "FoodDiary.Application/Wearables/Common/IWearableReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs",
                                          "implementation":  "WearableReadService",
-                                         "implementationPath":  "FoodDiary.Application/Wearables/Services/WearableReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24214,6 +24214,13 @@
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application.Users/DependencyInjection.cs",
                                                  "line":  34
+                                             },
+                                             {
+                                                 "service":  "IWearableReadService",
+                                                 "implementation":  "WearableReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Wearables/DependencyInjection.cs",
+                                                 "line":  12
                                              },
                                              {
                                                  "service":  "IAdminAiUsageReadService",
@@ -24654,28 +24661,21 @@
                                                  "implementation":  "TdeeUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  45
+                                                 "line":  44
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInUserProfileService",
                                                  "implementation":  "WeeklyCheckInUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  46
+                                                 "line":  45
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInReadService",
                                                  "implementation":  "WeeklyCheckInReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  47
-                                             },
-                                             {
-                                                 "service":  "IWearableReadService",
-                                                 "implementation":  "WearableReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Wearables.cs",
-                                                 "line":  9
+                                                 "line":  46
                                              },
                                              {
                                                  "service":  "IWeeklyGoalReadService",
@@ -25298,14 +25298,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  72
+                                                 "line":  74
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  73
+                                                 "line":  75
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25396,7 +25396,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  44
+                                                 "line":  46
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25452,35 +25452,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  34
+                                                 "line":  35
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  52
+                                                 "line":  54
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  53
+                                                 "line":  55
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  54
+                                                 "line":  56
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  77
+                                                 "line":  79
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

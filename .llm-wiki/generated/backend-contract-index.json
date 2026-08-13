@@ -1478,7 +1478,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
+                                                  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2934,7 +2934,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
+                                                  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5670,7 +5670,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
+                                                  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5686,7 +5686,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
+                                                  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5702,7 +5702,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
+                                                  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -12538,7 +12538,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
+                                                  "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -14971,7 +14971,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+                                                  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -21739,10 +21739,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -21752,7 +21752,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Wearables/Mappings/WearableHttpMappings.cs",
@@ -21765,7 +21765,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
@@ -21778,7 +21778,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearableHttpMappingsTests.cs",
@@ -21791,7 +21791,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs",
@@ -27953,10 +27953,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -27966,7 +27966,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Wearables/Mappings/WearableHttpMappings.cs",
@@ -27979,7 +27979,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
@@ -27992,7 +27992,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearableHttpMappingsTests.cs",
@@ -28005,7 +28005,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs",
@@ -38925,10 +38925,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -38938,7 +38938,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Wearables/Mappings/WearableHttpMappings.cs",
@@ -38951,7 +38951,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
@@ -38964,7 +38964,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearableHttpMappingsTests.cs",
@@ -38977,7 +38977,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs",
@@ -38990,10 +38990,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -39003,7 +39003,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Wearables/Mappings/WearableHttpMappings.cs",
@@ -39016,7 +39016,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
@@ -39029,7 +39029,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearableHttpMappingsTests.cs",
@@ -39042,7 +39042,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs",
@@ -39055,10 +39055,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -39068,7 +39068,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Wearables/Mappings/WearableHttpMappings.cs",
@@ -39081,7 +39081,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
@@ -39094,7 +39094,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearableHttpMappingsTests.cs",
@@ -39107,7 +39107,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs",
@@ -46390,6 +46390,45 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47352,45 +47391,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -48159,6 +48159,45 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/UpdateUserAppearance/UpdateUserAppearanceCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -49121,45 +49160,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -51070,6 +51070,84 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -52072,84 +52150,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -73026,6 +73026,45 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73832,45 +73871,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Queries/GetWeeklyCheckIn/GetWeeklyCheckInQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -74483,6 +74483,45 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Queries/GetWeightGoalHistory/GetWeightGoalHistoryQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75289,45 +75328,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -88522,6 +88522,84 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -89446,84 +89524,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -90641,7 +90641,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableClient.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -90654,7 +90654,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableClient.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -90667,7 +90667,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableClient.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -90758,7 +90758,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Services/WearableReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -90927,7 +90927,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -90940,7 +90940,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/DisconnectWearable/DisconnectWearableCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -90953,7 +90953,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableConnectionWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91005,7 +91005,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableOAuthStateService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91018,7 +91018,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableOAuthStateService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableAuthUrl/GetWearableAuthUrlQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91067,10 +91067,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Wearables.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91080,10 +91080,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableConnections/GetWearableConnectionsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91093,10 +91093,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91106,10 +91106,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Services/WearableReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91119,7 +91119,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
@@ -91132,7 +91132,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Common/IWearableReadService.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Common/IWearableReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs",
@@ -91161,7 +91161,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Services/WearableReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Services/WearableReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91382,7 +91382,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableSyncWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91434,7 +91434,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/ConnectWearable/ConnectWearableCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -91447,7 +91447,7 @@
                                                       "FoodDiary.Application.Abstractions/Wearables/Common/IWearableTokenProtector.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -102377,10 +102377,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -102390,7 +102390,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Wearables/Mappings/WearableHttpMappings.cs",
@@ -102403,7 +102403,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs",
@@ -102416,7 +102416,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearableHttpMappingsTests.cs",
@@ -102429,7 +102429,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
+                                                      "FoodDiary.Application.Wearables/Wearables/Commands/SyncWearableData/SyncWearableDataCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs",

@@ -1160,12 +1160,12 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "RecipeComments", "Commands", "DeleteRecipeComment", "DeleteRecipeCommentCommandHandler.cs"),
             Path.Combine(applicationRoot, "RecipeComments", "Commands", "UpdateRecipeComment", "UpdateRecipeCommentCommandHandler.cs"),
             Path.Combine(applicationRoot, "RecipeComments", "Queries", "GetRecipeComments", "GetRecipeCommentsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Wearables", "Commands", "ConnectWearable", "ConnectWearableCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Wearables", "Commands", "DisconnectWearable", "DisconnectWearableCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Wearables", "Commands", "SyncWearableData", "SyncWearableDataCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableAuthUrl", "GetWearableAuthUrlQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableConnections", "GetWearableConnectionsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Wearables", "Queries", "GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "ConnectWearable", "ConnectWearableCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "DisconnectWearable", "DisconnectWearableCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "SyncWearableData", "SyncWearableDataCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Queries", "GetWearableAuthUrl", "GetWearableAuthUrlQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Queries", "GetWearableConnections", "GetWearableConnectionsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Queries", "GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
@@ -2244,7 +2244,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void WearableQueries_UseReadServicesInsteadOfWearableAggregates() {
         string root = GetRepositoryRoot();
-        string wearableQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Wearables", "Queries");
+        string wearableQueriesRoot = Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Queries");
         string[] wearableQueryFiles = [.. SourceScanner.SourceFiles(wearableQueriesRoot)];
 
         string[] violations = [
@@ -2261,7 +2261,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
+            "FoodDiary.Application.Wearables",
             "Wearables",
             "Services",
             "WearableReadService.cs");

@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Wearables`
-- `FoodDiary.Application/Wearables`
+- `FoodDiary.Application.Wearables`
 - `FoodDiary.Domain/Entities/Wearables`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Wearables`
 - `FoodDiary.Infrastructure/Persistence/Wearables`
@@ -47,11 +48,11 @@ Source: `FoodDiary.Presentation.Api/Features/Wearables/WearablesController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: explicit-boundary-tests
+- Physical isolation: project
+- Architecture guardrails: assembly-isolated
 - Declared owned entities: WearableConnection, WearableSyncEntry
 - Public contract files: 16
-- Observed external consumer groups: 3
+- Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -85,6 +86,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Wearables/WearablesFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleBoundaryTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/WearablesModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/WearablesControllerTests.cs`
 
 ## Working Rule

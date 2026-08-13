@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  67,
+                    "dotnetProjects":  68,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  30,
-                    "extractedApplicationModules":  8,
+                    "applicationModules":  29,
+                    "extractedApplicationModules":  9,
                     "backendBusinessModules":  38,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  49,
+                    "agentGuides":  50,
                     "documentationPages":  43
                 },
     "dotnet":  {
@@ -302,6 +302,28 @@
                                                               ]
                                     },
                                     {
+                                        "name":  "FoodDiary.Application.Wearables",
+                                        "assemblyName":  "FoodDiary.Application.Wearables",
+                                        "path":  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
                                         "name":  "FoodDiary.Application",
                                         "assemblyName":  "FoodDiary.Application",
                                         "path":  "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -461,6 +483,7 @@
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
+                                                                  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
                                                               ],
@@ -557,6 +580,7 @@
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
+                                                                  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
                                                                   "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
@@ -624,6 +648,7 @@
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
+                                                                  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj"
                                                               ],
                                         "packageReferences":  [
@@ -697,6 +722,7 @@
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
+                                                                  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
                                                                   "FoodDiary.Integrations/FoodDiary.Integrations.csproj",
@@ -1759,6 +1785,7 @@
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
+                                                                  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj"
                                                               ],
@@ -2122,6 +2149,7 @@
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj",
                                                                   "FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj"
@@ -2655,12 +2683,6 @@
                                                     ]
                                },
                                {
-                                   "name":  "Wearables",
-                                   "dependencies":  [
-
-                                                    ]
-                               },
-                               {
                                    "name":  "WeeklyCheckIn",
                                    "dependencies":  [
                                                         "Consumptions",
@@ -2706,6 +2728,10 @@
                                         {
                                             "name":  "Users",
                                             "project":  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj"
+                                        },
+                                        {
+                                            "name":  "Wearables",
+                                            "project":  "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj"
                                         }
                                     ],
     "http":  {
@@ -4676,6 +4702,7 @@
                                                  "FoodDiary.Application.Marketing/AGENTS.md",
                                                  "FoodDiary.Application.Notifications/AGENTS.md",
                                                  "FoodDiary.Application.Users/AGENTS.md",
+                                                 "FoodDiary.Application.Wearables/AGENTS.md",
                                                  "FoodDiary.Application/AGENTS.md",
                                                  "FoodDiary.Domain/AGENTS.md",
                                                  "FoodDiary.Infrastructure/AGENTS.md",

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 30,
-    "extractedModules": 8,
+    "folderModules": 29,
+    "extractedModules": 9,
     "totalModules": 38
   },
   "analysis": {
@@ -422,13 +422,16 @@
     },
     "Wearables": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "explicit-boundary-tests",
+      "physicalIsolation": "project",
+      "enforcement": "assembly-isolated",
       "ownedEntities": [
         "WearableConnection",
         "WearableSyncEntry"
       ],
       "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Wearables"
+        ],
         "abstractionAreas": [
           "Wearables"
         ],

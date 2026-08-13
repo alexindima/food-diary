@@ -4,7 +4,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class WearablesModuleBoundaryTests {
     [Fact]
     public void WearablesApplicationSource_DoesNotDependOnRootApplicationCommon() {
-        string wearableRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application", "Wearables");
+        string wearableRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Wearables", "Wearables");
         string[] violations = [.. SourceScanner.SourceFiles(wearableRoot)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, line, index }))
@@ -18,13 +18,10 @@ public sealed class WearablesModuleBoundaryTests {
     [Fact]
     public void OtherApplicationModules_DoNotReferenceWearablesImplementationNamespace() {
         string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
-        string wearableRoot = Path.Combine(applicationRoot, "Wearables");
         string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
-            .Where(path => !path.StartsWith(wearableRoot + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, line, index }))
             .Where(entry => entry.line.Contains("FoodDiary.Application.Wearables", StringComparison.Ordinal))
-            .Where(entry => !Path.GetFileName(entry.path).Equals("DependencyInjection.Wearables.cs", StringComparison.Ordinal))
             .Select(entry => $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{(entry.index + 1).ToString(System.Globalization.CultureInfo.InvariantCulture)}")
             .Order(StringComparer.Ordinal)];
 
@@ -34,7 +31,7 @@ public sealed class WearablesModuleBoundaryTests {
     [Fact]
     public void WearablesReadServiceContract_RemainsInternalToFeature() {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application",
+            "FoodDiary.Application.Wearables",
             "Wearables",
             "Common",
             "IWearableReadService.cs"));
@@ -48,7 +45,7 @@ public sealed class WearablesModuleBoundaryTests {
     [InlineData("GetWearableDailySummary", "GetWearableDailySummaryQueryHandler.cs")]
     public void WearablesReadHandlers_RemainInternalToFeature(string query, string fileName) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application",
+            "FoodDiary.Application.Wearables",
             "Wearables",
             "Queries",
             query,

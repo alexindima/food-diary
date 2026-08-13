@@ -41,7 +41,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IAchievementReconciliationHandler, AchievementReconciliationHandler>();
         services.AddScoped<IAchievementDefinitionAdministrationService, AchievementDefinitionAdministrationService>();
         services.AddScoped<IExerciseEntryReadService, ExerciseEntryReadService>();
-        services.AddWearablesModule();
         services.AddScoped<ITdeeUserProfileService, TdeeUserProfileService>();
         services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
         services.AddScoped<IWeeklyCheckInReadService, WeeklyCheckInReadService>();

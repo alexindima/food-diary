@@ -7,6 +7,7 @@ using FoodDiary.Application.Favorites;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Users;
+using FoodDiary.Application.Wearables;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -43,6 +44,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddDietologistModule()
                 .AddFastingModule()
                 .AddFavoritesModule()
+                .AddWearablesModule()
                 .AddNotificationsModule()
                 .AddUsersModule()
                 .AddBillingModule()
