@@ -28,6 +28,8 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiRequirementCriteria.ps1')
+$requirementPolicy = (Get-Content -LiteralPath (Join-Path $wikiRoot 'policies/workspace-policies.json') -Raw | ConvertFrom-Json).requirementModel
 $absolutePath = if ([System.IO.Path]::IsPathRooted($Path)) { $Path } else { Join-Path $repositoryRoot $Path }
 $absoluteEvidencePath = if ([System.IO.Path]::IsPathRooted($EvidencePath)) { $EvidencePath } else { Join-Path $repositoryRoot $EvidencePath }
 
@@ -211,6 +213,10 @@ switch ($Action) {
         }
         $matrix = Read-Matrix
         $item = Get-Criterion $matrix $CriterionId
+        if ($AcceptanceStatus -eq 'satisfied' -and -not (Test-LlmWikiCriterionAtomic ([string]$item.text) $requirementPolicy)) {
+            $connectorCount = Get-LlmWikiCriterionCompoundConnectorCount ([string]$item.text)
+            throw "Criterion '$CriterionId' cannot be satisfied because it is compound ($connectorCount connector(s)). Run: ./.llm-wiki/wiki.ps1 task-requirements-expand -WorkspacePath <task-workspace> -Reason '<atomic decomposition rationale>', then map and resolve the generated atomic criteria."
+        }
         $item.status = $AcceptanceStatus
         $item.resolution.reason = if ([string]::IsNullOrWhiteSpace($Reason)) { $null } else { $Reason }
         $item.resolution.evidenceNote = if ([string]::IsNullOrWhiteSpace($EvidenceNote)) { $null } else { $EvidenceNote }
@@ -225,7 +231,9 @@ switch ($Action) {
         $unmapped = [System.Collections.Generic.List[string]]::new()
         $unresolved = [System.Collections.Generic.List[string]]::new()
         $unverified = [System.Collections.Generic.List[string]]::new()
+        $nonAtomic = [System.Collections.Generic.List[string]]::new()
         foreach ($item in @($matrix.criteria)) {
+            if (-not (Test-LlmWikiCriterionAtomic ([string]$item.text) $requirementPolicy)) { $nonAtomic.Add([string]$item.id) }
             $mappingCount = @(
                 @($item.mapping.scenarioIds) +
                 @($item.mapping.changedPaths) +
@@ -251,7 +259,7 @@ switch ($Action) {
             }
         }
         $evidenceMissing = [bool]$RequireEvidence -and $null -eq $evidence
-        $valid = $unmapped.Count -eq 0 -and $unresolved.Count -eq 0 -and $unverified.Count -eq 0 -and -not $evidenceMissing
+        $valid = $unmapped.Count -eq 0 -and $unresolved.Count -eq 0 -and $unverified.Count -eq 0 -and $nonAtomic.Count -eq 0 -and -not $evidenceMissing
         $result = [pscustomobject][ordered]@{
             valid = $valid
             objective = $matrix.objective
@@ -261,6 +269,7 @@ switch ($Action) {
             unmapped = @($unmapped)
             unresolved = @($unresolved)
             unverified = @($unverified)
+            nonAtomic = @($nonAtomic)
             evidenceRequired = [bool]$RequireEvidence
             evidenceMissing = $evidenceMissing
         }
@@ -269,6 +278,7 @@ switch ($Action) {
             foreach ($id in $unmapped) { Write-Host " - UNMAPPED: $id" }
             foreach ($id in $unresolved) { Write-Host " - UNRESOLVED: $id" }
             foreach ($id in $unverified) { Write-Host " - UNVERIFIED: $id" }
+            foreach ($id in $nonAtomic) { Write-Host " - NON-ATOMIC: $id; run task-requirements-expand before resolving it." }
             if ($evidenceMissing) { Write-Host " - EVIDENCE MISSING: $EvidencePath" }
         }
         if ($FailOnInvalid -and -not $valid) { exit 1 }

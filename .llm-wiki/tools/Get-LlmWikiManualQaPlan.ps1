@@ -13,7 +13,7 @@ $journeys = & (Join-Path $PSScriptRoot 'Find-LlmWikiProductJourney.ps1') -Query 
 $cases = [Collections.Generic.List[object]]::new()
 foreach ($journey in @($journeys.journeys)) {
     foreach ($scenario in @($journey.scenarios)) {
-        $scenarioId = if ($scenario.id) { [string]$scenario.id } else { [string]$scenario }
+        $scenarioId = if ($null -ne $scenario -and $scenario.PSObject.Properties['id'] -and $scenario.id) { [string]$scenario.id } else { [string]$scenario }
         $cases.Add([pscustomobject][ordered]@{ id = "QA-$scenarioId"; journey = [string]$journey.id; kind = 'journey'; scenario = $scenario; expected = 'The documented journey outcome completes without an unexpected side effect.' })
     }
 }
@@ -28,7 +28,8 @@ if (@($ProposedPath | Where-Object { $_ -match '(?i)FoodDiary\.Web\.Client|\.(ht
         @{ id = 'QA-MOBILE'; kind = 'responsive'; scenario = 'Exercise the changed UI flow at the narrow mobile breakpoint.'; expected = 'Content and actions remain visible, operable, and stable.' }
     )) { $cases.Add([pscustomobject]$generic) }
 }
-$result = [pscustomobject][ordered]@{ schemaVersion = 1; objective = $Objective; journeys = @($journeys.journeys.id); cases = @($cases); note = 'Derived QA plan. Promote only stable product journeys to the durable journey catalog.' }
+$journeyIds = @($journeys.journeys | ForEach-Object { if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id } } | Where-Object { $_ })
+$result = [pscustomobject][ordered]@{ schemaVersion = 1; objective = $Objective; journeys = $journeyIds; cases = @($cases); note = 'Derived QA plan. Promote only stable product journeys to the durable journey catalog.' }
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 12; exit 0 }
 Write-Host "Manual QA plan: $($cases.Count) case(s), $(@($journeys.journeys).Count) matched journey(s)"
 foreach ($case in $cases) { Write-Host " - $($case.id) [$($case.kind)]: $($case.scenario) => $($case.expected)" }

@@ -135,10 +135,10 @@ function Get-DeliveryAssessment {
     }
     $coreGates = @(
         [pscustomobject][ordered]@{ id = 'packet-freshness'; passed = $stalePacketPaths.Count -eq 0; summary = $(if ($stalePacketPaths.Count -eq 0) { 'all packet paths exist or are current Git deletions' } else { "$($stalePacketPaths.Count) stale packet path(s): $($stalePacketPaths -join ', ')" }) }
-        [pscustomobject][ordered]@{ id = 'requirements'; passed = [bool]$requirements.valid; summary = "$($requirements.model.classification.criteriaCount) criteria, $(@($requirements.model.findings).Count) blocking finding(s)" }
+        [pscustomobject][ordered]@{ id = 'requirements'; passed = [bool]$requirements.valid; summary = "$($requirements.model.classification.criteriaCount) criteria, $(@($requirements.model.findings).Count) blocking finding(s)$(if (@($requirements.model.findings).Count -gt 0) { ': ' + (@($requirements.model.findings | ForEach-Object { "$($_.criterionId)/$($_.id)" }) -join ', ') })" }
         [pscustomobject][ordered]@{ id = 'acceptance'; passed = [bool]$acceptance.valid; summary = "$($acceptance.satisfiedCount)/$($acceptance.criteriaCount) satisfied, $(@($acceptance.unmapped).Count) unmapped, $(@($acceptance.unverified).Count) unverified" }
         [pscustomobject][ordered]@{ id = 'plan-conformance'; passed = [bool]$conformance.valid; summary = "$($conformance.conformance.classification.changedPathCount) changed, $(@($conformance.conformance.classification.unplannedAllowedPaths).Count) unplanned, $(@($conformance.conformance.classification.outOfScopePaths).Count) out of scope" }
-        [pscustomobject][ordered]@{ id = 'proof-of-change'; passed = (-not [bool]$proof.applicable -or [bool]$proof.valid); summary = $(if ([bool]$proof.applicable) { "$(@($proof.proof.findings).Count) proof finding(s)" } else { 'not yet applicable' }) }
+        [pscustomobject][ordered]@{ id = 'proof-of-change'; passed = (-not [bool]$proof.applicable -or [bool]$proof.valid); summary = $(if ([bool]$proof.applicable) { "$(@($proof.proof.findings).Count) proof finding(s)$(if (@($proof.proof.findings).Count -gt 0) { ': ' + (@($proof.proof.findings | ForEach-Object { "$($_.criterionId)/$($_.id)" }) -join ', ') })" } else { 'not yet applicable' }) }
     )
     $evidencePassed = $unresolvedChecks.Count + $unresolvedReviews.Count -eq 0
     $gates = @($coreGates) + @(

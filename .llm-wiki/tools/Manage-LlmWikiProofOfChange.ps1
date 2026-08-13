@@ -29,6 +29,8 @@ foreach ($requiredPath in @($acceptancePath, $evidencePath, $manifestPath, $pack
 }
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $proofPolicy = $policy.proofOfChange
+. (Join-Path $PSScriptRoot 'LlmWikiRequirementCriteria.ps1')
+$requirementPolicy = $policy.requirementModel
 
 function Get-Hash([object]$Value) {
     $json = ConvertTo-Json -InputObject $Value -Depth 40 -Compress
@@ -88,6 +90,7 @@ function Get-Assessment {
         $hasEvidenceNote = -not [string]::IsNullOrWhiteSpace([string]$criterion.resolution.evidenceNote)
         $hasVerifiedEvidence = $verifiedChecks.Count -gt 0 -or $verifiedReviews.Count -gt 0 -or $hasEvidenceNote
         $criterionFindings = [Collections.Generic.List[string]]::new()
+        if (-not (Test-LlmWikiCriterionAtomic ([string]$criterion.text) $requirementPolicy)) { $criterionFindings.Add('criterion-compound') }
         if ($criterion.status -eq 'rejected') { $criterionFindings.Add('criterion-rejected') }
         if ($criterion.status -eq 'satisfied' -and $changedPaths.Count -lt [int]$proofPolicy.minimumChangedPathsPerSatisfiedCriterion) {
             $criterionFindings.Add('missing-change-link')

@@ -99,6 +99,13 @@ adds traceability but never changes a criterion from `pending` to `satisfied` an
 does not let an unrelated generic check become the sole behavioral mapping for a
 multi-criterion task.
 
+Acceptance resolution, acceptance validation, requirement assessment, and
+proof-of-change use the same criterion atomicity rule. A compound criterion
+cannot be marked `satisfied`; run `task-requirements-expand`, map the generated
+atomic criteria, and resolve each independently. Delivery gate summaries include
+the blocking criterion and finding identifiers so remediation does not require
+opening internal JSON receipts.
+
 Inspect actionable progress at any time:
 
 ```powershell

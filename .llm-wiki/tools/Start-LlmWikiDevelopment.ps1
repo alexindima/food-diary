@@ -9,6 +9,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiExtractionPlanning.ps1')
 $ProposedPath = @(
     @($ProposedPath) |
         Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
@@ -34,9 +35,18 @@ $researchArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Js
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $researchArguments.ProposedPath = $ProposedPath }
 $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') @researchArguments | ConvertFrom-Json
 $paths = @(@($ProposedPath) + @($workflow.inferred.paths) | Where-Object { $_ } | Sort-Object -Unique)
+$extractionPlan = Get-LlmWikiExtractionPlan $Objective $repositoryRoot
+$isModuleExtraction = $null -ne $extractionPlan
+if ($isModuleExtraction) {
+    $paths = @($paths + @($extractionPlan.paths) | Sort-Object -Unique)
+}
 $scopes = @($workflow.inferred.scopes)
 $criteria = [Collections.Generic.List[string]]::new()
-$criteria.Add("The requested outcome is observable and complete: $Objective")
+if ($isModuleExtraction) {
+    foreach ($criterion in @($extractionPlan.criteria)) { $criteria.Add([string]$criterion) }
+} else {
+    $criteria.Add('The primary requested outcome is implemented and observable.')
+}
 if ('Api' -in $scopes -or 'Contracts' -in $scopes) { $criteria.Add('HTTP routes, payloads, status codes, compatibility, and the OpenAPI snapshot match the implemented behavior.') }
 if ('Database' -in $scopes) { $criteria.Add('Persistence mappings and schema changes are verified; every migration includes its Designer and model snapshot updates when applicable.') }
 if (@($paths | Where-Object { $_ -match '(?i)Notification' }).Count -gt 0) { $criteria.Add('Notification delivery is correctly targeted, idempotent, retry-safe, and covered by focused tests.') }
@@ -52,7 +62,10 @@ if ([bool]$workflow.requiresWorkspace) {
     }
     elseif ($paths.Count -eq 0) { $workspaceMessage = 'workspace required, but concrete paths are not grounded; complete research/reclassification first' }
     else {
-        $allowedPaths = @($paths | ForEach-Object { '^' + [regex]::Escape([string]$_) + '$' })
+        $allowedPaths = @($paths | ForEach-Object {
+            $candidate = Join-Path $repositoryRoot ([string]$_)
+            '^' + [regex]::Escape([string]$_) + $(if (Test-Path -LiteralPath $candidate -PathType Container) { '(?:/.*)?$' } else { '$' })
+        })
         & (Join-Path $PSScriptRoot 'Initialize-LlmWikiTaskWorkspace.ps1') -Objective $Objective -Criterion @($criteria) -WorkspacePath $WorkspacePath -BaseRef $BaseRef -AllowedPath $allowedPaths -PlannedPath $paths | Out-Null
         $workspaceCreated = $true
         $workspaceMessage = "created: $WorkspacePath"

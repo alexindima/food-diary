@@ -219,17 +219,17 @@
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
                         "pagePath":  ".llm-wiki/workflows/acceptance-evidence-matrix.md",
-                        "pageSha256":  "c0e1bc0c3cb6ad64db35aa0621096f5bc9be70d2408f61cf2a0c4b0a6be86c40",
+                        "pageSha256":  "1fb64e039c1be137c7079e70291d79e82936c78d7a053d0eae894d941cd03858",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
                                         }
                                     ],
-                        "reason":  "Clean-worktree task-start now forwards objective and planned paths into packet compilation; optional plan metadata receives safe defaults. Acceptance, manifest, impact, release, report, similarity, and index semantics are unchanged.",
+                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6062708410ed79679192be137afe56544aa41008",
-                        "reviewedAtUtc":  "2026-08-12T02:28:27.6643795Z"
+                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
+                        "reviewedAtUtc":  "2026-08-13T18:24:59.2509365Z"
                     },
                     {
                         "pageId":  "workflow-adaptive-development",
@@ -511,17 +511,25 @@
                     {
                         "pageId":  "workflow-developer-experience",
                         "pagePath":  ".llm-wiki/workflows/developer-experience.md",
-                        "pageSha256":  "59bec3d0957b927fdfd24028e580354343b8be5922bbcb679bfd5126c70d8a91",
+                        "pageSha256":  "e81fa2b3a04a1494e8f592d61f2407a135f90a5899cf6cf94a01515c984e07b3",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiManualQaPlan.ps1",
+                                            "sha256":  "c31978475df5a4e37ad37fbfb65f0144d31ffb077e5e456edbc86f4f1eb4e218"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "dbb7de33a0df1e51f58579976c4e2b42b0630870f069bec05a75611bf9a56e4d"
+                                            "sha256":  "b120156c72ea34eeefbb54e882ac5e1d5798fe0920da5187c190eff36856ff46"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
+                                            "sha256":  "19ebaf65f02f4192dd2cd6e2c35428e7b63a40279e9af131980a3deac01b3afd"
                                         }
                                     ],
-                        "reason":  "Reviewed the compact research, combined update/verify facade, baseline lifecycle, and batch-review changes against current workflow pages; no additional narrative changes are required beyond adaptive-development and review-diff.",
+                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eec73d92f25d2ddb2b777c334386ac08965396b",
-                        "reviewedAtUtc":  "2026-08-12T20:39:01.0983878Z"
+                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
+                        "reviewedAtUtc":  "2026-08-13T18:24:59.6866789Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -640,13 +648,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "8dbb47f3b37a5881bee9d8c0938a003a68c1be6411fbcc9a345b224d05b90316"
+                                            "sha256":  "c1300f519f2eb5b6ac9ebe59ae16c832cb68ec41da58a1fc46643b3aa487fcdf"
                                         }
                                     ],
-                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-                        "reviewedAtUtc":  "2026-08-13T12:40:33.6117543Z"
+                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
+                        "reviewedAtUtc":  "2026-08-13T18:25:00.1759820Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -669,14 +677,14 @@
                         "pageSha256":  "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+                                            "sha256":  "b120156c72ea34eeefbb54e882ac5e1d5798fe0920da5187c190eff36856ff46"
                                         }
                                     ],
-                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
+                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-                        "reviewedAtUtc":  "2026-08-12T21:30:34.2957565Z"
+                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
+                        "reviewedAtUtc":  "2026-08-13T18:25:00.7009814Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -809,14 +817,14 @@
                         "pageSha256":  "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/knowledge/product-journeys.json",
-                                            "sha256":  "49849088155b84b8635c763aaec785dd954ae37f9ae9370b59f51e39363d4c94"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+                                            "sha256":  "ac00a8b62a0d8ba7603ba33e271f0be99b61643bc31d17ab753dd9672e192a56"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:02.1539240Z"
+                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
+                        "reviewedAtUtc":  "2026-08-13T18:25:01.2543407Z"
                     },
                     {
                         "pageId":  "workflow-proof-of-change",
@@ -825,17 +833,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
+                                            "sha256":  "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
                                         },
                                         {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
+                                            "sha256":  "52458b277ebc3a74e0c238d228867aaeebe030f4d3e1b8e52dca8b8b3dbbaa07"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:17.3031437Z"
+                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
+                        "reviewedAtUtc":  "2026-08-13T18:25:01.7432111Z"
                     },
                     {
                         "pageId":  "workflow-quality-risk",
@@ -858,14 +866,14 @@
                         "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "c72e9d79fb364545e68a89dc45c1159988cb6aa7958a30b6bc82fb62826bfa9b"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
                                         }
                                     ],
-                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-                        "reviewedAtUtc":  "2026-08-13T12:40:34.1563360Z"
+                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
+                        "reviewedAtUtc":  "2026-08-13T18:25:02.3405125Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -873,14 +881,18 @@
                         "pageSha256":  "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "49587d707de326bbb0d0caff4978b393469f0105de83e4114cfcf38f4272f9e5"
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+                                            "sha256":  "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
+                                            "sha256":  "664123efb96775a3933e7ccae4befa7116de780a0e1ed8fcaacd19ec27a08ff7"
                                         }
                                     ],
-                        "reason":  "Reviewed the governed lifecycle fixes: next handles its distinct payload schema, start persists normalized planned paths, and delivery links completed checks only to single or behaviorally anchored criteria without auto-satisfying them.",
+                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-                        "reviewedAtUtc":  "2026-08-12T21:24:21.8720040Z"
+                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
+                        "reviewedAtUtc":  "2026-08-13T18:25:02.8146485Z"
                     },
                     {
                         "pageId":  "workflow-review-report",

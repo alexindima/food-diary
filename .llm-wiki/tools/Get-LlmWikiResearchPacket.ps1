@@ -187,7 +187,15 @@ if (-not $workflow.scopeKnown -and $effectivePurpose -eq 'Implementation') {
     $openQuestions.Add([pscustomobject][ordered]@{ id = 'confirm-edit-boundary'; blocking = $true; question = 'Which ranked implementation paths form the actual edit boundary?'; evidenceNeeded = 'Read current source and confirm the entry point, implementation, and focused tests.' })
 }
 if ($workflow.requiresDecisionCheckpoint) {
-    $openQuestions.Add([pscustomobject][ordered]@{ id = 'resolve-design-boundary'; blocking = $effectivePurpose -eq 'Implementation'; question = 'Which compatibility, privacy, provider, persistence, or architecture choice must be fixed before editing?'; evidenceNeeded = 'Record a source-grounded decision or explicit assumption in the task journal.' })
+    $escapedObjective = $Objective.Replace("'", "''")
+    $plannedArgument = if ($groundedPaths.Count -gt 0) { " -PlannedPath '$(($groundedPaths | Select-Object -First $Limit) -join ';')'" } else { '' }
+    $openQuestions.Add([pscustomobject][ordered]@{
+        id = 'resolve-design-boundary'
+        blocking = $effectivePurpose -eq 'Implementation'
+        question = 'Select and record the compatibility, privacy, provider, persistence, or architecture boundary that the implementation must preserve.'
+        evidenceNeeded = 'A source-grounded decision naming the selected boundary, rejected alternative, and affected consumers.'
+        resolutionCommand = "./.llm-wiki/wiki.ps1 design -Intent '$escapedObjective'$plannedArgument -Decision '<selected boundary; rejected alternative; affected consumers>'"
+    })
 }
 if ($scopePaths.Count -eq 0 -and @($context.implementationFiles).Count -eq 0 -and @($context.symbols).Count -eq 0 -and @($context.frontendSymbols).Count -eq 0) {
     $openQuestions.Add([pscustomobject][ordered]@{ id = 'locate-implementation'; blocking = $true; question = 'The context index found no ranked implementation file. What exact symbol or route names the flow?'; evidenceNeeded = 'Use trace or source search and rerun research with PlannedPath.' })

@@ -32,11 +32,13 @@ if (Test-Path -LiteralPath $root -PathType Container) {
         })
     }
 }
+$failedCheckMeasure = $items | Measure-Object failedChecks -Sum
+$failedCheckSum = if ($null -ne $failedCheckMeasure -and $failedCheckMeasure.PSObject.Properties['Sum'] -and $null -ne $failedCheckMeasure.Sum) { [int]$failedCheckMeasure.Sum } else { 0 }
 $result = [pscustomobject][ordered]@{
     schemaVersion = 1
     workspaceCount = $items.Count
     readyOrSealedCount = @($items | Where-Object state -in @('ready', 'sealed', 'complete')).Count
-    failedCheckCount = [int](($items | Measure-Object failedChecks -Sum).Sum)
+    failedCheckCount = $failedCheckSum
     ceremony = [pscustomobject][ordered]@{
         manifestAdoptionPercent = $(if ($items.Count -eq 0) { 0 } else { [Math]::Round(100 * @($items | Where-Object hasManifest).Count / $items.Count, 1) })
         acceptanceAdoptionPercent = $(if ($items.Count -eq 0) { 0 } else { [Math]::Round(100 * @($items | Where-Object hasAcceptance).Count / $items.Count, 1) })

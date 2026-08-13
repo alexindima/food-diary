@@ -68,6 +68,14 @@ builds it with inferred references, reports compiler diagnostics, and removes
 the fixture. A requested compile probe must pass before the module is reported
 ready.
 
+For an explicit module-extraction intent, `start` expands discovery from the
+logical feature name to the physical implementation source set, abstraction
+areas, composition roots, project references, solution and Docker inputs,
+architecture tests, and ownership inventories. The governed workspace starts
+with independent outcomes for source ownership, declared dependencies, host
+registration, focused tests, and removal of the legacy source folder instead
+of repeating the complete intent as one meta-criterion.
+
 A baseline reports its session ID, age, and commit distance. When its accumulated
 path set is clearly unrelated to the much smaller current worktree delta, the
 facade closes it automatically, uses the safe current delta, and lets the next

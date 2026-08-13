@@ -29,6 +29,7 @@ foreach ($requiredPath in @($acceptancePath, $packetPath, $policyPath)) {
 }
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $modelPolicy = $policy.requirementModel
+. (Join-Path $PSScriptRoot 'LlmWikiRequirementCriteria.ps1')
 
 function Get-Hash([object]$Value) {
     $json = ConvertTo-Json -InputObject $Value -Depth 40 -Compress
@@ -160,7 +161,7 @@ function Get-Assessment {
     foreach ($criterion in $criteria) {
         $text = [string]$criterion.text
         $wordCount = @(Get-Tokens $text).Count
-        $connectors = @([regex]::Matches($text, '(?i)\b(and|or|but|while|unless)\b|[,;]')).Count
+        $connectors = Get-LlmWikiCriterionCompoundConnectorCount $text
         $vague = $text -match '(?i)^\s*(improve|optimi[sz]e|enhance|make .* better|fix)[.!]?\s*$'
         $criterionFindings = [Collections.Generic.List[string]]::new()
         if ($wordCount -lt [int]$modelPolicy.minimumCriterionWords) { $criterionFindings.Add('criterion-too-short') }
