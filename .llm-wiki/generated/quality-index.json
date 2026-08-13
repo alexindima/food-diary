@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4150,
+                    "productionFiles":  4155,
                     "criticalSymbols":  538,
                     "criticalSymbolsWithTestReferences":  509,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -302,11 +302,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  305,
+                         "nonBlankLines":  307,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  67.6
+                         "structuralRiskScore":  67.64
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
@@ -2215,6 +2215,22 @@
                       "structuralRiskScore":  0.24
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Consumptions/Common/IConsumptionFavoriteReadService.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Consumptions/Models/ConsumptionFavoriteMealModel.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/ContentReports/Common/ContentReportErrors.cs",
                       "nonBlankLines":  12,
                       "decisionPoints":  0,
@@ -3215,12 +3231,28 @@
                       "structuralRiskScore":  0.58
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.4
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs",
@@ -3231,12 +3263,28 @@
                       "structuralRiskScore":  0.32
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealModel.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
                       "nonBlankLines":  13,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Common/FavoriteProductErrors.cs",
@@ -3263,6 +3311,14 @@
                       "structuralRiskScore":  0.5
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductRepository.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -3277,6 +3333,14 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
+                      "nonBlankLines":  23,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.46
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
@@ -3311,6 +3375,14 @@
                       "structuralRiskScore":  0.5
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeRepository.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -3325,6 +3397,14 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeReadModel.cs",
@@ -7655,6 +7735,318 @@
                       "structuralRiskScore":  0.08
                   },
                   {
+                      "path":  "FoodDiary.Application.Favorites/Common/RequiredIdParser.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/DependencyInjection.cs",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.48
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
+                      "nonBlankLines":  50,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  9
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+                      "nonBlankLines":  41,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Mappings/FavoriteMealMappings.cs",
+                      "nonBlankLines":  47,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.94
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
+                      "nonBlankLines":  34,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.68
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Services/FavoriteMealReadService.cs",
+                      "nonBlankLines":  58,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
+                      "nonBlankLines":  53,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.56
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
+                      "nonBlankLines":  16,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  8.82
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+                      "nonBlankLines":  41,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
+                      "nonBlankLines":  48,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.46
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  8.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Mappings/FavoriteProductMappings.cs",
+                      "nonBlankLines":  69,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.38
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
+                      "nonBlankLines":  34,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.68
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
+                      "nonBlankLines":  55,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  9.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  7.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+                      "nonBlankLines":  41,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Mappings/FavoriteRecipeMappings.cs",
+                      "nonBlankLines":  37,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
+                      "nonBlankLines":  26,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.02
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+                      "nonBlankLines":  34,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.68
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Favorites/GlobalUsings.cs",
+                      "nonBlankLines":  1,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.02
+                  },
+                  {
                       "path":  "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
                       "nonBlankLines":  18,
                       "decisionPoints":  0,
@@ -10711,20 +11103,12 @@
                       "structuralRiskScore":  0.2
                   },
                   {
-                      "path":  "FoodDiary.Application/Consumptions/Common/IConsumptionFavoriteReadService.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
                       "path":  "FoodDiary.Application/Consumptions/Common/IConsumptionReadService.cs",
-                      "nonBlankLines":  24,
+                      "nonBlankLines":  25,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.48
+                      "structuralRiskScore":  0.5
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Common/IMealActivityReadService.cs",
@@ -10799,14 +11183,6 @@
                       "structuralRiskScore":  0.46
                   },
                   {
-                      "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionFavoriteMealModel.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
                       "nonBlankLines":  32,
                       "decisionPoints":  0,
@@ -10824,11 +11200,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionOverviewModel.cs",
-                      "nonBlankLines":  6,
+                      "nonBlankLines":  7,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
+                      "structuralRiskScore":  0.14
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionById/GetConsumptionByIdQuery.cs",
@@ -10936,11 +11312,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Services/ConsumptionReadService.cs",
-                      "nonBlankLines":  88,
+                      "nonBlankLines":  111,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.76
+                      "structuralRiskScore":  2.22
                   },
                   {
                       "path":  "FoodDiary.Application/Consumptions/Services/IMealNutritionService.cs",
@@ -11664,11 +12040,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                      "nonBlankLines":  58,
-                      "decisionPoints":  0,
+                      "nonBlankLines":  51,
+                      "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.16
+                      "structuralRiskScore":  2.52
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
@@ -11957,342 +12333,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  1.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
-                      "nonBlankLines":  53,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.06
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
-                      "nonBlankLines":  42,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Common/IFavoriteMealReadService.cs",
-                      "nonBlankLines":  20,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Mappings/FavoriteMealMappings.cs",
-                      "nonBlankLines":  49,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.98
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Models/FavoriteMealModel.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
-                      "nonBlankLines":  35,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
-                      "nonBlankLines":  60,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-                      "nonBlankLines":  54,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.58
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
-                      "nonBlankLines":  16,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  8.82
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
-                      "nonBlankLines":  42,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
-                      "nonBlankLines":  49,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.48
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
-                      "nonBlankLines":  15,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  8.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Common/IFavoriteProductReadService.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Mappings/FavoriteProductMappings.cs",
-                      "nonBlankLines":  70,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Models/FavoriteProductModel.cs",
-                      "nonBlankLines":  23,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.46
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
-                      "nonBlankLines":  35,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.44
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-                      "nonBlankLines":  56,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
-                      "nonBlankLines":  42,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Mappings/FavoriteRecipeMappings.cs",
-                      "nonBlankLines":  38,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.02
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
-                      "nonBlankLines":  35,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.44
                   },
                   {
                       "path":  "FoodDiary.Application/Gamification/Common/IAchievementAwardService.cs",
@@ -18968,11 +19008,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  305,
+                      "nonBlankLines":  307,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  67.6
+                      "structuralRiskScore":  67.64
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19392,11 +19432,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  43,
+                      "nonBlankLines":  45,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.36
+                      "structuralRiskScore":  2.4
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -20864,11 +20904,11 @@
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Mappings/ConsumptionHttpResponseMappings.cs",
-                      "nonBlankLines":  137,
+                      "nonBlankLines":  138,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.74
+                      "structuralRiskScore":  2.76
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Consumptions/Requests/ConsumptionAiItemHttpRequest.cs",
@@ -23736,11 +23776,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  75,
+                      "nonBlankLines":  77,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.5
+                      "structuralRiskScore":  4.54
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34054,8 +34094,8 @@
                             {
                                 "name":  "AddFavoriteMealCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
-                                "line":  16,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs"
@@ -34064,8 +34104,8 @@
                             {
                                 "name":  "AddFavoriteProductCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-                                "line":  16,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
+                                "line":  15,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs"
@@ -34074,8 +34114,8 @@
                             {
                                 "name":  "AddFavoriteRecipeCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-                                "line":  16,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
+                                "line":  15,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs"
@@ -34990,8 +35030,8 @@
                             {
                                 "name":  "RemoveFavoriteMealCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
-                                "line":  12,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+                                "line":  11,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs"
@@ -35000,8 +35040,8 @@
                             {
                                 "name":  "RemoveFavoriteProductCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
-                                "line":  12,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+                                "line":  11,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs"
@@ -35010,8 +35050,8 @@
                             {
                                 "name":  "RemoveFavoriteRecipeCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
-                                "line":  12,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+                                "line":  11,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs"
@@ -35385,8 +35425,8 @@
                             {
                                 "name":  "UpdateFavoriteProductCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
-                                "line":  14,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs"
@@ -37041,7 +37081,7 @@
                             {
                                 "name":  "GetFavoriteMealsQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37051,7 +37091,7 @@
                             {
                                 "name":  "GetFavoriteProductsQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37061,7 +37101,7 @@
                             {
                                 "name":  "GetFavoriteRecipesQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37758,8 +37798,8 @@
                             {
                                 "name":  "IsMealFavoriteQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
-                                "line":  9,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
+                                "line":  8,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -37769,8 +37809,8 @@
                             {
                                 "name":  "IsProductFavoriteQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
-                                "line":  9,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
+                                "line":  8,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -37780,8 +37820,8 @@
                             {
                                 "name":  "IsRecipeFavoriteQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
-                                "line":  9,
+                                "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+                                "line":  8,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -37851,7 +37891,7 @@
                             {
                                 "name":  "AddFavoriteMealCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37861,7 +37901,7 @@
                             {
                                 "name":  "AddFavoriteProductCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  0,
                                 "testReferences":  [
@@ -37871,7 +37911,7 @@
                             {
                                 "name":  "AddFavoriteRecipeCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  0,
                                 "testReferences":  [
@@ -39470,7 +39510,7 @@
                             {
                                 "name":  "UpdateFavoriteProductCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  0,
                                 "testReferences":  [

@@ -16,8 +16,8 @@ sources:
 
 - Origin: module-graph
 - Business-module dependencies: Images, Nutrition
-- Abstraction-contract dependencies: Achievements, Images, Meals, Products, RecentItems, Recipes, Users
-- Business-module consumers: Dashboard, Export, FavoriteMeals, Gamification, Usda, WeeklyCheckIn, WeeklyGoals
+- Abstraction-contract dependencies: Achievements, FavoriteMeals, Images, Meals, Products, RecentItems, Recipes, Users
+- Business-module consumers: Dashboard, Export, Gamification, Usda, WeeklyCheckIn, WeeklyGoals
 - Host/adapter consumers: FoodDiary.Presentation.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
@@ -51,25 +51,27 @@ Source: `FoodDiary.Presentation.Api/Features/Consumptions/ConsumptionsController
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
-- Public contract files: 13
-- Observed external consumer groups: 8
+- Public contract files: 15
+- Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 13
-- Interfaces: 6
-- DTO/read-model/projection types: 5
+- Public contract types: 15
+- Interfaces: 7
+- DTO/read-model/projection types: 6
 - Enums: 0
 - Exported repository-shaped contracts: 6
 - Contracts referencing domain entities: 2
 - `class ConsumptionErrors`
+- `interface IConsumptionFavoriteReadService`
 - `interface IMealActivityReadRepository`
 - `interface IMealConsumptionReadRepository`
 - `interface IMealProductNutritionReadRepository`
 - `interface IMealReadRepository`
 - `interface IMealRepository`
 - `interface IMealWriteRepository`
+- `record ConsumptionFavoriteMealModel`
 - `record MealConsumptionAiItemReadModel`
 - `record MealConsumptionAiSessionReadModel`
 - `record MealConsumptionItemReadModel`

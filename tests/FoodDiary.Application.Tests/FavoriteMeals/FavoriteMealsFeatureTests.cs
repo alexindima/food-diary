@@ -15,9 +15,6 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.FavoriteMeals.Models;
-using FoodDiary.Application.Consumptions.Common;
-using FoodDiary.Application.Consumptions.Models;
 
 namespace FoodDiary.Application.Tests.FavoriteMeals;
 
@@ -402,43 +399,23 @@ public class FavoriteMealsFeatureTests {
         return repository;
     }
 
-    private static IConsumptionReadService CreateConsumptionReadService(Meal? meal) {
-        IConsumptionReadService service = Substitute.For<IConsumptionReadService>();
+    private static IFavoriteMealSourceReadService CreateConsumptionReadService(Meal? meal) {
+        IFavoriteMealSourceReadService service = Substitute.For<IFavoriteMealSourceReadService>();
         service
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<MealId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(meal is null ? null : ToConsumptionModel(meal)));
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<MealId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(meal is null ? null : ToFavoriteMealSourceModel(meal)));
         return service;
     }
 
-    private static ConsumptionModel ToConsumptionModel(Meal meal) =>
+    private static FavoriteMealSourceModel ToFavoriteMealSourceModel(Meal meal) =>
         new(
-            meal.Id.Value,
             meal.Date,
             meal.MealType?.ToString(),
-            meal.Comment,
-            meal.ImageUrl,
-            meal.ImageAssetId?.Value,
             meal.TotalCalories,
             meal.TotalProteins,
             meal.TotalFats,
             meal.TotalCarbs,
-            meal.TotalFiber,
-            meal.TotalAlcohol,
-            meal.IsNutritionAutoCalculated,
-            meal.ManualCalories,
-            meal.ManualProteins,
-            meal.ManualFats,
-            meal.ManualCarbs,
-            meal.ManualFiber,
-            meal.ManualAlcohol,
-            meal.PreMealSatietyLevel,
-            meal.PostMealSatietyLevel,
-            QualityScore: 0,
-            QualityGrade: string.Empty,
-            IsFavorite: false,
-            FavoriteMealId: null,
-            Items: [.. Enumerable.Repeat<ConsumptionItemModel>(null!, meal.Items.Count)],
-            AiSessions: []);
+            meal.Items.Count);
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
         ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();

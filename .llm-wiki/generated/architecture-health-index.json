@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  99,
+                    "productionProjectEdges":  106,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
-                    "backendBusinessModules":  40,
+                    "backendBusinessModules":  38,
                     "moduleHotspotReviewCandidates":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
@@ -30,7 +30,7 @@
     "moduleHotspots":  [
                            {
                                "module":  "Consumptions",
-                               "fanIn":  7,
+                               "fanIn":  6,
                                "fanOut":  2,
                                "level":  "informational",
                                "role":  "aggregate-owner"
@@ -52,13 +52,6 @@
                            {
                                "module":  "Products",
                                "fanIn":  0,
-                               "fanOut":  5,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Recipes",
-                               "fanIn":  0,
                                "fanOut":  4,
                                "level":  "informational",
                                "role":  "aggregate-owner"
@@ -67,6 +60,13 @@
                                "module":  "Images",
                                "fanIn":  3,
                                "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Recipes",
+                               "fanIn":  0,
+                               "fanOut":  3,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -176,27 +176,6 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "FavoriteMeals",
-                               "fanIn":  0,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "FavoriteProducts",
-                               "fanIn":  1,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "FavoriteRecipes",
-                               "fanIn":  1,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Lessons",
                                "fanIn":  1,
                                "fanOut":  0,
@@ -254,6 +233,13 @@
                            },
                            {
                                "module":  "Fasting",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Favorites",
                                "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",
@@ -5561,7 +5547,7 @@
                                                  {
                                                      "name":  "AddFavoriteProductCommandValidator",
                                                      "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
+                                                     "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
@@ -5571,7 +5557,7 @@
                                                  {
                                                      "name":  "AddFavoriteRecipeCommandValidator",
                                                      "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
+                                                     "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
@@ -5711,7 +5697,7 @@
                                                  {
                                                      "name":  "UpdateFavoriteProductCommandValidator",
                                                      "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
+                                                     "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
                                                      "line":  4,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

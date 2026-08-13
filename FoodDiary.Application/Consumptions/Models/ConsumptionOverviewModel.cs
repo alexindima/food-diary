@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Consumptions.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Consumptions.Models;

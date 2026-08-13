@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.FavoriteRecipes.Models;
+using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;

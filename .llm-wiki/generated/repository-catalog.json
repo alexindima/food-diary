@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  66,
+                    "dotnetProjects":  67,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  33,
-                    "extractedApplicationModules":  7,
-                    "backendBusinessModules":  40,
+                    "applicationModules":  30,
+                    "extractedApplicationModules":  8,
+                    "backendBusinessModules":  38,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  48,
+                    "agentGuides":  49,
                     "documentationPages":  43
                 },
     "dotnet":  {
@@ -186,6 +186,36 @@
                                                                   },
                                                                   {
                                                                       "name":  "Microsoft.Extensions.Logging.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
+                                        "name":  "FoodDiary.Application.Favorites",
+                                        "assemblyName":  "FoodDiary.Application.Favorites",
+                                        "path":  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "FluentValidation",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "FluentValidation.DependencyInjectionExtensions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
                                                                       "version":  null
                                                                   }
                                                               ]
@@ -427,6 +457,7 @@
                                                                   "FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
+                                                                  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
@@ -522,6 +553,7 @@
                                                                   "FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
+                                                                  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
@@ -588,6 +620,7 @@
                                                                   "FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
+                                                                  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
@@ -660,6 +693,7 @@
                                                                   "FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
+                                                                  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
@@ -1721,6 +1755,7 @@
                                                                   "FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
+                                                                  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
@@ -2085,6 +2120,7 @@
                                                                   "FoodDiary.Application.BodyMetrics/FoodDiary.Application.BodyMetrics.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
+                                                                  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj",
@@ -2518,24 +2554,6 @@
                                                     ]
                                },
                                {
-                                   "name":  "FavoriteMeals",
-                                   "dependencies":  [
-                                                        "Consumptions"
-                                                    ]
-                               },
-                               {
-                                   "name":  "FavoriteProducts",
-                                   "dependencies":  [
-
-                                                    ]
-                               },
-                               {
-                                   "name":  "FavoriteRecipes",
-                                   "dependencies":  [
-
-                                                    ]
-                               },
-                               {
                                    "name":  "Gamification",
                                    "dependencies":  [
                                                         "Consumptions"
@@ -2580,7 +2598,6 @@
                                {
                                    "name":  "Products",
                                    "dependencies":  [
-                                                        "FavoriteProducts",
                                                         "Images",
                                                         "OpenFoodFacts",
                                                         "RecentItems",
@@ -2608,7 +2625,6 @@
                                {
                                    "name":  "Recipes",
                                    "dependencies":  [
-                                                        "FavoriteRecipes",
                                                         "Images",
                                                         "Nutrition",
                                                         "RecentItems"
@@ -2674,6 +2690,10 @@
                                         {
                                             "name":  "Fasting",
                                             "project":  "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj"
+                                        },
+                                        {
+                                            "name":  "Favorites",
+                                            "project":  "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj"
                                         },
                                         {
                                             "name":  "Marketing",
@@ -4652,6 +4672,7 @@
                                                  "FoodDiary.Application.BodyMetrics/AGENTS.md",
                                                  "FoodDiary.Application.Dietologist/AGENTS.md",
                                                  "FoodDiary.Application.Fasting/AGENTS.md",
+                                                 "FoodDiary.Application.Favorites/AGENTS.md",
                                                  "FoodDiary.Application.Marketing/AGENTS.md",
                                                  "FoodDiary.Application.Notifications/AGENTS.md",
                                                  "FoodDiary.Application.Users/AGENTS.md",

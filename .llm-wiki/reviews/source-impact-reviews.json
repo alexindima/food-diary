@@ -50,17 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "18614e4f86b9a455ace97b7c5c997260bf29faeb901372c6d39433dd9e9c63ef"
+                                            "sha256":  "828cbefe9a283bf792e07b76fc00dcba6c1744ccb3a28097aceddcd6b20ae0a8"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "63a43cd6d926c459bc01ac0371b8b59c93e9eca2f2d62ef4628b2637f913d52c"
+                                            "sha256":  "92158d7b7da3bcef9ddb84eeeb098bbdab6538a3754eb23d27c98e5449a42da4"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:31.0388165Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:14.0669592Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -69,21 +69,21 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "18614e4f86b9a455ace97b7c5c997260bf29faeb901372c6d39433dd9e9c63ef"
+                                            "sha256":  "828cbefe9a283bf792e07b76fc00dcba6c1744ccb3a28097aceddcd6b20ae0a8"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "ff9c635f16832a94631fb12c5049c7c11cabed1c37290b436f0abc1b0e74027e"
+                                            "sha256":  "5f933342599563e45f4c922d9b1c6af4c79329c3e0c577a658703c4cf0226b08"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "db0a9292ca2941df2f040bf4487a1a88617923e9169e502fb0204a21c7063aec"
+                                            "sha256":  "2893d38e45f7ef7d681a5872755ade42e39c798a17febe9db8b2fe4bcbd5e77c"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:31.2544808Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:14.2762414Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -122,17 +122,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "18614e4f86b9a455ace97b7c5c997260bf29faeb901372c6d39433dd9e9c63ef"
+                                            "sha256":  "828cbefe9a283bf792e07b76fc00dcba6c1744ccb3a28097aceddcd6b20ae0a8"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "ff9c635f16832a94631fb12c5049c7c11cabed1c37290b436f0abc1b0e74027e"
+                                            "sha256":  "5f933342599563e45f4c922d9b1c6af4c79329c3e0c577a658703c4cf0226b08"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:31.4729081Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:14.4611092Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -205,13 +205,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "d3b14aa2e87418df9dc3cc2598ccc31454ae3dab1cbb6d4a3fe3692c623c30c1"
+                                            "sha256":  "beba3f685c2e77166520d820324504b2bc865dbc4901f8ea8084cda11f49d481"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:33.5008033Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:16.5068581Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -284,21 +284,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "caf2b3df642edb77601ff9cc9f0323f6a011bd45556ca840606fa7c3f7f0f030"
+                                            "sha256":  "aa70b8c99b283058d0dd7693d8949abc291fe12f3d2dca82ccd5acf9650fa28a"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "18614e4f86b9a455ace97b7c5c997260bf29faeb901372c6d39433dd9e9c63ef"
+                                            "sha256":  "828cbefe9a283bf792e07b76fc00dcba6c1744ccb3a28097aceddcd6b20ae0a8"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "db0a9292ca2941df2f040bf4487a1a88617923e9169e502fb0204a21c7063aec"
+                                            "sha256":  "2893d38e45f7ef7d681a5872755ade42e39c798a17febe9db8b2fe4bcbd5e77c"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:31.7184835Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:14.6736848Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -307,13 +307,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "8fd4707a990598e8285a92462f7b7d63a5a8c3a50034ed053afcf683df16ff68"
+                                            "sha256":  "5b2d235afe7e970e03dc1fa4a199db5da9bef6a2d55b5c971e70b8e181c160b4"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:31.9998724Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:14.9788517Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -747,13 +747,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "ff9c635f16832a94631fb12c5049c7c11cabed1c37290b436f0abc1b0e74027e"
+                                            "sha256":  "5f933342599563e45f4c922d9b1c6af4c79329c3e0c577a658703c4cf0226b08"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:32.3350591Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:15.3113979Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -815,13 +815,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "c36a871b46f6bba2fc3c1434656e18430e3f3b107007f78eb29381beb971ede3"
+                                            "sha256":  "6c8c4a731ad720402992a1b7dff2262ffad38783c0e1188e0269033aee673131"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:32.7224703Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:15.6947612Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -864,13 +864,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "2b660d842abf29b3c289f2d47277b44afcf5259bc1b6fbbd5caf9eae3b5dac2b"
+                                            "sha256":  "f604b59f3138fcb33a030262527f882ef81a234037d2a6701b215c866f810ae7"
                                         }
                                     ],
-                        "reason":  "Fasting application extraction reviewed against the module manifest and dependency graph, project-reference matrix, composition roots and Docker build contexts, contract namespace migration, extraction readiness, focused application/JobManager/presentation tests, architecture tests, and a successful full solution build.",
+                        "reason":  "Favorites extraction reviewed against current project references, DI composition, abstraction-owned ports, architecture manifests, ownership documentation, focused tests, compile probe, and API compatibility output.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "3be66c6a781284e1d4201ee0bb64607043e09449",
-                        "reviewedAtUtc":  "2026-08-12T23:35:33.1416093Z"
+                        "gitHead":  "6568b23b9f54efbbbbff282f4cb5ef1ba445b03d",
+                        "reviewedAtUtc":  "2026-08-13T00:02:16.1020053Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

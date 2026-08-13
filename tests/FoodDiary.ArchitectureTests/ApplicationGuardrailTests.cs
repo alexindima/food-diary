@@ -2100,7 +2100,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void FavoriteStatusQueries_UseExistenceReadsInsteadOfFavoriteAggregates() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application.Favorites");
         string[] favoriteStatusQueryFiles = [
             Path.Combine(applicationRoot, "FavoriteMeals", "Queries", "IsMealFavorite", "IsMealFavoriteQueryHandler.cs"),
             Path.Combine(applicationRoot, "FavoriteProducts", "Queries", "IsProductFavorite", "IsProductFavoriteQueryHandler.cs"),
@@ -2120,7 +2120,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void FavoriteQueries_UseReadServicesInsteadOfFavoriteRepositoriesAndAggregates() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application.Favorites");
         string[] favoriteQueryFiles = [
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "FavoriteMeals", "Queries")),
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "FavoriteProducts", "Queries")),
@@ -2140,7 +2140,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void FavoriteReadServices_UseReadModelsInsteadOfFavoriteAggregates() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application.Favorites");
         string[] serviceFiles = [
             Path.Combine(applicationRoot, "FavoriteMeals", "Services", "FavoriteMealReadService.cs"),
             Path.Combine(applicationRoot, "FavoriteProducts", "Services", "FavoriteProductReadService.cs"),

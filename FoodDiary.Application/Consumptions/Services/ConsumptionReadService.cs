@@ -1,5 +1,9 @@
+using FoodDiary.Application.Abstractions.Consumptions.Models;
+using FoodDiary.Application.Abstractions.Consumptions.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Meals.Models;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Mappings;
@@ -10,7 +14,7 @@ namespace FoodDiary.Application.Consumptions.Services;
 
 public sealed class ConsumptionReadService(
     IMealConsumptionReadRepository mealRepository,
-    IConsumptionFavoriteReadService favoriteReadService) : IConsumptionReadService {
+    IConsumptionFavoriteReadService favoriteReadService) : IConsumptionReadService, IFavoriteMealSourceReadService {
     public async Task<PagedResponse<ConsumptionModel>> GetPagedAsync(
         UserId userId,
         int page,
@@ -68,6 +72,27 @@ public sealed class ConsumptionReadService(
             cancellationToken).ConfigureAwait(false);
 
         return meal?.ToModel();
+    }
+
+    public async Task<FavoriteMealSourceModel?> GetAsync(
+        UserId userId,
+        MealId mealId,
+        CancellationToken cancellationToken) {
+        MealConsumptionReadModel? meal = await mealRepository.GetByIdConsumptionReadModelAsync(
+            mealId,
+            userId,
+            cancellationToken).ConfigureAwait(false);
+
+        return meal is null
+            ? null
+            : new FavoriteMealSourceModel(
+                meal.Date,
+                meal.MealType?.ToString(),
+                meal.TotalCalories,
+                meal.TotalProteins,
+                meal.TotalFats,
+                meal.TotalCarbs,
+                meal.Items.Count);
     }
 
     private async Task<IReadOnlyDictionary<MealId, FavoriteMealId>> GetFavoritesByMealIdAsync(

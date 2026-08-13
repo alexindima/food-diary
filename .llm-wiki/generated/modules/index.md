@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 33 folder modules and 7 extracted application modules.
+This index unifies 30 folder modules and 8 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
@@ -23,7 +23,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Authentication](authentication.md) | aggregate-owner | 1 | 3 | 1 | 5 | graph-only |
 | [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |
-| [Consumptions](consumptions.md) | aggregate-owner | 2 | 7 | 7 | 1 | explicit-boundary-tests |
+| [Consumptions](consumptions.md) | aggregate-owner | 2 | 8 | 6 | 1 | explicit-boundary-tests |
 | [ContentReports](content-reports.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
 | [Cycles](cycles.md) | aggregate-owner | 0 | 2 | 2 | 1 | graph-only |
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
@@ -33,9 +33,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
 | [Export](export.md) | read-composer | 2 | 2 | 0 | 2 | graph-only |
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
-| [FavoriteMeals](favorite-meals.md) | aggregate-owner | 1 | 1 | 0 | 1 | graph-only |
-| [FavoriteProducts](favorite-products.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |
-| [FavoriteRecipes](favorite-recipes.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |
+| [Favorites](favorites.md) | aggregate-owner | 0 | 7 | 0 | 4 | project-reference-matrix |
 | [Gamification](gamification.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |
 | [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
 | [Images](images.md) | aggregate-owner | 0 | 0 | 3 | 3 | explicit-boundary-tests |
@@ -45,11 +43,11 @@ are reported separately; `none observed` never means proven isolation.
 | [Notifications](notifications.md) | aggregate-owner | 0 | 0 | 0 | 5 | project-reference-matrix |
 | [Nutrition](nutrition.md) | domain-service | 0 | 0 | 2 | 0 | graph-only |
 | [OpenFoodFacts](open-food-facts.md) | adapter | 0 | 0 | 1 | 2 | graph-only |
-| [Products](products.md) | aggregate-owner | 5 | 5 | 0 | 1 | explicit-boundary-tests |
+| [Products](products.md) | aggregate-owner | 4 | 6 | 0 | 1 | explicit-boundary-tests |
 | [RecentItems](recent-items.md) | aggregate-owner | 0 | 0 | 2 | 0 | graph-only |
 | [RecipeComments](recipe-comments.md) | aggregate-owner | 0 | 3 | 0 | 1 | graph-only |
 | [RecipeLikes](recipe-likes.md) | aggregate-owner | 0 | 2 | 0 | 1 | graph-only |
-| [Recipes](recipes.md) | aggregate-owner | 4 | 4 | 0 | 1 | explicit-boundary-tests |
+| [Recipes](recipes.md) | aggregate-owner | 3 | 5 | 0 | 1 | explicit-boundary-tests |
 | [ShoppingLists](shopping-lists.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |
 | [Statistics](statistics.md) | read-composer | 0 | 4 | 1 | 1 | graph-only |
 | [Tdee](tdee.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |

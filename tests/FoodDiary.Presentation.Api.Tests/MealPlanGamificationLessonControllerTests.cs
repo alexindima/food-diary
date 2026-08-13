@@ -1,7 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 using FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
-using FoodDiary.Application.FavoriteMeals.Models;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.FavoriteMeals.Queries.GetFavoriteMeals;
 using FoodDiary.Application.FavoriteMeals.Queries.IsMealFavorite;
 using FoodDiary.Application.Gamification.Models;

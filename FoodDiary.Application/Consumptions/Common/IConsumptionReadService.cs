@@ -1,11 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Models;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Common;
 
-public interface IConsumptionReadService {
+public interface IConsumptionReadService : IFavoriteMealSourceReadService {
     Task<PagedResponse<ConsumptionModel>> GetPagedAsync(
         UserId userId,
         int page,

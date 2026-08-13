@@ -45,9 +45,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Notifications | notifications, preferences, web-push subscriptions and notification web-push outbox | `INotificationWriter`, notification feed/preferences commands and queries, delivery scheduling contracts | Users access contracts, Resources |
 | Billing | subscriptions and billing transaction state | checkout, portal, webhook and entitlement operations | Users identity, billing provider adapter |
 | Images | image asset lifecycle and object-deletion outbox | presign, confirm, delete and cleanup operations | Object storage adapter |
-| FavoriteProducts | user-to-product favorites | favorite product commands and read service | Products lookup API, Users access |
-| FavoriteRecipes | user-to-recipe favorites | favorite recipe commands and read service | Recipes access API, Users access |
-| FavoriteMeals | user-to-meal favorites | favorite meal commands and read service | Consumption Diary read API, Users access |
+| Favorites | user-to-product, user-to-recipe and user-to-meal favorites | favorite commands and read services grouped in `FoodDiary.Application.Favorites` | Products/Recipes lookup APIs, Consumption Diary source-read API, Users access |
 | Dietologist Relationships | invitations, permissions and recommendations | relationship/recommendation commands and read services | Users directory/roles, Notifications writer/refresh, Email |
 | RecipeComments | recipe comments | comment commands and read service | Recipes access API, Users, Notifications writer |
 | RecipeLikes | recipe likes | toggle command and like-status read service | Recipes access API, Users |
@@ -265,9 +263,9 @@ User/role EF configurations live in `Configurations/Users`. Refresh-token sessio
 
 Images owns `ImageAsset`, upload validation, cleanup policy and the durable object-deletion outbox. Other modules use `IImageAssetAccessService` and `IImageAssetCleanupService`; they must not acquire image repositories. AI image analysis now resolves and validates ownership through the Images capability rather than loading `ImageAsset` persistence directly.
 
-FavoriteProducts, FavoriteRecipes and FavoriteMeals are three separate relationship modules. Each owns its own favorite entity and exposes commands plus a semantic read service. Products, Recipes and Consumption Diary consume those read services rather than favorite repositories.
+FavoriteProducts, FavoriteRecipes and FavoriteMeals are three cohesive feature slices inside the single physical `FoodDiary.Application.Favorites` module. Each slice owns its favorite entity and exposes commands plus a semantic read service, while sharing one composition boundary because they have the same lifecycle, dependency profile and relationship-focused responsibility. Products, Recipes and Consumption Diary consume those read services rather than favorite repositories.
 
-FavoriteMeals uses `IConsumptionReadService` when creating a favorite from a source meal. Consumption Diary declares the consumer-owned `IConsumptionFavoriteReadService` port; the FavoriteMeals adapter implements it for favorite IDs and overview projections. This keeps the source dependency one-way (`FavoriteMeals` to `Consumptions`) and avoids mutual repository or Module API coupling.
+FavoriteMeals uses the narrow `IFavoriteMealSourceReadService` abstraction when creating a favorite from a source meal. Consumption Diary implements that source projection. Consumption Diary also consumes the abstraction-owned `IConsumptionFavoriteReadService`, implemented by Favorites for favorite IDs and overview projections. Both projects depend on contracts in `FoodDiary.Application.Abstractions`, so the physical Application projects remain acyclic and avoid mutual repository or project references.
 
 Image EF configuration and object-deletion outbox configuration live in `Configurations/Images`. Favorite relationship configurations live together in `Configurations/Favorites`, while their repositories remain separated by owned persistence folders.
 

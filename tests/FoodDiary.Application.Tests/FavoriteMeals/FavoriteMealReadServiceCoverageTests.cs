@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.FavoriteMeals.Models;
 using FoodDiary.Application.FavoriteMeals.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 

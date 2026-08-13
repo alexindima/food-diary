@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1028,
+                    "contracts":  1029,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7101,
-                    "productionConsumerEdges":  4338,
+                    "consumerEdges":  7104,
+                    "productionConsumerEdges":  4341,
                     "testConsumerEdges":  2763,
-                    "consumedContracts":  1028,
+                    "consumedContracts":  1029,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -86,7 +86,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -118,7 +118,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -150,7 +150,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4534,7 +4534,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4550,7 +4550,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4566,7 +4566,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -7174,7 +7174,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Consumptions/Common/IConsumptionFavoriteReadService.cs"
+                                                  "FoodDiary.Application.Abstractions/Consumptions/Common/IConsumptionFavoriteReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -8534,7 +8534,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+                                                  "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -8551,6 +8551,22 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealRepository.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
+                          "name":  "IFavoriteMealSourceReadService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -8614,7 +8630,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+                                                  "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -8694,7 +8710,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+                                                  "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11498,7 +11514,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11514,7 +11530,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11530,7 +11546,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -14203,7 +14219,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -14219,7 +14235,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -14235,7 +14251,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -15387,7 +15403,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
+                                                  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -16731,10 +16747,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -16744,10 +16760,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -16757,7 +16773,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
@@ -16770,7 +16786,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -16783,7 +16799,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsValidatorTests.cs",
@@ -16796,7 +16812,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteMealHttpMappingsTests.cs",
@@ -16809,7 +16825,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -16887,10 +16903,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -16900,10 +16916,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -16913,7 +16929,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
@@ -16926,7 +16942,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -16939,7 +16955,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductHttpMappingsTests.cs",
@@ -16952,7 +16968,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductsControllerTests.cs",
@@ -17030,10 +17046,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -17043,10 +17059,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -17056,7 +17072,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
@@ -17069,7 +17085,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -17082,7 +17098,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipeHttpMappingsTests.cs",
@@ -17095,7 +17111,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs",
@@ -34190,10 +34206,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -34203,7 +34219,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
@@ -34216,7 +34232,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -34229,7 +34245,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteMealHttpMappingsTests.cs",
@@ -34242,7 +34258,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -34255,10 +34271,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -34268,7 +34284,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
@@ -34281,7 +34297,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -34294,7 +34310,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductHttpMappingsTests.cs",
@@ -34307,7 +34323,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductsControllerTests.cs",
@@ -34320,10 +34336,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -34333,7 +34349,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
@@ -34346,7 +34362,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -34359,7 +34375,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipeHttpMappingsTests.cs",
@@ -34372,7 +34388,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs",
@@ -46062,6 +46078,97 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Commands/DeliverTestNotification/DeliverTestNotificationCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -46920,97 +47027,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47831,6 +47847,97 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Fasting/Commands/UpdateCurrentFastingCheckIn/UpdateCurrentFastingCheckInCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48701,97 +48808,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -49205,38 +49221,38 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Consumptions/Common/IConsumptionFavoriteReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IConsumptionFavoriteReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/DependencyInjection.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IConsumptionFavoriteReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IConsumptionFavoriteReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Services/FavoriteMealReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "IConsumptionFavoriteReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Consumptions/Common/IConsumptionFavoriteReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Services/ConsumptionReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IConsumptionFavoriteReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Consumptions/Common/IConsumptionFavoriteReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                              "isTest":  false,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "IConsumptionFavoriteReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Consumptions/Common/IConsumptionFavoriteReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  2
                           },
                           {
                               "contract":  "IConsumptionReadService",
@@ -49301,20 +49317,7 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
                               "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IConsumptionReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Consumptions/Common/IConsumptionReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "IConsumptionReadService",
@@ -49328,19 +49331,6 @@
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Consumptions/ConsumptionsFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IConsumptionReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Consumptions/Common/IConsumptionReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  3
                           },
                           {
                               "contract":  "IContentReportAdministrationReadService",
@@ -50651,6 +50641,175 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51250,175 +51409,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60050,7 +60040,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Services/FavoriteMealReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60190,10 +60180,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -60203,10 +60193,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60216,10 +60206,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60229,10 +60219,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Common/IFavoriteMealReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Services/FavoriteMealReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Services/FavoriteMealReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60328,6 +60318,71 @@
                               "referenceCount":  1
                           },
                           {
+                              "contract":  "IFavoriteMealSourceReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IFavoriteMealSourceReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Consumptions/Common/IConsumptionReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IFavoriteMealSourceReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Consumptions/Services/ConsumptionReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IFavoriteMealSourceReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "isTest":  false,
+                              "referenceCount":  3
+                          },
+                          {
+                              "contract":  "IFavoriteMealSourceReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealSourceReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  3
+                          },
+                          {
                               "contract":  "IFavoriteMealWriteRepository",
                               "roles":  [
                                             "WriteRepository"
@@ -60349,7 +60404,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60362,7 +60417,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteMeals/Common/IFavoriteMealWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60440,7 +60495,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60567,10 +60622,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60580,10 +60635,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60593,10 +60648,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60606,10 +60661,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Services/FavoriteProductReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Services/FavoriteProductReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60619,7 +60674,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
@@ -60632,7 +60687,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Common/IFavoriteProductReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -60752,7 +60807,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60765,7 +60820,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60778,7 +60833,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60843,7 +60898,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60970,10 +61025,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60983,10 +61038,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -60996,10 +61051,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61009,10 +61064,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Services/FavoriteRecipeReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61022,7 +61077,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
@@ -61035,7 +61090,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
+                                                      "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -61155,7 +61210,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61168,7 +61223,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteRecipes/Common/IFavoriteRecipeWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71398,7 +71453,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Consumptions/Services/MealNutritionService.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71411,7 +71466,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductLookupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application/Consumptions/Services/MealNutritionService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72737,6 +72792,84 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73297,84 +73430,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74206,6 +74261,84 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Queries/GetNotificationPreferences/GetNotificationPreferencesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -74766,84 +74899,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -75792,7 +75847,7 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82731,10 +82786,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -82744,7 +82799,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
@@ -82757,7 +82812,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -82770,7 +82825,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteMealHttpMappingsTests.cs",
@@ -82783,7 +82838,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -82796,10 +82851,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -82809,7 +82864,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
@@ -82822,7 +82877,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -82835,7 +82890,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductHttpMappingsTests.cs",
@@ -82848,7 +82903,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductsControllerTests.cs",
@@ -82861,10 +82916,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -82874,7 +82929,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
@@ -82887,7 +82942,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -82900,7 +82955,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipeHttpMappingsTests.cs",
@@ -82913,7 +82968,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs",
@@ -87947,6 +88002,175 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Notifications/Commands/MarkAllNotificationsRead/MarkAllNotificationsReadCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -88598,175 +88822,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Export/Queries/ExportDiary/ExportDiaryQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/AddFavoriteMeal/AddFavoriteMealCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/GetFavoriteMeals/GetFavoriteMealsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Queries/IsMealFavorite/IsMealFavoriteQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/GetFavoriteProducts/GetFavoriteProductsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Queries/IsProductFavorite/IsProductFavoriteQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Queries/IsRecipeFavorite/IsRecipeFavoriteQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -99241,10 +99296,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -99254,7 +99309,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteMeals/Mappings/FavoriteMealHttpMappings.cs",
@@ -99267,7 +99322,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteMeals/FavoriteMealsFeatureTests.cs",
@@ -99280,7 +99335,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteMealHttpMappingsTests.cs",
@@ -99293,7 +99348,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteMeals/Commands/RemoveFavoriteMeal/RemoveFavoriteMealCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/MealPlanGamificationLessonControllerTests.cs",
@@ -99306,10 +99361,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -99319,7 +99374,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
@@ -99332,7 +99387,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -99345,7 +99400,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductHttpMappingsTests.cs",
@@ -99358,7 +99413,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductsControllerTests.cs",
@@ -99371,10 +99426,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -99384,7 +99439,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteRecipes/Mappings/FavoriteRecipeHttpMappings.cs",
@@ -99397,7 +99452,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteRecipes/FavoriteRecipesAdditionalFeatureTests.cs",
@@ -99410,7 +99465,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipeHttpMappingsTests.cs",
@@ -99423,7 +99478,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs",
@@ -104233,10 +104288,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -104246,10 +104301,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -104259,7 +104314,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/FavoriteProducts/Mappings/FavoriteProductHttpMappings.cs",
@@ -104272,7 +104327,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/FavoriteProducts/FavoriteProductsAdditionalFeatureTests.cs",
@@ -104285,7 +104340,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductHttpMappingsTests.cs",
@@ -104298,7 +104353,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
+                                                      "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteProductsControllerTests.cs",

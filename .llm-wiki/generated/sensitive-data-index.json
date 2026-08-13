@@ -6,10 +6,10 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1430,
+                    "candidateFields":  1431,
                     "credential":  152,
                     "identity":  153,
-                    "health":  629,
+                    "health":  630,
                     "financial":  199,
                     "privateContent":  297,
                     "boundaryFiles":  179,
@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  56
+                       "line":  57
                    },
                    {
                        "category":  "credential",
@@ -1350,6 +1350,20 @@
                    {
                        "category":  "financial",
                        "name":  "PreferredPortionAmount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
+                       "line":  23
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "DefaultPortionAmount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
+                       "line":  24
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "PreferredPortionAmount",
                        "type":  "double?",
                        "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
                        "line":  24
@@ -1510,6 +1524,20 @@
                    },
                    {
                        "category":  "financial",
+                       "name":  "PreferredPortionAmount",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "PreferredPortionAmount",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "financial",
                        "name":  "IBillingMarketingConversionRecorder",
                        "type":  "IMarketingConversionRecorder,",
                        "path":  "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
@@ -1549,34 +1577,6 @@
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
                        "line":  14
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "PreferredPortionAmount",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommand.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "PreferredPortionAmount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommand.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "PreferredPortionAmount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/FavoriteProducts/Models/FavoriteProductModel.cs",
-                       "line":  23
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "DefaultPortionAmount",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/FavoriteProducts/Models/FavoriteProductModel.cs",
-                       "line":  24
                    },
                    {
                        "category":  "financial",
@@ -2490,6 +2490,13 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/Consumptions/Models/ConsumptionFavoriteMealModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
                        "name":  "CycleProfileId",
                        "type":  "Guid",
                        "path":  "FoodDiary.Application.Abstractions/Cycles/Models/BleedingEntryReadModel.cs",
@@ -2786,8 +2793,29 @@
                        "category":  "health",
                        "name":  "TotalCalories",
                        "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
                        "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealReadModel.cs",
                        "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteMeals/Models/FavoriteMealSourceModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesPerBase",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
+                       "line":  13
                    },
                    {
                        "category":  "health",
@@ -2795,6 +2823,13 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
                        "line":  16
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
+                       "line":  10
                    },
                    {
                        "category":  "health",
@@ -3953,13 +3988,6 @@
                    },
                    {
                        "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionFavoriteMealModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
                        "name":  "ProductCaloriesPerBase",
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
@@ -4307,27 +4335,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
                        "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/FavoriteMeals/Models/FavoriteMealModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesPerBase",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/FavoriteProducts/Models/FavoriteProductModel.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
-                       "line":  10
                    },
                    {
                        "category":  "health",
@@ -8106,6 +8113,20 @@
                        "category":  "privateContent",
                        "name":  "Comment",
                        "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
                        "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
                        "line":  14
                    },
@@ -8115,6 +8136,13 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Abstractions/FavoriteProducts/Models/FavoriteProductReadModel.cs",
                        "line":  15
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Abstractions/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
+                       "line":  9
                    },
                    {
                        "category":  "privateContent",
@@ -8563,27 +8591,6 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
                        "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/FavoriteProducts/Models/FavoriteProductModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/FavoriteProducts/Models/FavoriteProductModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/FavoriteRecipes/Models/FavoriteRecipeModel.cs",
-                       "line":  9
                    },
                    {
                        "category":  "privateContent",

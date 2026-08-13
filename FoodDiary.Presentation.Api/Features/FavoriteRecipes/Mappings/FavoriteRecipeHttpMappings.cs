@@ -1,6 +1,6 @@
 using FoodDiary.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 using FoodDiary.Application.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
-using FoodDiary.Application.FavoriteRecipes.Models;
+using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
 using FoodDiary.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
 using FoodDiary.Presentation.Api.Features.FavoriteRecipes.Requests;

@@ -1,4 +1,4 @@
-using FoodDiary.Application.FavoriteRecipes.Models;
+using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Recipes.Models;

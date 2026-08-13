@@ -2,7 +2,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
-using FoodDiary.Application.FavoriteProducts.Models;
+using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Application.FavoriteProducts.Queries.GetFavoriteProducts;
 using FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
 using FoodDiary.Mediator;

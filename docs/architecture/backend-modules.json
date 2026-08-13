@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 33,
-    "extractedModules": 7,
-    "totalModules": 40
+    "folderModules": 30,
+    "extractedModules": 8,
+    "totalModules": 38
   },
   "analysis": {
     "compileTime": "Roslyn/syntax and project-reference evidence; unresolved or runtime-only DI edges are reported separately.",
@@ -204,26 +204,33 @@
         ]
       }
     },
-    "FavoriteMeals": {
+    "Favorites": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [],
-      "sourceMappings": {}
-    },
-    "FavoriteProducts": {
-      "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [],
-      "sourceMappings": {}
-    },
-    "FavoriteRecipes": {
-      "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
-      "ownedEntities": [],
-      "sourceMappings": {}
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
+      "ownedEntities": [
+        "FavoriteMeal",
+        "FavoriteProduct",
+        "FavoriteRecipe"
+      ],
+      "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Favorites"
+        ],
+        "abstractionAreas": [
+          "FavoriteMeals",
+          "FavoriteProducts",
+          "FavoriteRecipes"
+        ],
+        "domainAreas": [
+          "FavoriteMeals",
+          "FavoriteProducts",
+          "FavoriteRecipes"
+        ],
+        "persistenceAreas": [
+          "Favorites"
+        ]
+      }
     },
     "Gamification": {
       "role": "read-composer",
