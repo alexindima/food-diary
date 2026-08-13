@@ -1,11 +1,9 @@
-using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Services;
-using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Application.Dashboard;
 using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Products.Common;
@@ -21,14 +19,8 @@ public sealed class ApplicationDependencyInjectionTests {
 
         DependencyInjection.AddApplication(services);
 
-        Assert.Contains(services, ServiceDescriptorMatches<IMealNutritionService, MealNutritionService>(ServiceLifetime.Scoped));
-        Assert.Contains(services, descriptor =>
-            descriptor.ServiceType == typeof(IDashboardSnapshotBuilder) &&
-            descriptor.ImplementationFactory is not null &&
-            descriptor.Lifetime == ServiceLifetime.Scoped);
         Assert.Contains(services, ServiceDescriptorMatches<IPostCommitActionQueue, PostCommitActionQueue>(ServiceLifetime.Scoped));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(INotificationCleanupService));
-        Assert.Contains(services, ServiceDescriptorMatches<IAuthenticationTokenService, AuthenticationTokenService>(ServiceLifetime.Scoped));
         Assert.Contains(services, descriptor =>
             descriptor.ServiceType == typeof(TimeProvider) &&
             descriptor.Lifetime == ServiceLifetime.Singleton &&
@@ -38,6 +30,18 @@ public sealed class ApplicationDependencyInjectionTests {
         Assert.Contains(services, d => d.ImplementationType == typeof(LoggingBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(ValidationBehavior<,>));
         Assert.Contains(services, d => d.ImplementationType == typeof(CommandTransactionBehavior<,>));
+    }
+
+    [Fact]
+    public void AddDashboardModule_RegistersDashboardServices() {
+        var services = new ServiceCollection();
+
+        services.AddDashboardModule();
+
+        Assert.Contains(services, descriptor =>
+            descriptor.ServiceType == typeof(IDashboardSnapshotBuilder) &&
+            descriptor.ImplementationFactory is not null &&
+            descriptor.Lifetime == ServiceLifetime.Scoped);
     }
 
     [Fact]

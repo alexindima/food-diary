@@ -4,7 +4,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Exercises.Common;
-using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Dashboard.Internal;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Application.DailyAdvices.Models;

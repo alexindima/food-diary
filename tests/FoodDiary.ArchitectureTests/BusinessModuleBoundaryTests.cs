@@ -15,7 +15,6 @@ public sealed class BusinessModuleBoundaryTests {
         string[] expectedModuleCalls = [
             "services.AddAdministrationModules();",
             "services.AddFoodModules();",
-            "services.AddTrackingModules();",
             "services.AddCommunicationServices();",
         ];
 

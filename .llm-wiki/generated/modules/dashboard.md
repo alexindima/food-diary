@@ -14,17 +14,17 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Cycles, DailyAdvices, Exercises, Hydration, Meals, Statistics, Tdee
-- Abstraction-contract dependencies: Audit, Authentication, Dietologist, Fasting, Users, WaistEntries, WeightEntries
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj`
+- Business-module dependencies: none observed
+- Abstraction-contract dependencies: none observed
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Dashboard`
-- `FoodDiary.Application/Dashboard`
 - `FoodDiary.Infrastructure/Persistence/Dashboard`
 - `FoodDiary.Presentation.Api/Features/Dashboard`
 
@@ -45,7 +45,7 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: not yet enumerated
 - Public contract files: 17
-- Observed external consumer groups: 1
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -81,6 +81,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardSnapshotBuilderTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dashboard/DashboardValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/DashboardModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardBodyReadServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardMealsReadServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/DashboardReadServiceTests.cs`

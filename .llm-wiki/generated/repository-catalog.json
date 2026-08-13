@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  88,
+                    "dotnetProjects":  89,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  5,
-                    "extractedApplicationModules":  29,
+                    "applicationModules":  4,
+                    "extractedApplicationModules":  30,
                     "backendBusinessModules":  34,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  70,
+                    "agentGuides":  71,
                     "documentationPages":  44
                 },
     "dotnet":  {
@@ -242,6 +242,47 @@
                                                                   },
                                                                   {
                                                                       "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
+                                        "name":  "FoodDiary.Application.Dashboard",
+                                        "assemblyName":  "FoodDiary.Application.Dashboard",
+                                        "path":  "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
+                                                                  "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj",
+                                                                  "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
+                                                                  "FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj",
+                                                                  "FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj",
+                                                                  "FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj",
+                                                                  "FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "FluentValidation",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "FluentValidation.DependencyInjectionExtensions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.Logging.Abstractions",
                                                                       "version":  null
                                                                   }
                                                               ]
@@ -1104,6 +1145,7 @@
                                                                   "FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj",
                                                                   "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
                                                                   "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj",
+                                                                  "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Export/FoodDiary.Application.Export.csproj",
@@ -1221,6 +1263,7 @@
                                                                   "FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj",
                                                                   "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
                                                                   "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj",
+                                                                  "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Export/FoodDiary.Application.Export.csproj",
@@ -1309,6 +1352,7 @@
                                                                   "FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj",
                                                                   "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
                                                                   "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj",
+                                                                  "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Export/FoodDiary.Application.Export.csproj",
@@ -1403,6 +1447,7 @@
                                                                   "FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj",
                                                                   "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
                                                                   "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj",
+                                                                  "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Export/FoodDiary.Application.Export.csproj",
@@ -2486,6 +2531,7 @@
                                                                   "FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj",
                                                                   "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
                                                                   "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj",
+                                                                  "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Export/FoodDiary.Application.Export.csproj",
@@ -2890,6 +2936,7 @@
                                                                   "FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj",
                                                                   "FoodDiary.Application.Cycles/FoodDiary.Application.Cycles.csproj",
                                                                   "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj",
+                                                                  "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj",
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Exercises/FoodDiary.Application.Exercises.csproj",
                                                                   "FoodDiary.Application.Export/FoodDiary.Application.Export.csproj",
@@ -3273,18 +3320,6 @@
                                                     ]
                                },
                                {
-                                   "name":  "Dashboard",
-                                   "dependencies":  [
-                                                        "Cycles",
-                                                        "DailyAdvices",
-                                                        "Exercises",
-                                                        "Hydration",
-                                                        "Meals",
-                                                        "Statistics",
-                                                        "Tdee"
-                                                    ]
-                               },
-                               {
                                    "name":  "Products",
                                    "dependencies":  [
                                                         "Images",
@@ -3331,6 +3366,10 @@
                                         {
                                             "name":  "DailyAdvices",
                                             "project":  "FoodDiary.Application.DailyAdvices/FoodDiary.Application.DailyAdvices.csproj"
+                                        },
+                                        {
+                                            "name":  "Dashboard",
+                                            "project":  "FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj"
                                         },
                                         {
                                             "name":  "Dietologist",
@@ -5391,6 +5430,7 @@
                                                  "FoodDiary.Application.ContentReports/AGENTS.md",
                                                  "FoodDiary.Application.Cycles/AGENTS.md",
                                                  "FoodDiary.Application.DailyAdvices/AGENTS.md",
+                                                 "FoodDiary.Application.Dashboard/AGENTS.md",
                                                  "FoodDiary.Application.Dietologist/AGENTS.md",
                                                  "FoodDiary.Application.Exercises/AGENTS.md",
                                                  "FoodDiary.Application.Export/AGENTS.md",

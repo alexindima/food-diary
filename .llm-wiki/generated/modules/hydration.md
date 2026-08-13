@@ -18,8 +18,8 @@ sources:
 - Extracted project: `FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
-- Business-module consumers: Dashboard
-- Host/adapter consumers: FoodDiary.Application, FoodDiary.Application.WeeklyCheckIn, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Business-module consumers: none observed
+- Host/adapter consumers: FoodDiary.Application, FoodDiary.Application.Dashboard, FoodDiary.Application.WeeklyCheckIn, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas

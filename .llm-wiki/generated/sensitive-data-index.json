@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  78
+                       "line":  79
                    },
                    {
                        "category":  "credential",
@@ -3638,6 +3638,125 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "Calories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DailyCaloriesModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeeklyCalories",
+                       "type":  "IReadOnlyList\u003cDailyCaloriesModel\u003e",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardSnapshotModel.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "DashboardWeightModel",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardSnapshotModel.cs",
+                       "line":  19
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Waist",
+                       "type":  "DashboardWaistModel",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardSnapshotModel.cs",
+                       "line":  20
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardStatisticsModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWaist",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "HydrationGoal",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CalorieSchedule",
+                       "type":  "UserCalorieSchedule",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
+                       "line":  18
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Dashboard/Models/WeightPointModel.cs",
+                       "line":  3
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IncludeWeight",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IncludeWaist",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IncludeHydration",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IncludeFasting",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IncludeExercise",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IncludeTdee",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "IncludeCycle",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "health",
                        "name":  "BirthDate",
                        "type":  "DateTime?",
                        "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
@@ -4433,125 +4552,6 @@
                        "type":  "int",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                        "line":  46
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Calories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeeklyCalories",
-                       "type":  "IReadOnlyList\u003cDailyCaloriesModel\u003e",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardSnapshotModel.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "DashboardWeightModel",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardSnapshotModel.cs",
-                       "line":  19
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Waist",
-                       "type":  "DashboardWaistModel",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardSnapshotModel.cs",
-                       "line":  20
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardStatisticsModel.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardUserContextModel.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWaist",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardUserContextModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "HydrationGoal",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardUserContextModel.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CalorieSchedule",
-                       "type":  "UserCalorieSchedule",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardUserContextModel.cs",
-                       "line":  18
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Dashboard/Models/WeightPointModel.cs",
-                       "line":  3
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IncludeWeight",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IncludeWaist",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IncludeHydration",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IncludeFasting",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IncludeExercise",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IncludeTdee",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "IncludeCycle",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
-                       "line":  14
                    },
                    {
                        "category":  "health",
@@ -7208,6 +7208,13 @@
                    },
                    {
                        "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "identity",
                        "name":  "DietologistEmail",
                        "type":  "string",
                        "path":  "FoodDiary.Application.Dietologist/Commands/InviteDietologist/InviteDietologistCommand.cs",
@@ -7415,13 +7422,6 @@
                        "type":  "bool",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                        "line":  49
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Dashboard/Models/DashboardUserContextModel.cs",
-                       "line":  7
                    },
                    {
                        "category":  "identity",

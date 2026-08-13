@@ -38,6 +38,7 @@
     <ProjectReference Include="..\FoodDiary.Application.Notifications\FoodDiary.Application.Notifications.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.BodyMetrics\FoodDiary.Application.BodyMetrics.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Cycles\FoodDiary.Application.Cycles.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.Dashboard\FoodDiary.Application.Dashboard.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Hydration\FoodDiary.Application.Hydration.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Tdee\FoodDiary.Application.Tdee.csproj" />

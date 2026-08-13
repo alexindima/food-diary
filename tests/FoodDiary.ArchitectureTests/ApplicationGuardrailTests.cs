@@ -1190,13 +1190,13 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Meals", "Commands", "DeleteMeal", "DeleteMealCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Meals", "Queries", "GetMealById", "GetMealByIdQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.ContentReports", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dashboard", "Queries", "GetDashboardSnapshot", "GetDashboardSnapshotQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dashboard", "Queries", "GetDashboardSnapshot", "GetDashboardSnapshotQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitationForCurrentUser", "AcceptInvitationForCurrentUserCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "CreateRecommendation", "CreateRecommendationCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "DeclineInvitationForCurrentUser", "DeclineInvitationForCurrentUserCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "InviteDietologist", "InviteDietologistCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dashboard", "Queries", "GetDietologistClientDashboard", "GetDietologistClientDashboardQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Dashboard", "Queries", "GetDietologistClientDashboard", "GetDietologistClientDashboardQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetClientGoals", "GetClientGoalsQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetInvitationByToken", "GetInvitationByTokenQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Queries", "GetInvitationForCurrentUser", "GetInvitationForCurrentUserQueryHandler.cs"),
@@ -2323,8 +2323,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Dashboard",
+            "FoodDiary.Application.Dashboard",
             "Services",
             "RepositoryDashboardBodyReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -2363,7 +2362,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void DashboardSnapshotServices_UseReadModelsInsteadOfDashboardAggregates() {
         string root = GetRepositoryRoot();
-        string dashboardServicesRoot = Path.Combine(root, "FoodDiary.Application", "Dashboard", "Services");
+        string dashboardServicesRoot = Path.Combine(root, "FoodDiary.Application.Dashboard", "Services");
         string[] serviceFiles = [
             Path.Combine(dashboardServicesRoot, "DashboardSnapshotBuilder.cs"),
             Path.Combine(dashboardServicesRoot, "DashboardSectionDataLoader.cs"),
@@ -3095,7 +3094,7 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         (string SliceRoot, string AllowedRelativePath)[] slices = [
             (Path.Combine(root, "FoodDiary.Application.Ai"), Path.Combine("Services", "AiUserContextService.cs")),
-            (Path.Combine(applicationRoot, "Dashboard"), Path.Combine("Services", "DashboardUserContextService.cs")),
+            (Path.Combine(root, "FoodDiary.Application.Dashboard"), Path.Combine("Services", "DashboardUserContextService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Gamification"), Path.Combine("Services", "GamificationUserProfileService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Hydration"), Path.Combine("Services", "HydrationGoalService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Tdee"), Path.Combine("Services", "TdeeUserProfileService.cs")),
@@ -3185,7 +3184,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void DashboardRuntimeReadPath_UsesDedicatedInfrastructureReadService() {
         string root = GetRepositoryRoot();
-        string dashboardPlanPath = Path.Combine(root, "FoodDiary.Application", "Dashboard", "Dashboard-Query-Plan.md");
+        string dashboardPlanPath = Path.Combine(root, "FoodDiary.Application.Dashboard", "Dashboard-Query-Plan.md");
         Assert.False(File.Exists(dashboardPlanPath), "Dashboard migration plan should not be kept after the dedicated read path is implemented.");
 
         string repositoryRegistrationPath = Path.Combine(root, "FoodDiary.Infrastructure", "DependencyInjection.Dashboard.cs");
@@ -3193,7 +3192,7 @@ public sealed class ApplicationGuardrailTests {
         Assert.Contains("services.RemoveAll<IDashboardReadService>();", registrationSource, StringComparison.Ordinal);
         Assert.Contains("services.AddScoped<IDashboardReadService, DashboardReadService>();", registrationSource, StringComparison.Ordinal);
 
-        string applicationRegistrationPath = Path.Combine(root, "FoodDiary.Application", "DependencyInjection.Tracking.cs");
+        string applicationRegistrationPath = Path.Combine(root, "FoodDiary.Application.Dashboard", "DependencyInjection.cs");
         string applicationRegistrationSource = File.ReadAllText(applicationRegistrationPath);
         Assert.Contains("services.TryAddScoped<IDashboardReadService, ComposedDashboardReadService>();", applicationRegistrationSource, StringComparison.Ordinal);
     }

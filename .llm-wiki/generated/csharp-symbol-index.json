@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3200,
-                    "symbols":  3212,
+                    "sourceFiles":  3202,
+                    "symbols":  3213,
                     "interfaceImplementationLinks":  229,
                     "dependencyInjectionRegistrations":  229,
                     "kinds":  {
-                                  "class":  1639,
+                                  "class":  1640,
                                   "enum":  49,
                                   "interface":  410,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1179,
+                                  "Other":  1180,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -5520,6 +5520,258 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs",
                         "line":  9
+                    },
+                    {
+                        "name":  "SendDashboardTestEmailCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "SendDashboardTestEmailCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "SendDashboardTestEmailCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IDashboardUserContextService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UtcDateNormalizer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Internal/UtcDateNormalizer.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DailyCaloriesModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/DailyCaloriesModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DashboardMealsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/DashboardMealsModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DashboardSnapshotModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/DashboardSnapshotModel.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "DashboardStatisticsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/DashboardStatisticsModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DashboardUserContextModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/DashboardUserContextModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DashboardWaistModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/DashboardWaistModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DashboardWeightModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/DashboardWeightModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WaistPointModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/WaistPointModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "WeightPointModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Models/WeightPointModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetDashboardSnapshotQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetDashboardSnapshotQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "GetDashboardSnapshotQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "GetDietologistClientDashboardQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetDietologistClientDashboardQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
+                        "line":  15
+                    },
+                    {
+                        "name":  "ComposedDashboardReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dashboard/Services/ComposedDashboardReadService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DashboardBodyMapper",
+                        "kind":  "class",
+                        "role":  "Mapper",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardBodyMapper.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DashboardBuildContext",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardBuildContext.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DashboardMapping",
+                        "kind":  "class",
+                        "role":  "Mapping",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardMapping.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "DashboardMealsMapper",
+                        "kind":  "class",
+                        "role":  "Mapper",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardMealsMapper.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "DashboardSectionDataLoader",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
+                        "line":  22
+                    },
+                    {
+                        "name":  "DashboardSnapshotBuilder",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
+                        "line":  24
+                    },
+                    {
+                        "name":  "DashboardSnapshotRequest",
+                        "kind":  "record",
+                        "role":  "Request",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotRequest.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DashboardSnapshotSections",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotSections.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DashboardStatisticsMapper",
+                        "kind":  "class",
+                        "role":  "Mapper",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardStatisticsMapper.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DashboardUserContextService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dashboard/Services/DashboardUserContextService.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "IDashboardSectionDataLoader",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "IDashboardSnapshotBuilder",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "MediatorDashboardMealsReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dashboard/Services/MediatorDashboardMealsReadService.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "MediatorDashboardStatisticsReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dashboard/Services/MediatorDashboardStatisticsReadService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "RepositoryDashboardBodyReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Dashboard/Services/RepositoryDashboardBodyReadService.cs",
+                        "line":  11
                     },
                     {
                         "name":  "AcceptInvitationCommand",
@@ -11773,244 +12025,6 @@
                         "line":  5
                     },
                     {
-                        "name":  "SendDashboardTestEmailCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "SendDashboardTestEmailCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "SendDashboardTestEmailCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dashboard/Commands/SendDashboardTestEmail/SendDashboardTestEmailCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IDashboardUserContextService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dashboard/Common/IDashboardUserContextService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "DailyCaloriesModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/DailyCaloriesModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DashboardMealsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/DashboardMealsModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "DashboardSnapshotModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/DashboardSnapshotModel.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "DashboardStatisticsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/DashboardStatisticsModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DashboardUserContextModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/DashboardUserContextModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "DashboardWaistModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/DashboardWaistModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DashboardWeightModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/DashboardWeightModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WaistPointModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/WaistPointModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "WeightPointModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Models/WeightPointModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetDashboardSnapshotQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetDashboardSnapshotQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "GetDashboardSnapshotQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Dashboard/Queries/GetDashboardSnapshot/GetDashboardSnapshotQueryValidator.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "GetDietologistClientDashboardQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetDietologistClientDashboardQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Dashboard/Queries/GetDietologistClientDashboard/GetDietologistClientDashboardQueryHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "ComposedDashboardReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dashboard/Services/ComposedDashboardReadService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "DashboardBodyMapper",
-                        "kind":  "class",
-                        "role":  "Mapper",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardBodyMapper.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "DashboardBuildContext",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardBuildContext.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DashboardMapping",
-                        "kind":  "class",
-                        "role":  "Mapping",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardMapping.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "DashboardMealsMapper",
-                        "kind":  "class",
-                        "role":  "Mapper",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardMealsMapper.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "DashboardSectionDataLoader",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardSectionDataLoader.cs",
-                        "line":  22
-                    },
-                    {
-                        "name":  "DashboardSnapshotBuilder",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotBuilder.cs",
-                        "line":  24
-                    },
-                    {
-                        "name":  "DashboardSnapshotRequest",
-                        "kind":  "record",
-                        "role":  "Request",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotRequest.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DashboardSnapshotSections",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotSections.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "DashboardStatisticsMapper",
-                        "kind":  "class",
-                        "role":  "Mapper",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardStatisticsMapper.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "DashboardUserContextService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dashboard/Services/DashboardUserContextService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "IDashboardSectionDataLoader",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Services/IDashboardSectionDataLoader.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "IDashboardSnapshotBuilder",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Dashboard/Services/IDashboardSnapshotBuilder.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "MediatorDashboardMealsReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dashboard/Services/MediatorDashboardMealsReadService.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "MediatorDashboardStatisticsReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dashboard/Services/MediatorDashboardStatisticsReadService.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "RepositoryDashboardBodyReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Dashboard/Services/RepositoryDashboardBodyReadService.cs",
-                        "line":  11
-                    },
-                    {
                         "name":  "DependencyInjection",
                         "kind":  "class",
                         "role":  "Other",
@@ -12037,13 +12051,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
                         "line":  4
-                    },
-                    {
-                        "name":  "DependencyInjection",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                        "line":  8
                     },
                     {
                         "name":  "CreateProductCommand",
@@ -16418,7 +16425,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  384
+                        "line":  386
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16775,7 +16782,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  94
+                        "line":  96
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20562,7 +20569,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  44
+                        "line":  45
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22850,16 +22857,16 @@
                                      },
                                      {
                                          "interface":  "IDashboardSectionDataLoader",
-                                         "interfacePath":  "FoodDiary.Application/Dashboard/Services/IDashboardSectionDataLoader.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dashboard/Services/IDashboardSectionDataLoader.cs",
                                          "implementation":  "DashboardSectionDataLoader",
-                                         "implementationPath":  "FoodDiary.Application/Dashboard/Services/DashboardSectionDataLoader.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dashboard/Services/DashboardSectionDataLoader.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IDashboardSnapshotBuilder",
-                                         "interfacePath":  "FoodDiary.Application/Dashboard/Services/IDashboardSnapshotBuilder.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dashboard/Services/IDashboardSnapshotBuilder.cs",
                                          "implementation":  "DashboardSnapshotBuilder",
-                                         "implementationPath":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotBuilder.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dashboard/Services/DashboardSnapshotBuilder.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22871,9 +22878,9 @@
                                      },
                                      {
                                          "interface":  "IDashboardUserContextService",
-                                         "interfacePath":  "FoodDiary.Application/Dashboard/Common/IDashboardUserContextService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Dashboard/Common/IDashboardUserContextService.cs",
                                          "implementation":  "DashboardUserContextService",
-                                         "implementationPath":  "FoodDiary.Application/Dashboard/Services/DashboardUserContextService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Dashboard/Services/DashboardUserContextService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24244,6 +24251,48 @@
                                                  "line":  14
                                              },
                                              {
+                                                 "service":  "IDashboardStatisticsReadService",
+                                                 "implementation":  "MediatorDashboardStatisticsReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+                                                 "line":  16
+                                             },
+                                             {
+                                                 "service":  "IDashboardBodyReadService",
+                                                 "implementation":  "RepositoryDashboardBodyReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
+                                                 "service":  "IDashboardMealsReadService",
+                                                 "implementation":  "MediatorDashboardMealsReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+                                                 "line":  18
+                                             },
+                                             {
+                                                 "service":  "IDashboardReadService",
+                                                 "implementation":  "ComposedDashboardReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+                                                 "line":  19
+                                             },
+                                             {
+                                                 "service":  "IDashboardUserContextService",
+                                                 "implementation":  "DashboardUserContextService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+                                                 "line":  20
+                                             },
+                                             {
+                                                 "service":  "IDashboardSectionDataLoader",
+                                                 "implementation":  "DashboardSectionDataLoader",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Dashboard/DependencyInjection.cs",
+                                                 "line":  21
+                                             },
+                                             {
                                                  "service":  "IDietologistClientReadService",
                                                  "implementation":  "DietologistClientReadService",
                                                  "lifetime":  "Scoped",
@@ -24853,48 +24902,6 @@
                                                  "line":  15
                                              },
                                              {
-                                                 "service":  "IDashboardStatisticsReadService",
-                                                 "implementation":  "MediatorDashboardStatisticsReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  11
-                                             },
-                                             {
-                                                 "service":  "IDashboardBodyReadService",
-                                                 "implementation":  "RepositoryDashboardBodyReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  12
-                                             },
-                                             {
-                                                 "service":  "IDashboardMealsReadService",
-                                                 "implementation":  "MediatorDashboardMealsReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  13
-                                             },
-                                             {
-                                                 "service":  "IDashboardReadService",
-                                                 "implementation":  "ComposedDashboardReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  14
-                                             },
-                                             {
-                                                 "service":  "IDashboardUserContextService",
-                                                 "implementation":  "DashboardUserContextService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  15
-                                             },
-                                             {
-                                                 "service":  "IDashboardSectionDataLoader",
-                                                 "implementation":  "DashboardSectionDataLoader",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  16
-                                             },
-                                             {
                                                  "service":  "IAchievementDefinitionStore",
                                                  "implementation":  "AchievementDefinitionStore",
                                                  "lifetime":  "Scoped",
@@ -25501,14 +25508,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  114
+                                                 "line":  116
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  115
+                                                 "line":  117
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25599,7 +25606,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  86
+                                                 "line":  88
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25655,35 +25662,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  55
+                                                 "line":  56
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  94
+                                                 "line":  96
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  95
+                                                 "line":  97
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  96
+                                                 "line":  98
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  119
+                                                 "line":  121
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

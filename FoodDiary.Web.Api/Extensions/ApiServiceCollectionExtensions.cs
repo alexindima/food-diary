@@ -3,6 +3,7 @@ using FoodDiary.Application.Ai;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.BodyMetrics;
 using FoodDiary.Application.Cycles;
+using FoodDiary.Application.Dashboard;
 using FoodDiary.Application.Hydration;
 using FoodDiary.Application.Dietologist;
 using FoodDiary.Application.Exercises;
@@ -63,6 +64,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddAiModule()
                 .AddBodyMetricsModule()
                 .AddCyclesModule()
+                .AddDashboardModule()
                 .AddHydrationModule()
                 .AddDietologistModule()
                 .AddExercisesModule()
