@@ -30,6 +30,7 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Cycles\FoodDiary.Application.Cycles.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Hydration\FoodDiary.Application.Hydration.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Exercises\FoodDiary.Application.Exercises.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Application.Tdee\FoodDiary.Application.Tdee.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Infrastructure\FoodDiary.Infrastructure.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Initializer\FoodDiary.Initializer.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Integrations\FoodDiary.Integrations.csproj" />

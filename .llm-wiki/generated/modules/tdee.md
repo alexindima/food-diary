@@ -14,16 +14,17 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Exercises
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj`
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: Dashboard, Users, WeightEntries
 - Business-module consumers: Dashboard
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Application, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
-- `FoodDiary.Application/Tdee`
+- `FoodDiary.Application.Tdee`
 - `FoodDiary.Presentation.Api/Features/Tdee`
 
 ## HTTP Surface
@@ -37,11 +38,11 @@ Source: `FoodDiary.Presentation.Api/Features/Tdee/TdeeController.cs`
 ## Boundary Health
 
 - Role: read-composer
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 0
-- Observed external consumer groups: 2
+- Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -61,6 +62,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeCalculatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Tdee/TdeeValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/TdeeModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/TdeeControllerTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/TdeeHttpMappingsTests.cs`
 

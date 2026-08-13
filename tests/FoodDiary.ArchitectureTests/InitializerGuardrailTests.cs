@@ -22,6 +22,7 @@ public sealed class InitializerGuardrailTests {
             "FoodDiary.Application.MealPlanning",
             "FoodDiary.Application.Notifications",
             "FoodDiary.Application.RecipeCommunity",
+            "FoodDiary.Application.Tdee",
             "FoodDiary.Application.Users",
             "FoodDiary.Application.Wearables",
             "FoodDiary.Infrastructure",

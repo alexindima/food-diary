@@ -10,6 +10,7 @@ using FoodDiary.Application.Favorites;
 using FoodDiary.Application.Identity;
 using FoodDiary.Application.MealPlanning;
 using FoodDiary.Application.RecipeCommunity;
+using FoodDiary.Application.Tdee;
 using FoodDiary.Application.Notifications;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Users;
@@ -56,6 +57,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddIdentityModule()
                 .AddMealPlanningModule()
                 .AddRecipeCommunityModule()
+                .AddTdeeModule()
                 .AddWearablesModule()
                 .AddNotificationsModule()
                 .AddUsersModule()

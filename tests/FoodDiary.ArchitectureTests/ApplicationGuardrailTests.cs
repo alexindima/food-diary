@@ -15,6 +15,7 @@ public sealed class ApplicationGuardrailTests {
             "FoodDiary.Application.Cycles",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Hydration",
+            "FoodDiary.Application.Tdee",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
         ];
@@ -111,7 +112,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] calculatorFiles = [
-            Path.Combine(applicationRoot, "Tdee", "Services", "TdeeCalculator.cs"),
+            Path.Combine(root, "FoodDiary.Application.Tdee", "Services", "TdeeCalculator.cs"),
             Path.Combine(applicationRoot, "WeeklyCheckIn", "Services", "WeeklyCheckInCalculator.cs"),
             Path.Combine(applicationRoot, "Gamification", "Services", "GamificationCalculator.cs"),
         ];
@@ -243,7 +244,6 @@ public sealed class ApplicationGuardrailTests {
             "Products",
             "Recipes",
             "Statistics",
-            "Tdee",
             "Usda",
             "Users",
             "WaistEntries",
@@ -1148,7 +1148,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WaistEntries", "Queries", "GetWaistSummaries", "GetWaistSummariesQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Queries", "GetMealPlanById", "GetMealPlanByIdQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Queries", "GetMealPlans", "GetMealPlansQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Tdee", "Queries", "GetTdeeInsight", "GetTdeeInsightQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Tdee", "Queries", "GetTdeeInsight", "GetTdeeInsightQueryHandler.cs"),
             Path.Combine(applicationRoot, "Gamification", "Queries", "GetGamification", "GetGamificationQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeLikes", "Commands", "ToggleRecipeLike", "ToggleRecipeLikeCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeLikes", "Queries", "GetRecipeLikeStatus", "GetRecipeLikeStatusQueryHandler.cs"),
@@ -1258,7 +1258,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void TdeeQueries_UseStatisticsReadServiceInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
-        string tdeeQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Tdee", "Queries");
+        string tdeeQueriesRoot = Path.Combine(root, "FoodDiary.Application.Tdee", "Queries");
         string[] tdeeQueryFiles = [.. SourceScanner.SourceFiles(tdeeQueriesRoot)];
 
         string[] violations = [
@@ -3095,7 +3095,7 @@ public sealed class ApplicationGuardrailTests {
             (Path.Combine(applicationRoot, "Dashboard"), Path.Combine("Services", "DashboardUserContextService.cs")),
             (Path.Combine(applicationRoot, "Gamification"), Path.Combine("Services", "GamificationUserProfileService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Hydration"), Path.Combine("Services", "HydrationGoalService.cs")),
-            (Path.Combine(applicationRoot, "Tdee"), Path.Combine("Services", "TdeeUserProfileService.cs")),
+            (Path.Combine(root, "FoodDiary.Application.Tdee"), Path.Combine("Services", "TdeeUserProfileService.cs")),
             (Path.Combine(applicationRoot, "WeeklyCheckIn"), Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),
         ];
 

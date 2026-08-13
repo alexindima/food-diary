@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  64
+                       "line":  65
                    },
                    {
                        "category":  "credential",
@@ -3869,6 +3869,76 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "EstimatedTdee",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Tdee/Common/TdeeUserProfile.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Tdee/Common/TdeeUserProfile.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "DesiredWeight",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Tdee/Common/TdeeUserProfile.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "EstimatedTdee",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Tdee/Models/TdeeInsightModel.cs",
+                       "line":  4
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AdaptiveTdee",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Tdee/Models/TdeeInsightModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeightTrendPerWeek",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Tdee/Models/TdeeInsightModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "AdaptiveTdee",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Tdee/Services/AdaptiveTdeeResult.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "WeightTrendPerWeek",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Tdee/Services/AdaptiveTdeeResult.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Tdee/Services/TdeeCalculator.cs",
+                       "line":  172
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesBurned",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Tdee/Services/TdeeCalculator.cs",
+                       "line":  174
+                   },
+                   {
+                       "category":  "health",
                        "name":  "DesiredWaist",
                        "type":  "double?",
                        "path":  "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommand.cs",
@@ -4531,76 +4601,6 @@
                        "type":  "IReadOnlyList\u003cWaistEntrySummaryModel\u003e",
                        "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
                        "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "EstimatedTdee",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Tdee/Common/TdeeUserProfile.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Tdee/Common/TdeeUserProfile.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "DesiredWeight",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Tdee/Common/TdeeUserProfile.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "EstimatedTdee",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Tdee/Models/TdeeInsightModel.cs",
-                       "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AdaptiveTdee",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Tdee/Models/TdeeInsightModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeightTrendPerWeek",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Tdee/Models/TdeeInsightModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "AdaptiveTdee",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Tdee/Services/AdaptiveTdeeResult.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "WeightTrendPerWeek",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Tdee/Services/AdaptiveTdeeResult.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Tdee/Services/TdeeCalculator.cs",
-                       "line":  172
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesBurned",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Tdee/Services/TdeeCalculator.cs",
-                       "line":  174
                    },
                    {
                        "category":  "health",

@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 20 folder modules and 15 extracted application modules.
+This index unifies 19 folder modules and 16 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
@@ -28,7 +28,7 @@ are reported separately; `none observed` never means proven isolation.
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
 | [Dashboard](dashboard.md) | read-composer | 7 | 7 | 0 | 1 | explicit-boundary-tests |
 | [Dietologist](dietologist.md) | aggregate-owner | 0 | 0 | 0 | 4 | project-reference-matrix |
-| [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 2 | 5 | project-reference-matrix |
+| [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 1 | 6 | project-reference-matrix |
 | [Export](export.md) | read-composer | 2 | 2 | 0 | 2 | graph-only |
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
 | [Favorites](favorites.md) | aggregate-owner | 0 | 7 | 0 | 4 | project-reference-matrix |
@@ -47,7 +47,7 @@ are reported separately; `none observed` never means proven isolation.
 | [RecipeCommunity](recipe-community.md) | aggregate-owner | 0 | 5 | 0 | 4 | project-reference-matrix |
 | [Recipes](recipes.md) | aggregate-owner | 3 | 5 | 0 | 1 | explicit-boundary-tests |
 | [Statistics](statistics.md) | read-composer | 0 | 4 | 1 | 1 | graph-only |
-| [Tdee](tdee.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |
+| [Tdee](tdee.md) | read-composer | 0 | 3 | 1 | 5 | project-reference-matrix |
 | [Usda](usda.md) | adapter | 1 | 2 | 1 | 2 | graph-only |
 | [Users](users.md) | aggregate-owner | 0 | 0 | 0 | 4 | explicit-boundary-tests |
 | [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |

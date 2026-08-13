@@ -50,17 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "b8230e806346e79f28ce03571255594e87cb07a72512dbec62acb1fa74059941"
+                                            "sha256":  "ffbd3e1d214866fcec4d945814c4d25d303c18ef712db1eca06d3d10f210f727"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "373883f7f9be5d3e011c5200f4379cf00aa9482d936e1df0afde6f525a589d75"
+                                            "sha256":  "817a04d50434b04fa60bc95754520081846e58e178762299cbfec76c5f33f3df"
                                         }
                                     ],
-                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "TDEE application calculation and query code moved unchanged into FoodDiary.Application.Tdee; its dependency on FoodDiary.Application.Exercises is explicit and one-way, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
-                        "reviewedAtUtc":  "2026-08-13T09:24:00.2225945Z"
+                        "gitHead":  "e486a4948bc44f648be7a510d55159c1358a8048",
+                        "reviewedAtUtc":  "2026-08-13T09:41:49.3011298Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -69,17 +69,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "b8230e806346e79f28ce03571255594e87cb07a72512dbec62acb1fa74059941"
+                                            "sha256":  "ffbd3e1d214866fcec4d945814c4d25d303c18ef712db1eca06d3d10f210f727"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "1e0d8118cdec3bc6a9a271a2cad95b0a728fd47a62b52e325aafe29b1657dc34"
+                                            "sha256":  "7e59dd15903d10388d92e7d1d17aa1fd7b231cb6464bf1de469a7e70394bc358"
                                         }
                                     ],
-                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "TDEE application calculation and query code moved unchanged into FoodDiary.Application.Tdee; its dependency on FoodDiary.Application.Exercises is explicit and one-way, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
-                        "reviewedAtUtc":  "2026-08-13T09:24:00.7268165Z"
+                        "gitHead":  "e486a4948bc44f648be7a510d55159c1358a8048",
+                        "reviewedAtUtc":  "2026-08-13T09:41:49.9649450Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -118,13 +118,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "b8230e806346e79f28ce03571255594e87cb07a72512dbec62acb1fa74059941"
+                                            "sha256":  "ffbd3e1d214866fcec4d945814c4d25d303c18ef712db1eca06d3d10f210f727"
                                         }
                                     ],
-                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "TDEE application calculation and query code moved unchanged into FoodDiary.Application.Tdee; its dependency on FoodDiary.Application.Exercises is explicit and one-way, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
-                        "reviewedAtUtc":  "2026-08-13T09:24:01.2472922Z"
+                        "gitHead":  "e486a4948bc44f648be7a510d55159c1358a8048",
+                        "reviewedAtUtc":  "2026-08-13T09:41:50.6432809Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -197,13 +197,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "65acfc073c1eebb0a66f16a621829e46e8cf2223d3aeec80d2956b9e7ce8690e"
+                                            "sha256":  "efd3468e3542baa5218a1a716e822081b4466aa75de42bdd40a2eb6c8639560a"
                                         }
                                     ],
-                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "TDEE application calculation and query code moved unchanged into FoodDiary.Application.Tdee; its dependency on FoodDiary.Application.Exercises is explicit and one-way, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
-                        "reviewedAtUtc":  "2026-08-13T09:24:04.3327668Z"
+                        "gitHead":  "e486a4948bc44f648be7a510d55159c1358a8048",
+                        "reviewedAtUtc":  "2026-08-13T09:41:54.4548897Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -276,21 +276,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "a37eb77999e12f6c9a41b637d398f5f43242165e8e8ffb04014f5901184ec9f3"
+                                            "sha256":  "4f2ff1fb7d2b813df37aa8b35ce51c8484565c9c6ab4903965b6432d0e85e010"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "b8230e806346e79f28ce03571255594e87cb07a72512dbec62acb1fa74059941"
+                                            "sha256":  "ffbd3e1d214866fcec4d945814c4d25d303c18ef712db1eca06d3d10f210f727"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "1e0d8118cdec3bc6a9a271a2cad95b0a728fd47a62b52e325aafe29b1657dc34"
+                                            "sha256":  "7e59dd15903d10388d92e7d1d17aa1fd7b231cb6464bf1de469a7e70394bc358"
                                         }
                                     ],
-                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "TDEE application calculation and query code moved unchanged into FoodDiary.Application.Tdee; its dependency on FoodDiary.Application.Exercises is explicit and one-way, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
-                        "reviewedAtUtc":  "2026-08-13T09:24:01.8486663Z"
+                        "gitHead":  "e486a4948bc44f648be7a510d55159c1358a8048",
+                        "reviewedAtUtc":  "2026-08-13T09:41:51.4359251Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -299,13 +299,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "c17f56a78be88e1dfd199039d5a04ab3ee28d40b88442b57bc9c6822bf179126"
+                                            "sha256":  "7e29db9b3a522e7fa2f2abcbb90d0686850eb3a312c9fe5b7a41fe16c1edbacf"
                                         }
                                     ],
-                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "TDEE application calculation and query code moved unchanged into FoodDiary.Application.Tdee; its dependency on FoodDiary.Application.Exercises is explicit and one-way, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
-                        "reviewedAtUtc":  "2026-08-13T09:24:02.4438382Z"
+                        "gitHead":  "e486a4948bc44f648be7a510d55159c1358a8048",
+                        "reviewedAtUtc":  "2026-08-13T09:41:52.1393944Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -807,13 +807,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "55bf72f321817bfc40e3946bc8aa2fd68d22fc07e7ca635956fbf66ca8d89244"
+                                            "sha256":  "de899a1c18b1d3f1f6436f95bb76752cae75f880083a3805a08799c9f33a1a51"
                                         }
                                     ],
-                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "TDEE application calculation and query code moved unchanged into FoodDiary.Application.Tdee; its dependency on FoodDiary.Application.Exercises is explicit and one-way, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
-                        "reviewedAtUtc":  "2026-08-13T09:24:03.0227826Z"
+                        "gitHead":  "e486a4948bc44f648be7a510d55159c1358a8048",
+                        "reviewedAtUtc":  "2026-08-13T09:41:52.9191749Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -856,13 +856,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "563acbd7deccf6951a4850d53dcf0845ac8551f38ad5193825025358c9333e9f"
+                                            "sha256":  "e56406f3d76426bd2171b9637d1d40513311af0bc6036bc550084dad0efa1c29"
                                         }
                                     ],
-                        "reason":  "Exercises application use cases moved unchanged into FoodDiary.Application.Exercises; composition roots and explicit dependency matrix were updated, Dashboard and TDEE remain one-way consumers, API compatibility reports 0 changes, extraction readiness reports 0 leaks, and focused plus architecture tests pass.",
+                        "reason":  "TDEE application calculation and query code moved unchanged into FoodDiary.Application.Tdee; its dependency on FoodDiary.Application.Exercises is explicit and one-way, composition roots and dependency matrix were updated, API compatibility reports 0 changes, readiness reports 0 leaks, and focused plus architecture tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "358668c825f001b6e71cd07cce955d63d781b92c",
-                        "reviewedAtUtc":  "2026-08-13T09:24:03.6451447Z"
+                        "gitHead":  "e486a4948bc44f648be7a510d55159c1358a8048",
+                        "reviewedAtUtc":  "2026-08-13T09:41:53.6782206Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

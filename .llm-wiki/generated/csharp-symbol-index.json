@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3169,
-                    "symbols":  3195,
+                    "sourceFiles":  3171,
+                    "symbols":  3196,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1618,
+                                  "class":  1619,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1159,
+                                  "Other":  1160,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -8595,6 +8595,83 @@
                         "line":  7
                     },
                     {
+                        "name":  "ITdeeUserProfileService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Tdee/Common/ITdeeUserProfileService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "TdeeUserProfile",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Tdee/Common/TdeeUserProfile.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Tdee/DependencyInjection.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "TdeeConfidence",
+                        "kind":  "enum",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Tdee/Models/TdeeConfidence.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "TdeeInsightModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Tdee/Models/TdeeInsightModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetTdeeInsightQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetTdeeInsightQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
+                        "line":  16
+                    },
+                    {
+                        "name":  "GetTdeeInsightQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "AdaptiveTdeeResult",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Tdee/Services/AdaptiveTdeeResult.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "TdeeCalculator",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Tdee/Services/TdeeCalculator.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "TdeeUserProfileService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Tdee/Services/TdeeUserProfileService.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "AcceptAiConsentCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -11042,7 +11119,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                        "line":  15
+                        "line":  13
                     },
                     {
                         "name":  "DependencyInjection",
@@ -12282,76 +12359,6 @@
                         "role":  "Validator",
                         "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
                         "line":  4
-                    },
-                    {
-                        "name":  "ITdeeUserProfileService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Tdee/Common/ITdeeUserProfileService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "TdeeUserProfile",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Tdee/Common/TdeeUserProfile.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "TdeeConfidence",
-                        "kind":  "enum",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Tdee/Models/TdeeConfidence.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "TdeeInsightModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Tdee/Models/TdeeInsightModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetTdeeInsightQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetTdeeInsightQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryHandler.cs",
-                        "line":  16
-                    },
-                    {
-                        "name":  "GetTdeeInsightQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Tdee/Queries/GetTdeeInsight/GetTdeeInsightQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "AdaptiveTdeeResult",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Tdee/Services/AdaptiveTdeeResult.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "TdeeCalculator",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Tdee/Services/TdeeCalculator.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "TdeeUserProfileService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Tdee/Services/TdeeUserProfileService.cs",
-                        "line":  8
                     },
                     {
                         "name":  "LinkProductToUsdaFoodCommand",
@@ -16299,7 +16306,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  356
+                        "line":  358
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16656,7 +16663,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  66
+                        "line":  68
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20443,7 +20450,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  30
+                        "line":  31
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23711,9 +23718,9 @@
                                      },
                                      {
                                          "interface":  "ITdeeUserProfileService",
-                                         "interfacePath":  "FoodDiary.Application/Tdee/Common/ITdeeUserProfileService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Tdee/Common/ITdeeUserProfileService.cs",
                                          "implementation":  "TdeeUserProfileService",
-                                         "implementationPath":  "FoodDiary.Application/Tdee/Services/TdeeUserProfileService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Tdee/Services/TdeeUserProfileService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24377,6 +24384,13 @@
                                                  "line":  18
                                              },
                                              {
+                                                 "service":  "ITdeeUserProfileService",
+                                                 "implementation":  "TdeeUserProfileService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Tdee/DependencyInjection.cs",
+                                                 "line":  14
+                                             },
+                                             {
                                                  "service":  "IUserAdministrationMutationService",
                                                  "implementation":  "UserAdministrationMutationService",
                                                  "lifetime":  "Scoped",
@@ -24689,98 +24703,91 @@
                                                  "implementation":  "MediatorDashboardStatisticsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  18
+                                                 "line":  16
                                              },
                                              {
                                                  "service":  "IDashboardBodyReadService",
                                                  "implementation":  "RepositoryDashboardBodyReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  19
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IDashboardMealsReadService",
                                                  "implementation":  "MediatorDashboardMealsReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  20
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IDashboardReadService",
                                                  "implementation":  "ComposedDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  21
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IDashboardUserContextService",
                                                  "implementation":  "DashboardUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  22
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IDashboardSectionDataLoader",
                                                  "implementation":  "DashboardSectionDataLoader",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  23
+                                                 "line":  21
                                              },
                                              {
                                                  "service":  "IGamificationReadService",
                                                  "implementation":  "GamificationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  28
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IGamificationUserProfileService",
                                                  "implementation":  "GamificationUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  29
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IAchievementAwardService",
                                                  "implementation":  "AchievementAwardService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  30
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "IAchievementReconciliationHandler",
                                                  "implementation":  "AchievementReconciliationHandler",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  31
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "IAchievementDefinitionAdministrationService",
                                                  "implementation":  "AchievementDefinitionAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  32
-                                             },
-                                             {
-                                                 "service":  "ITdeeUserProfileService",
-                                                 "implementation":  "TdeeUserProfileService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  33
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInUserProfileService",
                                                  "implementation":  "WeeklyCheckInUserProfileService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  34
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "IWeeklyCheckInReadService",
                                                  "implementation":  "WeeklyCheckInReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                                                 "line":  35
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "IWeeklyGoalReadService",
@@ -25403,14 +25410,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  86
+                                                 "line":  88
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  87
+                                                 "line":  89
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25501,7 +25508,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  58
+                                                 "line":  60
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25557,35 +25564,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  41
+                                                 "line":  42
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  66
+                                                 "line":  68
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  67
+                                                 "line":  69
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  68
+                                                 "line":  70
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  91
+                                                 "line":  93
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",
