@@ -430,14 +430,18 @@ if ($compareHttpDtos) {
     }
 }
 
+$breakingChanges = @($changes | Where-Object severity -eq 'breaking')
+$additiveChanges = @($changes | Where-Object severity -eq 'additive')
 $result = [pscustomobject]@{
     baseRef = $BaseRef
     snapshotPath = $SnapshotPath
     payloadSnapshotPath = $PayloadSnapshotPath
     snapshotFormat = $snapshotFormat
     httpDtoPaths = @($httpDtoPaths)
-    breakingCount = @($changes | Where-Object severity -eq 'breaking').Count
-    additiveCount = @($changes | Where-Object severity -eq 'additive').Count
+    breakingCount = $breakingChanges.Count
+    additiveCount = $additiveChanges.Count
+    breakingChanges = $breakingChanges
+    additiveChanges = $additiveChanges
     changes = @($changes)
 }
 

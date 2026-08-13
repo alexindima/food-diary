@@ -256,14 +256,14 @@
                         "pageSha256":  "037cc1091ca997ebc790af65de373c685931315349afb4750800c31f49bd7245",
                         "sources":  [
                                         {
-                                            "path":  "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-                                            "sha256":  "c044930d115d697762d89eae22aaaddcbf954860658dffb12264f933613407cb"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+                                            "sha256":  "71dce0a8b832fda48be82a1b3aef32f1366cef9090786191957ddb70e87ff349"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:12:59.0636524Z"
+                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+                        "reviewedAtUtc":  "2026-08-13T12:40:32.7580873Z"
                     },
                     {
                         "pageId":  "workflow-architecture-health-review",
@@ -609,18 +609,14 @@
                         "pageSha256":  "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
-                                            "sha256":  "49587d707de326bbb0d0caff4978b393469f0105de83e4114cfcf38f4272f9e5"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
+                                            "sha256":  "2ee96e2ec26a5285c8f0d9a305327a10b739fef4682eee18184b8fb321b17713"
                                         }
                                     ],
-                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
+                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-                        "reviewedAtUtc":  "2026-08-12T21:30:34.0133615Z"
+                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+                        "reviewedAtUtc":  "2026-08-13T12:40:33.1865677Z"
                     },
                     {
                         "pageId":  "workflow-independent-change-critique",
@@ -647,18 +643,14 @@
                         "pageSha256":  "19b2949cb82545c8d7acd6132793142a6883eb04496cb452e00ac052c3dce296",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
-                                            "sha256":  "3f6de01faf51fb5937aa84f126d73ede88c6ea879d6714d25d36e208c72c0803"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "9e770f6036cfe8016526271c6d596c0034b4739c8ac8e03f840c46daa35ffdc1"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "8dbb47f3b37a5881bee9d8c0938a003a68c1be6411fbcc9a345b224d05b90316"
                                         }
                                     ],
-                        "reason":  "Reviewed the final named-splat fix for update-to-verify handoff against index-pipeline and task-dispatch contracts; the facade now preserves the exact affected path array without changing either workflow contract.",
+                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eec73d92f25d2ddb2b777c334386ac08965396b",
-                        "reviewedAtUtc":  "2026-08-12T20:41:47.0346971Z"
+                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+                        "reviewedAtUtc":  "2026-08-13T12:40:33.6117543Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -870,26 +862,14 @@
                         "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "ce590751a3075fdbb97221274ba29b64adfdba1c2ff1b9d6603f23dfff6c8f8b"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "02472ad53ed2b022d13a6bd6d480e768a3d08da93d11144d519e350a7f0e6bc3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
+                                            "sha256":  "c72e9d79fb364545e68a89dc45c1159988cb6aa7958a30b6bc82fb62826bfa9b"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:18.3082873Z"
+                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+                        "reviewedAtUtc":  "2026-08-13T12:40:34.1563360Z"
                     },
                     {
                         "pageId":  "workflow-requirement-intelligence",
@@ -909,25 +889,17 @@
                     {
                         "pageId":  "workflow-review-report",
                         "pagePath":  ".llm-wiki/workflows/review-report.md",
-                        "pageSha256":  "249ac686153517f2268ed4ad80018e78759bf60fa80a0c886019bbfe99fa07e7",
+                        "pageSha256":  "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-                                            "sha256":  "b32c06ed90d4755df8e61b1a589c0584f7a7edf533784baba500b378bddf221d"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "ce590751a3075fdbb97221274ba29b64adfdba1c2ff1b9d6603f23dfff6c8f8b"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReviewReport.ps1",
-                                            "sha256":  "df0c2d9358a09fec190034903c153c4af414e42655a76dd58685329011b12e11"
+                                            "sha256":  "c72e9d79fb364545e68a89dc45c1159988cb6aa7958a30b6bc82fb62826bfa9b"
                                         }
                                     ],
-                        "reason":  "Reviewed required security, observability, ADR, rollout, quality, privacy, and in-process contract obligations.",
+                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6c20500a8ed4e26725fc9f9f33be8c3f1e871084",
-                        "reviewedAtUtc":  "2026-08-12T03:16:29.4109081Z"
+                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+                        "reviewedAtUtc":  "2026-08-13T12:40:34.6390574Z"
                     },
                     {
                         "pageId":  "workflow-risk-calibration",
@@ -1049,17 +1021,17 @@
                     {
                         "pageId":  "workflow-task-workspace",
                         "pagePath":  ".llm-wiki/workflows/task-workspace.md",
-                        "pageSha256":  "d82ff199232ffa58514f61a394d36cad07f3e2d96d7bab4fdaa09be847fce590",
+                        "pageSha256":  "ed76010c9aad57a33818df996ea02272f901beb3db5876d9d8298058d7ae9cff",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-                                            "sha256":  "86d0979768a76d5e5c8fa9dc9a6fa27f2ca2e71eba544dda6f6e6a887170bfc2"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+                                            "sha256":  "c72e9d79fb364545e68a89dc45c1159988cb6aa7958a30b6bc82fb62826bfa9b"
                                         }
                                     ],
-                        "reason":  "Reviewed task-workspace lineage validation impact; no workspace schema or lifecycle contract changes.",
+                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "009e677aa8c7d6f4b4cbec20e302b47165a8b316",
-                        "reviewedAtUtc":  "2026-08-12T13:32:32.8212603Z"
+                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+                        "reviewedAtUtc":  "2026-08-13T12:40:35.1364948Z"
                     },
                     {
                         "pageId":  "workflow-test-plan",

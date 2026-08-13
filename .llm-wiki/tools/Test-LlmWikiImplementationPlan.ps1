@@ -51,4 +51,31 @@ if (@($abbreviatedPlan.phases).Count -eq 0) { throw 'Abbreviated brief did not p
 if (@($abbreviatedPlan.acceptanceInputs.relatedAdrs).Count -ne 0) { throw 'Missing decision context did not default to an empty ADR set.' }
 if (@($abbreviatedPlan.unresolved.structuralViolations).Count -ne 0) { throw 'Abbreviated brief introduced structural violations.' }
 
+$legacyApiPacket = [pscustomobject]@{
+    policy = [pscustomobject]@{ violations = @(); matchedRules = @(); requiredChecks = @(); reviewObligations = @() }
+    diff = [pscustomobject]@{ scopes = @('Api'); changedPaths = @() }
+    brief = [pscustomobject]@{
+        risk = [pscustomobject]@{ level = 'medium'; score = 3 }
+        privacyImpact = [pscustomobject]@{ fields = @(); boundaries = @(); potentialLogging = @() }
+    }
+    rollout = [pscustomobject]@{ flags = [pscustomobject]@{} }
+    fingerprint = 'legacy-api-result-fixture'
+}
+$legacyApiResult = [pscustomobject]@{
+    breakingCount = 1
+    additiveCount = 0
+    changes = @([pscustomobject]@{ severity = 'breaking'; kind = 'removed-operation'; location = '/legacy'; description = 'fixture' })
+}
+$legacyReadiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') `
+    -PacketInput $legacyApiPacket `
+    -ApiCompatibilityInput $legacyApiResult `
+    -ManifestPath '.artifacts/llm-wiki/nonexistent-legacy-manifest.json' `
+    -AcceptancePath '.artifacts/llm-wiki/nonexistent-legacy-acceptance.json' `
+    -EvidencePath '.artifacts/llm-wiki/nonexistent-legacy-evidence.json' `
+    -Format Json | ConvertFrom-Json
+$apiDimension = @($legacyReadiness.dimensions | Where-Object id -eq 'api-compatibility')[0]
+if ($apiDimension.status -ne 'fail' -or @($apiDimension.issues).Count -ne 1) {
+    throw 'Release readiness did not normalize a legacy API result without breakingChanges.'
+}
+
 Write-Host 'LLM Wiki implementation-plan tests passed.'

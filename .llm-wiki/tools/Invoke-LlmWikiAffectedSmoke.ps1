@@ -301,7 +301,17 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'tool-contract' {
-            & (Join-Path $toolsRoot 'Test-LlmWikiChangedTools.ps1') -ChangedPath $paths
+            $toolContractPaths = if ($hasExplicitChangedPaths) {
+                $paths
+            } else {
+                @(
+                    Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef, '--', '.llm-wiki/tools/*.ps1') -FailureMessage "Unable to collect changed Wiki tools from '$BaseRef'."
+                    if ($BaseRef -eq 'HEAD') {
+                        Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard', '--', '.llm-wiki/tools/*.ps1') -FailureMessage 'Unable to collect untracked Wiki tools.'
+                    }
+                ) | Sort-Object -Unique
+            }
+            & (Join-Path $toolsRoot 'Test-LlmWikiChangedTools.ps1') -ChangedPath @($toolContractPaths)
             if (-not $?) { exit 1 }
         }
         'full-tools' {

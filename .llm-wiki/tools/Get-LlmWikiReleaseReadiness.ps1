@@ -5,6 +5,7 @@ param(
     [string[]]$ChangedPath,
     [string]$Objective,
     [object]$PacketInput,
+    [object]$ApiCompatibilityInput,
     [string]$ManifestPath = '.artifacts/llm-wiki/change-manifest.json',
     [string]$AcceptancePath = '.artifacts/llm-wiki/acceptance-matrix.json',
     [string]$EvidencePath = '.artifacts/llm-wiki/evidence.json',
@@ -83,9 +84,20 @@ if (-not $apiScope) {
 } else {
     $apiArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
     if ($PSBoundParameters.ContainsKey('HeadRef')) { $apiArguments.HeadRef = $HeadRef }
-    $api = & (Join-Path $PSScriptRoot 'Test-LlmWikiApiCompatibility.ps1') @apiArguments | ConvertFrom-Json
+    $api = if ($null -ne $ApiCompatibilityInput) {
+        $ApiCompatibilityInput
+    } else {
+        & (Join-Path $PSScriptRoot 'Test-LlmWikiApiCompatibility.ps1') @apiArguments | ConvertFrom-Json
+    }
+    $breakingChanges = if ($api.PSObject.Properties['breakingChanges']) {
+        @($api.breakingChanges)
+    } elseif ($api.PSObject.Properties['changes']) {
+        @($api.changes | Where-Object severity -eq 'breaking')
+    } else {
+        @()
+    }
     if ($api.breakingCount -gt 0) {
-        Add-Dimension 'api-compatibility' 15 'fail' "$($api.breakingCount) breaking API change(s) detected." @($api.breakingChanges)
+        Add-Dimension 'api-compatibility' 15 'fail' "$($api.breakingCount) breaking API change(s) detected." $breakingChanges
     } else {
         Add-Dimension 'api-compatibility' 15 'pass' 'No breaking API snapshot change was detected.'
     }
