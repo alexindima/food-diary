@@ -40,9 +40,12 @@ function Restore-OrphanedIndexTransaction([string]$TransactionStateRoot, [string
         $ownerAlive = $false
         try { $ownerAlive = $null -ne (Get-Process -Id ([int]$state.ownerPid) -ErrorAction Stop) } catch { $ownerAlive = $false }
         if ($ownerAlive) { continue }
-        Write-Warning "Recovering interrupted LLM Wiki index transaction $($orphan.Name) before running another update."
+        $checkpointPath = Join-Path $orphan.FullName 'checkpoint'
+        $recoveryPath = if (Test-Path -LiteralPath $checkpointPath -PathType Container) { $checkpointPath } else { $backupPath }
+        $recoveryKind = if ($recoveryPath -eq $checkpointPath) { "last completed stage '$([string]$state.completedStage)'" } else { 'rollback snapshot' }
+        Write-Warning "Recovering interrupted LLM Wiki index transaction $($orphan.Name) from $recoveryKind before running another update."
         foreach ($item in @(Get-ChildItem -LiteralPath $GeneratedRoot -Force)) { Remove-Item -LiteralPath $item.FullName -Recurse -Force }
-        foreach ($item in @(Get-ChildItem -LiteralPath $backupPath -Force)) { Copy-Item -LiteralPath $item.FullName -Destination $GeneratedRoot -Recurse -Force }
+        foreach ($item in @(Get-ChildItem -LiteralPath $recoveryPath -Force)) { Copy-Item -LiteralPath $item.FullName -Destination $GeneratedRoot -Recurse -Force }
         Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
     }
 }
@@ -413,6 +416,19 @@ try {
         for ($offset = 0; $offset -lt $tools.Count; $offset += $MaxConcurrency) {
             $last = [Math]::Min($offset + $MaxConcurrency - 1, $tools.Count - 1)
             Invoke-PipelineBatch -StageName $stage.name -ToolNames @($tools[$offset..$last]) -CheckMode ([bool]$Check)
+        }
+        if (-not $Check -and $transactionRoot) {
+            $checkpointRoot = Join-Path $transactionRoot 'checkpoint'
+            if (Test-Path -LiteralPath $checkpointRoot) { Remove-Item -LiteralPath $checkpointRoot -Recurse -Force }
+            $null = New-Item -ItemType Directory -Path $checkpointRoot -Force
+            foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
+                Copy-Item -LiteralPath $item.FullName -Destination $checkpointRoot -Recurse -Force
+            }
+            [IO.File]::WriteAllText(
+                (Join-Path $transactionRoot 'state.json'),
+                (([ordered]@{ schemaVersion = 2; status = 'in-progress'; ownerPid = $PID; completedStage = $stage.name; checkpointedAtUtc = [DateTime]::UtcNow.ToString('o') } | ConvertTo-Json) + [Environment]::NewLine),
+                [Text.UTF8Encoding]::new($false))
+            Write-Host "LLM Wiki index checkpoint saved after stage '$($stage.name)'."
         }
     }
     if (-not $Check -and $transactionRoot) {

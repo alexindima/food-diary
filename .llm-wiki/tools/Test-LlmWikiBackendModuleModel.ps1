@@ -3,7 +3,24 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$manifest = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/backend-modules.json') -Raw | ConvertFrom-Json
+$manifestText = Get-Content -LiteralPath (Join-Path $repositoryRoot 'docs/architecture/backend-modules.json') -Raw
+$manifestLines = @($manifestText -split '\r?\n')
+$modulesStart = [Array]::IndexOf($manifestLines, '  "modules": {')
+if ($modulesStart -lt 0) { throw 'Backend module manifest modules section could not be found for duplicate-key validation.' }
+$moduleKeys = @()
+$moduleDepth = 1
+for ($index = $modulesStart + 1; $index -lt $manifestLines.Count -and $moduleDepth -gt 0; $index++) {
+    $line = $manifestLines[$index]
+    if ($moduleDepth -eq 1 -and $line -match '^    "(?<name>[^"]+)": \{$') {
+        $moduleKeys += $Matches['name']
+    }
+    $moduleDepth += @([regex]::Matches($line, '\{')).Count
+    $moduleDepth -= @([regex]::Matches($line, '\}')).Count
+}
+if ($moduleDepth -ne 0) { throw 'Backend module manifest modules section is not structurally balanced.' }
+$duplicateModuleKeys = @($moduleKeys | Group-Object | Where-Object Count -gt 1 | ForEach-Object Name)
+if ($duplicateModuleKeys.Count -gt 0) { throw "Backend module manifest contains duplicate module keys: $($duplicateModuleKeys -join ', ')." }
+$manifest = $manifestText | ConvertFrom-Json
 $catalog = Get-Content -LiteralPath (Join-Path $repositoryRoot '.llm-wiki/generated/repository-catalog.json') -Raw | ConvertFrom-Json
 $generatorText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Build-LlmWikiModulePages.ps1') -Raw
 

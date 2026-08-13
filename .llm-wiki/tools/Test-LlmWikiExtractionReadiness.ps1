@@ -31,6 +31,22 @@ if (@($bodyMetrics.dependencyReadiness.actualModules) -contains 'WeightEntries' 
     throw 'BodyMetrics readiness still reports assembly-internal logical features as external dependencies.'
 }
 
+$recipesProject = Join-Path (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path 'FoodDiary.Application.Recipes/FoodDiary.Application.Recipes.csproj'
+if (Test-Path -LiteralPath $recipesProject -PathType Leaf) {
+    $recipes = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Recipes -Format Json | ConvertFrom-Json
+    $recipeRegistrations = @($recipes.dependencyReadiness.diRegistrations)
+    foreach ($compositionRoot in @(
+        'FoodDiary.Initializer/Program.cs'
+        'FoodDiary.JobManager/Program.cs'
+        'FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs'
+    )) {
+        if ($compositionRoot -notin @($recipeRegistrations.path)) { throw "Extracted Recipes DI registration was not found in $compositionRoot." }
+    }
+    if (@($recipeRegistrations | Where-Object kind -eq 'module-extension-call').Count -ne 3) {
+        throw "Expected exactly three extracted Recipes composition registrations, found $(@($recipeRegistrations).Count)."
+    }
+}
+
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $fixtureRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/extraction-readiness-$PID"
 $fixturePath = Join-Path $fixtureRoot 'DashboardLeak.cs'

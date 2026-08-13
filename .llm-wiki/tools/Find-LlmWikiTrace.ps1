@@ -215,7 +215,7 @@ if ($Format -eq 'Json') {
 
 if ($results.Count -eq 0) {
     Write-Host "No request handlers matched '$Query'."
-    exit 1
+    exit 0
 }
 
 $displayResults = if ($Compact) { @($results | Select-Object -First 1) } else { @($results) }

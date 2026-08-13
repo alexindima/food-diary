@@ -159,6 +159,12 @@ Timeout handling terminates the complete process tree on Windows and modern
 exclusive repository-local lock and snapshots the generated tree; an internal
 failure or worker timeout restores that snapshot before releasing the lock, so
 parallel sessions cannot publish overlapping or partially successful updates.
+After every completed dependency stage it also writes an atomic generated-tree
+checkpoint and records the stage name. If an external client kills the owner
+process, the next update restores the latest completed-stage checkpoint rather
+than the original snapshot. Existing per-generator content receipts then reuse
+those completed outputs and continue with the first unfinished stage. A normal
+tool failure still follows the catch path and rolls the whole transaction back.
 After a successful update, the transaction compares generated JSON structurally
 and text artifacts with normalized line endings. If a builder changed only
 serialization formatting, the original artifact is restored and omitted from the

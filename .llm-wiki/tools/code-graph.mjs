@@ -6,7 +6,7 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '4';
+const parserVersion = '5';
 
 function gitPaths() {
   const output = execFileSync('git', ['-C', repositoryRoot, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], {
@@ -18,7 +18,7 @@ function gitPaths() {
     .map((path) => path.replaceAll('\\', '/'))
     .filter(Boolean)
     .filter((path) => /\.(?:cs|csproj|props|targets|ts|html)$/.test(path)
-      || /(^|\/)(?:appsettings(?:\.[^.\/]+)?|package|angular|backend-modules)\.json$/.test(path)
+      || /(^|\/)(?:appsettings(?:\.[^.\/]+)?|package|angular|backend-modules|module-dependencies)\.json$/.test(path)
       || /^\.github\/workflows\/[^/]+\.ya?ml$/.test(path))
     .filter((path) => !/(^|\/)(?:bin|obj|node_modules|\.artifacts|TestResults)(\/|$)/.test(path))
     .filter((path) => !/\.(?:Designer|g)\.cs$/.test(path) && !/ModelSnapshot\.cs$/.test(path));
@@ -343,6 +343,18 @@ function coverage(database) {
   };
 }
 
+function fingerprint(database, paths) {
+  const requested = paths.map((path) => path.replaceAll('\\', '/').replace(/\/$/, ''));
+  let rows;
+  if (requested.length === 0) {
+    rows = database.prepare('SELECT path, content_hash FROM files ORDER BY path').all();
+  } else {
+    const clauses = requested.map(() => '(path = ? OR path LIKE ?)').join(' OR ');
+    rows = database.prepare(`SELECT path, content_hash FROM files WHERE ${clauses} ORDER BY path`).all(...requested.flatMap((path) => [path, `${path}/%`]));
+  }
+  return { requestedPaths: requested, fileCount: rows.length, fingerprint: sha256(`${parserVersion}\n${rows.map((row) => `${row.path}\0${row.content_hash}`).join('\n')}`) };
+}
+
 const [action = 'status', ...argumentsList] = process.argv.slice(2);
 const options = Object.fromEntries(argumentsList.map((argument) => {
   const separator = argument.indexOf('=');
@@ -359,6 +371,7 @@ try {
   else if (action === 'trace') result = trace(database, options.query ?? '', Number(options.limit ?? 50));
   else if (action === 'relations') result = relations(database, (options.path ?? '').split(';').filter(Boolean), (options.kind ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
   else if (action === 'coverage') result = coverage(database);
+  else if (action === 'fingerprint') result = fingerprint(database, (options.path ?? '').split(';').filter(Boolean));
   else result = {
     action: 'status',
     databasePath,

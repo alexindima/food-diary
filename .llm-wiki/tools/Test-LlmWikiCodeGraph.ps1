@@ -3,23 +3,26 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
+$recipesSourcePrefix = if ($recipesBoundary -eq 'FoodDiary.Application.Recipes') { 'FoodDiary.Application.Recipes/Recipes' } else { $recipesBoundary }
 $build = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$build.files -lt 100 -or [int]$build.symbols -lt 100) { throw 'Code graph build produced an implausibly small repository graph.' }
 if ([int]$build.typedEdges -lt 1000) { throw 'Code graph build produced an implausibly small typed relationship graph.' }
 $warm = & $manager build -Format Json | ConvertFrom-Json
 if ([int]$warm.updated -ne 0 -or [int]$warm.scanned -ne 0) { throw 'Unchanged code graph build was not incremental.' }
 $symbol = & $manager symbol -Query RecipeNutritionUpdater -Format Json | ConvertFrom-Json
-if (@($symbol.symbols | Where-Object path -eq 'FoodDiary.Application/Recipes/Services/RecipeNutritionUpdater.cs').Count -ne 1) {
+if (@($symbol.symbols | Where-Object path -eq "$recipesSourcePrefix/Services/RecipeNutritionUpdater.cs").Count -ne 1) {
     throw 'Code graph symbol query did not locate RecipeNutritionUpdater.'
 }
 $consumers = & $manager consumers -Query IRecipeOverviewReadService -Limit 100 -Format Json | ConvertFrom-Json
 foreach ($requiredConsumer in @(
-    'FoodDiary.Application/Recipes/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs'
+    "$recipesSourcePrefix/Queries/GetRecipeById/GetRecipeByIdQueryHandler.cs"
     'FoodDiary.Infrastructure/Persistence/Recipes/RecipeOverviewReadService.cs'
 )) {
     if ($requiredConsumer -notin @($consumers.consumers.path)) { throw "Code graph omitted expected consumer: $requiredConsumer" }
 }
-$impact = & $manager impact -ChangedPath 'FoodDiary.Application/Recipes' -Limit 500 -Format Json | ConvertFrom-Json
+$impact = & $manager impact -ChangedPath $recipesBoundary -Limit 500 -Format Json | ConvertFrom-Json
 if (@($impact.paths).Count -lt 20 -or @($impact.references).Count -eq 0 -or @($impact.consumers).Count -eq 0) {
     throw 'Code graph module impact did not expose the expected Recipes boundary.'
 }
@@ -37,13 +40,13 @@ foreach ($requiredKind in @('di-service','mediator-handler','project-reference',
 foreach ($shadow in @($coverage.legacySymbolCoverage)) {
     if ([int]$shadow.missing -ne 0) { throw "Graph shadow coverage is incomplete for $($shadow.index): $($shadow.missing) symbol(s) missing." }
 }
-$recipeRelations = & $manager relations -ChangedPath 'FoodDiary.Application/Recipes' -RelationKind mediator-handler -Limit 100 -Format Json | ConvertFrom-Json
+$recipeRelations = & $manager relations -ChangedPath $recipesBoundary -RelationKind mediator-handler -Limit 100 -Format Json | ConvertFrom-Json
 if (@($recipeRelations.relations | Where-Object { $_.target -eq 'CreateRecipeCommand' -and $_.path -match 'CreateRecipeCommandHandler.cs$' }).Count -ne 1) {
     throw 'Typed graph did not preserve mediator handler provenance for CreateRecipeCommand.'
 }
 $migrationRelations = & $manager relations -ChangedPath 'FoodDiary.Infrastructure/Migrations/20251108210736_InitialCreate.cs' -RelationKind migration-table -Limit 100 -Format Json | ConvertFrom-Json
 if (@($migrationRelations.relations).Count -eq 0) { throw 'Typed graph did not preserve migration table provenance.' }
-$graphTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath 'FoodDiary.Application/Recipes' -Limit 100 -Format Json | ConvertFrom-Json
+$graphTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath $recipesBoundary -Limit 100 -Format Json | ConvertFrom-Json
 if (@($graphTestPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 1) {
     throw 'Graph-only test plan did not classify a direct Recipes test consumer as required.'
 }

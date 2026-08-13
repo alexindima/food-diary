@@ -16,6 +16,25 @@ if (-not (Test-Path -LiteralPath $folderModulePath -PathType Container) -and
     -not (Test-Path -LiteralPath $extractedModulePath -PathType Container)) {
     throw "Application module not found: $Module"
 }
+$cachePath = $null
+if (@($DependencyFixturePath | Where-Object { $_ }).Count -eq 0) {
+    $graphFingerprint = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action fingerprint -Format Json | ConvertFrom-Json
+    $cacheKeyText = "$($graphFingerprint.fingerprint)|$Module|tests=$([bool]$IncludeTests)|compile=$([bool]$CompileProbe)"
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { $cacheKey = ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($cacheKeyText))) -replace '-', '').ToLowerInvariant() }
+    finally { $sha.Dispose() }
+    $cacheRoot = Join-Path $repositoryRoot '.artifacts/llm-wiki/extraction-readiness-cache'
+    $cachePath = Join-Path $cacheRoot "$cacheKey.json"
+    if (Test-Path -LiteralPath $cachePath -PathType Leaf) {
+        $cachedJson = [IO.File]::ReadAllText($cachePath)
+        if ($Format -eq 'Json') { Write-Output $cachedJson; exit 0 }
+        $cached = $cachedJson | ConvertFrom-Json
+        Write-Host "Extraction readiness cache hit: $Module (ready=$($cached.moduleReadiness.ready), fingerprint=$($graphFingerprint.fingerprint.Substring(0,12)))."
+        Write-Host "Dependency readiness: actual=$(@($cached.dependencyReadiness.actualModules).Count), undeclared=$(@($cached.dependencyReadiness.undeclaredModules).Count), DI registrations=$(@($cached.dependencyReadiness.diRegistrations).Count)"
+        if ($CompileProbe) { Write-Host "Compile probe: $(if ($cached.compileProbe.passed) { 'passed (cached)' } else { 'failed (cached)' })" }
+        exit 0
+    }
+}
 $aggregateName = if ($Module -eq 'Users') { 'User' } else { $Module.TrimEnd('s') }
 $sourcePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '*.cs') -FailureMessage 'Unable to enumerate C# sources for extraction readiness.')
 $sourcePaths = @($sourcePaths |
@@ -72,14 +91,22 @@ $projectDependencies = @($actualDependencies | Where-Object { Test-Path -Literal
 $unresolvedCoreDependencies = @($actualDependencies | Where-Object { $_ -notin $projectDependencies })
 $diRegistrations = @(
     $sourcePaths |
-        Where-Object { $_ -match '^FoodDiary\.Application/DependencyInjection(?:\.[^/]+)?\.cs$' } |
         ForEach-Object {
             $path = $_
             $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
-            if ($text -match "FoodDiary\.Application\.$([regex]::Escape($Module))\.|\b$([regex]::Escape($Module))[A-Za-z0-9_]*(?:Service|Handler|Processor|Validator)\b") {
-                [pscustomobject]@{ path = $path; kind = 'composition-registration' }
+            $moduleRegistration = "Add$($Module)Module"
+            $callsExtractedModule = $path -notin $moduleSourcePaths -and $text -match "\b$([regex]::Escape($moduleRegistration))\s*\("
+            $legacyComposition = $path -match '^FoodDiary\.Application/DependencyInjection(?:\.[^/]+)?\.cs$' -and
+                $text -match "FoodDiary\.Application\.$([regex]::Escape($Module))\.|\b$([regex]::Escape($Module))[A-Za-z0-9_]*(?:Service|Handler|Processor|Validator)\b"
+            if ($callsExtractedModule -or $legacyComposition) {
+                [pscustomobject]@{
+                    path = $path
+                    kind = $(if ($callsExtractedModule) { 'module-extension-call' } else { 'composition-registration' })
+                    registration = $(if ($callsExtractedModule) { $moduleRegistration } else { $null })
+                }
             }
         }
+        Sort-Object path -Unique
 )
 
 $contracts = [Collections.Generic.List[object]]::new()
@@ -242,7 +269,12 @@ $result = [pscustomobject]@{
     categories = [pscustomobject]@{ directOrWrapper = @($leaks | Where-Object kind -eq 'direct-or-wrapper-aggregate').Count; repositoryOrDirectory = @($leaks | Where-Object kind -eq 'repository-or-directory').Count; transitiveWrapper = @($leaks | Where-Object kind -eq 'transitive-wrapper').Count; test = @($leaks | Where-Object { $_.consumerPath -match '(^|/)tests?/|\.Tests?/' }).Count; compositionOnly = @($leaks | Where-Object compositionOnly).Count }
     suggestedProjections = $projections
 }
-if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10; exit 0 }
+$resultJson = $result | ConvertTo-Json -Depth 10
+if ($cachePath) {
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $cachePath) -Force
+    [IO.File]::WriteAllText($cachePath, ($resultJson + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+}
+if ($Format -eq 'Json') { Write-Output $resultJson; exit 0 }
 Write-Host "Extraction readiness: $Module module (owned aggregate: $aggregateName)"
 Write-Host "Contract readiness: IUserContextService aggregate blockers=$($result.contractReadiness.aggregateBlockers), mutation blockers=$($result.contractReadiness.mutationBlockers), aggregate ready=$($result.contractReadiness.aggregateReady)"
 Write-Host "Module readiness: $(if ($result.moduleReadiness.ready) { 'ready' } else { 'not ready' })"

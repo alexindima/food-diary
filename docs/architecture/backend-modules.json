@@ -190,13 +190,6 @@
         "persistenceAreas": ["DailyAdvices"]
       }
     },
-    "Dashboard": {
-      "role": "read-composer",
-      "physicalIsolation": "folder",
-      "enforcement": "explicit-boundary-tests",
-      "ownedEntities": [],
-      "sourceMappings": {}
-    },
     "Dietologist": {
       "role": "aggregate-owner",
       "physicalIsolation": "project",

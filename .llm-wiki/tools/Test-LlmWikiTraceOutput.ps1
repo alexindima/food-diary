@@ -31,6 +31,11 @@ $backendCompact = @(& $backendTraceScript -Query 'StartPremiumTrial' -Compact 6>
 $backendFull = @(& $backendTraceScript -Query 'StartPremiumTrial' 6>&1 | ForEach-Object { $_.ToString() })
 if ($backendCompact -notcontains '  Compact trace: use -FullTrace for every match and consumer.') { throw 'Backend compact trace omitted its expansion hint.' }
 if ($backendCompact.Count -gt ($backendFull.Count + 1)) { throw 'Backend compact trace expanded output beyond its one-line hint.' }
+$noMatchQuery = 'zzqnosuchsymbol92841'
+$noMatch = @(& $backendTraceScript -Query $noMatchQuery -Compact 6>&1 | ForEach-Object { $_.ToString() })
+if ($LASTEXITCODE -ne 0 -or $noMatch -notcontains "No request handlers matched '$noMatchQuery'.") {
+    throw 'Backend semantic no-match must return an empty successful fragment instead of failing the facade.'
+}
 
 $broadBackendQuery = 'Recipes commands queries dependency injection repositories external module dependencies'
 $facadeOutput = @(& (Join-Path $PSScriptRoot '../wiki.ps1') trace -Fast -Module Recipes -Query $broadBackendQuery 6>&1 | ForEach-Object { $_.ToString() })

@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage')]
+    [ValidateSet('build', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint')]
     [string]$Action = 'status',
     [string]$Query,
     [string[]]$ChangedPath,
@@ -58,4 +58,5 @@ switch ($Action) {
         foreach ($item in @($result.relationKinds)) { Write-Host " - $($item.kind): $($item.count) edge(s) across $($item.files) file(s)" }
         foreach ($item in @($result.legacySymbolCoverage)) { Write-Host " - shadow $($item.index): $($item.covered)/$($item.total) covered, missing=$($item.missing)" }
     }
+    'fingerprint' { Write-Host "Code graph fingerprint: $($result.fingerprint) ($($result.fileCount) file(s))." }
 }

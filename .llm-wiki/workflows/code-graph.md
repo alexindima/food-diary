@@ -91,6 +91,18 @@ and `test-plan` when historical precedent, runtime wiring, policy, or journey
 coverage can change the answer. Publication gates continue to validate the
 underlying sources even when SQLite selected their affected scope.
 
+An empty backend semantic trace is a successful empty fragment, not a facade
+failure. Extracted-module readiness recognizes explicit `Add<Module>Module()`
+calls in executable composition roots in addition to legacy registrations from
+the monolithic Application dependency-injection files.
+
+Extraction readiness and its optional compile probe are content-addressed by
+the complete graph input fingerprint, module, test scope, and probe mode.
+Repeated readiness calls return the cached structured result; any tracked or
+untracked code, project, module-dependency, or relevant configuration change
+refreshes the graph and selects a different cache key. Synthetic dependency
+fixtures always bypass the cache.
+
 Run the regression and benchmark with:
 
 ```powershell
