@@ -44,6 +44,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.RecipeCommunity",
             "FoodDiary.Application.Statistics",
             "FoodDiary.Application.Tdee",
+            "FoodDiary.Application.Usda",
             "FoodDiary.Application.Users",
             "FoodDiary.Application.Wearables",
             "FoodDiary.Application.WeeklyGoals",

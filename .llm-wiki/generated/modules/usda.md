@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Meals
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj`
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: Meals, Users
 - Business-module consumers: Products
-- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Application, FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Usda`
-- `FoodDiary.Application/Usda`
+- `FoodDiary.Application.Usda`
 - `FoodDiary.Domain/Entities/Usda`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Usda`
 - `FoodDiary.Infrastructure/Persistence/Usda`
@@ -45,11 +46,11 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 ## Boundary Health
 
 - Role: adapter
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 20
-- Observed external consumer groups: 3
+- Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -88,6 +89,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/UsdaProductLinkRepositoryTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs`

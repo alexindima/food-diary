@@ -49,6 +49,7 @@
   <Project Path="FoodDiary.Application.Statistics/FoodDiary.Application.Statistics.csproj" />
   <Project Path="FoodDiary.Application.Meals/FoodDiary.Application.Meals.csproj" />
   <Project Path="FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj" />
+  <Project Path="FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj" />
   <Project Path="FoodDiary.Application.Tdee/FoodDiary.Application.Tdee.csproj" />
   <Project Path="FoodDiary.Application.OpenFoodFacts/FoodDiary.Application.OpenFoodFacts.csproj" />
   <Project Path="FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj" />

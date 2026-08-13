@@ -4102,7 +4102,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
+                                                  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4838,7 +4838,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
+                                                  "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11610,7 +11610,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Usda/Common/IUsdaFoodReadService.cs"
+                                                  "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11706,7 +11706,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Usda/Common/IUsdaProductSuggestionReadService.cs"
+                                                  "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -12858,7 +12858,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
+                                                  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -14603,7 +14603,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
+                                                  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -15115,7 +15115,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
+                                                  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -32503,10 +32503,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -32516,7 +32516,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Usda/Mappings/UsdaHttpMappings.cs",
@@ -32529,7 +32529,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
@@ -32542,7 +32542,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -32555,7 +32555,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs",
@@ -35597,10 +35597,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -35610,7 +35610,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Usda/Mappings/UsdaHttpMappings.cs",
@@ -35623,7 +35623,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
@@ -35636,7 +35636,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -35649,7 +35649,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs",
@@ -46429,6 +46429,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -46937,32 +46963,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48210,6 +48210,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -48718,32 +48744,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Commands/UpdateRecipe/UpdateRecipeCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -50966,6 +50966,45 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Common/IUserContextService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51552,45 +51591,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -65409,7 +65409,7 @@
                                                       "FoodDiary.Application.Meals/Common/IMealProductNutritionReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Services/UsdaDailyMicronutrientReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72805,6 +72805,45 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73404,45 +73443,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74274,6 +74274,45 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Queries/GetDesiredWaist/GetDesiredWaistQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -74873,45 +74912,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83413,7 +83413,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaDailyMicronutrientReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83426,7 +83426,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaDailyMicronutrientReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83439,7 +83439,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaDailyMicronutrientReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Services/UsdaDailyMicronutrientReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83465,7 +83465,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Services/UsdaDailyMicronutrientReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83478,7 +83478,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Services/UsdaFoodReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83491,7 +83491,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Services/UsdaProductSuggestionReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaProductSuggestionReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83569,7 +83569,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83631,10 +83631,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Common/IUsdaFoodReadService.cs"
+                                                      "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83644,10 +83644,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Common/IUsdaFoodReadService.cs"
+                                                      "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83657,10 +83657,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Common/IUsdaFoodReadService.cs"
+                                                      "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83670,10 +83670,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Common/IUsdaFoodReadService.cs"
+                                                      "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Services/UsdaFoodReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83790,7 +83790,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83803,7 +83803,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Services/UsdaFoodReadService.cs",
+                              "consumerPath":  "FoodDiary.Application/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -84024,7 +84024,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -84037,7 +84037,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -84099,10 +84099,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Common/IUsdaProductSuggestionReadService.cs"
+                                                      "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -84112,7 +84112,20 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Common/IUsdaProductSuggestionReadService.cs"
+                                                      "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaProductSuggestionReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUsdaProductSuggestionReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
@@ -84125,20 +84138,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Common/IUsdaProductSuggestionReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Services/UsdaProductSuggestionReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductSuggestionReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Common/IUsdaProductSuggestionReadService.cs"
+                                                      "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -88457,6 +88457,45 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/AcceptAiConsent/AcceptAiConsentCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -89082,45 +89121,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/GetRecipesOverview/GetRecipesOverviewQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -92796,10 +92796,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -92809,7 +92809,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Usda/Mappings/UsdaHttpMappings.cs",
@@ -92822,7 +92822,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs",
@@ -92835,7 +92835,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -92848,7 +92848,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs",
@@ -100895,10 +100895,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -100908,10 +100908,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -100921,7 +100921,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Usda/Mappings/UsdaHttpMappings.cs",
@@ -100934,7 +100934,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs",
@@ -100947,7 +100947,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaValidatorTests.cs",
@@ -100960,7 +100960,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -100973,7 +100973,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
+                                                      "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs",
@@ -103014,10 +103014,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -103027,7 +103027,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Usda/Mappings/UsdaHttpMappings.cs",
@@ -103040,7 +103040,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs",
@@ -103053,7 +103053,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -103066,7 +103066,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
+                                                      "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs",

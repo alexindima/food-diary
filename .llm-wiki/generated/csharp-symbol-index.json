@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3190,
-                    "symbols":  3208,
+                    "sourceFiles":  3192,
+                    "symbols":  3209,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1631,
+                                  "class":  1632,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1171,
+                                  "Other":  1172,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -9624,6 +9624,132 @@
                         "line":  8
                     },
                     {
+                        "name":  "LinkProductToUsdaFoodCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "LinkProductToUsdaFoodCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "UnlinkProductFromUsdaFoodCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "UnlinkProductFromUsdaFoodCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "IUsdaFoodReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IUsdaProductSuggestionReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Usda/DependencyInjection.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "HealthAreaScoreMappings",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Usda/Mappings/HealthAreaScoreMappings.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "GetDailyMicronutrientsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetDailyMicronutrientsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetMicronutrientsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetMicronutrientsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "SearchUsdaFoodsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "SearchUsdaFoodsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "SearchUsdaFoodsQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "UsdaDailyMicronutrientReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UsdaFoodReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UsdaProductSuggestionReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Usda/Services/UsdaProductSuggestionReadService.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "AcceptAiConsentCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -11595,7 +11721,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                        "line":  14
+                        "line":  11
                     },
                     {
                         "name":  "DependencyInjection",
@@ -12527,125 +12653,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Recipes/Services/RecipeStepAppender.cs",
                         "line":  11
-                    },
-                    {
-                        "name":  "LinkProductToUsdaFoodCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "LinkProductToUsdaFoodCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "UnlinkProductFromUsdaFoodCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "UnlinkProductFromUsdaFoodCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "IUsdaFoodReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Usda/Common/IUsdaFoodReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IUsdaProductSuggestionReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Usda/Common/IUsdaProductSuggestionReadService.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "HealthAreaScoreMappings",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Usda/Mappings/HealthAreaScoreMappings.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "GetDailyMicronutrientsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetDailyMicronutrientsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Usda/Queries/GetDailyMicronutrients/GetDailyMicronutrientsQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetMicronutrientsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetMicronutrientsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Usda/Queries/GetMicronutrients/GetMicronutrientsQueryHandler.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "SearchUsdaFoodsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "SearchUsdaFoodsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryHandler.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "SearchUsdaFoodsQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Usda/Queries/SearchUsdaFoods/SearchUsdaFoodsQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "UsdaDailyMicronutrientReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Usda/Services/UsdaDailyMicronutrientReadService.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "UsdaFoodReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Usda/Services/UsdaFoodReadService.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "UsdaProductSuggestionReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Usda/Services/UsdaProductSuggestionReadService.cs",
-                        "line":  6
                     },
                     {
                         "name":  "IWeeklyCheckInReadService",
@@ -16390,7 +16397,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  372
+                        "line":  374
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16747,7 +16754,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  82
+                        "line":  84
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20534,7 +20541,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  38
+                        "line":  39
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23839,14 +23846,14 @@
                                          "interface":  "IUsdaDailyMicronutrientReadService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaDailyMicronutrientReadService.cs",
                                          "implementation":  "UsdaDailyMicronutrientReadService",
-                                         "implementationPath":  "FoodDiary.Application/Usda/Services/UsdaDailyMicronutrientReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Usda/Services/UsdaDailyMicronutrientReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IUsdaFoodReadService",
-                                         "interfacePath":  "FoodDiary.Application/Usda/Common/IUsdaFoodReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs",
                                          "implementation":  "UsdaFoodReadService",
-                                         "implementationPath":  "FoodDiary.Application/Usda/Services/UsdaFoodReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23872,9 +23879,9 @@
                                      },
                                      {
                                          "interface":  "IUsdaProductSuggestionReadService",
-                                         "interfacePath":  "FoodDiary.Application/Usda/Common/IUsdaProductSuggestionReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs",
                                          "implementation":  "UsdaProductSuggestionReadService",
-                                         "implementationPath":  "FoodDiary.Application/Usda/Services/UsdaProductSuggestionReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Usda/Services/UsdaProductSuggestionReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24587,6 +24594,27 @@
                                                  "line":  14
                                              },
                                              {
+                                                 "service":  "IUsdaDailyMicronutrientReadService",
+                                                 "implementation":  "UsdaDailyMicronutrientReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Usda/DependencyInjection.cs",
+                                                 "line":  15
+                                             },
+                                             {
+                                                 "service":  "IUsdaFoodReadService",
+                                                 "implementation":  "UsdaFoodReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Usda/DependencyInjection.cs",
+                                                 "line":  16
+                                             },
+                                             {
+                                                 "service":  "IUsdaProductSuggestionReadService",
+                                                 "implementation":  "UsdaProductSuggestionReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Usda/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
                                                  "service":  "IUserAdministrationMutationService",
                                                  "implementation":  "UserAdministrationMutationService",
                                                  "lifetime":  "Scoped",
@@ -24738,56 +24766,35 @@
                                                  "implementation":  "ExportDiaryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  17
+                                                 "line":  14
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "OpenFoodFactsProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  18
+                                                 "line":  15
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "UsdaProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  19
+                                                 "line":  16
                                              },
                                              {
                                                  "service":  "IRecentProductReadService",
                                                  "implementation":  "RecentProductReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  20
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IRecentRecipeReadService",
                                                  "implementation":  "RecentRecipeReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  21
-                                             },
-                                             {
-                                                 "service":  "IUsdaDailyMicronutrientReadService",
-                                                 "implementation":  "UsdaDailyMicronutrientReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  22
-                                             },
-                                             {
-                                                 "service":  "IUsdaFoodReadService",
-                                                 "implementation":  "UsdaFoodReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  23
-                                             },
-                                             {
-                                                 "service":  "IUsdaProductSuggestionReadService",
-                                                 "implementation":  "UsdaProductSuggestionReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  24
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IDashboardStatisticsReadService",
@@ -25494,14 +25501,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  102
+                                                 "line":  104
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  103
+                                                 "line":  105
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25592,7 +25599,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  74
+                                                 "line":  76
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25648,35 +25655,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  49
+                                                 "line":  50
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  82
+                                                 "line":  84
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  83
+                                                 "line":  85
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  84
+                                                 "line":  86
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  107
+                                                 "line":  109
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

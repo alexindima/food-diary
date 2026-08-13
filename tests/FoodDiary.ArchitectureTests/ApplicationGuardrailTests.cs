@@ -22,6 +22,7 @@ public sealed class ApplicationGuardrailTests {
             "FoodDiary.Application.OpenFoodFacts",
             "FoodDiary.Application.Statistics",
             "FoodDiary.Application.Tdee",
+            "FoodDiary.Application.Usda",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
         ];
@@ -1211,9 +1212,9 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Notifications", "Queries", "GetUnreadCount", "GetUnreadCountQueryHandler.cs"),
             Path.Combine(applicationRoot, "Products", "Queries", "GetRecentProducts", "GetRecentProductsQueryHandler.cs"),
             Path.Combine(applicationRoot, "Recipes", "Queries", "GetRecentRecipes", "GetRecentRecipesQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Usda", "Commands", "LinkProductToUsdaFood", "LinkProductToUsdaFoodCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Usda", "Commands", "UnlinkProductFromUsdaFood", "UnlinkProductFromUsdaFoodCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Usda", "Queries", "GetDailyMicronutrients", "GetDailyMicronutrientsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Usda", "Commands", "LinkProductToUsdaFood", "LinkProductToUsdaFoodCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Usda", "Commands", "UnlinkProductFromUsdaFood", "UnlinkProductFromUsdaFoodCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Usda", "Queries", "GetDailyMicronutrients", "GetDailyMicronutrientsQueryHandler.cs"),
             Path.Combine(applicationRoot, "WeeklyCheckIn", "Queries", "GetWeeklyCheckIn", "GetWeeklyCheckInQueryHandler.cs"),
         ];
 
@@ -1360,7 +1361,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void DailyMicronutrientsQuery_UsesDedicatedReadServiceInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
-        string dailyMicronutrientsQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Usda", "Queries", "GetDailyMicronutrients");
+        string dailyMicronutrientsQueriesRoot = Path.Combine(root, "FoodDiary.Application.Usda", "Queries", "GetDailyMicronutrients");
         string[] dailyMicronutrientsQueryFiles = [.. SourceScanner.SourceFiles(dailyMicronutrientsQueriesRoot)];
 
         string[] violations = [
@@ -1381,7 +1382,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Meals", "Services", "MealReadService.cs"),
             Path.Combine(applicationRoot, "Export", "Services", "ExportDiaryReadService.cs"),
             Path.Combine(applicationRoot, "Gamification", "Services", "GamificationReadService.cs"),
-            Path.Combine(applicationRoot, "Usda", "Services", "UsdaDailyMicronutrientReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application.Usda", "Services", "UsdaDailyMicronutrientReadService.cs"),
             Path.Combine(applicationRoot, "WeeklyCheckIn", "Services", "WeeklyCheckInReadService.cs"),
         ];
 
@@ -1394,8 +1395,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Usda",
+            "FoodDiary.Application.Usda",
             "Services",
             "UsdaDailyMicronutrientReadService.cs");
         string[] serviceFiles = [servicePath];
@@ -1415,7 +1415,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void UsdaFoodQueries_UseDedicatedReadServiceInsteadOfFoodRepository() {
         string root = GetRepositoryRoot();
-        string usdaQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Usda", "Queries");
+        string usdaQueriesRoot = Path.Combine(root, "FoodDiary.Application.Usda", "Queries");
         string[] usdaFoodQueryFiles = [
             .. SourceScanner.SourceFiles(Path.Combine(usdaQueriesRoot, "SearchUsdaFoods")),
             .. SourceScanner.SourceFiles(Path.Combine(usdaQueriesRoot, "GetMicronutrients")),
@@ -1435,8 +1435,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
-            "FoodDiary.Application",
-            "Usda",
+            "FoodDiary.Application.Usda",
             "Services",
             "UsdaFoodReadService.cs");
         string[] serviceFiles = [servicePath];

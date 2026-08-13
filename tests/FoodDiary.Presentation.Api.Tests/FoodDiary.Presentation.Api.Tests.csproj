@@ -47,6 +47,7 @@
     <ProjectReference Include="..\..\FoodDiary.Application.Statistics\FoodDiary.Application.Statistics.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Meals\FoodDiary.Application.Meals.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.WeeklyGoals\FoodDiary.Application.WeeklyGoals.csproj" />
+    <ProjectReference Include="..\..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
   </ItemGroup>
 
 </Project>

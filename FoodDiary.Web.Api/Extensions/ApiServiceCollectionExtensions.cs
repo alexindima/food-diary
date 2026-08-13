@@ -22,6 +22,7 @@ using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Users;
 using FoodDiary.Application.Wearables;
 using FoodDiary.Application.WeeklyGoals;
+using FoodDiary.Application.Usda;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Integrations;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -72,6 +73,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddTdeeModule()
                 .AddWearablesModule()
                 .AddWeeklyGoalsModule()
+                .AddUsdaModule()
                 .AddNotificationsModule()
                 .AddOpenFoodFactsModule()
                 .AddUsersModule()
