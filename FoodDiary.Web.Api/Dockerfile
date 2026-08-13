@@ -27,6 +27,7 @@ COPY FoodDiary.Application.Dashboard/*.csproj FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/*.csproj FoodDiary.Application.Exercises/
 COPY FoodDiary.Application.Tdee/*.csproj FoodDiary.Application.Tdee/
 COPY FoodDiary.Application.OpenFoodFacts/*.csproj FoodDiary.Application.OpenFoodFacts/
+COPY FoodDiary.Application.Products/*.csproj FoodDiary.Application.Products/
 COPY FoodDiary.Application.Images/*.csproj FoodDiary.Application.Images/
 COPY FoodDiary.Application.Ai/*.csproj FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Lessons/*.csproj FoodDiary.Application.Lessons/
@@ -74,6 +75,7 @@ COPY FoodDiary.Application.Dashboard/ FoodDiary.Application.Dashboard/
 COPY FoodDiary.Application.Exercises/ FoodDiary.Application.Exercises/
 COPY FoodDiary.Application.Tdee/ FoodDiary.Application.Tdee/
 COPY FoodDiary.Application.OpenFoodFacts/ FoodDiary.Application.OpenFoodFacts/
+COPY FoodDiary.Application.Products/ FoodDiary.Application.Products/
 COPY FoodDiary.Application.Images/ FoodDiary.Application.Images/
 COPY FoodDiary.Application.Ai/ FoodDiary.Application.Ai/
 COPY FoodDiary.Application.Lessons/ FoodDiary.Application.Lessons/

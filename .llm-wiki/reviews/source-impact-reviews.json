@@ -42,17 +42,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "289201effe0a8abe590cdef0cdf35210c2325984b28e93367172de600236149d"
-                                        },
-                                        {
-                                            "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "c4a6c32faf0782328bb63f7b280042c5b7b351caecd7ddd02149d05b1f6686ab"
+                                            "sha256":  "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:16.9102378Z"
+                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
+                        "reviewedAtUtc":  "2026-08-13T20:02:15.9627020Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -60,14 +56,22 @@
                         "pageSha256":  "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
                         "sources":  [
                                         {
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
+                                        },
+                                        {
                                             "path":  "docs/architecture/module-dependencies.json",
                                             "sha256":  "589cc180e6a5b8816d84987f354b4326bc38ad165fc23f962f78dcb1682fe678"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+                                            "sha256":  "21de07e2525ac9dfeacb963b96e4acd1a71f9d3ddda26a73c864d9ad916225f3"
                                         }
                                     ],
-                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
+                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
-                        "reviewedAtUtc":  "2026-08-13T19:37:25.7611173Z"
+                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
+                        "reviewedAtUtc":  "2026-08-13T20:02:16.1682086Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -105,14 +109,18 @@
                         "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
                         "sources":  [
                                         {
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
+                                        },
+                                        {
                                             "path":  "docs/architecture/module-dependencies.json",
                                             "sha256":  "589cc180e6a5b8816d84987f354b4326bc38ad165fc23f962f78dcb1682fe678"
                                         }
                                     ],
-                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
+                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
-                        "reviewedAtUtc":  "2026-08-13T19:37:25.9732951Z"
+                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
+                        "reviewedAtUtc":  "2026-08-13T20:02:16.3596454Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -185,13 +193,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "a23c7bae484596080e54d5fff871ea71e8dad32fba03fba5fcba87df4970fd26"
+                                            "sha256":  "d9299d5a9d9b1051099482e253dabc56962412fe29040ff00538b53944fab938"
                                         }
                                     ],
-                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
+                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
-                        "reviewedAtUtc":  "2026-08-13T19:37:27.8110772Z"
+                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
+                        "reviewedAtUtc":  "2026-08-13T20:02:18.0918357Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -260,13 +268,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "2fe5d5a0d1b037d6b6faec61b46377f6a09a4854a981d4856a0c60b3ca5a486d"
+                                            "sha256":  "ea390ca8462e2d98c1d3c3697308bcb4e3c0a86bdb733c6e9745ca3ff0aad9dc"
+                                        },
+                                        {
+                                            "path":  "docs/architecture/backend-modules.json",
+                                            "sha256":  "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+                                            "sha256":  "21de07e2525ac9dfeacb963b96e4acd1a71f9d3ddda26a73c864d9ad916225f3"
                                         }
                                     ],
-                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
+                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
-                        "reviewedAtUtc":  "2026-08-13T19:37:26.2251224Z"
+                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
+                        "reviewedAtUtc":  "2026-08-13T20:02:16.5912659Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -275,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "1161d2baa231775cb98a090537430f0836adc47ded98431726658f8a30da660c"
+                                            "sha256":  "dba505a8824672ac747b78b1e8d08f0e378848f8e703498b6e03e1c8af525117"
                                         }
                                     ],
-                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
+                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
-                        "reviewedAtUtc":  "2026-08-13T19:37:26.5268630Z"
+                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
+                        "reviewedAtUtc":  "2026-08-13T20:02:16.9069141Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -787,13 +803,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "10188c869f0c5ce026bc66a9e7947070606b5cbc7ac43afd460cd1f8a40a377b"
+                                            "sha256":  "7b7739765113f4e5c7a92817baa65d889e07f72bc43d0a7d1d45c7ce7d89563f"
                                         }
                                     ],
-                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
+                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
-                        "reviewedAtUtc":  "2026-08-13T19:37:27.1956186Z"
+                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
+                        "reviewedAtUtc":  "2026-08-13T20:02:17.2717317Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -836,13 +852,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "67e3439ddf58b06d9224b9feed0542d32c768b60d6153a9099f60de3c1089409"
+                                            "sha256":  "b5cc108085824552e315456680afe98e31562fc3bb6ba90fdea35f74b98e7e75"
                                         }
                                     ],
-                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
+                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
-                        "reviewedAtUtc":  "2026-08-13T19:37:27.5314320Z"
+                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
+                        "reviewedAtUtc":  "2026-08-13T20:02:17.7492973Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

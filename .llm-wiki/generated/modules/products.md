@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
-- Business-module dependencies: Images, OpenFoodFacts, Usda
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Products/FoodDiary.Application.Products.csproj`
+- Business-module dependencies: none observed
 - Abstraction-contract dependencies: FavoriteProducts, Images, OpenFoodFacts, RecentItems, Usda, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Products`
-- `FoodDiary.Application/Products`
+- `FoodDiary.Application.Products`
 - `FoodDiary.Domain/Entities/Products`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Products`
 - `FoodDiary.Infrastructure/Persistence/Products`
@@ -54,11 +55,11 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: explicit-boundary-tests
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: Product
 - Public contract files: 9
-- Observed external consumer groups: 1
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -92,6 +93,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ProductsModuleExtractionTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/ProductSuggestionsControllerTests.cs`
 
 ## Working Rule

@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FoodDiary.Application\FoodDiary.Application.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.Products\FoodDiary.Application.Products.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Dietologist\FoodDiary.Application.Dietologist.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Fasting\FoodDiary.Application.Fasting.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Favorites\FoodDiary.Application.Favorites.csproj" />

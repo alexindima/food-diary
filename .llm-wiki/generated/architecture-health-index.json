@@ -1,7 +1,7 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  301,
+                    "productionProjectEdges":  311,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
@@ -5639,7 +5639,7 @@
                                                  {
                                                      "name":  "ProductUpdateLimitValidator",
                                                      "role":  "Validator",
-                                                     "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
+                                                     "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
                                                      "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [

@@ -1862,7 +1862,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2534,7 +2534,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
+                                                  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2870,7 +2870,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
+                                                  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4966,7 +4966,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs"
+                                                  "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5014,7 +5014,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
+                                                  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5030,7 +5030,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs"
+                                                  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5078,7 +5078,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
+                                                  "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -10362,7 +10362,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Common/IProductSearchSuggestionProvider.cs"
+                                                  "FoodDiary.Application.Products/Products/Common/IProductSearchSuggestionProvider.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -10586,7 +10586,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Common/IRecentProductReadService.cs"
+                                                  "FoodDiary.Application.Products/Products/Common/IRecentProductReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -14475,7 +14475,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
+                                                  "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -15435,7 +15435,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -23359,10 +23359,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  3
                           },
@@ -23372,10 +23372,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -23385,10 +23385,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -23398,7 +23398,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpMappings.cs",
@@ -23411,7 +23411,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs",
@@ -23424,7 +23424,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs",
@@ -23437,7 +23437,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
@@ -23450,7 +23450,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
@@ -26349,10 +26349,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -26362,10 +26362,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -26375,7 +26375,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpMappings.cs",
@@ -26388,7 +26388,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
@@ -26401,7 +26401,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
@@ -26414,7 +26414,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
@@ -27636,10 +27636,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -27649,10 +27649,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -27662,7 +27662,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpMappings.cs",
@@ -27675,7 +27675,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs",
@@ -27688,7 +27688,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
@@ -27701,7 +27701,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
@@ -35956,10 +35956,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -35969,10 +35969,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -35982,7 +35982,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpQueryMappings.cs",
@@ -35995,7 +35995,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
@@ -36008,7 +36008,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
@@ -36021,7 +36021,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
@@ -36112,10 +36112,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  3
                           },
@@ -36125,10 +36125,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -36138,7 +36138,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpQueryMappings.cs",
@@ -36151,7 +36151,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
@@ -36164,7 +36164,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
@@ -36177,7 +36177,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
@@ -36190,10 +36190,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -36203,10 +36203,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -36216,7 +36216,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpQueryMappings.cs",
@@ -36229,7 +36229,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
@@ -36242,7 +36242,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
@@ -36255,7 +36255,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
@@ -36359,10 +36359,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -36372,10 +36372,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -36385,7 +36385,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpQueryMappings.cs",
@@ -36398,7 +36398,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",
@@ -36411,7 +36411,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
@@ -36424,7 +36424,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
@@ -46502,6 +46502,58 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -46750,58 +46802,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48283,6 +48283,58 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -48531,58 +48583,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Commands/UpsertWeeklyGoal/UpsertWeeklyGoalCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -50636,6 +50636,136 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51040,136 +51170,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
-                              "isTest":  false,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-                              "isTest":  false,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -59658,7 +59658,7 @@
                                                       "FoodDiary.Application.Abstractions/FavoriteProducts/Common/IFavoriteProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61231,72 +61231,72 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Common/ProductImageAssetResolver.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductValuePreparer.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Common/ProductImageAssetResolver.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61517,33 +61517,33 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetCleanupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetCleanupService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetCleanupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetCleanupService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetCleanupService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -69342,7 +69342,7 @@
                                                       "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70798,7 +70798,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70811,7 +70811,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70824,7 +70824,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70837,7 +70837,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Services/RecentProductReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Services/RecentProductReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70928,7 +70928,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70941,7 +70941,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70954,7 +70954,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71120,10 +71120,10 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IProductSearchSuggestionProvider.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IProductSearchSuggestionProvider.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -71133,10 +71133,10 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IProductSearchSuggestionProvider.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IProductSearchSuggestionProvider.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -71146,10 +71146,10 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IProductSearchSuggestionProvider.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IProductSearchSuggestionProvider.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/SearchSuggestions/OpenFoodFactsProductSearchSuggestionProvider.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71159,10 +71159,10 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IProductSearchSuggestionProvider.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IProductSearchSuggestionProvider.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71172,12 +71172,12 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IProductSearchSuggestionProvider.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IProductSearchSuggestionProvider.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Common/ApplicationDependencyInjectionTests.cs",
                               "isTest":  true,
-                              "referenceCount":  1
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IProductSearchSuggestionProvider",
@@ -71185,12 +71185,38 @@
                                             "Other"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IProductSearchSuggestionProvider.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IProductSearchSuggestionProvider.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs",
                               "isTest":  true,
                               "referenceCount":  5
+                          },
+                          {
+                              "contract":  "IProductUsdaLinkService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/DependencyInjection.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductUsdaLinkService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Services/ProductUsdaLinkService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "IProductUsdaLinkService",
@@ -71215,32 +71241,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IProductUsdaLinkService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IProductUsdaLinkService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Services/ProductUsdaLinkService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71279,7 +71279,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71292,7 +71292,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71305,7 +71305,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71318,7 +71318,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -71331,7 +71331,7 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Services/ProductUsdaLinkService.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Services/ProductUsdaLinkService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72696,6 +72696,71 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -72944,71 +73009,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74165,6 +74165,71 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -74425,71 +74490,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Recipes/Queries/ExploreRecipes/ExploreRecipesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -74737,7 +74737,7 @@
                                                       "FoodDiary.Application.Abstractions/RecentItems/Common/IRecentItemUsageReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Services/RecentProductReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Services/RecentProductReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74903,10 +74903,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IRecentProductReadService.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IRecentProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74916,10 +74916,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IRecentProductReadService.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IRecentProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74929,10 +74929,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IRecentProductReadService.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IRecentProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74942,10 +74942,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IRecentProductReadService.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IRecentProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Services/RecentProductReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Services/RecentProductReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74955,7 +74955,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Common/IRecentProductReadService.cs"
+                                                      "FoodDiary.Application.Products/Products/Common/IRecentProductReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
@@ -83408,7 +83408,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83421,7 +83421,7 @@
                                                       "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
+                              "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaFoodReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -83499,6 +83499,19 @@
                                                       "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUsdaProductSuggestionReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Usda/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -83513,19 +83526,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Usda/Services/UsdaProductSuggestionReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductSuggestionReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Usda/Common/IUsdaProductSuggestionReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/SearchSuggestions/UsdaProductSearchSuggestionProvider.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -87828,6 +87828,110 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DeleteProduct/DeleteProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductById/GetProductByIdQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -88310,110 +88414,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.WeeklyGoals/Queries/GetWeeklyGoal/GetWeeklyGoalQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DeleteProduct/DeleteProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/DuplicateProduct/DuplicateProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductById/GetProductByIdQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetRecentProducts/GetRecentProductsQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -95654,6 +95654,58 @@
                                                       "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Models/ProductOverviewModel.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "PagedResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "PagedResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  4
+                          },
+                          {
+                              "contract":  "PagedResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  2
+                          },
+                          {
+                              "contract":  "PagedResponse",
+                              "roles":  [
+                                            "Response"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Common/IRecipeCommentReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -95694,58 +95746,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "PagedResponse",
-                              "roles":  [
-                                            "Response"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Models/ProductOverviewModel.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "PagedResponse",
-                              "roles":  [
-                                            "Response"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "PagedResponse",
-                              "roles":  [
-                                            "Response"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProducts/GetProductsQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  4
-                          },
-                          {
-                              "contract":  "PagedResponse",
-                              "roles":  [
-                                            "Response"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Models/PagedResponse.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -100162,10 +100162,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -100175,10 +100175,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -100188,7 +100188,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpMappings.cs",
@@ -100201,7 +100201,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs",
@@ -100214,7 +100214,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",
@@ -100227,7 +100227,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
+                                                      "FoodDiary.Application.Products/Products/Queries/SearchProductSuggestions/SearchProductSuggestionsQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductSuggestionsControllerTests.cs",
@@ -104257,10 +104257,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateApplier.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateApplier.cs",
                               "isTest":  false,
                               "referenceCount":  4
                           },
@@ -104270,10 +104270,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateLimitValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -104283,10 +104283,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -104296,10 +104296,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  3
                           },
@@ -104309,10 +104309,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  3
                           },
@@ -104322,7 +104322,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Products/Mappings/ProductHttpMappings.cs",
@@ -104335,7 +104335,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.cs",
@@ -104348,7 +104348,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.UpdateCommandTests.cs",
@@ -104361,7 +104361,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductsValidatorTests.cs",
@@ -104374,7 +104374,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
+                                                      "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/ProductHttpMappingsTests.cs",

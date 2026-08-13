@@ -320,6 +320,13 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "int,",
+                       "path":  "FoodDiary.Application.Products/Products/Common/RecentProductOverviewLoader.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "CurrentPassword",
                        "type":  "string",
                        "path":  "FoodDiary.Application.Users/Commands/ChangePassword/ChangePasswordCommand.cs",
@@ -338,13 +345,6 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
                        "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "CancellationToken",
-                       "type":  "int,",
-                       "path":  "FoodDiary.Application/Products/Common/RecentProductOverviewLoader.cs",
-                       "line":  9
                    },
                    {
                        "category":  "credential",
@@ -624,7 +624,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  80
+                       "line":  81
                    },
                    {
                        "category":  "credential",
@@ -1666,42 +1666,42 @@
                        "category":  "financial",
                        "name":  "BaseAmount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
                        "line":  19
                    },
                    {
                        "category":  "financial",
                        "name":  "DefaultPortionAmount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
                        "line":  20
                    },
                    {
                        "category":  "financial",
                        "name":  "BaseAmount",
                        "type":  "double?",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
                        "line":  27
                    },
                    {
                        "category":  "financial",
                        "name":  "DefaultPortionAmount",
                        "type":  "double?",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
                        "line":  28
                    },
                    {
                        "category":  "financial",
                        "name":  "BaseAmount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Products/Models/ProductModel.cs",
+                       "path":  "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
                        "line":  18
                    },
                    {
                        "category":  "financial",
                        "name":  "DefaultPortionAmount",
                        "type":  "double",
-                       "path":  "FoodDiary.Application/Products/Models/ProductModel.cs",
+                       "path":  "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
                        "line":  19
                    },
                    {
@@ -4275,6 +4275,55 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "CaloriesPerBase",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
+                       "line":  21
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesPerBase",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "line":  29
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesPerBase",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
+                       "line":  20
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesPer100G",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Products/Products/Models/ProductSearchSuggestionModel.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesFrom",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                       "line":  30
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesTo",
+                       "type":  "double?",
+                       "path":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                       "line":  31
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "CaloriesTo",
+                       "type":  "CaloriesFrom,",
+                       "path":  "FoodDiary.Application.Products/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
+                       "line":  34
+                   },
+                   {
+                       "category":  "health",
                        "name":  "TotalCalories",
                        "type":  "double",
                        "path":  "FoodDiary.Application.Statistics/Models/AggregatedStatisticsModel.cs",
@@ -4559,55 +4608,6 @@
                        "type":  "double",
                        "path":  "FoodDiary.Application.WeeklyCheckIn/Services/WeeklyCheckInCalculator.cs",
                        "line":  65
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesPerBase",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
-                       "line":  21
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesPerBase",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-                       "line":  29
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesPerBase",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Products/Models/ProductModel.cs",
-                       "line":  20
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesPer100G",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Products/Models/ProductSearchSuggestionModel.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesFrom",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  30
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesTo",
-                       "type":  "double?",
-                       "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  31
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "CaloriesTo",
-                       "type":  "CaloriesFrom,",
-                       "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  34
                    },
                    {
                        "category":  "health",
@@ -8601,6 +8601,153 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductCommand.cs",
+                       "line":  17
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductValues.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/CreateProduct/CreateProductValues.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateValues.cs",
+                       "line":  12
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateValues.cs",
+                       "line":  13
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "HasResolvedImageAsset",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateValues.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "line":  20
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearComment",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "line":  21
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "line":  22
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearImageUrl",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "line":  23
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "line":  24
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ClearImageAssetId",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Products/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
+                       "line":  25
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "ImageAssetId?",
+                       "path":  "FoodDiary.Application.Products/Products/Common/ProductImageAssetResolution.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Common/ProductImageAssetResolution.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "HasResolvedImageAsset",
+                       "type":  "bool",
+                       "path":  "FoodDiary.Application.Products/Products/Common/ProductImageAssetResolution.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "Comment",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
+                       "line":  14
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
+                       "line":  15
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid?",
+                       "path":  "FoodDiary.Application.Products/Products/Models/ProductModel.cs",
+                       "line":  16
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "ImageUrl",
+                       "type":  "string?",
+                       "path":  "FoodDiary.Application.Products/Products/Models/ProductSearchSuggestionModel.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "CommentId",
                        "type":  "Guid",
                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
@@ -8626,153 +8773,6 @@
                        "type":  "ImageAssetId?",
                        "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
                        "line":  30
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductCommand.cs",
-                       "line":  17
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductValues.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Commands/CreateProduct/CreateProductValues.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValues.cs",
-                       "line":  12
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValues.cs",
-                       "line":  13
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "HasResolvedImageAsset",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValues.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-                       "line":  20
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearComment",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-                       "line":  21
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-                       "line":  22
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearImageUrl",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-                       "line":  23
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-                       "line":  24
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ClearImageAssetId",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/UpdateProductCommand.cs",
-                       "line":  25
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "ImageAssetId?",
-                       "path":  "FoodDiary.Application/Products/Common/ProductImageAssetResolution.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Common/ProductImageAssetResolution.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "HasResolvedImageAsset",
-                       "type":  "bool",
-                       "path":  "FoodDiary.Application/Products/Common/ProductImageAssetResolution.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "Comment",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Models/ProductModel.cs",
-                       "line":  14
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Models/ProductModel.cs",
-                       "line":  15
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid?",
-                       "path":  "FoodDiary.Application/Products/Models/ProductModel.cs",
-                       "line":  16
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageUrl",
-                       "type":  "string?",
-                       "path":  "FoodDiary.Application/Products/Models/ProductSearchSuggestionModel.cs",
-                       "line":  10
                    },
                    {
                        "category":  "privateContent",
