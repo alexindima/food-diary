@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Statistics.Common;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Models;

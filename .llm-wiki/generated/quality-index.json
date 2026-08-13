@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4187,
+                    "productionFiles":  4190,
                     "criticalSymbols":  539,
                     "criticalSymbolsWithTestReferences":  510,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -294,11 +294,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  331,
+                         "nonBlankLines":  333,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  68.12
+                         "structuralRiskScore":  68.16
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
@@ -10991,6 +10991,94 @@
                       "structuralRiskScore":  0.36
                   },
                   {
+                      "path":  "FoodDiary.Application.Statistics/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Common/UtcDateNormalizer.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.76
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/DependencyInjection.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Models/AggregatedStatisticsModel.cs",
+                      "nonBlankLines":  19,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.38
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQuery.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
+                      "nonBlankLines":  62,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.74
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                      "nonBlankLines":  89,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  9.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.8
+                  },
+                  {
                       "path":  "FoodDiary.Application.Tdee/AssemblyInfo.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -14789,70 +14877,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  18.3
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Statistics/Models/AggregatedStatisticsModel.cs",
-                      "nonBlankLines":  19,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.38
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQuery.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
-                      "nonBlankLines":  62,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.74
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
-                      "nonBlankLines":  89,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
-                      "nonBlankLines":  15,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.8
                   },
                   {
                       "path":  "FoodDiary.Application/Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommand.cs",
@@ -19264,11 +19288,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  331,
+                      "nonBlankLines":  333,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  68.12
+                      "structuralRiskScore":  68.16
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19688,11 +19712,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  69,
+                      "nonBlankLines":  71,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.88
+                      "structuralRiskScore":  2.92
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -24032,11 +24056,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  101,
+                      "nonBlankLines":  103,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.02
+                      "structuralRiskScore":  5.06
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -37820,7 +37844,7 @@
                             {
                                 "name":  "GetStatisticsQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37830,7 +37854,7 @@
                             {
                                 "name":  "GetStatisticsSummaryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
                                 "line":  16,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39085,7 +39109,7 @@
                             {
                                 "name":  "GetStatisticsQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -39096,7 +39120,7 @@
                             {
                                 "name":  "GetStatisticsSummaryQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

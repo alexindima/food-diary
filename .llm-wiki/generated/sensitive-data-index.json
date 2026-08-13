@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  69
+                       "line":  70
                    },
                    {
                        "category":  "credential",
@@ -3869,6 +3869,34 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "TotalCalories",
+                       "type":  "double",
+                       "path":  "FoodDiary.Application.Statistics/Models/AggregatedStatisticsModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Nutrition",
+                       "type":  "IReadOnlyList\u003cAggregatedStatisticsModel\u003e",
+                       "path":  "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Weight",
+                       "type":  "IReadOnlyList\u003cWeightEntrySummaryModel\u003e",
+                       "path":  "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "Waist",
+                       "type":  "IReadOnlyList\u003cWaistEntrySummaryModel\u003e",
+                       "path":  "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
                        "name":  "EstimatedTdee",
                        "type":  "double?",
                        "path":  "FoodDiary.Application.Tdee/Common/TdeeUserProfile.cs",
@@ -4573,34 +4601,6 @@
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Recipes/Services/RecipeNutritionSummary.cs",
                        "line":  4
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "TotalCalories",
-                       "type":  "double",
-                       "path":  "FoodDiary.Application/Statistics/Models/AggregatedStatisticsModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Nutrition",
-                       "type":  "IReadOnlyList\u003cAggregatedStatisticsModel\u003e",
-                       "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "IReadOnlyList\u003cWeightEntrySummaryModel\u003e",
-                       "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Waist",
-                       "type":  "IReadOnlyList\u003cWaistEntrySummaryModel\u003e",
-                       "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
-                       "line":  9
                    },
                    {
                        "category":  "health",

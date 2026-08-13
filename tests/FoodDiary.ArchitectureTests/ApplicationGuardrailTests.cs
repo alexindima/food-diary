@@ -19,6 +19,7 @@ public sealed class ApplicationGuardrailTests {
             "FoodDiary.Application.Images",
             "FoodDiary.Application.Lessons",
             "FoodDiary.Application.OpenFoodFacts",
+            "FoodDiary.Application.Statistics",
             "FoodDiary.Application.Tdee",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
@@ -1246,7 +1247,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void StatisticsQueries_UseDedicatedStatisticsReadServiceInsteadOfMealAggregates() {
         string root = GetRepositoryRoot();
-        string statisticsRoot = Path.Combine(root, "FoodDiary.Application", "Statistics");
+        string statisticsRoot = Path.Combine(root, "FoodDiary.Application.Statistics");
         string[] statisticsFiles = [.. SourceScanner.SourceFiles(statisticsRoot)];
 
         string[] violations = [

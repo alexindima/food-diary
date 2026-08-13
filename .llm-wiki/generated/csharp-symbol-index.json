@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3179,
-                    "symbols":  3200,
+                    "sourceFiles":  3182,
+                    "symbols":  3202,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1623,
+                                  "class":  1625,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1164,
+                                  "Other":  1166,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -9036,6 +9036,76 @@
                         "line":  7
                     },
                     {
+                        "name":  "UtcDateNormalizer",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Statistics/Common/UtcDateNormalizer.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Statistics/DependencyInjection.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "AggregatedStatisticsModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Statistics/Models/AggregatedStatisticsModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "StatisticsSummaryModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Statistics/Models/StatisticsSummaryModel.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "GetStatisticsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetStatisticsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "GetStatisticsQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GetStatisticsSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetStatisticsSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
+                        "line":  16
+                    },
+                    {
+                        "name":  "GetStatisticsSummaryQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "ITdeeUserProfileService",
                         "kind":  "interface",
                         "role":  "Service",
@@ -12331,62 +12401,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Recipes/Services/RecipeStepAppender.cs",
                         "line":  11
-                    },
-                    {
-                        "name":  "AggregatedStatisticsModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Statistics/Models/AggregatedStatisticsModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "StatisticsSummaryModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Statistics/Models/StatisticsSummaryModel.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "GetStatisticsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetStatisticsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "GetStatisticsQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatistics/GetStatisticsQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GetStatisticsSummaryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetStatisticsSummaryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryHandler.cs",
-                        "line":  16
-                    },
-                    {
-                        "name":  "GetStatisticsSummaryQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Statistics/Queries/GetStatisticsSummary/GetStatisticsSummaryQueryValidator.cs",
-                        "line":  4
                     },
                     {
                         "name":  "LinkProductToUsdaFoodCommand",
@@ -16334,7 +16348,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  366
+                        "line":  368
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16691,7 +16705,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  76
+                        "line":  78
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20478,7 +20492,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  35
+                        "line":  36
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -25438,14 +25452,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  96
+                                                 "line":  98
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  97
+                                                 "line":  99
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25536,7 +25550,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  68
+                                                 "line":  70
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25592,35 +25606,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  46
+                                                 "line":  47
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  76
+                                                 "line":  78
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  77
+                                                 "line":  79
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  78
+                                                 "line":  80
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  101
+                                                 "line":  103
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

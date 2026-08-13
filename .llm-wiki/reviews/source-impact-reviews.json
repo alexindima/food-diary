@@ -42,17 +42,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cc08c1959785bd8091c10f5f61df875567d263361ff8c2d56c438e78b00d900c"
+                                            "sha256":  "a150abe3a8e862da8dae0c30cdb03d918731b9615fec3491428bd135de9c5ee8"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "5d868f054b59abcbb0c313024b0ead8b581f856744dc670b5e616b9a8b90056f"
+                                            "sha256":  "a955a498b72c3e9e6c8d9cb4e73675220295fc711717a9154a6cf6a277cc0ee9"
                                         }
                                     ],
-                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
-                        "reviewedAtUtc":  "2026-08-13T11:12:32.6069049Z"
+                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
+                        "reviewedAtUtc":  "2026-08-13T11:27:48.2000798Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -61,17 +61,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cc08c1959785bd8091c10f5f61df875567d263361ff8c2d56c438e78b00d900c"
+                                            "sha256":  "a150abe3a8e862da8dae0c30cdb03d918731b9615fec3491428bd135de9c5ee8"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "01353c9d54d556d292148d5e4c37d92a2df3a8d697a531a4d1d59d8226d35fc5"
+                                            "sha256":  "e4fb58dccdea9fba7805eb2d7d3680e86e66be633c4edaa5576acee26fdaa7f2"
                                         }
                                     ],
-                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
-                        "reviewedAtUtc":  "2026-08-13T11:12:33.2101293Z"
+                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
+                        "reviewedAtUtc":  "2026-08-13T11:27:48.7156119Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -110,13 +110,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cc08c1959785bd8091c10f5f61df875567d263361ff8c2d56c438e78b00d900c"
+                                            "sha256":  "a150abe3a8e862da8dae0c30cdb03d918731b9615fec3491428bd135de9c5ee8"
                                         }
                                     ],
-                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
-                        "reviewedAtUtc":  "2026-08-13T11:12:33.8332632Z"
+                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
+                        "reviewedAtUtc":  "2026-08-13T11:27:49.2434981Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -189,13 +189,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "39164537e1bd2b832c80de1f5215860676ab8d3ed1688734845cf77aed013652"
+                                            "sha256":  "9fbb18c19f5e66f46e53bd1001bc5f07c2a40e0584dbd83f93ad3181feac8a39"
                                         }
                                     ],
-                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
-                        "reviewedAtUtc":  "2026-08-13T11:12:37.5005072Z"
+                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
+                        "reviewedAtUtc":  "2026-08-13T11:27:52.7241897Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -268,21 +268,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "22bf6c3ccc39b99e65ec926dc18a0658eb91a7fd8ee2997a2629183372cb1e39"
+                                            "sha256":  "97fbabbfb974aa89ae3f5ff8b5cc51d2664372b94019c041c8e433e3836c065c"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cc08c1959785bd8091c10f5f61df875567d263361ff8c2d56c438e78b00d900c"
+                                            "sha256":  "a150abe3a8e862da8dae0c30cdb03d918731b9615fec3491428bd135de9c5ee8"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "01353c9d54d556d292148d5e4c37d92a2df3a8d697a531a4d1d59d8226d35fc5"
+                                            "sha256":  "e4fb58dccdea9fba7805eb2d7d3680e86e66be633c4edaa5576acee26fdaa7f2"
                                         }
                                     ],
-                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
-                        "reviewedAtUtc":  "2026-08-13T11:12:34.5712626Z"
+                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
+                        "reviewedAtUtc":  "2026-08-13T11:27:49.8497588Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -291,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "7ee5eb207e37f9d09472c6e8061ae0c0e1061885717e50ad3365f983d82714f7"
+                                            "sha256":  "38bac99945b26726e278aa301f211e30dd256f318849e581f02d85c3d3657619"
                                         }
                                     ],
-                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
-                        "reviewedAtUtc":  "2026-08-13T11:12:35.3492469Z"
+                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
+                        "reviewedAtUtc":  "2026-08-13T11:27:50.5492383Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -799,13 +799,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "33036b084f4a00bce272e9b7d78409d5f6134418cfa0af4734b3468c852e3728"
+                                            "sha256":  "5e054ae728705b1a3ae8e6b490e271874a5f76766d3249557b2fe515c6ae4018"
                                         }
                                     ],
-                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
-                        "reviewedAtUtc":  "2026-08-13T11:12:36.0368345Z"
+                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
+                        "reviewedAtUtc":  "2026-08-13T11:27:51.2832598Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -848,13 +848,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "d3059a3dde6543c06576b39cfdec829c3aea76c0d0072049d6169f746cf86351"
+                                            "sha256":  "d78039699f14a9270ac52de4e812b4b829ff0e9f5ba8bd270325a66388e6846e"
                                         }
                                     ],
-                        "reason":  "Lessons application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "Statistics application capability extracted into a dedicated project; no HTTP route or payload changes",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ada7a1f6b786e8082278da02b3cf7c09795aa8c0",
-                        "reviewedAtUtc":  "2026-08-13T11:12:36.7960001Z"
+                        "gitHead":  "1a1573fcf689b84d071d2e553098ca12477426c0",
+                        "reviewedAtUtc":  "2026-08-13T11:27:52.0794683Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
