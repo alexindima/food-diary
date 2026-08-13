@@ -33,6 +33,7 @@
     <ProjectReference Include="..\FoodDiary.Application.WeeklyGoals\FoodDiary.Application.WeeklyGoals.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Usda\FoodDiary.Application.Usda.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.WeeklyCheckIn\FoodDiary.Application.WeeklyCheckIn.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.DailyAdvices\FoodDiary.Application.DailyAdvices.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -23,6 +23,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Weekly goals application module: `FoodDiary.Application.WeeklyGoals/AGENTS.md`
 - USDA application module: `FoodDiary.Application.Usda/AGENTS.md`
 - Weekly check-in application module: `FoodDiary.Application.WeeklyCheckIn/AGENTS.md`
+- Daily advices application module: `FoodDiary.Application.DailyAdvices/AGENTS.md`
 - Domain layer: `FoodDiary.Domain/AGENTS.md`
 - Infrastructure layer: `FoodDiary.Infrastructure/AGENTS.md`
 - Integrations layer: `FoodDiary.Integrations/AGENTS.md`

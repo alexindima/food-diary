@@ -1015,7 +1015,6 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Theory]
     [InlineData("Lessons", "INutritionLessonRepository", "INutritionLessonReadRepository", "INutritionLessonWriteRepository")]
-    [InlineData("DailyAdvices", "IDailyAdviceRepository", "IDailyAdviceReadRepository")]
     public void OtherApplicationModules_DoNotAcquireContentAggregateRepositories(
         string ownerModule,
         params string[] forbiddenContracts) {

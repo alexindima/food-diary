@@ -152,7 +152,7 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdvice_WithUnsupportedLocale_FallsBackToEnglishAdvice() {
         var user = User.Create("fallback-advice@example.com", "hash");
-        IDailyAdviceRepository repository = CreateDailyAdviceRepository(
+        IDailyAdviceReadModelRepository repository = CreateDailyAdviceRepository(
             new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase) {
                 ["en"] = [DailyAdvice.Create("Hydrate", "en", weight: 1)],
             },
@@ -180,7 +180,7 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdvice_WhenLoadedAdviceDoesNotMatchLocale_ReturnsNotFound() {
         var user = User.Create("locale-mismatch-advice@example.com", "hash");
-        IDailyAdviceRepository repository = CreateDailyAdviceRepository(
+        IDailyAdviceReadModelRepository repository = CreateDailyAdviceRepository(
             new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase) {
                 ["en"] = [DailyAdvice.Create("Russian advice", "ru", weight: 1)],
             });
@@ -233,30 +233,23 @@ public class DailyAdvicesFeatureTests {
     }
 
     private static Type GetSelectorType() {
-        var selectorType = Type.GetType("FoodDiary.Application.DailyAdvices.Services.DailyAdviceSelector, FoodDiary.Application");
+        var selectorType = Type.GetType("FoodDiary.Application.DailyAdvices.Services.DailyAdviceSelector, FoodDiary.Application.DailyAdvices");
         Assert.NotNull(selectorType);
         return selectorType!;
     }
 
-    private static IDailyAdviceRepository CreateDailyAdviceRepository() =>
+    private static IDailyAdviceReadModelRepository CreateDailyAdviceRepository() =>
         CreateDailyAdviceRepository(new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase), out _);
 
-    private static IDailyAdviceRepository CreateDailyAdviceRepository(
+    private static IDailyAdviceReadModelRepository CreateDailyAdviceRepository(
         IReadOnlyDictionary<string, IReadOnlyList<DailyAdvice>> advices) =>
         CreateDailyAdviceRepository(advices, out _);
 
-    private static IDailyAdviceRepository CreateDailyAdviceRepository(
+    private static IDailyAdviceReadModelRepository CreateDailyAdviceRepository(
         IReadOnlyDictionary<string, IReadOnlyList<DailyAdvice>> advices,
         out List<string> requestedLocales) {
         List<string> capturedRequestedLocales = [];
-        IDailyAdviceRepository repository = Substitute.For<IDailyAdviceRepository>();
-        repository
-            .GetByLocaleAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                string locale = call.Arg<string>()!;
-                capturedRequestedLocales.Add(locale);
-                return Task.FromResult(advices.GetValueOrDefault(locale, []));
-            });
+        IDailyAdviceReadModelRepository repository = Substitute.For<IDailyAdviceReadModelRepository>();
         repository
             .GetByLocaleReadModelsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {

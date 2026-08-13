@@ -268,21 +268,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "a87c23dc784fda3515d7c97d89bbf288a5bf3ef7cfe613f429cc609861940aa0"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "de6ffc5e5c8a198b340e884d14b0d4051f07f3dd50442c822ade0b5795018352"
-                                        },
-                                        {
-                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "8d0db03e1bab5acd29f35ff43d3d831f78d07cc5228db7e070e1b00049a40713"
+                                            "sha256":  "6b2ed7e48f9874d87962768e92f99737124ec0e74422a623359fb18e7508235b"
                                         }
                                     ],
-                        "reason":  "WeeklyCheckIn was physically extracted under ADR 0009. Its existing read-composition behavior and HTTP surface are unchanged; the project graph now explicitly records dependencies on Hydration and Meals contracts. Full solution build, focused tests, extraction probe, and architecture tests provide evidence.",
+                        "reason":  "Reviewed the refreshed architecture-health report: DailyAdvices is now project-isolated, the Dashboard dependency is explicit, and architecture/focused tests confirm the final graph.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "39c294f4e632d548e9687caced22bbe6aa686e2d",
-                        "reviewedAtUtc":  "2026-08-13T16:01:33.4741434Z"
+                        "gitHead":  "52aee8e83fbc1ed031bfe31a4e7dd177da736555",
+                        "reviewedAtUtc":  "2026-08-13T16:39:47.4556864Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",

@@ -23,9 +23,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IHydrationEntryReadRepository>(static provider => provider.GetRequiredService<IHydrationEntryRepository>());
         services.AddScoped<IHydrationEntryReadModelRepository>(static provider => provider.GetRequiredService<IHydrationEntryRepository>());
         services.AddScoped<IHydrationEntryWriteRepository>(static provider => provider.GetRequiredService<IHydrationEntryRepository>());
-        services.AddScoped<IDailyAdviceRepository, DailyAdviceRepository>();
-        services.AddScoped<IDailyAdviceReadRepository>(static provider => provider.GetRequiredService<IDailyAdviceRepository>());
-        services.AddScoped<IDailyAdviceReadModelRepository>(static provider => provider.GetRequiredService<IDailyAdviceRepository>());
+        services.AddScoped<IDailyAdviceReadModelRepository, DailyAdviceRepository>();
         services.AddScoped<ICycleRepository, CycleRepository>();
         services.AddScoped<ICycleReadRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
         services.AddScoped<ICycleReadModelRepository>(static provider => provider.GetRequiredService<ICycleRepository>());

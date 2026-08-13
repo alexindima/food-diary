@@ -386,7 +386,7 @@ public sealed class DependencyInjectionTests {
         IWeightEntryRepository weightRepository = scope.ServiceProvider.GetRequiredService<IWeightEntryRepository>();
         IWaistEntryRepository waistRepository = scope.ServiceProvider.GetRequiredService<IWaistEntryRepository>();
         IHydrationEntryRepository hydrationRepository = scope.ServiceProvider.GetRequiredService<IHydrationEntryRepository>();
-        IDailyAdviceRepository dailyAdviceRepository = scope.ServiceProvider.GetRequiredService<IDailyAdviceRepository>();
+        IDailyAdviceReadModelRepository dailyAdviceRepository = scope.ServiceProvider.GetRequiredService<IDailyAdviceReadModelRepository>();
         ICycleRepository cycleRepository = scope.ServiceProvider.GetRequiredService<ICycleRepository>();
         IExerciseEntryRepository exerciseRepository = scope.ServiceProvider.GetRequiredService<IExerciseEntryRepository>();
 
@@ -401,7 +401,6 @@ public sealed class DependencyInjectionTests {
             () => Assert.Same(hydrationRepository, scope.ServiceProvider.GetRequiredService<IHydrationEntryReadRepository>()),
             () => Assert.Same(hydrationRepository, scope.ServiceProvider.GetRequiredService<IHydrationEntryWriteRepository>()),
             () => Assert.IsType<DailyAdviceRepository>(dailyAdviceRepository),
-            () => Assert.Same(dailyAdviceRepository, scope.ServiceProvider.GetRequiredService<IDailyAdviceReadRepository>()),
             () => Assert.IsType<CycleRepository>(cycleRepository),
             () => Assert.Same(cycleRepository, scope.ServiceProvider.GetRequiredService<ICycleReadRepository>()),
             () => Assert.Same(cycleRepository, scope.ServiceProvider.GetRequiredService<ICycleWriteRepository>()),

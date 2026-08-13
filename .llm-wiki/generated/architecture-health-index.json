@@ -3,7 +3,7 @@
     "summary":  {
                     "productionProjectEdges":  242,
                     "dependencyViolations":  0,
-                    "unusedAllowances":  0,
+                    "unusedAllowances":  8,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
                     "backendBusinessModules":  34,
@@ -19,7 +19,38 @@
 
                                     ],
     "unusedProjectAllowances":  [
-
+                                    {
+                                        "source":  "FoodDiary.Application",
+                                        "target":  "FoodDiary.Application.DailyAdvices"
+                                    },
+                                    {
+                                        "source":  "FoodDiary.Application.DailyAdvices",
+                                        "target":  "FoodDiary.Application.Abstractions"
+                                    },
+                                    {
+                                        "source":  "FoodDiary.Application.DailyAdvices",
+                                        "target":  "FoodDiary.Domain"
+                                    },
+                                    {
+                                        "source":  "FoodDiary.Application.DailyAdvices",
+                                        "target":  "FoodDiary.Mediator"
+                                    },
+                                    {
+                                        "source":  "FoodDiary.Initializer",
+                                        "target":  "FoodDiary.Application.DailyAdvices"
+                                    },
+                                    {
+                                        "source":  "FoodDiary.JobManager",
+                                        "target":  "FoodDiary.Application.DailyAdvices"
+                                    },
+                                    {
+                                        "source":  "FoodDiary.Presentation.Api",
+                                        "target":  "FoodDiary.Application.DailyAdvices"
+                                    },
+                                    {
+                                        "source":  "FoodDiary.Web.Api",
+                                        "target":  "FoodDiary.Application.DailyAdvices"
+                                    }
                                 ],
     "untrackedProductionProjects":  [
 
@@ -152,7 +183,7 @@
                                "fanIn":  1,
                                "fanOut":  0,
                                "level":  "informational",
-                               "role":  "aggregate-owner"
+                               "role":  "read-composer"
                            },
                            {
                                "module":  "Lessons",

@@ -707,8 +707,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         var repository = new DailyAdviceRepository(context);
 
-        Assert.Contains(await repository.GetByLocaleAsync(" "), advice => string.Equals(advice.Value, "Drink water", StringComparison.Ordinal));
-        Assert.Contains(await repository.GetByLocaleAsync("RU-ru"), advice => string.Equals(advice.Value, "Ru advice", StringComparison.Ordinal));
+        Assert.Contains(await repository.GetByLocaleReadModelsAsync(" "), advice => string.Equals(advice.Value, "Drink water", StringComparison.Ordinal));
+        Assert.Contains(await repository.GetByLocaleReadModelsAsync("RU-ru"), advice => string.Equals(advice.Value, "Ru advice", StringComparison.Ordinal));
     }
 
     [RequiresDockerFact]

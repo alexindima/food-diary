@@ -1,23 +1,10 @@
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.Abstractions.DailyAdvices.Models;
-using FoodDiary.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public sealed class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRepository {
-    public async Task<IReadOnlyList<DailyAdvice>> GetByLocaleAsync(
-        string locale,
-        CancellationToken cancellationToken = default) {
-        string normalizedLocale = NormalizeLocale(locale);
-
-        return await context.DailyAdvices
-            .AsNoTracking()
-            .Where(advice => advice.Locale == normalizedLocale)
-            .OrderBy(advice => advice.Id)
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-    }
-
+public sealed class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceReadModelRepository {
     public async Task<IReadOnlyList<DailyAdviceReadModel>> GetByLocaleReadModelsAsync(
         string locale,
         CancellationToken cancellationToken = default) {
