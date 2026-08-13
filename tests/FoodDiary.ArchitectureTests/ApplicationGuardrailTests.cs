@@ -242,8 +242,6 @@ public sealed class ApplicationGuardrailTests {
             "Notifications",
             "OpenFoodFacts",
             "Products",
-            "RecipeComments",
-            "RecipeLikes",
             "Recipes",
             "ShoppingLists",
             "Statistics",
@@ -1154,12 +1152,12 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "MealPlans", "Queries", "GetMealPlans", "GetMealPlansQueryHandler.cs"),
             Path.Combine(applicationRoot, "Tdee", "Queries", "GetTdeeInsight", "GetTdeeInsightQueryHandler.cs"),
             Path.Combine(applicationRoot, "Gamification", "Queries", "GetGamification", "GetGamificationQueryHandler.cs"),
-            Path.Combine(applicationRoot, "RecipeLikes", "Commands", "ToggleRecipeLike", "ToggleRecipeLikeCommandHandler.cs"),
-            Path.Combine(applicationRoot, "RecipeLikes", "Queries", "GetRecipeLikeStatus", "GetRecipeLikeStatusQueryHandler.cs"),
-            Path.Combine(applicationRoot, "RecipeComments", "Commands", "CreateRecipeComment", "CreateRecipeCommentCommandHandler.cs"),
-            Path.Combine(applicationRoot, "RecipeComments", "Commands", "DeleteRecipeComment", "DeleteRecipeCommentCommandHandler.cs"),
-            Path.Combine(applicationRoot, "RecipeComments", "Commands", "UpdateRecipeComment", "UpdateRecipeCommentCommandHandler.cs"),
-            Path.Combine(applicationRoot, "RecipeComments", "Queries", "GetRecipeComments", "GetRecipeCommentsQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeLikes", "Commands", "ToggleRecipeLike", "ToggleRecipeLikeCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeLikes", "Queries", "GetRecipeLikeStatus", "GetRecipeLikeStatusQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "CreateRecipeComment", "CreateRecipeCommentCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "DeleteRecipeComment", "DeleteRecipeCommentCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Commands", "UpdateRecipeComment", "UpdateRecipeCommentCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.RecipeCommunity", "RecipeComments", "Queries", "GetRecipeComments", "GetRecipeCommentsQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "ConnectWearable", "ConnectWearableCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "DisconnectWearable", "DisconnectWearableCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Wearables", "Wearables", "Commands", "SyncWearableData", "SyncWearableDataCommandHandler.cs"),
@@ -2477,7 +2475,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void SocialQueries_UseReadServicesInsteadOfSocialAggregates() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application.RecipeCommunity");
         string[] socialQueryFiles = [
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "RecipeLikes", "Queries")),
             .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "RecipeComments", "Queries")),
@@ -2496,7 +2494,7 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void SocialReadServices_UseReadModelsInsteadOfSocialAggregates() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application.RecipeCommunity");
         string[] serviceFiles = [
             Path.Combine(applicationRoot, "RecipeLikes", "Services", "RecipeLikeReadService.cs"),
             Path.Combine(applicationRoot, "RecipeComments", "Services", "RecipeCommentReadService.cs"),

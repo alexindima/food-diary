@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3149,
-                    "symbols":  3180,
+                    "sourceFiles":  3151,
+                    "symbols":  3181,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1603,
+                                  "class":  1604,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1145,
+                                  "Other":  1146,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -7517,6 +7517,146 @@
                         "line":  11
                     },
                     {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.RecipeCommunity/DependencyInjection.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "CreateRecipeCommentCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateRecipeCommentCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "CreateRecipeCommentCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DeleteRecipeCommentCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DeleteRecipeCommentCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "UpdateRecipeCommentCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "UpdateRecipeCommentCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "IRecipeCommentReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Common/IRecipeCommentReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "RecipeCommentModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Models/RecipeCommentModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetRecipeCommentsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQuery.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "GetRecipeCommentsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "RecipeCommentReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "ToggleRecipeLikeCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ToggleRecipeLikeCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "IRecipeLikeReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Common/IRecipeLikeReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "RecipeLikeStatusModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Models/RecipeLikeStatusModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetRecipeLikeStatusQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetRecipeLikeStatusQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "RecipeLikeReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Services/RecipeLikeReadService.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "AcceptAiConsentCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -10174,7 +10314,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                        "line":  27
+                        "line":  23
                     },
                     {
                         "name":  "DependencyInjection",
@@ -11386,139 +11526,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/RecentItems/Common/RecentItemOverviewLoader.cs",
                         "line":  4
-                    },
-                    {
-                        "name":  "CreateRecipeCommentCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateRecipeCommentCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "CreateRecipeCommentCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "DeleteRecipeCommentCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DeleteRecipeCommentCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "UpdateRecipeCommentCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "UpdateRecipeCommentCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "IRecipeCommentReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/RecipeComments/Common/IRecipeCommentReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "RecipeCommentModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/RecipeComments/Models/RecipeCommentModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetRecipeCommentsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQuery.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "GetRecipeCommentsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/RecipeComments/Queries/GetRecipeComments/GetRecipeCommentsQueryHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "RecipeCommentReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/RecipeComments/Services/RecipeCommentReadService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "ToggleRecipeLikeCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ToggleRecipeLikeCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/RecipeLikes/Commands/ToggleRecipeLike/ToggleRecipeLikeCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "IRecipeLikeReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/RecipeLikes/Common/IRecipeLikeReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "RecipeLikeStatusModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/RecipeLikes/Models/RecipeLikeStatusModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetRecipeLikeStatusQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetRecipeLikeStatusQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/RecipeLikes/Queries/GetRecipeLikeStatus/GetRecipeLikeStatusQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "RecipeLikeReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/RecipeLikes/Services/RecipeLikeReadService.cs",
-                        "line":  7
                     },
                     {
                         "name":  "CreateRecipeCommand",
@@ -16194,7 +16201,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  346
+                        "line":  348
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16551,7 +16558,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  56
+                        "line":  58
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20338,7 +20345,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  25
+                        "line":  26
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23487,9 +23494,9 @@
                                      },
                                      {
                                          "interface":  "IRecipeCommentReadService",
-                                         "interfacePath":  "FoodDiary.Application/RecipeComments/Common/IRecipeCommentReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Common/IRecipeCommentReadService.cs",
                                          "implementation":  "RecipeCommentReadService",
-                                         "implementationPath":  "FoodDiary.Application/RecipeComments/Services/RecipeCommentReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Services/RecipeCommentReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23501,9 +23508,9 @@
                                      },
                                      {
                                          "interface":  "IRecipeLikeReadService",
-                                         "interfacePath":  "FoodDiary.Application/RecipeLikes/Common/IRecipeLikeReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Common/IRecipeLikeReadService.cs",
                                          "implementation":  "RecipeLikeReadService",
-                                         "implementationPath":  "FoodDiary.Application/RecipeLikes/Services/RecipeLikeReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.RecipeCommunity/RecipeLikes/Services/RecipeLikeReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24209,6 +24216,20 @@
                                                  "line":  29
                                              },
                                              {
+                                                 "service":  "IRecipeCommentReadService",
+                                                 "implementation":  "RecipeCommentReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.RecipeCommunity/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
+                                                 "service":  "IRecipeLikeReadService",
+                                                 "implementation":  "RecipeLikeReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.RecipeCommunity/DependencyInjection.cs",
+                                                 "line":  18
+                                             },
+                                             {
                                                  "service":  "IUserAdministrationMutationService",
                                                  "implementation":  "UserAdministrationMutationService",
                                                  "lifetime":  "Scoped",
@@ -24402,133 +24423,119 @@
                                                  "implementation":  "ConsumptionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  30
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IMealActivityReadService",
                                                  "implementation":  "MealActivityReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  34
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "IConsumptionExportReadService",
                                                  "implementation":  "ConsumptionExportReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  35
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "IMealProductNutritionReadService",
                                                  "implementation":  "MealProductNutritionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  36
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "IMealNutritionService",
                                                  "implementation":  "MealNutritionService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  37
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IMealPlanReadService",
                                                  "implementation":  "MealPlanReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  38
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IShoppingListCreationService",
                                                  "implementation":  "ShoppingListCreationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  39
+                                                 "line":  35
                                              },
                                              {
                                                  "service":  "IShoppingListReadService",
                                                  "implementation":  "ShoppingListReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  40
+                                                 "line":  36
                                              },
                                              {
                                                  "service":  "IExportDiaryReadService",
                                                  "implementation":  "ExportDiaryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  41
+                                                 "line":  37
                                              },
                                              {
                                                  "service":  "IOpenFoodFactsCachedProductSearch",
                                                  "implementation":  "OpenFoodFactsCachedProductSearch",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  42
+                                                 "line":  38
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "OpenFoodFactsProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  43
+                                                 "line":  39
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "UsdaProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  44
-                                             },
-                                             {
-                                                 "service":  "IRecipeCommentReadService",
-                                                 "implementation":  "RecipeCommentReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  45
-                                             },
-                                             {
-                                                 "service":  "IRecipeLikeReadService",
-                                                 "implementation":  "RecipeLikeReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  46
+                                                 "line":  40
                                              },
                                              {
                                                  "service":  "IRecentProductReadService",
                                                  "implementation":  "RecentProductReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  47
+                                                 "line":  41
                                              },
                                              {
                                                  "service":  "IRecentRecipeReadService",
                                                  "implementation":  "RecentRecipeReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  48
+                                                 "line":  42
                                              },
                                              {
                                                  "service":  "IUsdaDailyMicronutrientReadService",
                                                  "implementation":  "UsdaDailyMicronutrientReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  49
+                                                 "line":  43
                                              },
                                              {
                                                  "service":  "IUsdaFoodReadService",
                                                  "implementation":  "UsdaFoodReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  50
+                                                 "line":  44
                                              },
                                              {
                                                  "service":  "IUsdaProductSuggestionReadService",
                                                  "implementation":  "UsdaProductSuggestionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  51
+                                                 "line":  45
                                              },
                                              {
                                                  "service":  "IImageAssetAccessService",
@@ -25298,14 +25305,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  76
+                                                 "line":  78
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  77
+                                                 "line":  79
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25396,7 +25403,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  48
+                                                 "line":  50
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25452,35 +25459,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  36
+                                                 "line":  37
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  56
+                                                 "line":  58
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  57
+                                                 "line":  59
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  58
+                                                 "line":  60
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  81
+                                                 "line":  83
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

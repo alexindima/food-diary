@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  59
+                       "line":  60
                    },
                    {
                        "category":  "credential",
@@ -8307,6 +8307,20 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "CommentId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "privateContent",
+                       "name":  "CommentId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "ProfileImageAssetId",
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommand.cs",
@@ -8752,20 +8766,6 @@
                        "type":  "string?",
                        "path":  "FoodDiary.Application/Products/Models/ProductSearchSuggestionModel.cs",
                        "line":  10
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "CommentId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "CommentId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
-                       "line":  9
                    },
                    {
                        "category":  "privateContent",

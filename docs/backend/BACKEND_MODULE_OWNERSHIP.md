@@ -47,8 +47,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Images | image asset lifecycle and object-deletion outbox | presign, confirm, delete and cleanup operations | Object storage adapter |
 | Favorites | user-to-product, user-to-recipe and user-to-meal favorites | favorite commands and read services grouped in `FoodDiary.Application.Favorites` | Products/Recipes lookup APIs, Consumption Diary source-read API, Users access |
 | Dietologist Relationships | invitations, permissions and recommendations | relationship/recommendation commands and read services | Users directory/roles, Notifications writer/refresh, Email |
-| RecipeComments | recipe comments | comment commands and read service | Recipes access API, Users, Notifications writer |
-| RecipeLikes | recipe likes | toggle command and like-status read service | Recipes access API, Users |
+| RecipeCommunity | recipe comments and likes | comment commands/read service and like toggle/status grouped in `FoodDiary.Application.RecipeCommunity` | Recipes access API, Users, Notifications writer |
 | Body Metrics | `WeightEntry` and `WaistEntry` measurements | measurement commands, `IWeightEntryReadService`, `IWaistEntryReadService` | Users access; Dashboard, Weekly Check-In and TDEE as read-only projection consumers |
 | Hydration | `HydrationEntry` and hydration totals | hydration commands, `IHydrationEntryReadService`, hydration-goal capability | Users access; Dashboard and Weekly Check-In as read-only projection consumers |
 | Exercises | `ExerciseEntry` and burned-calorie measurements | exercise commands and `IExerciseEntryReadService` | Users access; Dashboard and TDEE as read-only projection consumers |
@@ -272,7 +271,7 @@ Image EF configuration and object-deletion outbox configuration live in `Configu
 
 Dietologist Relationships owns invitations, relationship permissions and recommendations. Users profile composition consumes `IDietologistInvitationReadService`; it no longer queries the Dietologist read-model repository directly. Notification production uses Notifications writer/refresh capabilities, while role changes use the Users role-membership capability.
 
-RecipeComments and RecipeLikes are separate social interaction modules around Recipes. They may use `IRecipeAccessService` to validate the target recipe, but neither owns or loads the Recipe repository directly. Other modules consume their read services and commands rather than comment/like repositories.
+RecipeCommunity is the physical application module for the separate RecipeComments and RecipeLikes logical feature areas. Both may use `IRecipeAccessService` to validate the target recipe, but neither owns or loads the Recipe repository directly. Other modules consume their read services and commands rather than comment/like repositories.
 
 Dietologist invitation/recommendation configurations live in `Configurations/Dietologist`. Recipe comment/like configurations live in `Configurations/RecipeSocial`; repository ownership remains separated in the corresponding persistence folders.
 

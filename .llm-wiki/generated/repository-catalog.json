@@ -13,15 +13,15 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  69,
+                    "dotnetProjects":  70,
                     "testProjects":  29,
                     "frontendProjects":  4,
-                    "applicationModules":  27,
-                    "extractedApplicationModules":  10,
-                    "backendBusinessModules":  37,
+                    "applicationModules":  25,
+                    "extractedApplicationModules":  11,
+                    "backendBusinessModules":  36,
                     "controllers":  85,
                     "endpoints":  271,
-                    "agentGuides":  51,
+                    "agentGuides":  52,
                     "documentationPages":  43
                 },
     "dotnet":  {
@@ -306,6 +306,36 @@
                                                               ]
                                     },
                                     {
+                                        "name":  "FoodDiary.Application.RecipeCommunity",
+                                        "assemblyName":  "FoodDiary.Application.RecipeCommunity",
+                                        "path":  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Library",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+                                                                  "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
+                                                                  "FoodDiary.Domain/FoodDiary.Domain.csproj",
+                                                                  "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj"
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "FluentValidation",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "FluentValidation.DependencyInjectionExtensions",
+                                                                      "version":  null
+                                                                  },
+                                                                  {
+                                                                      "name":  "Microsoft.Extensions.DependencyInjection.Abstractions",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
+                                    {
                                         "name":  "FoodDiary.Application.Users",
                                         "assemblyName":  "FoodDiary.Application.Users",
                                         "path":  "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
@@ -517,6 +547,7 @@
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -615,6 +646,7 @@
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -684,6 +716,7 @@
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj"
@@ -759,6 +792,7 @@
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -1823,6 +1857,7 @@
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Marketing/FoodDiary.Application.Marketing.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
                                                                   "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
@@ -2039,6 +2074,7 @@
                                                                   "FoodDiary.Application.Dietologist/FoodDiary.Application.Dietologist.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj",
                                                                   "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
@@ -2104,6 +2140,7 @@
                                                                   "FoodDiary.Application.Fasting/FoodDiary.Application.Fasting.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
                                                                   "FoodDiary.JobManager/FoodDiary.JobManager.csproj"
                                                               ],
                                         "packageReferences":  [
@@ -2191,6 +2228,7 @@
                                                                   "FoodDiary.Application.Favorites/FoodDiary.Application.Favorites.csproj",
                                                                   "FoodDiary.Application.Identity/FoodDiary.Application.Identity.csproj",
                                                                   "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj",
+                                                                  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj",
                                                                   "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
                                                                   "FoodDiary.Application/FoodDiary.Application.csproj",
                                                                   "FoodDiary.Domain/FoodDiary.Domain.csproj",
@@ -2667,18 +2705,6 @@
                                                     ]
                                },
                                {
-                                   "name":  "RecipeComments",
-                                   "dependencies":  [
-
-                                                    ]
-                               },
-                               {
-                                   "name":  "RecipeLikes",
-                                   "dependencies":  [
-
-                                                    ]
-                               },
-                               {
                                    "name":  "Recipes",
                                    "dependencies":  [
                                                         "Images",
@@ -2756,6 +2782,10 @@
                                         {
                                             "name":  "Notifications",
                                             "project":  "FoodDiary.Application.Notifications/FoodDiary.Application.Notifications.csproj"
+                                        },
+                                        {
+                                            "name":  "RecipeCommunity",
+                                            "project":  "FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj"
                                         },
                                         {
                                             "name":  "Users",
@@ -4734,6 +4764,7 @@
                                                  "FoodDiary.Application.Identity/AGENTS.md",
                                                  "FoodDiary.Application.Marketing/AGENTS.md",
                                                  "FoodDiary.Application.Notifications/AGENTS.md",
+                                                 "FoodDiary.Application.RecipeCommunity/AGENTS.md",
                                                  "FoodDiary.Application.Users/AGENTS.md",
                                                  "FoodDiary.Application.Wearables/AGENTS.md",
                                                  "FoodDiary.Application/AGENTS.md",

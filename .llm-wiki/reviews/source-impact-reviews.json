@@ -50,17 +50,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "f49afc5521fce0471ef94c2eec43d26449b3e6c1639111aea50ef97671dfd9c7"
+                                            "sha256":  "ab5cee0ceceb2dd9bf81b22cc5c037f38879899d622322e02e0621e2a3d01a5d"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "44d1abd55246292c4bdfa86a91c41f39e8dd22668c811f3cc088c6cf2c71225b"
+                                            "sha256":  "2dfe8f9ace5493f3838c2dfcea951586731d88bef7294575ad071dee06fcf377"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:45.2922762Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:34.1077932Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -69,21 +69,21 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "f49afc5521fce0471ef94c2eec43d26449b3e6c1639111aea50ef97671dfd9c7"
+                                            "sha256":  "ab5cee0ceceb2dd9bf81b22cc5c037f38879899d622322e02e0621e2a3d01a5d"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "b68a08a60951a67ae028a0a1bb8cc67082298a24470de21665b13ce2d8171bcb"
+                                            "sha256":  "92eb649fc244eab6de819a24fada95c105592746541da151066c49f7f7f758be"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "61af087fba7cba5825ca4314ebcd2833f5f40f474e7cbed604c1fc95b2a424e0"
+                                            "sha256":  "77d2361b1e8d8da095d3999e555b76b43a50a8599a8a5a72df6098c7dd7ce4a6"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:45.4810982Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:34.3081593Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -122,17 +122,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "f49afc5521fce0471ef94c2eec43d26449b3e6c1639111aea50ef97671dfd9c7"
+                                            "sha256":  "ab5cee0ceceb2dd9bf81b22cc5c037f38879899d622322e02e0621e2a3d01a5d"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "b68a08a60951a67ae028a0a1bb8cc67082298a24470de21665b13ce2d8171bcb"
+                                            "sha256":  "92eb649fc244eab6de819a24fada95c105592746541da151066c49f7f7f758be"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:45.6755067Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:34.4952061Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -205,13 +205,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "cd73ae102caa8f391bf8d55ef2303bc415e2b956c49be5150c7e843a8d28f967"
+                                            "sha256":  "ef166c0f745891d124bb907ee6b6426429836a442ef3008a4aa1c50e52129402"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:47.7708148Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:36.2895555Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -284,21 +284,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "d8dc4806566e078c2155a673cf4d15e85640e268226205f3f0d3b3b19a9fdad1"
+                                            "sha256":  "b1a4f02f65206b4161b4591aa62c4279dc825ac354d35b591f51468fd8614225"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "f49afc5521fce0471ef94c2eec43d26449b3e6c1639111aea50ef97671dfd9c7"
+                                            "sha256":  "ab5cee0ceceb2dd9bf81b22cc5c037f38879899d622322e02e0621e2a3d01a5d"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "61af087fba7cba5825ca4314ebcd2833f5f40f474e7cbed604c1fc95b2a424e0"
+                                            "sha256":  "77d2361b1e8d8da095d3999e555b76b43a50a8599a8a5a72df6098c7dd7ce4a6"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:45.9180351Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:34.6819186Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -307,13 +307,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "1e8f5a803d2a2afd15e6bb06b87821aa6eef8871d7564680d62e28b20a898caa"
+                                            "sha256":  "8a7e4b03bd68c36f2f12ea62500e824191b1a0c5bde2352f03ec66d5945b56fe"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:46.2549131Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:34.9439957Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -747,13 +747,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "b68a08a60951a67ae028a0a1bb8cc67082298a24470de21665b13ce2d8171bcb"
+                                            "sha256":  "92eb649fc244eab6de819a24fada95c105592746541da151066c49f7f7f758be"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:46.6015105Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:35.2155466Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -815,13 +815,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "1d167d7bff30bca9ab28e45e4c132e4841ef4e17f2747baccc225a8196d03129"
+                                            "sha256":  "346684fba028c25bd50f7aa764e8b784473a522cdb8f18d6b4d4d7af8407ec4c"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:46.9668690Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:35.5776838Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -864,13 +864,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "591f706683c23c3f04a5f64877f584aa917510fafa311f3552f9c348827f82de"
+                                            "sha256":  "076ac3a2769440ded54cf5d6d2e66890ed6c8784658981db3b9271633ad06f71"
                                         }
                                     ],
-                        "reason":  "Identity extraction combines Authentication and Email ownership in FoodDiary.Application.Identity; generated indexes, dependency manifests, composition roots, architecture tests, focused behavior tests, and extraction readiness were updated and verified against current sources.",
+                        "reason":  "RecipeCommunity extraction groups RecipeComments and RecipeLikes in one application project while preserving logical namespaces, contracts, persistence ownership, HTTP surface, and dependency direction; solution build, focused tests, architecture tests, API compatibility, and extraction readiness validate the current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "7f1d5b6aa48cbb1f7e391db8f3a206892437dcc8",
-                        "reviewedAtUtc":  "2026-08-13T00:42:47.3963382Z"
+                        "gitHead":  "339efa5e7132dfcdd57d7a201c4124328178f876",
+                        "reviewedAtUtc":  "2026-08-13T01:03:35.9539793Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

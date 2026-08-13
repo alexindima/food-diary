@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 27 folder modules and 10 extracted application modules.
+This index unifies 25 folder modules and 11 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
@@ -44,8 +44,7 @@ are reported separately; `none observed` never means proven isolation.
 | [OpenFoodFacts](open-food-facts.md) | adapter | 0 | 0 | 1 | 2 | graph-only |
 | [Products](products.md) | aggregate-owner | 4 | 6 | 0 | 1 | explicit-boundary-tests |
 | [RecentItems](recent-items.md) | aggregate-owner | 0 | 0 | 2 | 0 | graph-only |
-| [RecipeComments](recipe-comments.md) | aggregate-owner | 0 | 3 | 0 | 1 | graph-only |
-| [RecipeLikes](recipe-likes.md) | aggregate-owner | 0 | 2 | 0 | 1 | graph-only |
+| [RecipeCommunity](recipe-community.md) | aggregate-owner | 0 | 5 | 0 | 4 | project-reference-matrix |
 | [Recipes](recipes.md) | aggregate-owner | 3 | 5 | 0 | 1 | explicit-boundary-tests |
 | [ShoppingLists](shopping-lists.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |
 | [Statistics](statistics.md) | read-composer | 0 | 4 | 1 | 1 | graph-only |

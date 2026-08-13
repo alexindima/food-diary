@@ -1,5 +1,5 @@
 ---
-id: generated.module.recipe-comments
+id: generated.module.recipe-community
 kind: module
 status: current
 generated_by: .llm-wiki/tools/Build-LlmWikiModulePages.ps1
@@ -10,67 +10,61 @@ sources:
   - docs/architecture/backend-modules.json
 ---
 
-# RecipeComments
+# RecipeCommunity
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.RecipeCommunity/FoodDiary.Application.RecipeCommunity.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Notifications, Recipes, Users
+- Abstraction-contract dependencies: Notifications, RecipeComments, RecipeLikes, Recipes, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/RecipeComments`
-- `FoodDiary.Application/RecipeComments`
+- `FoodDiary.Application.Abstractions/RecipeLikes`
+- `FoodDiary.Application.RecipeCommunity`
 - `FoodDiary.Infrastructure/Persistence/Configurations/RecipeSocial`
-- `FoodDiary.Presentation.Api/Features/RecipeComments`
 
 ## HTTP Surface
 
-### RecipeCommentsController
-
-Source: `FoodDiary.Presentation.Api/Features/RecipeComments/RecipeCommentsController.cs`
-
-- `GET /api/v{version:apiVersion}/recipes/{recipeId:guid}/comments`
-- `POST /api/v{version:apiVersion}/recipes/{recipeId:guid}/comments`
-- `PATCH /api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}`
-- `DELETE /api/v{version:apiVersion}/recipes/{recipeId:guid}/comments/{commentId:guid}`
-
+No literal attribute-routed controller was associated with this module.
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 6
-- Observed external consumer groups: 1
+- Public contract files: 9
+- Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 6
-- Interfaces: 4
+- Public contract types: 9
+- Interfaces: 7
 - DTO/read-model/projection types: 1
 - Enums: 0
-- Exported repository-shaped contracts: 4
-- Contracts referencing domain entities: 2
+- Exported repository-shaped contracts: 7
+- Contracts referencing domain entities: 4
 - `class RecipeCommentErrors`
 - `interface IRecipeCommentReadModelRepository`
 - `interface IRecipeCommentReadRepository`
 - `interface IRecipeCommentRepository`
 - `interface IRecipeCommentWriteRepository`
+- `interface IRecipeLikeReadRepository`
+- `interface IRecipeLikeRepository`
+- `interface IRecipeLikeWriteRepository`
 - `record RecipeCommentReadModel`
 
 ## Focused Tests
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsValidatorTests.cs`
-- [presentation] `tests/FoodDiary.Presentation.Api.Tests/RecipeCommentsControllerTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/RecipeCommunityModuleExtractionTests.cs`
 
 ## Working Rule
 

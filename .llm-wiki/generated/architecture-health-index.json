@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  120,
+                    "productionProjectEdges":  127,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
-                    "backendBusinessModules":  37,
+                    "backendBusinessModules":  36,
                     "moduleHotspotReviewCandidates":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
@@ -246,14 +246,7 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "RecipeComments",
-                               "fanIn":  0,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "RecipeLikes",
+                               "module":  "RecipeCommunity",
                                "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",
