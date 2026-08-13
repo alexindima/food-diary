@@ -767,8 +767,22 @@ switch ($Command) {
         } elseif ($TraceView -eq 'Backend') {
             Invoke-WikiTool 'Find-LlmWikiTrace.ps1' $traceArguments
         } else {
-            $frontendProbe = & (Join-Path $toolsRoot 'Find-LlmWikiFrontendTrace.ps1') -Query $Query -Format Json -Limit ([Math]::Min($Limit, 30)) | ConvertFrom-Json
-            if ([bool]$frontendProbe.matched) {
+            $backendSemanticHint = -not [string]::IsNullOrWhiteSpace($Module) -and
+                $Query -match '(?i)\b(commands?|queries?|handlers?|repositories?|dependency injection|application module|infrastructure|domain)\b'
+            if ($backendSemanticHint) {
+                Write-Host "Semantic trace classified as backend from module '$Module' and backend-specific query terms; using bounded graph module impact and skipping the optional frontend probe."
+                Invoke-WikiTool 'Get-LlmWikiGraphResearch.ps1' @{
+                    Objective = $Query; Module = $Module; Limit = [Math]::Min($Limit, 30); Format = $Format
+                }
+                break
+            }
+            $frontendProbe = $null
+            try {
+                $frontendProbe = & (Join-Path $toolsRoot 'Find-LlmWikiFrontendTrace.ps1') -Query $Query -Format Json -Limit ([Math]::Min($Limit, 30)) | ConvertFrom-Json
+            } catch {
+                Write-Warning "Frontend trace fragment is unavailable and will be skipped: $($_.Exception.Message)"
+            }
+            if ($null -ne $frontendProbe -and $frontendProbe.PSObject.Properties['matched'] -and [bool]$frontendProbe.matched) {
                 Invoke-WikiTool 'Find-LlmWikiFrontendTrace.ps1' $traceArguments
             } else {
                 Invoke-WikiTool 'Find-LlmWikiTrace.ps1' $traceArguments

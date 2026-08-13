@@ -32,4 +32,16 @@ $backendFull = @(& $backendTraceScript -Query 'StartPremiumTrial' 6>&1 | ForEach
 if ($backendCompact -notcontains '  Compact trace: use -FullTrace for every match and consumer.') { throw 'Backend compact trace omitted its expansion hint.' }
 if ($backendCompact.Count -gt ($backendFull.Count + 1)) { throw 'Backend compact trace expanded output beyond its one-line hint.' }
 
+$broadBackendQuery = 'Recipes commands queries dependency injection repositories external module dependencies'
+$facadeOutput = @(& (Join-Path $PSScriptRoot '../wiki.ps1') trace -Fast -Module Recipes -Query $broadBackendQuery 6>&1 | ForEach-Object { $_.ToString() })
+if ($LASTEXITCODE -ne 0 -or $facadeOutput -match 'PropertyNotFoundStrict|The property .path. cannot be found') {
+    throw "Broad backend semantic fallback failed through the facade: $($facadeOutput -join [Environment]::NewLine)"
+}
+if (-not ($facadeOutput -match 'falling back to semantic trace')) {
+    throw 'Broad backend regression did not exercise graph miss to semantic trace fallback.'
+}
+if (-not ($facadeOutput -match 'classified as backend') -or -not ($facadeOutput -match 'Fast graph research') -or $facadeOutput -match 'FavoriteRecipeService') {
+    throw 'Broad backend semantic fallback was incorrectly captured by the optional frontend probe.'
+}
+
 Write-Host 'LLM Wiki trace-output smoke passed: compact text is bounded and full trace remains available.'

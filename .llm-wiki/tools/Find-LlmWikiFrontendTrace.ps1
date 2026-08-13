@@ -193,8 +193,11 @@ $traces = @(
             contract = if ($componentContract.Count -eq 0) { $null } else { $componentContract[0] }
             apiCalls = $apiCalls
             tests = @(
-                @($target.path) + @($related.path) |
+                @([string]$target.path) + @($related | ForEach-Object {
+                    if ($null -ne $_ -and $_.PSObject.Properties['path']) { [string]$_.path }
+                }) |
                     ForEach-Object { $_ -replace '\.ts$', '.spec.ts' } |
+                    Where-Object { $_ } |
                     Where-Object { Test-Path -LiteralPath (Join-Path (Split-Path -Parent $wikiRoot) $_) } |
                     Sort-Object -Unique
             )

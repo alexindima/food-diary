@@ -208,13 +208,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "673874d85cf797a2ae059af0a35a4d0e471d71b48dabf9806ced2ed9faf3ab3d"
+                                            "sha256":  "8693c1711df81757453c23ea0cb25b153b64cc3d8915502ba9e85145b4692835"
                                         }
                                     ],
-                        "reason":  "Reviewed promotion of reconstructable code intelligence into the typed SQLite graph, zero-drift shadow coverage, graph-only test planning, and preserved Git authority for policy and evidence.",
+                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6cb6c37d688e890d92682ba8960b246f7f44cd41",
-                        "reviewedAtUtc":  "2026-08-13T20:59:58.7237552Z"
+                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
+                        "reviewedAtUtc":  "2026-08-13T21:15:08.7661136Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -328,6 +328,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
                         "reviewedAtUtc":  "2026-08-12T21:30:33.4987707Z"
+                    },
+                    {
+                        "pageId":  "workflow-code-graph",
+                        "pagePath":  ".llm-wiki/workflows/code-graph.md",
+                        "pageSha256":  "eb508cc44ccf8e6c713e2b93dbe0ad08161f782aaffd7e8fa2db7344608da89a",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "8693c1711df81757453c23ea0cb25b153b64cc3d8915502ba9e85145b4692835"
+                                        }
+                                    ],
+                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
+                        "reviewedAtUtc":  "2026-08-13T21:15:07.7025658Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -644,25 +659,17 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "19b2949cb82545c8d7acd6132793142a6883eb04496cb452e00ac052c3dce296",
+                        "pageSha256":  "ff39f81baacab5f9ed5780bc3e831909cb3a7c34ef61df80c17483e4881e91ec",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-                                            "sha256":  "64ce7624d9b1132322e26b236fa090d5a96bfcf29de438685b8beb5f3036bda0"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "cf1ae8947b53b58c8e01f7e46b210b37bcfa06d60dd604ca5725a1a821bc2e27"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "5285b00925b7b544047ca382209e8b1ce667540bdc54b91977125387fe1842b4"
+                                            "sha256":  "8693c1711df81757453c23ea0cb25b153b64cc3d8915502ba9e85145b4692835"
                                         }
                                     ],
-                        "reason":  "Reviewed fast SQLite graph research and trace routing, focused smoke selection, and verification fingerprints; bounded graph scans remain optional and governed delivery behavior is unchanged.",
+                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6f3c62feaca0244203364ad14425c14f8d39fb2f",
-                        "reviewedAtUtc":  "2026-08-13T20:16:56.2713899Z"
+                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
+                        "reviewedAtUtc":  "2026-08-13T21:15:08.2242788Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -1003,13 +1010,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "673874d85cf797a2ae059af0a35a4d0e471d71b48dabf9806ced2ed9faf3ab3d"
+                                            "sha256":  "8693c1711df81757453c23ea0cb25b153b64cc3d8915502ba9e85145b4692835"
                                         }
                                     ],
-                        "reason":  "Reviewed promotion of reconstructable code intelligence into the typed SQLite graph, zero-drift shadow coverage, graph-only test planning, and preserved Git authority for policy and evidence.",
+                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6cb6c37d688e890d92682ba8960b246f7f44cd41",
-                        "reviewedAtUtc":  "2026-08-13T20:59:59.5282169Z"
+                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
+                        "reviewedAtUtc":  "2026-08-13T21:15:09.4030161Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
@@ -1067,17 +1074,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1",
-                                            "sha256":  "fdd324fe8cdc5a36a36fc6fede1d23c96ce1b8e7d3c03e458a5c7b3b4b342d12"
+                                            "sha256":  "74d3aea0b2fe96b7d29e52cf92753a734fb10093a293bd6d7df3e00d1ffd2fed"
                                         },
                                         {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-                                            "sha256":  "24297b367f5c0600c52e7164973e78c33456c5a30023b39b7717a422ad34a00c"
+                                            "sha256":  "2e3e316751d7cbce2e6320d40303b6323b28d0409f3cca2f0211bd09929e770c"
                                         }
                                     ],
-                        "reason":  "Reviewed final frontend index schema-version guard and actionable regeneration diagnostic; trace semantics remain unchanged.",
+                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "6cb6c37d688e890d92682ba8960b246f7f44cd41",
-                        "reviewedAtUtc":  "2026-08-13T20:51:02.1543953Z"
+                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
+                        "reviewedAtUtc":  "2026-08-13T21:15:10.0264659Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",
