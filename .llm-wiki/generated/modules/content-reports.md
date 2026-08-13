@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.ContentReports/FoodDiary.Application.ContentReports.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: Admin
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Application, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/ContentReports`
-- `FoodDiary.Application/ContentReports`
+- `FoodDiary.Application.ContentReports`
 - `FoodDiary.Infrastructure/Persistence/Configurations/ContentReports`
 - `FoodDiary.Infrastructure/Persistence/ContentReports`
 - `FoodDiary.Presentation.Api/Features/ContentReports`
@@ -40,25 +41,23 @@ Source: `FoodDiary.Presentation.Api/Features/ContentReports/ContentReportsContro
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 6
-- Observed external consumer groups: 2
+- Public contract files: 4
+- Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 6
-- Interfaces: 4
+- Public contract types: 4
+- Interfaces: 2
 - DTO/read-model/projection types: 1
 - Enums: 0
-- Exported repository-shaped contracts: 4
-- Contracts referencing domain entities: 2
+- Exported repository-shaped contracts: 2
+- Contracts referencing domain entities: 1
 - `class ContentReportErrors`
 - `interface IContentReportReadModelRepository`
-- `interface IContentReportReadRepository`
-- `interface IContentReportRepository`
 - `interface IContentReportWriteRepository`
 - `record ContentReportAdminReadModel`
 
@@ -68,6 +67,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ContentReports/ContentReportsFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/ContentReports/ContentReportsValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/ContentReportsModuleExtractionTests.cs`
 
 ## Working Rule
 

@@ -532,6 +532,5 @@ public class AdminLessonFeatureTests {
                 Substitute.For<IAiUsageReadRepository>(),
                 Substitute.For<IAiPromptTemplateReadModelRepository>()),
             new ContentReportAdministrationReadService(
-                Substitute.For<IContentReportReadModelRepository>(),
-                Substitute.For<IContentReportReadRepository>()));
+                Substitute.For<IContentReportReadModelRepository>()));
 }

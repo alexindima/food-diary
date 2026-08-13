@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  74
+                       "line":  76
                    },
                    {
                        "category":  "credential",
@@ -3631,6 +3631,13 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "Weight",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.DailyAdvices/Models/DailyAdviceModel.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
                        "name":  "BirthDate",
                        "type":  "DateTime?",
                        "path":  "FoodDiary.Application.Dietologist/Models/ClientSummaryModel.cs",
@@ -4426,13 +4433,6 @@
                        "type":  "int",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                        "line":  46
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "Weight",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/DailyAdvices/Models/DailyAdviceModel.cs",
-                       "line":  8
                    },
                    {
                        "category":  "health",

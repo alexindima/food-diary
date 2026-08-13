@@ -1058,7 +1058,7 @@ public sealed class BusinessModuleBoundaryTests {
     }
 
     [Theory]
-    [InlineData("ContentReports", "IContentReportRepository", "IContentReportWriteRepository")]
+    [InlineData("ContentReports", "IContentReportWriteRepository")]
     [InlineData("Ai", "IAiPromptTemplateRepository", "IAiPromptTemplateReadRepository", "IAiPromptTemplateWriteRepository")]
     [InlineData("Email", "IEmailTemplateRepository", "IEmailTemplateWriteRepository")]
     public void OtherApplicationModules_DoNotAcquireAdministrativeContentWriteRepositories(
@@ -1086,7 +1086,7 @@ public sealed class BusinessModuleBoundaryTests {
     [InlineData("Ai", "IAiUsageReadRepository", "IAiPromptTemplateReadModelRepository")]
     [InlineData("Lessons", "INutritionLessonReadModelRepository")]
     [InlineData("Email", "IEmailTemplateReadModelRepository")]
-    [InlineData("ContentReports", "IContentReportReadModelRepository", "IContentReportReadRepository")]
+    [InlineData("ContentReports", "IContentReportReadModelRepository")]
     [InlineData("Authentication", "IUserLoginEventReadRepository")]
     [InlineData("Users", "IUserAdminReadModelRepository")]
     public void OtherApplicationModules_DoNotAcquireAdministrativeProjectionRepositories(

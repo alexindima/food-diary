@@ -6,8 +6,7 @@ using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.ContentReports.Services;
 
 public sealed class ContentReportAdministrationReadService(
-    IContentReportReadModelRepository readModelRepository,
-    IContentReportReadRepository readRepository) : IContentReportAdministrationReadService {
+    IContentReportReadModelRepository readModelRepository) : IContentReportAdministrationReadService {
     public Task<(IReadOnlyList<ContentReportAdminReadModel> Items, int Total)> GetReportsAsync(
         ReportStatus? status,
         int page,
@@ -16,5 +15,5 @@ public sealed class ContentReportAdministrationReadService(
         readModelRepository.GetPagedAdminReadModelsAsync(status, page, limit, cancellationToken);
 
     public Task<int> CountAsync(ReportStatus status, CancellationToken cancellationToken) =>
-        readRepository.CountByStatusAsync(status, cancellationToken);
+        readModelRepository.CountByStatusAsync(status, cancellationToken);
 }

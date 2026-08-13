@@ -20,6 +20,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Marketing application module: `FoodDiary.Application.Marketing/AGENTS.md`
 - Notifications application module: `FoodDiary.Application.Notifications/AGENTS.md`
 - Users application module: `FoodDiary.Application.Users/AGENTS.md`
+- Content reports application module: `FoodDiary.Application.ContentReports/AGENTS.md`
 - Weekly goals application module: `FoodDiary.Application.WeeklyGoals/AGENTS.md`
 - USDA application module: `FoodDiary.Application.Usda/AGENTS.md`
 - Weekly check-in application module: `FoodDiary.Application.WeeklyCheckIn/AGENTS.md`

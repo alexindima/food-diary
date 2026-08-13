@@ -722,7 +722,8 @@ public partial class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class CountingContentReportRepository(int pendingCount, IReadOnlyList<ContentReport>? reports = null) : IContentReportRepository {
+    private sealed class CountingContentReportRepository(int pendingCount, IReadOnlyList<ContentReport>? reports = null)
+        : IContentReportReadModelRepository, IContentReportWriteRepository {
         public ReportStatus? LastStatus { get; private set; }
         public int LastPage { get; private set; }
         public int LastLimit { get; private set; }
@@ -764,17 +765,6 @@ public partial class AdminFeatureTests {
                     report.ReviewedAtUtc)),
             ];
             return Task.FromResult((models, models.Count));
-        }
-        public Task<(IReadOnlyList<ContentReport> Items, int Total)> GetPagedAsync(
-            ReportStatus? status,
-            int page,
-            int limit,
-            CancellationToken cancellationToken = default) {
-            LastStatus = status;
-            LastPage = page;
-            LastLimit = limit;
-            IReadOnlyList<ContentReport> filtered = reports ?? [];
-            return Task.FromResult((filtered, filtered.Count));
         }
     }
 
@@ -905,8 +895,7 @@ public partial class AdminFeatureTests {
                 Substitute.For<IAiUsageReadRepository>(),
                 aiPromptTemplateRepository ?? Substitute.For<IAiPromptTemplateReadModelRepository>()),
             new ContentReportAdministrationReadService(
-                contentReportRepository ?? Substitute.For<IContentReportReadModelRepository>(),
-                Substitute.For<IContentReportReadRepository>()));
+                contentReportRepository ?? Substitute.For<IContentReportReadModelRepository>()));
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryEmailTemplateRepository(params EmailTemplate[] templates) : IEmailTemplateRepository {

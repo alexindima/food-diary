@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.ContentReports.Common;
 using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
@@ -26,7 +26,7 @@ public sealed class CreateContentReportCommandHandler(
             return CurrentUserAccessResolver.ToFailure<ContentReportModel>(userIdResult);
         }
 
-        Result<ReportTargetType> targetTypeResult = EnumValueParser.ParseRequired<ReportTargetType>(
+        Result<ReportTargetType> targetTypeResult = ContentReportTargetTypeParser.ParseRequired(
             command.TargetType,
             nameof(command.TargetType),
             "Target type must be 'Recipe' or 'Comment'.");

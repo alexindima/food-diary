@@ -900,14 +900,6 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportRepository",
-            [
-                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportReadRepository",
-                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportReadModelRepository",
-                "FoodDiary.Application.Abstractions.ContentReports.Common.IContentReportWriteRepository",
-            ]
-        },
-        {
             "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryRepository",
             [
                 "FoodDiary.Application.Abstractions.WaistEntries.Common.IWaistEntryReadRepository",

@@ -352,17 +352,13 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         bool hasReported = await repository.HasUserReportedAsync(user.Id, ReportTargetType.Recipe, targetId);
-        (IReadOnlyList<ContentReport> pendingItems, int pendingTotal) =
-            await repository.GetPagedAsync(ReportStatus.Pending, page: 1, limit: 10);
         (IReadOnlyList<ContentReportAdminReadModel> pendingReadModels, int pendingReadModelTotal) =
             await repository.GetPagedAdminReadModelsAsync(ReportStatus.Pending, page: 1, limit: 10);
-        (IReadOnlyList<ContentReport> allItems, int allTotal) =
-            await repository.GetPagedAsync(status: null, page: 1, limit: 1);
+        (IReadOnlyList<ContentReportAdminReadModel> allItems, int allTotal) =
+            await repository.GetPagedAdminReadModelsAsync(status: null, page: 1, limit: 1);
         int dismissedCount = await repository.CountByStatusAsync(ReportStatus.Dismissed);
 
         Assert.True(hasReported);
-        Assert.Equal(otherReport.Id, Assert.Single(pendingItems).Id);
-        Assert.Equal(1, pendingTotal);
         Assert.Equal(otherReport.Id.Value, Assert.Single(pendingReadModels).Id);
         Assert.Equal(1, pendingReadModelTotal);
         Assert.Single(allItems);

@@ -6,10 +6,9 @@ namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
     private static void AddModerationPersistence(this IServiceCollection services) {
-        services.AddScoped<IContentReportRepository, ContentReportRepository>();
-        services.AddScoped<IContentReportReadRepository>(static provider => provider.GetRequiredService<IContentReportRepository>());
-        services.AddScoped<IContentReportReadModelRepository>(static provider => provider.GetRequiredService<IContentReportRepository>());
-        services.AddScoped<IContentReportWriteRepository>(static provider => provider.GetRequiredService<IContentReportRepository>());
+        services.AddScoped<ContentReportRepository>();
+        services.AddScoped<IContentReportReadModelRepository>(static provider => provider.GetRequiredService<ContentReportRepository>());
+        services.AddScoped<IContentReportWriteRepository>(static provider => provider.GetRequiredService<ContentReportRepository>());
 
     }
 }

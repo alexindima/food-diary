@@ -7,7 +7,6 @@ using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
@@ -438,7 +437,6 @@ public partial class AdminFeatureTests {
         var handler = new GetAdminDashboardSummaryQueryHandler(new AdminDashboardReadService(
             userRepository,
             new ContentReportAdministrationReadService(
-                Substitute.For<IContentReportReadModelRepository>(),
                 contentReportRepository)));
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);

@@ -8,14 +8,14 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3194,
-                    "symbols":  3210,
-                    "interfaceImplementationLinks":  231,
-                    "dependencyInjectionRegistrations":  230,
+                    "sourceFiles":  3195,
+                    "symbols":  3209,
+                    "interfaceImplementationLinks":  229,
+                    "dependencyInjectionRegistrations":  229,
                     "kinds":  {
-                                  "class":  1633,
+                                  "class":  1636,
                                   "enum":  49,
-                                  "interface":  414,
+                                  "interface":  410,
                                   "record":  1001,
                                   "record struct":  113
                               },
@@ -32,12 +32,12 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1173,
+                                  "Other":  1176,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
-                                  "ReadRepository":  50,
-                                  "Repository":  106,
+                                  "ReadRepository":  48,
+                                  "Repository":  104,
                                   "Request":  124,
                                   "Response":  171,
                                   "Service":  262,
@@ -1525,20 +1525,6 @@
                         "line":  5
                     },
                     {
-                        "name":  "IContentReportReadRepository",
-                        "kind":  "interface",
-                        "role":  "ReadRepository",
-                        "path":  "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportReadRepository.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "IContentReportRepository",
-                        "kind":  "interface",
-                        "role":  "Repository",
-                        "path":  "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportRepository.cs",
-                        "line":  2
-                    },
-                    {
                         "name":  "IContentReportWriteRepository",
                         "kind":  "interface",
                         "role":  "WriteRepository",
@@ -1642,20 +1628,6 @@
                         "role":  "ReadModelRepository",
                         "path":  "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadModelRepository.cs",
                         "line":  4
-                    },
-                    {
-                        "name":  "IDailyAdviceReadRepository",
-                        "kind":  "interface",
-                        "role":  "ReadRepository",
-                        "path":  "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceReadRepository.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IDailyAdviceRepository",
-                        "kind":  "interface",
-                        "role":  "Repository",
-                        "path":  "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceRepository.cs",
-                        "line":  2
                     },
                     {
                         "name":  "DailyAdviceReadModel",
@@ -5179,6 +5151,76 @@
                         "line":  7
                     },
                     {
+                        "name":  "CreateContentReportCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CreateContentReportCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "CreateContentReportCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.ContentReports/Commands/CreateContentReport/CreateContentReportCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ContentReportTargetTypeParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.ContentReports/Common/ContentReportTargetTypeParser.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "IContentReportAdministrationReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IContentReportAdministrationService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.ContentReports/DependencyInjection.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "ContentReportModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.ContentReports/Models/ContentReportModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "ContentReportAdministrationReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationReadService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "ContentReportAdministrationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs",
+                        "line":  9
+                    },
+                    {
                         "name":  "ClearCycleDayCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -5422,6 +5464,62 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
                         "line":  13
+                    },
+                    {
+                        "name":  "IDailyAdviceReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.DailyAdvices/DependencyInjection.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "DailyAdviceModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.DailyAdvices/Models/DailyAdviceModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "GetDailyAdviceQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetDailyAdviceQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetDailyAdviceQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DailyAdviceReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.DailyAdvices/Services/DailyAdviceReadService.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "DailyAdviceSelector",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.DailyAdvices/Services/DailyAdviceSelector.cs",
+                        "line":  9
                     },
                     {
                         "name":  "AcceptInvitationCommand",
@@ -11444,111 +11542,6 @@
                         "line":  5
                     },
                     {
-                        "name":  "CreateContentReportCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/ContentReports/Commands/CreateContentReport/CreateContentReportCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CreateContentReportCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/ContentReports/Commands/CreateContentReport/CreateContentReportCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "CreateContentReportCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/ContentReports/Commands/CreateContentReport/CreateContentReportCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IContentReportAdministrationReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/ContentReports/Common/IContentReportAdministrationReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IContentReportAdministrationService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/ContentReports/Common/IContentReportAdministrationService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ContentReportModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/ContentReports/Models/ContentReportModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "ContentReportAdministrationReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/ContentReports/Services/ContentReportAdministrationReadService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "ContentReportAdministrationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/ContentReports/Services/ContentReportAdministrationService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "IDailyAdviceReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/DailyAdvices/Common/IDailyAdviceReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DailyAdviceModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/DailyAdvices/Models/DailyAdviceModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "GetDailyAdviceQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetDailyAdviceQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "GetDailyAdviceQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/DailyAdvices/Queries/GetDailyAdvice/GetDailyAdviceQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "DailyAdviceReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/DailyAdvices/Services/DailyAdviceReadService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "DailyAdviceSelector",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/DailyAdvices/Services/DailyAdviceSelector.cs",
-                        "line":  9
-                    },
-                    {
                         "name":  "SendDashboardTestEmailCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -11791,7 +11784,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                        "line":  10
+                        "line":  6
                     },
                     {
                         "name":  "DependencyInjection",
@@ -16054,7 +16047,7 @@
                         "kind":  "class",
                         "role":  "Repository",
                         "path":  "FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs",
-                        "line":  7
+                        "line":  6
                     },
                     {
                         "name":  "ExerciseEntryRepository",
@@ -16404,7 +16397,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  376
+                        "line":  380
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16761,7 +16754,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  86
+                        "line":  90
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20548,7 +20541,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  40
+                        "line":  42
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22780,23 +22773,16 @@
                                      },
                                      {
                                          "interface":  "IContentReportAdministrationReadService",
-                                         "interfacePath":  "FoodDiary.Application/ContentReports/Common/IContentReportAdministrationReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationReadService.cs",
                                          "implementation":  "ContentReportAdministrationReadService",
-                                         "implementationPath":  "FoodDiary.Application/ContentReports/Services/ContentReportAdministrationReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IContentReportAdministrationService",
-                                         "interfacePath":  "FoodDiary.Application/ContentReports/Common/IContentReportAdministrationService.cs",
+                                         "interfacePath":  "FoodDiary.Application.ContentReports/Common/IContentReportAdministrationService.cs",
                                          "implementation":  "ContentReportAdministrationService",
-                                         "implementationPath":  "FoodDiary.Application/ContentReports/Services/ContentReportAdministrationService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
-                                         "interface":  "IContentReportRepository",
-                                         "interfacePath":  "FoodDiary.Application.Abstractions/ContentReports/Common/IContentReportRepository.cs",
-                                         "implementation":  "ContentReportRepository",
-                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/ContentReports/ContentReportRepository.cs",
+                                         "implementationPath":  "FoodDiary.Application.ContentReports/Services/ContentReportAdministrationService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22815,16 +22801,9 @@
                                      },
                                      {
                                          "interface":  "IDailyAdviceReadService",
-                                         "interfacePath":  "FoodDiary.Application/DailyAdvices/Common/IDailyAdviceReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.DailyAdvices/Common/IDailyAdviceReadService.cs",
                                          "implementation":  "DailyAdviceReadService",
-                                         "implementationPath":  "FoodDiary.Application/DailyAdvices/Services/DailyAdviceReadService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
-                                         "interface":  "IDailyAdviceRepository",
-                                         "interfacePath":  "FoodDiary.Application.Abstractions/DailyAdvices/Common/IDailyAdviceRepository.cs",
-                                         "implementation":  "DailyAdviceRepository",
-                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs",
+                                         "implementationPath":  "FoodDiary.Application.DailyAdvices/Services/DailyAdviceReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24216,10 +24195,31 @@
                                                  "line":  18
                                              },
                                              {
+                                                 "service":  "IContentReportAdministrationService",
+                                                 "implementation":  "ContentReportAdministrationService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.ContentReports/DependencyInjection.cs",
+                                                 "line":  14
+                                             },
+                                             {
+                                                 "service":  "IContentReportAdministrationReadService",
+                                                 "implementation":  "ContentReportAdministrationReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.ContentReports/DependencyInjection.cs",
+                                                 "line":  15
+                                             },
+                                             {
                                                  "service":  "ICycleReadService",
                                                  "implementation":  "CycleReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application.Cycles/DependencyInjection.cs",
+                                                 "line":  14
+                                             },
+                                             {
+                                                 "service":  "IDailyAdviceReadService",
+                                                 "implementation":  "DailyAdviceReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.DailyAdvices/DependencyInjection.cs",
                                                  "line":  14
                                              },
                                              {
@@ -24710,70 +24710,49 @@
                                                  "implementation":  "AdminAiUsageReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  13
+                                                 "line":  9
                                              },
                                              {
                                                  "service":  "IAdminAuditReadService",
                                                  "implementation":  "AdminAuditReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  14
+                                                 "line":  10
                                              },
                                              {
                                                  "service":  "IAdminBillingReadService",
                                                  "implementation":  "AdminBillingReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  15
+                                                 "line":  11
                                              },
                                              {
                                                  "service":  "IAdminContentReadService",
                                                  "implementation":  "AdminContentReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  16
+                                                 "line":  12
                                              },
                                              {
                                                  "service":  "IAdminDashboardReadService",
                                                  "implementation":  "AdminDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  17
+                                                 "line":  13
                                              },
                                              {
                                                  "service":  "IAdminUserReadService",
                                                  "implementation":  "AdminUserReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  18
+                                                 "line":  14
                                              },
                                              {
                                                  "service":  "IAdminUserLoginReadService",
                                                  "implementation":  "AdminUserLoginReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  19
-                                             },
-                                             {
-                                                 "service":  "IContentReportAdministrationService",
-                                                 "implementation":  "ContentReportAdministrationService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  20
-                                             },
-                                             {
-                                                 "service":  "IContentReportAdministrationReadService",
-                                                 "implementation":  "ContentReportAdministrationReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  21
-                                             },
-                                             {
-                                                 "service":  "IDailyAdviceReadService",
-                                                 "implementation":  "DailyAdviceReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  22
+                                                 "line":  15
                                              },
                                              {
                                                  "service":  "IPostCommitActionQueue",
@@ -25196,13 +25175,6 @@
                                                  "line":  9
                                              },
                                              {
-                                                 "service":  "IContentReportRepository",
-                                                 "implementation":  "ContentReportRepository",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Moderation.cs",
-                                                 "line":  9
-                                             },
-                                             {
                                                  "service":  "INotificationRepository",
                                                  "implementation":  "NotificationRepository",
                                                  "lifetime":  "Scoped",
@@ -25371,7 +25343,7 @@
                                                  "line":  22
                                              },
                                              {
-                                                 "service":  "IDailyAdviceRepository",
+                                                 "service":  "IDailyAdviceReadModelRepository",
                                                  "implementation":  "DailyAdviceRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
@@ -25382,14 +25354,14 @@
                                                  "implementation":  "CycleRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-                                                 "line":  29
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IExerciseEntryRepository",
                                                  "implementation":  "ExerciseEntryRepository",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Tracking.cs",
-                                                 "line":  33
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "IUsdaFoodRepository",
@@ -25508,14 +25480,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  106
+                                                 "line":  110
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  107
+                                                 "line":  111
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25606,7 +25578,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  78
+                                                 "line":  82
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25662,35 +25634,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  51
+                                                 "line":  53
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  86
+                                                 "line":  90
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  87
+                                                 "line":  91
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  88
+                                                 "line":  92
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  111
+                                                 "line":  115
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

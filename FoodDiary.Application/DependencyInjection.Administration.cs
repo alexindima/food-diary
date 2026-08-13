@@ -1,7 +1,5 @@
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Services;
-using FoodDiary.Application.ContentReports.Common;
-using FoodDiary.Application.ContentReports.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FoodDiary.Application;
@@ -15,7 +13,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IAdminDashboardReadService, AdminDashboardReadService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAdminUserLoginReadService, AdminUserLoginReadService>();
-        services.AddScoped<IContentReportAdministrationService, ContentReportAdministrationService>();
-        services.AddScoped<IContentReportAdministrationReadService, ContentReportAdministrationReadService>();
     }
 }

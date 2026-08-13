@@ -13,7 +13,7 @@ namespace FoodDiary.Application.Tests.ContentReports;
 public class ContentReportsFeatureTests {
     [Fact]
     public async Task CreateContentReport_WithValidData_Succeeds() {
-        IContentReportRepository repository = CreateContentReportRepository();
+        IContentReportWriteRepository repository = CreateContentReportRepository();
         var handler = new CreateContentReportCommandHandler(repository, Substitute.For<ICurrentUserAccessService>());
 
         Result<ContentReportModel> result = await handler.Handle(
@@ -30,7 +30,7 @@ public class ContentReportsFeatureTests {
     public async Task CreateContentReport_WhenAlreadyReported_ReturnsFailure() {
         var userId = Guid.NewGuid();
         var targetId = Guid.NewGuid();
-        IContentReportRepository repository = CreateContentReportRepository((new UserId(userId), ReportTargetType.Recipe, targetId));
+        IContentReportWriteRepository repository = CreateContentReportRepository((new UserId(userId), ReportTargetType.Recipe, targetId));
 
         var handler = new CreateContentReportCommandHandler(repository, Substitute.For<ICurrentUserAccessService>());
         Result<ContentReportModel> result = await handler.Handle(
@@ -64,15 +64,14 @@ public class ContentReportsFeatureTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
-    private static IContentReportRepository CreateContentReportRepository(
+    private static IContentReportWriteRepository CreateContentReportRepository(
         params (UserId UserId, ReportTargetType TargetType, Guid TargetId)[] reported) {
         HashSet<(UserId UserId, ReportTargetType TargetType, Guid TargetId)> reportedSet = [.. reported];
-        IContentReportRepository repository = Substitute.For<IContentReportRepository>();
+        IContentReportWriteRepository repository = Substitute.For<IContentReportWriteRepository>();
         repository
             .AddAsync(Arg.Any<ContentReport>(), Arg.Any<CancellationToken>())
             .Returns(call => Task.FromResult(call.ArgAt<ContentReport>(0)));
-        ((IContentReportWriteRepository)repository)
-            .HasUserReportedAsync(Arg.Any<UserId>(), Arg.Any<ReportTargetType>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+        repository.HasUserReportedAsync(Arg.Any<UserId>(), Arg.Any<ReportTargetType>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId userId = call.ArgAt<UserId>(0);
                 ReportTargetType targetType = call.ArgAt<ReportTargetType>(1);

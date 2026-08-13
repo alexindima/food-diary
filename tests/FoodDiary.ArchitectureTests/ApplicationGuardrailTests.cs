@@ -13,6 +13,7 @@ public sealed class ApplicationGuardrailTests {
         string[] allowedProjectReferences = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Ai",
+            "FoodDiary.Application.ContentReports",
             "FoodDiary.Application.Cycles",
             "FoodDiary.Application.DailyAdvices",
             "FoodDiary.Application.Exercises",
@@ -1187,7 +1188,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Ai", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Meals", "Commands", "DeleteMeal", "DeleteMealCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Meals", "Queries", "GetMealById", "GetMealByIdQueryHandler.cs"),
-            Path.Combine(applicationRoot, "ContentReports", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.ContentReports", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dashboard", "Queries", "GetDashboardSnapshot", "GetDashboardSnapshotQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Dietologist", "Commands", "AcceptInvitationForCurrentUser", "AcceptInvitationForCurrentUserCommandHandler.cs"),
@@ -1494,7 +1495,7 @@ public sealed class ApplicationGuardrailTests {
         string[] contractFiles = [
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Lessons", "Common", "INutritionLessonReadRepository.cs"),
             Path.Combine(root, "FoodDiary.Application.Abstractions", "Admin", "Common", "IEmailTemplateReadRepository.cs"),
-            Path.Combine(root, "FoodDiary.Application.Abstractions", "ContentReports", "Common", "IContentReportReadRepository.cs"),
+            Path.Combine(root, "FoodDiary.Application.Abstractions", "ContentReports", "Common", "IContentReportReadModelRepository.cs"),
         ];
 
         string[] violations = [
