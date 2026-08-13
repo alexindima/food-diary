@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4156,
+                    "productionFiles":  4157,
                     "criticalSymbols":  538,
                     "criticalSymbolsWithTestReferences":  509,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -302,11 +302,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  309,
+                         "nonBlankLines":  311,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  67.68
+                         "structuralRiskScore":  67.72
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/fasting/components/fasting-timer-card/fasting-timer-card.ts",
@@ -805,7 +805,7 @@
                          "structuralRiskScore":  40.8
                      },
                      {
-                         "path":  "FoodDiary.Application/Authentication/Services/UserAgents/UserAgentParser.cs",
+                         "path":  "FoodDiary.Application.Identity/Authentication/Services/UserAgents/UserAgentParser.cs",
                          "nonBlankLines":  80,
                          "decisionPoints":  26,
                          "criticalSymbols":  0,
@@ -1005,6 +1005,22 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateReadModelRepository.cs",
@@ -1455,6 +1471,22 @@
                       "structuralRiskScore":  0.14
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs",
                       "nonBlankLines":  7,
                       "decisionPoints":  0,
@@ -1464,6 +1496,14 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
                       "nonBlankLines":  4,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
@@ -1541,6 +1581,14 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Authentication/Common/SecurityTokenGenerator.cs",
+                      "nonBlankLines":  43,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  6.86
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Authentication/Common/TestEmailMessage.cs",
@@ -2821,6 +2869,14 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Abstractions/Email/Common/ApplicationEmailTelemetry.cs",
+                      "nonBlankLines":  16,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.32
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Email/Common/EmailMessage.cs",
@@ -8047,6 +8103,534 @@
                       "structuralRiskScore":  0.02
                   },
                   {
+                      "path":  "FoodDiary.Application.Identity/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
+                      "nonBlankLines":  46,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommand.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
+                      "nonBlankLines":  46,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminStatus.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
+                      "nonBlankLines":  45,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.9
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
+                      "nonBlankLines":  21,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
+                      "nonBlankLines":  71,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  9.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+                      "nonBlankLines":  34,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.68
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommand.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
+                      "nonBlankLines":  37,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommand.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs",
+                      "nonBlankLines":  29,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandValidator.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
+                      "nonBlankLines":  61,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  13.72
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommand.cs",
+                      "nonBlankLines":  12,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.24
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandHandler.cs",
+                      "nonBlankLines":  45,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandValidator.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
+                      "nonBlankLines":  44,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.38
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommand.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+                      "nonBlankLines":  46,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+                      "nonBlankLines":  30,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
+                      "nonBlankLines":  28,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.06
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommand.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
+                      "nonBlankLines":  51,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.52
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
+                      "nonBlankLines":  44,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.38
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
+                      "nonBlankLines":  10,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
+                      "nonBlankLines":  42,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.84
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.28
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Models/AdminSsoStartModel.cs",
+                      "nonBlankLines":  4,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Models/AuthenticationModel.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.9
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventReadService.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs",
+                      "nonBlankLines":  91,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.82
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Services/EmailSender.cs",
+                      "nonBlankLines":  371,
+                      "decisionPoints":  22,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  40.42
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs",
+                      "nonBlankLines":  40,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Services/UserAgents/ParsedUserAgent.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Authentication/Services/UserAgents/UserAgentParser.cs",
+                      "nonBlankLines":  80,
+                      "decisionPoints":  26,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  40.6
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                      "nonBlankLines":  25,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.5
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationReadService.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs",
+                      "nonBlankLines":  25,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.5
+                  },
+                  {
                       "path":  "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommand.cs",
                       "nonBlankLines":  18,
                       "decisionPoints":  0,
@@ -9328,11 +9912,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-                      "nonBlankLines":  75,
+                      "nonBlankLines":  74,
                       "decisionPoints":  2,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  6.5
+                      "structuralRiskScore":  6.48
                   },
                   {
                       "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommandValidator.cs",
@@ -9456,11 +10040,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
-                      "nonBlankLines":  43,
+                      "nonBlankLines":  42,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.86
+                      "structuralRiskScore":  2.84
                   },
                   {
                       "path":  "FoodDiary.Application/Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandValidator.cs",
@@ -10469,534 +11053,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
-                      "nonBlankLines":  46,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommand.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
-                      "nonBlankLines":  46,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminStatus.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
-                      "nonBlankLines":  45,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.9
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-                      "nonBlankLines":  71,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
-                      "nonBlankLines":  34,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.68
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommand.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
-                      "nonBlankLines":  37,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommand.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-                      "nonBlankLines":  29,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandValidator.cs",
-                      "nonBlankLines":  17,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-                      "nonBlankLines":  62,
-                      "decisionPoints":  7,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  13.74
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommand.cs",
-                      "nonBlankLines":  12,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.24
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandHandler.cs",
-                      "nonBlankLines":  46,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.42
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandValidator.cs",
-                      "nonBlankLines":  20,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
-                      "nonBlankLines":  45,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommand.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
-                      "nonBlankLines":  47,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.44
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-                      "nonBlankLines":  30,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
-                      "nonBlankLines":  20,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.4
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
-                      "nonBlankLines":  28,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.06
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommand.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
-                      "nonBlankLines":  51,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.52
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
-                      "nonBlankLines":  44,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.38
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
-                      "nonBlankLines":  42,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.84
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Common/IAuthenticationLoginEventReadService.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Common/IEmailVerificationNotifier.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Common/SecurityTokenGenerator.cs",
-                      "nonBlankLines":  43,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  6.86
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Models/AdminSsoStartModel.cs",
-                      "nonBlankLines":  4,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Models/AuthenticationModel.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
-                      "nonBlankLines":  21,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
-                      "nonBlankLines":  19,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.38
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Services/AuthenticationTokenService.cs",
-                      "nonBlankLines":  92,
-                      "decisionPoints":  6,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.84
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Services/EmailSender.cs",
-                      "nonBlankLines":  372,
-                      "decisionPoints":  22,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  40.44
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Services/InitialAdminBootstrapService.cs",
-                      "nonBlankLines":  40,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Services/UserAgents/ParsedUserAgent.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Authentication/Services/UserAgents/UserAgentParser.cs",
-                      "nonBlankLines":  80,
-                      "decisionPoints":  26,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  40.6
                   },
                   {
                       "path":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
@@ -12168,11 +12224,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                      "nonBlankLines":  37,
+                      "nonBlankLines":  33,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.74
+                      "structuralRiskScore":  0.66
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
@@ -12183,20 +12239,12 @@
                       "structuralRiskScore":  2.52
                   },
                   {
-                      "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
-                  },
-                  {
                       "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                      "nonBlankLines":  16,
+                      "nonBlankLines":  13,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.32
+                      "structuralRiskScore":  0.26
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
@@ -12216,51 +12264,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.cs",
-                      "nonBlankLines":  29,
+                      "nonBlankLines":  28,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.58
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Email/Common/ApplicationEmailTelemetry.cs",
-                      "nonBlankLines":  16,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.32
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Email/Common/IEmailTemplateAdministrationReadService.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Email/Common/IEmailTemplateAdministrationService.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Email/Services/EmailTemplateAdministrationReadService.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Email/Services/EmailTemplateAdministrationService.cs",
-                      "nonBlankLines":  26,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.52
+                      "structuralRiskScore":  0.56
                   },
                   {
                       "path":  "FoodDiary.Application/Exercises/Commands/CreateExerciseEntry/CreateExerciseEntryCommand.cs",
@@ -19016,11 +19024,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  309,
+                      "nonBlankLines":  311,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  67.68
+                      "structuralRiskScore":  67.72
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19440,11 +19448,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  47,
+                      "nonBlankLines":  49,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.44
+                      "structuralRiskScore":  2.48
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23784,11 +23792,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  79,
+                      "nonBlankLines":  81,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.58
+                      "structuralRiskScore":  4.62
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34132,7 +34140,7 @@
                             {
                                 "name":  "AdminSsoExchangeCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
                                 "line":  13,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -34143,7 +34151,7 @@
                             {
                                 "name":  "AdminSsoStartCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
                                 "line":  13,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -34185,7 +34193,7 @@
                             {
                                 "name":  "BootstrapInitialAdminCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
                                 "line":  5,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -34257,7 +34265,7 @@
                             {
                                 "name":  "ConfirmPasswordResetCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
                                 "line":  14,
                                 "testReferenceCount":  3,
                                 "testReferences":  [
@@ -34301,7 +34309,7 @@
                                 "name":  "CreateAdminUserCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-                                "line":  15,
+                                "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs",
@@ -34771,7 +34779,7 @@
                             {
                                 "name":  "GoogleLoginCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  3,
                                 "testReferences":  [
@@ -34825,7 +34833,7 @@
                             {
                                 "name":  "LinkGoogleCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -34847,7 +34855,7 @@
                             {
                                 "name":  "LinkTelegramCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  4,
                                 "testReferences":  [
@@ -34860,7 +34868,7 @@
                             {
                                 "name":  "LoginCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  4,
                                 "testReferences":  [
@@ -35016,8 +35024,8 @@
                             {
                                 "name":  "RefreshTokenCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-                                "line":  15,
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
+                                "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/RefreshTokenCommandHandlerTests.cs",
@@ -35027,8 +35035,8 @@
                             {
                                 "name":  "RegisterCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandHandler.cs",
-                                "line":  11,
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandHandler.cs",
+                                "line":  10,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.RegisterLogin.cs",
@@ -35099,8 +35107,8 @@
                             {
                                 "name":  "RequestPasswordResetCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
-                                "line":  10,
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
+                                "line":  9,
                                 "testReferenceCount":  3,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.Password.cs",
@@ -35111,8 +35119,8 @@
                             {
                                 "name":  "ResendEmailVerificationCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
-                                "line":  12,
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+                                "line":  11,
                                 "testReferenceCount":  4,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Authentication/AuthenticationCommandHandlerTests.EmailVerification.cs",
@@ -35124,7 +35132,7 @@
                             {
                                 "name":  "RestoreAccountCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  3,
                                 "testReferences":  [
@@ -35178,7 +35186,7 @@
                                 "name":  "SendAdminEmailTemplateTestCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application/Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
-                                "line":  7,
+                                "line":  6,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.cs"
@@ -35281,7 +35289,7 @@
                             {
                                 "name":  "TelegramBotAuthCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
                                 "line":  9,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -35292,7 +35300,7 @@
                             {
                                 "name":  "TelegramLoginWidgetCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -35303,7 +35311,7 @@
                             {
                                 "name":  "TelegramVerifyCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -35638,7 +35646,7 @@
                             {
                                 "name":  "VerifyEmailCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  3,
                                 "testReferences":  [
@@ -37929,7 +37937,7 @@
                             {
                                 "name":  "AdminSsoExchangeCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -37939,7 +37947,7 @@
                             {
                                 "name":  "AdminSsoStartCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38029,7 +38037,7 @@
                             {
                                 "name":  "ConfirmPasswordResetCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38953,7 +38961,7 @@
                             {
                                 "name":  "GoogleLoginCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39016,7 +39024,7 @@
                             {
                                 "name":  "LinkGoogleCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39026,7 +39034,7 @@
                             {
                                 "name":  "LinkTelegramCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39036,7 +39044,7 @@
                             {
                                 "name":  "LoginCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39179,7 +39187,7 @@
                             {
                                 "name":  "RefreshTokenCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39189,7 +39197,7 @@
                             {
                                 "name":  "RegisterCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39219,7 +39227,7 @@
                             {
                                 "name":  "RequestPasswordResetCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39229,7 +39237,7 @@
                             {
                                 "name":  "ResendEmailVerificationCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39239,7 +39247,7 @@
                             {
                                 "name":  "RestoreAccountCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39403,7 +39411,7 @@
                             {
                                 "name":  "TelegramBotAuthCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39413,7 +39421,7 @@
                             {
                                 "name":  "TelegramLoginWidgetCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39437,7 +39445,7 @@
                             {
                                 "name":  "TelegramVerifyCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39693,7 +39701,7 @@
                             {
                                 "name":  "VerifyEmailCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

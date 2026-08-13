@@ -36,7 +36,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Module | Owns aggregates/data | Public application surface | Approved collaborators |
 | --- | --- | --- | --- |
 | Users | user profile/lifecycle, credentials stored on User, roles and role audit | narrow profile, authentication, administration, notification and billing capabilities; current-user access; role membership | Images, Notifications/Profile composition, Dietologist relationship projection |
-| Authentication | login/register/restore workflows, refresh sessions and login events | authentication commands, token/session lifecycle | Users authentication capabilities, Email, Notifications, external identity validators |
+| Identity | login/register/restore workflows, refresh sessions, login events and email templates | authentication commands, token/session lifecycle and email-template administration, grouped in `FoodDiary.Application.Identity` | Users authentication capabilities, Notifications, MailRelay and external identity validators |
 | Consumption Diary | `Meal`, meal items, AI sessions and consumption mutations | consumption commands, `IConsumptionReadService`, specialized activity/nutrition/export projections | Products/Recipes lookup APIs, Users, Images, FavoriteMeals, RecentItems, Nutrition |
 | RecentItems | recent product/recipe usage ordering | `IRecentItemUsageReadService`, `IRecentItemUsageRecorder` | Products and Recipes consume usage ordering; Consumption Diary records usage |
 | Products | products and product overview/search projections | product commands, `IProductLookupService`, `IProductOverviewReadService` | Users, Images, FavoriteProducts, RecentItems, external food sources |
@@ -61,7 +61,6 @@ This map covers the governed business owners and composed read modules in the pr
 | Daily Advice | localized daily advice content | daily-advice query and `IDailyAdviceReadService` | Dashboard invokes the query as a read-only composed-view dependency |
 | Content Reports | user-submitted reports and moderation status | report creation command, `IContentReportAdministrationService`, moderation projections | Users access; Admin invokes owner moderation capability and read projections |
 | AI | AI usage, prompt templates and AI orchestration policy | AI use cases, usage summaries, `IAiPromptAdministrationService` | Images access, Users access, provider adapters; Admin consumes projections |
-| Email Templates | persisted email templates | `IEmailTemplateAdministrationService` and template projections | Admin invokes owner capability; delivery remains behind MailRelay/client ports |
 | USDA Catalog | imported USDA foods/nutrients and product-link relationships | USDA commands/read services and read-model search projection | Products may consume the suggestion projection; Consumption nutrition is a read-only calculation input |
 | OpenFoodFacts Cache | cached external product documents and refresh lifecycle | cached product-search service | Products consumes the service; external provider remains an integration adapter |
 | Dashboard | composed user-facing read model; owns no source aggregates | dashboard query/read services | Approved read models from contributing modules |
@@ -234,7 +233,7 @@ Meal persistence registrations live in `DependencyInjection.Meals.cs`, RecentIte
 
 ## Users and Authentication boundaries
 
-Users and Authentication are separate collaborating modules around one identity lifecycle. Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates/state, including credential verification and account lifecycle mutation. Authentication owns login/register/restore orchestration, refresh-token sessions and login-event history.
+Users and Identity are separate collaborating modules around one identity lifecycle. Users owns the `User`, `Role`, `UserRole` and `UserRoleAuditEvent` aggregates/state, including credential verification and account lifecycle mutation. Identity is physically isolated in `FoodDiary.Application.Identity` and owns login/register/restore orchestration, refresh-token sessions, login-event history and application email-template administration. Authentication and Email remain logical feature areas inside that assembly.
 
 ### Users public capabilities
 

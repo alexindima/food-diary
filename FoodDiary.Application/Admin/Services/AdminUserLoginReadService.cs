@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Admin.Models;

@@ -24,7 +24,6 @@ public static partial class DependencyInjection {
         services.AddSingleton(TimeProvider.System);
 
         services.AddAdministrationModules();
-        services.AddIdentityModules();
         services.AddFoodModules();
         services.AddTrackingModules();
         services.AddCommunicationServices();

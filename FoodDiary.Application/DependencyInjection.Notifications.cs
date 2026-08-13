@@ -1,8 +1,6 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Ai.Services;
-using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Images.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,6 +11,5 @@ public static partial class DependencyInjection {
         services.AddScoped<IImageAssetAccessService, ImageAssetAccessService>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
-        services.AddScoped<IEmailSender, EmailSender>();
     }
 }

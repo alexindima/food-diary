@@ -166,6 +166,90 @@
                    },
                    {
                        "category":  "credential",
+                       "name":  "Password",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "NewPassword",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Credential",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Credential",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Password",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "RefreshToken",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Password",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Password",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "Token",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "AccessToken",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Models/AuthenticationModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "RefreshToken",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Models/AuthenticationModel.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "credential",
                        "name":  "HasPassword",
                        "type":  "bool",
                        "path":  "FoodDiary.Application.Notifications/Common/NotificationUserContext.cs",
@@ -254,90 +338,6 @@
                        "type":  "bool",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                        "line":  9
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Password",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Token",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "NewPassword",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Credential",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Credential",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Password",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "RefreshToken",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Password",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Password",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "Token",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "AccessToken",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Models/AuthenticationModel.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "RefreshToken",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Models/AuthenticationModel.cs",
-                       "line":  7
                    },
                    {
                        "category":  "credential",
@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  58
+                       "line":  59
                    },
                    {
                        "category":  "credential",
@@ -7257,6 +7257,55 @@
                    },
                    {
                        "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
+                       "line":  5
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "Email",
+                       "type":  "string",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "identity",
+                       "name":  "TelegramUserId",
+                       "type":  "long",
+                       "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "identity",
                        "name":  "UserAgent",
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Notifications/Commands/UpsertWebPushSubscription/UpsertWebPushSubscriptionCommand.cs",
@@ -7366,55 +7415,6 @@
                        "type":  "bool",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                        "line":  49
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
-                       "line":  7
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
-                       "line":  5
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
-                       "line":  6
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "Email",
-                       "type":  "string",
-                       "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "identity",
-                       "name":  "TelegramUserId",
-                       "type":  "long",
-                       "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
-                       "line":  9
                    },
                    {
                        "category":  "identity",
@@ -10046,7 +10046,7 @@
                               "fieldCount":  5
                           },
                           {
-                              "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
+                              "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
                               "categories":  [
                                                  "identity"
                                              ],

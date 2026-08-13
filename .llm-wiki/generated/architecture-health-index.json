@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  113,
+                    "productionProjectEdges":  120,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
-                    "backendBusinessModules":  38,
+                    "backendBusinessModules":  37,
                     "moduleHotspotReviewCandidates":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
@@ -45,7 +45,7 @@
                            {
                                "module":  "Admin",
                                "fanIn":  0,
-                               "fanOut":  6,
+                               "fanOut":  4,
                                "level":  "informational",
                                "role":  "orchestrator"
                            },
@@ -71,21 +71,7 @@
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "Authentication",
-                               "fanIn":  1,
-                               "fanOut":  1,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
                                "module":  "Cycles",
-                               "fanIn":  2,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "Email",
                                "fanIn":  2,
                                "fanOut":  0,
                                "level":  "informational",
@@ -240,6 +226,13 @@
                            },
                            {
                                "module":  "Favorites",
+                               "fanIn":  0,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
+                           },
+                           {
+                               "module":  "Identity",
                                "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",

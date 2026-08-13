@@ -14,7 +14,6 @@ public sealed class BusinessModuleBoundaryTests {
         string source = File.ReadAllText(dependencyInjectionPath);
         string[] expectedModuleCalls = [
             "services.AddAdministrationModules();",
-            "services.AddIdentityModules();",
             "services.AddFoodModules();",
             "services.AddTrackingModules();",
             "services.AddCommunicationServices();",
@@ -86,21 +85,21 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void MigratedAuthenticationIdentityHandlers_DoNotDependOnUsersAggregateAccess() {
         string[] handlerPaths = [
-            "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
-            "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
+            "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
         ];
         string[] forbiddenReferences = [
             "FoodDiary.Domain.Entities.Users",
@@ -123,7 +122,7 @@ public sealed class BusinessModuleBoundaryTests {
     [Fact]
     public void MigratedRefreshTokenHandler_DoesNotLoadOrMutateUserAggregate() {
         string handlerPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application",
+            "FoodDiary.Application.Identity",
             "Authentication",
             "Commands",
             "RefreshToken",
@@ -328,7 +327,7 @@ public sealed class BusinessModuleBoundaryTests {
         "FoodDiary.Application.Abstractions.Users.Models",
         "FoodDiary.Application.Authentication",
         "FoodDiary.Application.Common",
-        "FoodDiary.Application.Email.Common",
+        "FoodDiary.Application.Abstractions.Admin.Common",
         "FoodDiary.Application.Notifications.Common",
         "FoodDiary.Application.Users",
     };

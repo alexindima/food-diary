@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Ai, Authentication, ContentReports, Email, Gamification, Lessons
+- Business-module dependencies: Ai, ContentReports, Gamification, Lessons
 - Abstraction-contract dependencies: Ai, Audit, Authentication, ContentReports, Email, Lessons, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api
@@ -158,18 +158,18 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - Physical isolation: folder
 - Architecture guardrails: graph-only
 - Declared owned entities: not yet enumerated
-- Public contract files: 28
+- Public contract files: 30
 - Observed external consumer groups: 2
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 28
-- Interfaces: 12
+- Public contract types: 30
+- Interfaces: 14
 - DTO/read-model/projection types: 10
 - Enums: 0
 - Exported repository-shaped contracts: 11
-- Contracts referencing domain entities: 3
+- Contracts referencing domain entities: 4
 - `class AdminMailInboxErrors`
 - `interface IAdminBillingReadRepository`
 - `interface IAdminBillingRepository`
@@ -179,6 +179,8 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 - `interface IAdminMailInboxReader`
 - `interface IAdminUserRoleAuditReadRepository`
 - `interface IAdminUserRoleAuditRepository`
+- `interface IEmailTemplateAdministrationReadService`
+- `interface IEmailTemplateAdministrationService`
 - `interface IEmailTemplateReadModelRepository`
 - `interface IEmailTemplateReadRepository`
 - `interface IEmailTemplateRepository`

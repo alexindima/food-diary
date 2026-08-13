@@ -15,6 +15,7 @@ COPY FoodDiary.Application.Users/*.csproj FoodDiary.Application.Users/
 COPY FoodDiary.Application.Dietologist/*.csproj FoodDiary.Application.Dietologist/
 COPY FoodDiary.Application.Fasting/*.csproj FoodDiary.Application.Fasting/
 COPY FoodDiary.Application.Favorites/*.csproj FoodDiary.Application.Favorites/
+COPY FoodDiary.Application.Identity/*.csproj FoodDiary.Application.Identity/
 COPY FoodDiary.Application.Wearables/*.csproj FoodDiary.Application.Wearables/
 COPY FoodDiary.Application.Notifications/*.csproj FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/*.csproj FoodDiary.Application.BodyMetrics/
@@ -40,6 +41,7 @@ COPY FoodDiary.Application.Users/ FoodDiary.Application.Users/
 COPY FoodDiary.Application.Dietologist/ FoodDiary.Application.Dietologist/
 COPY FoodDiary.Application.Fasting/ FoodDiary.Application.Fasting/
 COPY FoodDiary.Application.Favorites/ FoodDiary.Application.Favorites/
+COPY FoodDiary.Application.Identity/ FoodDiary.Application.Identity/
 COPY FoodDiary.Application.Wearables/ FoodDiary.Application.Wearables/
 COPY FoodDiary.Application.Notifications/ FoodDiary.Application.Notifications/
 COPY FoodDiary.Application.BodyMetrics/ FoodDiary.Application.BodyMetrics/

@@ -1,5 +1,5 @@
 using Asp.Versioning;
-using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Billing;

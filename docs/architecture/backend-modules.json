@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 29,
-    "extractedModules": 9,
-    "totalModules": 38
+    "folderModules": 27,
+    "extractedModules": 10,
+    "totalModules": 37
   },
   "analysis": {
     "compileTime": "Roslyn/syntax and project-reference evidence; unresolved or runtime-only DI edges are reported separately.",
@@ -29,12 +29,20 @@
       "ownedEntities": [],
       "sourceMappings": {}
     },
-    "Authentication": {
+    "Identity": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
+      "physicalIsolation": "project",
+      "enforcement": "assembly-isolated",
       "ownedEntities": [],
-      "sourceMappings": {}
+      "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Identity"
+        ],
+        "applicationAreas": [
+          "Authentication",
+          "Email"
+        ]
+      }
     },
     "Billing": {
       "role": "aggregate-owner",
@@ -152,13 +160,6 @@
       "role": "aggregate-owner",
       "physicalIsolation": "project",
       "enforcement": "project-reference-matrix",
-      "ownedEntities": [],
-      "sourceMappings": {}
-    },
-    "Email": {
-      "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
       "ownedEntities": [],
       "sourceMappings": {}
     },

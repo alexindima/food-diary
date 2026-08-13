@@ -12,15 +12,14 @@ sources:
 
 # Application Modules
 
-This index unifies 29 folder modules and 9 extracted application modules.
+This index unifies 27 folder modules and 10 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
 | Module | Role | Business deps | Contract deps | App consumers | Host consumers | Enforcement |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
-| [Admin](admin.md) | orchestrator | 6 | 7 | 0 | 2 | graph-only |
+| [Admin](admin.md) | orchestrator | 4 | 7 | 0 | 2 | graph-only |
 | [Ai](ai.md) | orchestrator | 0 | 3 | 1 | 2 | graph-only |
-| [Authentication](authentication.md) | aggregate-owner | 1 | 3 | 1 | 5 | graph-only |
 | [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |
 | [Consumptions](consumptions.md) | aggregate-owner | 2 | 8 | 6 | 1 | explicit-boundary-tests |
@@ -29,13 +28,13 @@ are reported separately; `none observed` never means proven isolation.
 | [DailyAdvices](daily-advices.md) | aggregate-owner | 0 | 1 | 1 | 1 | graph-only |
 | [Dashboard](dashboard.md) | read-composer | 7 | 7 | 0 | 1 | explicit-boundary-tests |
 | [Dietologist](dietologist.md) | aggregate-owner | 0 | 0 | 0 | 4 | project-reference-matrix |
-| [Email](email.md) | aggregate-owner | 0 | 1 | 2 | 2 | graph-only |
 | [Exercises](exercises.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
 | [Export](export.md) | read-composer | 2 | 2 | 0 | 2 | graph-only |
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
 | [Favorites](favorites.md) | aggregate-owner | 0 | 7 | 0 | 4 | project-reference-matrix |
 | [Gamification](gamification.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |
 | [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
+| [Identity](identity.md) | aggregate-owner | 0 | 5 | 0 | 4 | assembly-isolated |
 | [Images](images.md) | aggregate-owner | 0 | 0 | 3 | 3 | explicit-boundary-tests |
 | [Lessons](lessons.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |
 | [Marketing](marketing.md) | aggregate-owner | 0 | 1 | 0 | 4 | assembly-isolated |

@@ -247,7 +247,7 @@ public sealed class SideEffectReliabilityGuardrailTests {
     [Fact]
     public void CriticalSideEffectServices_WriteDurableOutboxState() {
         string emailSenderPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application",
+            "FoodDiary.Application.Identity",
             "Authentication",
             "Services",
             "EmailSender.cs");

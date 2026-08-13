@@ -8,7 +8,7 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3148,
+                    "sourceFiles":  3149,
                     "symbols":  3180,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
@@ -214,6 +214,20 @@
                         "role":  "Repository",
                         "path":  "FoodDiary.Application.Abstractions/Admin/Common/IAdminUserRoleAuditRepository.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "IEmailTemplateAdministrationReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IEmailTemplateAdministrationService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
+                        "line":  5
                     },
                     {
                         "name":  "IEmailTemplateReadModelRepository",
@@ -608,6 +622,20 @@
                         "line":  2
                     },
                     {
+                        "name":  "IAuthenticationLoginEventCleanupService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "IAuthenticationLoginEventReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "IEmailSender",
                         "kind":  "interface",
                         "role":  "Other",
@@ -619,6 +647,13 @@
                         "kind":  "interface",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IEmailTemplateProvider.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "IEmailVerificationNotifier",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
                         "line":  2
                     },
                     {
@@ -683,6 +718,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Authentication/Common/PasswordResetMessage.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "SecurityTokenGenerator",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Authentication/Common/SecurityTokenGenerator.cs",
+                        "line":  5
                     },
                     {
                         "name":  "TestEmailMessage",
@@ -2006,6 +2048,13 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Dietologist/Models/RecommendationTemplateReadModel.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "ApplicationEmailTelemetry",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Email/Common/ApplicationEmailTelemetry.cs",
+                        "line":  4
                     },
                     {
                         "name":  "EmailMessage",
@@ -6537,6 +6586,461 @@
                         "line":  7
                     },
                     {
+                        "name":  "AdminSsoExchangeCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "AdminSsoExchangeCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "AdminSsoExchangeCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "AdminSsoStartCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "AdminSsoStartCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "AdminSsoStartCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "BootstrapInitialAdminCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "BootstrapInitialAdminCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "BootstrapInitialAdminModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "BootstrapInitialAdminStatus",
+                        "kind":  "enum",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminStatus.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "IInitialAdminBootstrapService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ConfirmPasswordResetCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ConfirmPasswordResetCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "ConfirmPasswordResetCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "GoogleLoginCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "GoogleLoginCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "GoogleLoginCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "LinkGoogleCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "LinkGoogleCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "LinkGoogleCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "LinkTelegramCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "LinkTelegramCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "LinkTelegramCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "LoginCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "LoginCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "LoginCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "RefreshTokenCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "RefreshTokenCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
+                        "line":  14
+                    },
+                    {
+                        "name":  "RefreshTokenCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "RegisterCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "RegisterCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "RegisterCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/Register/RegisterCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "RequestPasswordResetCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "RequestPasswordResetCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "RequestPasswordResetCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ResendEmailVerificationCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "ResendEmailVerificationCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "ResendEmailVerificationCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "RestoreAccountCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "RestoreAccountCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "RestoreAccountCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "TelegramBotAuthCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "TelegramBotAuthCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "TelegramBotAuthCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "TelegramLoginWidgetCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "TelegramLoginWidgetCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "TelegramLoginWidgetCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "TelegramVerifyCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommand.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "TelegramVerifyCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "TelegramVerifyCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "VerifyEmailCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "VerifyEmailCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "VerifyEmailCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "AdminSsoStartModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Models/AdminSsoStartModel.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "AuthenticationModel",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Models/AuthenticationModel.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "AuthenticationLoginEventCleanupService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "AuthenticationLoginEventReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "AuthenticationTokenService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "EmailSender",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Services/EmailSender.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "InitialAdminBootstrapService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "ParsedUserAgent",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Services/UserAgents/ParsedUserAgent.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "UserAgentParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Identity/Authentication/Services/UserAgents/UserAgentParser.cs",
+                        "line":  2
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                        "line":  12
+                    },
+                    {
+                        "name":  "EmailTemplateAdministrationReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "EmailTemplateAdministrationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "RecordMarketingAttributionCommand",
                         "kind":  "record",
                         "role":  "Command",
@@ -7640,7 +8144,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Admin/Commands/CreateAdminUser/CreateAdminUserCommandHandler.cs",
-                        "line":  15
+                        "line":  14
                     },
                     {
                         "name":  "CreateAdminUserCommandValidator",
@@ -7752,7 +8256,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application/Admin/Commands/SendAdminEmailTemplateTest/SendAdminEmailTemplateTestCommandHandler.cs",
-                        "line":  7
+                        "line":  6
                     },
                     {
                         "name":  "SendAdminEmailTemplateTestCommandValidator",
@@ -8628,468 +9132,6 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Ai/Services/UserAiUsageSummaryReadService.cs",
                         "line":  8
-                    },
-                    {
-                        "name":  "AdminSsoExchangeCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "AdminSsoExchangeCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "AdminSsoExchangeCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "AdminSsoStartCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "AdminSsoStartCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandHandler.cs",
-                        "line":  13
-                    },
-                    {
-                        "name":  "AdminSsoStartCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/AdminSsoStart/AdminSsoStartCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "BootstrapInitialAdminCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "BootstrapInitialAdminCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminCommandHandler.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "BootstrapInitialAdminModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "BootstrapInitialAdminStatus",
-                        "kind":  "enum",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/BootstrapInitialAdminStatus.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "IInitialAdminBootstrapService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "ConfirmPasswordResetCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ConfirmPasswordResetCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "ConfirmPasswordResetCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/ConfirmPasswordReset/ConfirmPasswordResetCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "GoogleLoginCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "GoogleLoginCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "GoogleLoginCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/GoogleLogin/GoogleLoginCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "LinkGoogleCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "LinkGoogleCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "LinkGoogleCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "LinkTelegramCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "LinkTelegramCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "LinkTelegramCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/LinkTelegram/LinkTelegramCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "LoginCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "LoginCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "LoginCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/Login/LoginCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "RefreshTokenCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "RefreshTokenCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandHandler.cs",
-                        "line":  15
-                    },
-                    {
-                        "name":  "RefreshTokenCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RefreshToken/RefreshTokenCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "RegisterCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "RegisterCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "RegisterCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/Register/RegisterCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "RequestPasswordResetCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "RequestPasswordResetCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "RequestPasswordResetCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RequestPasswordReset/RequestPasswordResetCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "ResendEmailVerificationCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "ResendEmailVerificationCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "ResendEmailVerificationCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/ResendEmailVerification/ResendEmailVerificationCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "RestoreAccountCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "RestoreAccountCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "RestoreAccountCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/RestoreAccount/RestoreAccountCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "TelegramBotAuthCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "TelegramBotAuthCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandHandler.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "TelegramBotAuthCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramBotAuth/TelegramBotAuthCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "TelegramLoginWidgetCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "TelegramLoginWidgetCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "TelegramLoginWidgetCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramLoginWidget/TelegramLoginWidgetCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "TelegramVerifyCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommand.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "TelegramVerifyCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandHandler.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "TelegramVerifyCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/TelegramVerify/TelegramVerifyCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "VerifyEmailCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommand.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "VerifyEmailCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "VerifyEmailCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Authentication/Commands/VerifyEmail/VerifyEmailCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IAuthenticationLoginEventCleanupService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "IAuthenticationLoginEventReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Common/IAuthenticationLoginEventReadService.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IEmailVerificationNotifier",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Common/IEmailVerificationNotifier.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "SecurityTokenGenerator",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Common/SecurityTokenGenerator.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "AdminSsoStartModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Models/AdminSsoStartModel.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "AuthenticationModel",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Models/AuthenticationModel.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "AuthenticationLoginEventCleanupService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "AuthenticationLoginEventReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "AuthenticationTokenService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Services/AuthenticationTokenService.cs",
-                        "line":  12
-                    },
-                    {
-                        "name":  "EmailSender",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Services/EmailSender.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "InitialAdminBootstrapService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Authentication/Services/InitialAdminBootstrapService.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "ParsedUserAgent",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Services/UserAgents/ParsedUserAgent.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "UserAgentParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Authentication/Services/UserAgents/UserAgentParser.cs",
-                        "line":  2
                     },
                     {
                         "name":  "CommandTransactionBehavior",
@@ -10118,7 +10160,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                        "line":  16
+                        "line":  14
                     },
                     {
                         "name":  "DependencyInjection",
@@ -10138,15 +10180,8 @@
                         "name":  "DependencyInjection",
                         "kind":  "class",
                         "role":  "Other",
-                        "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "DependencyInjection",
-                        "kind":  "class",
-                        "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                        "line":  10
+                        "line":  8
                     },
                     {
                         "name":  "DependencyInjection",
@@ -10161,41 +10196,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
                         "line":  6
-                    },
-                    {
-                        "name":  "ApplicationEmailTelemetry",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Email/Common/ApplicationEmailTelemetry.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IEmailTemplateAdministrationReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Email/Common/IEmailTemplateAdministrationReadService.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IEmailTemplateAdministrationService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Email/Common/IEmailTemplateAdministrationService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "EmailTemplateAdministrationReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Email/Services/EmailTemplateAdministrationReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "EmailTemplateAdministrationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Email/Services/EmailTemplateAdministrationService.cs",
-                        "line":  7
                     },
                     {
                         "name":  "CreateExerciseEntryCommand",
@@ -16194,7 +16194,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  344
+                        "line":  346
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16551,7 +16551,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  54
+                        "line":  56
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20338,7 +20338,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  24
+                        "line":  25
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22486,23 +22486,23 @@
                                      },
                                      {
                                          "interface":  "IAuthenticationLoginEventCleanupService",
-                                         "interfacePath":  "FoodDiary.Application/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventCleanupService.cs",
                                          "implementation":  "AuthenticationLoginEventCleanupService",
-                                         "implementationPath":  "FoodDiary.Application/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventCleanupService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IAuthenticationLoginEventReadService",
-                                         "interfacePath":  "FoodDiary.Application/Authentication/Common/IAuthenticationLoginEventReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Authentication/Common/IAuthenticationLoginEventReadService.cs",
                                          "implementation":  "AuthenticationLoginEventReadService",
-                                         "implementationPath":  "FoodDiary.Application/Authentication/Services/AuthenticationLoginEventReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationLoginEventReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IAuthenticationTokenService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Authentication/Services/IAuthenticationTokenService.cs",
                                          "implementation":  "AuthenticationTokenService",
-                                         "implementationPath":  "FoodDiary.Application/Authentication/Services/AuthenticationTokenService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22866,21 +22866,21 @@
                                          "interface":  "IEmailSender",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Authentication/Common/IEmailSender.cs",
                                          "implementation":  "EmailSender",
-                                         "implementationPath":  "FoodDiary.Application/Authentication/Services/EmailSender.cs",
+                                         "implementationPath":  "FoodDiary.Application.Identity/Authentication/Services/EmailSender.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IEmailTemplateAdministrationReadService",
-                                         "interfacePath":  "FoodDiary.Application/Email/Common/IEmailTemplateAdministrationReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationReadService.cs",
                                          "implementation":  "EmailTemplateAdministrationReadService",
-                                         "implementationPath":  "FoodDiary.Application/Email/Services/EmailTemplateAdministrationReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IEmailTemplateAdministrationService",
-                                         "interfacePath":  "FoodDiary.Application/Email/Common/IEmailTemplateAdministrationService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Admin/Common/IEmailTemplateAdministrationService.cs",
                                          "implementation":  "EmailTemplateAdministrationService",
-                                         "implementationPath":  "FoodDiary.Application/Email/Services/EmailTemplateAdministrationService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Identity/Email/Services/EmailTemplateAdministrationService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22899,7 +22899,7 @@
                                      },
                                      {
                                          "interface":  "IEmailVerificationNotifier",
-                                         "interfacePath":  "FoodDiary.Application/Authentication/Common/IEmailVerificationNotifier.cs",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Authentication/Common/IEmailVerificationNotifier.cs",
                                          "implementation":  "EmailVerificationNotifier",
                                          "implementationPath":  "FoodDiary.Presentation.Api/Services/EmailVerificationNotifier.cs",
                                          "confidence":  "naming-convention"
@@ -23109,9 +23109,9 @@
                                      },
                                      {
                                          "interface":  "IInitialAdminBootstrapService",
-                                         "interfacePath":  "FoodDiary.Application/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Identity/Authentication/Commands/BootstrapInitialAdmin/IInitialAdminBootstrapService.cs",
                                          "implementation":  "InitialAdminBootstrapService",
-                                         "implementationPath":  "FoodDiary.Application/Authentication/Services/InitialAdminBootstrapService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Identity/Authentication/Services/InitialAdminBootstrapService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24083,6 +24083,55 @@
                                                  "line":  24
                                              },
                                              {
+                                                 "service":  "IAuthenticationLoginEventCleanupService",
+                                                 "implementation":  "AuthenticationLoginEventCleanupService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                                                 "line":  19
+                                             },
+                                             {
+                                                 "service":  "IAuthenticationLoginEventReadService",
+                                                 "implementation":  "AuthenticationLoginEventReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                                                 "line":  20
+                                             },
+                                             {
+                                                 "service":  "IAuthenticationTokenService",
+                                                 "implementation":  "AuthenticationTokenService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                                                 "line":  21
+                                             },
+                                             {
+                                                 "service":  "IInitialAdminBootstrapService",
+                                                 "implementation":  "InitialAdminBootstrapService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                                                 "line":  22
+                                             },
+                                             {
+                                                 "service":  "IEmailSender",
+                                                 "implementation":  "EmailSender",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                                                 "line":  23
+                                             },
+                                             {
+                                                 "service":  "IEmailTemplateAdministrationService",
+                                                 "implementation":  "EmailTemplateAdministrationService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                                                 "line":  24
+                                             },
+                                             {
+                                                 "service":  "IEmailTemplateAdministrationReadService",
+                                                 "implementation":  "EmailTemplateAdministrationReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Identity/DependencyInjection.cs",
+                                                 "line":  25
+                                             },
+                                             {
                                                  "service":  "IMarketingAttributionCleanupService",
                                                  "implementation":  "MarketingAttributionCleanupService",
                                                  "lifetime":  "Scoped",
@@ -24227,133 +24276,119 @@
                                                  "implementation":  "AdminAiUsageReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  19
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IAdminAuditReadService",
                                                  "implementation":  "AdminAuditReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  20
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IAdminBillingReadService",
                                                  "implementation":  "AdminBillingReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  21
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IAdminContentReadService",
                                                  "implementation":  "AdminContentReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  22
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IAdminDashboardReadService",
                                                  "implementation":  "AdminDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  23
+                                                 "line":  21
                                              },
                                              {
                                                  "service":  "IAdminUserReadService",
                                                  "implementation":  "AdminUserReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  24
+                                                 "line":  22
                                              },
                                              {
                                                  "service":  "IAdminUserLoginReadService",
                                                  "implementation":  "AdminUserLoginReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  25
+                                                 "line":  23
                                              },
                                              {
                                                  "service":  "IAiUserContextService",
                                                  "implementation":  "AiUserContextService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  26
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IAiAdministrationReadService",
                                                  "implementation":  "AiAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  27
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "IAiPromptAdministrationService",
                                                  "implementation":  "AiPromptAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  28
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IUserAiUsageSummaryReadService",
                                                  "implementation":  "UserAiUsageSummaryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  29
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IContentReportAdministrationService",
                                                  "implementation":  "ContentReportAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  30
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "IContentReportAdministrationReadService",
                                                  "implementation":  "ContentReportAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  31
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "IDailyAdviceReadService",
                                                  "implementation":  "DailyAdviceReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  32
-                                             },
-                                             {
-                                                 "service":  "IEmailTemplateAdministrationService",
-                                                 "implementation":  "EmailTemplateAdministrationService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  33
-                                             },
-                                             {
-                                                 "service":  "IEmailTemplateAdministrationReadService",
-                                                 "implementation":  "EmailTemplateAdministrationReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  34
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "ILessonReadService",
                                                  "implementation":  "LessonReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  35
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "ILessonAdministrationService",
                                                  "implementation":  "LessonAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  36
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "ILessonAdministrationReadService",
                                                  "implementation":  "LessonAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  37
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IPostCommitActionQueue",
@@ -24496,60 +24531,25 @@
                                                  "line":  51
                                              },
                                              {
-                                                 "service":  "IAuthenticationLoginEventCleanupService",
-                                                 "implementation":  "AuthenticationLoginEventCleanupService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  11
-                                             },
-                                             {
-                                                 "service":  "IAuthenticationLoginEventReadService",
-                                                 "implementation":  "AuthenticationLoginEventReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  12
-                                             },
-                                             {
-                                                 "service":  "IAuthenticationTokenService",
-                                                 "implementation":  "AuthenticationTokenService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  13
-                                             },
-                                             {
-                                                 "service":  "IInitialAdminBootstrapService",
-                                                 "implementation":  "InitialAdminBootstrapService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Identity.cs",
-                                                 "line":  14
-                                             },
-                                             {
                                                  "service":  "IImageAssetAccessService",
                                                  "implementation":  "ImageAssetAccessService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  13
+                                                 "line":  11
                                              },
                                              {
                                                  "service":  "IImageAssetCleanupService",
                                                  "implementation":  "ImageAssetCleanupService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  14
+                                                 "line":  12
                                              },
                                              {
                                                  "service":  "IOpenAiFoodService",
                                                  "implementation":  "OpenAiFoodService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  15
-                                             },
-                                             {
-                                                 "service":  "IEmailSender",
-                                                 "implementation":  "EmailSender",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  16
+                                                 "line":  13
                                              },
                                              {
                                                  "service":  "ICycleReadService",
@@ -25298,14 +25298,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  74
+                                                 "line":  76
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  75
+                                                 "line":  77
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25396,7 +25396,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  46
+                                                 "line":  48
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25452,35 +25452,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  35
+                                                 "line":  36
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  54
+                                                 "line":  56
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  55
+                                                 "line":  57
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  56
+                                                 "line":  58
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  79
+                                                 "line":  81
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",
