@@ -75,7 +75,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Pushes can take a long time because the pre-push hook runs the full frontend and backend test suites. If `git push` appears to time out, check `git status`, `git log -1`, and the remote branch state before retrying.
 - Always run `git commit` and `git push` with hooks enabled. Do not use `--no-verify`. If a hook fails, inspect the reported log under `.git/hook-logs/`, fix the cause, and rerun the original command.
 - A running local API must not require bypassing hooks. The pre-push backend build uses `.artifacts/pre-push` so it does not overwrite assemblies held by the development server.
-- Keep isolated .NET outputs under the repository-level `.artifacts/` by using `--artifacts-path`; never pass a relative `BaseOutputPath`, because MSBuild creates a separate `.artifacts` folder under every project. Pre-commit and pre-push remove accidental nested `.artifacts` folders via `scripts/Clean-NestedDotnetArtifacts.ps1`.
+- Keep isolated .NET outputs under the repository-level `.artifacts/` by using `--artifacts-path`; never pass a relative `BaseOutputPath`, because MSBuild creates a separate `.artifacts` folder under every project. Pre-commit clears the root and accidental nested `.artifacts` folders before validation; pre-push removes accidental nested folders via `scripts/Clean-NestedDotnetArtifacts.ps1`.
 
 ## SSH Access
 

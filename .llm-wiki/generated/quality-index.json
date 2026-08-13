@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4183,
+                    "productionFiles":  4185,
                     "criticalSymbols":  539,
                     "criticalSymbolsWithTestReferences":  510,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -294,11 +294,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  327,
+                         "nonBlankLines":  329,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  68.04
+                         "structuralRiskScore":  68.08
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
@@ -5573,6 +5573,206 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+                      "nonBlankLines":  56,
+                      "decisionPoints":  5,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  10.62
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
+                      "nonBlankLines":  15,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.3
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+                      "nonBlankLines":  33,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.48
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+                      "nonBlankLines":  35,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.7
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Common/AiUserContext.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Common/IAiUserContextService.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/DependencyInjection.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.4
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+                      "nonBlankLines":  23,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.96
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Services/AiPromptAdministrationService.cs",
+                      "nonBlankLines":  31,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.62
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Services/AiUserContextService.cs",
+                      "nonBlankLines":  22,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.94
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Services/ApplicationAiTelemetry.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.26
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
+                      "nonBlankLines":  111,
+                      "decisionPoints":  10,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  17.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
+                      "nonBlankLines":  35,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
                   },
                   {
                       "path":  "FoodDiary.Application.Billing/AssemblyInfo.cs",
@@ -12407,190 +12607,6 @@
                       "structuralRiskScore":  0.92
                   },
                   {
-                      "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-                      "nonBlankLines":  60,
-                      "decisionPoints":  5,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
-                      "nonBlankLines":  15,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.3
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
-                      "nonBlankLines":  33,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
-                      "nonBlankLines":  24,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.48
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-                      "nonBlankLines":  35,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Common/AiUserContext.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Common/IAiAdministrationReadService.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Common/IAiPromptAdministrationService.cs",
-                      "nonBlankLines":  11,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Common/IAiUserContextService.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Common/IUserAiUsageSummaryReadService.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
-                      "nonBlankLines":  23,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.96
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Services/AiAdministrationReadService.cs",
-                      "nonBlankLines":  17,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.34
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Services/AiPromptAdministrationService.cs",
-                      "nonBlankLines":  31,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.62
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Services/AiUserContextService.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.94
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Services/ApplicationAiTelemetry.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
-                      "nonBlankLines":  111,
-                      "decisionPoints":  10,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  17.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Ai/Services/UserAiUsageSummaryReadService.cs",
-                      "nonBlankLines":  35,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
-                  },
-                  {
                       "path":  "FoodDiary.Application/AssemblyInfo.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -13512,11 +13528,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                      "nonBlankLines":  33,
+                      "nonBlankLines":  27,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.66
+                      "structuralRiskScore":  0.54
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
@@ -13528,11 +13544,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                      "nonBlankLines":  9,
+                      "nonBlankLines":  6,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
+                      "structuralRiskScore":  0.12
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
@@ -19232,11 +19248,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  327,
+                      "nonBlankLines":  329,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  68.04
+                      "structuralRiskScore":  68.08
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19656,11 +19672,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  65,
+                      "nonBlankLines":  67,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.8
+                      "structuralRiskScore":  2.84
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -24000,11 +24016,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  97,
+                      "nonBlankLines":  99,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.94
+                      "structuralRiskScore":  4.98
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34381,8 +34397,8 @@
                             {
                                 "name":  "AnalyzeFoodImageCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-                                "line":  14,
+                                "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+                                "line":  13,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs"
@@ -34422,7 +34438,7 @@
                             {
                                 "name":  "CalculateFoodNutritionCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -35150,7 +35166,7 @@
                             {
                                 "name":  "ParseFoodTextCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
                                 "line":  10,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37830,7 +37846,7 @@
                             {
                                 "name":  "GetUserAiUsageSummaryQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
                                 "line":  10,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38175,7 +38191,7 @@
                             {
                                 "name":  "AnalyzeFoodImageCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -38205,7 +38221,7 @@
                             {
                                 "name":  "CalculateFoodNutritionCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39084,7 +39100,7 @@
                             {
                                 "name":  "GetUserAiUsageSummaryQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [
@@ -39316,7 +39332,7 @@
                             {
                                 "name":  "ParseFoodTextCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  1,
                                 "testReferences":  [

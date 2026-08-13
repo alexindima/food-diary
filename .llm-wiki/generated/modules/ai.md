@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Admin, Images, Users
 - Business-module consumers: Admin
-- Host/adapter consumers: FoodDiary.Integrations, FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Application, FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Ai`
-- `FoodDiary.Application/Ai`
+- `FoodDiary.Application.Ai`
 - `FoodDiary.Domain/Entities/Ai`
 - `FoodDiary.Infrastructure/Persistence/Ai`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Ai`
@@ -49,11 +50,11 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 ## Boundary Health
 
 - Role: orchestrator
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 20
-- Observed external consumer groups: 3
+- Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -93,6 +94,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Ai/ParseFoodTextValidatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/AiConsentTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiUsageInvariantTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`

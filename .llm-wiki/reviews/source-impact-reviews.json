@@ -8,21 +8,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
-                                        },
-                                        {
-                                            "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "0636f80fb6fd7637a88979593fc735341be650a6406fb7c1336f568552c7f6e6"
-                                        },
-                                        {
-                                            "path":  "docs/BACKEND_MODULE_MAP.md",
-                                            "sha256":  "975590cae22cfca701ad9a900c8017cd8cd985236e8dce67913aa2df6a9cc57a"
+                                            "sha256":  "54f26f1cca1e4962d338e7b70387a0531938f21856fa869da1adf1275ffbb22a"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:32.8532790Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:53.7800035Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -50,17 +42,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "c878239ebfaa8e9acf596e26c749c7787226ec87a8010eb2971e6c1dbd978bdd"
+                                            "sha256":  "42cba00fccd027d3cbcdfc61449a77e73bb445b2fb2398dea93b6b93579bbe01"
                                         },
                                         {
                                             "path":  "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
-                                            "sha256":  "5248ac7baa8f4b83595c3c559576c5c52fb613a3ff8b048484b2ca564af186eb"
+                                            "sha256":  "1da7243ac671ba86b820aa8ad5164e0ddccdb71027ad4f7e37cac43611d084a3"
                                         }
                                     ],
-                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
-                        "reviewedAtUtc":  "2026-08-13T10:22:37.8606545Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:54.2470633Z"
                     },
                     {
                         "pageId":  "system.architecture",
@@ -69,17 +61,17 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "c878239ebfaa8e9acf596e26c749c7787226ec87a8010eb2971e6c1dbd978bdd"
+                                            "sha256":  "42cba00fccd027d3cbcdfc61449a77e73bb445b2fb2398dea93b6b93579bbe01"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "cbcf2a1a634cedcf6fea8b60f5b54c4aafa07015e055ce33715df052060539e3"
+                                            "sha256":  "3d030c7e99879ebb34f96269f972300be0586e9665cf803caeba41488a41a0ac"
                                         }
                                     ],
-                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
-                        "reviewedAtUtc":  "2026-08-13T10:22:38.4185570Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:54.7252567Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -103,13 +95,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
+                                            "sha256":  "54f26f1cca1e4962d338e7b70387a0531938f21856fa869da1adf1275ffbb22a"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:33.4451912Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:55.2828204Z"
                     },
                     {
                         "pageId":  "system.repository-catalog",
@@ -118,13 +110,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "c878239ebfaa8e9acf596e26c749c7787226ec87a8010eb2971e6c1dbd978bdd"
+                                            "sha256":  "42cba00fccd027d3cbcdfc61449a77e73bb445b2fb2398dea93b6b93579bbe01"
                                         }
                                     ],
-                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
-                        "reviewedAtUtc":  "2026-08-13T10:22:38.9493425Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:55.8133641Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -133,13 +125,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
+                                            "sha256":  "54f26f1cca1e4962d338e7b70387a0531938f21856fa869da1adf1275ffbb22a"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:34.1669172Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:57.4928847Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -197,13 +189,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "73891e570f4b408a0cca91d34fbd2b92a47f6210fde414ec90c7cc937baf98ff"
+                                            "sha256":  "43a118b35709c5d17c218c8eda7134ab6dfcef02a493aaa3ecdb8105019c62cc"
+                                        },
+                                        {
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "54f26f1cca1e4962d338e7b70387a0531938f21856fa869da1adf1275ffbb22a"
                                         }
                                     ],
-                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
-                        "reviewedAtUtc":  "2026-08-13T10:22:42.0510066Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:59.5423525Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -212,13 +208,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "d9d99d28a0f90992dfa5680134eee1abdb575bf602aa2eb27774665249aa06e2"
+                                            "sha256":  "54f26f1cca1e4962d338e7b70387a0531938f21856fa869da1adf1275ffbb22a"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:35.4702316Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:46:00.1708581Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -276,21 +272,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "e9c8daba63d15e1488705036845eb3559d6fd3cdde741c9cf221da3ef1270e6b"
+                                            "sha256":  "88286ba4d63a7f9f9b12dee62206e2f727b135ba31df3984fb33412e757cabb8"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "c878239ebfaa8e9acf596e26c749c7787226ec87a8010eb2971e6c1dbd978bdd"
+                                            "sha256":  "42cba00fccd027d3cbcdfc61449a77e73bb445b2fb2398dea93b6b93579bbe01"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "cbcf2a1a634cedcf6fea8b60f5b54c4aafa07015e055ce33715df052060539e3"
+                                            "sha256":  "3d030c7e99879ebb34f96269f972300be0586e9665cf803caeba41488a41a0ac"
                                         }
                                     ],
-                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
-                        "reviewedAtUtc":  "2026-08-13T10:22:39.5805252Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:56.2816031Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -299,13 +295,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "aec2f5aeccc0ab970c725865bc7799d61c89dc1109263666003b137b89818545"
+                                            "sha256":  "2b9f748a2fc1178debb3b8023c7882565c8d37322f81c0bc445ddaadda4d5315"
                                         }
                                     ],
-                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
-                        "reviewedAtUtc":  "2026-08-13T10:22:40.1708219Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:56.9478743Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -807,13 +803,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "62fbf5e7e31994fc04ff08e641714f51b295961d2441f0d53c0c81c27cc3c1dc"
+                                            "sha256":  "1309abc6567278dd7145cd6e75efefcd895f9033ace904ad49432039d1bd25fc"
                                         }
                                     ],
-                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
-                        "reviewedAtUtc":  "2026-08-13T10:22:40.7441650Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:58.1505288Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -856,13 +852,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "0a51cc624d4797b4c08697353bfc949e2224b149325ef71bcb915d0be9675282"
+                                            "sha256":  "0afcf65bd74daefbce062a73ec03882d1140f0d6fd729bf5947c96e2f6d63b97"
                                         }
                                     ],
-                        "reason":  "Images application capability extracted into its own project without HTTP contract changes",
+                        "reason":  "AI application capability extracted into its own project; pre-commit now clears safe repository artifact outputs",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ec2794cdd4b1dae2633a20106b363885143f069e",
-                        "reviewedAtUtc":  "2026-08-13T10:22:41.3733554Z"
+                        "gitHead":  "b67731a6a9cb864f558bbdd6d03702e16d3b4911",
+                        "reviewedAtUtc":  "2026-08-13T10:45:58.7880056Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

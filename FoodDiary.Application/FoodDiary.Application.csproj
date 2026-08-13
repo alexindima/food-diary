@@ -10,6 +10,7 @@
     <ProjectReference Include="..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\Shared\FoodDiary.Mediator\FoodDiary.Mediator.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Images\FoodDiary.Application.Images.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.Ai\FoodDiary.Application.Ai.csproj" />
   </ItemGroup>
 
   <ItemGroup>

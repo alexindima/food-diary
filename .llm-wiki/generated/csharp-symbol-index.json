@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3175,
-                    "symbols":  3198,
+                    "sourceFiles":  3177,
+                    "symbols":  3199,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1621,
+                                  "class":  1622,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1162,
+                                  "Other":  1163,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -4414,6 +4414,174 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/WeightEntries/Models/WeightEntrySummaryModel.cs",
                         "line":  2
+                    },
+                    {
+                        "name":  "AnalyzeFoodImageCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "AnalyzeFoodImageCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+                        "line":  13
+                    },
+                    {
+                        "name":  "AnalyzeFoodImageCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "CalculateFoodNutritionCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "CalculateFoodNutritionCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+                        "line":  11
+                    },
+                    {
+                        "name":  "CalculateFoodNutritionCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "ParseFoodTextCommand",
+                        "kind":  "record",
+                        "role":  "Command",
+                        "path":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "ParseFoodTextCommandHandler",
+                        "kind":  "class",
+                        "role":  "CommandHandler",
+                        "path":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "ParseFoodTextCommandValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "AiUserContext",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Ai/Common/AiUserContext.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "IAiAdministrationReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IAiPromptAdministrationService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IAiUserContextService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Common/IAiUserContextService.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "IUserAiUsageSummaryReadService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Ai/DependencyInjection.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "GetUserAiUsageSummaryQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "GetUserAiUsageSummaryQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "GetUserAiUsageSummaryQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "AiAdministrationReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "AiPromptAdministrationService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Services/AiPromptAdministrationService.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "AiUserContextService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Services/AiUserContextService.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "ApplicationAiTelemetry",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Ai/Services/ApplicationAiTelemetry.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "OpenAiFoodService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
+                        "line":  10
+                    },
+                    {
+                        "name":  "UserAiUsageSummaryReadService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
+                        "line":  8
                     },
                     {
                         "name":  "CreateCheckoutSessionCommand",
@@ -10268,167 +10436,6 @@
                         "line":  9
                     },
                     {
-                        "name":  "AnalyzeFoodImageCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "AnalyzeFoodImageCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-                        "line":  14
-                    },
-                    {
-                        "name":  "AnalyzeFoodImageCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "CalculateFoodNutritionCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "CalculateFoodNutritionCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
-                        "line":  11
-                    },
-                    {
-                        "name":  "CalculateFoodNutritionCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "ParseFoodTextCommand",
-                        "kind":  "record",
-                        "role":  "Command",
-                        "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "ParseFoodTextCommandHandler",
-                        "kind":  "class",
-                        "role":  "CommandHandler",
-                        "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "ParseFoodTextCommandValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "AiUserContext",
-                        "kind":  "record",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Ai/Common/AiUserContext.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "IAiAdministrationReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Common/IAiAdministrationReadService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IAiPromptAdministrationService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Common/IAiPromptAdministrationService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IAiUserContextService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Common/IAiUserContextService.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IUserAiUsageSummaryReadService",
-                        "kind":  "interface",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Common/IUserAiUsageSummaryReadService.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetUserAiUsageSummaryQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "GetUserAiUsageSummaryQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "GetUserAiUsageSummaryQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "AiAdministrationReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Services/AiAdministrationReadService.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "AiPromptAdministrationService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Services/AiPromptAdministrationService.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "AiUserContextService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Services/AiUserContextService.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "ApplicationAiTelemetry",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Ai/Services/ApplicationAiTelemetry.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "OpenAiFoodService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "UserAiUsageSummaryReadService",
-                        "kind":  "class",
-                        "role":  "Service",
-                        "path":  "FoodDiary.Application/Ai/Services/UserAiUsageSummaryReadService.cs",
-                        "line":  8
-                    },
-                    {
                         "name":  "CommandTransactionBehavior",
                         "kind":  "class",
                         "role":  "Other",
@@ -11231,7 +11238,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                        "line":  14
+                        "line":  12
                     },
                     {
                         "name":  "DependencyInjection",
@@ -11252,7 +11259,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                        "line":  6
+                        "line":  4
                     },
                     {
                         "name":  "DependencyInjection",
@@ -16320,7 +16327,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  362
+                        "line":  364
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16677,7 +16684,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  72
+                        "line":  74
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20464,7 +20471,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  33
+                        "line":  34
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -22563,16 +22570,16 @@
                                      },
                                      {
                                          "interface":  "IAiAdministrationReadService",
-                                         "interfacePath":  "FoodDiary.Application/Ai/Common/IAiAdministrationReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs",
                                          "implementation":  "AiAdministrationReadService",
-                                         "implementationPath":  "FoodDiary.Application/Ai/Services/AiAdministrationReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
                                          "interface":  "IAiPromptAdministrationService",
-                                         "interfacePath":  "FoodDiary.Application/Ai/Common/IAiPromptAdministrationService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs",
                                          "implementation":  "AiPromptAdministrationService",
-                                         "implementationPath":  "FoodDiary.Application/Ai/Services/AiPromptAdministrationService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Ai/Services/AiPromptAdministrationService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -22598,9 +22605,9 @@
                                      },
                                      {
                                          "interface":  "IAiUserContextService",
-                                         "interfacePath":  "FoodDiary.Application/Ai/Common/IAiUserContextService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Ai/Common/IAiUserContextService.cs",
                                          "implementation":  "AiUserContextService",
-                                         "implementationPath":  "FoodDiary.Application/Ai/Services/AiUserContextService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Ai/Services/AiUserContextService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23510,7 +23517,7 @@
                                          "interface":  "IOpenAiFoodService",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs",
                                          "implementation":  "OpenAiFoodService",
-                                         "implementationPath":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -23830,9 +23837,9 @@
                                      },
                                      {
                                          "interface":  "IUserAiUsageSummaryReadService",
-                                         "interfacePath":  "FoodDiary.Application/Ai/Common/IUserAiUsageSummaryReadService.cs",
+                                         "interfacePath":  "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs",
                                          "implementation":  "UserAiUsageSummaryReadService",
-                                         "implementationPath":  "FoodDiary.Application/Ai/Services/UserAiUsageSummaryReadService.cs",
+                                         "implementationPath":  "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24054,6 +24061,41 @@
                                      }
                                  ],
     "dependencyInjectionRegistrations":  [
+                                             {
+                                                 "service":  "IOpenAiFoodService",
+                                                 "implementation":  "OpenAiFoodService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Ai/DependencyInjection.cs",
+                                                 "line":  15
+                                             },
+                                             {
+                                                 "service":  "IAiUserContextService",
+                                                 "implementation":  "AiUserContextService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Ai/DependencyInjection.cs",
+                                                 "line":  16
+                                             },
+                                             {
+                                                 "service":  "IAiAdministrationReadService",
+                                                 "implementation":  "AiAdministrationReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Ai/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
+                                                 "service":  "IAiPromptAdministrationService",
+                                                 "implementation":  "AiPromptAdministrationService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Ai/DependencyInjection.cs",
+                                                 "line":  18
+                                             },
+                                             {
+                                                 "service":  "IUserAiUsageSummaryReadService",
+                                                 "implementation":  "UserAiUsageSummaryReadService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Ai/DependencyInjection.cs",
+                                                 "line":  19
+                                             },
                                              {
                                                  "service":  "IBillingOverviewReadService",
                                                  "implementation":  "BillingOverviewReadService",
@@ -24493,119 +24535,91 @@
                                                  "implementation":  "AdminAiUsageReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  17
+                                                 "line":  15
                                              },
                                              {
                                                  "service":  "IAdminAuditReadService",
                                                  "implementation":  "AdminAuditReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  18
+                                                 "line":  16
                                              },
                                              {
                                                  "service":  "IAdminBillingReadService",
                                                  "implementation":  "AdminBillingReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  19
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IAdminContentReadService",
                                                  "implementation":  "AdminContentReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  20
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IAdminDashboardReadService",
                                                  "implementation":  "AdminDashboardReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  21
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IAdminUserReadService",
                                                  "implementation":  "AdminUserReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  22
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IAdminUserLoginReadService",
                                                  "implementation":  "AdminUserLoginReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  23
-                                             },
-                                             {
-                                                 "service":  "IAiUserContextService",
-                                                 "implementation":  "AiUserContextService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  24
-                                             },
-                                             {
-                                                 "service":  "IAiAdministrationReadService",
-                                                 "implementation":  "AiAdministrationReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  25
-                                             },
-                                             {
-                                                 "service":  "IAiPromptAdministrationService",
-                                                 "implementation":  "AiPromptAdministrationService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  26
-                                             },
-                                             {
-                                                 "service":  "IUserAiUsageSummaryReadService",
-                                                 "implementation":  "UserAiUsageSummaryReadService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  27
+                                                 "line":  21
                                              },
                                              {
                                                  "service":  "IContentReportAdministrationService",
                                                  "implementation":  "ContentReportAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  28
+                                                 "line":  22
                                              },
                                              {
                                                  "service":  "IContentReportAdministrationReadService",
                                                  "implementation":  "ContentReportAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  29
+                                                 "line":  23
                                              },
                                              {
                                                  "service":  "IDailyAdviceReadService",
                                                  "implementation":  "DailyAdviceReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  30
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "ILessonReadService",
                                                  "implementation":  "LessonReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  31
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "ILessonAdministrationService",
                                                  "implementation":  "LessonAdministrationService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  32
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "ILessonAdministrationReadService",
                                                  "implementation":  "LessonAdministrationReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Administration.cs",
-                                                 "line":  33
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IPostCommitActionQueue",
@@ -24704,13 +24718,6 @@
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
                                                  "line":  35
-                                             },
-                                             {
-                                                 "service":  "IOpenAiFoodService",
-                                                 "implementation":  "OpenAiFoodService",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                                                 "line":  9
                                              },
                                              {
                                                  "service":  "IDashboardStatisticsReadService",
@@ -25424,14 +25431,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  92
+                                                 "line":  94
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  93
+                                                 "line":  95
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25522,7 +25529,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  64
+                                                 "line":  66
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25578,35 +25585,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  44
+                                                 "line":  45
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  72
+                                                 "line":  74
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  73
+                                                 "line":  75
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  74
+                                                 "line":  76
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  97
+                                                 "line":  99
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

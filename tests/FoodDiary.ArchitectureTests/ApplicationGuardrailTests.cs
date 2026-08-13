@@ -12,6 +12,7 @@ public sealed class ApplicationGuardrailTests {
         const string relativeProjectPath = "FoodDiary.Application/FoodDiary.Application.csproj";
         string[] allowedProjectReferences = [
             "FoodDiary.Application.Abstractions",
+            "FoodDiary.Application.Ai",
             "FoodDiary.Application.Cycles",
             "FoodDiary.Application.Exercises",
             "FoodDiary.Application.Hydration",
@@ -1178,7 +1179,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Ai", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Ai", "Commands", "ParseFoodText", "ParseFoodTextCommandHandler.cs"),
             Path.Combine(applicationRoot, "Consumptions", "Commands", "DeleteConsumption", "DeleteConsumptionCommandHandler.cs"),
             Path.Combine(applicationRoot, "Consumptions", "Queries", "GetConsumptionById", "GetConsumptionByIdQueryHandler.cs"),
             Path.Combine(applicationRoot, "ContentReports", "Commands", "CreateContentReport", "CreateContentReportCommandHandler.cs"),
@@ -3092,7 +3093,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         (string SliceRoot, string AllowedRelativePath)[] slices = [
-            (Path.Combine(applicationRoot, "Ai"), Path.Combine("Services", "AiUserContextService.cs")),
+            (Path.Combine(root, "FoodDiary.Application.Ai"), Path.Combine("Services", "AiUserContextService.cs")),
             (Path.Combine(applicationRoot, "Dashboard"), Path.Combine("Services", "DashboardUserContextService.cs")),
             (Path.Combine(applicationRoot, "Gamification"), Path.Combine("Services", "GamificationUserProfileService.cs")),
             (Path.Combine(root, "FoodDiary.Application.Hydration"), Path.Combine("Services", "HydrationGoalService.cs")),

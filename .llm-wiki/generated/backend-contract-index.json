@@ -886,7 +886,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+                                                  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -1238,7 +1238,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+                                                  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -5510,7 +5510,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+                                                  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -6422,7 +6422,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Ai/Common/IAiAdministrationReadService.cs"
+                                                  "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -6438,7 +6438,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Ai/Common/IAiPromptAdministrationService.cs"
+                                                  "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -6582,7 +6582,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                  "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -11946,7 +11946,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Ai/Common/IUserAiUsageSummaryReadService.cs"
+                                                  "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -13659,7 +13659,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+                                                  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -19490,10 +19490,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -19503,10 +19503,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -19516,7 +19516,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -19529,7 +19529,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
@@ -19542,7 +19542,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs",
@@ -19555,7 +19555,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs",
@@ -20777,10 +20777,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -20790,10 +20790,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -20803,7 +20803,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -20816,7 +20816,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
@@ -20829,7 +20829,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs",
@@ -20842,7 +20842,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs",
@@ -38236,10 +38236,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+                                                      "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -38249,10 +38249,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+                                                      "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -38262,7 +38262,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+                                                      "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -38275,7 +38275,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+                                                      "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
@@ -38288,7 +38288,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
+                                                      "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs",
@@ -41915,7 +41915,33 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiAdministrationReadService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/DependencyInjection.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAiAdministrationReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAiAdministrationReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Services/AdminAiUsageReadService.cs",
@@ -41928,7 +41954,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiAdministrationReadService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiAdministrationReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Services/AdminContentReadService.cs",
@@ -41936,28 +41962,15 @@
                               "referenceCount":  1
                           },
                           {
-                              "contract":  "IAiAdministrationReadService",
+                              "contract":  "IAiPromptAdministrationService",
                               "roles":  [
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiAdministrationReadService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/AiAdministrationReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IAiAdministrationReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiAdministrationReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Administration.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -41967,36 +41980,23 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiPromptAdministrationService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/AiPromptAdministrationService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IAiPromptAdministrationService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Ai/Common/IAiPromptAdministrationService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Commands/UpsertAdminAiPrompt/UpsertAdminAiPromptCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IAiPromptAdministrationService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiPromptAdministrationService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/AiPromptAdministrationService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IAiPromptAdministrationService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiPromptAdministrationService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Administration.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42009,7 +42009,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptProvider.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42087,7 +42087,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/AiAdministrationReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42334,7 +42334,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/AiPromptAdministrationService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/AiPromptAdministrationService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42412,7 +42412,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/AiAdministrationReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/AiAdministrationReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42425,7 +42425,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageReadRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/UserAiUsageSummaryReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42607,7 +42607,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IAiUsageWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42630,10 +42630,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42643,10 +42643,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42656,10 +42656,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42669,10 +42669,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/AiUserContextService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42682,10 +42682,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/AiUserContextService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42695,10 +42695,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/UserAiUsageSummaryReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42708,10 +42708,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Administration.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -42721,7 +42721,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
@@ -42734,7 +42734,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IAiUserContextService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IAiUserContextService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/OpenAiFoodServiceTests.cs",
@@ -45649,6 +45649,45 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47131,45 +47170,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47420,6 +47420,45 @@
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Common/CommonAbstractionsTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
                           },
                           {
                               "contract":  "ICommandHandler",
@@ -48912,45 +48951,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Commands/CreateConsumption/CreateConsumptionCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -49849,6 +49849,19 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Abstractions/Users/Common/IUserBillingService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -51552,19 +51565,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62120,6 +62120,19 @@
                                                       "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IImageAssetAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Images/Common/ImageAssetResolver.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -62160,19 +62173,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Commands/UpdateUser/UpdateUserCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IImageAssetAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Images/Common/IImageAssetAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70036,7 +70036,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodClient.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70101,7 +70101,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70114,7 +70114,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/CalculateFoodNutrition/CalculateFoodNutritionCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70127,7 +70127,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70140,7 +70140,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70153,7 +70153,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/IOpenAiFoodService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72441,6 +72441,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.BodyMetrics/WaistEntries/Queries/GetLatestWaistEntry/GetLatestWaistEntryQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73520,19 +73533,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Consumptions/Queries/GetConsumptionById/GetConsumptionByIdQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73899,6 +73899,19 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Behaviors/BehaviorTests.cs",
                               "isTest":  true,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+                              "isTest":  false,
                               "referenceCount":  1
                           },
                           {
@@ -74977,19 +74990,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Admin/Queries/GetCollaborationAudit/GetCollaborationAuditQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -84921,6 +84921,19 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/AiUserContextService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserAiProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Common/UserContextService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -84947,19 +84960,6 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/AiUserContextService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserAiProfileReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserAiProfileReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
@@ -84970,10 +84970,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IUserAiUsageSummaryReadService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -84983,10 +84983,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IUserAiUsageSummaryReadService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/UserAiUsageSummaryReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Queries/GetUserAiUsageSummary/GetUserAiUsageSummaryQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -84996,10 +84996,10 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IUserAiUsageSummaryReadService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Administration.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/UserAiUsageSummaryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -85009,7 +85009,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Common/IUserAiUsageSummaryReadService.cs"
+                                                      "FoodDiary.Application.Ai/Common/IUserAiUsageSummaryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
@@ -87274,6 +87274,19 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.BodyMetrics/WaistEntries/Commands/CreateWaistEntry/CreateWaistEntryCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -89004,19 +89017,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Wearables/Wearables/Queries/GetWearableDailySummary/GetWearableDailySummaryQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -95347,7 +95347,7 @@
                                                       "FoodDiary.Application.Abstractions/Ai/Common/OpenAiFoodClientResponse.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Services/OpenAiFoodService.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
                               "isTest":  false,
                               "referenceCount":  4
                           },
@@ -96839,10 +96839,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -96852,10 +96852,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -96865,7 +96865,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Ai/Mappings/AiHttpMappings.cs",
@@ -96878,7 +96878,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/AiValidatorsTests.cs",
@@ -96891,7 +96891,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Ai/ParseFoodTextValidatorTests.cs",
@@ -96904,7 +96904,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs",
@@ -96917,7 +96917,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
+                                                      "FoodDiary.Application.Ai/Commands/ParseFoodText/ParseFoodTextCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AiHttpMappingsTests.cs",

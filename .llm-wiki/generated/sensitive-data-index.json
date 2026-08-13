@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  67
+                       "line":  68
                    },
                    {
                        "category":  "credential",
@@ -8286,6 +8286,13 @@
                    },
                    {
                        "category":  "privateContent",
+                       "name":  "ImageAssetId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
+                       "line":  7
+                   },
+                   {
+                       "category":  "privateContent",
                        "name":  "Notes",
                        "type":  "string?",
                        "path":  "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
@@ -8472,13 +8479,6 @@
                        "type":  "Guid?",
                        "path":  "FoodDiary.Application/Admin/Models/AdminUserModel.cs",
                        "line":  37
-                   },
-                   {
-                       "category":  "privateContent",
-                       "name":  "ImageAssetId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Ai/Commands/AnalyzeFoodImage/AnalyzeFoodImageCommand.cs",
-                       "line":  7
                    },
                    {
                        "category":  "privateContent",

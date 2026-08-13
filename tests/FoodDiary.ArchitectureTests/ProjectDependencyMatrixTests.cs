@@ -7,6 +7,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Analyzers"] = [],
             ["FoodDiary.Application"] = [
                 "FoodDiary.Application.Abstractions",
+                "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Cycles",
                 "FoodDiary.Application.Exercises",
                 "FoodDiary.Application.Hydration",
@@ -17,6 +18,11 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Mediator",
             ],
             ["FoodDiary.Application.Billing"] = [
+                "FoodDiary.Application.Abstractions",
+                "FoodDiary.Domain",
+                "FoodDiary.Mediator",
+            ],
+            ["FoodDiary.Application.Ai"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Domain",
                 "FoodDiary.Mediator",
@@ -122,6 +128,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Initializer"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.BodyMetrics",
                 "FoodDiary.Application.Cycles",
@@ -150,6 +157,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.JobManager"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.BodyMetrics",
                 "FoodDiary.Application.Cycles",
@@ -224,6 +232,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Mediator"] = [],
             ["FoodDiary.Presentation.Api"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.BodyMetrics",
                 "FoodDiary.Application.Cycles",
@@ -251,6 +260,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Telegram.Bot"] = [],
             ["FoodDiary.Web.Api"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.BodyMetrics",
                 "FoodDiary.Application.Cycles",
@@ -283,6 +293,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Application.Tests"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.BodyMetrics",
                 "FoodDiary.Application.Cycles",
@@ -420,6 +431,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Presentation.Api.Tests"] = [
                 "FoodDiary.Application",
+                "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
                 "FoodDiary.Application.BodyMetrics",
                 "FoodDiary.Application.Cycles",

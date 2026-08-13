@@ -97,7 +97,7 @@ if [ -z "$WIKI_POWERSHELL" ]; then
   echo "PowerShell is required for nested .NET artifact cleanup."
   exit 1
 fi
-hook_run "Nested .NET artifact cleanup" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 || exit 1
+hook_run "Root and nested .NET artifact cleanup" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -IncludeRoot || exit 1
 
 if [ -n "$WIKI_INDEX_INPUT_FILES" ]; then
   if [ -z "$WIKI_POWERSHELL" ]; then

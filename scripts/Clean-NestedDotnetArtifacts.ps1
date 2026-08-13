@@ -1,5 +1,7 @@
 [CmdletBinding()]
-param()
+param(
+    [switch] $IncludeRoot
+)
 
 $ErrorActionPreference = 'Stop'
 
@@ -21,6 +23,17 @@ foreach ($directory in $nestedArtifacts) {
     }
 
     [IO.Directory]::Delete($path, $true)
+}
+
+if ($IncludeRoot -and [IO.Directory]::Exists($rootArtifacts)) {
+    $resolvedRootArtifacts = [IO.Path]::GetFullPath($rootArtifacts)
+    $expectedRootArtifacts = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts'))
+    if ($resolvedRootArtifacts -ne $expectedRootArtifacts) {
+        throw "Refusing to remove unsafe root artifact path: $resolvedRootArtifacts"
+    }
+
+    [IO.Directory]::Delete($resolvedRootArtifacts, $true)
+    Write-Output "Root .NET artifact directory removed."
 }
 
 $noun = if ($nestedArtifacts.Count -eq 1) { 'directory' } else { 'directories' }

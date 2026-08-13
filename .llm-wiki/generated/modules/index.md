@@ -12,14 +12,14 @@ sources:
 
 # Application Modules
 
-This index unifies 17 folder modules and 18 extracted application modules.
+This index unifies 16 folder modules and 19 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
 | Module | Role | Business deps | Contract deps | App consumers | Host consumers | Enforcement |
 | --- | --- | ---: | ---: | ---: | ---: | --- |
 | [Admin](admin.md) | orchestrator | 4 | 7 | 0 | 2 | graph-only |
-| [Ai](ai.md) | orchestrator | 0 | 3 | 1 | 2 | graph-only |
+| [Ai](ai.md) | orchestrator | 0 | 3 | 1 | 6 | project-reference-matrix |
 | [Billing](billing.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
 | [BodyMetrics](body-metrics.md) | aggregate-owner | 0 | 3 | 0 | 4 | project-reference-matrix |
 | [Consumptions](consumptions.md) | aggregate-owner | 2 | 8 | 6 | 1 | explicit-boundary-tests |

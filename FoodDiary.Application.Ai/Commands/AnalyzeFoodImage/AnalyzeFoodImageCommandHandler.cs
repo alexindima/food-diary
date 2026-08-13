@@ -6,7 +6,6 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Assets;
 
@@ -27,17 +26,14 @@ public sealed class AnalyzeFoodImageCommandHandler(
             return UserIdParser.ToFailure<FoodVisionModel>(userIdResult);
         }
 
-        Result<ImageAssetId> imageAssetIdResult = RequiredIdParser.Parse(
-            query.ImageAssetId,
-            nameof(query.ImageAssetId),
-            "Image asset id must not be empty.",
-            value => new ImageAssetId(value));
-        if (imageAssetIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<FoodVisionModel, ImageAssetId>(imageAssetIdResult);
+        if (query.ImageAssetId == Guid.Empty) {
+            return Result.Failure<FoodVisionModel>(Errors.Validation.Invalid(
+                nameof(query.ImageAssetId),
+                "Image asset id must not be empty."));
         }
 
         UserId userId = userIdResult.Value;
-        ImageAssetId imageAssetId = imageAssetIdResult.Value;
+        var imageAssetId = new ImageAssetId(query.ImageAssetId);
         Result<ImageAsset?> assetResult = await imageAssetAccessService
             .ResolveOptionalAsync(imageAssetId, userId, cancellationToken)
             .ConfigureAwait(false);

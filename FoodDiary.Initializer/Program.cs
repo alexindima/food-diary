@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using FoodDiary.Application;
+using FoodDiary.Application.Ai;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.BodyMetrics;
 using FoodDiary.Application.Cycles;
@@ -69,6 +70,7 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
 }
 
 builder.Services.AddApplication();
+builder.Services.AddAiModule();
 builder.Services.AddBodyMetricsModule();
 builder.Services.AddCyclesModule();
 builder.Services.AddHydrationModule();
