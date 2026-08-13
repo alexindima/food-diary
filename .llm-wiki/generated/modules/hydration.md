@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application, FoodDiary.Application.Dashboard, FoodDiary.Application.WeeklyCheckIn, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Application.WeeklyCheckIn, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -48,7 +48,7 @@ Source: `FoodDiary.Presentation.Api/Features/Hydration/HydrationEntriesControlle
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: HydrationEntry
 - Public contract files: 7
-- Observed external consumer groups: 7
+- Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

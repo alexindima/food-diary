@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\FoodDiary.Application\FoodDiary.Application.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Application.Billing\FoodDiary.Application.Billing.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Domain\FoodDiary.Domain.csproj" />
     <ProjectReference Include="..\..\FoodDiary.Presentation.Api\FoodDiary.Presentation.Api.csproj" />

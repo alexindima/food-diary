@@ -15,7 +15,7 @@ public sealed class MarketingModuleExtractionTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedMarketingAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application/FoodDiary.Application.csproj");
+            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.Marketing", references, StringComparer.Ordinal);
     }

@@ -8,30 +8,14 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ApplicationGuardrailTests {
     [Fact]
-    public void ApplicationProject_StaysDependencyLightweight() {
-        const string relativeProjectPath = "FoodDiary.Application/FoodDiary.Application.csproj";
+    public void ApplicationRuntimeProject_StaysDependencyLightweight() {
+        const string relativeProjectPath = "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj";
         string[] allowedProjectReferences = [
             "FoodDiary.Application.Abstractions",
-            "FoodDiary.Application.Ai",
-            "FoodDiary.Application.ContentReports",
-            "FoodDiary.Application.Cycles",
-            "FoodDiary.Application.DailyAdvices",
-            "FoodDiary.Application.Exercises",
-            "FoodDiary.Application.Gamification",
-            "FoodDiary.Application.Hydration",
-            "FoodDiary.Application.Images",
-            "FoodDiary.Application.Lessons",
-            "FoodDiary.Application.Meals",
-            "FoodDiary.Application.OpenFoodFacts",
-            "FoodDiary.Application.Statistics",
-            "FoodDiary.Application.Tdee",
-            "FoodDiary.Application.Usda",
-            "FoodDiary.Domain",
             "FoodDiary.Mediator",
         ];
         string[] allowedPackageReferences = [
             "FluentValidation",
-            "FluentValidation.DependencyInjectionExtensions",
             "Microsoft.Extensions.DependencyInjection.Abstractions",
             "Microsoft.Extensions.Logging.Abstractions",
         ];
@@ -145,9 +129,11 @@ public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationFeatures_DoNotUseLegacyCommandsCommonFolders() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        string[] violations = [.. Directory.GetDirectories(applicationRoot, "Common", SearchOption.AllDirectories)
+        string[] violations = [.. Directory.GetDirectories(root, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
+            .Where(path => !path.EndsWith(".Abstractions", StringComparison.Ordinal))
+            .Where(path => !path.EndsWith(".Runtime", StringComparison.Ordinal))
+            .SelectMany(path => Directory.GetDirectories(path, "Common", SearchOption.AllDirectories))
             .Where(path => path.EndsWith(
                 $"{Path.DirectorySeparatorChar}Commands{Path.DirectorySeparatorChar}Common",
                 StringComparison.OrdinalIgnoreCase))
@@ -158,40 +144,9 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationFeatureFolders_StayLimitedToUseCasePurposeFolders() {
+    public void ApplicationRuntimeSourceFiles_AreKeptOutOfProjectRootExceptCompositionFiles() {
         string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        var excludedFeatureFolders = new HashSet<string>(StringComparer.Ordinal) {
-            "bin",
-            "Common",
-            "obj",
-        };
-        var allowedPurposeFolders = new HashSet<string>(StringComparer.Ordinal) {
-            "Commands",
-            "Common",
-            "EventHandlers",
-            "Mappings",
-            "Models",
-            "Queries",
-            "SearchSuggestions",
-            "Services",
-            "Validators",
-        };
-
-        string[] violations = [.. Directory.GetDirectories(applicationRoot)
-            .Where(featurePath => !excludedFeatureFolders.Contains(Path.GetFileName(featurePath)))
-            .SelectMany(featurePath => Directory.GetDirectories(featurePath)
-                .Where(purposePath => !allowedPurposeFolders.Contains(Path.GetFileName(purposePath))))
-            .Select(path => Path.GetRelativePath(root, path))
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void ApplicationSourceFiles_AreKeptOutOfProjectRootExceptCompositionFiles() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application.Runtime");
         string[] violations = [.. Directory.GetFiles(applicationRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Where(path => !string.Equals(Path.GetFileName(path), "AssemblyInfo.cs", StringComparison.Ordinal))
             .Where(path => !Path.GetFileName(path).StartsWith("DependencyInjection", StringComparison.Ordinal))
@@ -202,17 +157,16 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationRootCommon_StaysLimitedToTechnicalApplicationPrimitives() {
+    public void ApplicationRuntimeCommon_StaysLimitedToTechnicalApplicationPrimitives() {
         string root = GetRepositoryRoot();
-        string commonRoot = Path.Combine(root, "FoodDiary.Application", "Common");
+        string commonRoot = Path.Combine(root, "FoodDiary.Application.Runtime", "Common");
         string[] allowedDirectories = [
             "Behaviors",
             "Services",
-            "Time",
-            "Validation",
         ];
 
         string?[] actualDirectories = [.. Directory.GetDirectories(commonRoot)
+            .Where(path => Directory.EnumerateFiles(path, "*.cs", SearchOption.AllDirectories).Any())
             .Select(Path.GetFileName)
             .Order(StringComparer.Ordinal)];
 
@@ -395,24 +349,6 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationCommonValidation_StaysLimitedToSharedLowLevelParsers() {
-        string root = GetRepositoryRoot();
-        string validationRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Validation");
-        string[] allowedFiles = [
-            "EnumFilterParser.cs",
-            "EnumValueParser.cs",
-            "OptionalEntityIdValidator.cs",
-            "RequiredIdParser.cs",
-        ];
-
-        string?[] actualFiles = [.. Directory.GetFiles(validationRoot, "*.cs", SearchOption.TopDirectoryOnly)
-            .Select(Path.GetFileName)
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Equal(allowedFiles, actualFiles);
-    }
-
-    [Fact]
     public void UserIdParser_LivesInApplicationAbstractions() {
         string root = GetRepositoryRoot();
         string parserPath = Path.Combine(
@@ -434,21 +370,6 @@ public sealed class ApplicationGuardrailTests {
         ];
 
         string?[] actualFiles = [.. Directory.GetFiles(modelsRoot, "*.cs", SearchOption.TopDirectoryOnly)
-            .Select(Path.GetFileName)
-            .Order(StringComparer.Ordinal)];
-
-        Assert.Equal(allowedFiles, actualFiles);
-    }
-
-    [Fact]
-    public void ApplicationCommonTime_StaysLimitedToSharedRequestTimeNormalization() {
-        string root = GetRepositoryRoot();
-        string timeRoot = Path.Combine(root, "FoodDiary.Application", "Common", "Time");
-        string[] allowedFiles = [
-            "UtcDateNormalizer.cs",
-        ];
-
-        string?[] actualFiles = [.. Directory.GetFiles(timeRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
             .Order(StringComparer.Ordinal)];
 

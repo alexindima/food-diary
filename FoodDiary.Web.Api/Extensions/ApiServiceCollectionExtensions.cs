@@ -1,4 +1,4 @@
-using FoodDiary.Application;
+using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Admin;
 using FoodDiary.Application.Ai;
 using FoodDiary.Application.Billing;
@@ -63,7 +63,7 @@ public static class ApiServiceCollectionExtensions {
         }
         private IServiceCollection AddApplicationModules(IConfiguration configuration, IHostEnvironment? environment) {
             return services
-                .AddApplication()
+                .AddApplicationRuntime()
                 .AddAdminModule()
                 .AddAiModule()
                 .AddBodyMetricsModule()

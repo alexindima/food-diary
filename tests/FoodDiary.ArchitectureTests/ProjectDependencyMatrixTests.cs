@@ -5,23 +5,8 @@ public sealed class ProjectDependencyMatrixTests {
     private static readonly IReadOnlyDictionary<string, string[]> AllowedProductionProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
             ["FoodDiary.Analyzers"] = [],
-            ["FoodDiary.Application"] = [
+            ["FoodDiary.Application.Runtime"] = [
                 "FoodDiary.Application.Abstractions",
-                "FoodDiary.Application.Ai",
-                "FoodDiary.Application.ContentReports",
-                "FoodDiary.Application.Cycles",
-                "FoodDiary.Application.DailyAdvices",
-                "FoodDiary.Application.Exercises",
-                "FoodDiary.Application.Gamification",
-                "FoodDiary.Application.Hydration",
-                "FoodDiary.Application.Images",
-                "FoodDiary.Application.Lessons",
-                "FoodDiary.Application.Meals",
-                "FoodDiary.Application.OpenFoodFacts",
-                "FoodDiary.Application.Statistics",
-                "FoodDiary.Application.Tdee",
-                "FoodDiary.Application.Usda",
-                "FoodDiary.Domain",
                 "FoodDiary.Mediator",
             ],
             ["FoodDiary.Application.Admin"] = [
@@ -227,7 +212,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Mediator",
             ],
             ["FoodDiary.Initializer"] = [
-                "FoodDiary.Application",
+                "FoodDiary.Application.Runtime",
                 "FoodDiary.Application.Admin",
                 "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
@@ -270,7 +255,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.MailRelay.Client",
             ],
             ["FoodDiary.JobManager"] = [
-                "FoodDiary.Application",
+                "FoodDiary.Application.Runtime",
                 "FoodDiary.Application.Admin",
                 "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
@@ -359,7 +344,6 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Mediator"] = [],
             ["FoodDiary.Presentation.Api"] = [
-                "FoodDiary.Application",
                 "FoodDiary.Application.Admin",
                 "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
@@ -401,7 +385,7 @@ public sealed class ProjectDependencyMatrixTests {
             ["FoodDiary.Results"] = [],
             ["FoodDiary.Telegram.Bot"] = [],
             ["FoodDiary.Web.Api"] = [
-                "FoodDiary.Application",
+                "FoodDiary.Application.Runtime",
                 "FoodDiary.Application.Admin",
                 "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
@@ -448,7 +432,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Analyzers",
             ],
             ["FoodDiary.Application.Tests"] = [
-                "FoodDiary.Application",
+                "FoodDiary.Application.Runtime",
                 "FoodDiary.Application.Admin",
                 "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
@@ -495,14 +479,12 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Domain",
             ],
             ["FoodDiary.Infrastructure.IntegrationTests"] = [
-                "FoodDiary.Application",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Initializer",
                 "FoodDiary.Integrations",
                 "FoodDiary.Testing",
             ],
             ["FoodDiary.Infrastructure.Tests"] = [
-                "FoodDiary.Application",
                 "FoodDiary.Application.BodyMetrics",
                 "FoodDiary.Application.Cycles",
                 "FoodDiary.Application.Dietologist",
@@ -601,7 +583,6 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Mediator",
             ],
             ["FoodDiary.Presentation.Api.Tests"] = [
-                "FoodDiary.Application",
                 "FoodDiary.Application.Admin",
                 "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",

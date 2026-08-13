@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Dashboard, Users, WeightEntries
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application, FoodDiary.Application.Dashboard, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -42,7 +42,7 @@ Source: `FoodDiary.Presentation.Api/Features/Tdee/TdeeController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 0
-- Observed external consumer groups: 6
+- Observed external consumer groups: 5
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

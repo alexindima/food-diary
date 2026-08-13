@@ -12,7 +12,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Behaviors;
+using FoodDiary.Application.Runtime.Common.Behaviors;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -31,7 +31,7 @@ public class CommonAbstractionsTests {
     public void ApplicationLayer_UsesCentralErrorCatalog_ExceptValidationBehavior() {
         string applicationRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
-            "..", "..", "..", "..", "..", "FoodDiary.Application"));
+            "..", "..", "..", "..", "..", "FoodDiary.Application.Runtime"));
         var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
             Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "Errors.cs"),
             Path.Combine(applicationRoot, "Common", "Behaviors", "ValidationBehavior.cs"),
@@ -64,7 +64,7 @@ public class CommonAbstractionsTests {
     public void ApplicationLayer_StringErrorCodes_UseKnownCatalogCodes() {
         string applicationRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
-            "..", "..", "..", "..", "..", "FoodDiary.Application"));
+            "..", "..", "..", "..", "..", "FoodDiary.Application.Runtime"));
         var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
             Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "Errors.cs"),
             Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "ErrorKindResolver.cs"),

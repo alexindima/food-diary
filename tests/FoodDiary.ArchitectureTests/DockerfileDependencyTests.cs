@@ -5,11 +5,11 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class DockerfileDependencyTests {
     [Theory]
-    [InlineData(@"..\FoodDiary.Application\FoodDiary.Application.csproj")]
-    [InlineData("../FoodDiary.Application/FoodDiary.Application.csproj")]
+    [InlineData(@"..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj")]
+    [InlineData("../FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj")]
     public void ProjectReferencePaths_AreNormalizedForCurrentOperatingSystem(string projectReference) {
         string separator = Path.DirectorySeparatorChar.ToString();
-        string expected = string.Join(separator, "..", "FoodDiary.Application", "FoodDiary.Application.csproj");
+        string expected = string.Join(separator, "..", "FoodDiary.Application.Runtime", "FoodDiary.Application.Runtime.csproj");
 
         Assert.Equal(expected, NormalizeProjectReferencePath(projectReference));
     }

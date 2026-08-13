@@ -23,7 +23,6 @@ public sealed class JobManagerGuardrailTests {
     public void JobManagerProject_ReferencesOnlyApprovedRuntimeModulesAndSchedulerPackages() {
         const string relativeProjectPath = "FoodDiary.JobManager/FoodDiary.JobManager.csproj";
         string[] expectedProjectReferences = [
-            "FoodDiary.Application",
             "FoodDiary.Application.Admin",
             "FoodDiary.Application.Ai",
             "FoodDiary.Application.Billing",
@@ -50,6 +49,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application.Products",
             "FoodDiary.Application.RecipeCommunity",
             "FoodDiary.Application.Recipes",
+            "FoodDiary.Application.Runtime",
             "FoodDiary.Application.Statistics",
             "FoodDiary.Application.Tdee",
             "FoodDiary.Application.Usda",

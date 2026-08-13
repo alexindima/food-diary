@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Common.Behaviors;
+namespace FoodDiary.Application.Runtime.Common.Behaviors;
 
 internal sealed class CommandTransactionBehavior<TRequest, TResponse>(
     IUnitOfWork unitOfWork,

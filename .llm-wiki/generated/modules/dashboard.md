@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `FoodDiary.Application.Dashboard/FoodDiary.Application.Dashboard.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: none observed
+- Abstraction-contract dependencies: Audit, Authentication, Dietologist, Fasting, Users, WaistEntries, WeightEntries
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -25,6 +25,7 @@ sources:
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Dashboard`
+- `FoodDiary.Application.Dashboard`
 - `FoodDiary.Infrastructure/Persistence/Dashboard`
 - `FoodDiary.Presentation.Api/Features/Dashboard`
 
@@ -41,8 +42,8 @@ Source: `FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs`
 ## Boundary Health
 
 - Role: read-composer
-- Physical isolation: folder
-- Architecture guardrails: explicit-boundary-tests
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
 - Public contract files: 17
 - Observed external consumer groups: 4

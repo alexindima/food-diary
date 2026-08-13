@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FoodDiary.Application\FoodDiary.Application.csproj" />
+    <ProjectReference Include="..\FoodDiary.Application.Runtime\FoodDiary.Application.Runtime.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Products\FoodDiary.Application.Products.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Recipes\FoodDiary.Application.Recipes.csproj" />
     <ProjectReference Include="..\FoodDiary.Application.Dietologist\FoodDiary.Application.Dietologist.csproj" />

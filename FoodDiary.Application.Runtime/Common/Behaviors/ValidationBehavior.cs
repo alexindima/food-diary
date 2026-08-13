@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Mediator;
 
-namespace FoodDiary.Application.Common.Behaviors;
+namespace FoodDiary.Application.Runtime.Common.Behaviors;
 
 public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>

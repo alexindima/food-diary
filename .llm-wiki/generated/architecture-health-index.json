@@ -1,18 +1,18 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "productionProjectEdges":  319,
+                    "productionProjectEdges":  303,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
                     "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
-                    "backendBusinessModules":  34,
+                    "backendBusinessModules":  33,
                     "moduleHotspotReviewCandidates":  0,
                     "ambiguousBackendContracts":  3,
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  149,
                     "componentsWithoutDirectSpecs":  126,
-                    "criticalSymbolsWithoutTestReferences":  29,
+                    "criticalSymbolsWithoutTestReferences":  32,
                     "explicitDebtMarkers":  3
                 },
     "projectDependencyViolations":  [
@@ -219,13 +219,6 @@
                            },
                            {
                                "module":  "Notifications",
-                               "fanIn":  0,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "RecentItems",
                                "fanIn":  0,
                                "fanOut":  0,
                                "level":  "informational",
@@ -5631,6 +5624,36 @@
                                                      "role":  "Validator",
                                                      "path":  "FoodDiary.Application.Meals/Common/Validators/MealAiSessionInputValidator.cs",
                                                      "line":  6,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "OptionalEntityIdValidator",
+                                                     "role":  "Validator",
+                                                     "path":  "FoodDiary.Application.Admin/Internal/Validation/OptionalEntityIdValidator.cs",
+                                                     "line":  5,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "OptionalEntityIdValidator",
+                                                     "role":  "Validator",
+                                                     "path":  "FoodDiary.Application.MealPlanning/Common/Validation/OptionalEntityIdValidator.cs",
+                                                     "line":  5,
+                                                     "testReferenceCount":  0,
+                                                     "testReferences":  [
+
+                                                                        ]
+                                                 },
+                                                 {
+                                                     "name":  "OptionalEntityIdValidator",
+                                                     "role":  "Validator",
+                                                     "path":  "FoodDiary.Application.Meals/Common/Validation/OptionalEntityIdValidator.cs",
+                                                     "line":  5,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 

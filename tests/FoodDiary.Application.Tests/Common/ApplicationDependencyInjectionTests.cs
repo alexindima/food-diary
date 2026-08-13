@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Common.Behaviors;
-using FoodDiary.Application.Common.Services;
+using FoodDiary.Application.Runtime.Common.Behaviors;
+using FoodDiary.Application.Runtime.Common.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dashboard;
 using FoodDiary.Application.Notifications.Services;
@@ -18,10 +18,10 @@ namespace FoodDiary.Application.Tests.Common;
 [ExcludeFromCodeCoverage]
 public sealed class ApplicationDependencyInjectionTests {
     [Fact]
-    public void AddApplication_RegistersCoreApplicationServices() {
+    public void AddApplicationRuntime_RegistersCoreApplicationServices() {
         var services = new ServiceCollection();
 
-        FoodDiary.Application.DependencyInjection.AddApplication(services);
+        FoodDiary.Application.Runtime.DependencyInjection.AddApplicationRuntime(services);
 
         Assert.Contains(services, ServiceDescriptorMatches<IPostCommitActionQueue, PostCommitActionQueue>(ServiceLifetime.Scoped));
         Assert.DoesNotContain(services, descriptor => descriptor.ServiceType == typeof(INotificationCleanupService));

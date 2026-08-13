@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using FoodDiary.Application;
+using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Admin;
 using FoodDiary.Application.Ai;
 using FoodDiary.Application.Billing;
@@ -83,7 +83,7 @@ if (string.IsNullOrWhiteSpace(builder.Configuration.GetConnectionString("Default
     return 1;
 }
 
-builder.Services.AddApplication();
+builder.Services.AddApplicationRuntime();
 builder.Services.AddAdminModule();
 builder.Services.AddAiModule();
 builder.Services.AddBodyMetricsModule();

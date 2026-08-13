@@ -460,6 +460,7 @@ $catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-c
 $modulePages = Get-ChildItem -LiteralPath (Join-Path $wikiRoot 'generated/modules') -File -Filter '*.md'
 Assert-Wiki ($catalog.extractedApplicationModules.Count -eq 2) 'Expected Billing and Marketing extracted application modules.'
 Assert-Wiki (@($catalog.extractedApplicationModules.name) -contains 'Billing') 'Billing is missing from extracted application modules.'
+Assert-Wiki (@($catalog.extractedApplicationModules.name) -notcontains 'Runtime') 'Application runtime must not be classified as a business module.'
 Assert-Wiki ($modulePages.Count -eq ($catalog.applicationModules.Count + $catalog.extractedApplicationModules.Count + 1)) 'Generated module-page count does not match catalog modules plus index.'
 
 $symbols = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json

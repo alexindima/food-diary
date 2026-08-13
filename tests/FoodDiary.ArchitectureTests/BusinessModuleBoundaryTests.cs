@@ -7,22 +7,17 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class BusinessModuleBoundaryTests {
     [Fact]
-    public void RootApplicationDependencyInjection_RemainsAModuleAggregator() {
+    public void ApplicationRuntimeDependencyInjection_StaysFreeOfFeatureModuleRegistration() {
         string dependencyInjectionPath = ArchitectureTestPaths.FromRoot(
-            "FoodDiary.Application",
+            "FoodDiary.Application.Runtime",
             "DependencyInjection.cs");
         string source = File.ReadAllText(dependencyInjectionPath);
-        string[] expectedModuleCalls = [
-            "services.AddCommunicationServices();",
-        ];
-
-        foreach (string expectedModuleCall in expectedModuleCalls) {
-            Assert.Contains(expectedModuleCall, source, StringComparison.Ordinal);
-        }
 
         Assert.DoesNotContain("using FoodDiary.Application.Admin", source, StringComparison.Ordinal);
         Assert.DoesNotContain("using FoodDiary.Application.Billing", source, StringComparison.Ordinal);
         Assert.DoesNotContain("using FoodDiary.Application.Notifications", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("AddValidatorsFromAssembly", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("RegisterServicesFromAssembly", source, StringComparison.Ordinal);
         Assert.Equal(1, source.Split("services.AddScoped<", StringSplitOptions.None).Length - 1);
         Assert.DoesNotContain("services.TryAddScoped<", source, StringComparison.Ordinal);
     }

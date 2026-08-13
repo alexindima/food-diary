@@ -1,4 +1,4 @@
-using FoodDiary.Application;
+using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Admin;
 using FoodDiary.Application.Ai;
 using FoodDiary.Application.Billing;
@@ -41,7 +41,7 @@ using System.Diagnostics.CodeAnalysis;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddApplication();
+builder.Services.AddApplicationRuntime();
 builder.Services.AddAdminModule();
 builder.Services.AddAiModule();
 builder.Services.AddBodyMetricsModule();

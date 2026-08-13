@@ -6,8 +6,8 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1432,
-                    "credential":  153,
+                    "candidateFields":  1431,
+                    "credential":  152,
                     "identity":  153,
                     "health":  630,
                     "financial":  199,
@@ -345,13 +345,6 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
                        "line":  8
-                   },
-                   {
-                       "category":  "credential",
-                       "name":  "CancellationToken",
-                       "type":  "int,",
-                       "path":  "FoodDiary.Application/RecentItems/Common/RecentItemOverviewLoader.cs",
-                       "line":  9
                    },
                    {
                        "category":  "credential",

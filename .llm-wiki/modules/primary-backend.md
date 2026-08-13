@@ -3,7 +3,7 @@ id: module.primary-backend
 kind: module
 status: current
 sources:
-  - FoodDiary.Application/AGENTS.md
+  - FoodDiary.Application.Runtime/AGENTS.md
   - FoodDiary.Application.Abstractions/AGENTS.md
   - FoodDiary.Domain/AGENTS.md
   - FoodDiary.Infrastructure/AGENTS.md
@@ -26,7 +26,8 @@ monolith. Read the scoped `AGENTS.md` for every project touched by a change.
 | --- | --- |
 | Domain behavior and invariants | `FoodDiary.Domain` |
 | Application-facing ports and models | `FoodDiary.Application.Abstractions` |
-| Core use cases | `FoodDiary.Application` |
+| Cross-cutting application execution pipeline | `FoodDiary.Application.Runtime` |
+| Business use cases | Owning `FoodDiary.Application.<Feature>` project |
 | Extracted billing use cases | `FoodDiary.Application.Billing` |
 | Extracted marketing use cases | `FoodDiary.Application.Marketing` |
 | EF Core and technical implementations | `FoodDiary.Infrastructure` |

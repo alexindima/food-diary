@@ -19,7 +19,7 @@ sources:
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Achievements, FavoriteMeals, Images, Nutrition, Products, RecentItems, Recipes, Users
 - Business-module consumers: none observed
-- Host/adapter consumers: FoodDiary.Application, FoodDiary.Application.Dashboard, FoodDiary.Application.Export, FoodDiary.Application.Gamification, FoodDiary.Application.Usda, FoodDiary.Application.WeeklyCheckIn, FoodDiary.Application.WeeklyGoals, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
+- Host/adapter consumers: FoodDiary.Application.Dashboard, FoodDiary.Application.Export, FoodDiary.Application.Gamification, FoodDiary.Application.Usda, FoodDiary.Application.WeeklyCheckIn, FoodDiary.Application.WeeklyGoals, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
@@ -52,7 +52,7 @@ Source: `FoodDiary.Presentation.Api/Features/Meals/MealsController.cs`
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: Meal, MealItem, MealAiSession, MealAiItem
 - Public contract files: 15
-- Observed external consumer groups: 11
+- Observed external consumer groups: 10
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Behaviors;
-using FoodDiary.Application.Common.Services;
+using FoodDiary.Application.Runtime.Common.Behaviors;
+using FoodDiary.Application.Runtime.Common.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 

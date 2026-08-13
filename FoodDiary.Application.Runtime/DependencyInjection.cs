@@ -1,29 +1,22 @@
-using System.Reflection;
-using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Common.Behaviors;
-using FoodDiary.Application.Common.Services;
+using FoodDiary.Application.Runtime.Common.Behaviors;
+using FoodDiary.Application.Runtime.Common.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FoodDiary.Application;
+namespace FoodDiary.Application.Runtime;
 
-public static partial class DependencyInjection {
-    public static IServiceCollection AddApplication(this IServiceCollection services) {
-        var assembly = Assembly.GetExecutingAssembly();
-
+public static class DependencyInjection {
+    public static IServiceCollection AddApplicationRuntime(this IServiceCollection services) {
         services.AddFoodDiaryMediator(cfg => {
-            cfg.RegisterServicesFromAssembly(assembly);
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
             cfg.AddOpenBehavior(typeof(CommandTransactionBehavior<,>));
         });
 
-        services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
         services.AddSingleton(TimeProvider.System);
 
-        services.AddCommunicationServices();
         return services;
     }
 }

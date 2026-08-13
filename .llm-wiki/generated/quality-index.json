@@ -5,10 +5,10 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4221,
-                    "criticalSymbols":  541,
-                    "criticalSymbolsWithTestReferences":  512,
-                    "criticalSymbolsWithoutTestReferences":  29,
+                    "productionFiles":  4214,
+                    "criticalSymbols":  540,
+                    "criticalSymbolsWithTestReferences":  508,
+                    "criticalSymbolsWithoutTestReferences":  32,
                     "debtMarkers":  3
                 },
     "hotspots":  [
@@ -6011,8 +6011,8 @@
                       "nonBlankLines":  13,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.26
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  7.26
                   },
                   {
                       "path":  "FoodDiary.Application.Admin/Internal/Validation/RequiredIdParser.cs",
@@ -11627,8 +11627,8 @@
                       "nonBlankLines":  13,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.26
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  7.26
                   },
                   {
                       "path":  "FoodDiary.Application.MealPlanning/Common/Validation/RequiredIdParser.cs",
@@ -12307,8 +12307,8 @@
                       "nonBlankLines":  10,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.2
+                      "unreferencedCriticalSymbols":  1,
+                      "structuralRiskScore":  7.2
                   },
                   {
                       "path":  "FoodDiary.Application.Meals/Common/Validation/RequiredIdParser.cs",
@@ -14127,6 +14127,54 @@
                       "structuralRiskScore":  18.28
                   },
                   {
+                      "path":  "FoodDiary.Application.Runtime/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
+                      "nonBlankLines":  27,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Runtime/Common/Behaviors/LoggingBehavior.cs",
+                      "nonBlankLines":  53,
+                      "decisionPoints":  3,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.56
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs",
+                      "nonBlankLines":  63,
+                      "decisionPoints":  7,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  11.76
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
+                      "nonBlankLines":  54,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  7.08
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Runtime/DependencyInjection.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.36
+                  },
+                  {
                       "path":  "FoodDiary.Application.Statistics/AssemblyInfo.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -15349,110 +15397,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  14.72
-                  },
-                  {
-                      "path":  "FoodDiary.Application/AssemblyInfo.cs",
-                      "nonBlankLines":  2,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
-                      "nonBlankLines":  27,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Behaviors/LoggingBehavior.cs",
-                      "nonBlankLines":  53,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.56
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Behaviors/ValidationBehavior.cs",
-                      "nonBlankLines":  63,
-                      "decisionPoints":  7,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  11.76
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Services/PostCommitActionQueue.cs",
-                      "nonBlankLines":  54,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.08
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Time/UtcDateNormalizer.cs",
-                      "nonBlankLines":  31,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  6.62
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Validation/EnumFilterParser.cs",
-                      "nonBlankLines":  16,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.32
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Validation/EnumValueParser.cs",
-                      "nonBlankLines":  38,
-                      "decisionPoints":  3,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.26
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Validation/OptionalEntityIdValidator.cs",
-                      "nonBlankLines":  19,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.38
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Common/Validation/RequiredIdParser.cs",
-                      "nonBlankLines":  24,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.48
-                  },
-                  {
-                      "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/DependencyInjection.cs",
-                      "nonBlankLines":  24,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.48
-                  },
-                  {
-                      "path":  "FoodDiary.Application/RecentItems/Common/RecentItemOverviewLoader.cs",
-                      "nonBlankLines":  22,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.94
                   },
                   {
                       "path":  "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -39601,10 +39545,9 @@
                                 "role":  "Validator",
                                 "path":  "FoodDiary.Application.Admin/Internal/Validation/OptionalEntityIdValidator.cs",
                                 "line":  5,
-                                "testReferenceCount":  2,
+                                "testReferenceCount":  0,
                                 "testReferences":  [
-                                                       "tests/FoodDiary.Application.Tests/Common/CommonValidationTests.cs",
-                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+
                                                    ]
                             },
                             {
@@ -39612,10 +39555,9 @@
                                 "role":  "Validator",
                                 "path":  "FoodDiary.Application.MealPlanning/Common/Validation/OptionalEntityIdValidator.cs",
                                 "line":  5,
-                                "testReferenceCount":  2,
+                                "testReferenceCount":  0,
                                 "testReferences":  [
-                                                       "tests/FoodDiary.Application.Tests/Common/CommonValidationTests.cs",
-                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+
                                                    ]
                             },
                             {
@@ -39623,21 +39565,9 @@
                                 "role":  "Validator",
                                 "path":  "FoodDiary.Application.Meals/Common/Validation/OptionalEntityIdValidator.cs",
                                 "line":  5,
-                                "testReferenceCount":  2,
+                                "testReferenceCount":  0,
                                 "testReferences":  [
-                                                       "tests/FoodDiary.Application.Tests/Common/CommonValidationTests.cs",
-                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
-                                                   ]
-                            },
-                            {
-                                "name":  "OptionalEntityIdValidator",
-                                "role":  "Validator",
-                                "path":  "FoodDiary.Application/Common/Validation/OptionalEntityIdValidator.cs",
-                                "line":  5,
-                                "testReferenceCount":  2,
-                                "testReferences":  [
-                                                       "tests/FoodDiary.Application.Tests/Common/CommonValidationTests.cs",
-                                                       "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs"
+
                                                    ]
                             },
                             {

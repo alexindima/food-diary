@@ -3,30 +3,6 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public class FeatureStructureTests {
     [Fact]
-    public void Application_Features_HaveCommandsOrQueriesFolders() {
-        string root = GetRepositoryRoot();
-        string applicationPath = Path.Combine(root, "FoodDiary.Application");
-        var excluded = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "bin", "obj", "Common" };
-
-        string[] featureDirectories = [.. Directory.GetDirectories(applicationPath)
-            .Select(Path.GetFileName)
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => name!)
-            .Where(name => !excluded.Contains(name))];
-
-        Assert.NotEmpty(featureDirectories);
-
-        foreach (string? feature in featureDirectories) {
-            string featurePath = Path.Combine(applicationPath, feature);
-            bool hasCommands = Directory.Exists(Path.Combine(featurePath, "Commands"));
-            bool hasQueries = Directory.Exists(Path.Combine(featurePath, "Queries"));
-            bool hasCommon = Directory.Exists(Path.Combine(featurePath, "Common"));
-            Assert.True(hasCommands || hasQueries || hasCommon,
-                $"Feature '{feature}' should contain Commands, Queries, and/or Common folder.");
-        }
-    }
-
-    [Fact]
     public void PresentationApi_FeatureFolders_ContainControllers() {
         string root = GetRepositoryRoot();
         string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
@@ -42,7 +18,7 @@ public class FeatureStructureTests {
 
     [Theory]
     [InlineData("FoodDiary.Application.Abstractions", "FoodDiary.Application.Abstractions")]
-    [InlineData("FoodDiary.Application", "FoodDiary.Application")]
+    [InlineData("FoodDiary.Application.Runtime", "FoodDiary.Application.Runtime")]
     [InlineData("FoodDiary.Domain", "FoodDiary.Domain")]
     [InlineData("FoodDiary.Infrastructure", "FoodDiary.Infrastructure")]
     [InlineData("FoodDiary.Integrations", "FoodDiary.Integrations")]

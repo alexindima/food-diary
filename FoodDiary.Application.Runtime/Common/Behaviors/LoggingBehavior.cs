@@ -4,7 +4,7 @@ using FoodDiary.Results;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging;
 
-namespace FoodDiary.Application.Common.Behaviors;
+namespace FoodDiary.Application.Runtime.Common.Behaviors;
 
 public sealed class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>

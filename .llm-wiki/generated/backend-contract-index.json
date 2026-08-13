@@ -70122,7 +70122,7 @@
                                                       "Shared/FoodDiary.Mediator/IPipelineBehavior.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70135,7 +70135,7 @@
                                                       "Shared/FoodDiary.Mediator/IPipelineBehavior.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Behaviors/LoggingBehavior.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Behaviors/LoggingBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70148,7 +70148,7 @@
                                                       "Shared/FoodDiary.Mediator/IPipelineBehavior.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Behaviors/ValidationBehavior.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70434,7 +70434,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70447,7 +70447,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Services/PostCommitActionQueue.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -70460,7 +70460,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -78195,7 +78195,7 @@
                                                       "Shared/FoodDiary.Mediator/IRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Behaviors/LoggingBehavior.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Behaviors/LoggingBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -78208,7 +78208,7 @@
                                                       "Shared/FoodDiary.Mediator/IRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Behaviors/ValidationBehavior.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82693,7 +82693,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ITransactionalCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82810,7 +82810,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
+                              "consumerPath":  "FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -82823,7 +82823,7 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IUnitOfWork.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
+                              "consumerPath":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },

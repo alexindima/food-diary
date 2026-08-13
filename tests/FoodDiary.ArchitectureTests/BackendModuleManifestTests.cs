@@ -11,19 +11,11 @@ public sealed class BackendModuleManifestTests {
     [Fact]
     public void BoundaryManifest_CoversFolderAndExtractedApplicationModules() {
         BackendModuleManifest manifest = LoadManifest();
-        string[] folderModules = [.. Directory.GetDirectories(ArchitectureTestPaths.FromRoot("FoodDiary.Application"))
-            .Select(Path.GetFileName)
-            .OfType<string>()
-            .Where(name => name is not ("bin" or "obj" or "Common"))
-            .Where(name => Directory.EnumerateFiles(
-                ArchitectureTestPaths.FromRoot("FoodDiary.Application", name),
-                "*.cs",
-                SearchOption.AllDirectories).Any())
-            .Order(StringComparer.Ordinal)];
+        string[] folderModules = [];
         string[] extractedModules = [.. Directory.GetDirectories(ArchitectureTestPaths.RepositoryRoot, "FoodDiary.Application.*", SearchOption.TopDirectoryOnly)
             .SelectMany(directory => Directory.GetFiles(directory, "FoodDiary.Application.*.csproj", SearchOption.TopDirectoryOnly))
             .Select(path => Path.GetFileNameWithoutExtension(path)["FoodDiary.Application.".Length..])
-            .Where(name => !name.Equals("Abstractions", StringComparison.Ordinal))
+            .Where(name => name is not ("Abstractions" or "Runtime"))
             .Order(StringComparer.Ordinal)];
         string[] actualModules = [.. folderModules.Concat(extractedModules).Distinct(StringComparer.Ordinal).Order(StringComparer.Ordinal)];
 

@@ -1,4 +1,4 @@
-using FoodDiary.Application;
+using FoodDiary.Application.Runtime;
 using FoodDiary.Application.Billing;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Notifications;
@@ -96,7 +96,7 @@ public sealed class DependencyInjectionTests {
     private static ServiceCollection CreateProductionServices(IConfiguration configuration) {
         var services = new ServiceCollection();
 
-        services.AddApplication();
+        services.AddApplicationRuntime();
         services.AddUsersModule();
         services.AddBillingModule();
         services.AddMarketingModule();

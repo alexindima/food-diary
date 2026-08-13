@@ -30,11 +30,11 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void ApplicationProject_ReferencesOnly_DomainAndContracts_AmongCoreProjects() {
-        HashSet<string> references = GetProjectReferences("FoodDiary.Application/FoodDiary.Application.csproj");
+    public void ApplicationRuntimeProject_ReferencesOnly_ApplicationContractsAmongCoreProjects() {
+        HashSet<string> references = GetProjectReferences("FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.Contains("FoodDiary.Application.Abstractions", references);
-        Assert.Contains("FoodDiary.Domain", references);
+        Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Resources", references);
         Assert.DoesNotContain("FoodDiary.Infrastructure", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
@@ -343,10 +343,11 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void PresentationApiProject_ReferencesApplication_ButNotInfrastructure() {
+    public void PresentationApiProject_ReferencesFeatureApplications_ButNotRuntimeOrInfrastructure() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
 
-        Assert.Contains("FoodDiary.Application", references);
+        Assert.DoesNotContain("FoodDiary.Application.Runtime", references);
+        Assert.Contains("FoodDiary.Application.Users", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Resources", references);
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
@@ -405,7 +406,7 @@ public class LayeringTests {
     public void WebApiProject_IsHostAndReferencesPresentationApplicationAndInfrastructure() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Web.Api/FoodDiary.Web.Api.csproj");
 
-        Assert.Contains("FoodDiary.Application", references);
+        Assert.Contains("FoodDiary.Application.Runtime", references);
         Assert.Contains("FoodDiary.Infrastructure", references);
         Assert.Contains("FoodDiary.Integrations", references);
         Assert.Contains("FoodDiary.Presentation.Api", references);

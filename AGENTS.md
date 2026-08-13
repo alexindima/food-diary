@@ -16,7 +16,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Tour engine: `FoodDiary.Web.Client/projects/fd-tour/AGENTS.md`
 - Presentation adapter: `FoodDiary.Presentation.Api/AGENTS.md`
 - API host/presentation: `FoodDiary.Web.Api/AGENTS.md`
-- Application layer: `FoodDiary.Application/AGENTS.md`
+- Application runtime: `FoodDiary.Application.Runtime/AGENTS.md`
 - Billing application module: `FoodDiary.Application.Billing/AGENTS.md`
 - Marketing application module: `FoodDiary.Application.Marketing/AGENTS.md`
 - Notifications application module: `FoodDiary.Application.Notifications/AGENTS.md`

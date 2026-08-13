@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3213,
-                    "symbols":  3222,
+                    "sourceFiles":  3206,
+                    "symbols":  3215,
                     "interfaceImplementationLinks":  229,
                     "dependencyInjectionRegistrations":  229,
                     "kinds":  {
-                                  "class":  1651,
+                                  "class":  1644,
                                   "enum":  49,
                                   "interface":  408,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1190,
+                                  "Other":  1184,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -41,7 +41,7 @@
                                   "Request":  124,
                                   "Response":  171,
                                   "Service":  264,
-                                  "Validator":  183,
+                                  "Validator":  182,
                                   "ValueObject":  123,
                                   "WriteRepository":  46
                               }
@@ -11724,6 +11724,41 @@
                         "line":  10
                     },
                     {
+                        "name":  "CommandTransactionBehavior",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Runtime/Common/Behaviors/CommandTransactionBehavior.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "LoggingBehavior",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Runtime/Common/Behaviors/LoggingBehavior.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "ValidationBehavior",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs",
+                        "line":  9
+                    },
+                    {
+                        "name":  "PostCommitActionQueue",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Runtime/DependencyInjection.cs",
+                        "line":  8
+                    },
+                    {
                         "name":  "UtcDateNormalizer",
                         "kind":  "class",
                         "role":  "Other",
@@ -12744,90 +12779,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application.WeeklyGoals/Services/WeeklyGoalReminderProcessor.cs",
                         "line":  8
-                    },
-                    {
-                        "name":  "CommandTransactionBehavior",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Behaviors/CommandTransactionBehavior.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "LoggingBehavior",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Behaviors/LoggingBehavior.cs",
-                        "line":  8
-                    },
-                    {
-                        "name":  "ValidationBehavior",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Behaviors/ValidationBehavior.cs",
-                        "line":  9
-                    },
-                    {
-                        "name":  "PostCommitActionQueue",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Services/PostCommitActionQueue.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "UtcDateNormalizer",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Time/UtcDateNormalizer.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "EnumFilterParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Validation/EnumFilterParser.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "EnumValueParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Validation/EnumValueParser.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "OptionalEntityIdValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/Common/Validation/OptionalEntityIdValidator.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "RequiredIdParser",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/Common/Validation/RequiredIdParser.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "DependencyInjection",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/DependencyInjection.cs",
-                        "line":  10
-                    },
-                    {
-                        "name":  "DependencyInjection",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "RecentItemOverviewLoader",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/RecentItems/Common/RecentItemOverviewLoader.cs",
-                        "line":  4
                     },
                     {
                         "name":  "DomainConstants",
@@ -23706,7 +23657,7 @@
                                          "interface":  "IPostCommitActionQueue",
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
                                          "implementation":  "PostCommitActionQueue",
-                                         "implementationPath":  "FoodDiary.Application/Common/Services/PostCommitActionQueue.cs",
+                                         "implementationPath":  "FoodDiary.Application.Runtime/Common/Services/PostCommitActionQueue.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24853,6 +24804,13 @@
                                                  "line":  14
                                              },
                                              {
+                                                 "service":  "IPostCommitActionQueue",
+                                                 "implementation":  "PostCommitActionQueue",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.Runtime/DependencyInjection.cs",
+                                                 "line":  17
+                                             },
+                                             {
                                                  "service":  "ITdeeUserProfileService",
                                                  "implementation":  "TdeeUserProfileService",
                                                  "lifetime":  "Scoped",
@@ -24963,13 +24921,6 @@
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application.WeeklyGoals/DependencyInjection.cs",
                                                  "line":  15
-                                             },
-                                             {
-                                                 "service":  "IPostCommitActionQueue",
-                                                 "implementation":  "PostCommitActionQueue",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.cs",
-                                                 "line":  23
                                              },
                                              {
                                                  "service":  "IAchievementDefinitionStore",

@@ -17,7 +17,7 @@ public sealed class FavoritesModuleExtractionTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedFavoritesAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application/FoodDiary.Application.csproj");
+            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.Favorites", references, StringComparer.Ordinal);
     }

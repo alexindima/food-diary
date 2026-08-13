@@ -8,13 +8,17 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
+                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
+                                        },
+                                        {
+                                            "path":  "docs/BACKEND_MODULE_MAP.md",
+                                            "sha256":  "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:16.6803027Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:17:58.4844021Z"
                     },
                     {
                         "pageId":  "module.mail-services",
@@ -22,18 +26,14 @@
                         "pageSha256":  "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
                         "sources":  [
                                         {
-                                            "path":  "docs/ARCHITECTURE.md",
-                                            "sha256":  "0636f80fb6fd7637a88979593fc735341be650a6406fb7c1336f568552c7f6e6"
-                                        },
-                                        {
                                             "path":  "docs/BACKEND_MODULE_MAP.md",
-                                            "sha256":  "975590cae22cfca701ad9a900c8017cd8cd985236e8dce67913aa2df6a9cc57a"
+                                            "sha256":  "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
                                         }
                                     ],
-                        "reason":  "Notifications application source moved into the dedicated FoodDiary.Application.Notifications project. Core consumers now construct notification intents through abstraction-owned payload/type contracts, composition roots register the extracted module explicitly, and project/deployment/architecture manifests were updated without HTTP or persistence schema changes.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "24d1f53f85644cdd55bd04238fa9230f1e9158db",
-                        "reviewedAtUtc":  "2026-08-12T21:52:33.0132832Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:17:58.6892974Z"
                     },
                     {
                         "pageId":  "module.primary-backend",
@@ -57,21 +57,29 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
+                                            "sha256":  "cc3e203588b5dedca64e0e03a8254e4e1f84425f793ca8b18707117f15e47c50"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "589cc180e6a5b8816d84987f354b4326bc38ad165fc23f962f78dcb1682fe678"
+                                            "sha256":  "8b4629e64f5d0a7b91a119f880eb47e4fd25bae7fe93962f6088a03715ede205"
+                                        },
+                                        {
+                                            "path":  "docs/BACKEND_MODULE_MAP.md",
+                                            "sha256":  "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
+                                        },
+                                        {
+                                            "path":  "tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs",
+                                            "sha256":  "f28649217227c8ed4e221be47305686ae7e9046f1f63b28f15927dc5e0a42d57"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "21de07e2525ac9dfeacb963b96e4acd1a71f9d3ddda26a73c864d9ad916225f3"
+                                            "sha256":  "4e7264e560f72da5cb13f932a457aa90a8801f910ba0661834ab08cebcffce88"
                                         }
                                     ],
-                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
-                        "reviewedAtUtc":  "2026-08-13T20:02:16.1682086Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:17:58.9170404Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -95,13 +103,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
+                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:17.4066947Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:17:59.1312515Z"
                     },
                     {
                         "pageId":  "system.repository-catalog",
@@ -109,18 +117,22 @@
                         "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+                                            "sha256":  "0288e19676851f41d9539e7f51739997546f6892f61352f552cbf22515f7c169"
+                                        },
+                                        {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
+                                            "sha256":  "cc3e203588b5dedca64e0e03a8254e4e1f84425f793ca8b18707117f15e47c50"
                                         },
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "589cc180e6a5b8816d84987f354b4326bc38ad165fc23f962f78dcb1682fe678"
+                                            "sha256":  "8b4629e64f5d0a7b91a119f880eb47e4fd25bae7fe93962f6088a03715ede205"
                                         }
                                     ],
-                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
-                        "reviewedAtUtc":  "2026-08-13T20:02:16.3596454Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:17:59.3620424Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -129,13 +141,13 @@
                         "sources":  [
                                         {
                                             "path":  "AGENTS.md",
-                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
+                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:18.6945136Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:18:00.2588830Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -193,13 +205,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "d9299d5a9d9b1051099482e253dabc56962412fe29040ff00538b53944fab938"
+                                            "sha256":  "44063d11d2d697c593d74ba5a9c2a88b32f99114f949d62959a24fd7085cf961"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+                                            "sha256":  "0288e19676851f41d9539e7f51739997546f6892f61352f552cbf22515f7c169"
+                                        },
+                                        {
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
                                         }
                                     ],
-                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+                        "reason":  "Reviewed final source set including ADR 0011 for the Application.Runtime boundary and refreshed all affected compiled indexes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
-                        "reviewedAtUtc":  "2026-08-13T20:02:18.0918357Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:19:46.8585044Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -207,14 +227,14 @@
                         "pageSha256":  "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "8693c1711df81757453c23ea0cb25b153b64cc3d8915502ba9e85145b4692835"
+                                            "path":  "AGENTS.md",
+                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
                                         }
                                     ],
-                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
-                        "reviewedAtUtc":  "2026-08-13T21:15:08.7661136Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:18:02.0368042Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -268,21 +288,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "ea390ca8462e2d98c1d3c3697308bcb4e3c0a86bdb733c6e9745ca3ff0aad9dc"
+                                            "sha256":  "15dd9d4b6d1ffa81a143b70fe96758a7dbd4cfe859edfc4b7ff0b156a1cda342"
                                         },
                                         {
                                             "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
+                                            "sha256":  "cc3e203588b5dedca64e0e03a8254e4e1f84425f793ca8b18707117f15e47c50"
                                         },
                                         {
                                             "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "21de07e2525ac9dfeacb963b96e4acd1a71f9d3ddda26a73c864d9ad916225f3"
+                                            "sha256":  "4e7264e560f72da5cb13f932a457aa90a8801f910ba0661834ab08cebcffce88"
                                         }
                                     ],
-                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
-                        "reviewedAtUtc":  "2026-08-13T20:02:16.5912659Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:17:59.5745054Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -291,13 +311,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "dba505a8824672ac747b78b1e8d08f0e378848f8e703498b6e03e1c8af525117"
+                                            "sha256":  "e915fdf57a1fa72348ca12bf47a38abfc15b19575244d1883a2380f9dc01d38f"
                                         }
                                     ],
-                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
-                        "reviewedAtUtc":  "2026-08-13T20:02:16.9069141Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:17:59.9527738Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -746,13 +766,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "589cc180e6a5b8816d84987f354b4326bc38ad165fc23f962f78dcb1682fe678"
+                                            "sha256":  "8b4629e64f5d0a7b91a119f880eb47e4fd25bae7fe93962f6088a03715ede205"
                                         }
                                     ],
-                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
-                        "reviewedAtUtc":  "2026-08-13T19:37:26.8196764Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:18:00.5271927Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -818,13 +838,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "7b7739765113f4e5c7a92817baa65d889e07f72bc43d0a7d1d45c7ce7d89563f"
+                                            "sha256":  "b18b5022e3b9e0343489670db64c227a7033ef81fd69592830ab0e2007e14a16"
                                         }
                                     ],
-                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
-                        "reviewedAtUtc":  "2026-08-13T20:02:17.2717317Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:18:00.9464379Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -867,13 +887,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "b5cc108085824552e315456680afe98e31562fc3bb6ba90fdea35f74b98e7e75"
+                                            "sha256":  "9ce380b587048bdfe4a1b7df055fa38eafc2d5c8eeeb764d86cb40ac9d88a0e1"
                                         }
                                     ],
-                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
-                        "reviewedAtUtc":  "2026-08-13T20:02:17.7492973Z"
+                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+                        "reviewedAtUtc":  "2026-08-13T22:18:01.4200224Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

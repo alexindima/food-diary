@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using Microsoft.Extensions.Logging;
 
-namespace FoodDiary.Application.Common.Services;
+namespace FoodDiary.Application.Runtime.Common.Services;
 
 internal sealed class PostCommitActionQueue : IPostCommitActionQueue {
     private static readonly TimeSpan DefaultActionTimeout = TimeSpan.FromSeconds(5);

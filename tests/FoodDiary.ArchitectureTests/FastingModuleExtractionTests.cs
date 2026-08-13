@@ -17,7 +17,7 @@ public sealed class FastingModuleExtractionTests {
     [Fact]
     public void CoreApplication_DoesNotReferenceExtractedFastingAssembly() {
         string[] references = ProjectReferenceReader.ReadProjectReferences(
-            "FoodDiary.Application/FoodDiary.Application.csproj");
+            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.Fasting", references, StringComparer.Ordinal);
     }
