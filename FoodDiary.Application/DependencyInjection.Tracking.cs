@@ -1,14 +1,11 @@
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Achievements.Common;
-using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Exercises.Services;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
-using FoodDiary.Application.Hydration.Common;
-using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Services;
 using FoodDiary.Application.WeeklyCheckIn.Common;
@@ -30,8 +27,6 @@ public static partial class DependencyInjection {
             new DashboardSnapshotBuilder(
                 serviceProvider.GetRequiredService<IDashboardSectionDataLoader>(),
                 serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>()));
-        services.AddScoped<IHydrationEntryReadService, HydrationEntryReadService>();
-        services.AddScoped<IHydrationGoalService, HydrationGoalService>();
         services.AddScoped<IGamificationReadService, GamificationReadService>();
         services.AddScoped<IGamificationUserProfileService, GamificationUserProfileService>();
         services.AddScoped<IAchievementAwardService, AchievementAwardService>();

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Hydration.Internal;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Hydration.Common;
 using FoodDiary.Application.Hydration.Models;

@@ -13,6 +13,7 @@ public sealed class ApplicationGuardrailTests {
         string[] allowedProjectReferences = [
             "FoodDiary.Application.Abstractions",
             "FoodDiary.Application.Cycles",
+            "FoodDiary.Application.Hydration",
             "FoodDiary.Domain",
             "FoodDiary.Mediator",
         ];
@@ -236,7 +237,6 @@ public sealed class ApplicationGuardrailTests {
             "FavoriteRecipes",
             "Fasting",
             "Gamification",
-            "Hydration",
             "Lessons",
             "Notifications",
             "OpenFoodFacts",
@@ -1129,11 +1129,11 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Exercises", "Commands", "UpdateExerciseEntry", "UpdateExerciseEntryCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Commands", "AdoptMealPlan", "AdoptMealPlanCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.MealPlanning", "MealPlans", "Commands", "GenerateShoppingList", "GenerateShoppingListCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Hydration", "Commands", "CreateHydrationEntry", "CreateHydrationEntryCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Hydration", "Commands", "DeleteHydrationEntry", "DeleteHydrationEntryCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Hydration", "Commands", "UpdateHydrationEntry", "UpdateHydrationEntryCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Hydration", "Queries", "GetHydrationDailyTotal", "GetHydrationDailyTotalQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Hydration", "Queries", "GetHydrationEntries", "GetHydrationEntriesQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Hydration", "Commands", "CreateHydrationEntry", "CreateHydrationEntryCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Hydration", "Commands", "DeleteHydrationEntry", "DeleteHydrationEntryCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Hydration", "Commands", "UpdateHydrationEntry", "UpdateHydrationEntryCommandHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Hydration", "Queries", "GetHydrationDailyTotal", "GetHydrationDailyTotalQueryHandler.cs"),
+            Path.Combine(root, "FoodDiary.Application.Hydration", "Queries", "GetHydrationEntries", "GetHydrationEntriesQueryHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WeightEntries", "Commands", "CreateWeightEntry", "CreateWeightEntryCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WeightEntries", "Commands", "DeleteWeightEntry", "DeleteWeightEntryCommandHandler.cs"),
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WeightEntries", "Commands", "UpdateWeightEntry", "UpdateWeightEntryCommandHandler.cs"),
@@ -2343,7 +2343,7 @@ public sealed class ApplicationGuardrailTests {
         string[] serviceFiles = [
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WeightEntries", "Services", "WeightEntryReadService.cs"),
             Path.Combine(root, "FoodDiary.Application.BodyMetrics", "WaistEntries", "Services", "WaistEntryReadService.cs"),
-            Path.Combine(applicationRoot, "Hydration", "Services", "HydrationEntryReadService.cs"),
+            Path.Combine(root, "FoodDiary.Application.Hydration", "Services", "HydrationEntryReadService.cs"),
         ];
 
         string[] violations = [
@@ -3091,19 +3091,18 @@ public sealed class ApplicationGuardrailTests {
     public void UserProfileFeatureSlices_UseCurrentUserAccessPolicyOnlyThroughDedicatedProfileServices() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        (string Slice, string AllowedRelativePath)[] slices = [
-            ("Ai", Path.Combine("Services", "AiUserContextService.cs")),
-            ("Dashboard", Path.Combine("Services", "DashboardUserContextService.cs")),
-            ("Gamification", Path.Combine("Services", "GamificationUserProfileService.cs")),
-            ("Hydration", Path.Combine("Services", "HydrationGoalService.cs")),
-            ("Tdee", Path.Combine("Services", "TdeeUserProfileService.cs")),
-            ("WeeklyCheckIn", Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),
+        (string SliceRoot, string AllowedRelativePath)[] slices = [
+            (Path.Combine(applicationRoot, "Ai"), Path.Combine("Services", "AiUserContextService.cs")),
+            (Path.Combine(applicationRoot, "Dashboard"), Path.Combine("Services", "DashboardUserContextService.cs")),
+            (Path.Combine(applicationRoot, "Gamification"), Path.Combine("Services", "GamificationUserProfileService.cs")),
+            (Path.Combine(root, "FoodDiary.Application.Hydration"), Path.Combine("Services", "HydrationGoalService.cs")),
+            (Path.Combine(applicationRoot, "Tdee"), Path.Combine("Services", "TdeeUserProfileService.cs")),
+            (Path.Combine(applicationRoot, "WeeklyCheckIn"), Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),
         ];
 
         string[] violations = [.. slices.SelectMany(slice => {
-            string sliceRoot = Path.Combine(applicationRoot, slice.Slice);
-            string allowedPath = Path.Combine(sliceRoot, slice.AllowedRelativePath);
-            string[] files = [.. SourceScanner.SourceFiles(sliceRoot)
+            string allowedPath = Path.Combine(slice.SliceRoot, slice.AllowedRelativePath);
+            string[] files = [.. SourceScanner.SourceFiles(slice.SliceRoot)
                 .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
 
             return FindReferencesInFiles(root, files, "CurrentUserAccessPolicy");

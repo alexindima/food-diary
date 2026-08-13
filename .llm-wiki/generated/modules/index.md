@@ -12,7 +12,7 @@ sources:
 
 # Application Modules
 
-This index unifies 22 folder modules and 13 extracted application modules.
+This index unifies 21 folder modules and 14 extracted application modules.
 Business-module edges, abstraction contracts, adapter consumers, and runtime composition
 are reported separately; `none observed` never means proven isolation.
 
@@ -33,7 +33,7 @@ are reported separately; `none observed` never means proven isolation.
 | [Fasting](fasting.md) | aggregate-owner | 0 | 2 | 0 | 4 | project-reference-matrix |
 | [Favorites](favorites.md) | aggregate-owner | 0 | 7 | 0 | 4 | project-reference-matrix |
 | [Gamification](gamification.md) | read-composer | 1 | 3 | 1 | 1 | graph-only |
-| [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 2 | 1 | graph-only |
+| [Hydration](hydration.md) | aggregate-owner | 0 | 1 | 2 | 5 | project-reference-matrix |
 | [Identity](identity.md) | aggregate-owner | 0 | 5 | 0 | 4 | assembly-isolated |
 | [Images](images.md) | aggregate-owner | 0 | 0 | 3 | 3 | explicit-boundary-tests |
 | [Lessons](lessons.md) | aggregate-owner | 0 | 2 | 1 | 1 | graph-only |

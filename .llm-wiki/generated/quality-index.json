@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4169,
+                    "productionFiles":  4173,
                     "criticalSymbols":  539,
                     "criticalSymbolsWithTestReferences":  510,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -294,11 +294,11 @@
                      },
                      {
                          "path":  "FoodDiary.Initializer/Program.cs",
-                         "nonBlankLines":  317,
+                         "nonBlankLines":  319,
                          "decisionPoints":  41,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  67.84
+                         "structuralRiskScore":  67.88
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/meals/api/meal.service.ts",
@@ -8391,6 +8391,214 @@
                       "structuralRiskScore":  0.02
                   },
                   {
+                      "path":  "FoodDiary.Application.Hydration/AssemblyInfo.cs",
+                      "nonBlankLines":  2,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
+                      "nonBlankLines":  8,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.16
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+                      "nonBlankLines":  36,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.72
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
+                      "nonBlankLines":  19,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.88
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
+                      "nonBlankLines":  6,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.12
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+                      "nonBlankLines":  40,
+                      "decisionPoints":  4,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  8.8
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.86
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+                      "nonBlankLines":  9,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.18
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+                      "nonBlankLines":  57,
+                      "decisionPoints":  6,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  12.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
+                      "nonBlankLines":  24,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.98
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs",
+                      "nonBlankLines":  18,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.36
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/DependencyInjection.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Internal/RequiredIdParser.cs",
+                      "nonBlankLines":  11,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.22
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Internal/UtcDateNormalizer.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.76
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Mappings/HydrationMappings.cs",
+                      "nonBlankLines":  16,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.32
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Models/HydrationDailyModel.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Models/HydrationEntryModel.cs",
+                      "nonBlankLines":  5,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+                      "nonBlankLines":  35,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  5.7
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
+                      "nonBlankLines":  7,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.14
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+                      "nonBlankLines":  30,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  4.1
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
+                      "nonBlankLines":  14,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  1,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.78
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs",
+                      "nonBlankLines":  30,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.6
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Services/HydrationGoalService.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.84
+                  },
+                  {
+                      "path":  "FoodDiary.Application.Hydration/Validators/HydrationValidators.cs",
+                      "nonBlankLines":  13,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.76
+                  },
+                  {
                       "path":  "FoodDiary.Application.Identity/AssemblyInfo.cs",
                       "nonBlankLines":  2,
                       "decisionPoints":  0,
@@ -12912,11 +13120,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                      "nonBlankLines":  43,
+                      "nonBlankLines":  38,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.86
+                      "structuralRiskScore":  0.76
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.WeeklyGoals.cs",
@@ -13285,182 +13493,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  1.92
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
-                      "nonBlankLines":  8,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-                      "nonBlankLines":  36,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.72
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
-                      "nonBlankLines":  19,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.88
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
-                      "nonBlankLines":  6,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.12
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-                      "nonBlankLines":  40,
-                      "decisionPoints":  4,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.8
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.86
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-                      "nonBlankLines":  58,
-                      "decisionPoints":  6,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  12.16
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
-                      "nonBlankLines":  24,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.98
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs",
-                      "nonBlankLines":  18,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.36
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Mappings/HydrationMappings.cs",
-                      "nonBlankLines":  16,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.32
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Models/HydrationDailyModel.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Models/HydrationEntryModel.cs",
-                      "nonBlankLines":  5,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
-                      "nonBlankLines":  35,
-                      "decisionPoints":  2,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.7
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
-                      "nonBlankLines":  7,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.14
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
-                      "nonBlankLines":  30,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.1
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  3.78
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Services/HydrationEntryReadService.cs",
-                      "nonBlankLines":  30,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.6
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Services/HydrationGoalService.cs",
-                      "nonBlankLines":  17,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.84
-                  },
-                  {
-                      "path":  "FoodDiary.Application/Hydration/Validators/HydrationValidators.cs",
-                      "nonBlankLines":  13,
-                      "decisionPoints":  1,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  1.76
                   },
                   {
                       "path":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
@@ -19120,11 +19152,11 @@
                   },
                   {
                       "path":  "FoodDiary.Initializer/Program.cs",
-                      "nonBlankLines":  317,
+                      "nonBlankLines":  319,
                       "decisionPoints":  41,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  67.84
+                      "structuralRiskScore":  67.88
                   },
                   {
                       "path":  "FoodDiary.Initializer/Properties/AssemblyInfo.cs",
@@ -19544,11 +19576,11 @@
                   },
                   {
                       "path":  "FoodDiary.JobManager/Program.cs",
-                      "nonBlankLines":  55,
+                      "nonBlankLines":  57,
                       "decisionPoints":  1,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  2.6
+                      "structuralRiskScore":  2.64
                   },
                   {
                       "path":  "FoodDiary.JobManager/Services/AchievementEvaluationOutboxJob.cs",
@@ -23888,11 +23920,11 @@
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                      "nonBlankLines":  87,
+                      "nonBlankLines":  89,
                       "decisionPoints":  2,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  4.74
+                      "structuralRiskScore":  4.78
                   },
                   {
                       "path":  "FoodDiary.Web.Api/Extensions/ApiTelemetry.cs",
@@ -34477,7 +34509,7 @@
                             {
                                 "name":  "CreateHydrationEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
                                 "line":  14,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -34662,7 +34694,7 @@
                             {
                                 "name":  "DeleteHydrationEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+                                "path":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
                                 "line":  12,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -35558,8 +35590,8 @@
                             {
                                 "name":  "UpdateHydrationEntryCommandHandler",
                                 "role":  "CommandHandler",
-                                "path":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-                                "line":  16,
+                                "path":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+                                "line":  15,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -37234,7 +37266,7 @@
                             {
                                 "name":  "GetHydrationDailyTotalQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
                                 "line":  11,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -37245,7 +37277,7 @@
                             {
                                 "name":  "GetHydrationEntriesQueryHandler",
                                 "role":  "QueryHandler",
-                                "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+                                "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
                                 "line":  10,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38265,7 +38297,7 @@
                             {
                                 "name":  "CreateHydrationEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38378,7 +38410,7 @@
                             {
                                 "name":  "DeleteHydrationEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38705,7 +38737,7 @@
                             {
                                 "name":  "GetHydrationDailyTotalQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -38716,7 +38748,7 @@
                             {
                                 "name":  "GetHydrationEntriesQueryValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
+                                "path":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
@@ -39653,7 +39685,7 @@
                             {
                                 "name":  "UpdateHydrationEntryCommandValidator",
                                 "role":  "Validator",
-                                "path":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
+                                "path":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
                                 "line":  4,
                                 "testReferenceCount":  2,
                                 "testReferences":  [

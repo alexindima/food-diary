@@ -1910,7 +1910,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
+                                                  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -2630,7 +2630,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
+                                                  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4598,7 +4598,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
+                                                  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -4630,7 +4630,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
+                                                  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -8854,7 +8854,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
+                                                  "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -15467,7 +15467,7 @@
                                         "FoodDiary"
                                     ],
                           "definitionPaths":  [
-                                                  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
+                                                  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -23507,10 +23507,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -23520,10 +23520,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -23533,7 +23533,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Hydration/Mappings/HydrationHttpMappings.cs",
@@ -23546,7 +23546,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -23559,7 +23559,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
@@ -23572,7 +23572,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -23585,7 +23585,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs",
@@ -26731,10 +26731,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -26744,10 +26744,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -26757,7 +26757,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Hydration/Mappings/HydrationHttpMappings.cs",
@@ -26770,7 +26770,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -26783,7 +26783,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
@@ -26796,7 +26796,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -26809,7 +26809,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs",
@@ -34466,10 +34466,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -34479,10 +34479,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -34492,7 +34492,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Hydration/Mappings/HydrationHttpQueryMappings.cs",
@@ -34505,7 +34505,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -34518,7 +34518,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
@@ -34531,7 +34531,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -34544,7 +34544,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs",
@@ -34609,10 +34609,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -34622,10 +34622,10 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -34635,7 +34635,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Hydration/Mappings/HydrationHttpQueryMappings.cs",
@@ -34648,7 +34648,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -34661,7 +34661,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
@@ -34674,7 +34674,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -34687,7 +34687,7 @@
                                             "Query"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
+                                                      "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs",
@@ -46221,6 +46221,45 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommand",
+                              "roles":  [
+                                            "Command"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Identity/Authentication/Commands/AdminSsoExchange/AdminSsoExchangeCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47183,45 +47222,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommand",
-                              "roles":  [
-                                            "Command"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Images/Commands/DeleteImageAsset/DeleteImageAssetCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -47990,6 +47990,45 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICommandHandler",
+                              "roles":  [
+                                            "CommandHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -48952,45 +48991,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Exercises/Commands/UpdateExerciseEntry/UpdateExerciseEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -50888,6 +50888,71 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "ICurrentUserAccessService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -51708,71 +51773,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Gamification/Queries/GetGamification/GetGamificationQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICurrentUserAccessService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61522,7 +61522,7 @@
                                                       "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryReadModelRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Services/HydrationEntryReadService.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61662,7 +61662,59 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/DependencyInjection.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IHydrationEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IHydrationEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IHydrationEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Services/HydrationEntryReadService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IHydrationEntryReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/DashboardSnapshotBuilder.cs",
@@ -61675,7 +61727,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Dashboard/Services/RepositoryDashboardBodyReadService.cs",
@@ -61688,59 +61740,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IHydrationEntryReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IHydrationEntryReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IHydrationEntryReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Services/HydrationEntryReadService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IHydrationEntryReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/WeeklyCheckIn/Services/WeeklyCheckInReadService.cs",
@@ -61753,7 +61753,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -61766,7 +61766,7 @@
                                             "Service"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Common/IHydrationEntryReadService.cs"
+                                                      "FoodDiary.Application.Hydration/Common/IHydrationEntryReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/WeeklyCheckIn/WeeklyCheckInFeatureTests.cs",
@@ -61912,7 +61912,7 @@
                                                       "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61925,7 +61925,7 @@
                                                       "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61938,7 +61938,7 @@
                                                       "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationEntryWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -61990,7 +61990,7 @@
                                                       "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationGoalService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Tracking.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/DependencyInjection.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62003,7 +62003,7 @@
                                                       "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationGoalService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -62016,7 +62016,7 @@
                                                       "FoodDiary.Application.Abstractions/Hydration/Common/IHydrationGoalService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Services/HydrationGoalService.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Services/HydrationGoalService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -72896,6 +72896,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQuery",
+                              "roles":  [
+                                            "Query"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73573,32 +73599,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Gamification/Queries/GetGamification/GetGamificationQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQuery",
-                              "roles":  [
-                                            "Query"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQuery.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -74365,6 +74365,32 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IQueryHandler",
+                              "roles":  [
+                                            "QueryHandler"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Queries/GetMealPlanById/GetMealPlanByIdQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -75042,32 +75068,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Gamification/Queries/GetGamification/GetGamificationQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQueryHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -86221,6 +86221,19 @@
                                                       "FoodDiary.Application.Abstractions/Users/Common/IUserHydrationProfileReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Services/HydrationGoalService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserHydrationProfileReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserHydrationProfileReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/Common/UserContextService.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -86235,19 +86248,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Users/DependencyInjection.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserHydrationProfileReadService",
-                              "roles":  [
-                                            "Service"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Users/Common/IUserHydrationProfileReadService.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Services/HydrationGoalService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -88249,6 +88249,71 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IUserRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.MealPlanning/MealPlans/Commands/AdoptMealPlan/AdoptMealPlanCommand.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -89121,71 +89186,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application/Gamification/Queries/GetGamification/GetGamificationQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationDailyTotal/GetHydrationDailyTotalQuery.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUserRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IUserRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Queries/GetHydrationEntries/GetHydrationEntriesQuery.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -104574,10 +104574,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  2
                           },
@@ -104587,10 +104587,10 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
+                              "consumerPath":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommandValidator.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },
@@ -104600,7 +104600,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Presentation.Api/Features/Hydration/Mappings/HydrationHttpMappings.cs",
@@ -104613,7 +104613,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs",
@@ -104626,7 +104626,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs",
@@ -104639,7 +104639,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/AdditionalFeatureControllerTests.cs",
@@ -104652,7 +104652,7 @@
                                             "Command"
                                         ],
                               "definitionPaths":  [
-                                                      "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
+                                                      "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs",

@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "description": "Canonical backend business-module inventory and cross-layer ownership mappings. Dependency evidence is generated separately and labelled by edge type.",
   "inventory": {
-    "folderModules": 22,
-    "extractedModules": 13,
+    "folderModules": 21,
+    "extractedModules": 14,
     "totalModules": 35
   },
   "analysis": {
@@ -245,12 +245,16 @@
     },
     "Hydration": {
       "role": "aggregate-owner",
-      "physicalIsolation": "folder",
-      "enforcement": "graph-only",
+      "physicalIsolation": "project",
+      "enforcement": "project-reference-matrix",
       "ownedEntities": [
         "HydrationEntry"
       ],
-      "sourceMappings": {}
+      "sourceMappings": {
+        "applicationProjects": [
+          "FoodDiary.Application.Hydration"
+        ]
+      }
     },
     "Images": {
       "role": "aggregate-owner",

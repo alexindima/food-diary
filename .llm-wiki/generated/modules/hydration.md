@@ -14,17 +14,18 @@ sources:
 
 ## Graph
 
-- Origin: module-graph
+- Origin: extracted-project
+- Extracted project: `FoodDiary.Application.Hydration/FoodDiary.Application.Hydration.csproj`
 - Business-module dependencies: none observed
 - Abstraction-contract dependencies: Users
 - Business-module consumers: Dashboard, WeeklyCheckIn
-- Host/adapter consumers: FoodDiary.Presentation.Api
+- Host/adapter consumers: FoodDiary.Application, FoodDiary.Initializer, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
 
 ## Source Areas
 
 - `FoodDiary.Application.Abstractions/Hydration`
-- `FoodDiary.Application/Hydration`
+- `FoodDiary.Application.Hydration`
 - `FoodDiary.Infrastructure/Persistence/Configurations/Hydration`
 - `FoodDiary.Presentation.Api/Features/Hydration`
 
@@ -43,11 +44,11 @@ Source: `FoodDiary.Presentation.Api/Features/Hydration/HydrationEntriesControlle
 ## Boundary Health
 
 - Role: aggregate-owner
-- Physical isolation: folder
-- Architecture guardrails: graph-only
+- Physical isolation: project
+- Architecture guardrails: project-reference-matrix
 - Declared owned entities: HydrationEntry
 - Public contract files: 7
-- Observed external consumer groups: 3
+- Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
@@ -73,6 +74,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationEntryReadModelTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Hydration/HydrationValidatorTests.cs`
+- [architecture-boundary] `tests/FoodDiary.ArchitectureTests/HydrationModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/HydrationEntryInvariantTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/HydrationHttpMappingsTests.cs`
 

@@ -617,7 +617,7 @@
                        "name":  "FOODDIARY_ConnectionStrings__DefaultConnection",
                        "type":  "set",
                        "path":  "FoodDiary.Initializer/Program.cs",
-                       "line":  62
+                       "line":  63
                    },
                    {
                        "category":  "credential",
@@ -1538,6 +1538,27 @@
                    },
                    {
                        "category":  "financial",
+                       "name":  "AmountMl",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
+                       "line":  10
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "AmountMl",
+                       "type":  "int?",
+                       "path":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+                       "line":  11
+                   },
+                   {
+                       "category":  "financial",
+                       "name":  "AmountMl",
+                       "type":  "int",
+                       "path":  "FoodDiary.Application.Hydration/Models/HydrationEntryModel.cs",
+                       "line":  6
+                   },
+                   {
+                       "category":  "financial",
                        "name":  "IBillingMarketingConversionRecorder",
                        "type":  "IMarketingConversionRecorder,",
                        "path":  "FoodDiary.Application.Marketing/Services/MarketingConversionRecorder.cs",
@@ -1633,27 +1654,6 @@
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Consumptions/Models/ConsumptionItemModel.cs",
                        "line":  14
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "AmountMl",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Hydration/Commands/CreateHydrationEntry/CreateHydrationEntryCommand.cs",
-                       "line":  10
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "AmountMl",
-                       "type":  "int?",
-                       "path":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
-                       "line":  11
-                   },
-                   {
-                       "category":  "financial",
-                       "name":  "AmountMl",
-                       "type":  "int",
-                       "path":  "FoodDiary.Application/Hydration/Models/HydrationEntryModel.cs",
-                       "line":  6
                    },
                    {
                        "category":  "financial",
@@ -3750,6 +3750,20 @@
                    },
                    {
                        "category":  "health",
+                       "name":  "HydrationEntryId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
+                       "line":  8
+                   },
+                   {
+                       "category":  "health",
+                       "name":  "HydrationEntryId",
+                       "type":  "Guid",
+                       "path":  "FoodDiary.Application.Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
+                       "line":  9
+                   },
+                   {
+                       "category":  "health",
                        "name":  "Calories",
                        "type":  "double?",
                        "path":  "FoodDiary.Application.MealPlanning/MealPlans/Models/MealPlanMealModel.cs",
@@ -4355,20 +4369,6 @@
                        "name":  "CaloriesBurned",
                        "type":  "double",
                        "path":  "FoodDiary.Application/Exercises/Models/ExerciseEntryModel.cs",
-                       "line":  9
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "HydrationEntryId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Hydration/Commands/DeleteHydrationEntry/DeleteHydrationEntryCommand.cs",
-                       "line":  8
-                   },
-                   {
-                       "category":  "health",
-                       "name":  "HydrationEntryId",
-                       "type":  "Guid",
-                       "path":  "FoodDiary.Application/Hydration/Commands/UpdateHydrationEntry/UpdateHydrationEntryCommand.cs",
                        "line":  9
                    },
                    {
