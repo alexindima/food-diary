@@ -4,6 +4,7 @@ param(
     [ValidateSet(
         'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
+        'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
         'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
@@ -277,9 +278,12 @@ if ($PSBoundParameters.ContainsKey('ProposedPath')) {
 }
 
 if ($Fast) {
-    if ($Command -ne 'verify') { throw '-Fast is supported only with the verify command.' }
-    $Command = 'verify-fast'
-    Write-Host 'Compatibility alias: verify -Fast -> verify-fast'
+    if ($Command -eq 'verify') {
+        $Command = 'verify-fast'
+        Write-Host 'Compatibility alias: verify -Fast -> verify-fast'
+    } elseif ($Command -notin @('trace', 'research')) {
+        throw '-Fast is supported only with the verify, trace, and research commands.'
+    }
 }
 
 # Verification receipts are content-addressed by the inputs of each stage. Reuse
@@ -696,6 +700,18 @@ switch ($Command) {
         Invoke-WikiTool 'Find-LlmWikiContext.ps1' $contextArguments
     }
     'trace' {
+        if ($Fast) {
+            $graphProbe = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
+                -Action trace -Query $Query -Limit ([Math]::Min($Limit, 30)) -Format Json | ConvertFrom-Json
+            $graphSymbols = [object[]]@($graphProbe.symbols)
+            if ($graphSymbols.Length -gt 0) {
+                Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
+                    Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
+                }
+                break
+            }
+            Write-Host "Code graph found no exact symbol for '$Query'; falling back to semantic trace."
+        }
         $traceArguments = @{
             Query = $Query; Format = $Format; Limit = [Math]::Min($Limit, 30)
         }
@@ -742,6 +758,25 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
         Invoke-WikiTool 'Get-LlmWikiAdaptiveWorkflow.ps1' $workflowArguments
     }
+    { $_ -in @('graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact') } {
+        $graphAction = @{
+            'graph-build' = 'build'
+            'graph-status' = 'status'
+            'graph-symbol' = 'symbol'
+            'graph-consumers' = 'consumers'
+            'graph-trace' = 'trace'
+            'graph-impact' = 'impact'
+        }[$Command]
+        $graphArguments = @{
+            Action = $graphAction
+            Query = $Query
+            ChangedPath = $ChangedPath
+            Limit = [Math]::Min($Limit, 500)
+            Format = $Format
+        }
+        if ($Check) { $graphArguments.Force = $true }
+        Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' $graphArguments
+    }
     'start' {
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'start requires -Intent <task description>.' }
         $startArguments = @{ Objective = $Objective; BaseRef = $BaseRef; WorkspacePath = $WorkspacePath; Format = $Format; Limit = [Math]::Min($Limit, 30) }
@@ -786,6 +821,12 @@ switch ($Command) {
     'research' {
         if ([string]::IsNullOrWhiteSpace($Objective) -and -not [string]::IsNullOrWhiteSpace($Query)) { $Objective = $Query }
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'research requires -Intent <task description> (compatible alias: -Query).' }
+        if ($Fast) {
+            $fastResearchArguments = @{ Objective = $Objective; Module = $Module; Limit = [Math]::Min($Limit, 500); Format = $Format }
+            if ($PSBoundParameters.ContainsKey('ProposedPath')) { $fastResearchArguments.ProposedPath = $ProposedPath }
+            Invoke-WikiTool 'Get-LlmWikiGraphResearch.ps1' $fastResearchArguments
+            break
+        }
         $researchArguments = @{ Objective = $Objective; Purpose = $ResearchPurpose; BaseRef = $BaseRef; Format = $Format; Limit = $Limit; Compact = $Compact }
         if (-not [string]::IsNullOrWhiteSpace($Module)) { $researchArguments.Module = $Module }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $researchArguments.HeadRef = $HeadRef }

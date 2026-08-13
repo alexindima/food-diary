@@ -72,6 +72,8 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('index-selection')
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
         $null = $smokeGroups.Add('trace-output')
+    } elseif ($path -match '^\.llm-wiki/tools/(?:Manage-LlmWikiCodeGraph|Measure-LlmWikiCodeGraph|Test-LlmWikiCodeGraph|Get-LlmWikiGraphResearch)\.ps1$' -or $path -eq '.llm-wiki/tools/code-graph.mjs') {
+        $null = $smokeGroups.Add('code-graph')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Get-LlmWikiDiffContext|Test-LlmWikiTaskBaseline)\.ps1$') {
         $null = $smokeGroups.Add('task-baseline')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiGitPaths|Test-LlmWikiGitPaths)\.ps1$') {
@@ -207,6 +209,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'task-baseline' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTaskBaseline.ps1')
+            if (-not $?) { exit 1 }
+        }
+        'code-graph' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiCodeGraph.ps1')
             if (-not $?) { exit 1 }
         }
         'git-paths' {

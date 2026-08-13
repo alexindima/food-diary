@@ -207,14 +207,14 @@
                         "pageSha256":  "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "782e64b5f13606801130aa5e69c40f173073bb011e45656ccdc8e4ba42473871"
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "5285b00925b7b544047ca382209e8b1ce667540bdc54b91977125387fe1842b4"
                                         }
                                     ],
-                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
+                        "reason":  "Reviewed fast SQLite graph research and trace routing, focused smoke selection, and verification fingerprints; bounded graph scans remain optional and governed delivery behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
-                        "reviewedAtUtc":  "2026-08-13T18:57:50.6101190Z"
+                        "gitHead":  "6f3c62feaca0244203364ad14425c14f8d39fb2f",
+                        "reviewedAtUtc":  "2026-08-13T20:16:56.8338715Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -647,14 +647,22 @@
                         "pageSha256":  "19b2949cb82545c8d7acd6132793142a6883eb04496cb452e00ac052c3dce296",
                         "sources":  [
                                         {
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+                                            "sha256":  "64ce7624d9b1132322e26b236fa090d5a96bfcf29de438685b8beb5f3036bda0"
+                                        },
+                                        {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "c1300f519f2eb5b6ac9ebe59ae16c832cb68ec41da58a1fc46643b3aa487fcdf"
+                                            "sha256":  "cf1ae8947b53b58c8e01f7e46b210b37bcfa06d60dd604ca5725a1a821bc2e27"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "5285b00925b7b544047ca382209e8b1ce667540bdc54b91977125387fe1842b4"
                                         }
                                     ],
-                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+                        "reason":  "Reviewed fast SQLite graph research and trace routing, focused smoke selection, and verification fingerprints; bounded graph scans remain optional and governed delivery behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
-                        "reviewedAtUtc":  "2026-08-13T18:25:00.1759820Z"
+                        "gitHead":  "6f3c62feaca0244203364ad14425c14f8d39fb2f",
+                        "reviewedAtUtc":  "2026-08-13T20:16:56.2713899Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -995,13 +1003,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "9e770f6036cfe8016526271c6d596c0034b4739c8ac8e03f840c46daa35ffdc1"
+                                            "sha256":  "5285b00925b7b544047ca382209e8b1ce667540bdc54b91977125387fe1842b4"
                                         }
                                     ],
-                        "reason":  "Reviewed the final named-splat fix for update-to-verify handoff against index-pipeline and task-dispatch contracts; the facade now preserves the exact affected path array without changing either workflow contract.",
+                        "reason":  "Reviewed fast SQLite graph research and trace routing, focused smoke selection, and verification fingerprints; bounded graph scans remain optional and governed delivery behavior is unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2eec73d92f25d2ddb2b777c334386ac08965396b",
-                        "reviewedAtUtc":  "2026-08-12T20:41:47.3289094Z"
+                        "gitHead":  "6f3c62feaca0244203364ad14425c14f8d39fb2f",
+                        "reviewedAtUtc":  "2026-08-13T20:16:57.5606017Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
