@@ -726,11 +726,11 @@
                      },
                      {
                          "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                         "nonBlankLines":  238,
+                         "nonBlankLines":  259,
                          "decisionPoints":  26,
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  43.76
+                         "structuralRiskScore":  44.18
                      },
                      {
                          "path":  "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/emoji-picker/fd-ui-emoji-picker.ts",
@@ -4440,11 +4440,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeAccessService.cs",
-                      "nonBlankLines":  11,
+                      "nonBlankLines":  10,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.22
+                      "structuralRiskScore":  0.2
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeLookupService.cs",
@@ -10240,11 +10240,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandHandler.cs",
-                      "nonBlankLines":  55,
+                      "nonBlankLines":  54,
                       "decisionPoints":  4,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  9.1
+                      "structuralRiskScore":  9.08
                   },
                   {
                       "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
@@ -10272,11 +10272,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Mappings/FavoriteRecipeMappings.cs",
-                      "nonBlankLines":  37,
-                      "decisionPoints":  5,
+                      "nonBlankLines":  52,
+                      "decisionPoints":  8,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  8.24
+                      "structuralRiskScore":  13.04
                   },
                   {
                       "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Queries/GetFavoriteRecipes/GetFavoriteRecipesQuery.cs",
@@ -12528,11 +12528,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Meals/Services/MealNutritionService.cs",
-                      "nonBlankLines":  68,
+                      "nonBlankLines":  77,
                       "decisionPoints":  8,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  13.36
+                      "structuralRiskScore":  13.54
                   },
                   {
                       "path":  "FoodDiary.Application.Meals/Services/MealNutritionSummary.cs",
@@ -13528,11 +13528,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-                      "nonBlankLines":  67,
+                      "nonBlankLines":  68,
                       "decisionPoints":  3,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.84
+                      "structuralRiskScore":  7.86
                   },
                   {
                       "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandValidator.cs",
@@ -13552,11 +13552,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
-                      "nonBlankLines":  43,
+                      "nonBlankLines":  44,
                       "decisionPoints":  5,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  10.36
+                      "structuralRiskScore":  10.38
                   },
                   {
                       "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/UpdateRecipeComment/UpdateRecipeCommentCommand.cs",
@@ -15688,11 +15688,11 @@
                   },
                   {
                       "path":  "FoodDiary.Domain/Entities/Meals/MealItem.cs",
-                      "nonBlankLines":  238,
+                      "nonBlankLines":  259,
                       "decisionPoints":  26,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  43.76
+                      "structuralRiskScore":  44.18
                   },
                   {
                       "path":  "FoodDiary.Domain/Entities/Notifications/Notification.cs",
@@ -19448,11 +19448,11 @@
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Services/RecipeAccessService.cs",
-                      "nonBlankLines":  13,
+                      "nonBlankLines":  16,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.26
+                      "structuralRiskScore":  0.32
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Services/RecipeLookupService.cs",
@@ -34923,7 +34923,7 @@
                                 "name":  "CreateRecipeCommentCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-                                "line":  14,
+                                "line":  15,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",
@@ -35099,7 +35099,7 @@
                                 "name":  "DeleteRecipeCommentCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
-                                "line":  11,
+                                "line":  12,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/RecipeComments/RecipeCommentsFeatureTests.cs",

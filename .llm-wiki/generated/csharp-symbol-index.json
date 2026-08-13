@@ -8438,7 +8438,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Mappings/FavoriteRecipeMappings.cs",
-                        "line":  6
+                        "line":  7
                     },
                     {
                         "name":  "GetFavoriteRecipesQuery",
@@ -11210,7 +11210,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/CreateRecipeComment/CreateRecipeCommentCommandHandler.cs",
-                        "line":  14
+                        "line":  15
                     },
                     {
                         "name":  "CreateRecipeCommentCommandValidator",
@@ -11231,7 +11231,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application.RecipeCommunity/RecipeComments/Commands/DeleteRecipeComment/DeleteRecipeCommentCommandHandler.cs",
-                        "line":  11
+                        "line":  12
                     },
                     {
                         "name":  "UpdateRecipeCommentCommand",

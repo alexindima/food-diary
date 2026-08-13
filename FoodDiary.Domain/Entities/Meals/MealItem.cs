@@ -115,18 +115,40 @@ public sealed class MealItem : Entity<MealItemId> {
 
     public void ApplyRecipeSnapshot(Recipe recipe) {
         ArgumentNullException.ThrowIfNull(recipe);
-        int servings = recipe.Servings <= 0 ? 1 : recipe.Servings;
-        ApplySnapshot(
+        ApplyRecipeSnapshot(
             recipe.Name,
             recipe.ImageUrl,
+            recipe.Servings,
+            recipe.TotalCalories,
+            recipe.TotalProteins,
+            recipe.TotalFats,
+            recipe.TotalCarbs,
+            recipe.TotalFiber,
+            recipe.TotalAlcohol);
+    }
+
+    public void ApplyRecipeSnapshot(
+        string name,
+        string? imageUrl,
+        int servings,
+        double? totalCalories,
+        double? totalProteins,
+        double? totalFats,
+        double? totalCarbs,
+        double? totalFiber,
+        double? totalAlcohol) {
+        int normalizedServings = servings <= 0 ? 1 : servings;
+        ApplySnapshot(
+            name,
+            imageUrl,
             "serving",
             1,
-            (recipe.TotalCalories ?? 0) / servings,
-            (recipe.TotalProteins ?? 0) / servings,
-            (recipe.TotalFats ?? 0) / servings,
-            (recipe.TotalCarbs ?? 0) / servings,
-            (recipe.TotalFiber ?? 0) / servings,
-            (recipe.TotalAlcohol ?? 0) / servings);
+            (totalCalories ?? 0) / normalizedServings,
+            (totalProteins ?? 0) / normalizedServings,
+            (totalFats ?? 0) / normalizedServings,
+            (totalCarbs ?? 0) / normalizedServings,
+            (totalFiber ?? 0) / normalizedServings,
+            (totalAlcohol ?? 0) / normalizedServings);
     }
 
     public void UpdateAmount(double amount) {

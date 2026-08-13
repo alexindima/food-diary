@@ -3,9 +3,9 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Services;
@@ -51,7 +51,7 @@ public static class RecipeIngredientAccessValidator {
             return Result.Success();
         }
 
-        IReadOnlyDictionary<RecipeId, Recipe> recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken).ConfigureAwait(false);
         return recipes.Count == nestedRecipeIds.Count
             ? Result.Success()
             : Result.Failure(Errors.Validation.Invalid(

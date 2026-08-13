@@ -3,11 +3,11 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.RecipeLikes.Models;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
@@ -28,7 +28,7 @@ public sealed class ToggleRecipeLikeCommandHandler(
         }
 
         var recipeId = (RecipeId)command.RecipeId;
-        Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
+        RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
             recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {

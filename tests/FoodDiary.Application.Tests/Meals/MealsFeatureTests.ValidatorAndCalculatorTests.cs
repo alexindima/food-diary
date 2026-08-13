@@ -2,6 +2,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Abstractions.Products.Models;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -71,7 +72,7 @@ public partial class MealsFeatureTests {
         MealNutritionSummary result = MealNutritionCalculator.Calculate(
             meal,
             new Dictionary<ProductId, ProductOverviewReadItem> { [product.Id] = TestProductOverview.From(product, userId) },
-            new Dictionary<RecipeId, Recipe> { [recipe.Id] = recipe });
+            new Dictionary<RecipeId, RecipeOverviewReadItem> { [recipe.Id] = TestRecipeOverview.From(recipe, userId) });
 
         Assert.Equal(215, result.Calories, 2);
         Assert.Equal(6.25, result.Proteins, 2);
@@ -91,7 +92,7 @@ public partial class MealsFeatureTests {
         MealNutritionSummary result = MealNutritionCalculator.Calculate(
             meal,
             new Dictionary<ProductId, ProductOverviewReadItem>(),
-            new Dictionary<RecipeId, Recipe>());
+            new Dictionary<RecipeId, RecipeOverviewReadItem>());
 
         Assert.Equal(0, result.Calories);
         Assert.Equal(0, result.Proteins);

@@ -353,9 +353,8 @@ public class RecipeCommentsFeatureTests {
                 Arg.Any<RecipeId>(),
                 Arg.Any<UserId>(),
                 Arg.Any<bool>(),
-                Arg.Any<bool>(),
                 Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(recipe));
+            .Returns(call => Task.FromResult(recipe is null ? null : TestRecipeOverview.From(recipe, call.ArgAt<UserId>(1))));
         return service;
     }
 

@@ -1,13 +1,13 @@
 using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Services;
 
-public sealed class RecipeLookupService(IRecipeReadRepository recipeRepository) : IRecipeLookupService {
-    public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
+public sealed class RecipeLookupService(IRecipeOverviewReadService recipeReadService) : IRecipeLookupService {
+    public Task<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>> GetAccessibleByIdsAsync(
         IEnumerable<RecipeId> ids,
         UserId userId,
         CancellationToken cancellationToken = default) =>
-        recipeRepository.GetByIdsAsync(ids, userId, includePublic: true, cancellationToken);
+        recipeReadService.GetByIdsWithUsageAsync(ids, userId, includePublic: true, cancellationToken);
 }

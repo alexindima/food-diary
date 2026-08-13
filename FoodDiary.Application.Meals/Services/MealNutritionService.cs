@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 
 namespace FoodDiary.Application.Meals.Services;
 
@@ -35,7 +35,7 @@ public sealed class MealNutritionService(
             return Result.Failure<MealNutritionSummary>(Errors.Product.NotAccessible(missingProduct.Value));
         }
 
-        IReadOnlyDictionary<RecipeId, Recipe> recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken).ConfigureAwait(false);
         if (recipes.Count != recipeIds.Count) {
             RecipeId missingRecipe = recipeIds.First(id => !recipes.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(Errors.Recipe.NotAccessible(missingRecipe.Value));
@@ -49,7 +49,7 @@ public sealed class MealNutritionService(
     private static void ApplyItemSnapshots(
         Meal meal,
         IReadOnlyDictionary<ProductId, ProductOverviewReadItem> products,
-        IReadOnlyDictionary<RecipeId, Recipe> recipes) {
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipes) {
         foreach (MealItem item in meal.Items) {
             if (item.HasNutritionSnapshot) {
                 continue;
@@ -70,8 +70,17 @@ public sealed class MealNutritionService(
                 continue;
             }
 
-            if (item.RecipeId is { } recipeId && recipes.TryGetValue(recipeId, out Recipe? recipe)) {
-                item.ApplyRecipeSnapshot(recipe);
+            if (item.RecipeId is { } recipeId && recipes.TryGetValue(recipeId, out RecipeOverviewReadItem? recipe)) {
+                item.ApplyRecipeSnapshot(
+                    recipe.Name,
+                    recipe.ImageUrl,
+                    recipe.Servings,
+                    recipe.TotalCalories,
+                    recipe.TotalProteins,
+                    recipe.TotalFats,
+                    recipe.TotalCarbs,
+                    recipe.TotalFiber,
+                    recipe.TotalAlcohol);
             }
         }
     }

@@ -68,7 +68,7 @@ Source: `FoodDiary.Presentation.Api/Features/Recipes/RecipesController.cs`
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 3
-- Contracts referencing domain entities: 5
+- Contracts referencing domain entities: 3
 - `class RecipeErrors`
 - `interface IRecipeAccessService`
 - `interface IRecipeLookupService`

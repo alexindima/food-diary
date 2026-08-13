@@ -483,21 +483,21 @@ public partial class RecipesFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class AllowAllRecipeLookupService : IRecipeLookupService {
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
+        public Task<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids,
             UserId userId,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(
-                ids.Distinct().ToDictionary(id => id, id => CreateNestedRecipe(userId, id)));
+            Task.FromResult<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>>(
+                ids.Distinct().ToDictionary(id => id, id => TestRecipeOverview.From(CreateNestedRecipe(userId, id), userId)));
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class EmptyRecipeLookupService : IRecipeLookupService {
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
+        public Task<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids,
             UserId userId,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(new Dictionary<RecipeId, Recipe>());
+            Task.FromResult<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>>(new Dictionary<RecipeId, RecipeOverviewReadItem>());
     }
 
     private static Product CreateProduct(UserId userId, ProductId productId) {

@@ -3,9 +3,10 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 
@@ -36,7 +37,7 @@ public sealed class DeleteRecipeCommentCommandHandler(
         // Author or recipe owner can delete
         bool isAuthor = comment.UserId == userIdResult.Value;
         if (!isAuthor) {
-            Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
+            RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
                 recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (recipe is null) {

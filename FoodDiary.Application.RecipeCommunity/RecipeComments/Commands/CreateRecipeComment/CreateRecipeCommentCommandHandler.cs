@@ -4,6 +4,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Domain.Entities.Recipes;
@@ -30,7 +31,7 @@ public sealed class CreateRecipeCommentCommandHandler(
         }
 
         var recipeId = (RecipeId)command.RecipeId;
-        Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
+        RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
             recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {

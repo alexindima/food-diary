@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Meals.Commands.DeleteMeal;
 using FoodDiary.Application.Meals.Commands.UpdateMeal;
@@ -20,7 +21,6 @@ using FoodDiary.Application.FavoriteMeals.Services;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
-using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -639,11 +639,11 @@ public partial class MealsFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class NoopRecipeLookupService : IRecipeLookupService {
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
+        public Task<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>> GetAccessibleByIdsAsync(
             IEnumerable<RecipeId> ids,
             UserId userId,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(new Dictionary<RecipeId, Recipe>());
+            Task.FromResult<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>>(new Dictionary<RecipeId, RecipeOverviewReadItem>());
     }
 
     [ExcludeFromCodeCoverage]

@@ -7,6 +7,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests.Meals;
@@ -158,7 +159,8 @@ public class MealNutritionServiceTests {
         IRecipeLookupService lookup = Substitute.For<IRecipeLookupService>();
         lookup
             .GetAccessibleByIdsAsync(Arg.Any<IEnumerable<RecipeId>>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(recipes));
+            .Returns(call => Task.FromResult<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>>(
+                recipes.ToDictionary(pair => pair.Key, pair => TestRecipeOverview.From(pair.Value, call.ArgAt<UserId>(1)))));
         return lookup;
     }
 }

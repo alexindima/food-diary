@@ -4,12 +4,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 
@@ -39,11 +39,10 @@ public sealed class AddFavoriteRecipeCommandHandler(
 
         UserId userId = userIdResult.Value;
         RecipeId recipeId = recipeIdResult.Value;
-        Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
+        RecipeOverviewReadItem? recipe = await recipeAccessService.GetAccessibleByIdAsync(
             recipeId,
             userId,
             includePublic: true,
-            includeSteps: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         if (recipe is null) {
             return Result.Failure<FavoriteRecipeModel>(Errors.Recipe.NotFound(command.RecipeId));

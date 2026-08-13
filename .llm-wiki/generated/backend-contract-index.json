@@ -76128,6 +76128,32 @@
                                                       "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Services/RecipeAccessService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IRecipeOverviewReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Infrastructure/Services/RecipeLookupService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IRecipeOverviewReadService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeOverviewReadService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Application.Tests/Recipes/RecipesFeatureTests.cs",
                               "isTest":  true,
                               "referenceCount":  3
@@ -76220,32 +76246,6 @@
                                                   ],
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Recipes.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IRecipeReadRepository",
-                              "roles":  [
-                                            "ReadRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeReadRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Infrastructure/Services/RecipeAccessService.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IRecipeReadRepository",
-                              "roles":  [
-                                            "ReadRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Recipes/Common/IRecipeReadRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Infrastructure/Services/RecipeLookupService.cs",
                               "isTest":  false,
                               "referenceCount":  1
                           },

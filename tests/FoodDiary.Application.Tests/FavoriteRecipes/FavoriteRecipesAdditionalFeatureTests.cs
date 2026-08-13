@@ -485,11 +485,10 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
                 Arg.Any<RecipeId>(),
                 Arg.Any<UserId>(),
                 Arg.Any<bool>(),
-                Arg.Any<bool>(),
                 Arg.Any<CancellationToken>())
             .Returns(call => {
                 RecipeId id = call.Arg<RecipeId>();
-                return Task.FromResult(recipe is not null && recipe.Id == id ? recipe : null);
+                return Task.FromResult(recipe is not null && recipe.Id == id ? TestRecipeOverview.From(recipe, call.ArgAt<UserId>(1)) : null);
             });
         return service;
     }
