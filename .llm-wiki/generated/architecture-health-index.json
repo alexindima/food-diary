@@ -50,16 +50,16 @@
                                "role":  "orchestrator"
                            },
                            {
-                               "module":  "Products",
-                               "fanIn":  0,
-                               "fanOut":  4,
+                               "module":  "Images",
+                               "fanIn":  3,
+                               "fanOut":  0,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
                            {
-                               "module":  "Images",
-                               "fanIn":  3,
-                               "fanOut":  0,
+                               "module":  "Products",
+                               "fanIn":  0,
+                               "fanOut":  3,
                                "level":  "informational",
                                "role":  "aggregate-owner"
                            },
@@ -93,13 +93,6 @@
                            },
                            {
                                "module":  "Hydration",
-                               "fanIn":  2,
-                               "fanOut":  0,
-                               "level":  "informational",
-                               "role":  "aggregate-owner"
-                           },
-                           {
-                               "module":  "RecentItems",
                                "fanIn":  2,
                                "fanOut":  0,
                                "level":  "informational",
@@ -167,6 +160,13 @@
                                "fanOut":  0,
                                "level":  "informational",
                                "role":  "adapter"
+                           },
+                           {
+                               "module":  "RecentItems",
+                               "fanIn":  1,
+                               "fanOut":  0,
+                               "level":  "informational",
+                               "role":  "aggregate-owner"
                            },
                            {
                                "module":  "Statistics",

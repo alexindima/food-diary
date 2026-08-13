@@ -8,14 +8,14 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3207,
-                    "symbols":  3217,
+                    "sourceFiles":  3209,
+                    "symbols":  3219,
                     "interfaceImplementationLinks":  229,
                     "dependencyInjectionRegistrations":  229,
                     "kinds":  {
-                                  "class":  1644,
+                                  "class":  1648,
                                   "enum":  49,
-                                  "interface":  410,
+                                  "interface":  408,
                                   "record":  1001,
                                   "record struct":  113
                               },
@@ -32,18 +32,18 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1183,
+                                  "Other":  1187,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
-                                  "ReadRepository":  48,
-                                  "Repository":  104,
+                                  "ReadRepository":  47,
+                                  "Repository":  102,
                                   "Request":  124,
                                   "Response":  171,
-                                  "Service":  262,
+                                  "Service":  264,
                                   "Validator":  183,
                                   "ValueObject":  123,
-                                  "WriteRepository":  47
+                                  "WriteRepository":  46
                               }
                 },
     "symbols":  [
@@ -1501,6 +1501,13 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application.Abstractions/Common/Validation/DietologistRequiredIdParser.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "SharedEnumValueParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.Abstractions/Common/Validation/SharedEnumValueParser.cs",
                         "line":  5
                     },
                     {
@@ -3268,6 +3275,13 @@
                         "line":  5
                     },
                     {
+                        "name":  "IProductUsdaLinkService",
+                        "kind":  "interface",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "IProductWriteRepository",
                         "kind":  "interface",
                         "role":  "WriteRepository",
@@ -3588,27 +3602,6 @@
                         "role":  "Service",
                         "path":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs",
                         "line":  4
-                    },
-                    {
-                        "name":  "IUsdaProductLinkReadRepository",
-                        "kind":  "interface",
-                        "role":  "ReadRepository",
-                        "path":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkReadRepository.cs",
-                        "line":  5
-                    },
-                    {
-                        "name":  "IUsdaProductLinkRepository",
-                        "kind":  "interface",
-                        "role":  "Repository",
-                        "path":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs",
-                        "line":  2
-                    },
-                    {
-                        "name":  "IUsdaProductLinkWriteRepository",
-                        "kind":  "interface",
-                        "role":  "WriteRepository",
-                        "path":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs",
-                        "line":  5
                     },
                     {
                         "name":  "UsdaErrors",
@@ -11147,7 +11140,7 @@
                         "kind":  "class",
                         "role":  "CommandHandler",
                         "path":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                        "line":  10
+                        "line":  9
                     },
                     {
                         "name":  "IUsdaFoodReadService",
@@ -12071,7 +12064,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                        "line":  9
+                        "line":  10
                     },
                     {
                         "name":  "DependencyInjection",
@@ -12176,7 +12169,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-                        "line":  12
+                        "line":  11
                     },
                     {
                         "name":  "ProductUpdateValues",
@@ -12235,6 +12228,13 @@
                         "line":  6
                     },
                     {
+                        "name":  "ProductEnumFilterParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Products/Common/ProductEnumFilterParser.cs",
+                        "line":  4
+                    },
+                    {
                         "name":  "ProductImageAssetResolution",
                         "kind":  "record",
                         "role":  "Other",
@@ -12247,6 +12247,20 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Products/Common/ProductImageAssetResolver.cs",
                         "line":  7
+                    },
+                    {
+                        "name":  "ProductRequiredIdParser",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Products/Common/ProductRequiredIdParser.cs",
+                        "line":  5
+                    },
+                    {
+                        "name":  "RecentProductOverviewLoader",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application/Products/Common/RecentProductOverviewLoader.cs",
+                        "line":  4
                     },
                     {
                         "name":  "ProductMappings",
@@ -12337,7 +12351,7 @@
                         "kind":  "class",
                         "role":  "QueryHandler",
                         "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                        "line":  17
+                        "line":  16
                     },
                     {
                         "name":  "GetProductsOverviewQueryValidator",
@@ -12403,11 +12417,18 @@
                         "line":  8
                     },
                     {
+                        "name":  "ProductUsdaLinkService",
+                        "kind":  "class",
+                        "role":  "Service",
+                        "path":  "FoodDiary.Application/Products/Services/ProductUsdaLinkService.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "RecentProductReadService",
                         "kind":  "class",
                         "role":  "Service",
                         "path":  "FoodDiary.Application/Products/Services/RecentProductReadService.cs",
-                        "line":  11
+                        "line":  10
                     },
                     {
                         "name":  "RecentItemOverviewLoader",
@@ -16180,13 +16201,6 @@
                         "kind":  "class",
                         "role":  "Repository",
                         "path":  "FoodDiary.Infrastructure/Persistence/Usda/UsdaFoodRepository.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "UsdaProductLinkRepository",
-                        "kind":  "class",
-                        "role":  "Repository",
-                        "path":  "FoodDiary.Infrastructure/Persistence/Usda/UsdaProductLinkRepository.cs",
                         "line":  7
                     },
                     {
@@ -23696,6 +23710,13 @@
                                          "confidence":  "naming-convention"
                                      },
                                      {
+                                         "interface":  "IProductUsdaLinkService",
+                                         "interfacePath":  "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs",
+                                         "implementation":  "ProductUsdaLinkService",
+                                         "implementationPath":  "FoodDiary.Application/Products/Services/ProductUsdaLinkService.cs",
+                                         "confidence":  "naming-convention"
+                                     },
+                                     {
                                          "interface":  "IProfileOverviewReadService",
                                          "interfacePath":  "FoodDiary.Application.Users/Common/IProfileOverviewReadService.cs",
                                          "implementation":  "ProfileOverviewReadService",
@@ -23910,13 +23931,6 @@
                                          "interfacePath":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs",
                                          "implementation":  "UsdaFoodSearchService",
                                          "implementationPath":  "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-                                         "confidence":  "naming-convention"
-                                     },
-                                     {
-                                         "interface":  "IUsdaProductLinkRepository",
-                                         "interfacePath":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs",
-                                         "implementation":  "UsdaProductLinkRepository",
-                                         "implementationPath":  "FoodDiary.Infrastructure/Persistence/Usda/UsdaProductLinkRepository.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24906,28 +24920,35 @@
                                                  "implementation":  "OpenFoodFactsProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  12
+                                                 "line":  13
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "UsdaProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  13
+                                                 "line":  14
                                              },
                                              {
                                                  "service":  "IRecentProductReadService",
                                                  "implementation":  "RecentProductReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  14
+                                                 "line":  15
+                                             },
+                                             {
+                                                 "service":  "IProductUsdaLinkService",
+                                                 "implementation":  "ProductUsdaLinkService",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                                                 "line":  16
                                              },
                                              {
                                                  "service":  "IRecentRecipeReadService",
                                                  "implementation":  "RecentRecipeReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  15
+                                                 "line":  17
                                              },
                                              {
                                                  "service":  "IAchievementDefinitionStore",
@@ -25425,13 +25446,6 @@
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
                                                  "line":  9
-                                             },
-                                             {
-                                                 "service":  "IUsdaProductLinkRepository",
-                                                 "implementation":  "UsdaProductLinkRepository",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
-                                                 "line":  12
                                              },
                                              {
                                                  "service":  "IUserRoleCatalogService",

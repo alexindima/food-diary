@@ -6,8 +6,8 @@
                       "externalTransfers":  "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
                   },
     "summary":  {
-                    "candidateFields":  1431,
-                    "credential":  152,
+                    "candidateFields":  1432,
+                    "credential":  153,
                     "identity":  153,
                     "health":  630,
                     "financial":  199,
@@ -338,6 +338,13 @@
                        "type":  "string",
                        "path":  "FoodDiary.Application.Users/Commands/SetPassword/SetPasswordCommand.cs",
                        "line":  8
+                   },
+                   {
+                       "category":  "credential",
+                       "name":  "CancellationToken",
+                       "type":  "int,",
+                       "path":  "FoodDiary.Application/Products/Common/RecentProductOverviewLoader.cs",
+                       "line":  9
                    },
                    {
                        "category":  "credential",
@@ -4586,21 +4593,21 @@
                        "name":  "CaloriesFrom",
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  31
+                       "line":  30
                    },
                    {
                        "category":  "health",
                        "name":  "CaloriesTo",
                        "type":  "double?",
                        "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  32
+                       "line":  31
                    },
                    {
                        "category":  "health",
                        "name":  "CaloriesTo",
                        "type":  "CaloriesFrom,",
                        "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                       "line":  35
+                       "line":  34
                    },
                    {
                        "category":  "health",

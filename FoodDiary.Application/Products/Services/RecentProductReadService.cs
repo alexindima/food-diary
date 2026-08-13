@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Services;
@@ -51,7 +50,7 @@ public sealed class RecentProductReadService(
         int limit,
         bool includePublic,
         CancellationToken cancellationToken) {
-        return await RecentItemOverviewLoader.LoadAsync<RecentProductUsage, ProductId, ProductOverviewReadItem>(
+        return await RecentProductOverviewLoader.LoadAsync<RecentProductUsage, ProductId, ProductOverviewReadItem>(
             userId,
             limit,
             recentItemUsageReadService.GetRecentProductsAsync,

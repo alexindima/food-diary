@@ -1072,7 +1072,7 @@ public sealed class BusinessModuleBoundaryTests {
 
     [Theory]
     [InlineData("OpenFoodFacts", "IOpenFoodFactsProductCacheRepository", "IOpenFoodFactsProductCacheReadRepository", "IOpenFoodFactsProductCacheWriteRepository")]
-    [InlineData("Usda", "IUsdaFoodRepository", "IUsdaFoodReadRepository", "IUsdaFoodReadModelRepository", "IUsdaProductLinkRepository", "IUsdaProductLinkReadRepository", "IUsdaProductLinkWriteRepository")]
+    [InlineData("Usda", "IUsdaFoodRepository", "IUsdaFoodReadRepository", "IUsdaFoodReadModelRepository")]
     public void OtherApplicationModules_DoNotAcquireExternalCatalogRepositories(
         string ownerModule,
         params string[] forbiddenContracts) {

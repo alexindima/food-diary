@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Products.Common;
@@ -16,13 +15,13 @@ internal static class ProductUpdateValuePreparer {
         ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         CancellationToken cancellationToken) {
-        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+        Result<ProductId> productIdResult = ProductRequiredIdParser.Parse(
             command.ProductId,
             nameof(command.ProductId),
             "Product id must not be empty.",
             value => new ProductId(value));
         if (productIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<ProductUpdateValues, ProductId>(productIdResult);
+            return ProductRequiredIdParser.ToFailure<ProductUpdateValues, ProductId>(productIdResult);
         }
 
         Result<UserId> userIdResult = await ResolveUserIdAsync(command, currentUserAccessService, cancellationToken).ConfigureAwait(false);

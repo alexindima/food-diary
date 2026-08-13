@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -30,7 +30,7 @@ public sealed class GetProductsQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        ProductType[]? productTypes = EnumFilterParser.ParseMany<ProductType>(query.ProductTypes);
+        ProductType[]? productTypes = ProductEnumFilterParser.ParseMany<ProductType>(query.ProductTypes);
 
         (IReadOnlyList<ProductOverviewReadItem> items, int totalItems) = await productOverviewReadService.GetPagedAsync(
             userId,

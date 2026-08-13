@@ -2,9 +2,9 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Products;
@@ -18,13 +18,13 @@ public sealed class DeleteProductCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteProductCommand, Result> {
     public async Task<Result> Handle(DeleteProductCommand command, CancellationToken cancellationToken) {
-        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+        Result<ProductId> productIdResult = ProductRequiredIdParser.Parse(
             command.ProductId,
             nameof(command.ProductId),
             "Product id must not be empty.",
             value => new ProductId(value));
         if (productIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure(productIdResult);
+            return ProductRequiredIdParser.ToFailure(productIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(

@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Application.Products.Mappings;
@@ -92,7 +91,7 @@ public sealed class GetProductsOverviewQueryHandler(
         new(favorite.ProductId);
 
     private static ProductOverviewOptions CreateOptions(GetProductsOverviewQuery query, UserId userId) {
-        ProductType[]? productTypes = EnumFilterParser.ParseMany<ProductType>(query.ProductTypes);
+        ProductType[]? productTypes = ProductEnumFilterParser.ParseMany<ProductType>(query.ProductTypes);
 
         return new ProductOverviewOptions(
             userId,

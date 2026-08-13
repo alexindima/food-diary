@@ -811,13 +811,6 @@ public sealed class DependencyInjectionTests {
             ]
         },
         {
-            "FoodDiary.Application.Abstractions.Usda.Common.IUsdaProductLinkRepository",
-            [
-                "FoodDiary.Application.Abstractions.Usda.Common.IUsdaProductLinkReadRepository",
-                "FoodDiary.Application.Abstractions.Usda.Common.IUsdaProductLinkWriteRepository",
-            ]
-        },
-        {
             "FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheRepository",
             [
                 "FoodDiary.Application.Abstractions.OpenFoodFacts.Common.IOpenFoodFactsProductCacheReadRepository",

@@ -1,13 +1,13 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Products.Common;
 
 internal static class ProductCommandParsers {
     public static Result<MeasurementUnit> ParseRequiredBaseUnit(string value, string propertyName) =>
-        EnumValueParser.ParseRequired<MeasurementUnit>(
+        SharedEnumValueParser.ParseRequired<MeasurementUnit>(
             value,
             propertyName,
             "Unknown measurement unit value.");
@@ -19,7 +19,7 @@ internal static class ProductCommandParsers {
             "Unknown measurement unit value.");
 
     public static Result<Visibility> ParseRequiredVisibility(string value, string propertyName) =>
-        EnumValueParser.ParseRequired<Visibility>(
+        SharedEnumValueParser.ParseRequired<Visibility>(
             value,
             propertyName,
             "Unknown visibility value.");
@@ -31,7 +31,7 @@ internal static class ProductCommandParsers {
             "Unknown visibility value.");
 
     public static Result<ProductType> ParseRequiredProductType(string value, string propertyName) {
-        Result<ProductType> productTypeResult = EnumValueParser.ParseRequired<ProductType>(
+        Result<ProductType> productTypeResult = SharedEnumValueParser.ParseRequired<ProductType>(
             value,
             propertyName,
             "Unknown product type value.");
@@ -67,5 +67,5 @@ internal static class ProductCommandParsers {
         where TEnum : struct, Enum =>
         string.IsNullOrWhiteSpace(value)
             ? Result.Success<TEnum?>(value: null)
-            : EnumValueParser.ParseOptional<TEnum>(value, propertyName, errorMessage);
+            : SharedEnumValueParser.ParseOptional<TEnum>(value, propertyName, errorMessage);
 }

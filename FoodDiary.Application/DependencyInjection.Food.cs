@@ -1,4 +1,5 @@
 using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Application.Products.Services;
 using FoodDiary.Application.Recipes.Common;
@@ -12,6 +13,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();
         services.AddScoped<IRecentProductReadService, RecentProductReadService>();
+        services.AddScoped<IProductUsdaLinkService, ProductUsdaLinkService>();
         services.AddScoped<IRecentRecipeReadService, RecentRecipeReadService>();
     }
 }

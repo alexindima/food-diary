@@ -1,12 +1,12 @@
 {
     "schemaVersion":  1,
     "summary":  {
-                    "contracts":  1025,
+                    "contracts":  1023,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7077,
-                    "productionConsumerEdges":  4332,
-                    "testConsumerEdges":  2745,
-                    "consumedContracts":  1025,
+                    "consumerEdges":  7065,
+                    "productionConsumerEdges":  4328,
+                    "testConsumerEdges":  2737,
+                    "consumedContracts":  1023,
                     "unconsumedContracts":  0
                 },
     "contracts":  [
@@ -10367,6 +10367,22 @@
                           "ambiguous":  false
                       },
                       {
+                          "name":  "IProductUsdaLinkService",
+                          "roles":  [
+                                        "Service"
+                                    ],
+                          "kinds":  [
+                                        "interface"
+                                    ],
+                          "areas":  [
+                                        "FoodDiary"
+                                    ],
+                          "definitionPaths":  [
+                                                  "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
+                                              ],
+                          "ambiguous":  false
+                      },
+                      {
                           "name":  "IProductWriteRepository",
                           "roles":  [
                                         "WriteRepository"
@@ -11579,54 +11595,6 @@
                                     ],
                           "definitionPaths":  [
                                                   "FoodDiary.Application.Abstractions/Usda/Common/IUsdaFoodSearchService.cs"
-                                              ],
-                          "ambiguous":  false
-                      },
-                      {
-                          "name":  "IUsdaProductLinkReadRepository",
-                          "roles":  [
-                                        "ReadRepository"
-                                    ],
-                          "kinds":  [
-                                        "interface"
-                                    ],
-                          "areas":  [
-                                        "FoodDiary"
-                                    ],
-                          "definitionPaths":  [
-                                                  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkReadRepository.cs"
-                                              ],
-                          "ambiguous":  false
-                      },
-                      {
-                          "name":  "IUsdaProductLinkRepository",
-                          "roles":  [
-                                        "Repository"
-                                    ],
-                          "kinds":  [
-                                        "interface"
-                                    ],
-                          "areas":  [
-                                        "FoodDiary"
-                                    ],
-                          "definitionPaths":  [
-                                                  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs"
-                                              ],
-                          "ambiguous":  false
-                      },
-                      {
-                          "name":  "IUsdaProductLinkWriteRepository",
-                          "roles":  [
-                                        "WriteRepository"
-                                    ],
-                          "kinds":  [
-                                        "interface"
-                                    ],
-                          "areas":  [
-                                        "FoodDiary"
-                                    ],
-                          "definitionPaths":  [
-                                                  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
                                               ],
                           "ambiguous":  false
                       },
@@ -71225,6 +71193,71 @@
                               "referenceCount":  5
                           },
                           {
+                              "contract":  "IProductUsdaLinkService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductUsdaLinkService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductUsdaLinkService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/DependencyInjection.Food.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductUsdaLinkService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Products/Services/ProductUsdaLinkService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductUsdaLinkService",
+                              "roles":  [
+                                            "Service"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  5
+                          },
+                          {
                               "contract":  "IProductWriteRepository",
                               "roles":  [
                                             "WriteRepository"
@@ -71298,6 +71331,19 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
+                              "consumerPath":  "FoodDiary.Application/Products/Services/ProductUsdaLinkService.cs",
+                              "isTest":  false,
+                              "referenceCount":  1
+                          },
+                          {
+                              "contract":  "IProductWriteRepository",
+                              "roles":  [
+                                            "WriteRepository"
+                                        ],
+                              "definitionPaths":  [
+                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Products.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -71311,9 +71357,9 @@
                                                       "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Usda/UsdaProductLinkRepository.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
+                              "consumerPath":  "tests/FoodDiary.Application.Tests/Products/ProductUsdaLinkServiceTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  5
                           },
                           {
                               "contract":  "IProductWriteRepository",
@@ -71340,19 +71386,6 @@
                               "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
                               "isTest":  true,
                               "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IProductWriteRepository",
-                              "roles":  [
-                                            "WriteRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/Persistence/UsdaProductLinkRepositoryTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  4
                           },
                           {
                               "contract":  "IProfileDietologistReadService",
@@ -83456,227 +83489,6 @@
                               "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkReadRepository",
-                              "roles":  [
-                                            "ReadRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkReadRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkReadRepository",
-                              "roles":  [
-                                            "ReadRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkReadRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkReadRepository",
-                              "roles":  [
-                                            "ReadRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkReadRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkReadRepository",
-                              "roles":  [
-                                            "ReadRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkReadRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkRepository",
-                              "roles":  [
-                                            "Repository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
-                              "isTest":  false,
-                              "referenceCount":  3
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkRepository",
-                              "roles":  [
-                                            "Repository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Infrastructure/Persistence/Usda/UsdaProductLinkRepository.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkRepository",
-                              "roles":  [
-                                            "Repository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  5
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkRepository",
-                              "roles":  [
-                                            "Repository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/ApplicationGuardrailTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkRepository",
-                              "roles":  [
-                                            "Repository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkRepository",
-                              "roles":  [
-                                            "Repository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkWriteRepository",
-                              "roles":  [
-                                            "WriteRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkWriteRepository",
-                              "roles":  [
-                                            "WriteRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkWriteRepository",
-                              "roles":  [
-                                            "WriteRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkWriteRepository",
-                              "roles":  [
-                                            "WriteRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkWriteRepository",
-                              "roles":  [
-                                            "WriteRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  3
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkWriteRepository",
-                              "roles":  [
-                                            "WriteRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.ArchitectureTests/BusinessModuleBoundaryTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IUsdaProductLinkWriteRepository",
-                              "roles":  [
-                                            "WriteRepository"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Infrastructure.Tests/DependencyInjectionTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  1
                           },
                           {
                               "contract":  "IUsdaProductSuggestionReadService",

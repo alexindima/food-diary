@@ -41,13 +41,13 @@ are reported separately; `none observed` never means proven isolation.
 | [Meals](meals.md) | aggregate-owner | 0 | 8 | 0 | 11 | project-reference-matrix |
 | [Notifications](notifications.md) | aggregate-owner | 0 | 0 | 0 | 5 | project-reference-matrix |
 | [OpenFoodFacts](open-food-facts.md) | adapter | 0 | 0 | 1 | 6 | project-reference-matrix |
-| [Products](products.md) | aggregate-owner | 4 | 6 | 0 | 1 | explicit-boundary-tests |
-| [RecentItems](recent-items.md) | aggregate-owner | 0 | 0 | 2 | 0 | graph-only |
+| [Products](products.md) | aggregate-owner | 3 | 6 | 0 | 1 | explicit-boundary-tests |
+| [RecentItems](recent-items.md) | aggregate-owner | 0 | 0 | 1 | 0 | graph-only |
 | [RecipeCommunity](recipe-community.md) | aggregate-owner | 0 | 5 | 0 | 4 | project-reference-matrix |
 | [Recipes](recipes.md) | aggregate-owner | 2 | 6 | 0 | 1 | explicit-boundary-tests |
 | [Statistics](statistics.md) | read-composer | 0 | 4 | 0 | 6 | project-reference-matrix |
 | [Tdee](tdee.md) | read-composer | 0 | 3 | 0 | 6 | project-reference-matrix |
-| [Usda](usda.md) | adapter | 0 | 2 | 1 | 6 | project-reference-matrix |
+| [Usda](usda.md) | adapter | 0 | 3 | 1 | 6 | project-reference-matrix |
 | [Users](users.md) | aggregate-owner | 0 | 0 | 0 | 4 | explicit-boundary-tests |
 | [Wearables](wearables.md) | aggregate-owner | 0 | 1 | 0 | 5 | assembly-isolated |
 | [WeeklyCheckIn](weekly-check-in.md) | read-composer | 0 | 5 | 0 | 4 | project-reference-matrix |

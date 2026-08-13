@@ -1,15 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
 
 public sealed class UnlinkProductFromUsdaFoodCommandHandler(
-    IUsdaProductLinkWriteRepository productLinkRepository,
+    IProductUsdaLinkService productLinkService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UnlinkProductFromUsdaFoodCommand, Result> {
     public async Task<Result> Handle(
@@ -24,15 +23,12 @@ public sealed class UnlinkProductFromUsdaFoodCommandHandler(
         }
 
         var productId = (ProductId)command.ProductId;
-        Product? product = await productLinkRepository.GetForLinkUpdateAsync(
+        bool unlinked = await productLinkService.UnlinkAsync(
             productId, userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
-        if (product is null) {
+        if (!unlinked) {
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
         }
-
-        product.UnlinkUsdaFood();
-        await productLinkRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4215,
+                    "productionFiles":  4217,
                     "criticalSymbols":  541,
                     "criticalSymbolsWithTestReferences":  512,
                     "criticalSymbolsWithoutTestReferences":  29,
@@ -2247,6 +2247,14 @@
                       "structuralRiskScore":  0.34
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Common/Validation/SharedEnumValueParser.cs",
+                      "nonBlankLines":  28,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.56
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/Common/Validation/UserIdParser.cs",
                       "nonBlankLines":  20,
                       "decisionPoints":  1,
@@ -4263,6 +4271,14 @@
                       "structuralRiskScore":  0.22
                   },
                   {
+                      "path":  "FoodDiary.Application.Abstractions/Products/Common/IProductUsdaLinkService.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
                       "path":  "FoodDiary.Application.Abstractions/Products/Common/IProductWriteRepository.cs",
                       "nonBlankLines":  13,
                       "decisionPoints":  0,
@@ -4629,30 +4645,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  0.22
-                  },
-                  {
-                      "path":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkReadRepository.cs",
-                      "nonBlankLines":  9,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.18
-                  },
-                  {
-                      "path":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkRepository.cs",
-                      "nonBlankLines":  2,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.04
-                  },
-                  {
-                      "path":  "FoodDiary.Application.Abstractions/Usda/Common/IUsdaProductLinkWriteRepository.cs",
-                      "nonBlankLines":  10,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.2
                   },
                   {
                       "path":  "FoodDiary.Application.Abstractions/Usda/Common/UsdaErrors.cs",
@@ -13464,11 +13456,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Usda/Commands/LinkProductToUsdaFood/LinkProductToUsdaFoodCommandHandler.cs",
-                      "nonBlankLines":  39,
-                      "decisionPoints":  3,
+                      "nonBlankLines":  45,
+                      "decisionPoints":  4,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  7.28
+                      "structuralRiskScore":  8.9
                   },
                   {
                       "path":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommand.cs",
@@ -13480,11 +13472,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                      "nonBlankLines":  33,
+                      "nonBlankLines":  30,
                       "decisionPoints":  2,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.66
+                      "structuralRiskScore":  5.6
                   },
                   {
                       "path":  "FoodDiary.Application.Usda/Common/IUsdaFoodReadService.cs",
@@ -14568,11 +14560,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                      "nonBlankLines":  15,
+                      "nonBlankLines":  17,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.3
+                      "structuralRiskScore":  0.34
                   },
                   {
                       "path":  "FoodDiary.Application/DependencyInjection.Notifications.cs",
@@ -14696,11 +14688,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValuePreparer.cs",
-                      "nonBlankLines":  85,
+                      "nonBlankLines":  84,
                       "decisionPoints":  9,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  15.2
+                      "structuralRiskScore":  15.18
                   },
                   {
                       "path":  "FoodDiary.Application/Products/Commands/UpdateProduct/ProductUpdateValues.cs",
@@ -14767,6 +14759,14 @@
                       "structuralRiskScore":  9.42
                   },
                   {
+                      "path":  "FoodDiary.Application/Products/Common/ProductEnumFilterParser.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.34
+                  },
+                  {
                       "path":  "FoodDiary.Application/Products/Common/ProductImageAssetResolution.cs",
                       "nonBlankLines":  6,
                       "decisionPoints":  0,
@@ -14781,6 +14781,22 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  2.04
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Products/Common/ProductRequiredIdParser.cs",
+                      "nonBlankLines":  17,
+                      "decisionPoints":  0,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  0.34
+                  },
+                  {
+                      "path":  "FoodDiary.Application/Products/Common/RecentProductOverviewLoader.cs",
+                      "nonBlankLines":  20,
+                      "decisionPoints":  1,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  1.9
                   },
                   {
                       "path":  "FoodDiary.Application/Products/Mappings/ProductMappings.cs",
@@ -14880,11 +14896,11 @@
                   },
                   {
                       "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                      "nonBlankLines":  117,
+                      "nonBlankLines":  116,
                       "decisionPoints":  1,
                       "criticalSymbols":  1,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  5.84
+                      "structuralRiskScore":  5.82
                   },
                   {
                       "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryValidator.cs",
@@ -14959,12 +14975,20 @@
                       "structuralRiskScore":  2.34
                   },
                   {
+                      "path":  "FoodDiary.Application/Products/Services/ProductUsdaLinkService.cs",
+                      "nonBlankLines":  45,
+                      "decisionPoints":  2,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.9
+                  },
+                  {
                       "path":  "FoodDiary.Application/Products/Services/RecentProductReadService.cs",
-                      "nonBlankLines":  62,
+                      "nonBlankLines":  61,
                       "decisionPoints":  8,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  13.24
+                      "structuralRiskScore":  13.22
                   },
                   {
                       "path":  "FoodDiary.Application/RecentItems/Common/RecentItemOverviewLoader.cs",
@@ -17592,11 +17616,11 @@
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/DependencyInjection.Usda.cs",
-                      "nonBlankLines":  14,
+                      "nonBlankLines":  11,
                       "decisionPoints":  0,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
+                      "structuralRiskScore":  0.22
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/DependencyInjection.Users.cs",
@@ -19173,14 +19197,6 @@
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
                       "structuralRiskScore":  9.18
-                  },
-                  {
-                      "path":  "FoodDiary.Infrastructure/Persistence/Usda/UsdaProductLinkRepository.cs",
-                      "nonBlankLines":  14,
-                      "decisionPoints":  0,
-                      "criticalSymbols":  0,
-                      "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  0.28
                   },
                   {
                       "path":  "FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
@@ -35798,7 +35814,7 @@
                                 "name":  "UnlinkProductFromUsdaFoodCommandHandler",
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application.Usda/Commands/UnlinkProductFromUsdaFood/UnlinkProductFromUsdaFoodCommandHandler.cs",
-                                "line":  10,
+                                "line":  9,
                                 "testReferenceCount":  2,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Usda/UsdaFeatureTests.cs",
@@ -37887,7 +37903,7 @@
                                 "name":  "GetProductsOverviewQueryHandler",
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application/Products/Queries/GetProductsOverview/GetProductsOverviewQueryHandler.cs",
-                                "line":  17,
+                                "line":  16,
                                 "testReferenceCount":  3,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.ReadQueryTests.cs",

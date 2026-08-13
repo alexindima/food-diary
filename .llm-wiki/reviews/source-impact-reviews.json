@@ -60,18 +60,14 @@
                         "pageSha256":  "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
                         "sources":  [
                                         {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "289201effe0a8abe590cdef0cdf35210c2325984b28e93367172de600236149d"
-                                        },
-                                        {
-                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "deaf9bd292b1f8bb0e88ad70ca8104c9f7250b5fa057fb4b322e0d9e2469c170"
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "589cc180e6a5b8816d84987f354b4326bc38ad165fc23f962f78dcb1682fe678"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:17.1652590Z"
+                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
+                        "reviewedAtUtc":  "2026-08-13T19:37:25.7611173Z"
                     },
                     {
                         "pageId":  "system.frontend-index",
@@ -109,14 +105,14 @@
                         "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
                         "sources":  [
                                         {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "289201effe0a8abe590cdef0cdf35210c2325984b28e93367172de600236149d"
+                                            "path":  "docs/architecture/module-dependencies.json",
+                                            "sha256":  "589cc180e6a5b8816d84987f354b4326bc38ad165fc23f962f78dcb1682fe678"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:17.6416705Z"
+                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
+                        "reviewedAtUtc":  "2026-08-13T19:37:25.9732951Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -189,17 +185,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "48aed18d90836fe2ec74dbbaa070f1acb45c8d3f7c21183ed617533191c3bf42"
-                                        },
-                                        {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "75b1fe345c1ae9cbe7c107325ff99e1601bf11a47ee72726e74b425102a9bf83"
+                                            "sha256":  "a23c7bae484596080e54d5fff871ea71e8dad32fba03fba5fcba87df4970fd26"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:19.9971246Z"
+                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
+                        "reviewedAtUtc":  "2026-08-13T19:37:27.8110772Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -268,21 +260,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "228977e96047484ab84229d6e6af248e2eb59e65bca02175fc46059c93f53c06"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "289201effe0a8abe590cdef0cdf35210c2325984b28e93367172de600236149d"
-                                        },
-                                        {
-                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "deaf9bd292b1f8bb0e88ad70ca8104c9f7250b5fa057fb4b322e0d9e2469c170"
+                                            "sha256":  "2fe5d5a0d1b037d6b6faec61b46377f6a09a4854a981d4856a0c60b3ca5a486d"
                                         }
                                     ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
+                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:17.9348246Z"
+                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
+                        "reviewedAtUtc":  "2026-08-13T19:37:26.2251224Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -291,13 +275,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "8576116aff6d4a0934b9f4c9bcc110b0927acd860d268038fa1441507ac40642"
+                                            "sha256":  "1161d2baa231775cb98a090537430f0836adc47ded98431726658f8a30da660c"
                                         }
                                     ],
-                        "reason":  "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
+                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
-                        "reviewedAtUtc":  "2026-08-13T19:18:26.9568690Z"
+                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
+                        "reviewedAtUtc":  "2026-08-13T19:37:26.5268630Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -731,13 +715,13 @@
                         "sources":  [
                                         {
                                             "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "19801482826c8005498550c0adb2aa333cbc5a1a3da3ec027f85dd5c3fa10eb8"
+                                            "sha256":  "589cc180e6a5b8816d84987f354b4326bc38ad165fc23f962f78dcb1682fe678"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:00.9967872Z"
+                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
+                        "reviewedAtUtc":  "2026-08-13T19:37:26.8196764Z"
                     },
                     {
                         "pageId":  "workflow-performance-observability-review",
@@ -803,13 +787,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "db29a252e7049410a19bada9353ba5bce5f337f1a4b4bdcc433ea6a0b93d8893"
+                                            "sha256":  "10188c869f0c5ce026bc66a9e7947070606b5cbc7ac43afd460cd1f8a40a377b"
                                         }
                                     ],
-                        "reason":  "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
+                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
-                        "reviewedAtUtc":  "2026-08-13T19:18:27.5965062Z"
+                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
+                        "reviewedAtUtc":  "2026-08-13T19:37:27.1956186Z"
                     },
                     {
                         "pageId":  "workflow-product-journey-impact",
@@ -852,13 +836,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "2a795d81e33b0a48accf8fc1057c7502dd19677920e081bf764df7821bdf1c02"
+                                            "sha256":  "67e3439ddf58b06d9224b9feed0542d32c768b60d6153a9099f60de3c1089409"
                                         }
                                     ],
-                        "reason":  "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
+                        "reason":  "Reviewed Products extraction preparation under ADR-0006: Products retains exclusive Product aggregate mutation through IProductUsdaLinkService; USDA no longer acquires Product repositories or aggregates; existing projection queries, pagination, tracking behavior, persistence ownership, HTTP contracts, and serialization are unchanged; focused application, architecture, and infrastructure tests pass.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
-                        "reviewedAtUtc":  "2026-08-13T19:18:27.9509052Z"
+                        "gitHead":  "88544ac161563d68d02a2af9da62c8714eaebec9",
+                        "reviewedAtUtc":  "2026-08-13T19:37:27.5314320Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

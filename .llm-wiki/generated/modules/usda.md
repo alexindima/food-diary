@@ -17,7 +17,7 @@ sources:
 - Origin: extracted-project
 - Extracted project: `FoodDiary.Application.Usda/FoodDiary.Application.Usda.csproj`
 - Business-module dependencies: none observed
-- Abstraction-contract dependencies: Meals, Users
+- Abstraction-contract dependencies: Meals, Products, Users
 - Business-module consumers: Products
 - Host/adapter consumers: FoodDiary.Application, FoodDiary.Initializer, FoodDiary.Integrations, FoodDiary.JobManager, FoodDiary.Presentation.Api, FoodDiary.Web.Api
 - Evidence model: compile-time namespaces plus project/composition source evidence; runtime DI/reflection may be incomplete.
@@ -49,27 +49,24 @@ Source: `FoodDiary.Presentation.Api/Features/Usda/UsdaController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 20
+- Public contract files: 17
 - Observed external consumer groups: 7
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 20
-- Interfaces: 8
+- Public contract types: 17
+- Interfaces: 5
 - DTO/read-model/projection types: 11
 - Enums: 0
-- Exported repository-shaped contracts: 6
-- Contracts referencing domain entities: 3
+- Exported repository-shaped contracts: 3
+- Contracts referencing domain entities: 1
 - `class UsdaErrors`
 - `interface IUsdaDailyMicronutrientReadService`
 - `interface IUsdaFoodReadModelRepository`
 - `interface IUsdaFoodReadRepository`
 - `interface IUsdaFoodRepository`
 - `interface IUsdaFoodSearchService`
-- `interface IUsdaProductLinkReadRepository`
-- `interface IUsdaProductLinkRepository`
-- `interface IUsdaProductLinkWriteRepository`
 - `record DailyMicronutrientModel`
 - `record DailyMicronutrientSummaryModel`
 - `record HealthAreaScoreModel`
@@ -90,7 +87,6 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaQueryHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Usda/UsdaValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsdaModuleExtractionTests.cs`
-- [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Persistence/UsdaProductLinkRepositoryTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/UsdaFoodSearchServiceTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/UsdaHttpMappingsTests.cs`
 

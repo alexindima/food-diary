@@ -23,7 +23,7 @@
     "MealPlanning": [],
     "Notifications": [],
     "OpenFoodFacts": [],
-    "Products": ["Images", "OpenFoodFacts", "RecentItems", "Usda"],
+    "Products": ["Images", "OpenFoodFacts", "Usda"],
     "RecentItems": [],
     "RecipeCommunity": [],
     "Recipes": ["Images", "RecentItems"],

@@ -15,7 +15,7 @@ sources:
 ## Graph
 
 - Origin: module-graph
-- Business-module dependencies: Images, OpenFoodFacts, RecentItems, Usda
+- Business-module dependencies: Images, OpenFoodFacts, Usda
 - Abstraction-contract dependencies: FavoriteProducts, Images, OpenFoodFacts, RecentItems, Usda, Users
 - Business-module consumers: none observed
 - Host/adapter consumers: FoodDiary.Presentation.Api
@@ -57,14 +57,14 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 - Physical isolation: folder
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: Product
-- Public contract files: 8
+- Public contract files: 9
 - Observed external consumer groups: 1
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 8
-- Interfaces: 5
+- Public contract types: 9
+- Interfaces: 6
 - DTO/read-model/projection types: 0
 - Enums: 0
 - Exported repository-shaped contracts: 3
@@ -74,6 +74,7 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 - `interface IProductOverviewReadService`
 - `interface IProductReadRepository`
 - `interface IProductRepository`
+- `interface IProductUsdaLinkService`
 - `interface IProductWriteRepository`
 - `record ProductOverviewReadItem`
 - `record ProductQueryFilters`
@@ -83,6 +84,7 @@ Source: `FoodDiary.Presentation.Api/Features/Products/ProductsController.cs`
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductSearchSuggestionTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductUsdaLinkServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.CreateCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.DeleteAndDuplicateCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Products/ProductsFeatureTests.MappingTests.cs`

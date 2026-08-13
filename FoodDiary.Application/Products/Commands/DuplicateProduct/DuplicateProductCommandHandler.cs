@@ -3,8 +3,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Entities.Products;
@@ -18,13 +18,13 @@ public sealed class DuplicateProductCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DuplicateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken) {
-        Result<ProductId> productIdResult = RequiredIdParser.Parse(
+        Result<ProductId> productIdResult = ProductRequiredIdParser.Parse(
             command.ProductId,
             nameof(command.ProductId),
             "Product id must not be empty.",
             value => new ProductId(value));
         if (productIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<ProductModel, ProductId>(productIdResult);
+            return ProductRequiredIdParser.ToFailure<ProductModel, ProductId>(productIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(

@@ -1109,7 +1109,6 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(infrastructureRoot, "Services", "ProductLookupService.cs"),
             Path.Combine(infrastructureRoot, "Services", "RecipeLookupService.cs"),
             Path.Combine(infrastructureRoot, "Services", "RecipeAccessService.cs"),
-            Path.Combine(infrastructureRoot, "Persistence", "Usda", "UsdaProductLinkRepository.cs"),
         ];
 
         string[] violations = [
@@ -2965,7 +2964,6 @@ public sealed class ApplicationGuardrailTests {
             .. FindRepositoryReferenceViolations(root, applicationRoot, "IAdminImpersonationSessionRepository", []),
             .. FindRepositoryReferenceViolations(root, applicationRoot, "IAdminUserRoleAuditRepository", []),
             .. FindRepositoryReferenceViolations(root, applicationRoot, "IUsdaFoodRepository", []),
-            .. FindRepositoryReferenceViolations(root, applicationRoot, "IUsdaProductLinkRepository", []),
             .. FindRepositoryReferenceViolations(root, applicationRoot, "IOpenFoodFactsProductCacheRepository", []),
         ];
 

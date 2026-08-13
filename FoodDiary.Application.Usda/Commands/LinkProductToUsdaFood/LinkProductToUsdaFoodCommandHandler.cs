@@ -2,15 +2,15 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
 
 namespace FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 
 public sealed class LinkProductToUsdaFoodCommandHandler(
-    IUsdaProductLinkWriteRepository productLinkRepository,
+    IProductUsdaLinkService productLinkService,
     IUsdaFoodReadRepository usdaFoodRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<LinkProductToUsdaFoodCommand, Result> {
@@ -26,10 +26,10 @@ public sealed class LinkProductToUsdaFoodCommandHandler(
         }
 
         var productId = (ProductId)command.ProductId;
-        Product? product = await productLinkRepository.GetForLinkUpdateAsync(
+        bool isAccessible = await productLinkService.IsAccessibleForUpdateAsync(
             productId, userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
-        if (product is null) {
+        if (!isAccessible) {
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
         }
 
@@ -38,8 +38,14 @@ public sealed class LinkProductToUsdaFoodCommandHandler(
             return Result.Failure(Errors.Usda.FoodNotFound(command.FdcId));
         }
 
-        product.LinkToUsdaFood(command.FdcId);
-        await productLinkRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+        bool linked = await productLinkService.LinkAsync(
+            productId,
+            userIdResult.Value,
+            command.FdcId,
+            cancellationToken).ConfigureAwait(false);
+        if (!linked) {
+            return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
+        }
 
         return Result.Success();
     }
