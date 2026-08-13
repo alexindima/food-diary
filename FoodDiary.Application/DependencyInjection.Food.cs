@@ -4,8 +4,6 @@ using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
-using FoodDiary.Application.OpenFoodFacts.Common;
-using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Application.Products.Services;
@@ -28,7 +26,6 @@ public static partial class DependencyInjection {
         services.AddScoped<IMealProductNutritionReadService, MealProductNutritionReadService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.AddScoped<IExportDiaryReadService, ExportDiaryReadService>();
-        services.AddScoped<IOpenFoodFactsCachedProductSearch, OpenFoodFactsCachedProductSearch>();
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();
         services.AddScoped<IRecentProductReadService, RecentProductReadService>();

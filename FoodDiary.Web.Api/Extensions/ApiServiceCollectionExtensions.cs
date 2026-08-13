@@ -12,6 +12,7 @@ using FoodDiary.Application.MealPlanning;
 using FoodDiary.Application.RecipeCommunity;
 using FoodDiary.Application.Tdee;
 using FoodDiary.Application.Notifications;
+using FoodDiary.Application.OpenFoodFacts;
 using FoodDiary.Application.Marketing;
 using FoodDiary.Application.Users;
 using FoodDiary.Application.Wearables;
@@ -60,6 +61,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddTdeeModule()
                 .AddWearablesModule()
                 .AddNotificationsModule()
+                .AddOpenFoodFactsModule()
                 .AddUsersModule()
                 .AddBillingModule()
                 .AddMarketingModule()

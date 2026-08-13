@@ -8,12 +8,12 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3171,
-                    "symbols":  3196,
+                    "sourceFiles":  3173,
+                    "symbols":  3197,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  230,
                     "kinds":  {
-                                  "class":  1619,
+                                  "class":  1620,
                                   "enum":  49,
                                   "interface":  414,
                                   "record":  1001,
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  57,
-                                  "Other":  1160,
+                                  "Other":  1161,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -8455,6 +8455,69 @@
                         "line":  11
                     },
                     {
+                        "name":  "IOpenFoodFactsCachedProductSearch",
+                        "kind":  "interface",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "DependencyInjection",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/DependencyInjection.cs",
+                        "line":  8
+                    },
+                    {
+                        "name":  "SearchByBarcodeQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "SearchByBarcodeQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "SearchByBarcodeQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "SearchOpenFoodFactsQuery",
+                        "kind":  "record",
+                        "role":  "Query",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs",
+                        "line":  6
+                    },
+                    {
+                        "name":  "SearchOpenFoodFactsQueryHandler",
+                        "kind":  "class",
+                        "role":  "QueryHandler",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
+                        "line":  7
+                    },
+                    {
+                        "name":  "SearchOpenFoodFactsQueryValidator",
+                        "kind":  "class",
+                        "role":  "Validator",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryValidator.cs",
+                        "line":  4
+                    },
+                    {
+                        "name":  "OpenFoodFactsCachedProductSearch",
+                        "kind":  "class",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
+                        "line":  7
+                    },
+                    {
                         "name":  "DependencyInjection",
                         "kind":  "class",
                         "role":  "Other",
@@ -11105,7 +11168,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                        "line":  19
+                        "line":  17
                     },
                     {
                         "name":  "DependencyInjection",
@@ -11540,62 +11603,6 @@
                         "role":  "Other",
                         "path":  "FoodDiary.Application/Nutrition/Common/ManualNutritionLimits.cs",
                         "line":  2
-                    },
-                    {
-                        "name":  "IOpenFoodFactsCachedProductSearch",
-                        "kind":  "interface",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "SearchByBarcodeQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "SearchByBarcodeQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryHandler.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "SearchByBarcodeQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/OpenFoodFacts/Queries/SearchByBarcode/SearchByBarcodeQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "SearchOpenFoodFactsQuery",
-                        "kind":  "record",
-                        "role":  "Query",
-                        "path":  "FoodDiary.Application/OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQuery.cs",
-                        "line":  6
-                    },
-                    {
-                        "name":  "SearchOpenFoodFactsQueryHandler",
-                        "kind":  "class",
-                        "role":  "QueryHandler",
-                        "path":  "FoodDiary.Application/OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryHandler.cs",
-                        "line":  7
-                    },
-                    {
-                        "name":  "SearchOpenFoodFactsQueryValidator",
-                        "kind":  "class",
-                        "role":  "Validator",
-                        "path":  "FoodDiary.Application/OpenFoodFacts/Queries/SearchProducts/SearchOpenFoodFactsQueryValidator.cs",
-                        "line":  4
-                    },
-                    {
-                        "name":  "OpenFoodFactsCachedProductSearch",
-                        "kind":  "class",
-                        "role":  "Other",
-                        "path":  "FoodDiary.Application/OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
-                        "line":  7
                     },
                     {
                         "name":  "CreateProductCommand",
@@ -16306,7 +16313,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Initializer/Program.cs",
-                        "line":  358
+                        "line":  360
                     },
                     {
                         "name":  "UsdaCsvReader",
@@ -16663,7 +16670,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.JobManager/Program.cs",
-                        "line":  68
+                        "line":  70
                     },
                     {
                         "name":  "AchievementEvaluationOutboxJob",
@@ -20450,7 +20457,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                        "line":  31
+                        "line":  32
                     },
                     {
                         "name":  "ApiTelemetry",
@@ -23501,9 +23508,9 @@
                                      },
                                      {
                                          "interface":  "IOpenFoodFactsCachedProductSearch",
-                                         "interfacePath":  "FoodDiary.Application/OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs",
+                                         "interfacePath":  "FoodDiary.Application.OpenFoodFacts/Common/IOpenFoodFactsCachedProductSearch.cs",
                                          "implementation":  "OpenFoodFactsCachedProductSearch",
-                                         "implementationPath":  "FoodDiary.Application/OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
+                                         "implementationPath":  "FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs",
                                          "confidence":  "naming-convention"
                                      },
                                      {
@@ -24370,6 +24377,13 @@
                                                  "line":  29
                                              },
                                              {
+                                                 "service":  "IOpenFoodFactsCachedProductSearch",
+                                                 "implementation":  "OpenFoodFactsCachedProductSearch",
+                                                 "lifetime":  "Scoped",
+                                                 "path":  "FoodDiary.Application.OpenFoodFacts/DependencyInjection.cs",
+                                                 "line":  14
+                                             },
+                                             {
                                                  "service":  "IRecipeCommentReadService",
                                                  "implementation":  "RecipeCommentReadService",
                                                  "lifetime":  "Scoped",
@@ -24584,98 +24598,91 @@
                                                  "implementation":  "ConsumptionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  22
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IMealActivityReadService",
                                                  "implementation":  "MealActivityReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  26
+                                                 "line":  24
                                              },
                                              {
                                                  "service":  "IConsumptionExportReadService",
                                                  "implementation":  "ConsumptionExportReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  27
+                                                 "line":  25
                                              },
                                              {
                                                  "service":  "IMealProductNutritionReadService",
                                                  "implementation":  "MealProductNutritionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  28
+                                                 "line":  26
                                              },
                                              {
                                                  "service":  "IMealNutritionService",
                                                  "implementation":  "MealNutritionService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  29
+                                                 "line":  27
                                              },
                                              {
                                                  "service":  "IExportDiaryReadService",
                                                  "implementation":  "ExportDiaryReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  30
-                                             },
-                                             {
-                                                 "service":  "IOpenFoodFactsCachedProductSearch",
-                                                 "implementation":  "OpenFoodFactsCachedProductSearch",
-                                                 "lifetime":  "Scoped",
-                                                 "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  31
+                                                 "line":  28
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "OpenFoodFactsProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  32
+                                                 "line":  29
                                              },
                                              {
                                                  "service":  "IProductSearchSuggestionProvider",
                                                  "implementation":  "UsdaProductSearchSuggestionProvider",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  33
+                                                 "line":  30
                                              },
                                              {
                                                  "service":  "IRecentProductReadService",
                                                  "implementation":  "RecentProductReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  34
+                                                 "line":  31
                                              },
                                              {
                                                  "service":  "IRecentRecipeReadService",
                                                  "implementation":  "RecentRecipeReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  35
+                                                 "line":  32
                                              },
                                              {
                                                  "service":  "IUsdaDailyMicronutrientReadService",
                                                  "implementation":  "UsdaDailyMicronutrientReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  36
+                                                 "line":  33
                                              },
                                              {
                                                  "service":  "IUsdaFoodReadService",
                                                  "implementation":  "UsdaFoodReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  37
+                                                 "line":  34
                                              },
                                              {
                                                  "service":  "IUsdaProductSuggestionReadService",
                                                  "implementation":  "UsdaProductSuggestionReadService",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Application/DependencyInjection.Food.cs",
-                                                 "line":  38
+                                                 "line":  35
                                              },
                                              {
                                                  "service":  "IImageAssetAccessService",
@@ -25410,14 +25417,14 @@
                                                  "implementation":  "NoOpEmailVerificationNotifier",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  88
+                                                 "line":  90
                                              },
                                              {
                                                  "service":  "INotificationPusher",
                                                  "implementation":  "NoOpNotificationPusher",
                                                  "lifetime":  "Scoped",
                                                  "path":  "FoodDiary.Initializer/Program.cs",
-                                                 "line":  89
+                                                 "line":  91
                                              },
                                              {
                                                  "service":  "IGoogleTokenValidator",
@@ -25508,7 +25515,7 @@
                                                  "implementation":  "HangfireRecurringJobRegistrationVerifier",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.JobManager/Program.cs",
-                                                 "line":  60
+                                                 "line":  62
                                              },
                                              {
                                                  "service":  "INotificationPusher",
@@ -25564,35 +25571,35 @@
                                                  "implementation":  "WearableTokenProtector",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  42
+                                                 "line":  43
                                              },
                                              {
                                                  "service":  "INotificationTextRenderer",
                                                  "implementation":  "NotificationResourceRenderer",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  68
+                                                 "line":  70
                                              },
                                              {
                                                  "service":  "IDiaryPdfReportTextProvider",
                                                  "implementation":  "DiaryPdfReportResourceTextProvider",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  69
+                                                 "line":  71
                                              },
                                              {
                                                  "service":  "INotificationTestScheduler",
                                                  "implementation":  "NotificationTestScheduler",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  70
+                                                 "line":  72
                                              },
                                              {
                                                  "service":  "IIdempotencyStore",
                                                  "implementation":  "RedisIdempotencyStore",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs",
-                                                 "line":  93
+                                                 "line":  95
                                              },
                                              {
                                                  "service":  "IMailInboxReadinessChecker",

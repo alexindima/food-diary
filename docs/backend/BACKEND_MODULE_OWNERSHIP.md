@@ -60,7 +60,7 @@ This map covers the governed business owners and composed read modules in the pr
 | Content Reports | user-submitted reports and moderation status | report creation command, `IContentReportAdministrationService`, moderation projections | Users access; Admin invokes owner moderation capability and read projections |
 | AI | AI usage, prompt templates and AI orchestration policy | AI use cases, usage summaries, `IAiPromptAdministrationService` | Images access, Users access, provider adapters; Admin consumes projections |
 | USDA Catalog | imported USDA foods/nutrients and product-link relationships | USDA commands/read services and read-model search projection | Products may consume the suggestion projection; Consumption nutrition is a read-only calculation input |
-| OpenFoodFacts Cache | cached external product documents and refresh lifecycle | cached product-search service | Products consumes the service; external provider remains an integration adapter |
+| OpenFoodFacts Cache | cached external product documents and refresh lifecycle | cached product-search service in `FoodDiary.Application.OpenFoodFacts` | Products consumes the service; external provider remains an integration adapter |
 | Dashboard | composed user-facing read model; owns no source aggregates | dashboard query/read services | Approved read models from contributing modules |
 
 ## Fasting pilot boundary
