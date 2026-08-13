@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
@@ -20,13 +20,13 @@ public sealed class DuplicateRecipeCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DuplicateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
-        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
+        Result<RecipeId> recipeIdResult = RecipeRequiredIdParser.Parse(
             command.RecipeId,
             nameof(command.RecipeId),
             "Recipe id must not be empty.",
             value => new RecipeId(value));
         if (recipeIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<RecipeModel, RecipeId>(recipeIdResult);
+            return RecipeRequiredIdParser.ToFailure<RecipeModel, RecipeId>(recipeIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(

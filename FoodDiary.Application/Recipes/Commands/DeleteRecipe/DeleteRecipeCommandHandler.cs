@@ -5,7 +5,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
@@ -18,13 +18,13 @@ public sealed class DeleteRecipeCommandHandler(
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteRecipeCommand, Result> {
     public async Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
-        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
+        Result<RecipeId> recipeIdResult = RecipeRequiredIdParser.Parse(
             command.RecipeId,
             nameof(command.RecipeId),
             "Recipe id must not be empty.",
             value => new RecipeId(value));
         if (recipeIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure(recipeIdResult);
+            return RecipeRequiredIdParser.ToFailure(recipeIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(

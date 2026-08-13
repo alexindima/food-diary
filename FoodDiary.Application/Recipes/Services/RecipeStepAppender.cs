@@ -1,8 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -74,7 +73,7 @@ internal static class RecipeStepAppender {
 
     private static Result AddIngredients(RecipeStep step, IEnumerable<RecipeIngredientInput> ingredients) {
         foreach (RecipeIngredientInput ingredient in ingredients) {
-            Result<ProductId?> productIdResult = OptionalEntityIdValidator.Parse(
+            Result<ProductId?> productIdResult = RecipeOptionalEntityIdParser.Parse(
                 ingredient.ProductId,
                 nameof(ingredient.ProductId),
                 "Product id",
@@ -83,7 +82,7 @@ internal static class RecipeStepAppender {
                 return productIdResult;
             }
 
-            Result<RecipeId?> nestedRecipeIdResult = OptionalEntityIdValidator.Parse(
+            Result<RecipeId?> nestedRecipeIdResult = RecipeOptionalEntityIdParser.Parse(
                 ingredient.NestedRecipeId,
                 nameof(ingredient.NestedRecipeId),
                 "Nested recipe id",

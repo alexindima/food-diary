@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -83,7 +82,7 @@ public static class RecipeIngredientAccessValidator {
         Func<Guid, TId> createId) where TId : struct {
         var ids = new HashSet<TId>();
         foreach (RecipeIngredientInput ingredient in steps.SelectMany(step => step.Ingredients)) {
-            Result<TId?> idResult = OptionalEntityIdValidator.Parse(getId(ingredient), fieldName, displayName, createId);
+            Result<TId?> idResult = RecipeOptionalEntityIdParser.Parse(getId(ingredient), fieldName, displayName, createId);
             if (idResult.IsFailure) {
                 return Result.Failure<IReadOnlyList<TId>>(idResult.Error);
             }

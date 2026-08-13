@@ -1,8 +1,8 @@
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
 using FluentValidation;
+using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
@@ -114,7 +114,7 @@ public sealed class CreateRecipeCommandValidator : AbstractValidator<CreateRecip
     }
 
     private static bool BeValidVisibility(string visibility) =>
-        EnumValueParser.CanParse<Visibility>(visibility);
+        SharedEnumValueParser.CanParse<Visibility>(visibility);
 
     private static bool HasManualNutrition(CreateRecipeCommand command) =>
         command is { ManualCalories: not null, ManualProteins: not null, ManualFats: not null, ManualCarbs: not null, ManualFiber: not null };

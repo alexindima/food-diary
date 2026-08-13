@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.RecentItems.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Services;
@@ -51,13 +50,19 @@ public sealed class RecentRecipeReadService(
         int limit,
         bool includePublic,
         CancellationToken cancellationToken) {
-        return await RecentItemOverviewLoader.LoadAsync<RecentRecipeUsage, RecipeId, RecipeOverviewReadItem>(
-            userId,
-            limit,
-            recentItemUsageReadService.GetRecentRecipesAsync,
-            recent => recent.RecipeId,
-            (ids, ownerUserId, ct) => recipeOverviewReadService.GetByIdsWithUsageAsync(ids, ownerUserId, includePublic, ct),
-            cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<RecentRecipeUsage> recents = await recentItemUsageReadService
+            .GetRecentRecipesAsync(userId, limit, cancellationToken)
+            .ConfigureAwait(false);
+        if (recents.Count == 0) {
+            return [];
+        }
+
+        RecipeId[] idsInOrder = [.. recents.Select(recent => recent.RecipeId)];
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> itemsById = await recipeOverviewReadService
+            .GetByIdsWithUsageAsync(idsInOrder, userId, includePublic, cancellationToken)
+            .ConfigureAwait(false);
+
+        return [.. idsInOrder.Where(itemsById.ContainsKey).Select(id => itemsById[id])];
     }
 
     private static bool MatchesFilters(RecipeOverviewReadItem recipe, RecipeQueryFilters filters) =>

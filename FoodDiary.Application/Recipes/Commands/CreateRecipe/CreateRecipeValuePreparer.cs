@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -34,7 +33,7 @@ internal static class CreateRecipeValuePreparer {
             return Result.Failure<CreateRecipeValues>(imageAssetResult.Error);
         }
 
-        Result<Visibility> visibilityResult = EnumValueParser.ParseRequired<Visibility>(
+        Result<Visibility> visibilityResult = SharedEnumValueParser.ParseRequired<Visibility>(
             command.Visibility,
             nameof(command.Visibility),
             "Unknown visibility value.");

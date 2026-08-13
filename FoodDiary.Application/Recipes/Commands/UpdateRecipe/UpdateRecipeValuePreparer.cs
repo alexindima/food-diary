@@ -5,9 +5,8 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Images.Common;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
@@ -26,7 +25,7 @@ internal static class UpdateRecipeValuePreparer {
         CancellationToken cancellationToken) {
         Result<RecipeId> recipeIdResult = ParseRecipeId(command);
         if (recipeIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<UpdateRecipeValues, RecipeId>(recipeIdResult);
+            return RecipeRequiredIdParser.ToFailure<UpdateRecipeValues, RecipeId>(recipeIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
@@ -93,7 +92,7 @@ internal static class UpdateRecipeValuePreparer {
             .ToList();
 
     private static Result<RecipeId> ParseRecipeId(UpdateRecipeCommand command) =>
-        RequiredIdParser.Parse(
+        RecipeRequiredIdParser.Parse(
             command.RecipeId,
             nameof(command.RecipeId),
             "Recipe id must not be empty.",
@@ -132,7 +131,7 @@ internal static class UpdateRecipeValuePreparer {
             return Result.Success<Visibility?>(value: null);
         }
 
-        return EnumValueParser.ParseOptional<Visibility>(
+        return SharedEnumValueParser.ParseOptional<Visibility>(
             command.Visibility,
             nameof(command.Visibility),
             "Unknown visibility value.");

@@ -4,7 +4,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -16,13 +16,13 @@ public sealed class GetRecipeByIdQueryHandler(
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(GetRecipeByIdQuery query, CancellationToken cancellationToken) {
-        Result<RecipeId> recipeIdResult = RequiredIdParser.Parse(
+        Result<RecipeId> recipeIdResult = RecipeRequiredIdParser.Parse(
             query.RecipeId,
             nameof(query.RecipeId),
             "Recipe id must not be empty.",
             value => new RecipeId(value));
         if (recipeIdResult.IsFailure) {
-            return RequiredIdParser.ToFailure<RecipeModel, RecipeId>(recipeIdResult);
+            return RecipeRequiredIdParser.ToFailure<RecipeModel, RecipeId>(recipeIdResult);
         }
 
         Result<UserId> userIdResult = await CurrentUserAccessResolver.ResolveAsync(
