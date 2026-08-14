@@ -7,9 +7,10 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '8-roslyn-qualified-literals-v1';
+const parserVersion = '9-typescript-compiler-api-v1';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
+const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
 
 function ensureRoslynExtractor() {
   const sources = [roslynProject, resolve(dirname(roslynProject), 'Program.cs')];
@@ -50,6 +51,19 @@ function extractCSharp(database, candidates, knownPaths) {
   });
   if (process.status !== 0) throw new Error(`Roslyn extractor failed (${process.status}): ${process.stderr}`);
   return new Map(JSON.parse(process.stdout).map((result) => [result.path, { language: 'csharp', ...result, projectReferences: [] }]));
+}
+
+function extractTypeScript(candidates) {
+  const paths = candidates.map((item) => item.path);
+  if (paths.length === 0) return new Map();
+  const child = spawnSync(process.execPath, [typescriptExtractor], {
+    cwd: repositoryRoot,
+    input: JSON.stringify({ paths }),
+    encoding: 'utf8',
+    maxBuffer: 128 * 1024 * 1024,
+  });
+  if (child.status !== 0) throw new Error(`TypeScript extractor failed (${child.status}): ${child.stderr}`);
+  return new Map(JSON.parse(child.stdout).map((result) => [result.path, result]));
 }
 
 function gitPaths() {
@@ -249,6 +263,7 @@ function build(database, force = false) {
     candidates.push({ path, stat, prior, text, contentHash, metadataOnly: false });
   }
   const roslynResults = extractCSharp(database, candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'csharp'), knownPaths);
+  const typescriptResults = extractTypeScript(candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'typescript'));
 
   database.exec('BEGIN IMMEDIATE');
   try {
@@ -265,7 +280,7 @@ function build(database, force = false) {
         continue;
       }
       if (prior) deleteFile.run(prior.id);
-      const extracted = roslynResults.get(path) ?? extract(path, text);
+      const extracted = roslynResults.get(path) ?? typescriptResults.get(path) ?? extract(path, text);
       const fileId = Number(insertFile.run(path, extracted.language, stat.size, stat.mtimeMs, contentHash).lastInsertRowid);
       for (const symbol of extracted.symbols) insertSymbol.run(fileId, symbol.kind, symbol.name, symbol.line, symbol.symbolId ?? null);
       for (const token of extracted.tokens) insertToken.run(fileId, token);

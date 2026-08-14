@@ -30,8 +30,11 @@ Build or incrementally refresh the graph:
 The first build scans tracked and untracked C#, TypeScript, HTML, and project
 files. C# declarations, identifier references, inheritance, method calls,
 object construction, DI, mediator, HTTP, and migration relations are extracted
-from Roslyn syntax trees in one batch; regex parsing remains limited to the
-lighter non-C# formats. Later builds use file size and modification time before
+from Roslyn syntax trees in one batch. TypeScript declarations, imports,
+inheritance, Angular selectors, routes, lazy imports, constructor/inject DI,
+resources, constructions, and HTTP calls are extracted through the TypeScript
+Compiler API; regex parsing remains limited to lighter HTML and configuration
+formats. Later builds use file size and modification time before
 hashing and parsing only candidates whose metadata changed. A no-op refresh
 does not start Roslyn. Updates run in one SQLite
 transaction and deleted files cascade to their symbols and token edges.

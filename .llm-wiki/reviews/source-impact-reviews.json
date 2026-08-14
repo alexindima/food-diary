@@ -680,18 +680,14 @@
                         "pageSha256":  "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-                                            "sha256":  "36c880aba0619e3f12338772e958cc1ca687916323b1936d947f36c39dfd76fb"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "1293139461c4e175eb81d99c2b20f672ada6f14b0fcbd2246c1576a88373137b"
                                         }
                                     ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+                        "reason":  "TypeScript regex extraction was replaced with the compiler API while preserving the SQLite graph contract, automatic routing, incremental rebuilds, and fallback behavior.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:49.2343984Z"
+                        "gitHead":  "9703734b7b4c011a9d7f93f767978b8c9fee206d",
+                        "reviewedAtUtc":  "2026-08-14T12:29:47.5703475Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
