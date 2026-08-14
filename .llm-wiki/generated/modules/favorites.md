@@ -85,6 +85,7 @@ No literal attribute-routed controller was associated with this module.
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Favorites/FavoriteCommandValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/FavoritesModuleExtractionTests.cs`
 
 ## Working Rule

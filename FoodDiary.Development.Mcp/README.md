@@ -1,0 +1,31 @@
+# FoodDiary Development MCP
+
+Local, read-only stdio MCP server that exposes stable `.llm-wiki/wiki.ps1`
+analysis entrypoints without replacing repository source-of-truth checks.
+
+## Tools
+
+- `get_change_context` wraps `wiki.ps1 brief`.
+- `trace_backend_flow` wraps `wiki.ps1 trace`.
+- `get_test_plan` wraps `wiki.ps1 test-plan`.
+
+The server does not expose governed task lifecycle, generation, delivery, or
+repair commands. Wiki output remains derived navigation: callers must verify
+change-sensitive conclusions in the referenced code, tests, ADRs, current docs,
+and scoped `AGENTS.md` files.
+
+## Run
+
+From the repository root:
+
+```powershell
+dotnet run --project FoodDiary.Development.Mcp
+```
+
+The client must launch the process from within the repository tree. When that is
+not possible, set `FOODDIARY_REPOSITORY_ROOT` to the absolute repository path.
+All protocol traffic uses stdout; host diagnostics use stderr.
+
+The trusted-project `.codex/config.toml` registers this server for Codex. Restart
+the desktop app or extension after pulling/building the project. The configured
+startup timeout allows the first `dotnet run` to restore and compile the server.

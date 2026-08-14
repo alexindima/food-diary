@@ -5,6 +5,7 @@ public sealed class ProjectDependencyMatrixTests {
     private static readonly IReadOnlyDictionary<string, string[]> AllowedProductionProjectReferences =
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
             ["FoodDiary.Analyzers"] = [],
+            ["FoodDiary.Development.Mcp"] = [],
             ["FoodDiary.Application.Runtime"] = [
                 "FoodDiary.Application.Abstractions",
                 "FoodDiary.Mediator",
@@ -430,6 +431,9 @@ public sealed class ProjectDependencyMatrixTests {
         new Dictionary<string, string[]>(StringComparer.Ordinal) {
             ["FoodDiary.Analyzers.Tests"] = [
                 "FoodDiary.Analyzers",
+            ],
+            ["FoodDiary.Development.Mcp.Tests"] = [
+                "FoodDiary.Development.Mcp",
             ],
             ["FoodDiary.Application.Tests"] = [
                 "FoodDiary.Application.Runtime",

@@ -44,6 +44,7 @@
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.10" />
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.10" />
+    <PackageVersion Include="ModelContextProtocol" Version="2.2.0" />
 
     <!-- Infrastructure -->
     <PackageVersion Include="AWSSDK.S3" Version="4.0.102" />

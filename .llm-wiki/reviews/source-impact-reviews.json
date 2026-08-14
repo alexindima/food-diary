@@ -1,1130 +1,1114 @@
-﻿{
-    "schemaVersion":  1,
-    "reviews":  [
-                    {
-                        "pageId":  "index",
-                        "pagePath":  ".llm-wiki/index.md",
-                        "pageSha256":  "c4bb6a75a90ab7c79f6a01e1fda3fe34b619a09e6123e4040fe43a566260875a",
-                        "sources":  [
-                                        {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
-                                        },
-                                        {
-                                            "path":  "docs/BACKEND_MODULE_MAP.md",
-                                            "sha256":  "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
-                                        }
-                                    ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:17:58.4844021Z"
-                    },
-                    {
-                        "pageId":  "module.mail-services",
-                        "pagePath":  ".llm-wiki/modules/mail-services.md",
-                        "pageSha256":  "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
-                        "sources":  [
-                                        {
-                                            "path":  "docs/BACKEND_MODULE_MAP.md",
-                                            "sha256":  "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
-                                        }
-                                    ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:17:58.6892974Z"
-                    },
-                    {
-                        "pageId":  "module.primary-backend",
-                        "pagePath":  ".llm-wiki/modules/primary-backend.md",
-                        "pageSha256":  "8513486fc92e9236d116ce0c4eeaf7ba511ab53761f517bcc26e58464a249fa1",
-                        "sources":  [
-                                        {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
-                                        }
-                                    ],
-                        "reason":  "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "4b1ef43e330684d8150bb561c155aeb110605ba9",
-                        "reviewedAtUtc":  "2026-08-13T20:02:15.9627020Z"
-                    },
-                    {
-                        "pageId":  "system.architecture",
-                        "pagePath":  ".llm-wiki/system/architecture.md",
-                        "pageSha256":  "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
-                        "sources":  [
-                                        {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cc3e203588b5dedca64e0e03a8254e4e1f84425f793ca8b18707117f15e47c50"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "8b4629e64f5d0a7b91a119f880eb47e4fd25bae7fe93962f6088a03715ede205"
-                                        },
-                                        {
-                                            "path":  "docs/BACKEND_MODULE_MAP.md",
-                                            "sha256":  "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
-                                        },
-                                        {
-                                            "path":  "tests/FoodDiary.ArchitectureTests/BackendModuleManifestTests.cs",
-                                            "sha256":  "f28649217227c8ed4e221be47305686ae7e9046f1f63b28f15927dc5e0a42d57"
-                                        },
-                                        {
-                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "4e7264e560f72da5cb13f932a457aa90a8801f910ba0661834ab08cebcffce88"
-                                        }
-                                    ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:17:58.9170404Z"
-                    },
-                    {
-                        "pageId":  "system.csharp-symbol-index",
-                        "pagePath":  ".llm-wiki/system/csharp-symbol-index.md",
-                        "pageSha256":  "15c3aae30eea5af15e394eb2f30ec80f4df604a9c718089e987afaf25f2d1dac",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
-                                            "sha256":  "050cb607b2dacb8935b95c9fbbb138c02de27b2be41403105c0e69fccee91768"
-                                        }
-                                    ],
-                        "reason":  "Production source indexes now exclude internal Wiki tooling consistently on Windows and Linux, removing cross-platform freshness drift.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "0616edfe4a49caaf8c83dc96f1876a9c3a199c47",
-                        "reviewedAtUtc":  "2026-08-14T03:09:04.6095534Z"
-                    },
-                    {
-                        "pageId":  "system.frontend-index",
-                        "pagePath":  ".llm-wiki/system/frontend-index.md",
-                        "pageSha256":  "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
-                                            "sha256":  "a7cfd40e741582b3806b6d4251d95fb30dfab55a2e9662f5ab153b8a6a3a988c"
-                                        }
-                                    ],
-                        "reason":  "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "7f31792400af36f7855687ca29a96dd026535d0a",
-                        "reviewedAtUtc":  "2026-08-10T18:18:15.4779121Z"
-                    },
-                    {
-                        "pageId":  "system.knowledge-model",
-                        "pagePath":  ".llm-wiki/system/knowledge-model.md",
-                        "pageSha256":  "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
-                        "sources":  [
-                                        {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
-                                        }
-                                    ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:17:59.1312515Z"
-                    },
-                    {
-                        "pageId":  "system.repository-catalog",
-                        "pagePath":  ".llm-wiki/system/repository-catalog.md",
-                        "pageSha256":  "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-                                            "sha256":  "f3a84571cebae04ab03741dcbbf79be39c6a0c8a6632d5d038f08edeb21562a1"
-                                        }
-                                    ],
-                        "reason":  "Production source indexes now exclude internal Wiki tooling consistently on Windows and Linux, removing cross-platform freshness drift.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "0616edfe4a49caaf8c83dc96f1876a9c3a199c47",
-                        "reviewedAtUtc":  "2026-08-14T03:09:04.7952394Z"
-                    },
-                    {
-                        "pageId":  "workflow.change-policy",
-                        "pagePath":  ".llm-wiki/workflows/change-policy.md",
-                        "pageSha256":  "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:47.7303451Z"
-                    },
-                    {
-                        "pageId":  "workflow.evals",
-                        "pagePath":  ".llm-wiki/workflows/evals.md",
-                        "pageSha256":  "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:48.4834148Z"
-                    },
-                    {
-                        "pageId":  "workflow.evidence-bundle",
-                        "pagePath":  ".llm-wiki/workflows/evidence-bundle.md",
-                        "pageSha256":  "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:48.8332155Z"
-                    },
-                    {
-                        "pageId":  "workflow.frontend-contract-review",
-                        "pagePath":  ".llm-wiki/workflows/frontend-contract-review.md",
-                        "pageSha256":  "225c45ee233216765f042957a19f615952f2ca2256542e58d3a7abf02d25d2f2",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/generated/frontend-contract-index.json",
-                                            "sha256":  "99e35e859a32418b59935aec99d0243a1db3d990addf93aede27cc887ace2074"
-                                        }
-                                    ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:00.2562684Z"
-                    },
-                    {
-                        "pageId":  "workflow.query-context",
-                        "pagePath":  ".llm-wiki/workflows/query-context.md",
-                        "pageSha256":  "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "44063d11d2d697c593d74ba5a9c2a88b32f99114f949d62959a24fd7085cf961"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-                                            "sha256":  "f3a84571cebae04ab03741dcbbf79be39c6a0c8a6632d5d038f08edeb21562a1"
-                                        }
-                                    ],
-                        "reason":  "Production source indexes now exclude internal Wiki tooling consistently on Windows and Linux, removing cross-platform freshness drift.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "0616edfe4a49caaf8c83dc96f1876a9c3a199c47",
-                        "reviewedAtUtc":  "2026-08-14T03:09:05.1068737Z"
-                    },
-                    {
-                        "pageId":  "workflow.review-diff",
-                        "pagePath":  ".llm-wiki/workflows/review-diff.md",
-                        "pageSha256":  "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:49.8500592Z"
-                    },
-                    {
-                        "pageId":  "workflow-acceptance-evidence-matrix",
-                        "pagePath":  ".llm-wiki/workflows/acceptance-evidence-matrix.md",
-                        "pageSha256":  "1fb64e039c1be137c7079e70291d79e82936c78d7a053d0eae894d941cd03858",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
-                                        }
-                                    ],
-                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
-                        "reviewedAtUtc":  "2026-08-13T18:24:59.2509365Z"
-                    },
-                    {
-                        "pageId":  "workflow-adaptive-development",
-                        "pagePath":  ".llm-wiki/workflows/adaptive-development.md",
-                        "pageSha256":  "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:47.5308215Z"
-                    },
-                    {
-                        "pageId":  "workflow-api-compatibility",
-                        "pagePath":  ".llm-wiki/workflows/api-compatibility.md",
-                        "pageSha256":  "037cc1091ca997ebc790af65de373c685931315349afb4750800c31f49bd7245",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-                                            "sha256":  "71dce0a8b832fda48be82a1b3aef32f1366cef9090786191957ddb70e87ff349"
-                                        }
-                                    ],
-                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-                        "reviewedAtUtc":  "2026-08-13T12:40:32.7580873Z"
-                    },
-                    {
-                        "pageId":  "workflow-architecture-health-review",
-                        "pagePath":  ".llm-wiki/workflows/architecture-health-review.md",
-                        "pageSha256":  "f74e1b06fd3864499e0a28e359f979e552cb8fa51fa0da582148e417a7dfd065",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "3b7ef7392956a7b2b6eafbf94187e7f6774b19c020880940739735f5b3ff9738"
-                                        }
-                                    ],
-                        "reason":  "Coverage-only test additions exercise existing contracts without changing backend HTTP routes, payloads, status codes, dependency boundaries, or runtime behavior; regenerated indexes and module pages were inspected for consistency.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "254bc6d91712afd11c871bd78535d7e65b6b906b",
-                        "reviewedAtUtc":  "2026-08-14T10:00:19.8196919Z"
-                    },
-                    {
-                        "pageId":  "workflow-backend-contract-review",
-                        "pagePath":  ".llm-wiki/workflows/backend-contract-review.md",
-                        "pageSha256":  "e38ac8a4632c1ae729365477f68f5cde28f6eebaf7dd764685faffd319feed6d",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "4b0a06d3e6c22744999076e11a5ca8e9c8d54f196bbf2eea971812bbf9581bec"
-                                        }
-                                    ],
-                        "reason":  "Coverage-only test additions exercise existing application, infrastructure, DI, outbox, and HTTP behavior without changing production contracts or runtime implementation.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "254bc6d91712afd11c871bd78535d7e65b6b906b",
-                        "reviewedAtUtc":  "2026-08-14T11:45:19.5877046Z"
-                    },
-                    {
-                        "pageId":  "workflow-change-manifest",
-                        "pagePath":  ".llm-wiki/workflows/change-manifest.md",
-                        "pageSha256":  "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
-                                        }
-                                    ],
-                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-                        "reviewedAtUtc":  "2026-08-12T21:30:33.3048625Z"
-                    },
-                    {
-                        "pageId":  "workflow-change-packet",
-                        "pagePath":  ".llm-wiki/workflows/change-packet.md",
-                        "pageSha256":  "49eab42e51f76e49c1ba23bb8ab93f7358270e92bed0b0e4547ba7b713fa4642",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-                                            "sha256":  "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
-                                        }
-                                    ],
-                        "reason":  "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-                        "reviewedAtUtc":  "2026-08-12T21:30:33.4987707Z"
-                    },
-                    {
-                        "pageId":  "workflow-code-graph",
-                        "pagePath":  ".llm-wiki/workflows/code-graph.md",
-                        "pageSha256":  "826a06dc3f0b033a6f1c97f4c6e51d628ac5c56475a6a08ef69870464905be00",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:47.9689541Z"
-                    },
-                    {
-                        "pageId":  "workflow-confidence-ledger",
-                        "pagePath":  ".llm-wiki/workflows/confidence-ledger.md",
-                        "pageSha256":  "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
-                                            "sha256":  "785f052003ad3c8ad93e7a044ea2d3acd0c32d79fb00a8c783aaeed1028ec626"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:13.9049947Z"
-                    },
-                    {
-                        "pageId":  "workflow-context-budget-optimization",
-                        "pagePath":  ".llm-wiki/workflows/context-budget-optimization.md",
-                        "pageSha256":  "79a057816a216c509d2f1d25849e93e19a32ce66f1f22b4e39db637ed292e1db",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
-                                        }
-                                    ],
-                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
-                        "reviewedAtUtc":  "2026-08-12T14:07:30.4199634Z"
-                    },
-                    {
-                        "pageId":  "workflow-context-bundles",
-                        "pagePath":  ".llm-wiki/workflows/context-bundles.md",
-                        "pageSha256":  "c6ad719eb6441142cdea59a921180a1c64d63b5c3143b6d0ac37ccf2df185fda",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-                                            "sha256":  "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
-                                            "sha256":  "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-                                            "sha256":  "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:14.1542166Z"
-                    },
-                    {
-                        "pageId":  "workflow-context-security",
-                        "pagePath":  ".llm-wiki/workflows/context-security.md",
-                        "pageSha256":  "b1772ca6e2b1bc91074242feec33660475b32799725366e180a3238cbd6a081c",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
-                                        }
-                                    ],
-                        "reason":  "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "11ad75c4c7b137342ee1af037f718414c8be6578",
-                        "reviewedAtUtc":  "2026-08-12T14:07:35.8298746Z"
-                    },
-                    {
-                        "pageId":  "workflow-controlled-learning-promotion",
-                        "pagePath":  ".llm-wiki/workflows/controlled-learning-promotion.md",
-                        "pageSha256":  "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/knowledge/learning-promotions.json",
-                                            "sha256":  "7c4d449e9443dd07872fc64622b63c5ee236d2abe24e660ed4c228aa8a14df70"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
-                                            "sha256":  "bcb5da42c93ff7837fbf33ec9c50b89145c6487fab6f82ea97d61d3bd08cc110"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
-                                            "sha256":  "996a9c5fdbf6b674ed1ce15f03531ea956b91f91766bd8369d11c72419c6074d"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
-                                            "sha256":  "b373c3c4fb7e20a4529005a06e4643b6e2ffd44f0b185ecb6199072564abcd87"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
-                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:14.4422672Z"
-                    },
-                    {
-                        "pageId":  "workflow-controlled-repair-loop",
-                        "pagePath":  ".llm-wiki/workflows/controlled-repair-loop.md",
-                        "pageSha256":  "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
-                                        }
-                                    ],
-                        "reason":  "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "5dd18c0612e12cede5d0ac11276eba421e812817",
-                        "reviewedAtUtc":  "2026-08-12T08:06:40.6247774Z"
-                    },
-                    {
-                        "pageId":  "workflow-cost-aware-verification",
-                        "pagePath":  ".llm-wiki/workflows/cost-aware-verification.md",
-                        "pageSha256":  "89bba606d2635692a16e530538c4ccc5a89b7d983e5a9465a605a1aefdd34e7c",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:14.7368462Z"
-                    },
-                    {
-                        "pageId":  "workflow-decision-context",
-                        "pagePath":  ".llm-wiki/workflows/decision-context.md",
-                        "pageSha256":  "8b4cb2d28a12dabbacea071dc05d656bf06ccbaec42ac12f5b35408b708a161a",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
-                                            "sha256":  "c7a531a0c64cd75e50a9c237faf735b0687a6867f57fc04e6c04efec9d3445b5"
-                                        }
-                                    ],
-                        "reason":  "Reviewed decision-context strict-mode handling: missing rule/module fields now produce an empty evidence set without changing ADR trigger semantics.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:09.1330805Z"
-                    },
-                    {
-                        "pageId":  "workflow-dependency-rollout",
-                        "pagePath":  ".llm-wiki/workflows/dependency-rollout.md",
-                        "pageSha256":  "285b7d0005f1b054eda23538c5f17b3dd44d318411cb12f6e7e4146e9db95db9",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
-                                            "sha256":  "a2d73a8256a9fcbd88556c76d431637daef8d1016024615d0b66438b4dc728d5"
-                                        }
-                                    ],
-                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
-                        "reviewedAtUtc":  "2026-08-12T09:51:49.8572958Z"
-                    },
-                    {
-                        "pageId":  "workflow-developer-experience",
-                        "pagePath":  ".llm-wiki/workflows/developer-experience.md",
-                        "pageSha256":  "e81fa2b3a04a1494e8f592d61f2407a135f90a5899cf6cf94a01515c984e07b3",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:48.2225054Z"
-                    },
-                    {
-                        "pageId":  "workflow-domain-data-review",
-                        "pagePath":  ".llm-wiki/workflows/domain-data-review.md",
-                        "pageSha256":  "26d445347ec6f5700f2ecefdf9e0c538f459107cff68b65c4c18ac8d65dda5f0",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/generated/domain-data-index.json",
-                                            "sha256":  "739397631c6f3eb6d611cbbdca0c40e49f89e5c3a544eb19ec003081d2d58a17"
-                                        }
-                                    ],
-                        "reason":  "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
-                        "reviewedAtUtc":  "2026-08-13T19:18:27.1964617Z"
-                    },
-                    {
-                        "pageId":  "workflow-durable-memory",
-                        "pagePath":  ".llm-wiki/workflows/durable-memory.md",
-                        "pageSha256":  "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-                                            "sha256":  "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
-                                            "sha256":  "e203a5aef1a161ba884d4f632842cd6831546fc18537212634186c6b9c3d7f61"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:14.9736782Z"
-                    },
-                    {
-                        "pageId":  "workflow-failure-knowledge",
-                        "pagePath":  ".llm-wiki/workflows/failure-knowledge.md",
-                        "pageSha256":  "35bfa8131be82949fafdf792276d7187342b85a0a926275e51379c9c7e80e233",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiFailures.ps1",
-                                            "sha256":  "58c0e4d1253b6de9189b0dc3618ceb0297f3b8c7e884d94c6a70f6d36c43ee8c"
-                                        }
-                                    ],
-                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
-                        "reviewedAtUtc":  "2026-08-14T02:46:30.2788656Z"
-                    },
-                    {
-                        "pageId":  "workflow-failure-prediction",
-                        "pagePath":  ".llm-wiki/workflows/failure-prediction.md",
-                        "pageSha256":  "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
-                                            "sha256":  "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
-                                            "sha256":  "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:15.5471170Z"
-                    },
-                    {
-                        "pageId":  "workflow-impact-simulation",
-                        "pagePath":  ".llm-wiki/workflows/impact-simulation.md",
-                        "pageSha256":  "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
-                                            "sha256":  "03e766fda53fcd5a7c7dc44fb591bea821300443313ec5d9882f5c42f69d6a59"
-                                        }
-                                    ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:00.6211221Z"
-                    },
-                    {
-                        "pageId":  "workflow-implementation-plan",
-                        "pagePath":  ".llm-wiki/workflows/implementation-plan.md",
-                        "pageSha256":  "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "2ee96e2ec26a5285c8f0d9a305327a10b739fef4682eee18184b8fb321b17713"
-                                        }
-                                    ],
-                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-                        "reviewedAtUtc":  "2026-08-13T12:40:33.1865677Z"
-                    },
-                    {
-                        "pageId":  "workflow-independent-change-critique",
-                        "pagePath":  ".llm-wiki/workflows/independent-change-critique.md",
-                        "pageSha256":  "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
-                                            "sha256":  "716c306fd32a152e2d9c634937c9428bb54459b33f479043ee0f9cabeef51b33"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:16.0799017Z"
-                    },
-                    {
-                        "pageId":  "workflow-index-pipeline",
-                        "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "1293139461c4e175eb81d99c2b20f672ada6f14b0fcbd2246c1576a88373137b"
-                                        }
-                                    ],
-                        "reason":  "TypeScript regex extraction was replaced with the compiler API while preserving the SQLite graph contract, automatic routing, incremental rebuilds, and fallback behavior.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "9703734b7b4c011a9d7f93f767978b8c9fee206d",
-                        "reviewedAtUtc":  "2026-08-14T12:29:47.5703475Z"
-                    },
-                    {
-                        "pageId":  "workflow-instruction-effectiveness",
-                        "pagePath":  ".llm-wiki/workflows/instruction-effectiveness.md",
-                        "pageSha256":  "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
-                                            "sha256":  "789fcb02a0f90012879dbea8c04c00e27a0360d4dc83a17cbe989f7b3b06dde4"
-                                        }
-                                    ],
-                        "reason":  "Reviewed cross-platform canonical JSON hashing and standalone verification; instruction outcome semantics and persisted chain remain unchanged.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d5eb6dc6614140a568feb0ecea95841c174df82f",
-                        "reviewedAtUtc":  "2026-07-31T20:22:08.9685006Z"
-                    },
-                    {
-                        "pageId":  "workflow-integration-scan",
-                        "pagePath":  ".llm-wiki/workflows/integration-scan.md",
-                        "pageSha256":  "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:49.5321577Z"
-                    },
-                    {
-                        "pageId":  "workflow-learned-regression-evals",
-                        "pagePath":  ".llm-wiki/workflows/learned-regression-evals.md",
-                        "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/evals/cases.json",
-                                            "sha256":  "e68052dcd82119dd8f57dfff57db725017f9b00ee251d9aa65127e6f5d9b1074"
-                                        }
-                                    ],
-                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
-                        "reviewedAtUtc":  "2026-08-14T00:06:49.4088405Z"
-                    },
-                    {
-                        "pageId":  "workflow-model-routing",
-                        "pagePath":  ".llm-wiki/workflows/model-routing.md",
-                        "pageSha256":  "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
-                                        }
-                                    ],
-                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
-                        "reviewedAtUtc":  "2026-08-12T09:51:51.9454992Z"
-                    },
-                    {
-                        "pageId":  "workflow-ownership-impact",
-                        "pagePath":  ".llm-wiki/workflows/ownership-impact.md",
-                        "pageSha256":  "d3d432c73abbc3e5880b10862b4b343ec755f82c7fd5a62a2286093f5f20676d",
-                        "sources":  [
-                                        {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "8b4629e64f5d0a7b91a119f880eb47e4fd25bae7fe93962f6088a03715ede205"
-                                        }
-                                    ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:18:00.5271927Z"
-                    },
-                    {
-                        "pageId":  "workflow-performance-observability-review",
-                        "pagePath":  ".llm-wiki/workflows/performance-observability-review.md",
-                        "pageSha256":  "0d3f137f64fa7b1f3299dc26881c5bfc9dfd9ab2ed9f11a0d1507cbf324ff541",
-                        "sources":  [
-                                        {
-                                            "path":  "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-                                            "sha256":  "87e3f1ec09488ecf6ae4e319293cd3a43b5b71cbff19186f09c5f1c52d1eccc3"
-                                        },
-                                        {
-                                            "path":  "docs/backend/BACKEND_PERFORMANCE_REVIEW.md",
-                                            "sha256":  "43990323011d5bd842a47067e25433af6bd1d10f393f6c787e287905ab87d6f8"
-                                        }
-                                    ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:13:01.3256421Z"
-                    },
-                    {
-                        "pageId":  "workflow-plan-diff-conformance",
-                        "pagePath":  ".llm-wiki/workflows/plan-diff-conformance.md",
-                        "pageSha256":  "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-                                            "sha256":  "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-                                            "sha256":  "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-                                            "sha256":  "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:17.0097814Z"
-                    },
-                    {
-                        "pageId":  "workflow-post-task-retrospective",
-                        "pagePath":  ".llm-wiki/workflows/post-task-retrospective.md",
-                        "pageSha256":  "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
-                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
-                                        }
-                                    ],
-                        "reason":  "Reviewed current and legacy impact-simulation receipt compatibility plus optional retrospective fields; workflow guidance remains accurate.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "8f6e68336eb71c2692fb7cc120d69bc421a14aff",
-                        "reviewedAtUtc":  "2026-08-12T10:39:46.2768485Z"
-                    },
-                    {
-                        "pageId":  "workflow-privacy-review",
-                        "pagePath":  ".llm-wiki/workflows/privacy-review.md",
-                        "pageSha256":  "ccc7ce4a406748d705aeca097cf3312ad16c1eea5f2bbabd1e362e7b4ac14d76",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/generated/sensitive-data-index.json",
-                                            "sha256":  "b18b5022e3b9e0343489670db64c227a7033ef81fd69592830ab0e2007e14a16"
-                                        }
-                                    ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:18:00.9464379Z"
-                    },
-                    {
-                        "pageId":  "workflow-product-journey-impact",
-                        "pagePath":  ".llm-wiki/workflows/product-journey-impact.md",
-                        "pageSha256":  "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-                                            "sha256":  "ac00a8b62a0d8ba7603ba33e271f0be99b61643bc31d17ab753dd9672e192a56"
-                                        }
-                                    ],
-                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
-                        "reviewedAtUtc":  "2026-08-13T18:25:01.2543407Z"
-                    },
-                    {
-                        "pageId":  "workflow-proof-of-change",
-                        "pagePath":  ".llm-wiki/workflows/proof-of-change.md",
-                        "pageSha256":  "8b82837eee71015fa0bc4c18f084e4ece9b7aedd383f14fb07def75df7fbda78",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
-                                            "sha256":  "52458b277ebc3a74e0c238d228867aaeebe030f4d3e1b8e52dca8b8b3dbbaa07"
-                                        }
-                                    ],
-                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
-                        "reviewedAtUtc":  "2026-08-13T18:25:01.7432111Z"
-                    },
-                    {
-                        "pageId":  "workflow-quality-risk",
-                        "pagePath":  ".llm-wiki/workflows/quality-risk.md",
-                        "pageSha256":  "6dbd01ffd9ba92e32c7d132ca80e70d883a1707164597cbecf5dac86e8bfb292",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "43abb714705b2ee7a9242400a55197e481c39eed1f8a8b5a96f277104bcd58ac"
-                                        }
-                                    ],
-                        "reason":  "Coverage-only tests exercise existing admin authorization, UTC normalization, repository alias, outbox processing, and empty webhook behavior without changing production contracts or runtime implementation.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "254bc6d91712afd11c871bd78535d7e65b6b906b",
-                        "reviewedAtUtc":  "2026-08-14T11:14:44.6913984Z"
-                    },
-                    {
-                        "pageId":  "workflow-release-readiness",
-                        "pagePath":  ".llm-wiki/workflows/release-readiness.md",
-                        "pageSha256":  "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "6b3dfdf272d220a0abf3ce06f28007fabb3305239b6eef8478954973c42d004d"
-                                        }
-                                    ],
-                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
-                        "reviewedAtUtc":  "2026-08-13T18:57:49.3279010Z"
-                    },
-                    {
-                        "pageId":  "workflow-requirement-intelligence",
-                        "pagePath":  ".llm-wiki/workflows/requirement-intelligence.md",
-                        "pageSha256":  "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-                                            "sha256":  "6b3dfdf272d220a0abf3ce06f28007fabb3305239b6eef8478954973c42d004d"
-                                        }
-                                    ],
-                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
-                        "reviewedAtUtc":  "2026-08-13T18:57:50.0005326Z"
-                    },
-                    {
-                        "pageId":  "workflow-review-report",
-                        "pagePath":  ".llm-wiki/workflows/review-report.md",
-                        "pageSha256":  "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
-                        "sources":  [
-                                        {
-                                            "path":  ".github/workflows/ci-tests.yml",
-                                            "sha256":  "973a0c1710771d7e9529d634b9dba341595eb2b865daf07dc667ec083b9999ef"
-                                        }
-                                    ],
-                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
-                        "reviewedAtUtc":  "2026-08-14T00:06:50.2226250Z"
-                    },
-                    {
-                        "pageId":  "workflow-risk-calibration",
-                        "pagePath":  ".llm-wiki/workflows/risk-calibration.md",
-                        "pageSha256":  "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
-                                            "sha256":  "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:18.9821407Z"
-                    },
-                    {
-                        "pageId":  "workflow-runtime-impact",
-                        "pagePath":  ".llm-wiki/workflows/runtime-impact.md",
-                        "pageSha256":  "f76e9e0aeb3642ca5dbda529bb9b4b9598b30d636df9df042d6a0d0edd2e9233",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/generated/runtime-topology.json",
-                                            "sha256":  "d5c2a7b26c329c34ff9a2625bf01c741f2d35fb07d4a5f7b1b477146cf0edc57"
-                                        }
-                                    ],
-                        "reason":  "Extract Admin into an isolated orchestration application module",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "439aae96be11a5ad3d706354e5be3f3a3938fe75",
-                        "reviewedAtUtc":  "2026-08-13T18:41:20.8485054Z"
-                    },
-                    {
-                        "pageId":  "workflow-similar-task-plan-reuse",
-                        "pagePath":  ".llm-wiki/workflows/similar-task-plan-reuse.md",
-                        "pageSha256":  "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-                                            "sha256":  "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:19.2784372Z"
-                    },
-                    {
-                        "pageId":  "workflow-task-brief",
-                        "pagePath":  ".llm-wiki/workflows/task-brief.md",
-                        "pageSha256":  "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-                                            "sha256":  "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:50.1417766Z"
-                    },
-                    {
-                        "pageId":  "workflow-task-contract",
-                        "pagePath":  ".llm-wiki/workflows/task-contract.md",
-                        "pageSha256":  "888080c8bba4b9ca779a914f57d720a181f282a6fda946b34af360cf55bd2e18",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
-                                            "sha256":  "b913fcdba8e023cec77a49bbfd12a9e91047f1eb31deafb54de131ce44abaa86"
-                                        }
-                                    ],
-                        "reason":  "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-                        "reviewedAtUtc":  "2026-08-11T23:54:59.2181151Z"
-                    },
-                    {
-                        "pageId":  "workflow-task-dispatch-receipts",
-                        "pagePath":  ".llm-wiki/workflows/task-dispatch-receipts.md",
-                        "pageSha256":  "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
-                                        }
-                                    ],
-                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-                        "reviewedAtUtc":  "2026-08-14T12:05:50.5136012Z"
-                    },
-                    {
-                        "pageId":  "workflow-task-scheduler",
-                        "pagePath":  ".llm-wiki/workflows/task-scheduler.md",
-                        "pageSha256":  "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-                                            "sha256":  "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
-                                            "sha256":  "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
-                                        }
-                                    ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:19.5792723Z"
-                    },
-                    {
-                        "pageId":  "workflow-task-workspace",
-                        "pagePath":  ".llm-wiki/workflows/task-workspace.md",
-                        "pageSha256":  "ed76010c9aad57a33818df996ea02272f901beb3db5876d9d8298058d7ae9cff",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "c72e9d79fb364545e68a89dc45c1159988cb6aa7958a30b6bc82fb62826bfa9b"
-                                        }
-                                    ],
-                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-                        "reviewedAtUtc":  "2026-08-13T12:40:35.1364948Z"
-                    },
-                    {
-                        "pageId":  "workflow-test-plan",
-                        "pagePath":  ".llm-wiki/workflows/test-plan.md",
-                        "pageSha256":  "58431db00a85f5a9da2ea8a0aa2d2910509884d52c68707826ae9c8c3bd23e16",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-                                            "sha256":  "ed683f483613eac44682273f6a8145cc0881db70ca35309aeacc0fe209c0ecf3"
-                                        }
-                                    ],
-                        "reason":  "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-                        "reviewedAtUtc":  "2026-08-12T01:16:08.7166054Z"
-                    },
-                    {
-                        "pageId":  "workflow-trace-feature",
-                        "pagePath":  ".llm-wiki/workflows/trace-feature.md",
-                        "pageSha256":  "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-                                            "sha256":  "c22d6016f956f55b5510afe0864085a9c9d27ba4cd0d726826cdec9ead8a2385"
-                                        }
-                                    ],
-                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
-                        "reviewedAtUtc":  "2026-08-14T01:43:31.3886080Z"
-                    },
-                    {
-                        "pageId":  "workflow-verification-planner",
-                        "pagePath":  ".llm-wiki/workflows/verification-planner.md",
-                        "pageSha256":  "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-                                            "sha256":  "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
-                                        }
-                                    ],
-                        "reason":  "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "684dcb79797815b9e9bf8af888375688ac34fefa",
-                        "reviewedAtUtc":  "2026-08-12T09:51:56.3337732Z"
-                    },
-                    {
-                        "pageId":  "workflow-verification-telemetry",
-                        "pagePath":  ".llm-wiki/workflows/verification-telemetry.md",
-                        "pageSha256":  "b12a79df67989847845ec9725cad44610e5ee3779bf54ed16e8194f751f45e77",
-                        "sources":  [
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
-                                            "sha256":  "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-                                            "sha256":  "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
-                                        }
-                                    ],
-                        "reason":  "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
-                        "baseRef":  "HEAD",
-                        "gitHead":  "08563f100032179ce1b5a7d428a97a9f3784173e",
-                        "reviewedAtUtc":  "2026-08-12T04:43:55.6331155Z"
-                    }
-                ]
+{
+  "schemaVersion": 1,
+  "reviews": [
+    {
+      "pageId": "index",
+      "pagePath": ".llm-wiki/index.md",
+      "pageSha256": "c4bb6a75a90ab7c79f6a01e1fda3fe34b619a09e6123e4040fe43a566260875a",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
+        },
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
+        }
+      ],
+      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "baseRef": "HEAD",
+      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+      "reviewedAtUtc": "2026-08-13T22:17:58.4844021Z"
+    },
+    {
+      "pageId": "module.mail-services",
+      "pagePath": ".llm-wiki/modules/mail-services.md",
+      "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
+      "sources": [
+        {
+          "path": "docs/BACKEND_MODULE_MAP.md",
+          "sha256": "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
+        }
+      ],
+      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "baseRef": "HEAD",
+      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+      "reviewedAtUtc": "2026-08-13T22:17:58.6892974Z"
+    },
+    {
+      "pageId": "module.primary-backend",
+      "pagePath": ".llm-wiki/modules/primary-backend.md",
+      "pageSha256": "8513486fc92e9236d116ce0c4eeaf7ba511ab53761f517bcc26e58464a249fa1",
+      "sources": [
+        {
+          "path": "docs/architecture/backend-modules.json",
+          "sha256": "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
+        }
+      ],
+      "reason": "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+      "baseRef": "HEAD",
+      "gitHead": "4b1ef43e330684d8150bb561c155aeb110605ba9",
+      "reviewedAtUtc": "2026-08-13T20:02:15.9627020Z"
+    },
+    {
+      "pageId": "system.architecture",
+      "pagePath": ".llm-wiki/system/architecture.md",
+      "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
+      "sources": [
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "cf6613d771cfee8b00bfae1f18755b19a75e0c82445114cc06f70f8fd117cd6a"
+        }
+      ],
+      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "baseRef": "HEAD",
+      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
+      "reviewedAtUtc": "2026-08-14T13:13:41.8268014Z"
+    },
+    {
+      "pageId": "system.csharp-symbol-index",
+      "pagePath": ".llm-wiki/system/csharp-symbol-index.md",
+      "pageSha256": "15c3aae30eea5af15e394eb2f30ec80f4df604a9c718089e987afaf25f2d1dac",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
+          "sha256": "050cb607b2dacb8935b95c9fbbb138c02de27b2be41403105c0e69fccee91768"
+        }
+      ],
+      "reason": "Production source indexes now exclude internal Wiki tooling consistently on Windows and Linux, removing cross-platform freshness drift.",
+      "baseRef": "HEAD",
+      "gitHead": "0616edfe4a49caaf8c83dc96f1876a9c3a199c47",
+      "reviewedAtUtc": "2026-08-14T03:09:04.6095534Z"
+    },
+    {
+      "pageId": "system.frontend-index",
+      "pagePath": ".llm-wiki/system/frontend-index.md",
+      "pageSha256": "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Build-LlmWikiFrontendIndex.ps1",
+          "sha256": "a7cfd40e741582b3806b6d4251d95fb30dfab55a2e9662f5ab153b8a6a3a988c"
+        }
+      ],
+      "reason": "Reviewed incremental verification, baseline-context visibility, and facade orchestration changes; indexed models and the documented evaluation, diff, brief, and dispatch semantics remain authoritative and unchanged outside the documented workflow improvements.",
+      "baseRef": "HEAD",
+      "gitHead": "7f31792400af36f7855687ca29a96dd026535d0a",
+      "reviewedAtUtc": "2026-08-10T18:18:15.4779121Z"
+    },
+    {
+      "pageId": "system.knowledge-model",
+      "pagePath": ".llm-wiki/system/knowledge-model.md",
+      "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
+      "sources": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
+        }
+      ],
+      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "baseRef": "HEAD",
+      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+      "reviewedAtUtc": "2026-08-13T22:17:59.1312515Z"
+    },
+    {
+      "pageId": "system.repository-catalog",
+      "pagePath": ".llm-wiki/system/repository-catalog.md",
+      "pageSha256": "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
+      "sources": [
+        {
+          "path": "Directory.Packages.props",
+          "sha256": "541b0647dc8c77d925299cdf6e0c1ed9eb557078d9d85ed1e3ce932f50dbbeba"
+        }
+      ],
+      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "baseRef": "HEAD",
+      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
+      "reviewedAtUtc": "2026-08-14T13:13:42.0097958Z"
+    },
+    {
+      "pageId": "workflow-acceptance-evidence-matrix",
+      "pagePath": ".llm-wiki/workflows/acceptance-evidence-matrix.md",
+      "pageSha256": "1fb64e039c1be137c7079e70291d79e82936c78d7a053d0eae894d941cd03858",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
+        }
+      ],
+      "reason": "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+      "baseRef": "HEAD",
+      "gitHead": "1abccf78c96b875ed9a5ec0f234151145da191c9",
+      "reviewedAtUtc": "2026-08-13T18:24:59.2509365Z"
+    },
+    {
+      "pageId": "workflow-adaptive-development",
+      "pagePath": ".llm-wiki/workflows/adaptive-development.md",
+      "pageSha256": "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
+          "sha256": "941eccbbcd6854082f1f508f869add65d4632c6a852e8dc08da3967451124653"
+        }
+      ],
+      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "baseRef": "HEAD",
+      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
+      "reviewedAtUtc": "2026-08-14T13:13:42.2055343Z"
+    },
+    {
+      "pageId": "workflow-api-compatibility",
+      "pagePath": ".llm-wiki/workflows/api-compatibility.md",
+      "pageSha256": "037cc1091ca997ebc790af65de373c685931315349afb4750800c31f49bd7245",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
+          "sha256": "71dce0a8b832fda48be82a1b3aef32f1366cef9090786191957ddb70e87ff349"
+        }
+      ],
+      "reason": "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+      "baseRef": "HEAD",
+      "gitHead": "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+      "reviewedAtUtc": "2026-08-13T12:40:32.7580873Z"
+    },
+    {
+      "pageId": "workflow-architecture-health-review",
+      "pagePath": ".llm-wiki/workflows/architecture-health-review.md",
+      "pageSha256": "f74e1b06fd3864499e0a28e359f979e552cb8fa51fa0da582148e417a7dfd065",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/architecture-health-index.json",
+          "sha256": "dc247c634b9ba4d1bb49cddd83f30935adfcd43b809a278ca2ac2263b0440b73"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "cf6613d771cfee8b00bfae1f18755b19a75e0c82445114cc06f70f8fd117cd6a"
+        }
+      ],
+      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "baseRef": "HEAD",
+      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
+      "reviewedAtUtc": "2026-08-14T13:13:42.4005076Z"
+    },
+    {
+      "pageId": "workflow-backend-contract-review",
+      "pagePath": ".llm-wiki/workflows/backend-contract-review.md",
+      "pageSha256": "e38ac8a4632c1ae729365477f68f5cde28f6eebaf7dd764685faffd319feed6d",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/backend-contract-index.json",
+          "sha256": "3c038b4d6c41a366a7ff69ffbb9211e6a92a044927c8525c9112359e3b7c4b49"
+        }
+      ],
+      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "baseRef": "HEAD",
+      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
+      "reviewedAtUtc": "2026-08-14T13:13:42.8271430Z"
+    },
+    {
+      "pageId": "workflow-change-manifest",
+      "pagePath": ".llm-wiki/workflows/change-manifest.md",
+      "pageSha256": "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
+        }
+      ],
+      "reason": "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
+      "baseRef": "HEAD",
+      "gitHead": "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+      "reviewedAtUtc": "2026-08-12T21:30:33.3048625Z"
+    },
+    {
+      "pageId": "workflow-change-packet",
+      "pagePath": ".llm-wiki/workflows/change-packet.md",
+      "pageSha256": "49eab42e51f76e49c1ba23bb8ab93f7358270e92bed0b0e4547ba7b713fa4642",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
+        }
+      ],
+      "reason": "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
+      "baseRef": "HEAD",
+      "gitHead": "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
+      "reviewedAtUtc": "2026-08-12T21:30:33.4987707Z"
+    },
+    {
+      "pageId": "workflow-code-graph",
+      "pagePath": ".llm-wiki/workflows/code-graph.md",
+      "pageSha256": "826a06dc3f0b033a6f1c97f4c6e51d628ac5c56475a6a08ef69870464905be00",
+      "sources": [
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:47.9689541Z"
+    },
+    {
+      "pageId": "workflow-confidence-ledger",
+      "pagePath": ".llm-wiki/workflows/confidence-ledger.md",
+      "pageSha256": "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
+          "sha256": "785f052003ad3c8ad93e7a044ea2d3acd0c32d79fb00a8c783aaeed1028ec626"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:13.9049947Z"
+    },
+    {
+      "pageId": "workflow-context-budget-optimization",
+      "pagePath": ".llm-wiki/workflows/context-budget-optimization.md",
+      "pageSha256": "79a057816a216c509d2f1d25849e93e19a32ce66f1f22b4e39db637ed292e1db",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+        }
+      ],
+      "reason": "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "11ad75c4c7b137342ee1af037f718414c8be6578",
+      "reviewedAtUtc": "2026-08-12T14:07:30.4199634Z"
+    },
+    {
+      "pageId": "workflow-context-bundles",
+      "pagePath": ".llm-wiki/workflows/context-bundles.md",
+      "pageSha256": "c6ad719eb6441142cdea59a921180a1c64d63b5c3143b6d0ac37ccf2df185fda",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
+          "sha256": "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
+          "sha256": "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
+          "sha256": "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:14.1542166Z"
+    },
+    {
+      "pageId": "workflow-context-security",
+      "pagePath": ".llm-wiki/workflows/context-security.md",
+      "pageSha256": "b1772ca6e2b1bc91074242feec33660475b32799725366e180a3238cbd6a081c",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+        }
+      ],
+      "reason": "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "11ad75c4c7b137342ee1af037f718414c8be6578",
+      "reviewedAtUtc": "2026-08-12T14:07:35.8298746Z"
+    },
+    {
+      "pageId": "workflow-controlled-learning-promotion",
+      "pagePath": ".llm-wiki/workflows/controlled-learning-promotion.md",
+      "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
+      "sources": [
+        {
+          "path": ".llm-wiki/knowledge/learning-promotions.json",
+          "sha256": "7c4d449e9443dd07872fc64622b63c5ee236d2abe24e660ed4c228aa8a14df70"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
+          "sha256": "bcb5da42c93ff7837fbf33ec9c50b89145c6487fab6f82ea97d61d3bd08cc110"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
+          "sha256": "996a9c5fdbf6b674ed1ce15f03531ea956b91f91766bd8369d11c72419c6074d"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
+          "sha256": "b373c3c4fb7e20a4529005a06e4643b6e2ffd44f0b185ecb6199072564abcd87"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+          "sha256": "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+          "sha256": "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:14.4422672Z"
+    },
+    {
+      "pageId": "workflow-controlled-repair-loop",
+      "pagePath": ".llm-wiki/workflows/controlled-repair-loop.md",
+      "pageSha256": "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+        }
+      ],
+      "reason": "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "5dd18c0612e12cede5d0ac11276eba421e812817",
+      "reviewedAtUtc": "2026-08-12T08:06:40.6247774Z"
+    },
+    {
+      "pageId": "workflow-cost-aware-verification",
+      "pagePath": ".llm-wiki/workflows/cost-aware-verification.md",
+      "pageSha256": "89bba606d2635692a16e530538c4ccc5a89b7d983e5a9465a605a1aefdd34e7c",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+          "sha256": "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:14.7368462Z"
+    },
+    {
+      "pageId": "workflow-decision-context",
+      "pagePath": ".llm-wiki/workflows/decision-context.md",
+      "pageSha256": "8b4cb2d28a12dabbacea071dc05d656bf06ccbaec42ac12f5b35408b708a161a",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
+          "sha256": "c7a531a0c64cd75e50a9c237faf735b0687a6867f57fc04e6c04efec9d3445b5"
+        }
+      ],
+      "reason": "Reviewed decision-context strict-mode handling: missing rule/module fields now produce an empty evidence set without changing ADR trigger semantics.",
+      "baseRef": "HEAD",
+      "gitHead": "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+      "reviewedAtUtc": "2026-08-12T01:16:09.1330805Z"
+    },
+    {
+      "pageId": "workflow-dependency-rollout",
+      "pagePath": ".llm-wiki/workflows/dependency-rollout.md",
+      "pageSha256": "285b7d0005f1b054eda23538c5f17b3dd44d318411cb12f6e7e4146e9db95db9",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiDependencyChanges.ps1",
+          "sha256": "a2d73a8256a9fcbd88556c76d431637daef8d1016024615d0b66438b4dc728d5"
+        }
+      ],
+      "reason": "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "684dcb79797815b9e9bf8af888375688ac34fefa",
+      "reviewedAtUtc": "2026-08-12T09:51:49.8572958Z"
+    },
+    {
+      "pageId": "workflow-developer-experience",
+      "pagePath": ".llm-wiki/workflows/developer-experience.md",
+      "pageSha256": "e81fa2b3a04a1494e8f592d61f2407a135f90a5899cf6cf94a01515c984e07b3",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:48.2225054Z"
+    },
+    {
+      "pageId": "workflow-domain-data-review",
+      "pagePath": ".llm-wiki/workflows/domain-data-review.md",
+      "pageSha256": "26d445347ec6f5700f2ecefdf9e0c538f459107cff68b65c4c18ac8d65dda5f0",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/domain-data-index.json",
+          "sha256": "739397631c6f3eb6d611cbbdca0c40e49f89e5c3a544eb19ec003081d2d58a17"
+        }
+      ],
+      "reason": "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
+      "baseRef": "HEAD",
+      "gitHead": "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
+      "reviewedAtUtc": "2026-08-13T19:18:27.1964617Z"
+    },
+    {
+      "pageId": "workflow-durable-memory",
+      "pagePath": ".llm-wiki/workflows/durable-memory.md",
+      "pageSha256": "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
+          "sha256": "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
+          "sha256": "e203a5aef1a161ba884d4f632842cd6831546fc18537212634186c6b9c3d7f61"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:14.9736782Z"
+    },
+    {
+      "pageId": "workflow-failure-knowledge",
+      "pagePath": ".llm-wiki/workflows/failure-knowledge.md",
+      "pageSha256": "35bfa8131be82949fafdf792276d7187342b85a0a926275e51379c9c7e80e233",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiFailures.ps1",
+          "sha256": "58c0e4d1253b6de9189b0dc3618ceb0297f3b8c7e884d94c6a70f6d36c43ee8c"
+        }
+      ],
+      "reason": "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+      "baseRef": "HEAD",
+      "gitHead": "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
+      "reviewedAtUtc": "2026-08-14T02:46:30.2788656Z"
+    },
+    {
+      "pageId": "workflow-failure-prediction",
+      "pagePath": ".llm-wiki/workflows/failure-prediction.md",
+      "pageSha256": "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
+          "sha256": "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
+          "sha256": "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:15.5471170Z"
+    },
+    {
+      "pageId": "workflow-impact-simulation",
+      "pagePath": ".llm-wiki/workflows/impact-simulation.md",
+      "pageSha256": "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
+          "sha256": "03e766fda53fcd5a7c7dc44fb591bea821300443313ec5d9882f5c42f69d6a59"
+        }
+      ],
+      "reason": "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+      "baseRef": "HEAD",
+      "gitHead": "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+      "reviewedAtUtc": "2026-08-13T12:13:00.6211221Z"
+    },
+    {
+      "pageId": "workflow-implementation-plan",
+      "pagePath": ".llm-wiki/workflows/implementation-plan.md",
+      "pageSha256": "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
+          "sha256": "2ee96e2ec26a5285c8f0d9a305327a10b739fef4682eee18184b8fb321b17713"
+        }
+      ],
+      "reason": "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+      "baseRef": "HEAD",
+      "gitHead": "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+      "reviewedAtUtc": "2026-08-13T12:40:33.1865677Z"
+    },
+    {
+      "pageId": "workflow-independent-change-critique",
+      "pagePath": ".llm-wiki/workflows/independent-change-critique.md",
+      "pageSha256": "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
+          "sha256": "716c306fd32a152e2d9c634937c9428bb54459b33f479043ee0f9cabeef51b33"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:16.0799017Z"
+    },
+    {
+      "pageId": "workflow-index-pipeline",
+      "pagePath": ".llm-wiki/workflows/index-pipeline.md",
+      "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "1293139461c4e175eb81d99c2b20f672ada6f14b0fcbd2246c1576a88373137b"
+        }
+      ],
+      "reason": "TypeScript regex extraction was replaced with the compiler API while preserving the SQLite graph contract, automatic routing, incremental rebuilds, and fallback behavior.",
+      "baseRef": "HEAD",
+      "gitHead": "9703734b7b4c011a9d7f93f767978b8c9fee206d",
+      "reviewedAtUtc": "2026-08-14T12:29:47.5703475Z"
+    },
+    {
+      "pageId": "workflow-instruction-effectiveness",
+      "pagePath": ".llm-wiki/workflows/instruction-effectiveness.md",
+      "pageSha256": "61d91d7cbe073b4d9d81be15b1391daea4fc698ef9abec557da5a9d9b45c26bb",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiInstructionOutcome.ps1",
+          "sha256": "789fcb02a0f90012879dbea8c04c00e27a0360d4dc83a17cbe989f7b3b06dde4"
+        }
+      ],
+      "reason": "Reviewed cross-platform canonical JSON hashing and standalone verification; instruction outcome semantics and persisted chain remain unchanged.",
+      "baseRef": "HEAD",
+      "gitHead": "d5eb6dc6614140a568feb0ecea95841c174df82f",
+      "reviewedAtUtc": "2026-07-31T20:22:08.9685006Z"
+    },
+    {
+      "pageId": "workflow-integration-scan",
+      "pagePath": ".llm-wiki/workflows/integration-scan.md",
+      "pageSha256": "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+          "sha256": "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:49.5321577Z"
+    },
+    {
+      "pageId": "workflow-learned-regression-evals",
+      "pagePath": ".llm-wiki/workflows/learned-regression-evals.md",
+      "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
+      "sources": [
+        {
+          "path": ".llm-wiki/evals/cases.json",
+          "sha256": "e68052dcd82119dd8f57dfff57db725017f9b00ee251d9aa65127e6f5d9b1074"
+        }
+      ],
+      "reason": "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
+      "baseRef": "HEAD",
+      "gitHead": "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
+      "reviewedAtUtc": "2026-08-14T00:06:49.4088405Z"
+    },
+    {
+      "pageId": "workflow-model-routing",
+      "pagePath": ".llm-wiki/workflows/model-routing.md",
+      "pageSha256": "f2175e29d46c5bf4aca0b8bb756b10ce36fb1049494ab8ee1309f48f3f75fbe6",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+        }
+      ],
+      "reason": "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "684dcb79797815b9e9bf8af888375688ac34fefa",
+      "reviewedAtUtc": "2026-08-12T09:51:51.9454992Z"
+    },
+    {
+      "pageId": "workflow-ownership-impact",
+      "pagePath": ".llm-wiki/workflows/ownership-impact.md",
+      "pageSha256": "d3d432c73abbc3e5880b10862b4b343ec755f82c7fd5a62a2286093f5f20676d",
+      "sources": [
+        {
+          "path": "docs/architecture/module-dependencies.json",
+          "sha256": "8b4629e64f5d0a7b91a119f880eb47e4fd25bae7fe93962f6088a03715ede205"
+        }
+      ],
+      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "baseRef": "HEAD",
+      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+      "reviewedAtUtc": "2026-08-13T22:18:00.5271927Z"
+    },
+    {
+      "pageId": "workflow-performance-observability-review",
+      "pagePath": ".llm-wiki/workflows/performance-observability-review.md",
+      "pageSha256": "0d3f137f64fa7b1f3299dc26881c5bfc9dfd9ab2ed9f11a0d1507cbf324ff541",
+      "sources": [
+        {
+          "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
+          "sha256": "87e3f1ec09488ecf6ae4e319293cd3a43b5b71cbff19186f09c5f1c52d1eccc3"
+        },
+        {
+          "path": "docs/backend/BACKEND_PERFORMANCE_REVIEW.md",
+          "sha256": "43990323011d5bd842a47067e25433af6bd1d10f393f6c787e287905ab87d6f8"
+        }
+      ],
+      "reason": "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+      "baseRef": "HEAD",
+      "gitHead": "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+      "reviewedAtUtc": "2026-08-13T12:13:01.3256421Z"
+    },
+    {
+      "pageId": "workflow-plan-diff-conformance",
+      "pagePath": ".llm-wiki/workflows/plan-diff-conformance.md",
+      "pageSha256": "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+          "sha256": "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:17.0097814Z"
+    },
+    {
+      "pageId": "workflow-post-task-retrospective",
+      "pagePath": ".llm-wiki/workflows/post-task-retrospective.md",
+      "pageSha256": "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
+          "sha256": "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
+        }
+      ],
+      "reason": "Reviewed current and legacy impact-simulation receipt compatibility plus optional retrospective fields; workflow guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "8f6e68336eb71c2692fb7cc120d69bc421a14aff",
+      "reviewedAtUtc": "2026-08-12T10:39:46.2768485Z"
+    },
+    {
+      "pageId": "workflow-privacy-review",
+      "pagePath": ".llm-wiki/workflows/privacy-review.md",
+      "pageSha256": "ccc7ce4a406748d705aeca097cf3312ad16c1eea5f2bbabd1e362e7b4ac14d76",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/sensitive-data-index.json",
+          "sha256": "b18b5022e3b9e0343489670db64c227a7033ef81fd69592830ab0e2007e14a16"
+        }
+      ],
+      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "baseRef": "HEAD",
+      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
+      "reviewedAtUtc": "2026-08-13T22:18:00.9464379Z"
+    },
+    {
+      "pageId": "workflow-product-journey-impact",
+      "pagePath": ".llm-wiki/workflows/product-journey-impact.md",
+      "pageSha256": "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+          "sha256": "ac00a8b62a0d8ba7603ba33e271f0be99b61643bc31d17ab753dd9672e192a56"
+        }
+      ],
+      "reason": "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+      "baseRef": "HEAD",
+      "gitHead": "1abccf78c96b875ed9a5ec0f234151145da191c9",
+      "reviewedAtUtc": "2026-08-13T18:25:01.2543407Z"
+    },
+    {
+      "pageId": "workflow-proof-of-change",
+      "pagePath": ".llm-wiki/workflows/proof-of-change.md",
+      "pageSha256": "8b82837eee71015fa0bc4c18f084e4ece9b7aedd383f14fb07def75df7fbda78",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
+          "sha256": "52458b277ebc3a74e0c238d228867aaeebe030f4d3e1b8e52dca8b8b3dbbaa07"
+        }
+      ],
+      "reason": "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+      "baseRef": "HEAD",
+      "gitHead": "1abccf78c96b875ed9a5ec0f234151145da191c9",
+      "reviewedAtUtc": "2026-08-13T18:25:01.7432111Z"
+    },
+    {
+      "pageId": "workflow-quality-risk",
+      "pagePath": ".llm-wiki/workflows/quality-risk.md",
+      "pageSha256": "6dbd01ffd9ba92e32c7d132ca80e70d883a1707164597cbecf5dac86e8bfb292",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/quality-index.json",
+          "sha256": "7408abb60e4af37b76aff67632d401d20c2b5ab4a68c38e223dfb9bbb4e00bd0"
+        }
+      ],
+      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "baseRef": "HEAD",
+      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
+      "reviewedAtUtc": "2026-08-14T13:13:43.2599228Z"
+    },
+    {
+      "pageId": "workflow-release-readiness",
+      "pagePath": ".llm-wiki/workflows/release-readiness.md",
+      "pageSha256": "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "6b3dfdf272d220a0abf3ce06f28007fabb3305239b6eef8478954973c42d004d"
+        }
+      ],
+      "reason": "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
+      "baseRef": "HEAD",
+      "gitHead": "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
+      "reviewedAtUtc": "2026-08-13T18:57:49.3279010Z"
+    },
+    {
+      "pageId": "workflow-requirement-intelligence",
+      "pagePath": ".llm-wiki/workflows/requirement-intelligence.md",
+      "pageSha256": "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "6b3dfdf272d220a0abf3ce06f28007fabb3305239b6eef8478954973c42d004d"
+        }
+      ],
+      "reason": "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
+      "baseRef": "HEAD",
+      "gitHead": "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
+      "reviewedAtUtc": "2026-08-13T18:57:50.0005326Z"
+    },
+    {
+      "pageId": "workflow-review-report",
+      "pagePath": ".llm-wiki/workflows/review-report.md",
+      "pageSha256": "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
+      "sources": [
+        {
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "973a0c1710771d7e9529d634b9dba341595eb2b865daf07dc667ec083b9999ef"
+        }
+      ],
+      "reason": "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
+      "baseRef": "HEAD",
+      "gitHead": "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
+      "reviewedAtUtc": "2026-08-14T00:06:50.2226250Z"
+    },
+    {
+      "pageId": "workflow-risk-calibration",
+      "pagePath": ".llm-wiki/workflows/risk-calibration.md",
+      "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
+          "sha256": "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:18.9821407Z"
+    },
+    {
+      "pageId": "workflow-runtime-impact",
+      "pagePath": ".llm-wiki/workflows/runtime-impact.md",
+      "pageSha256": "f76e9e0aeb3642ca5dbda529bb9b4b9598b30d636df9df042d6a0d0edd2e9233",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/runtime-topology.json",
+          "sha256": "d5c2a7b26c329c34ff9a2625bf01c741f2d35fb07d4a5f7b1b477146cf0edc57"
+        }
+      ],
+      "reason": "Extract Admin into an isolated orchestration application module",
+      "baseRef": "HEAD",
+      "gitHead": "439aae96be11a5ad3d706354e5be3f3a3938fe75",
+      "reviewedAtUtc": "2026-08-13T18:41:20.8485054Z"
+    },
+    {
+      "pageId": "workflow-similar-task-plan-reuse",
+      "pagePath": ".llm-wiki/workflows/similar-task-plan-reuse.md",
+      "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
+          "sha256": "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:19.2784372Z"
+    },
+    {
+      "pageId": "workflow-task-brief",
+      "pagePath": ".llm-wiki/workflows/task-brief.md",
+      "pageSha256": "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+          "sha256": "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:50.1417766Z"
+    },
+    {
+      "pageId": "workflow-task-contract",
+      "pagePath": ".llm-wiki/workflows/task-contract.md",
+      "pageSha256": "888080c8bba4b9ca779a914f57d720a181f282a6fda946b34af360cf55bd2e18",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
+          "sha256": "b913fcdba8e023cec77a49bbfd12a9e91047f1eb31deafb54de131ce44abaa86"
+        }
+      ],
+      "reason": "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "400fc4abd3235d7389072b570d3ecd08a8a6f589",
+      "reviewedAtUtc": "2026-08-11T23:54:59.2181151Z"
+    },
+    {
+      "pageId": "workflow-task-dispatch-receipts",
+      "pagePath": ".llm-wiki/workflows/task-dispatch-receipts.md",
+      "pageSha256": "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
+      "sources": [
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:50.5136012Z"
+    },
+    {
+      "pageId": "workflow-task-scheduler",
+      "pagePath": ".llm-wiki/workflows/task-scheduler.md",
+      "pageSha256": "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
+          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
+          "sha256": "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
+        }
+      ],
+      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "baseRef": "HEAD",
+      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
+      "reviewedAtUtc": "2026-08-12T18:49:19.5792723Z"
+    },
+    {
+      "pageId": "workflow-task-workspace",
+      "pagePath": ".llm-wiki/workflows/task-workspace.md",
+      "pageSha256": "ed76010c9aad57a33818df996ea02272f901beb3db5876d9d8298058d7ae9cff",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "c72e9d79fb364545e68a89dc45c1159988cb6aa7958a30b6bc82fb62826bfa9b"
+        }
+      ],
+      "reason": "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+      "baseRef": "HEAD",
+      "gitHead": "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
+      "reviewedAtUtc": "2026-08-13T12:40:35.1364948Z"
+    },
+    {
+      "pageId": "workflow-test-plan",
+      "pagePath": ".llm-wiki/workflows/test-plan.md",
+      "pageSha256": "58431db00a85f5a9da2ea8a0aa2d2910509884d52c68707826ae9c8c3bd23e16",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "ed683f483613eac44682273f6a8145cc0881db70ca35309aeacc0fe209c0ecf3"
+        }
+      ],
+      "reason": "Reviewed the centralized BOM-safe Git path boundary, assessment research mode, compact extraction delta, resumable completion facade, affected smoke routing, and strict-mode handling for sparse evidence; documented behavior remains aligned.",
+      "baseRef": "HEAD",
+      "gitHead": "86e537f5b7c5046494b26e1054fffcb94a9a3196",
+      "reviewedAtUtc": "2026-08-12T01:16:08.7166054Z"
+    },
+    {
+      "pageId": "workflow-trace-feature",
+      "pagePath": ".llm-wiki/workflows/trace-feature.md",
+      "pageSha256": "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
+          "sha256": "c22d6016f956f55b5510afe0864085a9c9d27ba4cd0d726826cdec9ead8a2385"
+        }
+      ],
+      "reason": "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
+      "baseRef": "HEAD",
+      "gitHead": "1bb3717d689db4bebf9873edee6b24722b37954a",
+      "reviewedAtUtc": "2026-08-14T01:43:31.3886080Z"
+    },
+    {
+      "pageId": "workflow-verification-planner",
+      "pagePath": ".llm-wiki/workflows/verification-planner.md",
+      "pageSha256": "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+        }
+      ],
+      "reason": "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "684dcb79797815b9e9bf8af888375688ac34fefa",
+      "reviewedAtUtc": "2026-08-12T09:51:56.3337732Z"
+    },
+    {
+      "pageId": "workflow-verification-telemetry",
+      "pagePath": ".llm-wiki/workflows/verification-telemetry.md",
+      "pageSha256": "b12a79df67989847845ec9725cad44610e5ee3779bf54ed16e8194f751f45e77",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
+          "sha256": "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
+          "sha256": "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+        }
+      ],
+      "reason": "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+      "baseRef": "HEAD",
+      "gitHead": "08563f100032179ce1b5a7d428a97a9f3784173e",
+      "reviewedAtUtc": "2026-08-12T04:43:55.6331155Z"
+    },
+    {
+      "pageId": "workflow.change-policy",
+      "pagePath": ".llm-wiki/workflows/change-policy.md",
+      "pageSha256": "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+          "sha256": "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:47.7303451Z"
+    },
+    {
+      "pageId": "workflow.evals",
+      "pagePath": ".llm-wiki/workflows/evals.md",
+      "pageSha256": "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+          "sha256": "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:48.4834148Z"
+    },
+    {
+      "pageId": "workflow.evidence-bundle",
+      "pagePath": ".llm-wiki/workflows/evidence-bundle.md",
+      "pageSha256": "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+          "sha256": "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:48.8332155Z"
+    },
+    {
+      "pageId": "workflow.frontend-contract-review",
+      "pagePath": ".llm-wiki/workflows/frontend-contract-review.md",
+      "pageSha256": "225c45ee233216765f042957a19f615952f2ca2256542e58d3a7abf02d25d2f2",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "99e35e859a32418b59935aec99d0243a1db3d990addf93aede27cc887ace2074"
+        }
+      ],
+      "reason": "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+      "baseRef": "HEAD",
+      "gitHead": "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
+      "reviewedAtUtc": "2026-08-13T12:13:00.2562684Z"
+    },
+    {
+      "pageId": "workflow.query-context",
+      "pagePath": ".llm-wiki/workflows/query-context.md",
+      "pageSha256": "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
+      "sources": [
+        {
+          "path": ".llm-wiki/generated/repository-catalog.json",
+          "sha256": "3ffb8620496310b5267d15e6e1290c3e7eeba12f23ab247e72afa48cdae35c45"
+        }
+      ],
+      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "baseRef": "HEAD",
+      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
+      "reviewedAtUtc": "2026-08-14T13:13:43.5954058Z"
+    },
+    {
+      "pageId": "workflow.review-diff",
+      "pagePath": ".llm-wiki/workflows/review-diff.md",
+      "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
+      "sources": [
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
+        }
+      ],
+      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "baseRef": "HEAD",
+      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+      "reviewedAtUtc": "2026-08-14T12:05:49.8500592Z"
+    }
+  ]
 }

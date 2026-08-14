@@ -82,6 +82,7 @@
   </Folder>
   <Folder Name="/Tooling/">
     <Project Path="FoodDiary.Analyzers/FoodDiary.Analyzers.csproj" />
+    <Project Path="FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj" />
   </Folder>
   <Folder Name="/Tests/Core/">
     <Project Path="tests/FoodDiary.Analyzers.Tests/FoodDiary.Analyzers.Tests.csproj" />
@@ -89,6 +90,7 @@
     <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
     <Project Path="tests/FoodDiary.Domain.Primitives.Tests/FoodDiary.Domain.Primitives.Tests.csproj" />
     <Project Path="tests/FoodDiary.Domain.Tests/FoodDiary.Domain.Tests.csproj" />
+    <Project Path="tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj" />
     <Project Path="tests/FoodDiary.Infrastructure.IntegrationTests/FoodDiary.Infrastructure.IntegrationTests.csproj" />
     <Project Path="tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj" />
     <Project Path="tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj" />

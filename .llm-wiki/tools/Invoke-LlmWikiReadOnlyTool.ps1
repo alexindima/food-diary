@@ -72,7 +72,7 @@ try {
     $mutated = [Collections.Generic.List[string]]::new()
     foreach ($entry in $before.GetEnumerator()) {
         $absolute = Join-Path $repositoryRoot $entry.Key
-        $same = (Test-Path -LiteralPath $absolute -PathType Leaf) -and (Get-FileHash -LiteralPath $absolute -Algorithm SHA256).Hash -ceq [string]$entry.Value.hash
+        $same = (Test-Path -LiteralPath $absolute -PathType Leaf) -and (Get-BytesHash ([IO.File]::ReadAllBytes($absolute))) -ceq [string]$entry.Value.hash
         if ($same) { continue }
         $null = New-Item -ItemType Directory -Path (Split-Path -Parent $absolute) -Force
         [IO.File]::WriteAllBytes($absolute, [byte[]]$entry.Value.bytes)
