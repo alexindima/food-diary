@@ -177,6 +177,7 @@ function openDatabase(databasePath) {
     PRAGMA journal_mode = WAL;
     PRAGMA synchronous = NORMAL;
     PRAGMA foreign_keys = ON;
+    PRAGMA busy_timeout = 5000;
     CREATE TABLE IF NOT EXISTS metadata(key TEXT PRIMARY KEY, value TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS files(
       id INTEGER PRIMARY KEY,
@@ -212,10 +213,19 @@ function openDatabase(databasePath) {
       confidence TEXT NOT NULL,
       PRIMARY KEY(file_id, kind, target, line)
     ) WITHOUT ROWID;
+    CREATE TABLE IF NOT EXISTS query_documents(
+      category TEXT NOT NULL,
+      record_key TEXT NOT NULL,
+      path TEXT NOT NULL,
+      source_path TEXT NOT NULL,
+      payload_json TEXT NOT NULL,
+      PRIMARY KEY(category, record_key, path)
+    ) WITHOUT ROWID;
     CREATE INDEX IF NOT EXISTS ix_symbols_name ON symbols(name COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_symbols_file ON symbols(file_id);
     CREATE INDEX IF NOT EXISTS ix_tokens_token ON file_tokens(token COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_edges_kind_target ON typed_edges(kind, target COLLATE NOCASE);
+    CREATE INDEX IF NOT EXISTS ix_query_documents_category_path ON query_documents(category, path COLLATE NOCASE);
   `);
   const ensureColumn = (table, column, definition) => {
     if (!database.prepare(`PRAGMA table_info(${table})`).all().some((item) => item.name === column)) database.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
@@ -224,6 +234,42 @@ function openDatabase(databasePath) {
   ensureColumn('typed_edges', 'target_id', 'TEXT');
   database.exec('CREATE INDEX IF NOT EXISTS ix_symbols_symbol_id ON symbols(symbol_id); CREATE INDEX IF NOT EXISTS ix_edges_target_id ON typed_edges(target_id);');
   return database;
+}
+
+function refreshQueryLayer(database) {
+  const sources = [
+    ['modules', 'docs/architecture/backend-modules.json'],
+    ['contracts', '.llm-wiki/generated/backend-contract-index.json'],
+    ['risks', '.llm-wiki/generated/quality-index.json'],
+  ];
+  const replaceCategory = database.prepare('DELETE FROM query_documents WHERE category = ?');
+  const insert = database.prepare('INSERT OR REPLACE INTO query_documents(category, record_key, path, source_path, payload_json) VALUES (?, ?, ?, ?, ?)');
+  let refreshed = 0;
+  for (const [category, sourcePath] of sources) {
+    const absolutePath = resolve(repositoryRoot, sourcePath);
+    if (!existsSync(absolutePath)) continue;
+    const text = readFileSync(absolutePath, 'utf8');
+    const contentHash = sha256(text);
+    const metadataKey = `query_source:${category}`;
+    if (database.prepare('SELECT value FROM metadata WHERE key = ?').get(metadataKey)?.value === contentHash) continue;
+    const document = JSON.parse(text);
+    const records = [];
+    if (category === 'modules') {
+      for (const [name, value] of Object.entries(document.modules ?? {})) records.push({ key: name, path: value?.sourceMappings?.applicationProjects?.[0] ?? '', value: { name, ...value } });
+    } else if (category === 'contracts') {
+      for (const value of document.contracts ?? []) records.push({ key: value.id ?? value.name ?? value.symbol ?? JSON.stringify(value), path: value.path ?? value.sourcePath ?? '', value });
+      for (const value of document.consumerEdges ?? []) records.push({ key: `consumer:${value.contract ?? ''}:${value.consumerPath ?? ''}`, path: value.consumerPath ?? '', value: { recordKind: 'consumer', ...value } });
+    } else {
+      for (const [recordKind, values] of Object.entries({ hotspot: document.hotspots ?? [], file: document.files ?? [], criticalSymbol: document.criticalSymbols ?? [], debtMarker: document.debtMarkers ?? [] })) {
+        for (const value of values) records.push({ key: `${recordKind}:${value.path ?? ''}:${value.name ?? value.symbol ?? value.line ?? ''}`, path: value.path ?? value.sourcePath ?? '', value: { recordKind, ...value } });
+      }
+    }
+    replaceCategory.run(category);
+    for (const record of records) insert.run(category, String(record.key), String(record.path), sourcePath, JSON.stringify(record.value));
+    database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run(metadataKey, contentHash);
+    refreshed += 1;
+  }
+  return refreshed;
 }
 
 function build(database, force = false) {
@@ -242,6 +288,7 @@ function build(database, force = false) {
   let updated = 0;
   let unchanged = 0;
   let removed = 0;
+  let queryCategoriesRefreshed = 0;
   const candidates = [];
 
   for (const path of knownPaths) {
@@ -290,6 +337,7 @@ function build(database, force = false) {
     }
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('parser_version', parserVersion);
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('updated_at_utc', new Date().toISOString());
+    queryCategoriesRefreshed = refreshQueryLayer(database);
     database.exec('COMMIT');
   } catch (error) {
     database.exec('ROLLBACK');
@@ -306,8 +354,31 @@ function build(database, force = false) {
     symbols: database.prepare('SELECT COUNT(*) count FROM symbols').get().count,
     tokens: database.prepare('SELECT COUNT(*) count FROM file_tokens').get().count,
     typedEdges: database.prepare('SELECT COUNT(*) count FROM typed_edges').get().count,
+    queryCategoriesRefreshed,
     durationMs: Math.round((performance.now() - started) * 100) / 100,
   };
+}
+
+function queryDocuments(database, category, query, limit) {
+  if (category === 'tests') {
+    const terms = `%${query}%`;
+    const rows = database.prepare(`
+      SELECT DISTINCT f.path, e.kind, e.target, e.confidence
+      FROM typed_edges e JOIN files f ON f.id=e.file_id
+      WHERE e.kind='test-ownership' AND (?='' OR f.path LIKE ? COLLATE NOCASE OR e.target LIKE ? COLLATE NOCASE)
+      ORDER BY f.path LIMIT ?
+    `).all(query, terms, terms, limit);
+    return { category, query, records: rows };
+  }
+  const term = `%${query}%`;
+  const rows = database.prepare(`
+    SELECT category, record_key recordKey, path, source_path sourcePath, payload_json payloadJson
+    FROM query_documents
+    WHERE category=? AND (?='' OR record_key LIKE ? COLLATE NOCASE OR path LIKE ? COLLATE NOCASE OR payload_json LIKE ? COLLATE NOCASE)
+    ORDER BY path, record_key LIMIT ?
+  `).all(category, query, term, term, term, limit).map((row) => ({ ...row, payload: JSON.parse(row.payloadJson) }));
+  for (const row of rows) delete row.payloadJson;
+  return { category, query, records: rows };
 }
 
 function findSymbols(database, query, limit) {
@@ -519,6 +590,7 @@ try {
   else if (action === 'relations') result = relations(database, (options.path ?? '').split(';').filter(Boolean), (options.kind ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
   else if (action === 'coverage') result = coverage(database);
   else if (action === 'fingerprint') result = fingerprint(database, (options.path ?? '').split(';').filter(Boolean));
+  else if (action === 'query') result = queryDocuments(database, options.category ?? 'modules', options.query ?? '', Number(options.limit ?? 50));
   else result = {
     action: 'status',
     databasePath,

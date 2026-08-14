@@ -18,7 +18,8 @@ public static class RepositoryRootResolver {
             directory = directory.Parent;
         }
 
-        throw new InvalidOperationException(
+        throw new DevelopmentMcpException(
+            DevelopmentMcpErrorCodes.RepositoryNotFound,
             $"FoodDiary repository root was not found. Set {RepositoryRootEnvironmentVariable}.");
     }
 
@@ -26,7 +27,9 @@ public static class RepositoryRootResolver {
         string fullPath = Path.GetFullPath(candidate);
         string wikiPath = Path.Combine(fullPath, ".llm-wiki", "wiki.ps1");
         if (!File.Exists(wikiPath)) {
-            throw new InvalidOperationException($"The configured repository root does not contain {wikiPath}.");
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.RepositoryNotFound,
+                $"The configured repository root does not contain {wikiPath}.");
         }
 
         return fullPath;

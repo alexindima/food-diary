@@ -1,8 +1,10 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('build', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint')]
+    [ValidateSet('build', 'status', 'symbol', 'consumers', 'trace', 'impact', 'relations', 'coverage', 'fingerprint', 'query')]
     [string]$Action = 'status',
     [string]$Query,
+    [ValidateSet('modules', 'contracts', 'risks', 'tests')]
+    [string]$Category = 'modules',
     [string[]]$ChangedPath,
     [string[]]$RelationKind,
     [string]$Module,
@@ -25,6 +27,7 @@ if ($Action -notin @('build', 'status') -and -not $SkipRefresh) {
 }
 $arguments = @($scriptPath, $Action, "--limit=$Limit")
 if (-not [string]::IsNullOrWhiteSpace($Query)) { $arguments += "--query=$Query" }
+if ($Action -eq 'query') { $arguments += "--category=$Category" }
 if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments += "--module=$Module" }
 if (-not [string]::IsNullOrWhiteSpace($PathPrefix)) { $arguments += "--path-prefix=$PathPrefix" }
 if ($SymbolKind -ne 'Any') { $arguments += "--symbol-kind=$SymbolKind" }
@@ -74,4 +77,8 @@ switch ($Action) {
         foreach ($item in @($result.legacySymbolCoverage)) { Write-Host " - shadow $($item.index): $($item.covered)/$($item.total) covered, missing=$($item.missing)" }
     }
     'fingerprint' { Write-Host "Code graph fingerprint: $($result.fingerprint) ($($result.fileCount) file(s))." }
+    'query' {
+        Write-Host "Code graph query [$Category] '$Query': $(@($result.records).Count) record(s)."
+        foreach ($item in @($result.records)) { Write-Host " - $($item.path) [$($item.recordKey)]" }
+    }
 }

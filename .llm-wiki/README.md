@@ -87,6 +87,16 @@ Interrupted local `verify` and `verify-full` runs resume passed stages by
 default; receipts are content-addressed independently from each stage's relevant
 inputs. CI disables this default and never trusts the local stage cache.
 
+Repository queries use a derived SQLite layer under `.artifacts/llm-wiki` for
+symbols, typed edges, modules, contracts, tests, and quality risks. The database
+is disposable and incrementally rebuilt from authoritative code, current docs,
+and compiled indexes. MCP change-context and test-plan calls share an immutable
+HEAD/worktree snapshot; the combined `get_development_context` MCP tool runs its
+three read-only queries concurrently against that same snapshot. Compiled JSON
+files remain publication artifacts while any generator or compatibility reader
+still consumes them; migration to SQLite removes query-time reads first, and a
+file is deleted only after a repository consumer scan proves it unused.
+
 The unified developer entrypoint is:
 
 ```powershell

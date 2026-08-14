@@ -12,6 +12,11 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
     ) {
         string repositoryRoot = RepositoryRootResolver.Resolve();
         string wikiPath = Path.Combine(repositoryRoot, ".llm-wiki", "wiki.ps1");
+        if (!File.Exists(wikiPath)) {
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.WikiUnavailable,
+                $"Wiki entrypoint was not found at {wikiPath}.");
+        }
 
         using Process process = new() {
             StartInfo = new ProcessStartInfo {
@@ -36,7 +41,9 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
 
         if (!process.Start()) {
-            throw new InvalidOperationException("The wiki command process could not be started.");
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.WikiCommandFailed,
+                "The wiki command process could not be started.");
         }
         process.StandardInput.Close();
 
@@ -50,7 +57,9 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
             await process.WaitForExitAsync(linkedCancellation.Token).ConfigureAwait(false);
         } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
             TryKill(process);
-            throw new TimeoutException($"Wiki command '{command}' exceeded {CommandTimeout}.");
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.Timeout,
+                $"Wiki command '{command}' exceeded {CommandTimeout}.");
         } catch {
             TryKill(process);
             throw;
@@ -59,12 +68,16 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         string output = await standardOutput.ConfigureAwait(false);
         string error = await standardError.ConfigureAwait(false);
         if (process.ExitCode != 0) {
-            throw new InvalidOperationException(
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.WikiCommandFailed,
                 $"Wiki command '{command}' failed with exit code " +
                 $"{process.ExitCode.ToString(System.Globalization.CultureInfo.InvariantCulture)}: {error.Trim()}");
         }
 
-        return new WikiCommandResult(command, output.Trim(), repositoryRoot);
+        string gitHead = await ServerStatusService
+            .ReadGitHeadAsync(repositoryRoot, cancellationToken)
+            .ConfigureAwait(false);
+        return WikiOutputParser.Parse(command, output.Trim(), repositoryRoot, gitHead);
     }
 
     private static void TryKill(Process process) {

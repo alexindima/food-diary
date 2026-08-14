@@ -1,6 +1,9 @@
 if (-not (Get-Command Invoke-LlmWikiGitPathList -ErrorAction SilentlyContinue)) {
     . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 }
+if (-not (Get-Command Get-LlmWikiChangeSetSnapshot -ErrorAction SilentlyContinue)) {
+    . (Join-Path $PSScriptRoot 'LlmWikiChangeSetSnapshot.ps1')
+}
 
 function Get-LlmWikiSha256 {
     param([Parameter(Mandatory)][string]$Value)
@@ -26,11 +29,9 @@ function Get-LlmWikiQueryCacheEntry {
         [Parameter(Mandatory)][hashtable]$Arguments
     )
 
-    $head = (& git -C $RepositoryRoot rev-parse HEAD).Trim()
-    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD for the Wiki query cache.' }
-    $workspacePaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--') -FailureMessage 'Unable to resolve modified paths for the Wiki query cache.')
-    $workspacePaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $RepositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to resolve untracked paths for the Wiki query cache.')
-    $workspacePaths = @($workspacePaths | Sort-Object -Unique)
+    $snapshot = Get-LlmWikiChangeSetSnapshot -RepositoryRoot $RepositoryRoot
+    $head = [string]$snapshot.head
+    $workspacePaths = [string[]]@($snapshot.changedPaths)
     $argumentJson = [ordered]@{}
     foreach ($key in @($Arguments.Keys | Sort-Object)) {
         $value = $Arguments[$key]
@@ -40,11 +41,9 @@ function Get-LlmWikiQueryCacheEntry {
     $material.Add('schema=1')
     $material.Add("namespace=$Namespace")
     $material.Add("head=$head")
+    $material.Add("changeSet=$($snapshot.fingerprint)")
     $material.Add("pwsh=$($PSVersionTable.PSVersion)")
     $material.Add(($argumentJson | ConvertTo-Json -Depth 8 -Compress))
-    foreach ($path in $workspacePaths) {
-        $material.Add("$path=$(Get-LlmWikiFileSha256 (Join-Path $RepositoryRoot $path))")
-    }
     $fingerprint = Get-LlmWikiSha256 ($material -join "`n")
     $gitDirectory = (& git -C $RepositoryRoot rev-parse --absolute-git-dir).Trim()
     if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for the Wiki query cache.' }

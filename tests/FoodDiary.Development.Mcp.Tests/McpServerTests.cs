@@ -6,23 +6,12 @@ namespace FoodDiary.Development.Mcp.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class McpServerTests {
     [Fact]
-    public async Task Server_ListsExpectedReadOnlyTools() {
+    public async Task ConfiguredServer_ListsAndCallsExpectedReadOnlyTools() {
         string repositoryRoot = FindRepositoryRoot();
-        StdioClientTransportOptions options = new() {
-            Name = "FoodDiary Development MCP test",
-            Command = "dotnet",
-            Arguments = [
-                "run",
-                "--project",
-                "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj",
-                "--no-launch-profile",
-                "--no-build",
-            ],
-            WorkingDirectory = repositoryRoot,
-            ShutdownTimeout = TimeSpan.FromSeconds(10),
-        };
+        var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
+        Assert.Contains("--no-build", configuration.Arguments, StringComparer.Ordinal);
 
-        StdioClientTransport transport = new(options);
+        var transport = new StdioClientTransport(configuration.CreateTransportOptions("FoodDiary Development MCP test"));
         using CancellationTokenSource connectionTimeout = new(TimeSpan.FromSeconds(30));
         await using McpClient client = await McpClient.CreateAsync(
             transport,
@@ -31,11 +20,14 @@ public sealed class McpServerTests {
         IList<McpClientTool> tools = await client.ListToolsAsync(
             cancellationToken: connectionTimeout.Token);
 
-        string[] expected = ["get_change_context", "get_test_plan", "trace_backend_flow"];
+        string[] expected = ["get_change_context", "get_development_context", "get_server_status", "get_test_plan", "trace_backend_flow"];
         string[] actual = [.. tools
             .Select(tool => tool.Name)
             .Order(StringComparer.Ordinal)];
         Assert.True(expected.SequenceEqual(actual, StringComparer.Ordinal));
+        Assert.True(expected.SequenceEqual(
+            configuration.EnabledTools.Order(StringComparer.Ordinal),
+            StringComparer.Ordinal));
         Assert.All(tools, tool => Assert.True(tool.ProtocolTool.Annotations?.ReadOnlyHint));
         Assert.Contains("Use these tools first", client.ServerInstructions, StringComparison.Ordinal);
 
@@ -50,6 +42,35 @@ public sealed class McpServerTests {
         Assert.NotEqual(true, result.IsError);
         Assert.Contains(result.Content, content =>
             content.ToString()!.Contains("Test plan:", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ConfiguredServer_SupportsConcurrentClientsAndStatusCalls() {
+        string repositoryRoot = FindRepositoryRoot();
+        var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
+
+        CallToolResult[] results = await Task.WhenAll(
+            CallStatusAsync(configuration, "FoodDiary MCP concurrent client 1"),
+            CallStatusAsync(configuration, "FoodDiary MCP concurrent client 2"));
+
+        Assert.All(results, result => {
+            Assert.NotEqual(true, result.IsError);
+            Assert.Contains(result.Content, content =>
+                content.ToString()!.Contains("repositoryRoot", StringComparison.OrdinalIgnoreCase));
+        });
+    }
+
+    private static async Task<CallToolResult> CallStatusAsync(
+        CodexMcpTestConfiguration configuration,
+        string name) {
+        var transport = new StdioClientTransport(configuration.CreateTransportOptions(name));
+        using CancellationTokenSource timeout = new(TimeSpan.FromMinutes(2));
+        await using McpClient client = await McpClient.CreateAsync(
+            transport,
+            cancellationToken: timeout.Token);
+        return await client.CallToolAsync(
+            "get_server_status",
+            cancellationToken: timeout.Token);
     }
 
     private static string FindRepositoryRoot() {

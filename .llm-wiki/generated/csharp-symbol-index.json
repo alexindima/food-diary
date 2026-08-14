@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3215,
-    "symbols": 3224,
-    "interfaceImplementationLinks": 229,
-    "dependencyInjectionRegistrations": 230,
+    "sourceFiles": 3228,
+    "symbols": 3237,
+    "interfaceImplementationLinks": 231,
+    "dependencyInjectionRegistrations": 232,
     "kinds": {
-      "class": 1651,
+      "class": 1657,
       "enum": 49,
-      "interface": 409,
-      "record": 1002,
+      "interface": 411,
+      "record": 1007,
       "record struct": 113
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 59,
-      "Other": 1190,
+      "Other": 1199,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -40,7 +40,7 @@
       "Repository": 102,
       "Request": 124,
       "Response": 171,
-      "Service": 265,
+      "Service": 269,
       "Validator": 182,
       "ValueObject": 123,
       "WriteRepository": 46
@@ -12781,6 +12781,62 @@
       "line": 8
     },
     {
+      "name": "ChangeSetSnapshot",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/ChangeSetSnapshot.cs",
+      "line": 2
+    },
+    {
+      "name": "ChangeSetSnapshotService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Development.Mcp/ChangeSetSnapshotService.cs",
+      "line": 7
+    },
+    {
+      "name": "DevelopmentContext",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/DevelopmentContext.cs",
+      "line": 2
+    },
+    {
+      "name": "DevelopmentMcpErrorCodes",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/DevelopmentMcpErrorCodes.cs",
+      "line": 2
+    },
+    {
+      "name": "DevelopmentMcpException",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/DevelopmentMcpException.cs",
+      "line": 2
+    },
+    {
+      "name": "DevelopmentMcpResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/DevelopmentMcpResult.cs",
+      "line": 2
+    },
+    {
+      "name": "IChangeSetSnapshotService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Development.Mcp/IChangeSetSnapshotService.cs",
+      "line": 2
+    },
+    {
+      "name": "IServerStatusService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Development.Mcp/IServerStatusService.cs",
+      "line": 2
+    },
+    {
       "name": "IWikiCommandExecutor",
       "kind": "interface",
       "role": "Other",
@@ -12802,11 +12858,46 @@
       "line": 2
     },
     {
+      "name": "ServerStatus",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/ServerStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "ServerStatusService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Development.Mcp/ServerStatusService.cs",
+      "line": 4
+    },
+    {
+      "name": "ToolExecution",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/ToolExecution.cs",
+      "line": 2
+    },
+    {
       "name": "WikiCommandResult",
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/WikiCommandResult.cs",
       "line": 2
+    },
+    {
+      "name": "WikiIndexStatus",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/WikiIndexStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "WikiOutputParser",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/WikiOutputParser.cs",
+      "line": 4
     },
     {
       "name": "WikiQueryService",
@@ -22870,6 +22961,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IChangeSetSnapshotService",
+      "interfacePath": "FoodDiary.Development.Mcp/IChangeSetSnapshotService.cs",
+      "implementation": "ChangeSetSnapshotService",
+      "implementationPath": "FoodDiary.Development.Mcp/ChangeSetSnapshotService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IClientTaskRepository",
       "interfacePath": "FoodDiary.Application.Abstractions/Dietologist/Common/IClientTaskRepository.cs",
       "implementation": "ClientTaskRepository",
@@ -23882,6 +23980,13 @@
       "interfacePath": "FoodDiary.Application.Abstractions/Authentication/Common/IRefreshTokenSessionRepository.cs",
       "implementation": "RefreshTokenSessionRepository",
       "implementationPath": "FoodDiary.Infrastructure/Persistence/Users/RefreshTokenSessionRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IServerStatusService",
+      "interfacePath": "FoodDiary.Development.Mcp/IServerStatusService.cs",
+      "implementation": "ServerStatusService",
+      "implementationPath": "FoodDiary.Development.Mcp/ServerStatusService.cs",
       "confidence": "naming-convention"
     },
     {
@@ -24986,11 +25091,25 @@
       "line": 15
     },
     {
+      "service": "IServerStatusService",
+      "implementation": "ServerStatusService",
+      "lifetime": "Singleton",
+      "path": "FoodDiary.Development.Mcp/Program.cs",
+      "line": 9
+    },
+    {
+      "service": "IChangeSetSnapshotService",
+      "implementation": "ChangeSetSnapshotService",
+      "lifetime": "Singleton",
+      "path": "FoodDiary.Development.Mcp/Program.cs",
+      "line": 10
+    },
+    {
       "service": "IWikiCommandExecutor",
       "implementation": "PowerShellWikiCommandExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 9
+      "line": 11
     },
     {
       "service": "IAchievementDefinitionStore",

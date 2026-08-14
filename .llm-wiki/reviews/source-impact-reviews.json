@@ -146,18 +146,14 @@
       "pageSha256": "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "b8f11d14cf94c14473f629bceafb6f1dd8ad4a2bf0597d1d1149cbf39e5f23c3"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "da2af78f40f5e246b7d518b004ca066c39260ea4c721046c917a99c740739f9a"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "6064ea1d6997e26c1501804dfb492955adfe3d69133044acc622d8cb997b0566"
         }
       ],
-      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
+      "reason": "Reviewed the immutable change-set cache, SQLite query layer, parallel MCP snapshot flow, and compatibility-preserving compiled-index migration boundary; authoritative sources remain unchanged and generated JSON is retained while consumers exist.",
       "baseRef": "HEAD",
-      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
-      "reviewedAtUtc": "2026-08-14T14:03:27.2679284Z"
+      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
+      "reviewedAtUtc": "2026-08-14T14:24:53.8877786Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -200,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "3c038b4d6c41a366a7ff69ffbb9211e6a92a044927c8525c9112359e3b7c4b49"
+          "sha256": "03544be173da2be221d7cd456c7607ee953c88ae34a3d6e5d4444b5b38268bbf"
         }
       ],
-      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "reason": "Reviewed the immutable change-set cache, SQLite query layer, parallel MCP snapshot flow, and compatibility-preserving compiled-index migration boundary; authoritative sources remain unchanged and generated JSON is retained while consumers exist.",
       "baseRef": "HEAD",
-      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
-      "reviewedAtUtc": "2026-08-14T13:13:42.8271430Z"
+      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
+      "reviewedAtUtc": "2026-08-14T14:24:54.7445535Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -245,21 +241,21 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "22c669dee2216f699906b9bfb0783a74fb680cbfc40dc3f1ae825c9958f43543"
+          "sha256": "79dde5136856d6e189dfd4f43df9c04d2d971bab5b037bd12cfa86ff7a8ecb2c"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "d1c0fe834c959da03abe9d4bd0a53c4241bfd0747f5997fc24e93ecb56406183"
+          "sha256": "e55ec7730a4151d8b9035e4706468d2ee60fa7cab5588dcd8fd06e41256dd58c"
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "23cc8d0fe0e03a3e41486f4b33f0050ad2c8e97fff5de7052e79ba9bc5bb3dd0"
+          "sha256": "07b63a27728409259560314f05b0f454fceb98f18afc4d199876608a8d963b27"
         }
       ],
-      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
+      "reason": "Reviewed the explicit ChangedPathList facade contract used by MCP snapshots; it only normalizes process-safe input into the existing ChangedPath array and does not alter routing, index, dispatch, or review semantics.",
       "baseRef": "HEAD",
-      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
-      "reviewedAtUtc": "2026-08-14T14:03:27.5313306Z"
+      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
+      "reviewedAtUtc": "2026-08-14T14:33:44.4962382Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -446,14 +442,14 @@
       "pageSha256": "e81fa2b3a04a1494e8f592d61f2407a135f90a5899cf6cf94a01515c984e07b3",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "6064ea1d6997e26c1501804dfb492955adfe3d69133044acc622d8cb997b0566"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Reviewed the immutable change-set cache, SQLite query layer, parallel MCP snapshot flow, and compatibility-preserving compiled-index migration boundary; authoritative sources remain unchanged and generated JSON is retained while consumers exist.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:48.2225054Z"
+      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
+      "reviewedAtUtc": "2026-08-14T14:24:55.8747641Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -586,18 +582,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "b211c8fd3b48115471bb1131311765d7871c83270fca2fe3c8c73a2bfee301da"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "23cc8d0fe0e03a3e41486f4b33f0050ad2c8e97fff5de7052e79ba9bc5bb3dd0"
+          "sha256": "07b63a27728409259560314f05b0f454fceb98f18afc4d199876608a8d963b27"
         }
       ],
-      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
+      "reason": "Reviewed the explicit ChangedPathList facade contract used by MCP snapshots; it only normalizes process-safe input into the existing ChangedPath array and does not alter routing, index, dispatch, or review semantics.",
       "baseRef": "HEAD",
-      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
-      "reviewedAtUtc": "2026-08-14T14:03:27.8697781Z"
+      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
+      "reviewedAtUtc": "2026-08-14T14:33:45.1558444Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -783,17 +775,21 @@
     {
       "pageId": "workflow-quality-risk",
       "pagePath": ".llm-wiki/workflows/quality-risk.md",
-      "pageSha256": "6dbd01ffd9ba92e32c7d132ca80e70d883a1707164597cbecf5dac86e8bfb292",
+      "pageSha256": "fd5d48c14eed37dc3c8eabfec1c859fb688e2b25af49c007d69f4a38e32416ca",
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7408abb60e4af37b76aff67632d401d20c2b5ab4a68c38e223dfb9bbb4e00bd0"
+          "sha256": "2d8c57a30a61a1782816d55e639e6b28092ae74403f5e8e5cd8da0e8ae72d474"
+        },
+        {
+          "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
+          "sha256": "87b1edef52eea86d3f2a9df8ef2264eb07b0705c6d58631d260ce81bd1476d16"
         }
       ],
-      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "reason": "Reviewed final snapshot caching and MCP concurrency changes plus regenerated quality metadata; SQLite remains derived, generated publication indexes remain compatible, and no durable architecture boundary changed.",
       "baseRef": "HEAD",
-      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
-      "reviewedAtUtc": "2026-08-14T13:13:43.2599228Z"
+      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
+      "reviewedAtUtc": "2026-08-14T14:29:36.7793437Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -930,13 +926,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "23cc8d0fe0e03a3e41486f4b33f0050ad2c8e97fff5de7052e79ba9bc5bb3dd0"
+          "sha256": "07b63a27728409259560314f05b0f454fceb98f18afc4d199876608a8d963b27"
         }
       ],
-      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
+      "reason": "Reviewed the explicit ChangedPathList facade contract used by MCP snapshots; it only normalizes process-safe input into the existing ChangedPath array and does not alter routing, index, dispatch, or review semantics.",
       "baseRef": "HEAD",
-      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
-      "reviewedAtUtc": "2026-08-14T14:03:28.7058330Z"
+      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
+      "reviewedAtUtc": "2026-08-14T14:33:46.6470398Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1118,13 +1114,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "23cc8d0fe0e03a3e41486f4b33f0050ad2c8e97fff5de7052e79ba9bc5bb3dd0"
+          "sha256": "07b63a27728409259560314f05b0f454fceb98f18afc4d199876608a8d963b27"
         }
       ],
-      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
+      "reason": "Reviewed the explicit ChangedPathList facade contract used by MCP snapshots; it only normalizes process-safe input into the existing ChangedPath array and does not alter routing, index, dispatch, or review semantics.",
       "baseRef": "HEAD",
-      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
-      "reviewedAtUtc": "2026-08-14T14:03:28.3033393Z"
+      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
+      "reviewedAtUtc": "2026-08-14T14:33:45.8993229Z"
     }
   ]
 }

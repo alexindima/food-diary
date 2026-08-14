@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1024,
+    "contracts": 1026,
     "ambiguousContracts": 3,
-    "consumerEdges": 7102,
-    "productionConsumerEdges": 4331,
-    "testConsumerEdges": 2771,
-    "consumedContracts": 1024,
+    "consumerEdges": 7109,
+    "productionConsumerEdges": 4337,
+    "testConsumerEdges": 2772,
+    "consumedContracts": 1026,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -6939,6 +6939,22 @@
       "ambiguous": false
     },
     {
+      "name": "IChangeSetSnapshotService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IChangeSetSnapshotService.cs"
+      ],
+      "ambiguous": false
+    },
+    {
       "name": "IClientTaskReadModelRepository",
       "roles": [
         "ReadModelRepository"
@@ -11227,6 +11243,22 @@
       ],
       "definitionPaths": [
         "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "IServerStatusService",
+      "roles": [
+        "Service"
+      ],
+      "kinds": [
+        "interface"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IServerStatusService.cs"
       ],
       "ambiguous": false
     },
@@ -44961,6 +44993,58 @@
       "consumerPath": "tests/FoodDiary.JobManager.Tests/BillingRecoveryJobsTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "IChangeSetSnapshotService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IChangeSetSnapshotService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/ChangeSetSnapshotService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IChangeSetSnapshotService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IChangeSetSnapshotService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Program.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IChangeSetSnapshotService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IChangeSetSnapshotService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/WikiQueryService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IChangeSetSnapshotService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IChangeSetSnapshotService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Development.Mcp.Tests/WikiQueryServiceTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "IClientTaskReadModelRepository",
@@ -81750,6 +81834,45 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs",
       "isTest": true,
       "referenceCount": 3
+    },
+    {
+      "contract": "IServerStatusService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IServerStatusService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Program.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IServerStatusService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IServerStatusService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/ServerStatusService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IServerStatusService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/IServerStatusService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/WikiTools.cs",
+      "isTest": false,
+      "referenceCount": 1
     },
     {
       "contract": "IShoppingListCreationService",

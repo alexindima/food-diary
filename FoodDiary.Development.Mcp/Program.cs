@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogLevel.Trace);
+builder.Services.AddSingleton<IServerStatusService, ServerStatusService>();
+builder.Services.AddSingleton<IChangeSetSnapshotService, ChangeSetSnapshotService>();
 builder.Services.AddSingleton<IWikiCommandExecutor, PowerShellWikiCommandExecutor>();
 builder.Services.AddSingleton<WikiQueryService>();
 builder.Services

@@ -81,6 +81,7 @@ param(
     [string]$BaseRef = 'HEAD',
     [string]$HeadRef,
     [string[]]$ChangedPath,
+    [string]$ChangedPathList,
     [string[]]$RelationKind,
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
@@ -246,6 +247,14 @@ Set-Item -LiteralPath "Env:GIT_CONFIG_KEY_$gitConfigCount" -Value 'core.safecrlf
 Set-Item -LiteralPath "Env:GIT_CONFIG_VALUE_$gitConfigCount" -Value 'false'
 $env:GIT_CONFIG_COUNT = [string]($gitConfigCount + 1)
 $toolsRoot = Join-Path $PSScriptRoot 'tools'
+if (-not [string]::IsNullOrWhiteSpace($ChangedPathList)) {
+    $ChangedPath = [string[]]@(
+        $ChangedPathList -split "`r?`n" |
+            Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+            Sort-Object -Unique
+    )
+    $PSBoundParameters['ChangedPath'] = $ChangedPath
+}
 . (Join-Path $toolsRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $toolsRoot 'LlmWikiJson.ps1')
 . (Join-Path $toolsRoot 'LlmWikiProcess.ps1')

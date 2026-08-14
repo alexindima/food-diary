@@ -10,16 +10,18 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$wikiRoot = Split-Path -Parent $PSScriptRoot
-$index = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/quality-index.json') -Raw | ConvertFrom-Json
+$queryResult = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') `
+    -Action query `
+    -Category risks `
+    -Query $Query `
+    -Limit 500 `
+    -Format Json | ConvertFrom-Json
+$riskRecords = @($queryResult.records)
 
 $items = switch ($View) {
-    'test-gaps' { @($index.criticalSymbols | Where-Object testReferenceCount -eq 0) }
-    'debt' { @($index.debtMarkers) }
-    default { @($index.hotspots) }
-}
-if (-not [string]::IsNullOrWhiteSpace($Query)) {
-    $items = @($items | Where-Object { ($_ | ConvertTo-Json -Compress) -match [regex]::Escape($Query) })
+    'test-gaps' { @($riskRecords | Where-Object { $_.payload.recordKind -eq 'criticalSymbol' -and [int]$_.payload.testReferenceCount -eq 0 } | ForEach-Object payload) }
+    'debt' { @($riskRecords | Where-Object { $_.payload.recordKind -eq 'debtMarker' } | ForEach-Object payload) }
+    default { @($riskRecords | Where-Object { $_.payload.recordKind -eq 'hotspot' } | ForEach-Object payload) }
 }
 $items = @($items | Select-Object -First $Limit)
 if ($View -eq 'test-gaps') {
