@@ -27,7 +27,10 @@ function Add-LegacyEvent([Collections.Generic.List[object]]$Events, [string]$Kin
         previousHash=$(if ($Events.Count -eq 0) { '' } else { [string]$Events[-1].eventHash })
         observation=$Observation; decision=$Decision; targetId=''; reason=$Reason; eventHash=''
     }
-    $event.eventHash = Get-TestHash (Get-LegacyPayload $event)
+    # The migration validates the persisted JSON shape, so build the legacy hash
+    # from that same round-tripped representation on every PowerShell platform.
+    $normalizedEvent = $event | ConvertTo-Json -Depth 40 | ConvertFrom-Json
+    $event.eventHash = Get-TestHash (Get-LegacyPayload $normalizedEvent)
     $Events.Add($event)
 }
 
