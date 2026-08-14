@@ -143,6 +143,7 @@ $boundedFeatureScopes = $profile -eq 'feature' -and $scopeKnown -and $directModu
     @($productionScopes | Where-Object { $_ -notin @('Backend', 'Api', 'Frontend', 'Contracts') }).Count -eq 0 -and
     -not $flags.databaseMigration -and -not $flags.externalIntegrations -and -not $flags.configuration
 $requiresWorkspace = $profile -notin @('ui-discovery', 'scope-discovery', 'maintenance', 'pattern-extension', 'test-only') -and ($profile -in @('critical', 'architectural') -or ($crossCutting -and -not $boundedFeatureScopes -and -not $boundedCrossLayerBug))
+$workflowLevel = if ($requiresWorkspace) { 'governed' } elseif ($profile -in @('feature', 'pattern-extension') -or $requiresDesign) { 'standard' } else { 'small' }
 $experiencePolicyPath = Join-Path (Split-Path -Parent $PSScriptRoot) 'policies/experience-policies.json'
 $experiencePolicy = Get-Content -LiteralPath $experiencePolicyPath -Raw | ConvertFrom-Json
 $ceremonyBudget = $experiencePolicy.ceremonyBudgets.$profile
@@ -275,6 +276,7 @@ $result = [pscustomobject][ordered]@{
     objective = $Objective
     profile = $profile
     workflowVariant = $(if ($visualTiny) { 'visual-tiny' } else { $profile })
+    workflowLevel = $workflowLevel
     maintenanceKind = $(if ($profile -eq 'maintenance') { $maintenanceKind } else { $null })
     confidence = $confidence
     confidenceDimensions = [pscustomobject][ordered]@{
@@ -302,7 +304,7 @@ $result = [pscustomobject][ordered]@{
 }
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10; exit 0 }
-Write-Host "Adaptive workflow: $profile ($confidence confidence)"
+Write-Host "Adaptive workflow: $profile / $workflowLevel ($confidence confidence)"
 Write-Host "Confidence: discovery=$discoveryConfidence; blocker-count=$blockerCountConfidence; implementation-scope=$implementationScopeConfidence"
 foreach ($confidenceReason in $confidenceReasons) { Write-Host "Confidence reason: $confidenceReason" }
 Write-Host "Objective: $Objective"

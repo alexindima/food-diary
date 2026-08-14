@@ -81,6 +81,7 @@ $criticalIncident = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'
     -Objective 'Fix an authentication bypass that allows unauthorized account access.' `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($criticalIncident.profile -eq 'critical') 'Explicit authentication bypass was incorrectly downgraded to scope discovery.'
+Assert-Adaptive ($criticalIncident.workflowLevel -eq 'governed') 'Critical work did not expose the governed workflow level.'
 
 $dockerMaintenance = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Fix the frontend Docker build by copying dependency manifests before npm ci.' `
@@ -151,6 +152,7 @@ $groundedDashboardFeature = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkf
     -ProposedPath $dashboardFeaturePaths `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($groundedDashboardFeature.profile -eq 'feature') 'Grounded existing dashboard contract extension remained critical.'
+Assert-Adaptive ($groundedDashboardFeature.workflowLevel -eq 'standard') 'Bounded feature work did not expose the standard workflow level.'
 Assert-Adaptive (-not $groundedDashboardFeature.requiresWorkspace) 'Bounded single-module dashboard feature retained governed evidence workspace ceremony.'
 Assert-Adaptive ($groundedDashboardFeature.requiresDesign) 'Grounded dashboard feature lost its normal feature design checkpoint.'
 
@@ -198,6 +200,7 @@ $criticalCoverageOnly = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.
     ) `
     -Format Json | ConvertFrom-Json
 Assert-Adaptive ($criticalCoverageOnly.profile -eq 'test-only') 'Test-only coverage inherited critical risk from unchanged production code.'
+Assert-Adaptive ($criticalCoverageOnly.workflowLevel -eq 'small') 'Test-only work did not expose the small workflow level.'
 Assert-Adaptive (-not $criticalCoverageOnly.requiresDecisionCheckpoint -and -not $criticalCoverageOnly.requiresDesign -and -not $criticalCoverageOnly.requiresWorkspace) 'Test-only coverage retained governed ceremony.'
 Assert-Adaptive ((@(Get-AdaptiveIds @($criticalCoverageOnly.stages | Where-Object required)) -join ',') -eq 'coverage-brief,test-implementation,focused-verification,completion') 'Test-only coverage did not use the four-stage focused route.'
 Assert-Adaptive (@($criticalCoverageOnly.stages.command | Where-Object { $_ -match 'journeys|design|privacy|rollout|wiki\.ps1 verify$' }).Count -eq 0) 'Test-only coverage retained unrelated product or critical workflow commands.'

@@ -406,6 +406,45 @@ function trace(database, query, limit) {
   return { query, ...direct, namespaceFilters, impact: impact(database, paths, limit) };
 }
 
+function rankedTrace(database, query, limit, filters = {}) {
+  const direct = trace(database, query, limit);
+  if (direct.symbols.length > 0 || direct.consumers.length > 0 || direct.namespaceFilters.length > 0) return { ...direct, candidates: [] };
+  const terms = [...new Set(query.toLowerCase().match(/[a-z0-9]+/g) ?? [])].filter((term) => term.length >= 3);
+  const backendTerms = new Set(['smtp', 'persistence', 'repository', 'readiness', 'telemetry', 'outbox', 'hosted', 'service', 'handler', 'worker', 'database', 'infrastructure']);
+  const desiredKind = (filters.symbolKind ?? '').toLowerCase();
+  const moduleTerm = (filters.module ?? '').toLowerCase();
+  const prefix = (filters.pathPrefix ?? '').replaceAll('\\', '/').toLowerCase();
+  const rows = database.prepare('SELECT s.name, s.kind, s.line, f.path, f.language FROM symbols s JOIN files f ON f.id=s.file_id').all();
+  const candidates = rows.flatMap((row) => {
+    const path = row.path.toLowerCase();
+    const name = row.name.toLowerCase();
+    if (prefix && !path.startsWith(prefix)) return [];
+    if (moduleTerm && !path.includes(moduleTerm)) return [];
+    if (desiredKind && desiredKind !== 'any' && !name.includes(desiredKind) && row.kind.toLowerCase() !== desiredKind) return [];
+    const matched = terms.filter((term) => name.includes(term) || path.includes(term));
+    if (matched.length === 0) return [];
+    const reasons = [];
+    let score = matched.length * 12;
+    if (matched.length >= 2) { score += matched.length * 8; reasons.push(`${matched.length} query tokens match one candidate`); }
+    if (moduleTerm && path.includes(moduleTerm)) { score += 40; reasons.push(`bounded context ${filters.module}`); }
+    if (prefix && path.startsWith(prefix)) { score += 50; reasons.push(`path prefix ${filters.pathPrefix}`); }
+    if ([...backendTerms].some((term) => terms.includes(term))) {
+      if (row.language === 'csharp') { score += 25; reasons.push('backend intent and C# symbol'); }
+      if (path.startsWith('fooddiary.web.client/')) { score -= 40; reasons.push('frontend penalty for backend intent'); }
+    }
+    if (/(^|\/)(?:tests?|[^/]+\.tests?)(\/|$)/.test(path)) { score -= 45; reasons.push('test candidate ranked after production'); }
+    if (/hostedservice|backgroundservice|worker/.test(name)) score += 18;
+    if (/service|handler|repository|controller/.test(name)) score += 12;
+    if (reasons.length === 0) reasons.push(`matched tokens: ${matched.join(', ')}`);
+    return [{ ...row, score, matchedTerms: matched, reasons }];
+  }).sort((left, right) => right.score - left.score || left.path.localeCompare(right.path)).slice(0, limit);
+  return {
+    ...direct,
+    candidates: candidates.map((item, index) => ({ ...item, confidence: item.score >= 80 ? 'high' : item.score >= 40 ? 'medium' : 'low', rank: index + 1 })),
+    ranking: { queryTerms: terms, layer: filters.layer ?? 'Auto', module: filters.module ?? null, symbolKind: filters.symbolKind ?? 'Any', pathPrefix: filters.pathPrefix ?? null },
+  };
+}
+
 function relations(database, paths, kinds, limit) {
   const requested = paths.map((path) => path.replaceAll('\\', '/').replace(/\/$/, ''));
   const pathClauses = requested.length > 0 ? requested.map(() => '(f.path = ? OR f.path LIKE ?)').join(' OR ') : '1=1';
@@ -474,7 +513,9 @@ try {
   else if (action === 'symbol') result = { query: options.query ?? '', symbols: findSymbols(database, options.query ?? '', Number(options.limit ?? 20)) };
   else if (action === 'consumers') result = consumers(database, options.query ?? '', Number(options.limit ?? 50));
   else if (action === 'impact') result = impact(database, (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
-  else if (action === 'trace') result = trace(database, options.query ?? '', Number(options.limit ?? 50));
+  else if (action === 'trace') result = rankedTrace(database, options.query ?? '', Number(options.limit ?? 50), {
+    module: options.module, pathPrefix: options['path-prefix'], symbolKind: options['symbol-kind'], layer: options.layer,
+  });
   else if (action === 'relations') result = relations(database, (options.path ?? '').split(';').filter(Boolean), (options.kind ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
   else if (action === 'coverage') result = coverage(database);
   else if (action === 'fingerprint') result = fingerprint(database, (options.path ?? '').split(';').filter(Boolean));

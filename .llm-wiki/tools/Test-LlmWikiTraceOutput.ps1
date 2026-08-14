@@ -42,11 +42,23 @@ $facadeOutput = @(& (Join-Path $PSScriptRoot '../wiki.ps1') trace -Fast -Module 
 if ($LASTEXITCODE -ne 0 -or $facadeOutput -match 'PropertyNotFoundStrict|The property .path. cannot be found') {
     throw "Broad backend semantic fallback failed through the facade: $($facadeOutput -join [Environment]::NewLine)"
 }
-if (-not ($facadeOutput -match 'falling back to semantic trace')) {
-    throw 'Broad backend regression did not exercise graph miss to semantic trace fallback.'
+if (-not ($facadeOutput -match 'candidate \[') -or $facadeOutput -match 'FavoriteRecipeService|AdminMailInboxComponent') {
+    throw 'Broad backend trace did not return ranked backend graph candidates or was captured by the optional frontend probe.'
 }
-if (-not ($facadeOutput -match 'classified as backend') -or -not ($facadeOutput -match 'Fast graph research') -or $facadeOutput -match 'FavoriteRecipeService') {
-    throw 'Broad backend semantic fallback was incorrectly captured by the optional frontend probe.'
+
+$mailInboxTrace = & (Join-Path $PSScriptRoot '../wiki.ps1') trace `
+    -Query 'MailInbox SMTP receive persistence readiness telemetry' `
+    -Layer Backend `
+    -Module MailInbox `
+    -PathPrefix 'MailInbox/' `
+    -Limit 8 `
+    -Format Json | ConvertFrom-Json
+$rankedCandidates = @($mailInboxTrace.candidates)
+if ($rankedCandidates.Count -eq 0 -or $rankedCandidates[0].path -notmatch '^MailInbox/' -or $rankedCandidates[0].path -match '/tests?/' -or $rankedCandidates[0].path -match 'Web\.Client') {
+    throw 'Backend trace filters did not rank a production MailInbox candidate first.'
+}
+if (-not $rankedCandidates[0].PSObject.Properties['confidence'] -or @($rankedCandidates[0].reasons).Count -eq 0) {
+    throw 'Ranked trace candidates omitted confidence or ranking explanations.'
 }
 
 $namespaceFacadeOutput = @(& (Join-Path $PSScriptRoot '../wiki.ps1') trace -Fast -Query 'FoodDiary.Presentation.Api.Features.Auth' 6>&1 | ForEach-Object { $_.ToString() })

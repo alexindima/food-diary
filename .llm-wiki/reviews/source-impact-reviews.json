@@ -146,14 +146,18 @@
       "pageSha256": "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiReadOnlyTool.ps1",
-          "sha256": "941eccbbcd6854082f1f508f869add65d4632c6a852e8dc08da3967451124653"
+          "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "b8f11d14cf94c14473f629bceafb6f1dd8ad4a2bf0597d1d1149cbf39e5f23c3"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "da2af78f40f5e246b7d518b004ca066c39260ea4c721046c917a99c740739f9a"
         }
       ],
-      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
       "baseRef": "HEAD",
-      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
-      "reviewedAtUtc": "2026-08-14T13:13:42.2055343Z"
+      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
+      "reviewedAtUtc": "2026-08-14T14:03:27.2679284Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -237,17 +241,25 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "826a06dc3f0b033a6f1c97f4c6e51d628ac5c56475a6a08ef69870464905be00",
+      "pageSha256": "3dd38cd9b305a117775fcdf2e4036dfb5e974a910bb601b8237af593c7b55796",
       "sources": [
         {
+          "path": ".llm-wiki/tools/code-graph.mjs",
+          "sha256": "22c669dee2216f699906b9bfb0783a74fb680cbfc40dc3f1ae825c9958f43543"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
+          "sha256": "d1c0fe834c959da03abe9d4bd0a53c4241bfd0747f5997fc24e93ecb56406183"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
+          "sha256": "23cc8d0fe0e03a3e41486f4b33f0050ad2c8e97fff5de7052e79ba9bc5bb3dd0"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:47.9689541Z"
+      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
+      "reviewedAtUtc": "2026-08-14T14:03:27.5313306Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -575,13 +587,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "1293139461c4e175eb81d99c2b20f672ada6f14b0fcbd2246c1576a88373137b"
+          "sha256": "b211c8fd3b48115471bb1131311765d7871c83270fca2fe3c8c73a2bfee301da"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "23cc8d0fe0e03a3e41486f4b33f0050ad2c8e97fff5de7052e79ba9bc5bb3dd0"
         }
       ],
-      "reason": "TypeScript regex extraction was replaced with the compiler API while preserving the SQLite graph contract, automatic routing, incremental rebuilds, and fallback behavior.",
+      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
       "baseRef": "HEAD",
-      "gitHead": "9703734b7b4c011a9d7f93f767978b8c9fee206d",
-      "reviewedAtUtc": "2026-08-14T12:29:47.5703475Z"
+      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
+      "reviewedAtUtc": "2026-08-14T14:03:27.8697781Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -914,13 +930,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
+          "sha256": "23cc8d0fe0e03a3e41486f4b33f0050ad2c8e97fff5de7052e79ba9bc5bb3dd0"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:50.5136012Z"
+      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
+      "reviewedAtUtc": "2026-08-14T14:03:28.7058330Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1102,13 +1118,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
+          "sha256": "23cc8d0fe0e03a3e41486f4b33f0050ad2c8e97fff5de7052e79ba9bc5bb3dd0"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Trace now uses explainable backend-aware SQLite ranking and explicit filters; test-gap evidence is confidence-calibrated; adaptive routes expose small, standard, or governed ceremony.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:49.8500592Z"
+      "gitHead": "6656dda061886ef74c5f121e9b4761d84a4f7de4",
+      "reviewedAtUtc": "2026-08-14T14:03:28.3033393Z"
     }
   ]
 }

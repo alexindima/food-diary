@@ -70,7 +70,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('facade-contract')
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiIndexTiming|Test-LlmWikiIndexTiming|Test-LlmWikiIndexCheckpoint|LlmWikiGeneratedArtifacts|Build-LlmWikiCatalog|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth|ModulePages)Index|Build-LlmWikiModulePages|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection|Test-LlmWikiBackendModuleModel)\.ps1$' -or $path -eq 'docs/architecture/backend-modules.json') {
         $null = $smokeGroups.Add('index-selection')
-    } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput|Find-LlmWikiQualityRisk|Test-LlmWikiQualityRisk)\.ps1$') {
         $null = $smokeGroups.Add('trace-output')
     } elseif ($path -match '^\.llm-wiki/tools/(?:Manage-LlmWikiCodeGraph|Measure-LlmWikiCodeGraph|Test-LlmWikiCodeGraph|Test-LlmWikiRoslynExtractor|Test-LlmWikiTypeScriptExtractor|Get-LlmWikiGraphResearch|Get-LlmWikiGraphTestPlan)\.ps1$' -or $path -in @('.llm-wiki/tools/code-graph.mjs', '.llm-wiki/tools/typescript-extractor.mjs') -or $path -like '.llm-wiki/tools/roslyn-extractor/*') {
         $null = $smokeGroups.Add('code-graph')
@@ -214,6 +214,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'trace-output' {
             & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiQualityRisk.ps1')
             if (-not $?) { exit 1 }
         }
         'task-baseline' {

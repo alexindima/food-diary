@@ -24,6 +24,11 @@ sources:
 Use hotspots to choose review depth and refactoring candidates. Use test gaps to
 find nearby tests and verify whether behavior is covered indirectly before adding
 new tests. Never describe name-reference matching as real code coverage.
+Each result is explicitly classified as `direct-test-reference-absent`, carries
+medium confidence and identifies its evidence as static symbol-name matching.
+Integration, dynamic, reflection-based, or differently named tests may still
+cover the behavior; `test-gaps` is an investigation queue, never proof of
+missing execution coverage.
 
 For account linking, cover the success path, provider validation failure, email
 mismatch, identity owned by another user, idempotent retry, and refusal to

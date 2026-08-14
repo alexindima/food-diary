@@ -32,6 +32,15 @@ indexed frontend symbol and otherwise falls back to the backend request trace.
 Use `-TraceView Frontend` or `-TraceView Backend` to force a view. Use
 `-Format Json` when another tool or agent will consume the result.
 
+Backend-oriented natural-language queries automatically use the SQLite graph
+when they contain terms such as SMTP, persistence, readiness, outbox, hosted
+service, or telemetry. Narrow ambiguous searches explicitly with `-Layer
+Backend`, `-Module MailInbox`, `-PathPrefix 'MailInbox/'`, and optional
+`-SymbolKind HostedService|Service|Handler|Controller|Repository`. A broad
+graph result returns ranked candidates with confidence and concrete scoring
+reasons. Production C# candidates receive a backend-intent boost, while
+frontend and test candidates are penalized for backend queries.
+
 Text output is compact by default: one best match, bounded direct consumers,
 routes, calls, and tests. Use `-FullTrace` only when broad dependency discovery
 is intentional. JSON remains complete so composed tools do not lose evidence.

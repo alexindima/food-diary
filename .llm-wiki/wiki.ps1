@@ -54,8 +54,12 @@ param(
     [switch]$VerifyAfterUpdate,
     [switch]$CompileProbe,
     [string]$Query,
+    [Alias('Layer')]
     [ValidateSet('Auto', 'Backend', 'Frontend')]
     [string]$TraceView = 'Auto',
+    [ValidateSet('Any', 'HostedService', 'Service', 'Handler', 'Controller', 'Repository', 'Component')]
+    [string]$SymbolKind = 'Any',
+    [string]$PathPrefix,
     [ValidateSet('Any', 'Api', 'Backend', 'Frontend', 'Database', 'Tests')]
     [string]$ChangeType = 'Any',
     [ValidateSet('all', 'credential', 'identity', 'health', 'financial', 'privateContent', 'logging', 'boundaries')]
@@ -761,15 +765,22 @@ switch ($Command) {
         Invoke-WikiTool 'Find-LlmWikiContext.ps1' $contextArguments
     }
     'trace' {
-        if ($Fast) {
-            $graphProbe = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
-                -Action trace -Query $Query -Limit ([Math]::Min($Limit, 30)) -Format Json | ConvertFrom-Json
+        $backendIntent = $Query -match '(?i)\b(smtp|persistence|repository|readiness|telemetry|outbox|hosted service|background service|worker|database|infrastructure)\b'
+        $filteredGraphTrace = $Fast -or $TraceView -eq 'Backend' -or $backendIntent -or $SymbolKind -ne 'Any' -or -not [string]::IsNullOrWhiteSpace($PathPrefix)
+        if ($filteredGraphTrace) {
+            $graphArguments = @{
+                Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = 'Json'
+                SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+            }
+            $graphProbe = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') @graphArguments | ConvertFrom-Json
             $graphSymbols = [object[]]@($graphProbe.symbols)
             $graphConsumers = [object[]]@($graphProbe.consumers)
             $graphNamespaceFilters = [object[]]@($graphProbe.namespaceFilters)
-            if ($graphSymbols.Length -gt 0 -or $graphConsumers.Length -gt 0 -or $graphNamespaceFilters.Length -gt 0) {
+            $graphCandidates = [object[]]@($graphProbe.candidates)
+            if ($graphSymbols.Length -gt 0 -or $graphConsumers.Length -gt 0 -or $graphNamespaceFilters.Length -gt 0 -or $graphCandidates.Length -gt 0) {
                 Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
                     Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
+                    SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
                 }
                 break
             }

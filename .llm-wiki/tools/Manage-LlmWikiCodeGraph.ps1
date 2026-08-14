@@ -5,6 +5,10 @@ param(
     [string]$Query,
     [string[]]$ChangedPath,
     [string[]]$RelationKind,
+    [string]$Module,
+    [string]$PathPrefix,
+    [ValidateSet('Any', 'HostedService', 'Service', 'Handler', 'Controller', 'Repository', 'Component')]
+    [string]$SymbolKind = 'Any',
     [ValidateRange(1, 500)]
     [int]$Limit = 50,
     [switch]$Force,
@@ -21,6 +25,9 @@ if ($Action -notin @('build', 'status') -and -not $SkipRefresh) {
 }
 $arguments = @($scriptPath, $Action, "--limit=$Limit")
 if (-not [string]::IsNullOrWhiteSpace($Query)) { $arguments += "--query=$Query" }
+if (-not [string]::IsNullOrWhiteSpace($Module)) { $arguments += "--module=$Module" }
+if (-not [string]::IsNullOrWhiteSpace($PathPrefix)) { $arguments += "--path-prefix=$PathPrefix" }
+if ($SymbolKind -ne 'Any') { $arguments += "--symbol-kind=$SymbolKind" }
 $normalizedChangedPaths = [string[]]@($ChangedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
 if ($normalizedChangedPaths.Length -gt 0) { $arguments += "--path=$($normalizedChangedPaths -join ';')" }
 $normalizedRelationKinds = [string[]]@($RelationKind | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })
@@ -41,6 +48,7 @@ switch ($Action) {
     }
     'trace' {
         Write-Host "Code graph trace for '$Query': $(@($result.symbols).Count) symbol(s), $(@($result.consumers).Count) consumer(s)."
+        foreach ($item in @($result.candidates)) { Write-Host " - candidate [$($item.confidence), score=$($item.score)]: $($item.path):$($item.line) [$($item.name)] because $(@($item.reasons) -join '; ')" }
         foreach ($item in @($result.symbols)) { Write-Host " - symbol: $($item.path):$($item.line) [$($item.name)]" }
         foreach ($item in @($result.consumers)) {
             $relation = if ($item.PSObject.Properties['relationKind'] -and -not [string]::IsNullOrWhiteSpace([string]$item.relationKind)) { [string]$item.relationKind } else { [string]$item.source }
