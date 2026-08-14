@@ -30,7 +30,7 @@ try {
         -CoverageScope 'application-contract' `
         -Format Json | Out-Null
     $plan = & (Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1') `
-        -ChangedPath 'FoodDiary.Application.Abstractions/Users/Common/IUserDirectoryService.cs' `
+        -ChangedPath 'FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs' `
         -Format Json | ConvertFrom-Json
     $applicationCheck = @($plan.commands | Where-Object id -eq 'application-contract-tests')[0]
     if ($applicationCheck.status -ne 'satisfied' -or [double]$applicationCheck.receipt.durationSeconds -ne 21) {

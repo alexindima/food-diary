@@ -451,7 +451,7 @@ jobs:
           projects=(
             "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj"
             "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
-            "FoodDiary.Application/FoodDiary.Application.csproj"
+            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj"
           )
 
           for project in "${projects[@]}"; do
@@ -531,7 +531,7 @@ jobs:
           projects=(
             "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj"
             "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
-            "FoodDiary.Application/FoodDiary.Application.csproj"
+            "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj"
           )
 
           {

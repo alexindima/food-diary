@@ -40,7 +40,7 @@ foreach ($worker in $workers) {
     try {
         $worker.process.WaitForExit()
         $worker.stopwatch.Stop()
-        $actualSeconds = if ($worker.process.HasExited) { ($worker.process.ExitTime - $worker.process.StartTime).TotalSeconds } else { $worker.stopwatch.Elapsed.TotalSeconds }
+        $actualSeconds = $worker.stopwatch.Elapsed.TotalSeconds
         if ($worker.process.ExitCode -ne 0) { $failures.Add("$($worker.check.name) (exit=$($worker.process.ExitCode))") }
         Write-Host " - $($worker.check.name): $([Math]::Round($actualSeconds, 2))s"
     } finally {

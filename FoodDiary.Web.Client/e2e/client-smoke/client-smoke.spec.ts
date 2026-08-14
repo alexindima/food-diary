@@ -64,6 +64,7 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/waist-entries/page-summary'), createResponse: createWaistHistoryPageSummary },
     { matches: pathname => pathname.endsWith('/dashboard'), createResponse: createDashboardSnapshot },
     { matches: pathname => pathname.endsWith('/meals/overview'), createResponse: createMealsOverview },
+    { matches: pathname => pathname.endsWith('/fasting/overview'), createResponse: createFastingOverview },
     { matches: pathname => pathname.endsWith('/cycles/current'), createResponse: () => null },
     { matches: pathname => pathname.endsWith('/tdee/insight'), createResponse: createTdeeInsight },
     { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
@@ -307,6 +308,10 @@ async function stabilizeAccessibilityPageAsync(page: Page, route: (typeof ACCESS
     await expect(page.locator('html')).toHaveAttribute('data-i18n-ready', /^(?:en|ru)$/u);
     if (route === '/dashboard') {
         await expect(page.getByPlaceholder('Describe your meal, e.g. "two eggs and toast"...')).toBeVisible();
+    }
+    if (route === '/fasting') {
+        await expect(page.locator('.fd-ui-progress-ring')).toHaveAttribute('aria-label', /\S+/u);
+        await expect(page.locator('.fasting-redesign__history-action > button')).toHaveAccessibleName(/\S+/u);
     }
 
     await page.addStyleTag({ content: ACCESSIBILITY_STABILITY_CSS });
@@ -708,6 +713,23 @@ function createUser(): Record<string, unknown> {
         isActive: true,
         isEmailConfirmed: true,
         aiConsentAcceptedAt: null,
+    };
+}
+
+function createFastingOverview(): Record<string, unknown> {
+    return {
+        currentSession: null,
+        stats: {
+            totalCompleted: 0,
+            currentStreak: 0,
+            averageDurationHours: 0,
+            completionRateLast30Days: 0,
+            checkInRateLast30Days: 0,
+            lastCheckInAtUtc: null,
+            topSymptom: null,
+        },
+        insights: { alerts: [], insights: [] },
+        history: { data: [], page: 1, limit: 10, totalPages: 0, totalItems: 0 },
     };
 }
 

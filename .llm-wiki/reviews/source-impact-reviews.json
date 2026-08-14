@@ -155,14 +155,14 @@
                         "pageSha256":  "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "782e64b5f13606801130aa5e69c40f173073bb011e45656ccdc8e4ba42473871"
+                                            "path":  ".llm-wiki/evals/cases.json",
+                                            "sha256":  "e68052dcd82119dd8f57dfff57db725017f9b00ee251d9aa65127e6f5d9b1074"
                                         }
                                     ],
-                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
+                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
-                        "reviewedAtUtc":  "2026-08-13T18:57:48.8258818Z"
+                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
+                        "reviewedAtUtc":  "2026-08-14T00:06:47.8533210Z"
                     },
                     {
                         "pageId":  "workflow.evidence-bundle",
@@ -254,17 +254,17 @@
                     {
                         "pageId":  "workflow-adaptive-development",
                         "pagePath":  ".llm-wiki/workflows/adaptive-development.md",
-                        "pageSha256":  "5e0ad5354ca56d6d730fe0ad27f732115930bdb9bc5b8e4b461e263a2042da3f",
+                        "pageSha256":  "6985f3df5242db030eb9a91836ac06d8c1707540254dd36959ab658202ca6286",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/knowledge/product-journeys.json",
-                                            "sha256":  "49849088155b84b8635c763aaec785dd954ae37f9ae9370b59f51e39363d4c94"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
+                                            "sha256":  "9c90e1f57c5da72ab0622b56ac585a5eecb392cb95d50e59007fed5a6f50344f"
                                         }
                                     ],
-                        "reason":  "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-                        "reviewedAtUtc":  "2026-08-13T12:12:58.8157382Z"
+                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
+                        "reviewedAtUtc":  "2026-08-14T00:06:47.1890989Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -679,17 +679,17 @@
                     {
                         "pageId":  "workflow-index-pipeline",
                         "pagePath":  ".llm-wiki/workflows/index-pipeline.md",
-                        "pageSha256":  "ff39f81baacab5f9ed5780bc3e831909cb3a7c34ef61df80c17483e4881e91ec",
+                        "pageSha256":  "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "8693c1711df81757453c23ea0cb25b153b64cc3d8915502ba9e85145b4692835"
+                                            "path":  ".github/workflows/ci-tests.yml",
+                                            "sha256":  "973a0c1710771d7e9529d634b9dba341595eb2b865daf07dc667ec083b9999ef"
                                         }
                                     ],
-                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
+                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
-                        "reviewedAtUtc":  "2026-08-13T21:15:08.2242788Z"
+                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
+                        "reviewedAtUtc":  "2026-08-14T00:06:48.5552250Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -727,22 +727,14 @@
                         "pageSha256":  "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiEvals.ps1",
-                                            "sha256":  "87a2bc5f65c33fe55d63035ec361d2c978ac7128e1a5e2b8b606d0c145747566"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiEvalPromotion.ps1",
-                                            "sha256":  "13e4c6052b365688000c6a90260308027d84d50b868ead24185f60cbbe5c598e"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
-                                            "sha256":  "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
+                                            "path":  ".llm-wiki/evals/cases.json",
+                                            "sha256":  "e68052dcd82119dd8f57dfff57db725017f9b00ee251d9aa65127e6f5d9b1074"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:16.3885233Z"
+                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
+                        "reviewedAtUtc":  "2026-08-14T00:06:49.4088405Z"
                     },
                     {
                         "pageId":  "workflow-model-routing",
@@ -931,14 +923,14 @@
                         "pageSha256":  "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-                                            "sha256":  "c72e9d79fb364545e68a89dc45c1159988cb6aa7958a30b6bc82fb62826bfa9b"
+                                            "path":  ".github/workflows/ci-tests.yml",
+                                            "sha256":  "973a0c1710771d7e9529d634b9dba341595eb2b865daf07dc667ec083b9999ef"
                                         }
                                     ],
-                        "reason":  "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-                        "reviewedAtUtc":  "2026-08-13T12:40:34.6390574Z"
+                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
+                        "reviewedAtUtc":  "2026-08-14T00:06:50.2226250Z"
                     },
                     {
                         "pageId":  "workflow-risk-calibration",

@@ -95,9 +95,9 @@
     {
       "id": "critical-flow-observability",
       "changedPaths": [
-        "FoodDiary.Application/Authentication/Commands/Login/LoginCommandHandler.cs"
+        "FoodDiary.Application.Identity/Authentication/Commands/Login/LoginCommandHandler.cs"
       ],
-      "expectedModules": ["Authentication"],
+      "expectedModules": ["Identity"],
       "expectedScopes": ["Backend"],
       "expectedRules": ["backend-boundaries", "security-sensitive", "observability-critical-flow"],
       "expectedChecks": ["architecture-tests"],
@@ -196,7 +196,7 @@
     {
       "id": "backend-command-consumer-change",
       "changedPaths": [
-        "FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs"
+        "FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs"
       ],
       "expectedModules": ["Fasting"],
       "expectedScopes": ["Backend"],
