@@ -94,6 +94,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.ValidatorAndCalculatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/MealsFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/UpdateMealCommandValidatorTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Meals/UtcDateNormalizerTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/MealsModuleExtractionTests.cs`
 
 ## Working Rule

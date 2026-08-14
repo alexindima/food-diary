@@ -216,6 +216,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/CreateAdminUserCommandValidatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/GetCollaborationAuditQueryHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/UserLoginActivityFeatureTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AdminModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AdminInvariantTests.cs`

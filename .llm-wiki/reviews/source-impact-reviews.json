@@ -295,13 +295,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "ef3fd3aef11ade3247510f1afcf3b2f43472ae69664f4edce5264345070cd312"
+                                            "sha256":  "dcab710576db231de304175890f9f64298b19dbe44a191de6ca32c8000e7f646"
                                         }
                                     ],
-                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
+                        "reason":  "Reviewed after admin user creation mapping fix and focused coverage tests: HTTP routes, payload shapes, status codes, persistence contracts, and module dependencies are unchanged; the production change only maps FirstName and LastName to their named domain parameters.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
-                        "reviewedAtUtc":  "2026-08-14T01:43:27.9247094Z"
+                        "gitHead":  "9457d6a32587418bd4985a32875a3022d1ac22cd",
+                        "reviewedAtUtc":  "2026-08-14T02:24:02.5867047Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",

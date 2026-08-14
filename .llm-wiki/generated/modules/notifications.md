@@ -108,6 +108,7 @@ Source: `FoodDiary.Presentation.Api/Features/Notifications/NotificationsControll
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/DeliverTestNotificationCommandHandlerTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationFactoryTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationReadServiceCoverageTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.MappingAndCleanup.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Notifications/NotificationsFeatureTests.Preferences.cs`

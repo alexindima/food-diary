@@ -43,7 +43,7 @@ internal sealed class UserAdministrationMutationService(
         }
 
         var user = User.Create(request.Email, passwordHasher.Hash(request.TemporaryPassword));
-        user.UpdatePersonalInfo(request.FirstName, request.LastName);
+        user.UpdatePersonalInfo(firstName: request.FirstName, lastName: request.LastName);
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
             ProteinTarget: 150,

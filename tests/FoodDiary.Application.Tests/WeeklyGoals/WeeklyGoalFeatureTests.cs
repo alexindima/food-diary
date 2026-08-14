@@ -7,6 +7,7 @@ using FoodDiary.Application.WeeklyGoals.Commands.UpsertWeeklyGoal;
 using FoodDiary.Application.WeeklyGoals.Common;
 using FoodDiary.Application.WeeklyGoals.Models;
 using FoodDiary.Application.WeeklyGoals.Queries.GetWeeklyGoal;
+using FoodDiary.Application.WeeklyGoals.Services;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -102,6 +103,38 @@ public sealed class WeeklyGoalFeatureTests {
         int progress = await new WeeklyGoalProgressReader(meals).GetProgressDaysAsync(goal, CancellationToken.None);
 
         Assert.Equal(2, progress);
+    }
+
+    [Fact]
+    public async Task ReadService_WhenGoalDoesNotExist_ReturnsNullWithoutReadingProgress() {
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        IMealActivityReadService meals = Substitute.For<IMealActivityReadService>();
+        var service = new WeeklyGoalReadService(repository, new WeeklyGoalProgressReader(meals));
+
+        WeeklyGoalModel? model = await service.GetAsync(UserId.New(), WeekStartUtc, CancellationToken.None);
+
+        Assert.Null(model);
+        await meals.DidNotReceiveWithAnyArgs().GetDistinctMealDatesAsync(default, default, default, default);
+    }
+
+    [Fact]
+    public async Task ReadService_WhenGoalExists_MapsCalculatedProgress() {
+        var userId = UserId.New();
+        WeeklyGoal goal = CreateGoal(userId, reminderEnabled: false);
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        IMealActivityReadService meals = Substitute.For<IMealActivityReadService>();
+        repository.GetAsync(userId, WeekStartUtc, false, Arg.Any<CancellationToken>()).Returns(goal);
+        meals.GetDistinctMealDatesAsync(userId, WeekStartUtc, WeekStartUtc.AddDays(6), Arg.Any<CancellationToken>())
+            .Returns([WeekStartUtc, WeekStartUtc.AddDays(2)]);
+        var service = new WeeklyGoalReadService(repository, new WeeklyGoalProgressReader(meals));
+
+        WeeklyGoalModel? model = await service.GetAsync(userId, WeekStartUtc, CancellationToken.None);
+
+        Assert.NotNull(model);
+        Assert.Multiple(
+            () => Assert.Equal(2, model.ProgressDays),
+            () => Assert.Equal(5, model.TargetDays),
+            () => Assert.False(model.IsCompleted));
     }
 
     [Fact]
