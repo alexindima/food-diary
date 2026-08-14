@@ -8,9 +8,12 @@ $indexPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
 $index = Get-Content -LiteralPath $indexPath -Raw | ConvertFrom-Json
 $catalog = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/repository-catalog.json') -Raw | ConvertFrom-Json
 $symbols = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/csharp-symbol-index.json') -Raw | ConvertFrom-Json
+$backendContracts = Get-Content -LiteralPath (Join-Path $wikiRoot 'generated/backend-contract-index.json') -Raw | ConvertFrom-Json
 $catalogToolProjects = @(@($catalog.dotnet.projects) | Where-Object { [string]$_.path -match '^\.llm-wiki/tools/' })
 $toolSymbols = @(@($symbols.symbols) | Where-Object { [string]$_.path -match '^\.llm-wiki/tools/' })
-if ($catalogToolProjects.Count -ne 0 -or $toolSymbols.Count -ne 0) {
+$toolContractDefinitions = @(@($backendContracts.contracts) | Where-Object { @($_.definitionPaths | Where-Object { [string]$_ -match '^\.llm-wiki/tools/' }).Count -gt 0 })
+$toolContractConsumers = @(@($backendContracts.consumerEdges) | Where-Object { [string]$_.consumerPath -match '^\.llm-wiki/tools/' })
+if ($catalogToolProjects.Count -ne 0 -or $toolSymbols.Count -ne 0 -or $toolContractDefinitions.Count -ne 0 -or $toolContractConsumers.Count -ne 0) {
     throw 'Internal Wiki tool sources must not make production catalog or symbol indexes platform-dependent.'
 }
 $toolProjects = @(

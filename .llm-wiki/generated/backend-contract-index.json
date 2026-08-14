@@ -3,8 +3,8 @@
     "summary":  {
                     "contracts":  1023,
                     "ambiguousContracts":  3,
-                    "consumerEdges":  7079,
-                    "productionConsumerEdges":  4332,
+                    "consumerEdges":  7075,
+                    "productionConsumerEdges":  4328,
                     "testConsumerEdges":  2747,
                     "consumedContracts":  1023,
                     "unconsumedContracts":  0
@@ -46892,19 +46892,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "ICommandHandler",
-                              "roles":  [
-                                            "CommandHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -67002,19 +66989,6 @@
                                                       "Shared/FoodDiary.Mediator/INotificationHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "INotificationHandler",
-                              "roles":  [
-                                            "Handler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "Shared/FoodDiary.Mediator/INotificationHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Dietologist/EventHandlers/RecommendationCreatedEventHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -73151,19 +73125,6 @@
                                                       "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
-                              "isTest":  false,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IQueryHandler",
-                              "roles":  [
-                                            "QueryHandler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/IQueryHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "FoodDiary.Application.Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
                               "isTest":  false,
                               "referenceCount":  1
@@ -79276,19 +79237,6 @@
                               "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Telegram.Bot.Tests/TelegramBotWorkerTests.cs",
                               "isTest":  true,
-                              "referenceCount":  1
-                          },
-                          {
-                              "contract":  "IRequestHandler",
-                              "roles":  [
-                                            "Handler"
-                                        ],
-                              "definitionPaths":  [
-                                                      "Shared/FoodDiary.Mediator/IRequestHandler.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
-                              "consumerPath":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
-                              "isTest":  false,
                               "referenceCount":  1
                           },
                           {

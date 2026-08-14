@@ -11,7 +11,7 @@ $outputPath = Join-Path $wikiRoot 'generated/backend-contract-index.json'
 $cachePath = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-cache/backend-contract-index.json'
 $cacheInputs = @(& git -C $repositoryRoot ls-files --cached --others --exclude-standard -- '*.cs')
 if ($LASTEXITCODE -ne 0) { throw 'Unable to enumerate backend-contract cache inputs.' }
-$cacheInputs = @($cacheInputs | Where-Object { $_ -notmatch '[\/](node_modules|bin|obj|Migrations|\.artifacts|TestResults)[\/]' -and $_ -notmatch '\.(Designer|g)\.cs$' }) + @('.llm-wiki/generated/csharp-symbol-index.json', '.llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
+$cacheInputs = @($cacheInputs | Where-Object { $_ -notmatch '(^|[\/])\.llm-wiki[\/]tools[\/]' -and $_ -notmatch '[\/](node_modules|bin|obj|Migrations|\.artifacts|TestResults)[\/]' -and $_ -notmatch '\.(Designer|g)\.cs$' }) + @('.llm-wiki/generated/csharp-symbol-index.json', '.llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1', '.llm-wiki/tools/LlmWikiJson.ps1', '.llm-wiki/tools/LlmWikiIndexCache.ps1')
 $inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $cacheInputs
 if ($ReuseUnchangedCheck -and (Test-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint)) { Write-Host 'Backend contract index cache hit: inputs, generator, and output are unchanged.'; exit 0 }
 
@@ -58,6 +58,7 @@ $consumerEdges = [System.Collections.Generic.List[object]]::new()
 $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
         Where-Object {
+            $_.FullName -notmatch '[\\/]\.llm-wiki[\\/]tools[\\/]' -and
             $_.FullName -notmatch '[\\/](node_modules|bin|obj|Migrations|\.artifacts|TestResults)[\\/]' -and
             $_.Name -notmatch '\.(Designer|g)\.cs$'
         } |

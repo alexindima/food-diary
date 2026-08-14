@@ -306,13 +306,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "dcab710576db231de304175890f9f64298b19dbe44a191de6ca32c8000e7f646"
+                                            "sha256":  "76ea39253aff61999c7f27a87af431adba67c8bf2a438e0c51a9ca100d1eeac6"
                                         }
                                     ],
-                        "reason":  "Reviewed after admin user creation mapping fix and focused coverage tests: HTTP routes, payload shapes, status codes, persistence contracts, and module dependencies are unchanged; the production change only maps FirstName and LastName to their named domain parameters.",
+                        "reason":  "Exclude internal Wiki tooling from backend contract discovery so generated indexes remain identical on Windows and Linux.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9457d6a32587418bd4985a32875a3022d1ac22cd",
-                        "reviewedAtUtc":  "2026-08-14T02:24:02.5867047Z"
+                        "gitHead":  "82d61b370ff449272ac012cea9d6c5921b50da53",
+                        "reviewedAtUtc":  "2026-08-14T03:30:15.2006099Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -684,22 +684,14 @@
                         "pageSha256":  "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "d113755ff7dfe30e7f90b353e9f5952753a0903a8b085a530ce3c99c21a4845a"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-                                            "sha256":  "e78986f98ccc4fdee8fbf60ae32140d79294d2ff8459c6ccbf52995f46641add"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
+                                            "sha256":  "af0f6f75285771d96dd5ba5861ed6f1cd4e92ef8690f5537b01a82d3f74eea02"
                                         }
                                     ],
-                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+                        "reason":  "Exclude internal Wiki tooling from backend contract discovery so generated indexes remain identical on Windows and Linux.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
-                        "reviewedAtUtc":  "2026-08-14T02:46:30.5420002Z"
+                        "gitHead":  "82d61b370ff449272ac012cea9d6c5921b50da53",
+                        "reviewedAtUtc":  "2026-08-14T03:30:15.5643083Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
