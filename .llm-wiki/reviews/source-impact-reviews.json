@@ -574,14 +574,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
-          "sha256": "ebb8d7b8f9d90fab56ba6bfe064fcc31c2d1a8563047266eb76817552b227899"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "8016c0b373bfc72f2e85bcbfa332e5deb032e1080a6f9065bea3317441f0619f"
         }
       ],
-      "reason": "Full verification now prewarms the shared code graph before parallel graph-dependent smoke groups, eliminating cold-build queue timeouts while preserving worker parallelism.",
+      "reason": "The standalone LLM Wiki CI job now installs the TypeScript compiler dependency required by compiler-backed graph extraction before full verification.",
       "baseRef": "HEAD",
-      "gitHead": "786b156abe9f3af3169e1dc16f99156c5e310481",
-      "reviewedAtUtc": "2026-08-14T16:48:31.5077418Z"
+      "gitHead": "9ea2f836763ef38e6ea904c50ca1462bc0606157",
+      "reviewedAtUtc": "2026-08-14T17:08:20.6105214Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -816,13 +816,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "973a0c1710771d7e9529d634b9dba341595eb2b865daf07dc667ec083b9999ef"
+          "sha256": "8016c0b373bfc72f2e85bcbfa332e5deb032e1080a6f9065bea3317441f0619f"
         }
       ],
-      "reason": "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
+      "reason": "The standalone LLM Wiki CI job now installs the TypeScript compiler dependency required by compiler-backed graph extraction before full verification.",
       "baseRef": "HEAD",
-      "gitHead": "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
-      "reviewedAtUtc": "2026-08-14T00:06:50.2226250Z"
+      "gitHead": "9ea2f836763ef38e6ea904c50ca1462bc0606157",
+      "reviewedAtUtc": "2026-08-14T17:08:21.0161890Z"
     },
     {
       "pageId": "workflow-risk-calibration",

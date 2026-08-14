@@ -19,6 +19,17 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Node.js for Wiki compiler analysis
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: FoodDiary.Web.Client/package-lock.json
+
+      - name: Install Wiki compiler dependencies
+        working-directory: FoodDiary.Web.Client
+        run: npm ci --ignore-scripts
+
       - name: Verify LLM Wiki (full)
         shell: pwsh
         env:
