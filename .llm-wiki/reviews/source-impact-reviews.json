@@ -241,13 +241,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "cf25ea579d23b00e029e53b04bdb7d76f7bb34fe188faa946e23ffe5ed42d406"
+          "sha256": "9e0b056b37be9ad538d0ec9582585c77d63fba1e4c4fed7c51880b9124591c84"
         }
       ],
-      "reason": "Reviewed CI reliability fixes: serialized cold code-graph refreshes, deterministic timing sample ordering, process-safe MCP transport tests, and lightweight health checks preserve existing architecture and quality semantics.",
+      "reason": "Validated SQLite code-graph build locking across the full open, build, and close lifecycle under four concurrent cold builders; solution-wide formatting now matches CI.",
       "baseRef": "HEAD",
-      "gitHead": "c6ee2fa66946b112bff9033e1939dcf5f994d677",
-      "reviewedAtUtc": "2026-08-14T15:51:33.4188164Z"
+      "gitHead": "210346cd15b0d2122bc54e749ea4e8c2c55daf64",
+      "reviewedAtUtc": "2026-08-14T16:20:24.0116589Z"
     },
     {
       "pageId": "workflow-confidence-ledger",

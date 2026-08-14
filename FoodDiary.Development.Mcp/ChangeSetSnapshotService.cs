@@ -95,33 +95,33 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
     private Task<string> RunGitAsync(
         IReadOnlyList<string> arguments,
         CancellationToken cancellationToken) => Task.Run(() => {
-        using Process process = new() {
-            StartInfo = new ProcessStartInfo {
-                FileName = "git",
-                WorkingDirectory = _repositoryRoot,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-            },
-        };
-        foreach (string argument in arguments) {
-            process.StartInfo.ArgumentList.Add(argument);
-        }
+            using Process process = new() {
+                StartInfo = new ProcessStartInfo {
+                    FileName = "git",
+                    WorkingDirectory = _repositoryRoot,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                },
+            };
+            foreach (string argument in arguments) {
+                process.StartInfo.ArgumentList.Add(argument);
+            }
 
-        process.Start();
-        string output = process.StandardOutput.ReadToEnd();
-        string error = process.StandardError.ReadToEnd();
-        process.WaitForExit();
-        cancellationToken.ThrowIfCancellationRequested();
-        if (process.ExitCode != 0) {
-            throw new DevelopmentMcpException(
-                DevelopmentMcpErrorCodes.RepositoryNotFound,
-                $"Git change-set snapshot failed: {error.Trim()}");
-        }
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (process.ExitCode != 0) {
+                throw new DevelopmentMcpException(
+                    DevelopmentMcpErrorCodes.RepositoryNotFound,
+                    $"Git change-set snapshot failed: {error.Trim()}");
+            }
 
-        return output;
-    }, cancellationToken);
+            return output;
+        }, cancellationToken);
 
     private static string[] ParseChangedPaths(string porcelain) {
         string[] records = porcelain.Split('\0', StringSplitOptions.RemoveEmptyEntries);

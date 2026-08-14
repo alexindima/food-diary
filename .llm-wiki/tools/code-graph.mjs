@@ -608,10 +608,23 @@ const options = Object.fromEntries(argumentsList.map((argument) => {
   return separator < 0 ? [argument.replace(/^--/, ''), 'true'] : [argument.slice(2, separator), argument.slice(separator + 1)];
 }));
 const databasePath = resolve(repositoryRoot, options.database ?? '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const database = openDatabase(databasePath);
+let database;
 try {
   let result;
-  if (action === 'build') result = withBuildLock(() => build(database, options.force === 'true'));
+  if (action === 'build') {
+    result = withBuildLock(() => {
+      database = openDatabase(databasePath);
+      try {
+        return build(database, options.force === 'true');
+      } finally {
+        database.close();
+        database = undefined;
+      }
+    });
+  } else {
+    database = openDatabase(databasePath);
+  }
+  if (action === 'build') { /* result was produced while holding the build lock */ }
   else if (action === 'symbol') result = { query: options.query ?? '', symbols: findSymbols(database, options.query ?? '', Number(options.limit ?? 20)) };
   else if (action === 'consumers') result = consumers(database, options.query ?? '', Number(options.limit ?? 50));
   else if (action === 'impact') result = impact(database, (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));
@@ -633,5 +646,5 @@ try {
   };
   process.stdout.write(`${JSON.stringify(result)}\n`);
 } finally {
-  database.close();
+  database?.close();
 }
