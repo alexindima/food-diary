@@ -55,7 +55,8 @@ function Join-RouteTemplate {
 $projectFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.csproj' |
         Where-Object {
-            $_.FullName -notmatch '[\\/](obj|bin|\.artifacts|TestResults)[\\/]'
+            $_.FullName -notmatch '[\\/](obj|bin|\.artifacts|TestResults)[\\/]' -and
+            $_.FullName -notmatch '[\\/]\.llm-wiki[\\/]tools[\\/]'
         } |
         Sort-Object FullName
 )

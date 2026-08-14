@@ -82,6 +82,21 @@
                         "reviewedAtUtc":  "2026-08-13T22:17:58.9170404Z"
                     },
                     {
+                        "pageId":  "system.csharp-symbol-index",
+                        "pagePath":  ".llm-wiki/system/csharp-symbol-index.md",
+                        "pageSha256":  "15c3aae30eea5af15e394eb2f30ec80f4df604a9c718089e987afaf25f2d1dac",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
+                                            "sha256":  "050cb607b2dacb8935b95c9fbbb138c02de27b2be41403105c0e69fccee91768"
+                                        }
+                                    ],
+                        "reason":  "Production source indexes now exclude internal Wiki tooling consistently on Windows and Linux, removing cross-platform freshness drift.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "0616edfe4a49caaf8c83dc96f1876a9c3a199c47",
+                        "reviewedAtUtc":  "2026-08-14T03:09:04.6095534Z"
+                    },
+                    {
                         "pageId":  "system.frontend-index",
                         "pagePath":  ".llm-wiki/system/frontend-index.md",
                         "pageSha256":  "1ea0c12ce78af5d45542c40530c4a07ae52fdd0a10b3ab76e7f37e89601f1226",
@@ -118,21 +133,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-                                            "sha256":  "0288e19676851f41d9539e7f51739997546f6892f61352f552cbf22515f7c169"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cc3e203588b5dedca64e0e03a8254e4e1f84425f793ca8b18707117f15e47c50"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/module-dependencies.json",
-                                            "sha256":  "8b4629e64f5d0a7b91a119f880eb47e4fd25bae7fe93962f6088a03715ede205"
+                                            "sha256":  "f3a84571cebae04ab03741dcbbf79be39c6a0c8a6632d5d038f08edeb21562a1"
                                         }
                                     ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+                        "reason":  "Production source indexes now exclude internal Wiki tooling consistently on Windows and Linux, removing cross-platform freshness drift.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:17:59.3620424Z"
+                        "gitHead":  "0616edfe4a49caaf8c83dc96f1876a9c3a199c47",
+                        "reviewedAtUtc":  "2026-08-14T03:09:04.7952394Z"
                     },
                     {
                         "pageId":  "workflow.change-policy",
@@ -205,13 +212,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "ac081e4a0507785e144118bfce5d186a1fc49832d2b260110fbffb19774a7d4b"
+                                            "sha256":  "44063d11d2d697c593d74ba5a9c2a88b32f99114f949d62959a24fd7085cf961"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
+                                            "sha256":  "f3a84571cebae04ab03741dcbbf79be39c6a0c8a6632d5d038f08edeb21562a1"
                                         }
                                     ],
-                        "reason":  "Reviewed Roslyn-based C# graph extraction, incremental cache behavior, generated symbol/contract/quality deltas, and architecture-test exclusion for the non-production Wiki tool; product boundaries and public runtime contracts are unchanged.",
+                        "reason":  "Production source indexes now exclude internal Wiki tooling consistently on Windows and Linux, removing cross-platform freshness drift.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
-                        "reviewedAtUtc":  "2026-08-14T01:09:51.0262382Z"
+                        "gitHead":  "0616edfe4a49caaf8c83dc96f1876a9c3a199c47",
+                        "reviewedAtUtc":  "2026-08-14T03:09:05.1068737Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",

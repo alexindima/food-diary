@@ -73,6 +73,7 @@ $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
         Where-Object {
             $_.FullName -notmatch '[\\/](tests|node_modules|obj|bin|\.artifacts|TestResults|Migrations)[\\/]' -and
+            $_.FullName -notmatch '[\\/]\.llm-wiki[\\/]tools[\\/]' -and
             $_.Name -notmatch '\.(Designer|g)\.cs$' -and
             $_.Name -notmatch 'ModelSnapshot\.cs$'
         } |
