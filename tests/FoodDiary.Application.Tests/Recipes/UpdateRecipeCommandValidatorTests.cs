@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Nutrition.Common;
-using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;

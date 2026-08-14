@@ -2,11 +2,11 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeComments.Common;
-using FoodDiary.Application.RecipeComments.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
+namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComments;
 
 public sealed class GetRecipeCommentsQueryHandler(
     IRecipeCommentReadService commentReadService,

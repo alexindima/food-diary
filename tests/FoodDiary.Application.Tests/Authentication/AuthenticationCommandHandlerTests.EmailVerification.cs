@@ -1,5 +1,5 @@
-using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
-using FoodDiary.Application.Authentication.Commands.VerifyEmail;
+using FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;

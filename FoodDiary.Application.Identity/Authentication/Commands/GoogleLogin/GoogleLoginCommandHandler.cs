@@ -1,14 +1,14 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Domain.Entities.Notifications;
 
-namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
+namespace FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
 
 public sealed class GoogleLoginCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

@@ -4,13 +4,13 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.ShoppingLists.Mappings;
-using FoodDiary.Application.ShoppingLists.Models;
-using FoodDiary.Application.ShoppingLists.Services;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Commands.CreateShoppingList;
 
 public sealed class CreateShoppingListCommandHandler(
     IShoppingListWriteRepository shoppingListRepository,

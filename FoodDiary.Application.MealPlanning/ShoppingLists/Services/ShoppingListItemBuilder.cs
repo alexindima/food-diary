@@ -3,11 +3,11 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.MealPlanning.Common.Validation;
-using FoodDiary.Application.ShoppingLists.Common;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ShoppingLists.Services;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Services;
 
 public static class ShoppingListItemBuilder {
     public static async Task<Result<IReadOnlyList<ShoppingListItemData>>> BuildItemsAsync(

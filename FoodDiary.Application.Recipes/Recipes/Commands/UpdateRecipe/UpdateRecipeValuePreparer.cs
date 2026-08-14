@@ -5,14 +5,14 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Application.Images.Common;
-using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Application.Recipes.Recipes.Services;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
 
 internal static class UpdateRecipeValuePreparer {
     public static async Task<Result<UpdateRecipeValues>> PrepareAsync(

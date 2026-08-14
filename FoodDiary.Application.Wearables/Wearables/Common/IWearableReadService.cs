@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Wearables.Common;
+namespace FoodDiary.Application.Wearables.Wearables.Common;
 
 internal interface IWearableReadService {
     Task<IReadOnlyList<WearableConnectionModel>> GetConnectionsAsync(

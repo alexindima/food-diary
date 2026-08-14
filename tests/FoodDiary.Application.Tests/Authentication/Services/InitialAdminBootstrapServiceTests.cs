@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
-using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
+using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
 

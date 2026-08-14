@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.FavoriteProducts.Queries.GetFavoriteProducts;
+namespace FoodDiary.Application.Favorites.FavoriteProducts.Queries.GetFavoriteProducts;
 
 public sealed class GetFavoriteProductsQueryHandler(
     IFavoriteProductReadService favoriteProductReadService,

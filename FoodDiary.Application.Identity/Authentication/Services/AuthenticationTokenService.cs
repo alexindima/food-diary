@@ -3,11 +3,11 @@ using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Authentication.Services.UserAgents;
+using FoodDiary.Application.Identity.Authentication.Services.UserAgents;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
 
-namespace FoodDiary.Application.Authentication.Services;
+namespace FoodDiary.Application.Identity.Authentication.Services;
 
 public sealed class AuthenticationTokenService(
     IUserLoginEventWriteRepository userLoginEventRepository,

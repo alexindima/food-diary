@@ -1,9 +1,9 @@
-using FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
-using FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
-using FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
+using FoodDiary.Application.Favorites.FavoriteProducts.Commands.AddFavoriteProduct;
+using FoodDiary.Application.Favorites.FavoriteProducts.Commands.RemoveFavoriteProduct;
+using FoodDiary.Application.Favorites.FavoriteProducts.Commands.UpdateFavoriteProduct;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
-using FoodDiary.Application.FavoriteProducts.Queries.GetFavoriteProducts;
-using FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
+using FoodDiary.Application.Favorites.FavoriteProducts.Queries.GetFavoriteProducts;
+using FoodDiary.Application.Favorites.FavoriteProducts.Queries.IsProductFavorite;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Requests;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Responses;
 

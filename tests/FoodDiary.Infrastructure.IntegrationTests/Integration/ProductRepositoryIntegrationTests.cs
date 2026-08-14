@@ -8,7 +8,7 @@ using FoodDiary.Infrastructure.Persistence.Products;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace FoodDiary.Infrastructure.Tests.Integration;
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

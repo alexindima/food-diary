@@ -7,7 +7,7 @@ using FoodDiary.Results;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 
-namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
+namespace FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
 
 public sealed class VerifyEmailCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

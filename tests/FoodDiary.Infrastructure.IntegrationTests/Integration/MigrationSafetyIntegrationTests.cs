@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FoodDiary.Infrastructure.Tests.Integration;
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

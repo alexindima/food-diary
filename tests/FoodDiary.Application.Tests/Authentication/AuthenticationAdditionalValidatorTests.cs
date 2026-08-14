@@ -1,11 +1,11 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
-using FoodDiary.Application.Authentication.Commands.GoogleLogin;
-using FoodDiary.Application.Authentication.Commands.LinkTelegram;
-using FoodDiary.Application.Authentication.Commands.Login;
-using FoodDiary.Application.Authentication.Commands.RefreshToken;
-using FoodDiary.Application.Authentication.Commands.RestoreAccount;
-using FoodDiary.Application.Authentication.Commands.TelegramVerify;
+using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Application.Identity.Authentication.Commands.GoogleLogin;
+using FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Identity.Authentication.Commands.Login;
+using FoodDiary.Application.Identity.Authentication.Commands.RefreshToken;
+using FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
+using FoodDiary.Application.Identity.Authentication.Commands.TelegramVerify;
 
 namespace FoodDiary.Application.Tests.Authentication;
 

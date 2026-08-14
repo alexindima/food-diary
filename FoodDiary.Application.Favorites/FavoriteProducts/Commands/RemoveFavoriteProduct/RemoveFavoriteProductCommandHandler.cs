@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 
-namespace FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
+namespace FoodDiary.Application.Favorites.FavoriteProducts.Commands.RemoveFavoriteProduct;
 
 public sealed class RemoveFavoriteProductCommandHandler(
     IFavoriteProductWriteRepository favoriteProductRepository,

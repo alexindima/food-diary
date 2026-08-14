@@ -5,7 +5,7 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using Microsoft.Extensions.Logging;
 
-namespace FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
+namespace FoodDiary.Application.Identity.Authentication.Commands.RequestPasswordReset;
 
 public sealed class RequestPasswordResetCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.ShoppingLists.Models;
-using FoodDiary.Application.ShoppingLists.Mappings;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
 

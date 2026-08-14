@@ -1,10 +1,10 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
-using FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
-using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
-using FoodDiary.Application.RecipeComments.Models;
-using FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.DeleteRecipeComment;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRecipeComment;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComments;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.RecipeComments;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Requests;

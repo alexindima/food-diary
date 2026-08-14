@@ -2,9 +2,9 @@ using FluentValidation;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
-using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
-using FoodDiary.Application.Authentication.Services;
-using FoodDiary.Application.Email.Services;
+using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
+using FoodDiary.Application.Identity.Authentication.Services;
+using FoodDiary.Application.Identity.Email.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

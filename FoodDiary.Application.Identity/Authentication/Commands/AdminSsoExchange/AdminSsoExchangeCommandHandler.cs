@@ -2,14 +2,14 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
+namespace FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
 
 public sealed class AdminSsoExchangeCommandHandler(
     IAdminSsoService adminSsoService,

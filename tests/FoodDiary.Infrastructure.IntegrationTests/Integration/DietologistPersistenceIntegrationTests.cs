@@ -10,7 +10,7 @@ using FoodDiary.Infrastructure.Persistence.Authentication;
 using FoodDiary.Infrastructure.Persistence.Dietologist;
 using FoodDiary.Infrastructure.Persistence.Recommendations;
 
-namespace FoodDiary.Infrastructure.Tests.Integration;
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
-using FoodDiary.Application.ShoppingLists.Common;
-using FoodDiary.Application.ShoppingLists.Models;
-using FoodDiary.Application.ShoppingLists.Services;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

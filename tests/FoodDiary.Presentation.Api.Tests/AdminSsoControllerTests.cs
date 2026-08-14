@@ -1,7 +1,7 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
-using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
+using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Auth;

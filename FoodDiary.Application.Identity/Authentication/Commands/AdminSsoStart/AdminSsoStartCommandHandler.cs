@@ -5,11 +5,11 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Authentication.Commands.AdminSsoStart;
+namespace FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
 
 public sealed class AdminSsoStartCommandHandler(
     IAdminSsoService adminSsoService,

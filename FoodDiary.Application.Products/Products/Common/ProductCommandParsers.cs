@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Application.Products.Products.Common;
 
 internal static class ProductCommandParsers {
     public static Result<MeasurementUnit> ParseRequiredBaseUnit(string value, string propertyName) =>

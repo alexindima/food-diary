@@ -5,13 +5,13 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.MealPlanning.Common.Validation;
-using FoodDiary.Application.ShoppingLists.Mappings;
-using FoodDiary.Application.ShoppingLists.Models;
-using FoodDiary.Application.ShoppingLists.Services;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Shopping;
 
-namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Commands.UpdateShoppingList;
 
 public sealed class UpdateShoppingListCommandHandler(
     IShoppingListWriteRepository shoppingListRepository,

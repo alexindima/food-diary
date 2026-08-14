@@ -1,9 +1,9 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Authentication.Commands.LinkTelegram;
-using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
-using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
-using FoodDiary.Application.Authentication.Commands.TelegramVerify;
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Identity.Authentication.Commands.TelegramBotAuth;
+using FoodDiary.Application.Identity.Authentication.Commands.TelegramLoginWidget;
+using FoodDiary.Application.Identity.Authentication.Commands.TelegramVerify;
+using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Auth;

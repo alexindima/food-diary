@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
+namespace FoodDiary.Application.Favorites.FavoriteMeals.Commands.RemoveFavoriteMeal;
 
 public record RemoveFavoriteMealCommand(
     Guid? UserId,

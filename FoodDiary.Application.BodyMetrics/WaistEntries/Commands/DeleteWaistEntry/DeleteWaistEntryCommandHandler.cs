@@ -8,7 +8,7 @@ using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
+namespace FoodDiary.Application.BodyMetrics.WaistEntries.Commands.DeleteWaistEntry;
 
 public sealed class DeleteWaistEntryCommandHandler(
     IWaistEntryWriteRepository waistEntryRepository,

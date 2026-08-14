@@ -334,6 +334,7 @@ dotnet_diagnostic.MA0051.severity = warning
 # Build-time project conventions. Rules are disabled by default in the analyzer
 # and activated only for the scopes previously owned by architecture tests.
 [**/*.cs]
+dotnet_diagnostic.IDE0130.severity = error
 dotnet_diagnostic.FD0005.severity = error
 dotnet_diagnostic.FD0010.severity = error
 dotnet_diagnostic.FD0011.severity = error

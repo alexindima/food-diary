@@ -6,13 +6,13 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Products.Products.Mappings;
+using FoodDiary.Application.Products.Products.Models;
+using FoodDiary.Application.Products.Products.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Queries.GetProductsOverview;
+namespace FoodDiary.Application.Products.Products.Queries.GetProductsOverview;
 
 public sealed class GetProductsOverviewQueryHandler(
     IProductOverviewReadService productOverviewReadService,

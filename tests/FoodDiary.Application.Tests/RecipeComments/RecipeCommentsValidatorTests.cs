@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
 
 namespace FoodDiary.Application.Tests.RecipeComments;
 

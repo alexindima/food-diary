@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
+namespace FoodDiary.Application.Identity.Authentication.Commands.AdminSsoExchange;
 
 public sealed class AdminSsoExchangeCommandValidator : AbstractValidator<AdminSsoExchangeCommand> {
     public AdminSsoExchangeCommandValidator() {

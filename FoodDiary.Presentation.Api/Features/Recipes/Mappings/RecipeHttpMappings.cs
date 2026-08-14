@@ -1,8 +1,8 @@
-using FoodDiary.Application.Recipes.Commands.CreateRecipe;
-using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
-using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
-using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Commands.CreateRecipe;
+using FoodDiary.Application.Recipes.Recipes.Commands.DeleteRecipe;
+using FoodDiary.Application.Recipes.Recipes.Commands.DuplicateRecipe;
+using FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Recipes.Mappings;

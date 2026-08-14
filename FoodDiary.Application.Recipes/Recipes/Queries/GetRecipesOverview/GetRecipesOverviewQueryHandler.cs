@@ -4,14 +4,14 @@ using FoodDiary.Application.Abstractions.Common.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
-using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Recipes.Models;
 using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
+namespace FoodDiary.Application.Recipes.Recipes.Queries.GetRecipesOverview;
 
 public sealed class GetRecipesOverviewQueryHandler(
     IRecipeOverviewReadService recipeOverviewReadService,

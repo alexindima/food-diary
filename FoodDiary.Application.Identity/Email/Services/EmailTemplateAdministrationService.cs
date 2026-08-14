@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Email.Services;
+namespace FoodDiary.Application.Identity.Email.Services;
 
 public sealed class EmailTemplateAdministrationService(IEmailTemplateWriteRepository repository)
     : IEmailTemplateAdministrationService {

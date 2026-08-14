@@ -1,10 +1,10 @@
-using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
-using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
-using FoodDiary.Application.Authentication.Commands.RestoreAccount;
+using FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
+using FoodDiary.Application.Identity.Authentication.Commands.RequestPasswordReset;
+using FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
 using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 

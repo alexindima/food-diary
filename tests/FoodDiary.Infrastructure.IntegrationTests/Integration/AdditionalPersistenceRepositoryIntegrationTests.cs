@@ -26,7 +26,7 @@ using FoodDiary.Infrastructure.Persistence.Usda;
 using FoodDiary.Infrastructure.Persistence.Wearables;
 using Microsoft.EntityFrameworkCore;
 
-namespace FoodDiary.Infrastructure.Tests.Integration;
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 #pragma warning disable MA0051
 

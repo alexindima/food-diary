@@ -4,12 +4,12 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Common;
+using FoodDiary.Application.Wearables.Wearables.Common;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Wearables.Commands.ConnectWearable;
+namespace FoodDiary.Application.Wearables.Wearables.Commands.ConnectWearable;
 
 public sealed class ConnectWearableCommandHandler(
     IEnumerable<IWearableClient> wearableClients,

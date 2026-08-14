@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Tests;
+namespace FoodDiary.Application.Tests.Support;
 
 [ExcludeFromCodeCoverage]
 public sealed class AllowImageAssetAccessService : IImageAssetAccessService {

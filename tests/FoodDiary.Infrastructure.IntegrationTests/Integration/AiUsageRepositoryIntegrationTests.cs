@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Ai;
 
-namespace FoodDiary.Infrastructure.Tests.Integration;
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

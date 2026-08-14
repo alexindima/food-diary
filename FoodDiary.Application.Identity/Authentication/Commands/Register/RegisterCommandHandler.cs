@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 
-namespace FoodDiary.Application.Authentication.Commands.Register;
+namespace FoodDiary.Application.Identity.Authentication.Commands.Register;
 
 public sealed class RegisterCommandHandler(
     IUserAuthenticationRegistrationService userRegistrationService,

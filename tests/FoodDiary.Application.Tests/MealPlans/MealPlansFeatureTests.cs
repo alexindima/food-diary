@@ -1,16 +1,16 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
+using FoodDiary.Application.MealPlanning.MealPlans.Commands.AdoptMealPlan;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
-using FoodDiary.Application.MealPlans.Common;
-using FoodDiary.Application.MealPlans.Mappings;
-using FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
-using FoodDiary.Application.MealPlans.Queries.GetMealPlans;
-using FoodDiary.Application.MealPlans.Services;
+using FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
+using FoodDiary.Application.MealPlanning.MealPlans.Common;
+using FoodDiary.Application.MealPlanning.MealPlans.Mappings;
+using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlanById;
+using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
+using FoodDiary.Application.MealPlanning.MealPlans.Services;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -18,10 +18,10 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.MealPlans.Models;
-using FoodDiary.Application.ShoppingLists.Models;
-using FoodDiary.Application.ShoppingLists.Common;
-using FoodDiary.Application.ShoppingLists.Mappings;
+using FoodDiary.Application.MealPlanning.MealPlans.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
 
 namespace FoodDiary.Application.Tests.MealPlans;
 

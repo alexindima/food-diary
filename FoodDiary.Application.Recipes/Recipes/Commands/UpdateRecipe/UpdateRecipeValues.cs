@@ -1,10 +1,10 @@
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
 
 internal sealed record UpdateRecipeValues(
     UserId UserId,

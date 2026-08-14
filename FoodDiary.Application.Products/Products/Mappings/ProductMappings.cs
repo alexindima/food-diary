@@ -1,8 +1,8 @@
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Models;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.Products.Mappings;
+namespace FoodDiary.Application.Products.Products.Mappings;
 
 public static class ProductMappings {
     public static ProductModel ToModel(

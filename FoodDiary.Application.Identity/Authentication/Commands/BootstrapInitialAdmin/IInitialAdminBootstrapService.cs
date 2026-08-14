@@ -1,6 +1,6 @@
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
+namespace FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 
 public interface IInitialAdminBootstrapService {
     Task<Result<BootstrapInitialAdminModel>> BootstrapAsync(

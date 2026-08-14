@@ -1,8 +1,8 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Models;
 
-namespace FoodDiary.Application.Products.Queries.SearchProductSuggestions;
+namespace FoodDiary.Application.Products.Products.Queries.SearchProductSuggestions;
 
 public sealed record SearchProductSuggestionsQuery(
     string Search,

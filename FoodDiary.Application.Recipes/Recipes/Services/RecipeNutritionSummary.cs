@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Recipes.Services;
+namespace FoodDiary.Application.Recipes.Recipes.Services;
 
 public sealed record RecipeNutritionSummary(
     double? TotalCalories,

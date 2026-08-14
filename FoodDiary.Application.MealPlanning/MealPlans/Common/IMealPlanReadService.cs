@@ -1,8 +1,8 @@
-using FoodDiary.Application.MealPlans.Models;
+using FoodDiary.Application.MealPlanning.MealPlans.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlans.Common;
+namespace FoodDiary.Application.MealPlanning.MealPlans.Common;
 
 public interface IMealPlanReadService {
     Task<IReadOnlyList<MealPlanSummaryModel>> GetAllAsync(

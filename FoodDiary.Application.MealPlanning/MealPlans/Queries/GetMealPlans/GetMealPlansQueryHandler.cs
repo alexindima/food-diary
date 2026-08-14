@@ -2,12 +2,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.MealPlanning.Common.Validation;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.MealPlans.Common;
-using FoodDiary.Application.MealPlans.Models;
+using FoodDiary.Application.MealPlanning.MealPlans.Common;
+using FoodDiary.Application.MealPlanning.MealPlans.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlans.Queries.GetMealPlans;
+namespace FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
 
 public sealed class GetMealPlansQueryHandler(
     IMealPlanReadService mealPlanReadService,

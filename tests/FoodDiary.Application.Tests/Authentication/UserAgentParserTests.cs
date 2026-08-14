@@ -138,7 +138,7 @@ public class UserAgentParserTests {
     }
 
     private static Type GetParserType() {
-        var parserType = Type.GetType("FoodDiary.Application.Authentication.Services.UserAgents.UserAgentParser, FoodDiary.Application.Identity");
+        var parserType = Type.GetType("FoodDiary.Application.Identity.Authentication.Services.UserAgents.UserAgentParser, FoodDiary.Application.Identity");
         Assert.NotNull(parserType);
         return parserType!;
     }

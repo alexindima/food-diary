@@ -1,7 +1,7 @@
-using FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
-using FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
-using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
-using FoodDiary.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistEntries;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetLatestWaistEntry;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistSummaries;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistHistoryPageSummary;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;

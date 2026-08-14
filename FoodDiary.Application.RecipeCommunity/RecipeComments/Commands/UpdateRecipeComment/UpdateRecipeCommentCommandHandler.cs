@@ -3,11 +3,11 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeComments.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
-namespace FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
+namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRecipeComment;
 
 public sealed class UpdateRecipeCommentCommandHandler(
     IRecipeCommentWriteRepository commentRepository,

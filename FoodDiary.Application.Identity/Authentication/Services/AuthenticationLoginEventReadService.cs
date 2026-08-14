@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 
-namespace FoodDiary.Application.Authentication.Services;
+namespace FoodDiary.Application.Identity.Authentication.Services;
 
 public sealed class AuthenticationLoginEventReadService(IUserLoginEventReadRepository repository)
     : IAuthenticationLoginEventReadService {

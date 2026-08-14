@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Application.Products.Products.Common;
 
 internal static class ProductCommandValidation {
     public static bool BeValidUnit(string? unit) =>

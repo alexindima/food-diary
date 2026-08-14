@@ -1,8 +1,8 @@
 using FluentValidation;
-using FoodDiary.Application.MealPlans.Common;
-using FoodDiary.Application.MealPlans.Services;
-using FoodDiary.Application.ShoppingLists.Common;
-using FoodDiary.Application.ShoppingLists.Services;
+using FoodDiary.Application.MealPlanning.MealPlans.Common;
+using FoodDiary.Application.MealPlanning.MealPlans.Services;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

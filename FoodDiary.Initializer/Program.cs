@@ -35,7 +35,7 @@ using FoodDiary.Application.ContentReports;
 using FoodDiary.Application.Gamification;
 using FoodDiary.Application.Export;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
+using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Outbox;
 using FoodDiary.Initializer;

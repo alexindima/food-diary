@@ -1,9 +1,9 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Common;
+using FoodDiary.Application.Products.Products.Models;
 
-namespace FoodDiary.Application.Products.Queries.SearchProductSuggestions;
+namespace FoodDiary.Application.Products.Products.Queries.SearchProductSuggestions;
 
 public sealed class SearchProductSuggestionsQueryHandler(IEnumerable<IProductSearchSuggestionProvider> providers)
     : IQueryHandler<SearchProductSuggestionsQuery, Result<IReadOnlyList<ProductSearchSuggestionModel>>> {

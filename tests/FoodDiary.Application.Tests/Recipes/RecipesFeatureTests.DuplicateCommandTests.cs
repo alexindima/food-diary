@@ -1,10 +1,10 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
+using FoodDiary.Application.Recipes.Recipes.Commands.DuplicateRecipe;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Models;
 
 namespace FoodDiary.Application.Tests.Recipes;
 

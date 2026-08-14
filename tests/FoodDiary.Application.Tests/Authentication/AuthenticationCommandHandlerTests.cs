@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Authentication.Commands.LinkTelegram;
-using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Results;

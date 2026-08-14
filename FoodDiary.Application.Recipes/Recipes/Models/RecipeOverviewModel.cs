@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
-namespace FoodDiary.Application.Recipes.Models;
+namespace FoodDiary.Application.Recipes.Recipes.Models;
 
 public sealed record RecipeOverviewModel(
     IReadOnlyList<RecipeModel> RecentItems,

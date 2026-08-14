@@ -3,11 +3,11 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Wearables.Common;
+using FoodDiary.Application.Wearables.Wearables.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
+namespace FoodDiary.Application.Wearables.Wearables.Queries.GetWearableAuthUrl;
 
 public sealed class GetWearableAuthUrlQueryHandler(
     IEnumerable<IWearableClient> wearableClients,

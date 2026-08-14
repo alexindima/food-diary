@@ -5,11 +5,11 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
-namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.DeleteRecipe;
 
 public sealed class DeleteRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,

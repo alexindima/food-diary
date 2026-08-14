@@ -6,12 +6,12 @@ using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeComments.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Notifications;
 
-namespace FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
+namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
 
 public sealed class CreateRecipeCommentCommandHandler(
     IRecipeCommentWriteRepository commentRepository,

@@ -8,7 +8,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Shopping;
 
-namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Commands.DeleteShoppingList;
 
 public sealed class DeleteShoppingListCommandHandler(
     IShoppingListWriteRepository shoppingListRepository,

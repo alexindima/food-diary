@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
+namespace FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetLatestWeightEntry;
 
 public sealed class GetLatestWeightEntryQueryHandler(
     IWeightEntryReadService weightEntryReadService,

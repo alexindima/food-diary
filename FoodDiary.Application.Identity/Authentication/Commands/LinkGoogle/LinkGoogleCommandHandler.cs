@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Authentication.Commands.LinkGoogle;
+namespace FoodDiary.Application.Identity.Authentication.Commands.LinkGoogle;
 
 public sealed class LinkGoogleCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

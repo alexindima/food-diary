@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
+namespace FoodDiary.Application.BodyMetrics.WaistEntries.Commands.DeleteWaistEntry;
 
 public sealed class DeleteWaistEntryCommandValidator : AbstractValidator<DeleteWaistEntryCommand> {
     public DeleteWaistEntryCommandValidator() {

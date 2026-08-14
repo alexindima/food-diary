@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.ShoppingLists.Models;
-using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Domain.Entities.Shopping;
 
-namespace FoodDiary.Application.ShoppingLists.Mappings;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Mappings;
 
 public static class ShoppingListMappings {
     extension(ShoppingList list) {

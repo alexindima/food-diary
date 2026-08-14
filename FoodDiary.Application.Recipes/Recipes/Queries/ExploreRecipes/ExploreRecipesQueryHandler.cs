@@ -5,11 +5,11 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Queries.ExploreRecipes;
+namespace FoodDiary.Application.Recipes.Recipes.Queries.ExploreRecipes;
 
 public sealed class ExploreRecipesQueryHandler(IRecipeOverviewReadService recipeOverviewReadService)
     : IQueryHandler<ExploreRecipesQuery, Result<PagedResponse<RecipeModel>>> {

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
+namespace FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
 
 public sealed class GenerateShoppingListCommandValidator : AbstractValidator<GenerateShoppingListCommand> {
     public GenerateShoppingListCommandValidator() {

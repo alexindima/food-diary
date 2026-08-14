@@ -8,7 +8,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Authentication.Commands.LinkTelegram;
+namespace FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
 
 public sealed class LinkTelegramCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

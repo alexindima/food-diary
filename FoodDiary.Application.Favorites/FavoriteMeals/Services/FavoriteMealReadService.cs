@@ -2,10 +2,10 @@ using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.FavoriteMeals.Mappings;
+using FoodDiary.Application.Favorites.FavoriteMeals.Mappings;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.FavoriteMeals.Services;
+namespace FoodDiary.Application.Favorites.FavoriteMeals.Services;
 
 public sealed class FavoriteMealReadService(IFavoriteMealReadModelRepository favoriteMealReadModelRepository)
     : IFavoriteMealReadService, IMealFavoriteReadService {

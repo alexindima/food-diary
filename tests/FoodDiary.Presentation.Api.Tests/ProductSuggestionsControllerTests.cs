@@ -1,6 +1,6 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
+using FoodDiary.Application.Products.Products.Models;
+using FoodDiary.Application.Products.Products.Queries.SearchProductSuggestions;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Products.Responses;

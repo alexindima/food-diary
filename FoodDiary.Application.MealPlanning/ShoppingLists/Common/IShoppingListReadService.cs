@@ -1,7 +1,7 @@
-using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ShoppingLists.Common;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Common;
 
 public interface IShoppingListReadService {
     Task<IReadOnlyList<ShoppingListSummaryModel>> GetAllAsync(

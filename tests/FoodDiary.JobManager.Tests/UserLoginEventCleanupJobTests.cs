@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.JobManager.Services;

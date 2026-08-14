@@ -1,16 +1,16 @@
-using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.RecipeLikes.Common;
-using FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
-using FoodDiary.Application.RecipeLikes.Services;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Common;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Queries.GetRecipeLikeStatus;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;
 
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.RecipeLikes.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
 
 namespace FoodDiary.Application.Tests.RecipeLikes;
 

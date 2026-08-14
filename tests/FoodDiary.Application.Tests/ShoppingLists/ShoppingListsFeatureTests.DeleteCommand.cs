@@ -1,4 +1,4 @@
-using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Results;

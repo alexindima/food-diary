@@ -6,12 +6,12 @@ using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.FavoriteRecipes.Mappings;
+using FoodDiary.Application.Favorites.FavoriteRecipes.Mappings;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Models;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
+namespace FoodDiary.Application.Favorites.FavoriteRecipes.Commands.AddFavoriteRecipe;
 
 public sealed class AddFavoriteRecipeCommandHandler(
     IFavoriteRecipeWriteRepository favoriteRecipeRepository,

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
+namespace FoodDiary.Application.Identity.Authentication.Commands.RequestPasswordReset;
 
 public sealed class RequestPasswordResetCommandValidator : AbstractValidator<RequestPasswordResetCommand> {
     public RequestPasswordResetCommandValidator() {

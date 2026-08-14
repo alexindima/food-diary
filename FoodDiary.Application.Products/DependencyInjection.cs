@@ -1,8 +1,8 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products.SearchSuggestions;
-using FoodDiary.Application.Products.Services;
+using FoodDiary.Application.Products.Products.Common;
+using FoodDiary.Application.Products.Products.SearchSuggestions;
+using FoodDiary.Application.Products.Products.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

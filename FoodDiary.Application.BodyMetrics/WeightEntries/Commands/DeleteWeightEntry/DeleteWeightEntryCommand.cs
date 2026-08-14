@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
+namespace FoodDiary.Application.BodyMetrics.WeightEntries.Commands.DeleteWeightEntry;
 
 public record DeleteWeightEntryCommand(
     Guid? UserId,

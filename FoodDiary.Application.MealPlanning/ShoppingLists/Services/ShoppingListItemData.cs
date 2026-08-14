@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ShoppingLists.Services;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Services;
 
 public sealed record ShoppingListItemData(
     ShoppingListItemId? Id,

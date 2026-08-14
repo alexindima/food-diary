@@ -83,7 +83,7 @@ public sealed class ControllerConventionsTests {
         };
 
         Type[] authControllers = [.. GetFeatureControllerTypes()
-            .Where(type => string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
+            .Where(type => string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Tests.Auth", StringComparison.Ordinal))
             .OrderBy(type => type.Name, StringComparer.Ordinal)];
 
         Dictionary<string, string> actualRoutes = authControllers.ToDictionary(
@@ -134,7 +134,7 @@ public sealed class ControllerConventionsTests {
     [Fact]
     public void NonAuthFeatureControllers_RequireAuthorizationAtControllerLevel() {
         string?[] violations = [.. GetFeatureControllerTypes()
-            .Where(type => !string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
+            .Where(type => !string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Tests.Auth", StringComparison.Ordinal))
             .Where(type => !IsAnonymousInfrastructureController(type))
             .Where(type => !type.IsAssignableTo(typeof(FoodDiary.Presentation.Api.Controllers.AuthorizedController)))
             .Where(type => type.GetCustomAttribute<AuthorizeAttribute>() is null)
@@ -147,7 +147,7 @@ public sealed class ControllerConventionsTests {
     public void NonAuthFeatureActions_DoNotDocumentUnauthorizedOrForbiddenResponses_Manually() {
         string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
-            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
+            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Tests.Auth", StringComparison.Ordinal))
             .Where(DeclaresProtectedResponses)
             .Select(FormatMethodName)];
 
@@ -160,7 +160,7 @@ public sealed class ControllerConventionsTests {
             .SelectMany(GetActionMethods)
             .Where(method => !IsAnonymousInfrastructureController(method.DeclaringType))
             .Where(method => method.GetCustomAttribute<AllowAnonymousAttribute>() is not null)
-            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
+            .Where(method => !string.Equals(method.DeclaringType?.Namespace, "FoodDiary.Presentation.Api.Tests.Auth", StringComparison.Ordinal))
             .Select(FormatMethodName)];
 
         Assert.Empty(violations);
@@ -366,7 +366,7 @@ public sealed class ControllerConventionsTests {
     private static Type[] GetFeatureControllerTypes() =>
         [.. PresentationAssembly.GetTypes()
             .Where(type => type is { IsAbstract: false, IsClass: true })
-            .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Features.", StringComparison.Ordinal) is true)
+            .Where(type => type.Namespace?.StartsWith("FoodDiary.Presentation.Api.Tests.", StringComparison.Ordinal) is true)
             .Where(type => type.Name.EndsWith("Controller", StringComparison.Ordinal))];
 
     private static MethodInfo[] GetActionMethods(Type controllerType) =>
@@ -399,13 +399,13 @@ public sealed class ControllerConventionsTests {
 
     private static bool IsAnonymousInfrastructureController(Type? type) =>
         type?.FullName is
-            "FoodDiary.Presentation.Api.Features.Billing.BillingWebhookController" or
-            "FoodDiary.Presentation.Api.Features.Logs.LogsController" or
-            "FoodDiary.Presentation.Api.Features.Marketing.MarketingAttributionController" or
-            "FoodDiary.Presentation.Api.Features.Version.VersionController";
+            "FoodDiary.Presentation.Api.Tests.Billing.BillingWebhookController" or
+            "FoodDiary.Presentation.Api.Tests.Logs.LogsController" or
+            "FoodDiary.Presentation.Api.Tests.Marketing.MarketingAttributionController" or
+            "FoodDiary.Presentation.Api.Tests.Version.VersionController";
 
     private static bool IsNonStandardInfrastructureController(Type? type) =>
-        type?.FullName is "FoodDiary.Presentation.Api.Features.Version.VersionController";
+        type?.FullName is "FoodDiary.Presentation.Api.Tests.Version.VersionController";
 
     private static string FormatMethodName(MethodInfo method) =>
         $"{method.DeclaringType!.FullName}.{method.Name}";

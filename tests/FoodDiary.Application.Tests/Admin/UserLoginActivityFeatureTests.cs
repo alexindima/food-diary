@@ -5,7 +5,7 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Admin.Services;
-using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Tests.Admin;

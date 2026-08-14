@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.RecipeComments.Common;
-using FoodDiary.Application.RecipeComments.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeComments.Services;
+namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Services;
 
 public sealed class RecipeCommentReadService(IRecipeCommentReadModelRepository commentRepository)
     : IRecipeCommentReadService {

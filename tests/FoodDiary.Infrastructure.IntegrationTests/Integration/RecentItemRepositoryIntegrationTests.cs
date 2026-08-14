@@ -7,7 +7,7 @@ using FoodDiary.Infrastructure.Persistence.RecentItems;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
-namespace FoodDiary.Infrastructure.Tests.Integration;
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

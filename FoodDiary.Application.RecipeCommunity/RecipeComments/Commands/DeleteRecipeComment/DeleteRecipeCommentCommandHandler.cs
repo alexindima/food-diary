@@ -8,7 +8,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
+namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.DeleteRecipeComment;
 
 public sealed class DeleteRecipeCommentCommandHandler(
     IRecipeCommentWriteRepository commentRepository,

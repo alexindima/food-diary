@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Models;
 
-namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.CreateRecipe;
 
 public record CreateRecipeCommand(
     Guid? UserId,

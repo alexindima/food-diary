@@ -2,10 +2,10 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Common;
+using FoodDiary.Application.Wearables.Wearables.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
+namespace FoodDiary.Application.Wearables.Wearables.Queries.GetWearableDailySummary;
 
 internal sealed class GetWearableDailySummaryQueryHandler(
     IWearableReadService wearableReadService,

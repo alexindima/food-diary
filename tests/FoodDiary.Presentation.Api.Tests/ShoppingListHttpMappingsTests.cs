@@ -1,10 +1,10 @@
-using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
-using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
-using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
-using FoodDiary.Application.ShoppingLists.Models;
-using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
-using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
-using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.CreateShoppingList;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.DeleteShoppingList;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Commands.UpdateShoppingList;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetCurrentShoppingList;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingListById;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;

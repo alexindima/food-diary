@@ -1,6 +1,6 @@
 using System.Diagnostics.Metrics;
 using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Email.Common;
 

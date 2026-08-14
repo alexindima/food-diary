@@ -1,6 +1,6 @@
-using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
-using FoodDiary.Application.RecipeLikes.Models;
-using FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Queries.GetRecipeLikeStatus;
 using FoodDiary.Presentation.Api.Features.RecipeLikes.Responses;
 
 namespace FoodDiary.Presentation.Api.Features.RecipeLikes.Mappings;

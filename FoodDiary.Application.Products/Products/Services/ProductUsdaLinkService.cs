@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Services;
+namespace FoodDiary.Application.Products.Products.Services;
 
 public sealed class ProductUsdaLinkService(IProductWriteRepository productRepository) : IProductUsdaLinkService {
     public async Task<bool> IsAccessibleForUpdateAsync(

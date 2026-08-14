@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
+namespace FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightEntries;
 
 public sealed class GetWeightEntriesQueryValidator : AbstractValidator<GetWeightEntriesQuery> {
     public GetWeightEntriesQueryValidator() {

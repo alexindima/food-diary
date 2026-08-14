@@ -1,10 +1,10 @@
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Common;
+using FoodDiary.Application.Wearables.Wearables.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Wearables.Services;
+namespace FoodDiary.Application.Wearables.Wearables.Services;
 
 internal sealed class WearableReadService(
     IWearableConnectionReadRepository connectionRepository,

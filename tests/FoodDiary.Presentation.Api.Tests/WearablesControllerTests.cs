@@ -1,11 +1,11 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Wearables.Models;
-using FoodDiary.Application.Wearables.Commands.ConnectWearable;
-using FoodDiary.Application.Wearables.Commands.DisconnectWearable;
-using FoodDiary.Application.Wearables.Commands.SyncWearableData;
-using FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
-using FoodDiary.Application.Wearables.Queries.GetWearableConnections;
-using FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
+using FoodDiary.Application.Wearables.Wearables.Commands.ConnectWearable;
+using FoodDiary.Application.Wearables.Wearables.Commands.DisconnectWearable;
+using FoodDiary.Application.Wearables.Wearables.Commands.SyncWearableData;
+using FoodDiary.Application.Wearables.Wearables.Queries.GetWearableAuthUrl;
+using FoodDiary.Application.Wearables.Wearables.Queries.GetWearableConnections;
+using FoodDiary.Application.Wearables.Wearables.Queries.GetWearableDailySummary;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Wearables;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;

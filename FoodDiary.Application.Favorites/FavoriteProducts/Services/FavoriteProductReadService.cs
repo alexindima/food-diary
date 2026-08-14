@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
-using FoodDiary.Application.FavoriteProducts.Mappings;
+using FoodDiary.Application.Favorites.FavoriteProducts.Mappings;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.FavoriteProducts.Services;
+namespace FoodDiary.Application.Favorites.FavoriteProducts.Services;
 
 public sealed class FavoriteProductReadService(
     IFavoriteProductReadModelRepository favoriteProductReadModelRepository)

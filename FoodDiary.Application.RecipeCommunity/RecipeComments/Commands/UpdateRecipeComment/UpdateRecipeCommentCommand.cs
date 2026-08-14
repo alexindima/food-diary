@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.RecipeComments.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 
-namespace FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
+namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRecipeComment;
 
 public record UpdateRecipeCommentCommand(
     Guid? UserId,

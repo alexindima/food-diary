@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
+using FoodDiary.Application.Favorites.FavoriteMeals.Commands.AddFavoriteMeal;
 
 namespace FoodDiary.Application.Tests.FavoriteMeals;
 

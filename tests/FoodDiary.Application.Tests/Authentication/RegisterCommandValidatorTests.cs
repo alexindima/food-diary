@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Authentication.Commands.Register;
+using FoodDiary.Application.Identity.Authentication.Commands.Register;
 
 namespace FoodDiary.Application.Tests.Authentication;
 

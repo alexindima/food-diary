@@ -1,4 +1,4 @@
-using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
 using FoodDiary.Presentation.Api.Responses;
 

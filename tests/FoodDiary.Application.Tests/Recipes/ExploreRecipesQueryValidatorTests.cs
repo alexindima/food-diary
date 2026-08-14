@@ -1,5 +1,5 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
+using FoodDiary.Application.Recipes.Recipes.Queries.ExploreRecipes;
 
 namespace FoodDiary.Application.Tests.Recipes;
 

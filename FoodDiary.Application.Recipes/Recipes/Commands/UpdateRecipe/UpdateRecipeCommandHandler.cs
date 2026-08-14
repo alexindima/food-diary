@@ -5,13 +5,13 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Recipes.Mappings;
-using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Recipes.Services;
+using FoodDiary.Application.Recipes.Recipes.Mappings;
+using FoodDiary.Application.Recipes.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Services;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
 
 public sealed class UpdateRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,

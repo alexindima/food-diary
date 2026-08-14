@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.RecipeComments.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeComments.Common;
+namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
 
 public interface IRecipeCommentReadService {
     Task<PagedResponse<RecipeCommentModel>> GetPagedByRecipeAsync(

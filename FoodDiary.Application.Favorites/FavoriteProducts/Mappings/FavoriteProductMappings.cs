@@ -4,7 +4,7 @@ using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.FavoriteProducts.Mappings;
+namespace FoodDiary.Application.Favorites.FavoriteProducts.Mappings;
 
 public static class FavoriteProductMappings {
     public static FavoriteProductModel ToModel(this FavoriteProduct favorite) {

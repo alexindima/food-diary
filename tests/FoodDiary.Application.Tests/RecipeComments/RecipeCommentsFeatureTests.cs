@@ -1,20 +1,20 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
-using FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
-using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.DeleteRecipeComment;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.UpdateRecipeComment;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeComments.Common;
-using FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
-using FoodDiary.Application.RecipeComments.Services;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Queries.GetRecipeComments;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
 
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
-using FoodDiary.Application.RecipeComments.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Models;
 using FoodDiary.Application.Abstractions.Common.Models;
 
 namespace FoodDiary.Application.Tests.RecipeComments;

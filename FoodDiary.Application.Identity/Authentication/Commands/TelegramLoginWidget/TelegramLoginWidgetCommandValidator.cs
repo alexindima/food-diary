@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
+namespace FoodDiary.Application.Identity.Authentication.Commands.TelegramLoginWidget;
 
 public sealed class TelegramLoginWidgetCommandValidator : AbstractValidator<TelegramLoginWidgetCommand> {
     public TelegramLoginWidgetCommandValidator() {

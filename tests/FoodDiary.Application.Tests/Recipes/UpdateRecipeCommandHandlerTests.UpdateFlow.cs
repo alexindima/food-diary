@@ -1,6 +1,6 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.Recipes.Recipes.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -21,7 +21,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("blank-visibility@example.com", "hash")),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -43,7 +43,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -92,7 +92,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 

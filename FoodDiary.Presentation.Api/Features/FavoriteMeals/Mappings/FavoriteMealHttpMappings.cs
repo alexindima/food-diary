@@ -1,8 +1,8 @@
-using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
-using FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
+using FoodDiary.Application.Favorites.FavoriteMeals.Commands.AddFavoriteMeal;
+using FoodDiary.Application.Favorites.FavoriteMeals.Commands.RemoveFavoriteMeal;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.FavoriteMeals.Queries.GetFavoriteMeals;
-using FoodDiary.Application.FavoriteMeals.Queries.IsMealFavorite;
+using FoodDiary.Application.Favorites.FavoriteMeals.Queries.GetFavoriteMeals;
+using FoodDiary.Application.Favorites.FavoriteMeals.Queries.IsMealFavorite;
 using FoodDiary.Presentation.Api.Features.FavoriteMeals.Requests;
 using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
 

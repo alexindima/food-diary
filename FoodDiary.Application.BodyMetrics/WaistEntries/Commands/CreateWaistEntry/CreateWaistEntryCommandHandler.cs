@@ -5,12 +5,12 @@ using FoodDiary.Results;
 using FoodDiary.Application.BodyMetrics.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.WaistEntries.Mappings;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Mappings;
 using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
+namespace FoodDiary.Application.BodyMetrics.WaistEntries.Commands.CreateWaistEntry;
 
 public sealed class CreateWaistEntryCommandHandler(
     IWaistEntryWriteRepository waistEntryRepository,

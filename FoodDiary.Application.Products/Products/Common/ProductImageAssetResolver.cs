@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Application.Products.Products.Common;
 
 internal static class ProductImageAssetResolver {
     public static async Task<Result<ProductImageAssetResolution>> ResolveOptionalAsync(

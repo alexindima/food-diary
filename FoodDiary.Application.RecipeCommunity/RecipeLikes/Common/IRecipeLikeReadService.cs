@@ -1,7 +1,7 @@
-using FoodDiary.Application.RecipeLikes.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeLikes.Common;
+namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Common;
 
 public interface IRecipeLikeReadService {
     Task<RecipeLikeStatusModel> GetStatusAsync(

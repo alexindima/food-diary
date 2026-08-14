@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.MealPlans.Models;
-using FoodDiary.Application.MealPlans.Common;
-using FoodDiary.Application.MealPlans.Mappings;
-using FoodDiary.Application.MealPlans.Models;
+using FoodDiary.Application.MealPlanning.MealPlans.Common;
+using FoodDiary.Application.MealPlanning.MealPlans.Mappings;
+using FoodDiary.Application.MealPlanning.MealPlans.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.MealPlans.Services;
+namespace FoodDiary.Application.MealPlanning.MealPlans.Services;
 
 public sealed class MealPlanReadService(IMealPlanReadModelRepository mealPlanRepository)
     : IMealPlanReadService {

@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 
-namespace FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
+namespace FoodDiary.Application.BodyMetrics.WeightEntries.Commands.UpdateWeightEntry;
 
 public record UpdateWeightEntryCommand(
     Guid? UserId,

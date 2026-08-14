@@ -1,9 +1,9 @@
 using FoodDiary.Results;
 using FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 using FoodDiary.Application.ContentReports.Models;
-using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
-using FoodDiary.Application.RecipeLikes.Models;
-using FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Queries.GetRecipeLikeStatus;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.ContentReports;
 using FoodDiary.Presentation.Api.Features.ContentReports.Requests;

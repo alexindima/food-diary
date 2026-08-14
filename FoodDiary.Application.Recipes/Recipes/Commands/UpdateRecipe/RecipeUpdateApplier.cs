@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Entities.Recipes;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
 
 internal static class RecipeUpdateApplier {
     public static void Apply(Recipe recipe, UpdateRecipeCommand command, UpdateRecipeValues values) {

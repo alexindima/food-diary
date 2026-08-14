@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.Entities.Meals;
 
-namespace FoodDiary.Application.FavoriteMeals.Mappings;
+namespace FoodDiary.Application.Favorites.FavoriteMeals.Mappings;
 
 public static class FavoriteMealMappings {
     public static FavoriteMealModel ToModel(this FavoriteMeal favorite) =>

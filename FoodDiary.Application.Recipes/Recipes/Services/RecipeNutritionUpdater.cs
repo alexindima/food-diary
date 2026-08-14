@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Domain.Entities.Recipes;
 
-namespace FoodDiary.Application.Recipes.Services;
+namespace FoodDiary.Application.Recipes.Recipes.Services;
 
 public static class RecipeNutritionUpdater {
     private const double Tolerance = 0.01;

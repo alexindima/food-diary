@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Authentication.Commands.Register;
+namespace FoodDiary.Application.Identity.Authentication.Commands.Register;
 
 public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand> {
     public RegisterCommandValidator() {

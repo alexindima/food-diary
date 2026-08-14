@@ -1,12 +1,12 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Services;
+namespace FoodDiary.Application.Recipes.Recipes.Services;
 
 internal static class RecipeStepAppender {
     public static Task<Result> AddAsync(

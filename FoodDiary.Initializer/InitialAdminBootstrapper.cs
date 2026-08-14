@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
-using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
+using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Results;
 
 namespace FoodDiary.Initializer;

@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Commands.UpdateProduct;
+namespace FoodDiary.Application.Products.Products.Commands.UpdateProduct;
 
 internal sealed record ProductUpdateValues(
     UserId UserId,

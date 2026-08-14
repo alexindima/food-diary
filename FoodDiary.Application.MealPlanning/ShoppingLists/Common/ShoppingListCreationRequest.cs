@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ShoppingLists.Common;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Common;
 
 public sealed record ShoppingListCreationRequest(
     UserId UserId,

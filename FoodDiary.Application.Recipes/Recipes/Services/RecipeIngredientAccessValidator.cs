@@ -4,10 +4,10 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Services;
+namespace FoodDiary.Application.Recipes.Recipes.Services;
 
 public static class RecipeIngredientAccessValidator {
     public static async Task<Result> EnsureIngredientsAccessibleAsync(

@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.DuplicateRecipe;
 
 public sealed class DuplicateRecipeCommandValidator : AbstractValidator<DuplicateRecipeCommand> {
     public DuplicateRecipeCommandValidator() {

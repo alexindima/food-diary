@@ -1,4 +1,4 @@
-namespace FoodDiary.Presentation.Api.Features.TelemetryTests;
+namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class TelemetryProbeController;

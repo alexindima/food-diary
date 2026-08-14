@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using System.Globalization;
 
-namespace FoodDiary.Application.Authentication.Services;
+namespace FoodDiary.Application.Identity.Authentication.Services;
 
 public sealed class EmailSender(
     EmailOptions options,

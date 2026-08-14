@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.ShoppingLists.Common;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Common;
 
 public record ShoppingListItemInput(
     Guid? Id,

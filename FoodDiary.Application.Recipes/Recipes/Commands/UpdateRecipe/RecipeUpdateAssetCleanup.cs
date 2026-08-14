@@ -2,7 +2,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
 
 internal static class RecipeUpdateAssetCleanup {
     public static async Task DeleteUnusedAsync(

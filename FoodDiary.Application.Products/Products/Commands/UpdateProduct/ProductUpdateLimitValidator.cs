@@ -3,7 +3,7 @@ using FoodDiary.Results;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Products.Commands.UpdateProduct;
+namespace FoodDiary.Application.Products.Products.Commands.UpdateProduct;
 
 internal static class ProductUpdateLimitValidator {
     public static Result Validate(Product product, UpdateProductCommand command, ProductUpdateValues values) {

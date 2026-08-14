@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Common;
+using FoodDiary.Application.Products.Products.Mappings;
+using FoodDiary.Application.Products.Products.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Services;
+namespace FoodDiary.Application.Products.Products.Services;
 
 public sealed class RecentProductReadService(
     IRecentItemUsageReadService recentItemUsageReadService,

@@ -4,12 +4,12 @@ using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Mappings;
+using FoodDiary.Application.Products.Products.Models;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Commands.UpdateProduct;
+namespace FoodDiary.Application.Products.Products.Commands.UpdateProduct;
 
 public sealed class UpdateProductCommandHandler(
     IProductWriteRepository productRepository,

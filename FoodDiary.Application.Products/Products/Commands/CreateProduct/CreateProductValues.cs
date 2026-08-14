@@ -1,7 +1,7 @@
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Commands.CreateProduct;
+namespace FoodDiary.Application.Products.Products.Commands.CreateProduct;
 
 internal sealed record CreateProductValues(
     UserId UserId,

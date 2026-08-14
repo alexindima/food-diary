@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
+namespace FoodDiary.Application.RecipeCommunity.RecipeComments.Commands.CreateRecipeComment;
 
 public sealed class CreateRecipeCommentCommandValidator : AbstractValidator<CreateRecipeCommentCommand> {
     public CreateRecipeCommentCommandValidator() {

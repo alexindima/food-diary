@@ -1,4 +1,4 @@
-using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
+using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests.Authentication;

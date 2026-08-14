@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Products.Models;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Application.Products.Products.Common;
 
 public interface IRecentProductReadService {
     Task<IReadOnlyList<ProductModel>> GetRecentAsync(

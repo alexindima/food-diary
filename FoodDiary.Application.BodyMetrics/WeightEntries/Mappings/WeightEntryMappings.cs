@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
 
-namespace FoodDiary.Application.WeightEntries.Mappings;
+namespace FoodDiary.Application.BodyMetrics.WeightEntries.Mappings;
 
 public static class WeightEntryMappings {
     public static WeightEntryModel ToModel(this WeightEntry entry) =>

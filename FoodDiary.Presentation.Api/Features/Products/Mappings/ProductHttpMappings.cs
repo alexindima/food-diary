@@ -1,9 +1,9 @@
-using FoodDiary.Application.Products.Commands.CreateProduct;
-using FoodDiary.Application.Products.Commands.DeleteProduct;
-using FoodDiary.Application.Products.Commands.DuplicateProduct;
-using FoodDiary.Application.Products.Commands.UpdateProduct;
-using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
+using FoodDiary.Application.Products.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Products.Commands.DeleteProduct;
+using FoodDiary.Application.Products.Products.Commands.DuplicateProduct;
+using FoodDiary.Application.Products.Products.Commands.UpdateProduct;
+using FoodDiary.Application.Products.Products.Models;
+using FoodDiary.Application.Products.Products.Queries.SearchProductSuggestions;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Responses;
 

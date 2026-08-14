@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Recipes.Models;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Models;
 
-namespace FoodDiary.Application.Recipes.Mappings;
+namespace FoodDiary.Application.Recipes.Recipes.Mappings;
 
 public static class RecipeOverviewReadMappings {
     public static RecipeModel ToModel(

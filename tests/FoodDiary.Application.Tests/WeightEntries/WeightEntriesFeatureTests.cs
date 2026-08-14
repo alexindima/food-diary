@@ -1,20 +1,20 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
-using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
-using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.CreateWeightEntry;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.DeleteWeightEntry;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.UpdateWeightEntry;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
-using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
-using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
-using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetLatestWeightEntry;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightEntries;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.WeightEntries.Mappings;
-using FoodDiary.Application.WeightEntries.Services;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Mappings;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
 
 namespace FoodDiary.Application.Tests.WeightEntries;
 

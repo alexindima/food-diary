@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.Presentation.Api.Features;
+namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 [Collection(FoodDiary.Presentation.Api.Tests.PresentationTelemetryCollection.Name)]

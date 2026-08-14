@@ -7,7 +7,7 @@ using FoodDiary.Application.Exercises.Common;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.WeightEntries.Services;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;

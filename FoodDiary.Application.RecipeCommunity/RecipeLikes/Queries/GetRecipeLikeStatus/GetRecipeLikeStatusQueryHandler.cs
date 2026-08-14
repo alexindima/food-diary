@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeLikes.Common;
-using FoodDiary.Application.RecipeLikes.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Common;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
+namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Queries.GetRecipeLikeStatus;
 
 public sealed class GetRecipeLikeStatusQueryHandler(
     IRecipeLikeReadService likeReadService,

@@ -2,11 +2,11 @@ using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Products.Products.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Commands.CreateProduct;
+namespace FoodDiary.Application.Products.Products.Commands.CreateProduct;
 
 internal static class CreateProductValuePreparer {
     public static async Task<Result<CreateProductValues>> PrepareAsync(

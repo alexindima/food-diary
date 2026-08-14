@@ -5,11 +5,11 @@ using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.RecipeLikes.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
+namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Commands.ToggleRecipeLike;
 
 public sealed class ToggleRecipeLikeCommandHandler(
     IRecipeLikeWriteRepository likeRepository,

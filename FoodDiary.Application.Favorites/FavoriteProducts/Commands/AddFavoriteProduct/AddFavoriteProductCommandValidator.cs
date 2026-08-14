@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
+namespace FoodDiary.Application.Favorites.FavoriteProducts.Commands.AddFavoriteProduct;
 
 public sealed class AddFavoriteProductCommandValidator : AbstractValidator<AddFavoriteProductCommand> {
     public AddFavoriteProductCommandValidator() {

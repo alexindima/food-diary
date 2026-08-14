@@ -1,5 +1,5 @@
-using FoodDiary.Application.Wearables.Common;
-using FoodDiary.Application.Wearables.Services;
+using FoodDiary.Application.Wearables.Wearables.Common;
+using FoodDiary.Application.Wearables.Wearables.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

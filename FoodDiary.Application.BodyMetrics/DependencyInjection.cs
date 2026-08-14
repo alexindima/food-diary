@@ -1,8 +1,8 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
-using FoodDiary.Application.WaistEntries.Services;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Services;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Application.WeightEntries.Services;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

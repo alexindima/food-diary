@@ -1,4 +1,4 @@
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Models;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;
 

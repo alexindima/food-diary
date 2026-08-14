@@ -6,7 +6,7 @@ using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
+namespace FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistEntries;
 
 public sealed class GetWaistEntriesQueryHandler(
     IWaistEntryReadService waistEntryReadService,

@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.FavoriteMeals.Queries.IsMealFavorite;
+namespace FoodDiary.Application.Favorites.FavoriteMeals.Queries.IsMealFavorite;
 
 public sealed class IsMealFavoriteQueryHandler(
     IFavoriteMealReadService favoriteMealReadService,

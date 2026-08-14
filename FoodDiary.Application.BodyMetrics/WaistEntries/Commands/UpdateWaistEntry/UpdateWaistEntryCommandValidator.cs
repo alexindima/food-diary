@@ -2,7 +2,7 @@ using System.Globalization;
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
 
-namespace FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
+namespace FoodDiary.Application.BodyMetrics.WaistEntries.Commands.UpdateWaistEntry;
 
 public sealed class UpdateWaistEntryCommandValidator : AbstractValidator<UpdateWaistEntryCommand> {
     public UpdateWaistEntryCommandValidator() {

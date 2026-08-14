@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
-using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
+using FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Authentication.Services;
+namespace FoodDiary.Application.Identity.Authentication.Services;
 
 internal sealed class InitialAdminBootstrapService(
     IUserAuthenticationRegistrationService userRegistrationService,

@@ -5,11 +5,11 @@ using FoodDiary.Application.BodyMetrics.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Models;
-using FoodDiary.Application.WaistEntries.Models;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.WaistEntries.Queries.GetWaistHistoryPageSummary;
+namespace FoodDiary.Application.BodyMetrics.WaistEntries.Queries.GetWaistHistoryPageSummary;
 
 public sealed class GetWaistHistoryPageSummaryQueryHandler(
     IWaistEntryReadService readService,

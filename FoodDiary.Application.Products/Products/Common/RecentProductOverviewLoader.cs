@@ -1,6 +1,6 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Application.Products.Products.Common;
 
 internal static class RecentProductOverviewLoader {
     public static async Task<IReadOnlyList<TItem>> LoadAsync<TRecent, TId, TItem>(

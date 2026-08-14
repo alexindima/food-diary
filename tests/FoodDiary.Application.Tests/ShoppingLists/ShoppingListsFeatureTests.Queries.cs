@@ -1,11 +1,11 @@
-using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
-using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
-using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetCurrentShoppingList;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingListById;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Results;
-using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
 

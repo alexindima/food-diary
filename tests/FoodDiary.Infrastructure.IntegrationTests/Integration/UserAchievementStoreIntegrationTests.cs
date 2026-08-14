@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace FoodDiary.Infrastructure.Tests.Integration;
+namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]

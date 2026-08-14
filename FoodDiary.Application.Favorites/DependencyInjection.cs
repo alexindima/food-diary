@@ -3,9 +3,9 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
-using FoodDiary.Application.FavoriteMeals.Services;
-using FoodDiary.Application.FavoriteProducts.Services;
-using FoodDiary.Application.FavoriteRecipes.Services;
+using FoodDiary.Application.Favorites.FavoriteMeals.Services;
+using FoodDiary.Application.Favorites.FavoriteProducts.Services;
+using FoodDiary.Application.Favorites.FavoriteRecipes.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

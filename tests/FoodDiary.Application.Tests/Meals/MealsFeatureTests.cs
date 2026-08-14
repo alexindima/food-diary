@@ -17,7 +17,7 @@ using FoodDiary.Application.Meals.Common;
 using FoodDiary.Application.Meals.Services;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
-using FoodDiary.Application.FavoriteMeals.Services;
+using FoodDiary.Application.Favorites.FavoriteMeals.Services;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
@@ -190,7 +190,7 @@ public partial class MealsFeatureTests {
             new RecordingCleanupService(),
             CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
-            imageAccess ?? FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+            imageAccess ?? FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance);
 
     private static MealProjectionReadModel ToMealProjectionReadModel(Meal meal) =>
         new(

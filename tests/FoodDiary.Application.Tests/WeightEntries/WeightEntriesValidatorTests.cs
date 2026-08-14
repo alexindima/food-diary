@@ -1,10 +1,10 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
-using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
-using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
-using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
-using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
-using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.CreateWeightEntry;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.DeleteWeightEntry;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Commands.UpdateWeightEntry;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetLatestWeightEntry;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightEntries;
+using FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightSummaries;
 
 namespace FoodDiary.Application.Tests.WeightEntries;
 

@@ -3,11 +3,11 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.MealPlanning.Common.Validation;
-using FoodDiary.Application.ShoppingLists.Common;
-using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetShoppingListById;
 
 public sealed class GetShoppingListByIdQueryHandler(
     IShoppingListReadService shoppingListReadService,

@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.Entities.Recipes;
 
-namespace FoodDiary.Application.FavoriteRecipes.Mappings;
+namespace FoodDiary.Application.Favorites.FavoriteRecipes.Mappings;
 
 public static class FavoriteRecipeMappings {
     public static FavoriteRecipeModel ToModel(this FavoriteRecipe favorite) {

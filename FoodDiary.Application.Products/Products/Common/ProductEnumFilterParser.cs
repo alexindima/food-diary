@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Validation;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Application.Products.Products.Common;
 
 internal static class ProductEnumFilterParser {
     public static TEnum[]? ParseMany<TEnum>(IEnumerable<string>? values)

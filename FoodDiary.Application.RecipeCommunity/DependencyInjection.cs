@@ -1,8 +1,8 @@
 using FluentValidation;
-using FoodDiary.Application.RecipeComments.Common;
-using FoodDiary.Application.RecipeComments.Services;
-using FoodDiary.Application.RecipeLikes.Common;
-using FoodDiary.Application.RecipeLikes.Services;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Common;
+using FoodDiary.Application.RecipeCommunity.RecipeComments.Services;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Common;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Services;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.DependencyInjection;
 

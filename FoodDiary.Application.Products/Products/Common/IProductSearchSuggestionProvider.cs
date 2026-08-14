@@ -1,6 +1,6 @@
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Models;
 
-namespace FoodDiary.Application.Products.Common;
+namespace FoodDiary.Application.Products.Products.Common;
 
 public interface IProductSearchSuggestionProvider {
     string Source { get; }

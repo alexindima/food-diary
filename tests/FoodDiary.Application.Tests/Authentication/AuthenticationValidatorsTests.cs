@@ -1,11 +1,11 @@
 using FluentValidation.Results;
-using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
-using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
-using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
-using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
-using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
-using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
-using FoodDiary.Application.Authentication.Commands.VerifyEmail;
+using FoodDiary.Application.Identity.Authentication.Commands.AdminSsoStart;
+using FoodDiary.Application.Identity.Authentication.Commands.ConfirmPasswordReset;
+using FoodDiary.Application.Identity.Authentication.Commands.RequestPasswordReset;
+using FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Application.Identity.Authentication.Commands.TelegramBotAuth;
+using FoodDiary.Application.Identity.Authentication.Commands.TelegramLoginWidget;
+using FoodDiary.Application.Identity.Authentication.Commands.VerifyEmail;
 
 namespace FoodDiary.Application.Tests.Authentication;
 

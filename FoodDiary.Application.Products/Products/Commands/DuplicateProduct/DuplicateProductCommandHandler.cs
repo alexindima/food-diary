@@ -3,14 +3,14 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Products.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Mappings;
+using FoodDiary.Application.Products.Products.Models;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
+namespace FoodDiary.Application.Products.Products.Commands.DuplicateProduct;
 
 public sealed class DuplicateProductCommandHandler(
     IProductReadRepository productReadRepository,

@@ -6,7 +6,7 @@ using FoodDiary.Application.Images.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.CreateRecipe;
 
 internal static class CreateRecipeValuePreparer {
     public static async Task<Result<CreateRecipeValues>> PrepareAsync(

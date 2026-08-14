@@ -4,12 +4,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.FavoriteProducts.Mappings;
+using FoodDiary.Application.Favorites.FavoriteProducts.Mappings;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
+namespace FoodDiary.Application.Favorites.FavoriteProducts.Commands.UpdateFavoriteProduct;
 
 public sealed class UpdateFavoriteProductCommandHandler(
     IFavoriteProductWriteRepository favoriteProductRepository,

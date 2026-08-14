@@ -4,13 +4,13 @@ using FoodDiary.Results;
 using FoodDiary.Application.MealPlanning.Common.Validation;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.ShoppingLists.Common;
-using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
-namespace FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
+namespace FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
 
 public sealed class GenerateShoppingListCommandHandler(
     IMealPlanReadRepository mealPlanRepository,

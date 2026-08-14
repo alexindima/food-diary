@@ -2,7 +2,7 @@ using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Lessons.Services;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.ContentReports.Services;
-using FoodDiary.Application.Email.Services;
+using FoodDiary.Application.Identity.Email.Services;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;

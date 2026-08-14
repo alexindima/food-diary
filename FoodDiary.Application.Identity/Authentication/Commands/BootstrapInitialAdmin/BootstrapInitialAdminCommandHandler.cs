@@ -1,7 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
-namespace FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
+namespace FoodDiary.Application.Identity.Authentication.Commands.BootstrapInitialAdmin;
 
 public sealed class BootstrapInitialAdminCommandHandler(
     IInitialAdminBootstrapService initialAdminBootstrapService)

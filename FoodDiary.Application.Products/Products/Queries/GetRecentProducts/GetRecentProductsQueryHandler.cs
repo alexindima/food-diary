@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Common;
+using FoodDiary.Application.Products.Products.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
+namespace FoodDiary.Application.Products.Products.Queries.GetRecentProducts;
 
 public sealed class GetRecentProductsQueryHandler(
     IRecentProductReadService recentProductReadService,

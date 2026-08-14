@@ -1,6 +1,6 @@
-using FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
-using FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
-using FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.CreateWaistEntry;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.DeleteWaistEntry;
+using FoodDiary.Application.BodyMetrics.WaistEntries.Commands.UpdateWaistEntry;
 using FoodDiary.Presentation.Api.Features.WaistEntries.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;

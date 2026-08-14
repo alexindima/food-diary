@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
+namespace FoodDiary.Application.BodyMetrics.WeightEntries.Queries.GetWeightSummaries;
 
 public sealed class GetWeightSummariesQueryHandler(
     IWeightEntryReadService weightEntryReadService,

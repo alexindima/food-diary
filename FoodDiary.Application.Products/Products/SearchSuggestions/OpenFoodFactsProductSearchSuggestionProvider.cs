@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.OpenFoodFacts.Common;
-using FoodDiary.Application.Products.Common;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Common;
+using FoodDiary.Application.Products.Products.Models;
 
-namespace FoodDiary.Application.Products.SearchSuggestions;
+namespace FoodDiary.Application.Products.Products.SearchSuggestions;
 
 public sealed class OpenFoodFactsProductSearchSuggestionProvider(IOpenFoodFactsCachedProductSearch cachedProductSearch) : IProductSearchSuggestionProvider {
     public string Source => "openFoodFacts";

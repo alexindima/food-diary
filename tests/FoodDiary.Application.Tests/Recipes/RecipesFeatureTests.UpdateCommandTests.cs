@@ -1,11 +1,11 @@
 using FoodDiary.Results;
-using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Models;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
@@ -62,7 +62,7 @@ public partial class RecipesFeatureTests {
             new SingleRecipeRepository(recipe),
             new RecordingCleanupService(),
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -115,7 +115,7 @@ public partial class RecipesFeatureTests {
             new SingleRecipeRepository(recipe),
             cleanup,
             new StubUserRepository(user),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 

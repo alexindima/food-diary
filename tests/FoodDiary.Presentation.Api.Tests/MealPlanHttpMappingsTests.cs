@@ -1,7 +1,7 @@
-using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
-using FoodDiary.Application.MealPlans.Models;
-using FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
-using FoodDiary.Application.MealPlans.Queries.GetMealPlans;
+using FoodDiary.Application.MealPlanning.MealPlans.Commands.AdoptMealPlan;
+using FoodDiary.Application.MealPlanning.MealPlans.Models;
+using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlanById;
+using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
 using FoodDiary.Presentation.Api.Features.MealPlans.Mappings;
 using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
 

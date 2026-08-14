@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Recipes.Common;
+namespace FoodDiary.Application.Recipes.Recipes.Common;
 
 public record RecipeIngredientInput(
     Guid? ProductId,

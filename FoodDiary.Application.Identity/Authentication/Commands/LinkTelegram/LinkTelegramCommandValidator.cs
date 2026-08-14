@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Authentication.Commands.LinkTelegram;
+namespace FoodDiary.Application.Identity.Authentication.Commands.LinkTelegram;
 
 public sealed class LinkTelegramCommandValidator : AbstractValidator<LinkTelegramCommand> {
     public LinkTelegramCommandValidator() {

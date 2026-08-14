@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.Recipes.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -26,7 +26,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
@@ -69,7 +69,7 @@ public partial class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.Support.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.Forbidden());
         UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
@@ -136,7 +136,7 @@ public partial class UpdateRecipeCommandHandlerTests {
             CreateRecipeRepository(recipeId, userId, recipe),
             cleanup,
             CreateUserRepository(User.Create("user@example.com", "hash")),
-            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
+            FoodDiary.Application.Tests.Support.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 

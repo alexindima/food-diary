@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
+namespace FoodDiary.Application.Identity.Authentication.Commands.ResendEmailVerification;
 
 public sealed class ResendEmailVerificationCommandHandler(
     IUserAuthenticationIdentityService userIdentityService,

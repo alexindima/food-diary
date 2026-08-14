@@ -2,12 +2,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Products.Mappings;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Mappings;
+using FoodDiary.Application.Products.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Products;
 
-namespace FoodDiary.Application.Products.Commands.CreateProduct;
+namespace FoodDiary.Application.Products.Products.Commands.CreateProduct;
 
 public sealed class CreateProductCommandHandler(
     IProductWriteRepository productRepository,

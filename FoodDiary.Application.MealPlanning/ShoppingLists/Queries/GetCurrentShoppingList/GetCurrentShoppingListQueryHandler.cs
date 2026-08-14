@@ -2,11 +2,11 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.ShoppingLists.Common;
-using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Common;
+using FoodDiary.Application.MealPlanning.ShoppingLists.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
+namespace FoodDiary.Application.MealPlanning.ShoppingLists.Queries.GetCurrentShoppingList;
 
 public sealed class GetCurrentShoppingListQueryHandler(
     IShoppingListReadService shoppingListReadService,

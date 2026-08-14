@@ -15,7 +15,7 @@ namespace FoodDiary.Presentation.Api.Tests {
         public async Task OnActionExecutionAsync_WithSuccessfulAction_InvokesNext() {
             var filter = new TelemetryActionFilter(NullLogger<TelemetryActionFilter>.Instance);
             ActionExecutingContext context = CreateActionExecutingContext(
-                new FoodDiary.Presentation.Api.Features.TelemetryTests.TelemetryProbeController(),
+                new FoodDiary.Presentation.Api.Tests.TelemetryProbeController(),
                 actionName: "Get",
                 statusCode: StatusCodes.Status200OK);
             bool nextCalled = false;
@@ -46,7 +46,7 @@ namespace FoodDiary.Presentation.Api.Tests {
         public async Task OnActionExecutionAsync_WithActionException_RecordsFailureAndInvokesNext() {
             var filter = new TelemetryActionFilter(NullLogger<TelemetryActionFilter>.Instance);
             ActionExecutingContext context = CreateActionExecutingContext(
-                new FoodDiary.Presentation.Api.Features.TelemetryTests.TelemetryProbeController(),
+                new FoodDiary.Presentation.Api.Tests.TelemetryProbeController(),
                 actionName: "Post",
                 statusCode: StatusCodes.Status500InternalServerError);
             var exception = new InvalidOperationException("boom");

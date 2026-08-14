@@ -4,12 +4,12 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Products.Common;
+using FoodDiary.Application.Products.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Products;
 
-namespace FoodDiary.Application.Products.Commands.DeleteProduct;
+namespace FoodDiary.Application.Products.Products.Commands.DeleteProduct;
 
 public sealed class DeleteProductCommandHandler(
     IProductWriteRepository productRepository,

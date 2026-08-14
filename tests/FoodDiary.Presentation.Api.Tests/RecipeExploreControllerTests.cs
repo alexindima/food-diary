@@ -1,7 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Models;
-using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
+using FoodDiary.Application.Recipes.Recipes.Models;
+using FoodDiary.Application.Recipes.Recipes.Queries.ExploreRecipes;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;

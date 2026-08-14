@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Authentication.Models;
-using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Identity.Authentication.Models;
 
-namespace FoodDiary.Application.Authentication.Commands.RestoreAccount;
+namespace FoodDiary.Application.Identity.Authentication.Commands.RestoreAccount;
 
 public record RestoreAccountCommand(
     string Email,

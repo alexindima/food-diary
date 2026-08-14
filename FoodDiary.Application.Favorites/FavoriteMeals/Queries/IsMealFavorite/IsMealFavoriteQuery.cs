@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.FavoriteMeals.Queries.IsMealFavorite;
+namespace FoodDiary.Application.Favorites.FavoriteMeals.Queries.IsMealFavorite;
 
 public record IsMealFavoriteQuery(
     Guid? UserId,

@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.RecipeLikes.Models;
+namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
 
 public sealed record RecipeLikeStatusModel(
     bool IsLiked,

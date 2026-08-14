@@ -1,11 +1,11 @@
-using FoodDiary.Application.Recipes.Common;
-using FoodDiary.Application.Recipes.Common.Validators;
+using FoodDiary.Application.Recipes.Recipes.Common;
+using FoodDiary.Application.Recipes.Recipes.Common.Validators;
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Validation;
 using FoodDiary.Application.Abstractions.Nutrition.Common;
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
+namespace FoodDiary.Application.Recipes.Recipes.Commands.CreateRecipe;
 
 public sealed class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand> {
     public CreateRecipeCommandValidator() {

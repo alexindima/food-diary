@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Results;
-using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Products.Models;
 
-namespace FoodDiary.Application.Products.Commands.CreateProduct;
+namespace FoodDiary.Application.Products.Products.Commands.CreateProduct;
 
 public record CreateProductCommand(
     Guid? UserId,

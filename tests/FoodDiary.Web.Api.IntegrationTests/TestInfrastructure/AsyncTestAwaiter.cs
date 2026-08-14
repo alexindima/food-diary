@@ -1,4 +1,4 @@
-namespace FoodDiary.Web.Api.IntegrationTests;
+namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 [ExcludeFromCodeCoverage]
 internal static class AsyncTestAwaiter {

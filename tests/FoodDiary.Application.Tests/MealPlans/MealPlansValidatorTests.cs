@@ -1,8 +1,8 @@
 using FluentValidation.TestHelper;
-using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
-using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
-using FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
-using FoodDiary.Application.MealPlans.Queries.GetMealPlans;
+using FoodDiary.Application.MealPlanning.MealPlans.Commands.AdoptMealPlan;
+using FoodDiary.Application.MealPlanning.MealPlans.Commands.GenerateShoppingList;
+using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlanById;
+using FoodDiary.Application.MealPlanning.MealPlans.Queries.GetMealPlans;
 
 namespace FoodDiary.Application.Tests.MealPlans;
 

@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Products.Services;
+using FoodDiary.Application.Products.Products.Services;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

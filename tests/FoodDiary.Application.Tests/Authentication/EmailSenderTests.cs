@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
-using FoodDiary.Application.Authentication.Services;
+using FoodDiary.Application.Identity.Authentication.Services;
 using FoodDiary.Application.Dietologist.Services;
 
 namespace FoodDiary.Application.Tests.Authentication;

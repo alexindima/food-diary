@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Products.Queries.GetProductById;
+namespace FoodDiary.Application.Products.Products.Queries.GetProductById;
 
 public sealed class GetProductByIdQueryValidator : AbstractValidator<GetProductByIdQuery> {
     public GetProductByIdQueryValidator() {

@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
-using FoodDiary.Application.RecipeLikes.Common;
-using FoodDiary.Application.RecipeLikes.Models;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Common;
+using FoodDiary.Application.RecipeCommunity.RecipeLikes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.RecipeLikes.Services;
+namespace FoodDiary.Application.RecipeCommunity.RecipeLikes.Services;
 
 public sealed class RecipeLikeReadService(IRecipeLikeReadRepository likeRepository)
     : IRecipeLikeReadService {

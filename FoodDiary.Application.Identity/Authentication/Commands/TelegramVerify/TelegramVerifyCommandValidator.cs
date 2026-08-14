@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace FoodDiary.Application.Authentication.Commands.TelegramVerify;
+namespace FoodDiary.Application.Identity.Authentication.Commands.TelegramVerify;
 
 public sealed class TelegramVerifyCommandValidator : AbstractValidator<TelegramVerifyCommand> {
     public TelegramVerifyCommandValidator() {
