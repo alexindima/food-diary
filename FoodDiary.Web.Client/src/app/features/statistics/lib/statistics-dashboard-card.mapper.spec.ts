@@ -21,8 +21,8 @@ const USER: User = {
     fatTarget: 70,
     carbTarget: 250,
     fiberTarget: 25,
-    desiredWeight: 75,
-    desiredWaist: 80,
+    desiredWeightKg: 75,
+    desiredWaistCm: 80,
 };
 
 describe('statistics dashboard card mapper', () => {

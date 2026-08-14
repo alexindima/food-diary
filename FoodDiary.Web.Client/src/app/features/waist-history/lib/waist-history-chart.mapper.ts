@@ -13,7 +13,7 @@ export function buildWaistHistoryChartPoints(points: WaistEntrySummaryPoint[], l
 
     return ordered.map(point => ({
         label: formatWaistHistoryDateLabel(point.startDate, locale),
-        value: point.averageCircumference > 0 ? point.averageCircumference : null,
+        value: point.averageCircumferenceCm > 0 ? point.averageCircumferenceCm : null,
     }));
 }
 

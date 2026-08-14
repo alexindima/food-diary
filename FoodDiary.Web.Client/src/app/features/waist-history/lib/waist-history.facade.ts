@@ -28,11 +28,11 @@ import { buildWhtViewModel } from './waist-history-wht.mapper';
 
 type WaistEntryFormModel = {
     date: string;
-    circumference: string;
+    circumferenceCm: string;
 };
 
 type DesiredWaistFormModel = {
-    circumference: string;
+    circumferenceCm: string;
 };
 
 type WaistCustomRangeFormModel = {
@@ -68,20 +68,20 @@ export class WaistHistoryFacade {
     public readonly isSummaryLoading = signal(false);
     public readonly customRangeModel = signal<WaistCustomRangeFormModel>({ range: null });
     public readonly customRangeForm = form(this.customRangeModel);
-    public readonly waistGoal = signal<DesiredWaistResponse>({ desiredWaist: null, startWaist: null, startedAtUtc: null });
-    public readonly desiredWaist = computed(() => this.waistGoal().desiredWaist);
+    public readonly waistGoal = signal<DesiredWaistResponse>({ desiredWaistCm: null, startWaistCm: null, startedAtUtc: null });
+    public readonly desiredWaistCm = computed(() => this.waistGoal().desiredWaistCm);
     public readonly waistGoalHistory = signal<WaistGoalHistoryItem[]>([]);
     public readonly hasCompletedWaistGoals = computed(() => this.waistGoalHistory().some(goal => goal.status !== 'Active'));
     public readonly lastCompletedWaistGoal = computed(() => this.waistGoalHistory().find(goal => goal.status !== 'Active') ?? null);
     public readonly isDesiredWaistSaving = signal(false);
     public readonly desiredWaistSaveVersion = signal(0);
     public readonly latestEntry = signal<WaistEntry | null>(null);
-    public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumference: '' });
+    public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumferenceCm: '' });
     public readonly desiredWaistForm = form(this.desiredWaistModel);
 
     public readonly formModel = signal<WaistEntryFormModel>({
         date: formatWaistHistoryDateInput(new Date()),
-        circumference: '',
+        circumferenceCm: '',
     });
     private readonly submitWaistEntryFormAsync = async (): Promise<void> => {
         await this.submitAsync();
@@ -90,8 +90,8 @@ export class WaistHistoryFacade {
         this.formModel,
         path => {
             required(path.date);
-            required(path.circumference);
-            validate(path.circumference, ({ value }) => {
+            required(path.circumferenceCm);
+            validate(path.circumferenceCm, ({ value }) => {
                 const parsed = parseDecimalInput(value());
                 return parsed === null || parsed < MIN_WAIST_CM || parsed > MAX_WAIST_CM
                     ? { kind: 'waistRange', message: 'Waist circumference is out of range' }
@@ -111,7 +111,7 @@ export class WaistHistoryFacade {
         buildWaistHistoryChartPoints(this.summaryPoints(), resolveTranslateLanguage(this.translate)),
     );
 
-    public readonly latestWaist = computed<number | null>(() => this.latestEntry()?.circumference ?? null);
+    public readonly latestWaist = computed<number | null>(() => this.latestEntry()?.circumferenceCm ?? null);
     public readonly latestWaistDate = computed<string | null>(() => this.latestEntry()?.date ?? null);
 
     public readonly whtViewModel = computed(() => buildWhtViewModel(this.userHeightCm(), this.latestWaist()));
@@ -184,7 +184,7 @@ export class WaistHistoryFacade {
                 return;
             }
 
-            this.form.circumference().value.set(payload.circumference.toString());
+            this.form.circumferenceCm().value.set(payload.circumferenceCm.toString());
         } catch (error: unknown) {
             this.handleEntrySaveError(error);
         }
@@ -195,7 +195,7 @@ export class WaistHistoryFacade {
         this.editingEntryId.set(entry.id);
         this.formModel.set({
             date: formatWaistHistoryDateInput(new Date(entry.date)),
-            circumference: entry.circumference.toString(),
+            circumferenceCm: entry.circumferenceCm.toString(),
         });
     }
 
@@ -204,7 +204,7 @@ export class WaistHistoryFacade {
         const latest = (this.entriesDescending() as Array<WaistEntry | undefined>)[0];
         this.formModel.set({
             date: formatWaistHistoryDateInput(new Date()),
-            circumference: latest !== undefined ? latest.circumference.toString() : '',
+            circumferenceCm: latest !== undefined ? latest.circumferenceCm.toString() : '',
         });
     }
 
@@ -250,7 +250,7 @@ export class WaistHistoryFacade {
             .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
                 this.waistGoal.set(goal);
-                this.desiredWaistModel.set({ circumference: goal.desiredWaist?.toString() ?? '' });
+                this.desiredWaistModel.set({ circumferenceCm: goal.desiredWaistCm?.toString() ?? '' });
                 this.desiredWaistSaveVersion.update(version => version + 1);
                 this.loadWaistGoalHistory();
             });
@@ -269,7 +269,7 @@ export class WaistHistoryFacade {
             .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
                 this.waistGoal.set(goal);
-                this.desiredWaistModel.set({ circumference: '' });
+                this.desiredWaistModel.set({ circumferenceCm: '' });
                 this.desiredWaistSaveVersion.update(version => version + 1);
                 this.loadWaistGoalHistory();
             });
@@ -294,7 +294,7 @@ export class WaistHistoryFacade {
     }
 
     private parseDesiredWaist(): number | null | undefined {
-        const rawValue = this.desiredWaistModel().circumference.trim();
+        const rawValue = this.desiredWaistModel().circumferenceCm.trim();
         if (rawValue.length === 0) {
             return null;
         }
@@ -340,12 +340,12 @@ export class WaistHistoryFacade {
                 if (this.selectedRange() === 'month') {
                     this.rollingMonthSummaryPoints.set(page.summary);
                 }
-                this.userHeightCm.set(page.height);
+                this.userHeightCm.set(page.heightCm);
                 this.waistGoal.set(page.goal);
                 this.waistGoalHistory.set(page.goalHistory);
-                this.desiredWaistModel.set({ circumference: page.goal.desiredWaist?.toString() ?? '' });
+                this.desiredWaistModel.set({ circumferenceCm: page.goal.desiredWaistCm?.toString() ?? '' });
                 if (!this.isEditing()) {
-                    this.form.circumference().value.set(latestEntry?.circumference.toString() ?? '');
+                    this.form.circumferenceCm().value.set(latestEntry?.circumferenceCm.toString() ?? '');
                 }
             });
     }
@@ -392,18 +392,18 @@ export class WaistHistoryFacade {
     }
 
     private buildPayload(): CreateWaistEntryPayload | null {
-        const { date: rawDate, circumference: rawCircumference } = this.formModel();
+        const { date: rawDate, circumferenceCm: rawCircumference } = this.formModel();
         if (rawDate.length === 0 || rawCircumference.length === 0) {
             return null;
         }
 
         const date = new Date(rawDate);
         const utcDate = normalizeStartOfDay(date);
-        const circumference = Number(rawCircumference);
+        const circumferenceCm = Number(rawCircumference);
 
         return {
             date: utcDate.toISOString(),
-            circumference,
+            circumferenceCm,
         };
     }
 

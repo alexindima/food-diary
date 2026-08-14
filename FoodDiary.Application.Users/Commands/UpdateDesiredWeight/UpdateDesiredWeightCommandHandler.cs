@@ -40,10 +40,10 @@ public sealed class UpdateDesiredWeightCommandHandler(
             .GetCurrentWeightAsync(userId, cancellationToken)
             .ConfigureAwait(false);
         double? activeGoalStartWeight = currentUser.WeightGoals.SingleOrDefault(
-            goal => goal.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active)?.StartWeight;
-        double currentWeight = trackedWeight ?? currentUser.Weight ?? activeGoalStartWeight ?? command.DesiredWeight ?? 1;
-        if (command.DesiredWeight.HasValue) {
-            currentUser.StartWeightGoal(command.DesiredWeight.Value, currentWeight, nowUtc);
+            goal => goal.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active)?.StartWeightKg;
+        double currentWeight = trackedWeight ?? currentUser.WeightKg ?? activeGoalStartWeight ?? command.DesiredWeightKg ?? 1;
+        if (command.DesiredWeightKg.HasValue) {
+            currentUser.StartWeightGoal(command.DesiredWeightKg.Value, currentWeight, nowUtc);
         } else {
             currentUser.CancelWeightGoal(nowUtc, currentWeight);
         }
@@ -51,7 +51,7 @@ public sealed class UpdateDesiredWeightCommandHandler(
 
         FoodDiary.Domain.Entities.Tracking.WeightGoal? activeGoal = currentUser.WeightGoals.SingleOrDefault(
             goal => goal.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active);
-        return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeight, activeGoal?.StartWeight, activeGoal?.StartedAtUtc));
+        return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeightKg, activeGoal?.StartWeightKg, activeGoal?.StartedAtUtc));
     }
 
     private sealed class NullCurrentWeightProvider : IUserCurrentWeightProvider {

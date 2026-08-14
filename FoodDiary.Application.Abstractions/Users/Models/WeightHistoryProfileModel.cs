@@ -1,6 +1,6 @@
 namespace FoodDiary.Application.Abstractions.Users.Models;
 
 public sealed record WeightHistoryProfileModel(
-    double? Height,
+    double? HeightCm,
     UserDesiredWeightModel Goal,
     IReadOnlyList<WeightGoalHistoryModel> GoalHistory);

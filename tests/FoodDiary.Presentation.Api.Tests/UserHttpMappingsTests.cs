@@ -25,8 +25,8 @@ public sealed class UserHttpMappingsTests {
             LastName: "Doe",
             BirthDate: birthDate,
             Gender: "Male",
-            Weight: 82.4,
-            Height: 181,
+            WeightKg: 82.4,
+            HeightCm: 181,
             ActivityLevel: "Moderate",
             StepGoal: 9000,
             HydrationGoal: 2.7,
@@ -51,8 +51,8 @@ public sealed class UserHttpMappingsTests {
         Assert.Equal(request.LastName, command.LastName);
         Assert.Equal(request.BirthDate, command.BirthDate);
         Assert.Equal(request.Gender, command.Gender);
-        Assert.Equal(request.Weight, command.Weight);
-        Assert.Equal(request.Height, command.Height);
+        Assert.Equal(request.WeightKg, command.WeightKg);
+        Assert.Equal(request.HeightCm, command.HeightCm);
         Assert.Equal(request.ActivityLevel, command.ActivityLevel);
         Assert.Equal(request.StepGoal, command.StepGoal);
         Assert.Equal(request.HydrationGoal, command.HydrationGoal);
@@ -107,9 +107,9 @@ public sealed class UserHttpMappingsTests {
         UpdateDesiredWaistCommand waistCommand = waistRequest.ToDesiredWaistCommand(userId);
 
         Assert.Equal(userId, weightCommand.UserId);
-        Assert.Equal(76.5, weightCommand.DesiredWeight);
+        Assert.Equal(76.5, weightCommand.DesiredWeightKg);
         Assert.Equal(userId, waistCommand.UserId);
-        Assert.Equal(82.4, waistCommand.DesiredWaist);
+        Assert.Equal(82.4, waistCommand.DesiredWaistCm);
     }
 
     [Fact]
@@ -152,10 +152,10 @@ public sealed class UserHttpMappingsTests {
         Assert.Equal("Doe", response.LastName);
         Assert.Equal(birthDate, response.BirthDate);
         Assert.Equal("Male", response.Gender);
-        Assert.Equal(82.4, response.Weight);
-        Assert.Equal(78, response.DesiredWeight);
-        Assert.Equal(84, response.DesiredWaist);
-        Assert.Equal(181, response.Height);
+        Assert.Equal(82.4, response.WeightKg);
+        Assert.Equal(78, response.DesiredWeightKg);
+        Assert.Equal(84, response.DesiredWaistCm);
+        Assert.Equal(181, response.HeightCm);
         Assert.Equal("Moderate", response.ActivityLevel);
         Assert.Equal(2100, response.DailyCalorieTarget);
         Assert.Equal(120, response.ProteinTarget);
@@ -253,10 +253,10 @@ public sealed class UserHttpMappingsTests {
             LastName: "Doe",
             BirthDate: birthDate,
             Gender: "Male",
-            Weight: 82.4,
-            DesiredWeight: 78,
-            DesiredWaist: 84,
-            Height: 181,
+            WeightKg: 82.4,
+            DesiredWeightKg: 78,
+            DesiredWaistCm: 84,
+            HeightCm: 181,
             ActivityLevel: "Moderate",
             DailyCalorieTarget: 2100,
             ProteinTarget: 120,

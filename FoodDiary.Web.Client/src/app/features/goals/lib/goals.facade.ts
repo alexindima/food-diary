@@ -429,8 +429,8 @@ export class GoalsFacade {
         this.applyLoadedMacroTargets(goals);
         this.waterValue.set(this.clampOptionalValue(goals?.waterGoal, this.waterConfig.max));
         this.bodyTargetValues.set({
-            weight: goals?.desiredWeight ?? 0,
-            waist: goals?.desiredWaist ?? 0,
+            weight: goals?.desiredWeightKg ?? 0,
+            waist: goals?.desiredWaistCm ?? 0,
         });
         this.calorieCyclingEnabled.set(goals?.calorieCyclingEnabled ?? false);
         this.dayCalories.set(createDayCaloriesFromGoals(goals));

@@ -59,8 +59,8 @@ public sealed class StatisticsSummaryFeatureTests {
         ResultAssert.Success(result);
         Assert.Multiple(
             () => Assert.Equal(1800, Assert.Single(result.Value.Nutrition).TotalCalories),
-            () => Assert.Equal(75.3, Assert.Single(result.Value.Weight).AverageWeight),
-            () => Assert.Equal(82.1, Assert.Single(result.Value.Waist).AverageCircumference));
+            () => Assert.Equal(75.3, Assert.Single(result.Value.Weight).AverageWeightKg),
+            () => Assert.Equal(82.1, Assert.Single(result.Value.Waist).AverageCircumferenceCm));
     }
 
     [Fact]

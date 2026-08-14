@@ -6,5 +6,5 @@ public readonly record struct UserPersonalInfoUpdate(
     string? LastName = null,
     DateTime? BirthDate = null,
     string? Gender = null,
-    double? Weight = null,
-    double? Height = null);
+    double? WeightKg = null,
+    double? HeightCm = null);

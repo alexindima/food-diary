@@ -8,7 +8,7 @@ public sealed record ClientSummaryHttpResponse(
     string? ProfileImage,
     DateTime? BirthDate,
     string? Gender,
-    double? Height,
+    double? HeightCm,
     string? ActivityLevel,
     DietologistPermissionsHttpResponse Permissions,
     DateTime AcceptedAtUtc);

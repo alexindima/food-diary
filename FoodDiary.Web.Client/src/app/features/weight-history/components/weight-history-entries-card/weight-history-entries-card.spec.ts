@@ -54,7 +54,7 @@ describe('WeightHistoryEntriesCardComponent', () => {
 
     it('renders weight loss as negative when the goal requires weight gain', () => {
         const latestEntry = createEntry();
-        const olderEntry = { ...createEntry(), id: 'entry-2', date: '2026-05-14T00:00:00Z', weight: OLDER_ENTRY_WEIGHT };
+        const olderEntry = { ...createEntry(), id: 'entry-2', date: '2026-05-14T00:00:00Z', weightKg: OLDER_ENTRY_WEIGHT };
         const { fixture } = setupComponent([latestEntry, olderEntry], GAIN_DESIRED_WEIGHT);
         const element = fixture.nativeElement as HTMLElement;
 
@@ -64,7 +64,7 @@ describe('WeightHistoryEntriesCardComponent', () => {
 
 function setupComponent(
     entries: WeightEntry[],
-    desiredWeight = DEFAULT_DESIRED_WEIGHT,
+    desiredWeightKg = DEFAULT_DESIRED_WEIGHT,
 ): {
     component: WeightHistoryEntriesCardComponent;
     fixture: ComponentFixture<WeightHistoryEntriesCardComponent>;
@@ -78,7 +78,7 @@ function setupComponent(
     fixture.componentRef.setInput('isLoading', false);
     fixture.componentRef.setInput('entries', entries);
     fixture.componentRef.setInput('currentWeight', ENTRY_WEIGHT);
-    fixture.componentRef.setInput('desiredWeight', desiredWeight);
+    fixture.componentRef.setInput('desiredWeightKg', desiredWeightKg);
     fixture.detectChanges();
 
     return {
@@ -96,6 +96,6 @@ function createEntry(): WeightEntry {
         id: 'entry-1',
         userId: 'user-1',
         date: '2026-05-15T00:00:00Z',
-        weight: ENTRY_WEIGHT,
+        weightKg: ENTRY_WEIGHT,
     };
 }

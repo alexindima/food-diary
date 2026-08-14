@@ -52,8 +52,8 @@ public class DietologistAccessPolicyTests {
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Profile"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Meals"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Statistics"));
-        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Weight"));
-        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Waist"));
+        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "WeightKg"));
+        Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "WaistCm"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Goals"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Hydration"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Fasting"));
@@ -80,14 +80,14 @@ public class DietologistAccessPolicyTests {
 
     [Theory]
     [InlineData("Statistics")]
-    [InlineData("Weight")]
-    [InlineData("Waist")]
+    [InlineData("WeightKg")]
+    [InlineData("WaistCm")]
     [InlineData("Goals")]
     public void EnsurePermission_WhenSpecificPermissionDenied_ReturnsError(string category) {
         DietologistPermissionsModel perms = category switch {
             "Statistics" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: false, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true),
-            "Weight" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: false, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true),
-            "Waist" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true),
+            "WeightKg" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: false, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true),
+            "WaistCm" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true),
             "Goals" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: false, ShareHydration: true, ShareProfile: true, ShareFasting: true),
             _ => throw new ArgumentOutOfRangeException(nameof(category)),
         };

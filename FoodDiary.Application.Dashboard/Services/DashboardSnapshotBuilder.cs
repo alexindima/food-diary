@@ -116,13 +116,13 @@ public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
 
     private static DashboardWeightModel BuildWeight(DashboardBodyReadModel body, DashboardBuildContext context) =>
         context.Sections.IncludeWeight
-            ? DashboardMapping.ToWeightModel(body.LatestWeightEntries, context.CurrentUser.DesiredWeight)
-            : new DashboardWeightModel(Latest: null, Previous: null, Desired: null);
+            ? DashboardMapping.ToWeightModel(body.LatestWeightEntries, context.CurrentUser.DesiredWeightKg)
+            : new DashboardWeightModel(Latest: null, Previous: null, DesiredWeightKg: null);
 
     private static DashboardWaistModel BuildWaist(DashboardBodyReadModel body, DashboardBuildContext context) =>
         context.Sections.IncludeWaist
-            ? DashboardMapping.ToWaistModel(body.LatestWaistEntries, context.CurrentUser.DesiredWaist)
-            : new DashboardWaistModel(Latest: null, Previous: null, Desired: null);
+            ? DashboardMapping.ToWaistModel(body.LatestWaistEntries, context.CurrentUser.DesiredWaistCm)
+            : new DashboardWaistModel(Latest: null, Previous: null, DesiredWaistCm: null);
 
     private static IReadOnlyList<WeightEntrySummaryModel> BuildWeightTrend(DashboardBodyReadModel body, DashboardBuildContext context) =>
         context.Sections.IncludeWeight ? DashboardMapping.ToWeightTrend(body.WeightTrend) : [];

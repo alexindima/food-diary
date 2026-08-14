@@ -46,10 +46,10 @@ internal sealed class RepositoryDashboardBodyReadService(
             : [];
 
         return new DashboardBodyReadModel(
-            [.. latestWeightEntries.Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.Weight))],
-            [.. latestWaistEntries.Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.Circumference))],
-            [.. weightTrend.Select(summary => new DashboardWeightSummaryReadModel(summary.StartDate, summary.EndDate, summary.AverageWeight))],
-            [.. waistTrend.Select(summary => new DashboardWaistSummaryReadModel(summary.StartDate, summary.EndDate, summary.AverageCircumference))],
+            [.. latestWeightEntries.Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.WeightKg))],
+            [.. latestWaistEntries.Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.CircumferenceCm))],
+            [.. weightTrend.Select(summary => new DashboardWeightSummaryReadModel(summary.StartDate, summary.EndDate, summary.AverageWeightKg))],
+            [.. waistTrend.Select(summary => new DashboardWaistSummaryReadModel(summary.StartDate, summary.EndDate, summary.AverageCircumferenceCm))],
             hydrationTotals.Sum(total => total.TotalMl));
     }
 }

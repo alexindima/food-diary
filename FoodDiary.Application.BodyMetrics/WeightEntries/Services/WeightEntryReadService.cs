@@ -76,7 +76,7 @@ internal sealed class WeightEntryReadService(IWeightEntryReadModelRepository wei
             return new WeightEntrySummaryModel(start, end, 0);
         }
 
-        double avg = bucketEntries.Average(entry => entry.Weight);
+        double avg = bucketEntries.Average(entry => entry.WeightKg);
         return new WeightEntrySummaryModel(start, end, Math.Round(avg, 2, MidpointRounding.ToEven));
     }
 }

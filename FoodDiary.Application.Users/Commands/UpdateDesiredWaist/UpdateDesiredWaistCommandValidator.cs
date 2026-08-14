@@ -1,6 +1,6 @@
 using System.Globalization;
 using FluentValidation;
-using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
+using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaistCm;
 
 namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 
@@ -15,13 +15,13 @@ public sealed class UpdateDesiredWaistCommandValidator : AbstractValidator<Updat
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
-        RuleFor(c => c.DesiredWaist)
+        RuleFor(c => c.DesiredWaistCm)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWaist must be in range (0, {DesiredWaistValueObject.MaxValue}]"))
+            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWaistCm must be in range (0, {DesiredWaistValueObject.MaxValue}]"))
             .LessThanOrEqualTo(DesiredWaistValueObject.MaxValue)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWaist must be in range (0, {DesiredWaistValueObject.MaxValue}]"))
-            .When(c => c.DesiredWaist.HasValue);
+            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWaistCm must be in range (0, {DesiredWaistValueObject.MaxValue}]"))
+            .When(c => c.DesiredWaistCm.HasValue);
     }
 }

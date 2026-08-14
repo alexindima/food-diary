@@ -161,9 +161,9 @@ public class DashboardFeatureTests {
 
         Assert.NotNull(dto.Latest);
         Assert.NotNull(dto.Previous);
-        Assert.Equal(82.5, dto.Latest!.Weight);
-        Assert.Equal(83, dto.Previous!.Weight);
-        Assert.Equal(80, dto.Desired);
+        Assert.Equal(82.5, dto.Latest!.WeightKg);
+        Assert.Equal(83, dto.Previous!.WeightKg);
+        Assert.Equal(80, dto.DesiredWeightKg);
     }
 
     [Fact]
@@ -172,7 +172,7 @@ public class DashboardFeatureTests {
 
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);
-        Assert.Null(dto.Desired);
+        Assert.Null(dto.DesiredWeightKg);
     }
 
     [Fact]
@@ -228,9 +228,9 @@ public class DashboardFeatureTests {
 
         Assert.NotNull(dto.Latest);
         Assert.NotNull(dto.Previous);
-        Assert.Equal(92.1, dto.Latest!.Circumference);
-        Assert.Equal(92.8, dto.Previous!.Circumference);
-        Assert.Equal(90, dto.Desired);
+        Assert.Equal(92.1, dto.Latest!.CircumferenceCm);
+        Assert.Equal(92.8, dto.Previous!.CircumferenceCm);
+        Assert.Equal(90, dto.DesiredWaistCm);
     }
 
     [Fact]
@@ -239,7 +239,7 @@ public class DashboardFeatureTests {
 
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);
-        Assert.Null(dto.Desired);
+        Assert.Null(dto.DesiredWaistCm);
     }
 
     [Fact]
@@ -462,7 +462,7 @@ public class DashboardFeatureTests {
                 Arg.Do<CancellationToken>(cancellationToken => capturedCancellationToken = cancellationToken))
             .Returns(Task.FromResult(Result.Success(new UserDashboardProfileModel(
                 user.Id.Value, user.Email, user.Language, user.DashboardLayoutJson,
-                user.DesiredWeight, user.DesiredWaist, user.HydrationGoal, user.WaterGoal,
+                user.DesiredWeightKg, user.DesiredWaistCm, user.HydrationGoal, user.WaterGoal,
                 user.ProteinTarget, user.FatTarget, user.CarbTarget, user.FiberTarget,
                 new UserCalorieSchedule(
                     DailyCalorieTarget: user.DailyCalorieTarget,
@@ -530,8 +530,8 @@ public class DashboardFeatureTests {
                         user.Email,
                         user.Language,
                         user.DashboardLayoutJson,
-                        user.DesiredWeight,
-                        user.DesiredWaist,
+                        user.DesiredWeightKg,
+                        user.DesiredWaistCm,
                         user.HydrationGoal,
                         user.WaterGoal,
                         user.ProteinTarget,
@@ -680,8 +680,8 @@ public class DashboardFeatureTests {
             user.Email,
             user.Language,
             user.DashboardLayoutJson,
-            user.DesiredWeight,
-            user.DesiredWaist,
+            user.DesiredWeightKg,
+            user.DesiredWaistCm,
             user.HydrationGoal,
             user.WaterGoal,
             user.ProteinTarget,

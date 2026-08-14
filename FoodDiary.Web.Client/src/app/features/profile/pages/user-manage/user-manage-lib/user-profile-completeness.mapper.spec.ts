@@ -8,7 +8,7 @@ const FULLY_COMPLETE = 100;
 
 describe('calculateProfileCompleteness', () => {
     it('returns zero when calculation profile fields are empty', () => {
-        expect(calculateProfileCompleteness({ birthDate: null, gender: null, height: null, activityLevel: null })).toBe(0);
+        expect(calculateProfileCompleteness({ birthDate: null, gender: null, heightCm: null, activityLevel: null })).toBe(0);
     });
 
     it('weights each calculation profile field equally', () => {
@@ -16,7 +16,7 @@ describe('calculateProfileCompleteness', () => {
             calculateProfileCompleteness({
                 birthDate: null,
                 gender: Gender.Male,
-                height: 175,
+                heightCm: 175,
                 activityLevel: 'MODERATE',
             }),
         ).toBe(THREE_QUARTERS_COMPLETE);
@@ -27,7 +27,7 @@ describe('calculateProfileCompleteness', () => {
             calculateProfileCompleteness({
                 birthDate: '1990-01-01',
                 gender: Gender.Female,
-                height: 168,
+                heightCm: 168,
                 activityLevel: 'LIGHT',
             }),
         ).toBe(FULLY_COMPLETE);

@@ -8,7 +8,7 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import type { ActivityLevelOption } from '../../../../../shared/models/user.data';
 import type { UserFormValues } from '../../user-manage/user-manage-lib/user-manage.types';
 
-export type UserManageBodyFormPatch = Partial<Pick<UserFormValues, 'height' | 'activityLevel'>>;
+export type UserManageBodyFormPatch = Partial<Pick<UserFormValues, 'heightCm' | 'activityLevel'>>;
 
 @Component({
     selector: 'fd-user-manage-body-card',
@@ -24,12 +24,12 @@ export class UserManageBodyCardComponent {
 
     protected onHeightChange(value: string | number | null): void {
         if (value === null || String(value).trim().length === 0) {
-            this.emitFormPatch({ height: null });
+            this.emitFormPatch({ heightCm: null });
             return;
         }
 
         const parsed = Number(value);
-        this.emitFormPatch({ height: Number.isFinite(parsed) ? parsed : null });
+        this.emitFormPatch({ heightCm: Number.isFinite(parsed) ? parsed : null });
     }
 
     protected emitFormPatch(patch: UserManageBodyFormPatch): void {

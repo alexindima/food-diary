@@ -55,7 +55,7 @@ public class WeightEntryInvariantTests {
 
         entry.Update(weight: 73.5, date: newDate);
 
-        Assert.Equal(73.5, entry.Weight);
+        Assert.Equal(73.5, entry.WeightKg);
         Assert.Equal(DateTime.SpecifyKind(newDate.ToUniversalTime().Date, DateTimeKind.Utc), entry.Date);
         Assert.NotNull(entry.ModifiedOnUtc);
     }

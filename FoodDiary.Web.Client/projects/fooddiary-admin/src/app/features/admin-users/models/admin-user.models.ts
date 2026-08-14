@@ -8,10 +8,10 @@ export type AdminUser = {
     lastName?: string | null;
     birthDate?: string | null;
     gender?: string | null;
-    weight?: number | null;
-    desiredWeight?: number | null;
-    desiredWaist?: number | null;
-    height?: number | null;
+    weightKg?: number | null;
+    desiredWeightKg?: number | null;
+    desiredWaistCm?: number | null;
+    heightCm?: number | null;
     activityLevel?: string | null;
     dailyCalorieTarget?: number | null;
     proteinTarget?: number | null;

@@ -865,8 +865,8 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void DesiredWeightAndWaist_Create_ExposeValues() {
-        var weight = DesiredWeight.Create(75.5);
-        var waist = DesiredWaist.Create(82.3);
+        var weight = DesiredWeightKg.Create(75.5);
+        var waist = DesiredWaistCm.Create(82.3);
 
         Assert.Equal(75.5, weight.Value);
         Assert.Equal(82.3, waist.Value);

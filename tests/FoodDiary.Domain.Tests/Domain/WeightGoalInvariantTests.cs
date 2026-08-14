@@ -13,8 +13,8 @@ public sealed class WeightGoalInvariantTests {
         var goal = WeightGoal.Start(UserId.New(), 72, 81.5, startedAtUtc);
 
         Assert.Multiple(
-            () => Assert.Equal(72, goal.TargetWeight),
-            () => Assert.Equal(81.5, goal.StartWeight),
+            () => Assert.Equal(72, goal.TargetWeightKg),
+            () => Assert.Equal(81.5, goal.StartWeightKg),
             () => Assert.Equal(startedAtUtc, goal.StartedAtUtc),
             () => Assert.Equal(WeightGoalStatus.Active, goal.Status),
             () => Assert.Null(goal.EndedAtUtc));
@@ -31,8 +31,8 @@ public sealed class WeightGoalInvariantTests {
         Assert.Multiple(
             () => Assert.Equal(WeightGoalStatus.Replaced, goal.Status),
             () => Assert.Equal(endedAtUtc, goal.EndedAtUtc),
-            () => Assert.Equal(78, goal.EndWeight),
-            () => Assert.Equal(81.5, goal.StartWeight),
+            () => Assert.Equal(78, goal.EndWeightKg),
+            () => Assert.Equal(81.5, goal.StartWeightKg),
             () => Assert.Equal(startedAtUtc, goal.StartedAtUtc));
     }
 
@@ -45,7 +45,7 @@ public sealed class WeightGoalInvariantTests {
 
         Assert.Multiple(
             () => Assert.Equal(WeightGoalStatus.Cancelled, goal.Status),
-            () => Assert.Equal(80, goal.EndWeight));
+            () => Assert.Equal(80, goal.EndWeightKg));
     }
 
     [Fact]

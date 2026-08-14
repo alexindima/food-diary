@@ -64,7 +64,7 @@ function setupComponent(
     });
 
     const fixture = TestBed.createComponent(WaistHistoryFormCardComponent);
-    const model = signal({ date: '2026-05-15', circumference: '81.5' });
+    const model = signal({ date: '2026-05-15', circumferenceCm: '81.5' });
     fixture.componentRef.setInput(
         'form',
         TestBed.runInInjectionContext(() => {

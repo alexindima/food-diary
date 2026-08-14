@@ -51,7 +51,7 @@ public static class DietologistMappings {
             invitation.ShareProfile ? invitation.ClientUser.ProfileImage : null,
             invitation.ShareProfile ? invitation.ClientUser.BirthDate : null,
             invitation.ShareProfile ? invitation.ClientUser.Gender : null,
-            invitation.ShareProfile ? invitation.ClientUser.Height : null,
+            invitation.ShareProfile ? invitation.ClientUser.HeightCm : null,
             invitation.ShareProfile ? invitation.ClientUser.ActivityLevel.ToString() : null,
             invitation.GetPermissions().ToModel(),
             invitation.AcceptedAtUtc!.Value);

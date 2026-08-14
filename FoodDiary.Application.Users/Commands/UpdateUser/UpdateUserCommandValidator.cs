@@ -13,18 +13,18 @@ public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCom
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
-        When(x => x.Weight.HasValue, () => {
-            RuleFor(x => x.Weight)
+        When(x => x.WeightKg.HasValue, () => {
+            RuleFor(x => x.WeightKg)
                 .GreaterThan(0)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage("Weight must be greater than 0");
+                .WithMessage("WeightKg must be greater than 0");
         });
 
-        When(x => x.Height.HasValue, () => {
-            RuleFor(x => x.Height)
+        When(x => x.HeightCm.HasValue, () => {
+            RuleFor(x => x.HeightCm)
                 .GreaterThan(0)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage("Height must be greater than 0");
+                .WithMessage("HeightCm must be greater than 0");
         });
 
         When(x => x.StepGoal.HasValue, () => {

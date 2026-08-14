@@ -35,7 +35,7 @@ export class WaistGoalHistoryDialogComponent {
         const current = this.facade.latestWaist();
         const language = resolveTranslateLanguage(this.translate);
         return this.facade.waistGoalHistory().map(goal => {
-            const displayEndWaist = goal.status === 'Active' ? (current ?? goal.startWaist) : (goal.endWaist ?? goal.startWaist);
+            const displayEndWaist = goal.status === 'Active' ? (current ?? goal.startWaistCm) : (goal.endWaistCm ?? goal.startWaistCm);
             return {
                 ...goal,
                 startDate: formatDateValue(goal.startedAtUtc, language, { day: 'numeric', month: 'long', year: 'numeric' }) ?? '',
@@ -44,7 +44,7 @@ export class WaistGoalHistoryDialogComponent {
                         ? formatDateValue(goal.endedAtUtc, language, { day: 'numeric', month: 'long', year: 'numeric' })
                         : null,
                 displayEndWaist,
-                change: displayEndWaist - goal.startWaist,
+                change: displayEndWaist - goal.startWaistCm,
                 progress: goal.status === 'Active' ? this.calculateProgress(goal, displayEndWaist) : null,
                 statusKey: `WAIST_HISTORY.GOAL_STATUS_${goal.status.toUpperCase()}`,
             };
@@ -54,13 +54,13 @@ export class WaistGoalHistoryDialogComponent {
         this.dialogRef.close();
     }
     private calculateProgress(goal: WaistGoalHistoryItem, current: number): number {
-        const total = Math.abs(goal.targetWaist - goal.startWaist);
+        const total = Math.abs(goal.targetWaistCm - goal.startWaistCm);
         if (total === 0) {
             return PERCENT_MAX;
         }
         return Math.min(
             PERCENT_MAX,
-            Math.max(0, (((current - goal.startWaist) * Math.sign(goal.targetWaist - goal.startWaist)) / total) * PERCENT_MAX),
+            Math.max(0, (((current - goal.startWaistCm) * Math.sign(goal.targetWaistCm - goal.startWaistCm)) / total) * PERCENT_MAX),
         );
     }
 }

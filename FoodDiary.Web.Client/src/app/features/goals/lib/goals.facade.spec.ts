@@ -57,8 +57,8 @@ describe('GoalsFacade', () => {
                     carbTarget: SAVED_CARBS,
                     fiberTarget: SAVED_FIBER,
                     waterGoal: SAVED_WATER,
-                    desiredWeight: SAVED_WEIGHT,
-                    desiredWaist: SAVED_WAIST,
+                    desiredWeightKg: SAVED_WEIGHT,
+                    desiredWaistCm: SAVED_WAIST,
                 }),
             ),
             updateGoals: vi.fn().mockReturnValue(of({})),
@@ -125,8 +125,8 @@ function registerLoadTests(): void {
                     carbTarget: null,
                     fiberTarget: null,
                     waterGoal: null,
-                    desiredWeight: null,
-                    desiredWaist: null,
+                    desiredWeightKg: null,
+                    desiredWaistCm: null,
                     calorieCyclingEnabled: false,
                 }),
             );
@@ -205,8 +205,8 @@ function registerManualSaveTests(): void {
                     carbTarget: AUTOSAVE_CARBS,
                     fiberTarget: AUTOSAVE_FIBER,
                     waterGoal: AUTOSAVE_WATER,
-                    desiredWeight: AUTOSAVE_WEIGHT,
-                    desiredWaist: null,
+                    desiredWeightKg: AUTOSAVE_WEIGHT,
+                    desiredWaistCm: null,
                     calorieCyclingEnabled: false,
                 }),
             );
@@ -249,8 +249,8 @@ function registerAutosaveTests(): void {
                 carbTarget: AUTOSAVE_CARBS,
                 fiberTarget: AUTOSAVE_FIBER,
                 waterGoal: AUTOSAVE_WATER,
-                desiredWeight: AUTOSAVE_WEIGHT,
-                desiredWaist: null,
+                desiredWeightKg: AUTOSAVE_WEIGHT,
+                desiredWaistCm: null,
                 calorieCyclingEnabled: false,
             });
             expect(toastService.success).toHaveBeenCalledWith('GOALS_PAGE.SAVED_TOAST');

@@ -18,10 +18,10 @@ public static class UserHttpResponseMappings {
                 model.LastName,
                 model.BirthDate,
                 model.Gender,
-                model.Weight,
-                model.DesiredWeight,
-                model.DesiredWaist,
-                model.Height,
+                model.WeightKg,
+                model.DesiredWeightKg,
+                model.DesiredWaistCm,
+                model.HeightCm,
                 model.ActivityLevel,
                 model.DailyCalorieTarget,
                 model.ProteinTarget,
@@ -54,22 +54,22 @@ public static class UserHttpResponseMappings {
 
     extension(UserDesiredWeightModel model) {
         public UserDesiredWeightHttpResponse ToHttpResponse()
-                => new(model.DesiredWeight, model.StartWeight, model.StartedAtUtc);
+                => new(model.DesiredWeightKg, model.StartWeightKg, model.StartedAtUtc);
     }
 
     extension(WeightGoalHistoryModel model) {
         public WeightGoalHistoryHttpResponse ToHttpResponse() =>
-                new(model.Id, model.TargetWeight, model.StartWeight, model.EndWeight, model.StartedAtUtc, model.EndedAtUtc, model.Status);
+                new(model.Id, model.TargetWeightKg, model.StartWeightKg, model.EndWeightKg, model.StartedAtUtc, model.EndedAtUtc, model.Status);
     }
 
     extension(UserDesiredWaistModel model) {
         public UserDesiredWaistHttpResponse ToHttpResponse()
-                => new(model.DesiredWaist, model.StartWaist, model.StartedAtUtc);
+                => new(model.DesiredWaistCm, model.StartWaistCm, model.StartedAtUtc);
     }
 
     extension(WaistGoalHistoryModel model) {
         public WaistGoalHistoryHttpResponse ToHttpResponse() =>
-                new(model.Id, model.TargetWaist, model.StartWaist, model.EndWaist, model.StartedAtUtc, model.EndedAtUtc, model.Status);
+                new(model.Id, model.TargetWaistCm, model.StartWaistCm, model.EndWaistCm, model.StartedAtUtc, model.EndedAtUtc, model.Status);
     }
 
     extension(ProfileOverviewModel model) {

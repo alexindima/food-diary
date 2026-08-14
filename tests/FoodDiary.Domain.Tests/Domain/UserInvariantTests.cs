@@ -186,8 +186,8 @@ public class UserInvariantTests {
 
         Assert.Multiple(
             () => Assert.Equal(WeightGoalStatus.Cancelled, goal.Status),
-            () => Assert.Equal(80, goal.EndWeight),
-            () => Assert.Null(user.DesiredWeight));
+            () => Assert.Equal(80, goal.EndWeightKg),
+            () => Assert.Null(user.DesiredWeightKg));
     }
 
     [Fact]
@@ -200,8 +200,8 @@ public class UserInvariantTests {
 
         Assert.Multiple(
             () => Assert.Equal(WaistGoalStatus.Cancelled, goal.Status),
-            () => Assert.Equal(87, goal.EndWaist),
-            () => Assert.Null(user.DesiredWaist));
+            () => Assert.Equal(87, goal.EndWaistCm),
+            () => Assert.Null(user.DesiredWaistCm));
     }
 
     [Fact]
@@ -429,7 +429,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Weight: weight)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: weight)));
     }
 
     [Theory]
@@ -440,7 +440,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Height: height)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(HeightCm: height)));
     }
 
     [Theory]
@@ -450,7 +450,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Height: height)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(HeightCm: height)));
     }
 
     [Theory]
@@ -460,7 +460,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(Weight: weight)));
+            user.UpdatePersonalInfo(new UserPersonalInfoUpdate(WeightKg: weight)));
     }
 
     [Fact]
@@ -471,14 +471,14 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             LastName: " Doe ",
             BirthDate: birthDate,
-            Weight: 82.5,
-            Height: 181.2));
+            WeightKg: 82.5,
+            HeightCm: 181.2));
 
         Assert.Multiple(
             () => Assert.Equal("Doe", user.LastName),
             () => Assert.Equal(birthDate, user.BirthDate),
-            () => Assert.Equal(82.5, user.Weight),
-            () => Assert.Equal(181.2, user.Height));
+            () => Assert.Equal(82.5, user.WeightKg),
+            () => Assert.Equal(181.2, user.HeightCm));
         Assert.NotNull(user.ModifiedOnUtc);
     }
 
@@ -602,8 +602,8 @@ public class UserInvariantTests {
             () => Assert.Equal(240, user.CarbTarget),
             () => Assert.Equal(30, user.FiberTarget),
             () => Assert.Equal(2.5, user.WaterGoal),
-            () => Assert.Equal(74.5, user.DesiredWeight),
-            () => Assert.Equal(88, user.DesiredWaist));
+            () => Assert.Equal(74.5, user.DesiredWeightKg),
+            () => Assert.Equal(88, user.DesiredWaistCm));
     }
 
     [Fact]
@@ -701,7 +701,7 @@ public class UserInvariantTests {
 
         user.UpdateDesiredWeight(desiredWeight);
 
-        Assert.Equal(desiredWeight, user.DesiredWeight);
+        Assert.Equal(desiredWeight, user.DesiredWeightKg);
     }
 
     [Theory]
@@ -722,7 +722,7 @@ public class UserInvariantTests {
 
         user.UpdateDesiredWaist(desiredWaist);
 
-        Assert.Equal(desiredWaist, user.DesiredWaist);
+        Assert.Equal(desiredWaist, user.DesiredWaistCm);
     }
 
     [Fact]
@@ -732,7 +732,7 @@ public class UserInvariantTests {
 
         user.UpdateDesiredWeight(desiredWeight: null);
 
-        Assert.Null(user.DesiredWeight);
+        Assert.Null(user.DesiredWeightKg);
     }
 
     [Fact]
@@ -742,7 +742,7 @@ public class UserInvariantTests {
 
         user.UpdateDesiredWaist(desiredWaist: null);
 
-        Assert.Null(user.DesiredWaist);
+        Assert.Null(user.DesiredWaistCm);
     }
 
     [Fact]
@@ -1127,8 +1127,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
-            Weight: 80,
-            Height: 180));
+            WeightKg: 80,
+            HeightCm: 180));
 
         Assert.Equal(1780, user.CalculateBmr());
     }
@@ -1140,8 +1140,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "F",
-            Weight: 60,
-            Height: 165));
+            WeightKg: 60,
+            HeightCm: 165));
 
         Assert.Equal(1320, user.CalculateBmr());
     }
@@ -1153,8 +1153,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
-            Weight: 80,
-            Height: 180));
+            WeightKg: 80,
+            HeightCm: 180));
         user.UpdateActivity(activityLevel: ActivityLevel.Extreme);
 
         Assert.Equal(3382, user.CalculateEstimatedTdee());
@@ -1171,8 +1171,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
-            Weight: 80,
-            Height: 180));
+            WeightKg: 80,
+            HeightCm: 180));
         user.UpdateActivity(activityLevel: activityLevel);
 
         Assert.Equal(expectedTdee, user.CalculateEstimatedTdee());
@@ -1205,8 +1205,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
-            Weight: 80,
-            Height: 180));
+            WeightKg: 80,
+            HeightCm: 180));
 
         Assert.Equal(1785, user.CalculateBmr());
     }
@@ -1218,8 +1218,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "F",
-            Weight: 1,
-            Height: 1));
+            WeightKg: 1,
+            HeightCm: 1));
 
         Assert.Null(user.CalculateBmr());
     }
@@ -1230,8 +1230,8 @@ public class UserInvariantTests {
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: DateTime.UtcNow.Date,
             Gender: "M",
-            Weight: 80,
-            Height: 180));
+            WeightKg: 80,
+            HeightCm: 180));
 
         Assert.Null(user.CalculateBmr());
         Assert.Null(user.CalculateEstimatedTdee());

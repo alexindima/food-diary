@@ -467,7 +467,7 @@ public sealed class AttentionSignalTests {
                 ],
                 [
                     .. (dashboard.WeightTrend ?? []).Select(item =>
-                        new AttentionSignalWeightPointReadModel(item.EndDate, item.AverageWeight)),
+                        new AttentionSignalWeightPointReadModel(item.EndDate, item.AverageWeightKg)),
                 ]));
         }
 

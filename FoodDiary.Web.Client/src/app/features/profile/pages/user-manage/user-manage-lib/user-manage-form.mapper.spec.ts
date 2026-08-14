@@ -20,7 +20,7 @@ const USER: User = {
     lastName: 'Ivanov',
     birthDate: new Date('1990-05-10T12:00:00Z'),
     gender: 'M',
-    height: 180,
+    heightCm: 180,
     activityLevel: 'MODERATE',
     stepGoal: 8000,
     language: 'ru-RU',
@@ -68,7 +68,7 @@ describe('user manage form mapper', () => {
             theme: 'ocean',
             uiStyle: 'classic',
             birthDate: '1990-05-10',
-            height: USER.height,
+            heightCm: USER.heightCm,
             activityLevel: USER.activityLevel,
             stepGoal: USER.stepGoal,
             profileImage: {

@@ -14,7 +14,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryFormCardComponent {
-    public readonly form = input.required<FieldTree<{ date: string; circumference: string }>>();
+    public readonly form = input.required<FieldTree<{ date: string; circumferenceCm: string }>>();
     public readonly isSaving = input.required<boolean>();
     public readonly isEditing = input.required<boolean>();
     public readonly error = input<string | null>(null);

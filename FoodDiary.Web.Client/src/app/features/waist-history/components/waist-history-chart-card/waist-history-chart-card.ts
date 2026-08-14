@@ -14,11 +14,11 @@ import type { WaistHistoryChartPoint } from '../../lib/waist-history-chart.mappe
 export class WaistHistoryChartCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly chartPoints = input.required<readonly WaistHistoryChartPoint[]>();
-    public readonly desiredWaist = input.required<number | null>();
+    public readonly desiredWaistCm = input.required<number | null>();
     public readonly goalLabel = input.required<string>();
     protected readonly hasPoints = computed(() => this.chartPoints().some(point => point.value !== null));
     protected readonly referenceLines = computed<readonly FdUiLineChartReferenceLine[]>(() => {
-        const desiredWaist = this.desiredWaist();
-        return desiredWaist === null ? [] : [{ value: desiredWaist, label: this.goalLabel() }];
+        const desiredWaistCm = this.desiredWaistCm();
+        return desiredWaistCm === null ? [] : [{ value: desiredWaistCm, label: this.goalLabel() }];
     });
 }

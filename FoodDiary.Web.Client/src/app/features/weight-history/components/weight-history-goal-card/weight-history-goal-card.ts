@@ -25,8 +25,8 @@ export class WeightHistoryGoalCardComponent {
     private readonly translateService = inject(TranslateService);
     public readonly currentWeight = input.required<number | null>();
     public readonly currentWeightDate = input.required<string | null>();
-    public readonly desiredWeight = input.required<number | null>();
-    public readonly startWeight = input.required<number | null>();
+    public readonly desiredWeightKg = input.required<number | null>();
+    public readonly startWeightKg = input.required<number | null>();
     public readonly startedAtUtc = input.required<string | null>();
     public readonly hasGoalHistory = input.required<boolean>();
     public readonly lastCompletedGoal = input.required<WeightGoalHistoryItem | null>();
@@ -51,13 +51,13 @@ export class WeightHistoryGoalCardComponent {
         const dateOptions = { day: 'numeric', month: 'short', year: 'numeric' } as const;
         const startDate = formatDateValue(goal.startedAtUtc, language, dateOptions);
         const endDate = formatDateValue(goal.endedAtUtc, language, dateOptions);
-        const change = goal.endWeight === null ? null : goal.endWeight - goal.startWeight;
+        const change = goal.endWeightKg === null ? null : goal.endWeightKg - goal.startWeightKg;
         return { ...goal, startDate, endDate, change };
     });
     protected readonly progress = computed(() => {
         const current = this.currentWeight();
-        const goal = this.desiredWeight();
-        const oldest = this.startWeight();
+        const goal = this.desiredWeightKg();
+        const oldest = this.startWeightKg();
         if (current === null || goal === null || oldest === null) {
             return null;
         }
@@ -73,7 +73,7 @@ export class WeightHistoryGoalCardComponent {
         const weeklyRate = daysElapsed > 0 ? (completedDistance / daysElapsed) * DAYS_PER_WEEK : 0;
         const daysToGoal = weeklyRate > 0 ? Math.ceil((remaining / weeklyRate) * DAYS_PER_WEEK) : null;
 
-        return { percent, lost, remaining, weeklyRate, daysToGoal, startWeight: oldest, currentWeight: current };
+        return { percent, lost, remaining, weeklyRate, daysToGoal, startWeightKg: oldest, currentWeight: current };
     });
 
     private daysBetweenEntries(): number {

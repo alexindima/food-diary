@@ -19,8 +19,8 @@ public sealed class TdeeUserProfileService(IUserTdeeProfileReadService userProfi
         return Result.Success(new TdeeUserProfile(
             profile.Bmr,
             profile.EstimatedTdee,
-            profile.Weight,
-            profile.DesiredWeight,
+            profile.WeightKg,
+            profile.DesiredWeightKg,
             profile.DailyCalorieTarget));
     }
 }

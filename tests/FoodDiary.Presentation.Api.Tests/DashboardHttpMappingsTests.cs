@@ -96,11 +96,11 @@ public sealed class DashboardHttpMappingsTests {
             new DashboardWeightModel(
                 new WeightPointModel(date, 80.5),
                 new WeightPointModel(date.AddDays(-1), 81.2),
-                Desired: 76),
+                DesiredWeightKg: 76),
             new DashboardWaistModel(
                 new WaistPointModel(date, 88.3),
                 new WaistPointModel(date.AddDays(-1), 89.1),
-                Desired: 84),
+                DesiredWaistCm: 84),
             new DashboardMealsModel([], Total: 0),
             new HydrationDailyModel(date, TotalMl: 1800, GoalMl: 2500),
             new DailyAdviceModel(Guid.NewGuid(), "ru", "Совет", "hydration", 2),
@@ -161,8 +161,8 @@ public sealed class DashboardHttpMappingsTests {
             () => Assert.Equal(65, weeklyPoint.Fats),
             () => Assert.Equal(180, weeklyPoint.Carbs),
             () => Assert.Equal(25, weeklyPoint.Fiber));
-        Assert.Equal(80.5, response.Weight.Latest!.Weight);
-        Assert.Equal(88.3, response.Waist.Latest!.Circumference);
+        Assert.Equal(80.5, response.Weight.Latest!.WeightKg);
+        Assert.Equal(88.3, response.Waist.Latest!.CircumferenceCm);
         Assert.Equal(0, response.Meals.Total);
         Assert.Equal(1800, response.Hydration!.TotalMl);
         Assert.Equal("Совет", response.Advice!.Value);

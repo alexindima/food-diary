@@ -196,7 +196,7 @@ public sealed class DietologistInvitationReadService(
             invitation.Permissions.ShareProfile ? invitation.ClientProfileImage : null,
             invitation.Permissions.ShareProfile ? invitation.ClientBirthDate : null,
             invitation.Permissions.ShareProfile ? invitation.ClientGender : null,
-            invitation.Permissions.ShareProfile ? invitation.ClientHeight : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientHeightCm : null,
             invitation.Permissions.ShareProfile ? invitation.ClientActivityLevel.ToString() : null,
             invitation.Permissions.ToApplicationModel(),
             invitation.AcceptedAtUtc!.Value);

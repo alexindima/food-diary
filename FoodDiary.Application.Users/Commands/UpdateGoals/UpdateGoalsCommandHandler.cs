@@ -45,8 +45,8 @@ public sealed class UpdateGoalsCommandHandler(
                 CarbTarget: command.CarbTarget,
                 FiberTarget: command.FiberTarget,
                 WaterGoal: command.WaterGoal,
-                DesiredWeight: null,
-                DesiredWaist: null,
+                DesiredWeightKg: null,
+                DesiredWaistCm: null,
                 CalorieCyclingEnabled: command.CalorieCyclingEnabled,
                 MondayCalories: command.MondayCalories,
                 TuesdayCalories: command.TuesdayCalories,
@@ -56,22 +56,22 @@ public sealed class UpdateGoalsCommandHandler(
                 SaturdayCalories: command.SaturdayCalories,
                 SundayCalories: command.SundayCalories));
 
-            if (command.DesiredWeight.HasValue && command.DesiredWeight != currentUser.DesiredWeight) {
+            if (command.DesiredWeightKg.HasValue && command.DesiredWeightKg != currentUser.DesiredWeightKg) {
                 double? trackedWeight = await currentWeightProvider
                     .GetCurrentWeightAsync(userId, cancellationToken)
                     .ConfigureAwait(false);
-                double startWeight = trackedWeight ?? currentUser.Weight ?? command.DesiredWeight.Value;
+                double startWeight = trackedWeight ?? currentUser.WeightKg ?? command.DesiredWeightKg.Value;
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
-                currentUser.StartWeightGoal(command.DesiredWeight.Value, startWeight, startedAtUtc);
+                currentUser.StartWeightGoal(command.DesiredWeightKg.Value, startWeight, startedAtUtc);
             }
 
-            if (command.DesiredWaist.HasValue && command.DesiredWaist != currentUser.DesiredWaist) {
+            if (command.DesiredWaistCm.HasValue && command.DesiredWaistCm != currentUser.DesiredWaistCm) {
                 double? trackedWaist = await currentWaistProvider
                     .GetCurrentWaistAsync(userId, cancellationToken)
                     .ConfigureAwait(false);
-                double startWaist = trackedWaist ?? command.DesiredWaist.Value;
+                double startWaist = trackedWaist ?? command.DesiredWaistCm.Value;
                 DateTime startedAtUtc = (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime;
-                currentUser.StartWaistGoal(command.DesiredWaist.Value, startWaist, startedAtUtc);
+                currentUser.StartWaistGoal(command.DesiredWaistCm.Value, startWaist, startedAtUtc);
             }
         } catch (ArgumentOutOfRangeException ex) {
             return Result.Failure<GoalsModel>(

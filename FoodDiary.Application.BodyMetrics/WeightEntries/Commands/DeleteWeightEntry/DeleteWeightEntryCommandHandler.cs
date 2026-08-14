@@ -18,7 +18,7 @@ public sealed class DeleteWeightEntryCommandHandler(
         Result<WeightEntryId> weightEntryIdResult = RequiredIdParser.Parse(
             command.WeightEntryId,
             nameof(command.WeightEntryId),
-            "Weight entry id must not be empty.",
+            "WeightKg entry id must not be empty.",
             value => new WeightEntryId(value));
         if (weightEntryIdResult.IsFailure) {
             return RequiredIdParser.ToFailure(weightEntryIdResult);

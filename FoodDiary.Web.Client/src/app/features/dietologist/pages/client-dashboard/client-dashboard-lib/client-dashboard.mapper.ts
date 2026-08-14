@@ -72,7 +72,7 @@ export function buildClientProfileChips(client: ClientSummary | null): string[] 
         return [];
     }
 
-    return [formatProfileChip(client.height, ' cm'), client.gender, client.activityLevel].filter(
+    return [formatProfileChip(client.heightCm, ' cm'), client.gender, client.activityLevel].filter(
         (value): value is string => value !== null && value.length > 0,
     );
 }
@@ -84,7 +84,7 @@ export function buildClientProfileDetails(client: ClientSummary | null): ClientP
 
     return [
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.EMAIL', value: client.email },
-        { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.HEIGHT', value: formatNullableNumber(client.height, ' cm') },
+        { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.HEIGHT', value: formatNullableNumber(client.heightCm, ' cm') },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.GENDER', value: client.gender ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.ACTIVITY', value: client.activityLevel ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.BIRTH_DATE', value: formatDateOnly(client.birthDate) },
@@ -174,11 +174,11 @@ export function buildBodyTiles(snapshot: DashboardSnapshot | null, permissions?:
     return [
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.WEIGHT',
-            value: formatNullableNumber(snapshot.weight.latest?.weight, ' kg'),
+            value: formatNullableNumber(snapshot.weight.latest?.weightKg, ' kg'),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.WAIST',
-            value: formatNullableNumber(snapshot.waist.latest?.circumference, ' cm'),
+            value: formatNullableNumber(snapshot.waist.latest?.circumferenceCm, ' cm'),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.HYDRATION',
@@ -222,7 +222,7 @@ export function buildGoalTiles(goals: DietologistClientGoals | null): ClientMetr
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.DESIRED_WEIGHT',
-            value: formatNullableNumber(goals.desiredWeight, ' kg'),
+            value: formatNullableNumber(goals.desiredWeightKg, ' kg'),
         },
     ];
 }
@@ -260,8 +260,8 @@ export function buildWeightView(snapshot: DashboardSnapshot | null): ClientBodyM
 
     return {
         date: snapshot.weight.latest.date,
-        value: formatNumber(snapshot.weight.latest.weight, ' kg'),
-        delta: formatDelta(snapshot.weight.latest.weight, snapshot.weight.previous?.weight, ' kg'),
+        value: formatNumber(snapshot.weight.latest.weightKg, ' kg'),
+        delta: formatDelta(snapshot.weight.latest.weightKg, snapshot.weight.previous?.weightKg, ' kg'),
     };
 }
 
@@ -272,8 +272,8 @@ export function buildWaistView(snapshot: DashboardSnapshot | null): ClientBodyMe
 
     return {
         date: snapshot.waist.latest.date,
-        value: formatNumber(snapshot.waist.latest.circumference, ' cm'),
-        delta: formatDelta(snapshot.waist.latest.circumference, snapshot.waist.previous?.circumference, ' cm'),
+        value: formatNumber(snapshot.waist.latest.circumferenceCm, ' cm'),
+        delta: formatDelta(snapshot.waist.latest.circumferenceCm, snapshot.waist.previous?.circumferenceCm, ' cm'),
     };
 }
 

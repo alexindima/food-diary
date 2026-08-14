@@ -217,7 +217,7 @@ describe('UserService goals', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/desired-weight`);
         expect(req.request.method).toBe('GET');
-        req.flush({ desiredWeight: DESIRED_WEIGHT });
+        req.flush({ desiredWeightKg: DESIRED_WEIGHT });
     });
 
     it('should update desired weight', () => {
@@ -227,8 +227,8 @@ describe('UserService goals', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/desired-weight`);
         expect(req.request.method).toBe('PUT');
-        expect(req.request.body).toEqual({ desiredWeight: UPDATED_DESIRED_WEIGHT });
-        req.flush({ desiredWeight: UPDATED_DESIRED_WEIGHT });
+        expect(req.request.body).toEqual({ desiredWeightKg: UPDATED_DESIRED_WEIGHT });
+        req.flush({ desiredWeightKg: UPDATED_DESIRED_WEIGHT });
     });
 });
 

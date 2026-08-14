@@ -20,10 +20,10 @@ public sealed class UpdateWeightEntryCommandValidator : AbstractValidator<Update
             .WithErrorCode("Validation.Required")
             .WithMessage("WeightEntryId is required.");
 
-        RuleFor(c => c.Weight)
+        RuleFor(c => c.WeightKg)
             .GreaterThan(0)
-            .LessThanOrEqualTo(DesiredWeight.MaxValue)
+            .LessThanOrEqualTo(DesiredWeightKg.MaxValue)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"Weight must be in range (0, {DesiredWeight.MaxValue}]."));
+            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"WeightKg must be in range (0, {DesiredWeightKg.MaxValue}]."));
     }
 }

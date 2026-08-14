@@ -38,7 +38,7 @@ public sealed class CreateWeightEntryCommandHandler(
                 Errors.WeightEntry.AlreadyExists(normalizedDate));
         }
 
-        var entry = WeightEntry.Create(userId, normalizedDate, command.Weight);
+        var entry = WeightEntry.Create(userId, normalizedDate, command.WeightKg);
         entry = await weightEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(entry.ToModel());

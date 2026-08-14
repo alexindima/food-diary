@@ -52,7 +52,7 @@ public sealed class GetWaistHistoryPageSummaryQueryHandler(
         IReadOnlyList<WaistEntrySummaryModel> summary = await readService.GetSummariesAsync(
             userId, dateFrom, dateTo, query.QuantizationDays, cancellationToken).ConfigureAwait(false);
         WaistHistoryProfileModel profile = profileResult.Value;
-        return Result.Success(new WaistHistoryPageSummaryModel(entries, summary, profile.Height, profile.Goal, profile.GoalHistory));
+        return Result.Success(new WaistHistoryPageSummaryModel(entries, summary, profile.HeightCm, profile.Goal, profile.GoalHistory));
     }
 
     private static Error? Validate(GetWaistHistoryPageSummaryQuery query) {

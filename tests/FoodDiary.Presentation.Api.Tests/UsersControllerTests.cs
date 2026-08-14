@@ -49,8 +49,8 @@ public sealed class UsersControllerTests {
             LastName: "Doe",
             BirthDate: null,
             Gender: null,
-            Weight: 82,
-            Height: 181,
+            WeightKg: 82,
+            HeightCm: 181,
             ActivityLevel: "Moderate",
             StepGoal: 9000,
             HydrationGoal: 2.7,
@@ -107,7 +107,7 @@ public sealed class UsersControllerTests {
 
         OkObjectResult getOk = Assert.IsType<OkObjectResult>(getResult);
         UserDesiredWeightHttpResponse getResponse = Assert.IsType<UserDesiredWeightHttpResponse>(getOk.Value);
-        Assert.Equal(76.5, getResponse.DesiredWeight);
+        Assert.Equal(76.5, getResponse.DesiredWeightKg);
         GetDesiredWeightQuery getQuery = Assert.IsType<GetDesiredWeightQuery>(getSentRequest);
         Assert.Equal(userId, getQuery.UserId);
 
@@ -120,10 +120,10 @@ public sealed class UsersControllerTests {
 
         OkObjectResult updateOk = Assert.IsType<OkObjectResult>(updateResult);
         UserDesiredWeightHttpResponse updateResponse = Assert.IsType<UserDesiredWeightHttpResponse>(updateOk.Value);
-        Assert.Equal(75, updateResponse.DesiredWeight);
+        Assert.Equal(75, updateResponse.DesiredWeightKg);
         UpdateDesiredWeightCommand command = Assert.IsType<UpdateDesiredWeightCommand>(updateSentRequest);
         Assert.Equal(userId, command.UserId);
-        Assert.Equal(75, command.DesiredWeight);
+        Assert.Equal(75, command.DesiredWeightKg);
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public sealed class UsersControllerTests {
 
         OkObjectResult getOk = Assert.IsType<OkObjectResult>(getResult);
         UserDesiredWaistHttpResponse getResponse = Assert.IsType<UserDesiredWaistHttpResponse>(getOk.Value);
-        Assert.Equal(84, getResponse.DesiredWaist);
+        Assert.Equal(84, getResponse.DesiredWaistCm);
         GetDesiredWaistQuery getQuery = Assert.IsType<GetDesiredWaistQuery>(getSentRequest);
         Assert.Equal(userId, getQuery.UserId);
 
@@ -150,10 +150,10 @@ public sealed class UsersControllerTests {
 
         OkObjectResult updateOk = Assert.IsType<OkObjectResult>(updateResult);
         UserDesiredWaistHttpResponse updateResponse = Assert.IsType<UserDesiredWaistHttpResponse>(updateOk.Value);
-        Assert.Equal(82, updateResponse.DesiredWaist);
+        Assert.Equal(82, updateResponse.DesiredWaistCm);
         UpdateDesiredWaistCommand command = Assert.IsType<UpdateDesiredWaistCommand>(updateSentRequest);
         Assert.Equal(userId, command.UserId);
-        Assert.Equal(82, command.DesiredWaist);
+        Assert.Equal(82, command.DesiredWaistCm);
     }
 
     [Fact]
@@ -187,10 +187,10 @@ public sealed class UsersControllerTests {
             LastName: "Doe",
             BirthDate: null,
             Gender: null,
-            Weight: null,
-            DesiredWeight: null,
-            DesiredWaist: null,
-            Height: null,
+            WeightKg: null,
+            DesiredWeightKg: null,
+            DesiredWaistCm: null,
+            HeightCm: null,
             ActivityLevel: "Moderate",
             DailyCalorieTarget: null,
             ProteinTarget: null,

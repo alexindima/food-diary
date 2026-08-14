@@ -7,5 +7,5 @@ namespace FoodDiary.Application.BodyMetrics.WeightEntries.Commands.CreateWeightE
 public record CreateWeightEntryCommand(
     Guid? UserId,
     DateTime Date,
-    double Weight
+    double WeightKg
 ) : ICommand<Result<WeightEntryModel>>, IUserRequest;

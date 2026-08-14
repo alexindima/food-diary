@@ -535,7 +535,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
     }
 
-    private static async Task<(WeightEntry Weight, WaistEntry Waist)> CoverBodyMetricRepositoriesAsync(
+    private static async Task<(WeightEntry WeightKg, WaistEntry WaistCm)> CoverBodyMetricRepositoriesAsync(
         FoodDiaryDbContext context,
         UserId userId,
         DateTime today) {

@@ -12420,7 +12420,7 @@
           "required": true
         },
         {
-          "name": "desiredWaist",
+          "name": "desiredWaistCm",
           "type": "number | null",
           "required": true
         },
@@ -12496,7 +12496,7 @@
       "inputs": [
         {
           "name": "form",
-          "type": "FieldTree<{ date: string; circumference: string }>",
+          "type": "FieldTree<{ date: string; circumferenceCm: string }>",
           "required": true
         },
         {
@@ -12541,12 +12541,12 @@
           "required": true
         },
         {
-          "name": "desiredWaist",
+          "name": "desiredWaistCm",
           "type": "number | null",
           "required": true
         },
         {
-          "name": "startWaist",
+          "name": "startWaistCm",
           "type": "number | null",
           "required": true
         },
@@ -12762,7 +12762,7 @@
           "required": true
         },
         {
-          "name": "desiredWeight",
+          "name": "desiredWeightKg",
           "type": "number | null",
           "required": true
         },
@@ -12798,7 +12798,7 @@
           "required": true
         },
         {
-          "name": "desiredWeight",
+          "name": "desiredWeightKg",
           "type": "number | null",
           "required": true
         }
@@ -12848,7 +12848,7 @@
       "inputs": [
         {
           "name": "form",
-          "type": "FieldTree<{ date: string; weight: string }>",
+          "type": "FieldTree<{ date: string; weightKg: string }>",
           "required": true
         },
         {
@@ -12893,12 +12893,12 @@
           "required": true
         },
         {
-          "name": "desiredWeight",
+          "name": "desiredWeightKg",
           "type": "number | null",
           "required": true
         },
         {
-          "name": "startWeight",
+          "name": "startWeightKg",
           "type": "number | null",
           "required": true
         },
@@ -33044,7 +33044,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "chartPoints",
-        "desiredWaist",
+        "desiredWaistCm",
         "goalLabel",
         "isLoading"
       ],
@@ -33094,10 +33094,10 @@
       "inputsUsed": [
         "currentWaist",
         "currentWaistDate",
-        "desiredWaist",
+        "desiredWaistCm",
         "hasGoalHistory",
         "lastCompletedGoal",
-        "startWaist",
+        "startWaistCm",
         "startedAtUtc"
       ],
       "outputsHandled": [
@@ -33114,7 +33114,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "chartPoints",
-        "desiredWeight",
+        "desiredWeightKg",
         "goalLabel",
         "isLoading"
       ],
@@ -33129,7 +33129,7 @@
       "occurrences": 1,
       "inputsUsed": [
         "currentWeight",
-        "desiredWeight",
+        "desiredWeightKg",
         "entries",
         "isLoading"
       ],
@@ -33166,10 +33166,10 @@
       "inputsUsed": [
         "currentWeight",
         "currentWeightDate",
-        "desiredWeight",
+        "desiredWeightKg",
         "hasGoalHistory",
         "lastCompletedGoal",
-        "startWeight",
+        "startWeightKg",
         "startedAtUtc"
       ],
       "outputsHandled": [

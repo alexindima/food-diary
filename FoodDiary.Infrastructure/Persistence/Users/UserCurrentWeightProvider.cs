@@ -11,7 +11,7 @@ public sealed class UserCurrentWeightProvider(FoodDiaryDbContext context) : IUse
             .Where(entry => entry.UserId == userId)
             .OrderByDescending(entry => entry.Date)
             .ThenByDescending(entry => entry.CreatedOnUtc)
-            .Select(entry => (double?)entry.Weight)
+            .Select(entry => (double?)entry.WeightKg)
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);
     }

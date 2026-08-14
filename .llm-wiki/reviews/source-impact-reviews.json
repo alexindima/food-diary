@@ -177,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "c9d8711c10c54184c9ac1c07e0c77a39a4eb863a805dd3382dcf9179263dccd5"
+          "sha256": "573a001fe033c0046b8df1a5dea9475fa18476197ae3f5f45abf5a5363ad3ee1"
         }
       ],
-      "reason": "Frontend profile layout and shared select rendering changed; generated frontend, contract, quality, and architecture indexes were refreshed, while documented workflow guidance remains current.",
+      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
       "baseRef": "HEAD",
-      "gitHead": "c1f9a7c759c24cfcae241e4388df635b8425fbbb",
-      "reviewedAtUtc": "2026-08-14T21:23:12.0755436Z"
+      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
+      "reviewedAtUtc": "2026-08-14T22:39:18.8953146Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -446,13 +446,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "739397631c6f3eb6d611cbbdca0c40e49f89e5c3a544eb19ec003081d2d58a17"
+          "sha256": "c9c705aa0d3b7c2a0552c2e14bc1a2e45fe3283dfb5f21d3446086f65bbf8a06"
         }
       ],
-      "reason": "Reviewed Product boundary migration: IProductLookupService now returns the existing immutable ProductOverviewReadItem projection; HTTP and serialization contracts are unchanged, ownership remains scoped by ProductOverviewReadService, meal snapshot validation remains enforced by MealItem, and focused Favorites, ShoppingLists, Meals, and Recipes tests pass.",
+      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
       "baseRef": "HEAD",
-      "gitHead": "b21208b5c4186cbd6e4bfc30687f9b3f0108ce23",
-      "reviewedAtUtc": "2026-08-13T19:18:27.1964617Z"
+      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
+      "reviewedAtUtc": "2026-08-14T22:39:19.2299394Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -718,13 +718,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "b18b5022e3b9e0343489670db64c227a7033ef81fd69592830ab0e2007e14a16"
+          "sha256": "a72e77bbd4c2c8aef8c96ca071275a54ca5088932e317d4fc80069c1744928eb"
         }
       ],
-      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
       "baseRef": "HEAD",
-      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-      "reviewedAtUtc": "2026-08-13T22:18:00.9464379Z"
+      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
+      "reviewedAtUtc": "2026-08-14T22:39:20.1830501Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -767,13 +767,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "11fab42cde1f09343af8885a9c301663dfa9bd5697447c83a22531a2b53f4cd0"
+          "sha256": "247099b514c69f3eedadb2dc2a7f8080a15fe5cba4aaf8b2fbec330cb929f6a2"
         }
       ],
-      "reason": "Frontend profile layout and shared select rendering changed; generated frontend, contract, quality, and architecture indexes were refreshed, while documented workflow guidance remains current.",
+      "reason": "Reviewed after Prettier-only normalization of five already verified frontend files; behavior, contracts, ownership, and risk profile are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "c1f9a7c759c24cfcae241e4388df635b8425fbbb",
-      "reviewedAtUtc": "2026-08-14T21:23:13.9009014Z"
+      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
+      "reviewedAtUtc": "2026-08-14T22:45:39.0119413Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -974,17 +974,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b078ab9a523762ed3141d98b4d73313daa1d9e1e3ae82d0bd2dc18630dc5071f"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "d4914d34a9e2352181c8c1d94251e9f99ca2bc1f4cccff3fb303c77c318ef306"
+          "sha256": "07ff3975fad77db23339d22431b3b128df3d3bc9a4bc8ec025bd20779b62cf29"
         }
       ],
-      "reason": "Frontend profile layout and shared select rendering changed; generated frontend, contract, quality, and architecture indexes were refreshed, while documented workflow guidance remains current.",
+      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
       "baseRef": "HEAD",
-      "gitHead": "c1f9a7c759c24cfcae241e4388df635b8425fbbb",
-      "reviewedAtUtc": "2026-08-14T21:23:14.7689099Z"
+      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
+      "reviewedAtUtc": "2026-08-14T22:39:21.3582388Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1072,13 +1068,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "b078ab9a523762ed3141d98b4d73313daa1d9e1e3ae82d0bd2dc18630dc5071f"
+          "sha256": "07ff3975fad77db23339d22431b3b128df3d3bc9a4bc8ec025bd20779b62cf29"
         }
       ],
-      "reason": "Frontend profile layout and shared select rendering changed; generated frontend, contract, quality, and architecture indexes were refreshed, while documented workflow guidance remains current.",
+      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
       "baseRef": "HEAD",
-      "gitHead": "c1f9a7c759c24cfcae241e4388df635b8425fbbb",
-      "reviewedAtUtc": "2026-08-14T21:23:12.9842645Z"
+      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
+      "reviewedAtUtc": "2026-08-14T22:39:19.7108850Z"
     },
     {
       "pageId": "workflow.query-context",

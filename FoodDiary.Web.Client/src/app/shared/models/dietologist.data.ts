@@ -17,7 +17,7 @@ export type ClientSummary = {
     profileImage: string | null;
     birthDate: string | null;
     gender: string | null;
-    height: number | null;
+    heightCm: number | null;
     activityLevel: string | null;
     permissions: DietologistPermissions;
     acceptedAtUtc: string;
@@ -33,8 +33,8 @@ export type DietologistClientGoals = {
     fiberTarget?: number | null;
     waterGoal?: number | null;
     hydrationGoal?: number | null;
-    desiredWeight?: number | null;
-    desiredWaist?: number | null;
+    desiredWeightKg?: number | null;
+    desiredWaistCm?: number | null;
     stepGoal?: number | null;
 };
 

@@ -71,8 +71,8 @@ export function buildDraftRequest(draft: GoalsDraft): UpdateGoalsRequest {
         carbTarget: draft.macros.carbs,
         fiberTarget: draft.macros.fiber,
         waterGoal: draft.water,
-        desiredWeight: normalizeDesiredBodyTarget(draft.bodyTargets.weight),
-        desiredWaist: normalizeDesiredBodyTarget(draft.bodyTargets.waist),
+        desiredWeightKg: normalizeDesiredBodyTarget(draft.bodyTargets.weight),
+        desiredWaistCm: normalizeDesiredBodyTarget(draft.bodyTargets.waist),
         calorieCyclingEnabled: draft.cyclingEnabled,
         ...draft.dayCalories,
     };

@@ -8,8 +8,8 @@ public readonly record struct UserPersonalProfileState(
     string? LastName,
     DateTime? BirthDate,
     string? Gender,
-    double? Weight,
-    double? Height,
+    double? WeightKg,
+    double? HeightCm,
     ActivityLevel ActivityLevel) {
     public static UserPersonalProfileState CreateInitial() {
         return new UserPersonalProfileState(
@@ -18,8 +18,8 @@ public readonly record struct UserPersonalProfileState(
             LastName: null,
             BirthDate: null,
             Gender: null,
-            Weight: null,
-            Height: null,
+            WeightKg: null,
+            HeightCm: null,
             ActivityLevel: ActivityLevel.Moderate);
     }
 }

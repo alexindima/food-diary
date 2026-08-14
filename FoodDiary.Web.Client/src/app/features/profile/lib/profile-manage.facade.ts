@@ -70,8 +70,8 @@ export class ProfileManageFacade {
 
     private loadLatestMeasurements(): void {
         this.profileMeasurementsService.getLatest().subscribe(summary => {
-            this.currentWeight.set(summary.weight);
-            this.currentWaist.set(summary.waist);
+            this.currentWeight.set(summary.weightKg);
+            this.currentWaist.set(summary.waistCm);
         });
     }
 

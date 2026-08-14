@@ -5,6 +5,6 @@ namespace FoodDiary.Presentation.Api.Features.WaistEntries.Responses;
 public sealed record WaistHistoryPageSummaryHttpResponse(
     IReadOnlyList<WaistEntryHttpResponse> Entries,
     IReadOnlyList<WaistEntrySummaryHttpResponse> Summary,
-    double? Height,
+    double? HeightCm,
     UserDesiredWaistHttpResponse Goal,
     IReadOnlyList<WaistGoalHistoryHttpResponse> GoalHistory);

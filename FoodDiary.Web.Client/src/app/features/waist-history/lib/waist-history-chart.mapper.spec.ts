@@ -5,8 +5,8 @@ import { buildWaistEntryViewModels, buildWaistHistoryChartPoints } from './waist
 
 const AVERAGE_CIRCUMFERENCE = 82;
 const POINTS: WaistEntrySummaryPoint[] = [
-    { startDate: '2026-05-02T00:00:00Z', endDate: '2026-05-02T23:59:59Z', averageCircumference: AVERAGE_CIRCUMFERENCE },
-    { startDate: '2026-05-01T00:00:00Z', endDate: '2026-05-01T23:59:59Z', averageCircumference: 0 },
+    { startDate: '2026-05-02T00:00:00Z', endDate: '2026-05-02T23:59:59Z', averageCircumferenceCm: AVERAGE_CIRCUMFERENCE },
+    { startDate: '2026-05-01T00:00:00Z', endDate: '2026-05-01T23:59:59Z', averageCircumferenceCm: 0 },
 ];
 
 describe('waist history chart mapper', () => {
@@ -20,11 +20,11 @@ describe('waist history chart mapper', () => {
     });
 
     it('builds entry view models with localized numeric dates', () => {
-        const items = buildWaistEntryViewModels([{ id: 'wa-1', userId: 'u-1', date: '2026-05-15T00:00:00Z', circumference: 81.5 }], 'en');
+        const items = buildWaistEntryViewModels([{ id: 'wa-1', userId: 'u-1', date: '2026-05-15T00:00:00Z', circumferenceCm: 81.5 }], 'en');
 
         expect(items).toEqual([
             {
-                entry: { id: 'wa-1', userId: 'u-1', date: '2026-05-15T00:00:00Z', circumference: 81.5 },
+                entry: { id: 'wa-1', userId: 'u-1', date: '2026-05-15T00:00:00Z', circumferenceCm: 81.5 },
                 dateLabel: '05/15/2026',
             },
         ]);

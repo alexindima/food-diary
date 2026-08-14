@@ -6,7 +6,7 @@
                     <div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ goal.statusKey | translate }}</div>
                         <div class="fd-ui-card-title">
-                            {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: goal.targetWaist | number: '1.0-2' } }}
+                            {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: goal.targetWaistCm | number: '1.0-2' } }}
                         </div>
                     </div>
                     @if (goal.status === 'Active') {
@@ -28,7 +28,7 @@
                 }
                 <div class="waist-goal-history__values fd-grid fd-ui-caption fd-ui-text-muted">
                     <span
-                        >{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}: {{ goal.startWaist | number: '1.0-2' }}
+                        >{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}: {{ goal.startWaistCm | number: '1.0-2' }}
                         {{ 'GENERAL.UNITS.CM' | translate }}</span
                     ><span
                         >{{ (goal.status === 'Active' ? 'WAIST_HISTORY.GOAL_CURRENT_WAIST' : 'WAIST_HISTORY.GOAL_END_WAIST') | translate }}:

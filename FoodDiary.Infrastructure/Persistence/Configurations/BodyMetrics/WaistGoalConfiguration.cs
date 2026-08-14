@@ -12,7 +12,7 @@ internal sealed class WaistGoalConfiguration : IEntityTypeConfiguration<WaistGoa
         builder.Property(goal => goal.Status).HasConversion<string>().HasMaxLength(32);
         builder.Property(goal => goal.StartedAtUtc).HasColumnType("timestamp with time zone");
         builder.Property(goal => goal.EndedAtUtc).HasColumnType("timestamp with time zone");
-        builder.Property(goal => goal.EndWaist);
+        builder.Property(goal => goal.EndWaistCm);
         builder.HasIndex(goal => goal.UserId)
             .IsUnique()
             .HasFilter("\"Status\" = 'Active'");

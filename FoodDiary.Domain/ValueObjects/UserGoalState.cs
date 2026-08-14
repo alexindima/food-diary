@@ -7,8 +7,8 @@ public readonly record struct UserGoalState(
     double? CarbTarget,
     double? FiberTarget,
     double? WaterGoal,
-    double? DesiredWeight,
-    double? DesiredWaist,
+    double? DesiredWeightKg,
+    double? DesiredWaistCm,
     bool CalorieCyclingEnabled = false,
     double? MondayCalories = null,
     double? TuesdayCalories = null,
@@ -25,7 +25,7 @@ public readonly record struct UserGoalState(
             CarbTarget: null,
             FiberTarget: null,
             WaterGoal: null,
-            DesiredWeight: null,
-            DesiredWaist: null);
+            DesiredWeightKg: null,
+            DesiredWaistCm: null);
     }
 }

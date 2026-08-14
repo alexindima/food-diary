@@ -19,9 +19,9 @@ export class WeightHistoryGoalDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<WeightHistoryGoalDialogComponent, void>);
     private readonly initialSaveVersion = this.facade.desiredWeightSaveVersion();
 
-    protected readonly desiredWeight = this.facade.desiredWeight;
+    protected readonly desiredWeightKg = this.facade.desiredWeightKg;
     protected readonly form = this.facade.desiredWeightForm;
-    protected readonly weightField = this.facade.desiredWeightForm.weight;
+    protected readonly weightField = this.facade.desiredWeightForm.weightKg;
     protected readonly isSaving = this.facade.isDesiredWeightSaving;
 
     public constructor() {

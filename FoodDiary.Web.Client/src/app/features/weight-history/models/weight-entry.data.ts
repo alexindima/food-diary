@@ -2,12 +2,12 @@ export type WeightEntry = {
     id: string;
     userId: string;
     date: string;
-    weight: number;
+    weightKg: number;
 };
 
 export type CreateWeightEntryPayload = {
     date: string;
-    weight: number;
+    weightKg: number;
 };
 
 export type UpdateWeightEntryPayload = CreateWeightEntryPayload;
@@ -22,7 +22,7 @@ export type WeightEntryFilters = {
 export type WeightEntrySummaryPoint = {
     startDate: string;
     endDate: string;
-    averageWeight: number;
+    averageWeightKg: number;
 };
 
 export type WeightEntrySummaryFilters = {
@@ -34,7 +34,7 @@ export type WeightEntrySummaryFilters = {
 export type WeightHistoryPageSummary = {
     entries: WeightEntry[];
     summary: WeightEntrySummaryPoint[];
-    height: number | null;
+    heightCm: number | null;
     goal: DesiredWeightResponse;
     goalHistory: WeightGoalHistoryItem[];
 };

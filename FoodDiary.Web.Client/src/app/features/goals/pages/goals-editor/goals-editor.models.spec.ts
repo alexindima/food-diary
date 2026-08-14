@@ -33,8 +33,8 @@ describe('goals page v2 draft calculations', () => {
     it('sends unset body targets as null', () => {
         const request = buildDraftRequest(createDraft());
 
-        expect(request.desiredWeight).toBe(WEIGHT);
-        expect(request.desiredWaist).toBeNull();
+        expect(request.desiredWeightKg).toBe(WEIGHT);
+        expect(request.desiredWaistCm).toBeNull();
     });
 });
 

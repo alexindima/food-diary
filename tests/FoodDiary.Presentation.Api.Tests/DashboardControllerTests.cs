@@ -101,8 +101,8 @@ public sealed class DashboardControllerTests {
                 CarbGoal: 200,
                 FiberGoal: 30),
             [new DailyCaloriesModel(date, 1800)],
-            new DashboardWeightModel(Latest: null, Previous: null, Desired: null),
-            new DashboardWaistModel(Latest: null, Previous: null, Desired: null),
+            new DashboardWeightModel(Latest: null, Previous: null, DesiredWeightKg: null),
+            new DashboardWaistModel(Latest: null, Previous: null, DesiredWaistCm: null),
             new DashboardMealsModel([], Total: 0),
             Advice: new DailyAdviceModel(Guid.NewGuid(), "ru", "Advice", "tag", 1));
 }

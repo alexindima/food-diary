@@ -13,7 +13,7 @@ const MOCK_ENTRY: WeightEntry = {
     id: 'w-1',
     userId: 'user-1',
     date: '2026-03-01',
-    weight: 75.5,
+    weightKg: 75.5,
 };
 
 let service: WeightEntriesService;
@@ -102,7 +102,7 @@ describe('WeightEntriesService latest', () => {
 
 describe('WeightEntriesService mutations', () => {
     it('should create entry', () => {
-        const payload = { date: '2026-03-28', weight: 76 };
+        const payload = { date: '2026-03-28', weightKg: 76 };
 
         service.create(payload).subscribe(entry => {
             expect(entry).toEqual(MOCK_ENTRY);
@@ -115,8 +115,8 @@ describe('WeightEntriesService mutations', () => {
     });
 
     it('should update entry', () => {
-        const payload = { date: '2026-03-28', weight: 77 };
-        const updated = { ...MOCK_ENTRY, weight: 77 };
+        const payload = { date: '2026-03-28', weightKg: 77 };
+        const updated = { ...MOCK_ENTRY, weightKg: 77 };
 
         service.update('w-1', payload).subscribe(entry => {
             expect(entry).toEqual(updated);

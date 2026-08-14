@@ -1,6 +1,6 @@
 <fd-ui-dialog
     size="sm"
-    [title]="(desiredWaist() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.CONFIGURE_GOAL') | translate"
+    [title]="(desiredWaistCm() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.CONFIGURE_GOAL') | translate"
     [dismissible]="!isSaving()"
     (close)="close()"
 >
@@ -16,13 +16,13 @@
             (suffixButtonClicked)="waistField().value.set('')"
         />
         <div class="fd-row fd-wrap fd-justify-end fd-gap-actions">
-            @if (desiredWaist() !== null) {
+            @if (desiredWaistCm() !== null) {
                 <fd-ui-button type="button" variant="danger" fill="text" [loading]="isSaving()" (click)="cancelGoal()">{{
                     'WAIST_HISTORY.CANCEL_GOAL' | translate
                 }}</fd-ui-button>
             }
             <fd-ui-button type="button" [loading]="isSaving()" (click)="save()">{{
-                (desiredWaist() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.START_NEW_GOAL') | translate
+                (desiredWaistCm() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.START_NEW_GOAL') | translate
             }}</fd-ui-button>
         </div>
     </div>

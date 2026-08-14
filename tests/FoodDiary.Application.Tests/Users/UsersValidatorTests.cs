@@ -87,13 +87,13 @@ public class UsersValidatorTests {
     public async Task UpdateDesiredWaist_WithZeroValue_HasError() {
         var v = new UpdateDesiredWaistCommandValidator();
         TestValidationResult<UpdateDesiredWaistCommand> result = await v.TestValidateAsync(new UpdateDesiredWaistCommand(Guid.NewGuid(), 0));
-        result.ShouldHaveValidationErrorFor(c => c.DesiredWaist);
+        result.ShouldHaveValidationErrorFor(c => c.DesiredWaistCm);
     }
 
     [Fact]
     public async Task UpdateDesiredWaist_WithNull_NoErrors() {
         var v = new UpdateDesiredWaistCommandValidator();
-        TestValidationResult<UpdateDesiredWaistCommand> result = await v.TestValidateAsync(new UpdateDesiredWaistCommand(Guid.NewGuid(), DesiredWaist: null));
+        TestValidationResult<UpdateDesiredWaistCommand> result = await v.TestValidateAsync(new UpdateDesiredWaistCommand(Guid.NewGuid(), DesiredWaistCm: null));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -103,7 +103,7 @@ public class UsersValidatorTests {
     public async Task UpdateDesiredWeight_WithZeroValue_HasError() {
         var v = new UpdateDesiredWeightCommandValidator();
         TestValidationResult<UpdateDesiredWeightCommand> result = await v.TestValidateAsync(new UpdateDesiredWeightCommand(Guid.NewGuid(), 0));
-        result.ShouldHaveValidationErrorFor(c => c.DesiredWeight);
+        result.ShouldHaveValidationErrorFor(c => c.DesiredWeightKg);
     }
 
     // â”€â”€ UpdateUser â”€â”€
@@ -111,15 +111,15 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateUser_WithNullUserId_HasError() {
         var v = new UpdateUserCommandValidator();
-        TestValidationResult<UpdateUserCommand> result = await v.TestValidateAsync(new UpdateUserCommand(UserId: null, Username: null, FirstName: null, LastName: null, BirthDate: null, Gender: null, Weight: null, Height: null, ActivityLevel: null, StepGoal: null, HydrationGoal: null, Language: null, Theme: null, UiStyle: null, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, ProfileImage: null, ProfileImageAssetId: null, DashboardLayout: null, IsActive: null));
+        TestValidationResult<UpdateUserCommand> result = await v.TestValidateAsync(new UpdateUserCommand(UserId: null, Username: null, FirstName: null, LastName: null, BirthDate: null, Gender: null, WeightKg: null, HeightCm: null, ActivityLevel: null, StepGoal: null, HydrationGoal: null, Language: null, Theme: null, UiStyle: null, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, ProfileImage: null, ProfileImageAssetId: null, DashboardLayout: null, IsActive: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpdateUser_WithNegativeWeight_HasError() {
         var v = new UpdateUserCommandValidator();
-        TestValidationResult<UpdateUserCommand> result = await v.TestValidateAsync(new UpdateUserCommand(Guid.NewGuid(), Username: null, FirstName: null, LastName: null, BirthDate: null, Gender: null, -1, Height: null, ActivityLevel: null, StepGoal: null, HydrationGoal: null, Language: null, Theme: null, UiStyle: null, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, ProfileImage: null, ProfileImageAssetId: null, DashboardLayout: null, IsActive: null));
-        result.ShouldHaveValidationErrorFor(c => c.Weight);
+        TestValidationResult<UpdateUserCommand> result = await v.TestValidateAsync(new UpdateUserCommand(Guid.NewGuid(), Username: null, FirstName: null, LastName: null, BirthDate: null, Gender: null, -1, HeightCm: null, ActivityLevel: null, StepGoal: null, HydrationGoal: null, Language: null, Theme: null, UiStyle: null, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, ProfileImage: null, ProfileImageAssetId: null, DashboardLayout: null, IsActive: null));
+        result.ShouldHaveValidationErrorFor(c => c.WeightKg);
     }
 
     [Fact]
@@ -175,14 +175,14 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateGoals_WithNullUserId_HasError() {
         var v = new UpdateGoalsCommandValidator();
-        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(UserId: null, DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeight: null, DesiredWaist: null, CalorieCyclingEnabled: null, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
+        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(UserId: null, DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeightKg: null, DesiredWaistCm: null, CalorieCyclingEnabled: null, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpdateGoals_WithNegativeCalorieTarget_HasError() {
         var v = new UpdateGoalsCommandValidator();
-        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), -1, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeight: null, DesiredWaist: null, CalorieCyclingEnabled: null, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
+        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), -1, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeightKg: null, DesiredWaistCm: null, CalorieCyclingEnabled: null, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
         result.ShouldHaveValidationErrorFor(c => c.DailyCalorieTarget);
     }
 
@@ -196,7 +196,7 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateGoals_WithNegativeMondayCalories_HasError() {
         var v = new UpdateGoalsCommandValidator();
-        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeight: null, DesiredWaist: null, CalorieCyclingEnabled: null, -100, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
+        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeightKg: null, DesiredWaistCm: null, CalorieCyclingEnabled: null, -100, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
         result.ShouldHaveValidationErrorFor(c => c.MondayCalories);
     }
 
@@ -213,8 +213,8 @@ public class UsersValidatorTests {
             CarbTarget: null,
             FiberTarget: null,
             WaterGoal: null,
-            DesiredWeight: null,
-            DesiredWaist: null));
+            DesiredWeightKg: null,
+            DesiredWaistCm: null));
 
         result.ShouldHaveValidationErrorFor(c => c.ProteinTarget);
     }
@@ -230,8 +230,8 @@ public class UsersValidatorTests {
             CarbTarget: null,
             FiberTarget: null,
             WaterGoal: null,
-            DesiredWeight: null,
-            DesiredWaist: null,
+            DesiredWeightKg: null,
+            DesiredWaistCm: null,
             MondayCalories: double.NaN));
 
         result.ShouldHaveValidationErrorFor(c => c.MondayCalories);

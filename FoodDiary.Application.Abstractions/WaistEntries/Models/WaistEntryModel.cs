@@ -4,4 +4,4 @@ public sealed record WaistEntryModel(
     Guid Id,
     Guid UserId,
     DateTime Date,
-    double Circumference);
+    double CircumferenceCm);

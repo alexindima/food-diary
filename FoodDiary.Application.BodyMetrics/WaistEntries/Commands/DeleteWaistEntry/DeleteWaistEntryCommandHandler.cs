@@ -18,7 +18,7 @@ public sealed class DeleteWaistEntryCommandHandler(
         Result<WaistEntryId> waistEntryIdResult = RequiredIdParser.Parse(
             command.WaistEntryId,
             nameof(command.WaistEntryId),
-            "Waist entry id must not be empty.",
+            "WaistCm entry id must not be empty.",
             value => new WaistEntryId(value));
         if (waistEntryIdResult.IsFailure) {
             return RequiredIdParser.ToFailure(waistEntryIdResult);

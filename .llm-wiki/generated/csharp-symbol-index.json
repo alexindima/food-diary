@@ -13866,17 +13866,17 @@
       "line": 5
     },
     {
-      "name": "DesiredWaist",
+      "name": "DesiredWaistCm",
       "kind": "record struct",
       "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/DesiredWaist.cs",
+      "path": "FoodDiary.Domain/ValueObjects/DesiredWaistCm.cs",
       "line": 4
     },
     {
-      "name": "DesiredWeight",
+      "name": "DesiredWeightKg",
       "kind": "record struct",
       "role": "ValueObject",
-      "path": "FoodDiary.Domain/ValueObjects/DesiredWeight.cs",
+      "path": "FoodDiary.Domain/ValueObjects/DesiredWeightKg.cs",
       "line": 4
     },
     {

@@ -7,11 +7,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
-    private const double MaxCircumference = DesiredWaist.MaxValue;
+    private const double MaxCircumference = DesiredWaistCm.MaxValue;
 
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; }
-    public double Circumference { get; private set; }
+    public double CircumferenceCm { get; private set; }
 
     public User User { get; private set; } = null!;
 
@@ -29,7 +29,7 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
         var entry = new WaistEntry(WaistEntryId.New()) {
             UserId = userId,
             Date = normalizedDate,
-            Circumference = normalizedCircumference,
+            CircumferenceCm = normalizedCircumference,
         };
 
         entry.SetCreated();
@@ -41,8 +41,8 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
 
         if (circumference.HasValue) {
             double normalizedCircumference = NormalizeCircumference(circumference.Value);
-            if (!AreSame(Circumference, normalizedCircumference)) {
-                Circumference = normalizedCircumference;
+            if (!AreSame(CircumferenceCm, normalizedCircumference)) {
+                CircumferenceCm = normalizedCircumference;
                 changed = true;
             }
         }
@@ -72,11 +72,11 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
 
     private static double NormalizeCircumference(double value) {
         if (double.IsNaN(value) || double.IsInfinity(value)) {
-            throw new ArgumentOutOfRangeException(nameof(value), "Circumference must be a finite number.");
+            throw new ArgumentOutOfRangeException(nameof(value), "CircumferenceCm must be a finite number.");
         }
 
         return value is <= 0 or > MaxCircumference
-            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Circumference must be in range (0, {MaxCircumference}]."))
+            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"CircumferenceCm must be in range (0, {MaxCircumference}]."))
             : value;
     }
 

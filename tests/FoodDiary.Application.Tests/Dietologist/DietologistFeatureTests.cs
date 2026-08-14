@@ -541,7 +541,7 @@ public partial class DietologistFeatureTests {
                 invitation.ClientUser?.ProfileImage,
                 invitation.ClientUser?.BirthDate,
                 invitation.ClientUser?.Gender,
-                invitation.ClientUser?.Height,
+                invitation.ClientUser?.HeightCm,
                 invitation.ClientUser?.ActivityLevel ?? ActivityLevel.Moderate,
                 invitation.DietologistUser?.Email,
                 invitation.DietologistUser?.FirstName,

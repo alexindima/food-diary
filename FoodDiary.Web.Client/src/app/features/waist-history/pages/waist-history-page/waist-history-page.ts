@@ -62,7 +62,7 @@ export class WaistHistoryPageComponent {
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSummaryLoading = this.facade.isSummaryLoading;
     protected readonly customRangeForm = this.facade.customRangeForm;
-    protected readonly desiredWaist = this.facade.desiredWaist;
+    protected readonly desiredWaistCm = this.facade.desiredWaistCm;
     protected readonly waistGoal = this.facade.waistGoal;
     protected readonly latestWaist = this.facade.latestWaist;
     protected readonly latestWaistDate = this.facade.latestWaistDate;
@@ -76,7 +76,7 @@ export class WaistHistoryPageComponent {
     protected readonly waistChange = computed<{ value: number; tone: 'positive' | 'negative' | 'neutral' } | null>(() => {
         const values = this.facade
             .rollingMonthSummaryPoints()
-            .map(point => point.averageCircumference)
+            .map(point => point.averageCircumferenceCm)
             .filter(value => value > 0);
         const first = values.at(0);
         const latest = values.at(-1);
@@ -85,7 +85,7 @@ export class WaistHistoryPageComponent {
         }
 
         const value = latest - first;
-        const goal = this.desiredWaist();
+        const goal = this.desiredWaistCm();
         const tone =
             value === 0 || goal === null || latest === goal
                 ? 'neutral'
@@ -97,8 +97,8 @@ export class WaistHistoryPageComponent {
 
     protected readonly waistToGoal = computed(() => {
         const current = this.latestWaist();
-        const goal = this.desiredWaist();
-        const start = this.waistGoal().startWaist;
+        const goal = this.desiredWaistCm();
+        const start = this.waistGoal().startWaistCm;
         if (current === null || goal === null || start === null) {
             return null;
         }
@@ -154,7 +154,7 @@ export class WaistHistoryPageComponent {
         this.dialogService
             .open<WaistHistoryEntriesDialogComponent, WaistHistoryEntriesDialogData, WaistHistoryEntriesDialogResult>(
                 WaistHistoryEntriesDialogComponent,
-                { data: { entries: this.entriesDescending(), desiredWaist: this.desiredWaist() }, preset: 'form' },
+                { data: { entries: this.entriesDescending(), desiredWaistCm: this.desiredWaistCm() }, preset: 'form' },
             )
             .afterClosed()
             .subscribe(result => {

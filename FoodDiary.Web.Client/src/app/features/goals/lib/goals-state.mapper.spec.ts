@@ -55,8 +55,8 @@ describe('goals state mapper', () => {
         const regular = buildGoalsRequest({ ...baseState, calorieCyclingEnabled: false });
         const cycling = buildGoalsRequest({ ...baseState, calorieCyclingEnabled: true });
 
-        expect(regular.desiredWeight).toBeNull();
-        expect(regular.desiredWaist).toBe(WAIST_TARGET);
+        expect(regular.desiredWeightKg).toBeNull();
+        expect(regular.desiredWaistCm).toBe(WAIST_TARGET);
         expect(regular.mondayCalories).toBeUndefined();
         expect(cycling.mondayCalories).toBe(CALORIE_TARGET);
         expect(cycling.sundayCalories).toBe(CALORIE_TARGET);

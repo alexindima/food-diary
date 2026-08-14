@@ -40,7 +40,7 @@ public sealed class StatisticsControllerTests {
             () => Assert.Equal(to, query.DateTo),
             () => Assert.Equal(7, query.QuantizationDays),
             () => Assert.Equal(14000, Assert.Single(response.Nutrition).TotalCalories),
-            () => Assert.Equal(75.3, Assert.Single(response.Weight).AverageWeight),
-            () => Assert.Equal(82.1, Assert.Single(response.Waist).AverageCircumference));
+            () => Assert.Equal(75.3, Assert.Single(response.Weight).AverageWeightKg),
+            () => Assert.Equal(82.1, Assert.Single(response.Waist).AverageCircumferenceCm));
     }
 }

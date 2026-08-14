@@ -7,19 +7,19 @@ namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class WeightGoal : Entity<WeightGoalId> {
     public UserId UserId { get; private set; }
-    public double TargetWeight { get; private set; }
-    public double StartWeight { get; private set; }
+    public double TargetWeightKg { get; private set; }
+    public double StartWeightKg { get; private set; }
     public DateTime StartedAtUtc { get; private set; }
     public WeightGoalStatus Status { get; private set; }
     public DateTime? EndedAtUtc { get; private set; }
-    public double? EndWeight { get; private set; }
+    public double? EndWeightKg { get; private set; }
 
     private WeightGoal() {
     }
 
     public static WeightGoal Start(UserId userId, double targetWeight, double startWeight, DateTime startedAtUtc) {
-        _ = DesiredWeight.Create(targetWeight);
-        _ = DesiredWeight.Create(startWeight);
+        _ = DesiredWeightKg.Create(targetWeight);
+        _ = DesiredWeightKg.Create(startWeight);
         if (userId.Value == Guid.Empty) {
             throw new ArgumentException("User id is required.", nameof(userId));
         }
@@ -27,8 +27,8 @@ public sealed class WeightGoal : Entity<WeightGoalId> {
         var goal = new WeightGoal {
             Id = WeightGoalId.New(),
             UserId = userId,
-            TargetWeight = targetWeight,
-            StartWeight = startWeight,
+            TargetWeightKg = targetWeight,
+            StartWeightKg = startWeight,
             StartedAtUtc = NormalizeUtc(startedAtUtc),
             Status = WeightGoalStatus.Active,
         };
@@ -46,14 +46,14 @@ public sealed class WeightGoal : Entity<WeightGoalId> {
         }
 
         DateTime normalized = NormalizeUtc(endedAtUtc);
-        _ = DesiredWeight.Create(endWeight);
+        _ = DesiredWeightKg.Create(endWeight);
         if (normalized < StartedAtUtc) {
             throw new ArgumentOutOfRangeException(nameof(endedAtUtc));
         }
 
         Status = status;
         EndedAtUtc = normalized;
-        EndWeight = endWeight;
+        EndWeightKg = endWeight;
         SetModified(normalized);
     }
 

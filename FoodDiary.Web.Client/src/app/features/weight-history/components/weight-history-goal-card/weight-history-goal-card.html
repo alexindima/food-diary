@@ -7,7 +7,7 @@
                         {{ 'WEIGHT_HISTORY.GOAL_REMAINING' | translate: { value: progress.remaining | number: '1.0-2' } }}
                     </div>
                     <div class="fd-ui-caption fd-ui-text-muted">
-                        {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: desiredWeight() | number: '1.0-2' } }}
+                        {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: desiredWeightKg() | number: '1.0-2' } }}
                     </div>
                 </div>
                 <div class="weight-history-page__goal-percent fd-ui-stat-value">{{ progress.percent | number: '1.0-0' }}%</div>
@@ -60,7 +60,7 @@
                     <div class="weight-history-page__goal-stat-icon"><fd-ui-icon name="scale" size="lg" /></div>
                     <div>
                         <div class="weight-history-page__goal-stat-value fd-ui-stat-value">
-                            {{ progress.startWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                            {{ progress.startWeightKg | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
                         </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_START_WEIGHT' | translate }}</div>
                     </div>
@@ -91,7 +91,7 @@
         </div>
     }
 
-    @if (desiredWeight() === null) {
+    @if (desiredWeightKg() === null) {
         <div class="weight-history-page__goal-empty fd-stack fd-gap-card-header">
             <div class="fd-ui-card-title">{{ 'WEIGHT_HISTORY.GOAL_NOT_SET' | translate }}</div>
             <div class="fd-ui-body-sm fd-ui-text-muted">{{ 'WEIGHT_HISTORY.GOAL_EMPTY_DESCRIPTION' | translate }}</div>
@@ -101,7 +101,7 @@
                         <div>
                             <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_HISTORY.LAST_GOAL' | translate }}</div>
                             <div class="fd-ui-card-title">
-                                {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: lastGoal.targetWeight | number: '1.0-2' } }}
+                                {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: lastGoal.targetWeightKg | number: '1.0-2' } }}
                             </div>
                         </div>
                         @if (lastGoal.change !== null) {
@@ -143,7 +143,7 @@
             icon="track_changes"
             (click)="configureGoal.emit()"
         >
-            {{ (desiredWeight() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.CONFIGURE_GOAL') | translate }}
+            {{ (desiredWeightKg() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.CONFIGURE_GOAL') | translate }}
         </fd-ui-button>
     </div>
 </fd-ui-card>

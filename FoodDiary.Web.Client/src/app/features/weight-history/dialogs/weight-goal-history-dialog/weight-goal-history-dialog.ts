@@ -37,7 +37,8 @@ export class WeightGoalHistoryDialogComponent {
         const currentWeight = this.facade.latestWeight();
         const language = resolveTranslateLanguage(this.translate);
         return this.facade.weightGoalHistory().map(goal => {
-            const displayEndWeight = goal.status === 'Active' ? (currentWeight ?? goal.startWeight) : (goal.endWeight ?? goal.startWeight);
+            const displayEndWeight =
+                goal.status === 'Active' ? (currentWeight ?? goal.startWeightKg) : (goal.endWeightKg ?? goal.startWeightKg);
             return {
                 ...goal,
                 startDate: formatDateValue(goal.startedAtUtc, language, { day: 'numeric', month: 'long', year: 'numeric' }) ?? '',
@@ -46,7 +47,7 @@ export class WeightGoalHistoryDialogComponent {
                         ? formatDateValue(goal.endedAtUtc, language, { day: 'numeric', month: 'long', year: 'numeric' })
                         : null,
                 displayEndWeight,
-                change: displayEndWeight - goal.startWeight,
+                change: displayEndWeight - goal.startWeightKg,
                 progress: goal.status === 'Active' ? this.calculateProgress(goal, displayEndWeight) : null,
                 statusKey: `WEIGHT_HISTORY.GOAL_STATUS_${goal.status.toUpperCase()}`,
             };
@@ -58,12 +59,12 @@ export class WeightGoalHistoryDialogComponent {
     }
 
     private calculateProgress(goal: WeightGoalHistoryItem, currentWeight: number): number {
-        const totalDistance = Math.abs(goal.targetWeight - goal.startWeight);
+        const totalDistance = Math.abs(goal.targetWeightKg - goal.startWeightKg);
         if (totalDistance === 0) {
             return PERCENT_MAX;
         }
-        const direction = Math.sign(goal.targetWeight - goal.startWeight);
-        const completed = (currentWeight - goal.startWeight) * direction;
+        const direction = Math.sign(goal.targetWeightKg - goal.startWeightKg);
+        const completed = (currentWeight - goal.startWeightKg) * direction;
         return Math.min(PERCENT_MAX, Math.max(0, (completed / totalDistance) * PERCENT_MAX));
     }
 }

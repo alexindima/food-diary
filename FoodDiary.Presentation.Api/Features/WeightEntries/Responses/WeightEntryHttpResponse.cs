@@ -4,4 +4,4 @@ public sealed record WeightEntryHttpResponse(
     Guid Id,
     Guid UserId,
     DateTime Date,
-    double Weight);
+    double WeightKg);

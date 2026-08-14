@@ -73,6 +73,6 @@ function createEntry(): WaistEntry {
         id: 'entry-1',
         userId: 'user-1',
         date: '2026-05-15T00:00:00Z',
-        circumference: ENTRY_CIRCUMFERENCE,
+        circumferenceCm: ENTRY_CIRCUMFERENCE,
     };
 }

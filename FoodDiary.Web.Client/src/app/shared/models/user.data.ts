@@ -20,10 +20,10 @@ export type User = {
     lastName?: string;
     birthDate?: Date;
     gender?: string;
-    weight?: number;
-    desiredWeight?: number;
-    desiredWaist?: number;
-    height?: number;
+    weightKg?: number;
+    desiredWeightKg?: number;
+    desiredWaistCm?: number;
+    heightCm?: number;
     activityLevel?: ActivityLevelOption;
     dailyCalorieTarget?: number;
     proteinTarget?: number;
@@ -58,7 +58,7 @@ export type UpdateUserFormValues = {
     birthDate: Date | string | null;
     gender: string | null;
     language: string | null;
-    height: number | null;
+    heightCm: number | null;
     activityLevel: ActivityLevelOption | null;
     stepGoal: number | null;
     hydrationGoal?: number | null;
@@ -76,7 +76,7 @@ export class UpdateUserDto {
     public lastName?: string;
     public birthDate?: Date;
     public gender?: string;
-    public height?: number;
+    public heightCm?: number;
     public activityLevel?: string;
     public stepGoal?: number;
     public hydrationGoal?: number;
@@ -97,7 +97,7 @@ export class UpdateUserDto {
         this.lastName = normalizeString(formValues.lastName);
         this.birthDate = normalizeDate(formValues.birthDate);
         this.gender = normalizeString(formValues.gender);
-        this.height = normalizeNumber(formValues.height);
+        this.heightCm = normalizeNumber(formValues.heightCm);
         this.activityLevel = normalizeActivityLevel(formValues.activityLevel);
         this.stepGoal = normalizeInteger(formValues.stepGoal);
         this.hydrationGoal = normalizeNumber((formValues as { hydrationGoal?: number | null }).hydrationGoal);
@@ -200,32 +200,32 @@ export type SetPasswordRequest = {
 };
 
 export type DesiredWeightResponse = {
-    desiredWeight: number | null;
-    startWeight: number | null;
+    desiredWeightKg: number | null;
+    startWeightKg: number | null;
     startedAtUtc: string | null;
 };
 
 export type WeightGoalHistoryItem = {
     id: string;
-    targetWeight: number;
-    startWeight: number;
-    endWeight: number | null;
+    targetWeightKg: number;
+    startWeightKg: number;
+    endWeightKg: number | null;
     startedAtUtc: string;
     endedAtUtc: string | null;
     status: 'Active' | 'Replaced' | 'Cancelled';
 };
 
 export type DesiredWaistResponse = {
-    desiredWaist: number | null;
-    startWaist: number | null;
+    desiredWaistCm: number | null;
+    startWaistCm: number | null;
     startedAtUtc: string | null;
 };
 
 export type WaistGoalHistoryItem = {
     id: string;
-    targetWaist: number;
-    startWaist: number;
-    endWaist: number | null;
+    targetWaistCm: number;
+    startWaistCm: number;
+    endWaistCm: number | null;
     startedAtUtc: string;
     endedAtUtc: string | null;
     status: 'Active' | 'Replaced' | 'Cancelled';

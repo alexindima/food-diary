@@ -60,7 +60,7 @@ async function setupComponentAsync(
     const fixture = TestBed.createComponent(WeightHistoryChartCardComponent);
     fixture.componentRef.setInput('isLoading', isLoading);
     fixture.componentRef.setInput('chartPoints', chartPoints);
-    fixture.componentRef.setInput('desiredWeight', DESIRED_WEIGHT);
+    fixture.componentRef.setInput('desiredWeightKg', DESIRED_WEIGHT);
     fixture.componentRef.setInput('goalLabel', 'Goal: 70 kg');
     fixture.detectChanges();
 

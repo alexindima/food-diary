@@ -20,8 +20,8 @@
       "dailyCalorieTarget",
       "dashboardLayoutJson",
       "deletedAt",
-      "desiredWaist",
-      "desiredWeight",
+      "desiredWaistCm",
+      "desiredWeightKg",
       "email",
       "fastingCheckInFollowUpReminderHours",
       "fastingCheckInReminderHours",
@@ -32,7 +32,7 @@
       "fridayCalories",
       "gender",
       "hasPassword",
-      "height",
+      "heightCm",
       "hydrationGoal",
       "id",
       "isActive",
@@ -59,7 +59,7 @@
       "username",
       "waterGoal",
       "wednesdayCalories",
-      "weight"
+      "weightKg"
     ]
   },
   "recipe-by-id": {
@@ -260,12 +260,12 @@
       "total"
     ],
     "weightKeys": [
-      "desired",
+      "desiredWeightKg",
       "latest",
       "previous"
     ],
     "waistKeys": [
-      "desired",
+      "desiredWaistCm",
       "latest",
       "previous"
     ]
@@ -296,22 +296,22 @@
   },
   "desired-waist": {
     "keys": [
-      "desiredWaist",
-      "startWaist",
+      "desiredWaistCm",
+      "startWaistCm",
       "startedAtUtc"
     ],
-    "desiredWaist": 81.5,
-    "startWaist": 81.5,
+    "desiredWaistCm": 81.5,
+    "startWaistCm": 81.5,
     "hasStartedAtUtc": true
   },
   "desired-weight": {
     "keys": [
-      "desiredWeight",
-      "startWeight",
+      "desiredWeightKg",
+      "startWeightKg",
       "startedAtUtc"
     ],
-    "desiredWeight": 72.5,
-    "startWeight": 72.5,
+    "desiredWeightKg": 72.5,
+    "startWeightKg": 72.5,
     "hasStartedAtUtc": true
   },
   "weight-goal-history": {
@@ -321,7 +321,7 @@
       "Replaced"
     ],
     "allHaveStartDates": true,
-    "completedHasEndWeight": true
+    "completedHasEndWeightKg": true
   },
   "user-info": {
     "keys": [
@@ -331,8 +331,8 @@
       "carbTarget",
       "dailyCalorieTarget",
       "dashboardLayout",
-      "desiredWaist",
-      "desiredWeight",
+      "desiredWaistCm",
+      "desiredWeightKg",
       "email",
       "fastingCheckInFollowUpReminderHours",
       "fastingCheckInReminderHours",
@@ -343,7 +343,7 @@
       "gender",
       "hasGoogleIdentity",
       "hasPassword",
-      "height",
+      "heightCm",
       "hydrationGoal",
       "id",
       "isActive",
@@ -362,7 +362,7 @@
       "uiStyle",
       "username",
       "waterGoal",
-      "weight"
+      "weightKg"
     ],
     "emailDomain": "example.com",
     "language": "en",
@@ -396,8 +396,8 @@
       "carbTarget",
       "dailyCalorieTarget",
       "dashboardLayout",
-      "desiredWaist",
-      "desiredWeight",
+      "desiredWaistCm",
+      "desiredWeightKg",
       "email",
       "fastingCheckInFollowUpReminderHours",
       "fastingCheckInReminderHours",
@@ -408,7 +408,7 @@
       "gender",
       "hasGoogleIdentity",
       "hasPassword",
-      "height",
+      "heightCm",
       "hydrationGoal",
       "id",
       "isActive",
@@ -427,7 +427,7 @@
       "uiStyle",
       "username",
       "waterGoal",
-      "weight"
+      "weightKg"
     ],
     "notificationPreferenceKeys": [
       "fastingCheckInFollowUpReminderHours",
@@ -446,6 +446,6 @@
       "Replaced"
     ],
     "allHaveStartDates": true,
-    "completedHasEndWaist": true
+    "completedHasEndWaistCm": true
   }
 }

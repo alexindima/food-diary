@@ -64,7 +64,7 @@ export class WeightHistoryPageComponent {
     protected readonly currentRange = this.facade.currentRange;
     protected readonly entries = this.facade.entries;
     protected readonly isLoading = this.facade.isLoading;
-    protected readonly desiredWeight = this.facade.desiredWeight;
+    protected readonly desiredWeightKg = this.facade.desiredWeightKg;
     protected readonly weightGoal = this.facade.weightGoal;
     protected readonly hasCompletedWeightGoals = this.facade.hasCompletedWeightGoals;
     protected readonly lastCompletedWeightGoal = this.facade.lastCompletedWeightGoal;
@@ -80,7 +80,7 @@ export class WeightHistoryPageComponent {
     protected readonly weightChange = computed<{ value: number; tone: 'positive' | 'negative' | 'neutral' } | null>(() => {
         const values = this.facade
             .rollingMonthSummaryPoints()
-            .map(point => point.averageWeight)
+            .map(point => point.averageWeightKg)
             .filter(value => value > 0);
 
         const latestValue = values.at(-1);
@@ -90,17 +90,17 @@ export class WeightHistoryPageComponent {
         }
 
         const value = latestValue - firstValue;
-        return { value, tone: getWeightChangeTone(value, latestValue, this.desiredWeight()) };
+        return { value, tone: getWeightChangeTone(value, latestValue, this.desiredWeightKg()) };
     });
 
     protected readonly weightToGoal = computed<{ value: number } | null>(() => {
         const latestWeight = this.latestWeight();
-        const desiredWeight = this.desiredWeight();
+        const desiredWeightKg = this.desiredWeightKg();
 
-        const startWeight = this.facade.weightGoal().startWeight;
-        return latestWeight === null || desiredWeight === null || startWeight === null
+        const startWeightKg = this.facade.weightGoal().startWeightKg;
+        return latestWeight === null || desiredWeightKg === null || startWeightKg === null
             ? null
-            : { value: getWeightRemainingToGoal(startWeight, latestWeight, desiredWeight) };
+            : { value: getWeightRemainingToGoal(startWeightKg, latestWeight, desiredWeightKg) };
     });
 
     protected readonly rangeTabs = WEIGHT_HISTORY_RANGE_TABS;
@@ -158,7 +158,7 @@ export class WeightHistoryPageComponent {
                     data: {
                         entries: this.entriesDescending(),
                         currentWeight: this.latestWeight(),
-                        desiredWeight: this.desiredWeight(),
+                        desiredWeightKg: this.desiredWeightKg(),
                     },
                     preset: 'form',
                 },

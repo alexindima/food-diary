@@ -8,5 +8,5 @@ public record UpdateWaistEntryCommand(
     Guid? UserId,
     Guid WaistEntryId,
     DateTime Date,
-    double Circumference
+    double CircumferenceCm
 ) : ICommand<Result<WaistEntryModel>>, IUserRequest;

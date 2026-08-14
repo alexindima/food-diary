@@ -8,5 +8,5 @@ public record UpdateWeightEntryCommand(
     Guid? UserId,
     Guid WeightEntryId,
     DateTime Date,
-    double Weight
+    double WeightKg
 ) : ICommand<Result<WeightEntryModel>>, IUserRequest;

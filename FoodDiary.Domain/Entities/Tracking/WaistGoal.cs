@@ -7,19 +7,19 @@ namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class WaistGoal : Entity<WaistGoalId> {
     public UserId UserId { get; private set; }
-    public double TargetWaist { get; private set; }
-    public double StartWaist { get; private set; }
+    public double TargetWaistCm { get; private set; }
+    public double StartWaistCm { get; private set; }
     public DateTime StartedAtUtc { get; private set; }
     public WaistGoalStatus Status { get; private set; }
     public DateTime? EndedAtUtc { get; private set; }
-    public double? EndWaist { get; private set; }
+    public double? EndWaistCm { get; private set; }
 
     private WaistGoal() {
     }
 
     public static WaistGoal Start(UserId userId, double targetWaist, double startWaist, DateTime startedAtUtc) {
-        _ = DesiredWaist.Create(targetWaist);
-        _ = DesiredWaist.Create(startWaist);
+        _ = DesiredWaistCm.Create(targetWaist);
+        _ = DesiredWaistCm.Create(startWaist);
         if (userId.Value == Guid.Empty) {
             throw new ArgumentException("User id is required.", nameof(userId));
         }
@@ -27,8 +27,8 @@ public sealed class WaistGoal : Entity<WaistGoalId> {
         var goal = new WaistGoal {
             Id = WaistGoalId.New(),
             UserId = userId,
-            TargetWaist = targetWaist,
-            StartWaist = startWaist,
+            TargetWaistCm = targetWaist,
+            StartWaistCm = startWaist,
             StartedAtUtc = NormalizeUtc(startedAtUtc),
             Status = WaistGoalStatus.Active,
         };
@@ -46,14 +46,14 @@ public sealed class WaistGoal : Entity<WaistGoalId> {
         }
 
         DateTime normalized = NormalizeUtc(endedAtUtc);
-        _ = DesiredWaist.Create(endWaist);
+        _ = DesiredWaistCm.Create(endWaist);
         if (normalized < StartedAtUtc) {
             throw new ArgumentOutOfRangeException(nameof(endedAtUtc));
         }
 
         Status = status;
         EndedAtUtc = normalized;
-        EndWaist = endWaist;
+        EndWaistCm = endWaist;
         SetModified(normalized);
     }
 

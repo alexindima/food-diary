@@ -89,7 +89,7 @@
                                 —
                             }
                         </div>
-                        @if (desiredWaist(); as goal) {
+                        @if (desiredWaistCm(); as goal) {
                             <div class="waist-history-page__metric-caption fd-ui-caption">
                                 {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: goal | number: '1.0-2' } }}
                             </div>
@@ -116,8 +116,8 @@
                 data-tour-id="waist-history-chart"
                 [isLoading]="isSummaryLoading()"
                 [chartPoints]="chartPoints()"
-                [desiredWaist]="desiredWaist()"
-                [goalLabel]="'WAIST_HISTORY.GOAL_VALUE' | translate: { value: (desiredWaist() | number: '1.0-2') }"
+                [desiredWaistCm]="desiredWaistCm()"
+                [goalLabel]="'WAIST_HISTORY.GOAL_VALUE' | translate: { value: (desiredWaistCm() | number: '1.0-2') }"
             >
                 <fd-period-filter
                     chartControls
@@ -143,8 +143,8 @@
                 data-tour-id="waist-history-goal"
                 [currentWaist]="latestWaist()"
                 [currentWaistDate]="latestWaistDate()"
-                [desiredWaist]="desiredWaist()"
-                [startWaist]="waistGoal().startWaist"
+                [desiredWaistCm]="desiredWaistCm()"
+                [startWaistCm]="waistGoal().startWaistCm"
                 [startedAtUtc]="waistGoal().startedAtUtc"
                 [hasGoalHistory]="hasCompletedWaistGoals()"
                 [lastCompletedGoal]="lastCompletedWaistGoal()"

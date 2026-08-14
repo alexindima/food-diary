@@ -61,7 +61,7 @@ public partial class DietologistFeatureTests {
         typeof(User).GetProperty(nameof(User.LastName))!.SetValue(client, "Jones");
         typeof(User).GetProperty(nameof(User.ProfileImage))!.SetValue(client, "https://cdn.example.com/avatar.jpg");
         typeof(User).GetProperty(nameof(User.Gender))!.SetValue(client, "F");
-        typeof(User).GetProperty(nameof(User.Height))!.SetValue(client, 170d);
+        typeof(User).GetProperty(nameof(User.HeightCm))!.SetValue(client, 170d);
         typeof(User).GetProperty(nameof(User.ActivityLevel))!.SetValue(client, ActivityLevel.High);
         DateTime birthDate = new(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         typeof(User).GetProperty(nameof(User.BirthDate))!.SetValue(client, birthDate);
@@ -79,7 +79,7 @@ public partial class DietologistFeatureTests {
         Assert.Equal("https://cdn.example.com/avatar.jpg", model.ProfileImage);
         Assert.Equal(birthDate, model.BirthDate);
         Assert.Equal("F", model.Gender);
-        Assert.Equal(170d, model.Height);
+        Assert.Equal(170d, model.HeightCm);
         Assert.Equal(ActivityLevel.High.ToString(), model.ActivityLevel);
         Assert.Equal(invitation.AcceptedAtUtc, model.AcceptedAtUtc);
     }

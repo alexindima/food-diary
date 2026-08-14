@@ -2,9 +2,9 @@ namespace FoodDiary.Application.Abstractions.Users.Models;
 
 public sealed record WaistGoalHistoryModel(
     Guid Id,
-    double TargetWaist,
-    double StartWaist,
-    double? EndWaist,
+    double TargetWaistCm,
+    double StartWaistCm,
+    double? EndWaistCm,
     DateTime StartedAtUtc,
     DateTime? EndedAtUtc,
     string Status);

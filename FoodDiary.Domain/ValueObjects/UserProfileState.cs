@@ -9,8 +9,8 @@ public readonly record struct UserProfileState(
     string? LastName,
     DateTime? BirthDate,
     string? Gender,
-    double? Weight,
-    double? Height,
+    double? WeightKg,
+    double? HeightCm,
     ActivityLevel ActivityLevel,
     string? ProfileImage,
     ImageAssetId? ProfileImageAssetId,
@@ -30,8 +30,8 @@ public readonly record struct UserProfileState(
             LastName: null,
             BirthDate: null,
             Gender: null,
-            Weight: null,
-            Height: null,
+            WeightKg: null,
+            HeightCm: null,
             ActivityLevel: ActivityLevel.Moderate,
             ProfileImage: null,
             ProfileImageAssetId: null,
@@ -52,8 +52,8 @@ public readonly record struct UserProfileState(
         LastName,
         BirthDate,
         Gender,
-        Weight,
-        Height,
+        WeightKg,
+        HeightCm,
         ActivityLevel);
 
     public UserProfileMediaState Media => new(ProfileImage, ProfileImageAssetId);

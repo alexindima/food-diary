@@ -56,8 +56,8 @@ describe('client dashboard mapper', () => {
                 averageCarbs: 151,
                 averageFiber: 21,
             },
-            weight: { latest: { weight: 73 } },
-            waist: { latest: { circumference: 84 } },
+            weight: { latest: { weightKg: 73 } },
+            waist: { latest: { circumferenceCm: 84 } },
             hydration: { totalMl: 1500 },
             meals: { total: 4 },
         };
@@ -135,8 +135,8 @@ function createDashboardSnapshot(): unknown {
             averageFiber: 21,
         },
         weeklyCalories: [],
-        weight: { latest: { date: '2026-05-23T00:00:00Z', weight: 73.2 }, previous: { date: '2026-05-22T00:00:00Z', weight: 72 } },
-        waist: { latest: { date: '2026-05-23T00:00:00Z', circumference: 84 }, previous: null, desired: 80 },
+        weight: { latest: { date: '2026-05-23T00:00:00Z', weightKg: 73.2 }, previous: { date: '2026-05-22T00:00:00Z', weightKg: 72 } },
+        waist: { latest: { date: '2026-05-23T00:00:00Z', circumferenceCm: 84 }, previous: null, desiredWaistCm: 80 },
         meals: {
             items: [
                 {

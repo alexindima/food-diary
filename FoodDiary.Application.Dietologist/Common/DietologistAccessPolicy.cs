@@ -52,12 +52,12 @@ public static class DietologistAccessPolicy {
             "Profile" when !permissions.ShareProfile => Errors.Dietologist.PermissionDenied,
             "Meals" when !permissions.ShareMeals => Errors.Dietologist.PermissionDenied,
             "Statistics" when !permissions.ShareStatistics => Errors.Dietologist.PermissionDenied,
-            "Weight" when !permissions.ShareWeight => Errors.Dietologist.PermissionDenied,
-            "Waist" when !permissions.ShareWaist => Errors.Dietologist.PermissionDenied,
+            "WeightKg" when !permissions.ShareWeight => Errors.Dietologist.PermissionDenied,
+            "WaistCm" when !permissions.ShareWaist => Errors.Dietologist.PermissionDenied,
             "Goals" when !permissions.ShareGoals => Errors.Dietologist.PermissionDenied,
             "Hydration" when !permissions.ShareHydration => Errors.Dietologist.PermissionDenied,
             "Fasting" when !permissions.ShareFasting => Errors.Dietologist.PermissionDenied,
-            "Profile" or "Meals" or "Statistics" or "Weight" or "Waist" or "Goals" or "Hydration" or "Fasting" => null,
+            "Profile" or "Meals" or "Statistics" or "WeightKg" or "WaistCm" or "Goals" or "Hydration" or "Fasting" => null,
             _ => Errors.Dietologist.PermissionDenied,
         };
     }

@@ -44,7 +44,7 @@ export function createWeightTrendSignals(
     const weightTrendSeries = computed<WeightTrendPoint[]>(() => {
         const points = weightTrendPoints().map(point => ({
             date: point.startDate,
-            value: point.averageWeight > 0 ? point.averageWeight : null,
+            value: point.averageWeightKg > 0 ? point.averageWeightKg : null,
         }));
         return points;
     });
@@ -66,7 +66,7 @@ export function createWaistTrendSignals(
     const waistTrendSeries = computed<WeightTrendPoint[]>(() => {
         const points = waistTrendPoints().map(point => ({
             date: point.startDate,
-            value: point.averageCircumference > 0 ? point.averageCircumference : null,
+            value: point.averageCircumferenceCm > 0 ? point.averageCircumferenceCm : null,
         }));
         return points;
     });

@@ -66,9 +66,9 @@ public static class DashboardHttpResponseMappings {
     extension(DashboardWeightModel model) {
         private DashboardWeightHttpResponse ToHttpResponse() {
             return new DashboardWeightHttpResponse(
-                model.Latest is null ? null : new WeightPointHttpResponse(model.Latest.Date, model.Latest.Weight),
-                model.Previous is null ? null : new WeightPointHttpResponse(model.Previous.Date, model.Previous.Weight),
-                model.Desired
+                model.Latest is null ? null : new WeightPointHttpResponse(model.Latest.Date, model.Latest.WeightKg),
+                model.Previous is null ? null : new WeightPointHttpResponse(model.Previous.Date, model.Previous.WeightKg),
+                model.DesiredWeightKg
             );
         }
     }
@@ -76,9 +76,9 @@ public static class DashboardHttpResponseMappings {
     extension(DashboardWaistModel model) {
         private DashboardWaistHttpResponse ToHttpResponse() {
             return new DashboardWaistHttpResponse(
-                model.Latest is null ? null : new WaistPointHttpResponse(model.Latest.Date, model.Latest.Circumference),
-                model.Previous is null ? null : new WaistPointHttpResponse(model.Previous.Date, model.Previous.Circumference),
-                model.Desired
+                model.Latest is null ? null : new WaistPointHttpResponse(model.Latest.Date, model.Latest.CircumferenceCm),
+                model.Previous is null ? null : new WaistPointHttpResponse(model.Previous.Date, model.Previous.CircumferenceCm),
+                model.DesiredWaistCm
             );
         }
     }

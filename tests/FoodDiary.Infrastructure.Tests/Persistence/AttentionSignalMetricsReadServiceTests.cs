@@ -34,11 +34,11 @@ public sealed class AttentionSignalMetricsReadServiceTests {
             () => Assert.Contains(result, item =>
                 item.ClientUserId == first.Id.Value &&
                 item.LastMealAtUtc == firstMeal.Date &&
-                item.WeightPoints.Single().Weight == firstWeight.Weight),
+                item.WeightPoints.Single().WeightKg == firstWeight.WeightKg),
             () => Assert.Contains(result, item =>
                 item.ClientUserId == second.Id.Value &&
                 item.LastMealAtUtc == secondMeal.Date &&
-                item.WeightPoints.Single().Weight == secondWeight.Weight));
+                item.WeightPoints.Single().WeightKg == secondWeight.WeightKg));
     }
 
     [Fact]

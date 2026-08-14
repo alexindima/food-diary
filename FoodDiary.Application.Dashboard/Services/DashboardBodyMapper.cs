@@ -11,8 +11,8 @@ internal static class DashboardBodyMapper {
         DashboardWeightPointReadModel? previous = entries.Count > 1 ? entries[1] : null;
 
         return new DashboardWeightModel(
-            latest is null ? null : new WeightPointModel(latest.Date, latest.Weight),
-            previous is null ? null : new WeightPointModel(previous.Date, previous.Weight),
+            latest is null ? null : new WeightPointModel(latest.Date, latest.WeightKg),
+            previous is null ? null : new WeightPointModel(previous.Date, previous.WeightKg),
             desired);
     }
 
@@ -21,22 +21,22 @@ internal static class DashboardBodyMapper {
         DashboardWaistPointReadModel? previous = entries.Count > 1 ? entries[1] : null;
 
         return new DashboardWaistModel(
-            latest is null ? null : new WaistPointModel(latest.Date, latest.Circumference),
-            previous is null ? null : new WaistPointModel(previous.Date, previous.Circumference),
+            latest is null ? null : new WaistPointModel(latest.Date, latest.CircumferenceCm),
+            previous is null ? null : new WaistPointModel(previous.Date, previous.CircumferenceCm),
             desired);
     }
 
     public static IReadOnlyList<WeightEntrySummaryModel> ToWeightTrend(IReadOnlyList<DashboardWeightSummaryReadModel> responses) {
         return responses
             .OrderBy(response => response.DateFrom)
-            .Select(response => new WeightEntrySummaryModel(response.DateFrom, response.DateTo, response.AverageWeight))
+            .Select(response => new WeightEntrySummaryModel(response.DateFrom, response.DateTo, response.AverageWeightKg))
             .ToList();
     }
 
     public static IReadOnlyList<WaistEntrySummaryModel> ToWaistTrend(IReadOnlyList<DashboardWaistSummaryReadModel> responses) {
         return responses
             .OrderBy(response => response.DateFrom)
-            .Select(response => new WaistEntrySummaryModel(response.DateFrom, response.DateTo, response.AverageCircumference))
+            .Select(response => new WaistEntrySummaryModel(response.DateFrom, response.DateTo, response.AverageCircumferenceCm))
             .ToList();
     }
 }

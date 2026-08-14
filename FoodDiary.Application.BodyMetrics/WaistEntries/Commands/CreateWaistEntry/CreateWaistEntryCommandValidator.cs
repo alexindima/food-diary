@@ -15,10 +15,10 @@ public sealed class CreateWaistEntryCommandValidator : AbstractValidator<CreateW
             .WithErrorCode("Authentication.InvalidToken")
             .WithMessage("Unable to identify user");
 
-        RuleFor(c => c.Circumference)
+        RuleFor(c => c.CircumferenceCm)
             .GreaterThan(0)
-            .LessThanOrEqualTo(DesiredWaist.MaxValue)
+            .LessThanOrEqualTo(DesiredWaistCm.MaxValue)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"Circumference must be in range (0, {DesiredWaist.MaxValue}]."));
+            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"CircumferenceCm must be in range (0, {DesiredWaistCm.MaxValue}]."));
     }
 }

@@ -16,8 +16,8 @@ public static class WeeklyCheckInCalculator {
         BuildSummaryCore(
             nutritionBuckets,
             mealsLogged,
-            [.. weights.Select(static entry => new WeightSample(entry.Date, entry.Weight))],
-            [.. waists.Select(static entry => new WaistSample(entry.Date, entry.Circumference))],
+            [.. weights.Select(static entry => new WeightSample(entry.Date, entry.WeightKg))],
+            [.. waists.Select(static entry => new WaistSample(entry.Date, entry.CircumferenceCm))],
             hydration,
             daysInPeriod);
 
@@ -36,12 +36,12 @@ public static class WeeklyCheckInCalculator {
         int daysLogged = nutritionBuckets.Count(static bucket => bucket.TotalCalories > 0);
 
         var sortedWeights = weights.OrderBy(w => w.Date).ToList();
-        double? weightStart = sortedWeights.FirstOrDefault()?.Weight;
-        double? weightEnd = sortedWeights.LastOrDefault()?.Weight;
+        double? weightStart = sortedWeights.FirstOrDefault()?.WeightKg;
+        double? weightEnd = sortedWeights.LastOrDefault()?.WeightKg;
 
         var sortedWaists = waists.OrderBy(w => w.Date).ToList();
-        double? waistStart = sortedWaists.FirstOrDefault()?.Circumference;
-        double? waistEnd = sortedWaists.LastOrDefault()?.Circumference;
+        double? waistStart = sortedWaists.FirstOrDefault()?.CircumferenceCm;
+        double? waistEnd = sortedWaists.LastOrDefault()?.CircumferenceCm;
 
         int totalHydration = hydration.Sum(h => h.TotalMl);
         int avgHydration = daysInPeriod > 0 ? totalHydration / daysInPeriod : 0;
@@ -62,9 +62,9 @@ public static class WeeklyCheckInCalculator {
             avgHydration);
     }
 
-    private sealed record WeightSample(DateTime Date, double Weight);
+    private sealed record WeightSample(DateTime Date, double WeightKg);
 
-    private sealed record WaistSample(DateTime Date, double Circumference);
+    private sealed record WaistSample(DateTime Date, double CircumferenceCm);
 
     public static WeekTrendModel BuildTrends(WeekSummaryModel thisWeek, WeekSummaryModel lastWeek) {
         return new WeekTrendModel(

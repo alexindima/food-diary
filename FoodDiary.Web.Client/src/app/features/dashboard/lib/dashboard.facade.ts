@@ -65,12 +65,12 @@ export class DashboardFacade {
     public readonly todayCalories = computed(() => this.snapshot()?.statistics.totalCalories ?? 0);
     public readonly caloriesBurned = computed(() => this.snapshot()?.caloriesBurned ?? 0);
     public readonly meals = computed<Meal[]>(() => this.snapshot()?.meals.items ?? []);
-    public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weight ?? null);
-    public readonly previousWeight = computed(() => this.snapshot()?.weight.previous?.weight ?? null);
-    public readonly desiredWeight = computed(() => this.snapshot()?.weight.desired ?? null);
-    public readonly latestWaist = computed(() => this.snapshot()?.waist.latest?.circumference ?? null);
-    public readonly previousWaist = computed(() => this.snapshot()?.waist.previous?.circumference ?? null);
-    public readonly desiredWaist = computed(() => this.snapshot()?.waist.desired ?? null);
+    public readonly latestWeight = computed(() => this.snapshot()?.weight.latest?.weightKg ?? null);
+    public readonly previousWeight = computed(() => this.snapshot()?.weight.previous?.weightKg ?? null);
+    public readonly desiredWeightKg = computed(() => this.snapshot()?.weight.desiredWeightKg ?? null);
+    public readonly latestWaist = computed(() => this.snapshot()?.waist.latest?.circumferenceCm ?? null);
+    public readonly previousWaist = computed(() => this.snapshot()?.waist.previous?.circumferenceCm ?? null);
+    public readonly desiredWaistCm = computed(() => this.snapshot()?.waist.desiredWaistCm ?? null);
     public readonly weeklyConsumed = computed(() =>
         (this.snapshot()?.weeklyCalories ?? []).reduce((sum, point) => sum + point.calories, 0),
     );

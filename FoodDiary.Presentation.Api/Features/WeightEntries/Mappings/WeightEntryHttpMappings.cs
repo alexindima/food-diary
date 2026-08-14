@@ -16,7 +16,7 @@ public static class WeightEntryHttpMappings {
                 new(
                     userId,
                     request.Date,
-                    request.Weight);
+                    request.WeightKg);
     }
 
     extension(UpdateWeightEntryHttpRequest request) {
@@ -27,6 +27,6 @@ public static class WeightEntryHttpMappings {
                     userId,
                     entryId,
                     request.Date,
-                    request.Weight);
+                    request.WeightKg);
     }
 }

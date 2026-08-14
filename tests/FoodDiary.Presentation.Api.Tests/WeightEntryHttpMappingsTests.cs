@@ -28,7 +28,7 @@ public sealed class WeightEntryHttpMappingsTests {
         Assert.Multiple(
             () => Assert.Equal(userId, command.UserId),
             () => Assert.Equal(date, command.Date),
-            () => Assert.Equal(75.5, command.Weight));
+            () => Assert.Equal(75.5, command.WeightKg));
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public sealed class WeightEntryHttpMappingsTests {
             () => Assert.Equal(userId, command.UserId),
             () => Assert.Equal(entryId, command.WeightEntryId),
             () => Assert.Equal(date, command.Date),
-            () => Assert.Equal(74.8, command.Weight));
+            () => Assert.Equal(74.8, command.WeightKg));
     }
 
     [Fact]
@@ -140,7 +140,7 @@ public sealed class WeightEntryHttpMappingsTests {
             () => Assert.Equal(id, response.Id),
             () => Assert.Equal(userId, response.UserId),
             () => Assert.Equal(date, response.Date),
-            () => Assert.Equal(75.5, response.Weight));
+            () => Assert.Equal(75.5, response.WeightKg));
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public sealed class WeightEntryHttpMappingsTests {
         Assert.Multiple(
             () => Assert.Equal(from, response.StartDate),
             () => Assert.Equal(to, response.EndDate),
-            () => Assert.Equal(75.2, response.AverageWeight));
+            () => Assert.Equal(75.2, response.AverageWeightKg));
     }
 
     [Fact]
@@ -177,9 +177,9 @@ public sealed class WeightEntryHttpMappingsTests {
         WeightGoalHistoryHttpResponse history = Assert.Single(response.GoalHistory);
         Assert.Multiple(
             () => Assert.Equal(entryId, entry.Id),
-            () => Assert.Equal(75.2, summary.AverageWeight),
-            () => Assert.Equal(180, response.Height),
-            () => Assert.Equal(72, response.Goal.DesiredWeight),
+            () => Assert.Equal(75.2, summary.AverageWeightKg),
+            () => Assert.Equal(180, response.HeightCm),
+            () => Assert.Equal(72, response.Goal.DesiredWeightKg),
             () => Assert.Equal(goalId, history.Id),
             () => Assert.Equal("Cancelled", history.Status));
     }

@@ -57,12 +57,12 @@ public sealed class HistoryProfileCoverageTests {
         ResultAssert.Success(weight);
         ResultAssert.Success(waist);
         Assert.Multiple(
-            () => Assert.Equal(72, weight.Value.Goal.DesiredWeight),
-            () => Assert.Equal(80, weight.Value.Goal.StartWeight),
+            () => Assert.Equal(72, weight.Value.Goal.DesiredWeightKg),
+            () => Assert.Equal(80, weight.Value.Goal.StartWeightKg),
             () => Assert.Equal(2, weight.Value.GoalHistory.Count),
             () => Assert.Equal("Active", weight.Value.GoalHistory[0].Status),
-            () => Assert.Equal(76, waist.Value.Goal.DesiredWaist),
-            () => Assert.Equal(86, waist.Value.Goal.StartWaist),
+            () => Assert.Equal(76, waist.Value.Goal.DesiredWaistCm),
+            () => Assert.Equal(86, waist.Value.Goal.StartWaistCm),
             () => Assert.Equal(2, waist.Value.GoalHistory.Count),
             () => Assert.Equal("Active", waist.Value.GoalHistory[0].Status));
     }

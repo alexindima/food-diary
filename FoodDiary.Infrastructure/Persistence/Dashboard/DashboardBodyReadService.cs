@@ -55,7 +55,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
             .OrderByDescending(entry => entry.Date)
             .ThenByDescending(entry => entry.CreatedOnUtc)
             .Take(2)
-            .Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.Weight))
+            .Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.WeightKg))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -69,7 +69,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
             .OrderByDescending(entry => entry.Date)
             .ThenByDescending(entry => entry.CreatedOnUtc)
             .Take(2)
-            .Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.Circumference))
+            .Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.CircumferenceCm))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -83,7 +83,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
             .Where(entry => entry.UserId == userId && entry.Date >= trendStart && entry.Date <= dayStart)
             .OrderBy(entry => entry.Date)
             .ThenBy(entry => entry.CreatedOnUtc)
-            .Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.Weight))
+            .Select(entry => new DashboardWeightPointReadModel(entry.Date, entry.WeightKg))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -97,7 +97,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
             .Where(entry => entry.UserId == userId && entry.Date >= trendStart && entry.Date <= dayStart)
             .OrderBy(entry => entry.Date)
             .ThenBy(entry => entry.CreatedOnUtc)
-            .Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.Circumference))
+            .Select(entry => new DashboardWaistPointReadModel(entry.Date, entry.CircumferenceCm))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -136,7 +136,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
         DashboardWeightPointReadModel[] bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
         double average = bucketEntries.Length == 0
             ? 0
-            : Math.Round(bucketEntries.Average(entry => entry.Weight), 2, MidpointRounding.ToEven);
+            : Math.Round(bucketEntries.Average(entry => entry.WeightKg), 2, MidpointRounding.ToEven);
         return new DashboardWeightSummaryReadModel(start, end, average);
     }
 
@@ -147,7 +147,7 @@ internal sealed class DashboardBodyReadService(FoodDiaryDbContext context) : IDa
         DashboardWaistPointReadModel[] bucketEntries = [.. entries.Where(entry => entry.Date >= start && entry.Date <= end)];
         double average = bucketEntries.Length == 0
             ? 0
-            : Math.Round(bucketEntries.Average(entry => entry.Circumference), 2, MidpointRounding.ToEven);
+            : Math.Round(bucketEntries.Average(entry => entry.CircumferenceCm), 2, MidpointRounding.ToEven);
         return new DashboardWaistSummaryReadModel(start, end, average);
     }
 

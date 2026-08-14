@@ -35,12 +35,14 @@ let userService: {
 beforeEach(() => {
     weightEntriesService = createWeightEntriesServiceMock();
     userService = {
-        getWeightGoal: vi.fn().mockReturnValue(of({ desiredWeight: TARGET_WEIGHT, startWeight: 75, startedAtUtc: '2026-01-01T00:00:00Z' })),
+        getWeightGoal: vi
+            .fn()
+            .mockReturnValue(of({ desiredWeightKg: TARGET_WEIGHT, startWeightKg: 75, startedAtUtc: '2026-01-01T00:00:00Z' })),
         getWeightGoalHistory: vi.fn().mockReturnValue(of([])),
-        getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
+        getInfo: vi.fn().mockReturnValue(of({ heightCm: 180 })),
         updateWeightGoal: vi
             .fn()
-            .mockReturnValue(of({ desiredWeight: UPDATED_TARGET_WEIGHT, startWeight: 75, startedAtUtc: '2026-01-01T00:00:00Z' })),
+            .mockReturnValue(of({ desiredWeightKg: UPDATED_TARGET_WEIGHT, startWeightKg: 75, startedAtUtc: '2026-01-01T00:00:00Z' })),
     };
 
     TestBed.configureTestingModule({
@@ -75,9 +77,9 @@ describe('WeightHistoryFacade loading', () => {
         expect(userService.getInfo).not.toHaveBeenCalled();
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
-        expect(facade.desiredWeight()).toBe(TARGET_WEIGHT);
+        expect(facade.desiredWeightKg()).toBe(TARGET_WEIGHT);
         expect(facade.latestWeight()).toBe(LATEST_WEIGHT);
-        expect(facade.formModel().weight).toBe(LATEST_WEIGHT.toString());
+        expect(facade.formModel().weightKg).toBe(LATEST_WEIGHT.toString());
         expect(facade.bmiViewModel()?.value).toBe(EXPECTED_BMI);
     });
 
@@ -90,18 +92,18 @@ describe('WeightHistoryFacade loading', () => {
                 goalHistory: [
                     {
                         id: 'latest',
-                        targetWeight: 75,
-                        startWeight: 113,
-                        endWeight: 113,
+                        targetWeightKg: 75,
+                        startWeightKg: 113,
+                        endWeightKg: 113,
                         startedAtUtc: '2026-08-06T10:00:00Z',
                         endedAtUtc: '2026-08-06T11:00:00Z',
                         status: 'Cancelled' as const,
                     },
                     {
                         id: 'older',
-                        targetWeight: 74,
-                        startWeight: 112,
-                        endWeight: 111,
+                        targetWeightKg: 74,
+                        startWeightKg: 112,
+                        endWeightKg: 111,
                         startedAtUtc: '2026-07-01T10:00:00Z',
                         endedAtUtc: '2026-07-02T10:00:00Z',
                         status: 'Replaced' as const,
@@ -122,7 +124,7 @@ describe('WeightHistoryFacade loading', () => {
         facade.initialize();
         TestBed.tick();
 
-        expect(facade.entriesDescending()[0]?.weight).toBe(INDEPENDENT_LATEST_WEIGHT);
+        expect(facade.entriesDescending()[0]?.weightKg).toBe(INDEPENDENT_LATEST_WEIGHT);
         expect(facade.latestWeight()).toBe(INDEPENDENT_LATEST_WEIGHT);
         expect(facade.latestWeightDate()).toBe('2026-05-10T00:00:00Z');
     });
@@ -137,14 +139,14 @@ describe('WeightHistoryFacade entries', () => {
 
         facade.formModel.set({
             date: '2026-04-02',
-            weight: '73.8',
+            weightKg: '73.8',
         });
 
         facade.submit();
 
         expect(weightEntriesService.create).toHaveBeenCalledWith({
             date: '2026-04-02T00:00:00.000Z',
-            weight: UPDATED_ENTRY_WEIGHT,
+            weightKg: UPDATED_ENTRY_WEIGHT,
         });
         await vi.waitFor(() => {
             expect(weightEntriesService.getPageSummary).toHaveBeenCalledTimes(1);
@@ -154,7 +156,7 @@ describe('WeightHistoryFacade entries', () => {
     it('does not submit invalid form', () => {
         facade.formModel.set({
             date: '',
-            weight: '',
+            weightKg: '',
         });
 
         facade.submit();
@@ -168,7 +170,7 @@ describe('WeightHistoryFacade entries', () => {
         weightEntriesService.create.mockReturnValueOnce(throwError(() => ({ error: { error: 'WeightEntry.AlreadyExists' } })));
         facade.formModel.set({
             date: '2026-04-02',
-            weight: '73.8',
+            weightKg: '73.8',
         });
 
         facade.submit();
@@ -181,7 +183,7 @@ describe('WeightHistoryFacade entries', () => {
     });
 
     it('switches to edit mode and updates the existing entry', async () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weight: 74.2 };
+        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 };
 
         facade.startEdit(entry);
         facade.submit();
@@ -191,24 +193,24 @@ describe('WeightHistoryFacade entries', () => {
         });
         expect(weightEntriesService.update).toHaveBeenCalledWith('entry-1', {
             date: '2026-04-01T00:00:00.000Z',
-            weight: 74.2,
+            weightKg: 74.2,
         });
     });
 
     it('cancels editing and restores latest weight in the form', () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weight: 74.2 };
-        facade.entries.set([entry, { id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', weight: 73.1 }]);
-        facade.latestEntry.set({ id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', weight: 73.1 });
+        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 };
+        facade.entries.set([entry, { id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', weightKg: 73.1 }]);
+        facade.latestEntry.set({ id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', weightKg: 73.1 });
 
         facade.startEdit(entry);
         facade.cancelEdit();
 
         expect(facade.isEditing()).toBe(false);
-        expect(facade.formModel().weight).toBe('73.1');
+        expect(facade.formModel().weightKg).toBe('73.1');
     });
 
     it('deletes entry and exits edit mode when edited entry is removed', () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weight: 74.2 };
+        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 };
         facade.startEdit(entry);
 
         facade.deleteEntry(entry);
@@ -251,43 +253,43 @@ describe('WeightHistoryFacade ranges', () => {
 
 describe('WeightHistoryFacade desired weight', () => {
     it('saves desired weight after validation', () => {
-        facade.desiredWeightModel.set({ weight: `${UPDATED_TARGET_WEIGHT}` });
+        facade.desiredWeightModel.set({ weightKg: `${UPDATED_TARGET_WEIGHT}` });
 
         facade.saveDesiredWeight();
 
         expect(userService.updateWeightGoal).toHaveBeenCalledWith(UPDATED_TARGET_WEIGHT);
-        expect(facade.desiredWeight()).toBe(UPDATED_TARGET_WEIGHT);
-        expect(facade.desiredWeightModel().weight).toBe(`${UPDATED_TARGET_WEIGHT}`);
+        expect(facade.desiredWeightKg()).toBe(UPDATED_TARGET_WEIGHT);
+        expect(facade.desiredWeightModel().weightKg).toBe(`${UPDATED_TARGET_WEIGHT}`);
     });
 
     it('cancels the active goal without form validation', () => {
-        userService.updateWeightGoal.mockReturnValue(of({ desiredWeight: null, startWeight: null, startedAtUtc: null }));
+        userService.updateWeightGoal.mockReturnValue(of({ desiredWeightKg: null, startWeightKg: null, startedAtUtc: null }));
 
         facade.cancelWeightGoal();
 
         expect(userService.updateWeightGoal).toHaveBeenCalledWith(null);
-        expect(facade.weightGoal()).toEqual({ desiredWeight: null, startWeight: null, startedAtUtc: null });
-        expect(facade.desiredWeightModel().weight).toBe('');
+        expect(facade.weightGoal()).toEqual({ desiredWeightKg: null, startWeightKg: null, startedAtUtc: null });
+        expect(facade.desiredWeightModel().weightKg).toBe('');
     });
 });
 
 function createWeightEntriesServiceMock(): typeof weightEntriesService {
     return {
         getPageSummary: vi.fn().mockReturnValue(of(createWeightPageSummary())),
-        getLatest: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weight: 74.2 })),
+        getLatest: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 })),
         getEntries: vi.fn().mockReturnValue(
             of([
-                { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weight: 74.2 },
-                { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', weight: 75.1 },
+                { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 },
+                { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', weightKg: 75.1 },
             ]),
         ),
         getSummary: vi
             .fn()
-            .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeight: 74.2 }])),
+            .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeightKg: 74.2 }])),
         create: vi
             .fn()
-            .mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', weight: UPDATED_ENTRY_WEIGHT })),
-        update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weight: 74.2 })),
+            .mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', weightKg: UPDATED_ENTRY_WEIGHT })),
+        update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weightKg: 74.2 })),
         remove: vi.fn().mockReturnValue(of(void 0)),
     };
 }
@@ -299,13 +301,13 @@ function createWeightPageSummary(latestWeight = LATEST_WEIGHT): WeightHistoryPag
                 id: 'entry-1',
                 userId: 'user-1',
                 date: latestWeight === INDEPENDENT_LATEST_WEIGHT ? '2026-05-10T00:00:00Z' : '2026-04-01T00:00:00Z',
-                weight: latestWeight,
+                weightKg: latestWeight,
             },
-            { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', weight: 75.1 },
+            { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', weightKg: 75.1 },
         ],
-        summary: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeight: 74.2 }],
-        height: 180,
-        goal: { desiredWeight: TARGET_WEIGHT, startWeight: 75, startedAtUtc: '2026-01-01T00:00:00Z' },
+        summary: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeightKg: 74.2 }],
+        heightCm: 180,
+        goal: { desiredWeightKg: TARGET_WEIGHT, startWeightKg: 75, startedAtUtc: '2026-01-01T00:00:00Z' },
         goalHistory: [],
     };
 }

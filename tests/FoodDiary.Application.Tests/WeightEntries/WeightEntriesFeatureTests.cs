@@ -178,7 +178,7 @@ public class WeightEntriesFeatureTests {
         WeightEntrySummaryModel summary = Assert.Single(result.Value);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), summary.StartDate);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), summary.EndDate);
-        Assert.Equal(81, summary.AverageWeight);
+        Assert.Equal(81, summary.AverageWeightKg);
     }
 
     [Fact]
@@ -252,11 +252,11 @@ public class WeightEntriesFeatureTests {
             result.Value,
             entry => {
                 Assert.Equal(newer.Id.Value, entry.Id);
-                Assert.Equal(81, entry.Weight);
+                Assert.Equal(81, entry.WeightKg);
             },
             entry => {
                 Assert.Equal(older.Id.Value, entry.Id);
-                Assert.Equal(82, entry.Weight);
+                Assert.Equal(82, entry.WeightKg);
             });
     }
 
@@ -508,7 +508,7 @@ public class WeightEntriesFeatureTests {
         ResultAssert.Success(result);
         Assert.NotNull(result.Value);
         Assert.Equal(latest.Id.Value, result.Value.Id);
-        Assert.Equal(81, result.Value.Weight);
+        Assert.Equal(81, result.Value.WeightKg);
     }
 
     [Fact]
@@ -537,8 +537,8 @@ public class WeightEntriesFeatureTests {
         Assert.Multiple(
             () => Assert.Equal([newer.Id.Value, older.Id.Value], entries.Select(entry => entry.Id)),
             () => Assert.Equal(newer.Id.Value, latest?.Id),
-            () => Assert.Equal(81, summaries[0].AverageWeight),
-            () => Assert.Equal(0, summaries[1].AverageWeight));
+            () => Assert.Equal(81, summaries[0].AverageWeightKg),
+            () => Assert.Equal(0, summaries[1].AverageWeightKg));
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {
@@ -644,7 +644,7 @@ public class WeightEntriesFeatureTests {
                 descending,
                 cancellationToken).ConfigureAwait(false);
 
-            return [.. entries.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
+            return [.. entries.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))];
         }
 
         public async Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
@@ -653,7 +653,7 @@ public class WeightEntriesFeatureTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) {
             IReadOnlyList<WeightEntry> entries = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-            return [.. entries.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
+            return [.. entries.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))];
         }
 
         async Task<IReadOnlyList<WeightEntryModel>> IWeightEntryReadService.GetEntriesAsync(
@@ -716,7 +716,7 @@ public class WeightEntriesFeatureTests {
                 return new WeightEntrySummaryModel(start, end, 0);
             }
 
-            double avg = bucketEntries.Average(entry => entry.Weight);
+            double avg = bucketEntries.Average(entry => entry.WeightKg);
             return new WeightEntrySummaryModel(start, end, Math.Round(avg, 2, MidpointRounding.ToEven));
         }
     }

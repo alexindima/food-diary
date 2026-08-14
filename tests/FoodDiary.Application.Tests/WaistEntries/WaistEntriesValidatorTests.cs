@@ -21,7 +21,7 @@ public class WaistEntriesValidatorTests {
     public async Task CreateWaist_WithZeroCircumference_HasError() {
         TestValidationResult<CreateWaistEntryCommand> result = await new CreateWaistEntryCommandValidator().TestValidateAsync(
             new CreateWaistEntryCommand(Guid.NewGuid(), DateTime.UtcNow, 0));
-        result.ShouldHaveValidationErrorFor(c => c.Circumference);
+        result.ShouldHaveValidationErrorFor(c => c.CircumferenceCm);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class WaistEntriesValidatorTests {
     public async Task UpdateWaist_WithZeroCircumference_HasError() {
         TestValidationResult<UpdateWaistEntryCommand> result = await new UpdateWaistEntryCommandValidator().TestValidateAsync(
             new UpdateWaistEntryCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, 0));
-        result.ShouldHaveValidationErrorFor(c => c.Circumference);
+        result.ShouldHaveValidationErrorFor(c => c.CircumferenceCm);
     }
 
     [Fact]

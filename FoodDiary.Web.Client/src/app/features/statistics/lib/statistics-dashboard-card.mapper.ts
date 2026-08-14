@@ -60,8 +60,8 @@ export function buildStatisticsDashboardCardsView(input: StatisticsDashboardCard
         mealStructure: buildMealStructure(statistics),
         stability: buildDietStability(days, calorieGoal, quantizationDays),
         body: {
-            weight: buildBodyMetric('weight', weightPoints, user?.desiredWeight ?? null, periodDays),
-            waist: buildBodyMetric('waist', waistPoints, user?.desiredWaist ?? null, periodDays),
+            weight: buildBodyMetric('weight', weightPoints, user?.desiredWeightKg ?? null, periodDays),
+            waist: buildBodyMetric('waist', waistPoints, user?.desiredWaistCm ?? null, periodDays),
         },
     };
 }

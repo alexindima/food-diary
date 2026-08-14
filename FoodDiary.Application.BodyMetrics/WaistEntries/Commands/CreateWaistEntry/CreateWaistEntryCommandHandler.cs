@@ -38,7 +38,7 @@ public sealed class CreateWaistEntryCommandHandler(
                 Errors.WaistEntry.AlreadyExists(normalizedDate));
         }
 
-        var entry = WaistEntry.Create(userId, normalizedDate, command.Circumference);
+        var entry = WaistEntry.Create(userId, normalizedDate, command.CircumferenceCm);
         entry = await waistEntryRepository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }

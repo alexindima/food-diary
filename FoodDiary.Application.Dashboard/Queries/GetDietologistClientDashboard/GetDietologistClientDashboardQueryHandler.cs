@@ -102,10 +102,10 @@ public sealed class GetDietologistClientDashboardQueryHandler(
             WeeklyCalories = permissions.ShareStatistics ? dashboard.WeeklyCalories : [],
             Weight = permissions.ShareWeight
                 ? dashboard.Weight
-                : new DashboardWeightModel(Latest: null, Previous: null, Desired: null),
+                : new DashboardWeightModel(Latest: null, Previous: null, DesiredWeightKg: null),
             Waist = permissions.ShareWaist
                 ? dashboard.Waist
-                : new DashboardWaistModel(Latest: null, Previous: null, Desired: null),
+                : new DashboardWaistModel(Latest: null, Previous: null, DesiredWaistCm: null),
             Meals = permissions.ShareMeals ? dashboard.Meals : new DashboardMealsModel([], 0),
             Hydration = permissions.ShareHydration ? dashboard.Hydration : null,
             Advice = null,

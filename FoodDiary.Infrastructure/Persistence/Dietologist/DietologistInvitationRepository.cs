@@ -22,7 +22,7 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
             invitation.ClientUser.ProfileImage,
             invitation.ClientUser.BirthDate,
             invitation.ClientUser.Gender,
-            invitation.ClientUser.Height,
+            invitation.ClientUser.HeightCm,
             invitation.ClientUser.ActivityLevel,
             invitation.DietologistUser == null ? null : invitation.DietologistUser.Email,
             invitation.DietologistUser == null ? null : invitation.DietologistUser.FirstName,

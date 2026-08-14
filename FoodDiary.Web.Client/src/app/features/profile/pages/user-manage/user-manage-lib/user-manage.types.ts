@@ -15,7 +15,7 @@ export type UserFormValues = {
     language: string | null;
     theme: AppThemeName | null;
     uiStyle: UiStyleOption | null;
-    height: number | null;
+    heightCm: number | null;
     activityLevel: ActivityLevelOption | null;
     stepGoal: number | null;
     profileImage: ImageSelection | null;

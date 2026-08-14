@@ -483,8 +483,8 @@ public partial class UsersFeatureTests {
         Result<UserDesiredWeightModel> result = await handler.Handle(new UpdateDesiredWeightCommand(user.Id.Value, 72.5), CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Equal(72.5, result.Value.DesiredWeight);
-        Assert.Equal(72.5, user.DesiredWeight);
+        Assert.Equal(72.5, result.Value.DesiredWeightKg);
+        Assert.Equal(72.5, user.DesiredWeightKg);
     }
 
     [Fact]
@@ -494,11 +494,11 @@ public partial class UsersFeatureTests {
         var handler = new UpdateDesiredWeightCommandHandler(new SingleUserRepository(user));
 
         Result<UserDesiredWeightModel> result = await handler.Handle(
-            new UpdateDesiredWeightCommand(user.Id.Value, DesiredWeight: null),
+            new UpdateDesiredWeightCommand(user.Id.Value, DesiredWeightKg: null),
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Null(result.Value.DesiredWeight);
+        Assert.Null(result.Value.DesiredWeightKg);
         Assert.DoesNotContain(user.WeightGoals, goal => goal.Status == WeightGoalStatus.Active);
     }
 
@@ -543,8 +543,8 @@ public partial class UsersFeatureTests {
         Result<UserDesiredWaistModel> result = await handler.Handle(new UpdateDesiredWaistCommand(user.Id.Value, 78.5), CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Equal(78.5, result.Value.DesiredWaist);
-        Assert.Equal(78.5, user.DesiredWaist);
+        Assert.Equal(78.5, result.Value.DesiredWaistCm);
+        Assert.Equal(78.5, user.DesiredWaistCm);
     }
 
     [Fact]
@@ -554,11 +554,11 @@ public partial class UsersFeatureTests {
         var handler = new UpdateDesiredWaistCommandHandler(new SingleUserRepository(user));
 
         Result<UserDesiredWaistModel> result = await handler.Handle(
-            new UpdateDesiredWaistCommand(user.Id.Value, DesiredWaist: null),
+            new UpdateDesiredWaistCommand(user.Id.Value, DesiredWaistCm: null),
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Null(result.Value.DesiredWaist);
+        Assert.Null(result.Value.DesiredWaistCm);
         Assert.DoesNotContain(user.WaistGoals, goal => goal.Status == WaistGoalStatus.Active);
     }
 
@@ -599,8 +599,8 @@ public partial class UsersFeatureTests {
                 CarbTarget: null,
                 FiberTarget: null,
                 WaterGoal: null,
-                DesiredWeight: null,
-                DesiredWaist: null),
+                DesiredWeightKg: null,
+                DesiredWaistCm: null),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -622,14 +622,14 @@ public partial class UsersFeatureTests {
                 CarbTarget: 220,
                 FiberTarget: 25,
                 WaterGoal: 2.2,
-                DesiredWeight: 72,
-                DesiredWaist: 78),
+                DesiredWeightKg: 72,
+                DesiredWaistCm: 78),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(2000, result.Value.DailyCalorieTarget);
         Assert.Equal(120, result.Value.ProteinTarget);
-        Assert.Equal(72, result.Value.DesiredWeight);
+        Assert.Equal(72, result.Value.DesiredWeightKg);
         Assert.Same(user, repository.UpdatedUser);
     }
 
@@ -647,8 +647,8 @@ public partial class UsersFeatureTests {
                 CarbTarget: null,
                 FiberTarget: null,
                 WaterGoal: null,
-                DesiredWeight: 0,
-                DesiredWaist: null),
+                DesiredWeightKg: 0,
+                DesiredWaistCm: null),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -669,8 +669,8 @@ public partial class UsersFeatureTests {
                 CarbTarget: null,
                 FiberTarget: null,
                 WaterGoal: null,
-                DesiredWeight: null,
-                DesiredWaist: null,
+                DesiredWeightKg: null,
+                DesiredWaistCm: null,
                 MondayCalories: double.NaN),
             CancellationToken.None);
 
@@ -693,8 +693,8 @@ public partial class UsersFeatureTests {
                 CarbTarget: null,
                 FiberTarget: null,
                 WaterGoal: null,
-                DesiredWeight: null,
-                DesiredWaist: null),
+                DesiredWeightKg: null,
+                DesiredWaistCm: null),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -722,8 +722,8 @@ public partial class UsersFeatureTests {
                 CarbTarget: null,
                 FiberTarget: null,
                 WaterGoal: null,
-                DesiredWeight: null,
-                DesiredWaist: null),
+                DesiredWeightKg: null,
+                DesiredWaistCm: null),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -908,7 +908,7 @@ public partial class UsersFeatureTests {
         Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(user.Id.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Equal(74.5, result.Value.DesiredWeight);
+        Assert.Equal(74.5, result.Value.DesiredWeightKg);
     }
 
     [Fact]
@@ -952,7 +952,7 @@ public partial class UsersFeatureTests {
         Result<UserDesiredWaistModel> result = await handler.Handle(new GetDesiredWaistQuery(user.Id.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Equal(79.5, result.Value.DesiredWaist);
+        Assert.Equal(79.5, result.Value.DesiredWaistCm);
     }
 
     [Fact]
@@ -989,16 +989,16 @@ public partial class UsersFeatureTests {
             CarbTarget: 220,
             FiberTarget: 30,
             WaterGoal: 2.1,
-            DesiredWeight: 73,
-            DesiredWaist: 78));
+            DesiredWeightKg: 73,
+            DesiredWaistCm: 78));
         var handler = new GetUserGoalsQueryHandler(new SingleUserRepository(user), new SingleUserRepository(user));
 
         Result<GoalsModel> result = await handler.Handle(new GetUserGoalsQuery(user.Id.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(2100, result.Value.DailyCalorieTarget);
-        Assert.Equal(73, result.Value.DesiredWeight);
-        Assert.Equal(78, result.Value.DesiredWaist);
+        Assert.Equal(73, result.Value.DesiredWeightKg);
+        Assert.Equal(78, result.Value.DesiredWaistCm);
     }
 
     [Fact]
@@ -1037,8 +1037,8 @@ public partial class UsersFeatureTests {
             CarbTarget: 250,
             FiberTarget: 28,
             WaterGoal: 2.2,
-            DesiredWeight: 72,
-            DesiredWaist: 77));
+            DesiredWeightKg: 72,
+            DesiredWaistCm: 77));
         IUserLookupRepository userLookupRepository = Substitute.For<IUserLookupRepository>();
         userLookupRepository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
         var service = new UserContextService(userLookupRepository, Substitute.For<IUserWriteRepository>());
@@ -1047,8 +1047,8 @@ public partial class UsersFeatureTests {
 
         ResultAssert.Success(result);
         Assert.Equal(2150, result.Value.DailyCalorieTarget);
-        Assert.Equal(72, result.Value.DesiredWeight);
-        Assert.Equal(77, result.Value.DesiredWaist);
+        Assert.Equal(72, result.Value.DesiredWeightKg);
+        Assert.Equal(77, result.Value.DesiredWaistCm);
     }
 
     [Fact]
@@ -1061,8 +1061,8 @@ public partial class UsersFeatureTests {
             CarbTarget: null,
             FiberTarget: null,
             WaterGoal: 2.4,
-            DesiredWeight: 71,
-            DesiredWaist: null));
+            DesiredWeightKg: 71,
+            DesiredWaistCm: null));
         IUserLookupRepository userLookupRepository = Substitute.For<IUserLookupRepository>();
         userLookupRepository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
         var service = new UserContextService(userLookupRepository, Substitute.For<IUserWriteRepository>());
@@ -1087,8 +1087,8 @@ public partial class UsersFeatureTests {
             () => Assert.Equal(user.HydrationGoal ?? user.WaterGoal, hydration.EffectiveWaterGoal),
             () => Assert.Equal(user.CalculateBmr(), tdee.Bmr),
             () => Assert.Equal(user.CalculateEstimatedTdee(), tdee.EstimatedTdee),
-            () => Assert.Equal(user.Weight, tdee.Weight),
-            () => Assert.Equal(user.DesiredWeight, tdee.DesiredWeight),
+            () => Assert.Equal(user.WeightKg, tdee.WeightKg),
+            () => Assert.Equal(user.DesiredWeightKg, tdee.DesiredWeightKg),
             () => Assert.Equal(user.DailyCalorieTarget, tdee.DailyCalorieTarget),
             () => Assert.Equal(user.DailyCalorieTarget, weeklyCheckIn.DailyCalorieTarget),
             () => Assert.Equal(user.Email, dashboard.Email),
@@ -1177,7 +1177,7 @@ public partial class UsersFeatureTests {
             Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
             return result.IsFailure
                 ? Result.Failure<UserDesiredWeightModel>(result.Error)
-                : Result.Success(new UserDesiredWeightModel(result.Value.DesiredWeight));
+                : Result.Success(new UserDesiredWeightModel(result.Value.DesiredWeightKg));
         }
 
         public Task<Result<IReadOnlyList<WeightGoalHistoryModel>>> GetWeightGoalHistoryAsync(
@@ -1197,8 +1197,8 @@ public partial class UsersFeatureTests {
             return result.IsFailure
                 ? Result.Failure<WeightHistoryProfileModel>(result.Error)
                 : Result.Success(new WeightHistoryProfileModel(
-                    result.Value.Height,
-                    new UserDesiredWeightModel(result.Value.DesiredWeight),
+                    result.Value.HeightCm,
+                    new UserDesiredWeightModel(result.Value.DesiredWeightKg),
                     []));
         }
 
@@ -1209,8 +1209,8 @@ public partial class UsersFeatureTests {
             return result.IsFailure
                 ? Result.Failure<WaistHistoryProfileModel>(result.Error)
                 : Result.Success(new WaistHistoryProfileModel(
-                    result.Value.Height,
-                    new UserDesiredWaistModel(result.Value.DesiredWaist),
+                    result.Value.HeightCm,
+                    new UserDesiredWaistModel(result.Value.DesiredWaistCm),
                     []));
         }
 
@@ -1218,7 +1218,7 @@ public partial class UsersFeatureTests {
             Result<User> result = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
             return result.IsFailure
                 ? Result.Failure<UserDesiredWaistModel>(result.Error)
-                : Result.Success(new UserDesiredWaistModel(result.Value.DesiredWaist));
+                : Result.Success(new UserDesiredWaistModel(result.Value.DesiredWaistCm));
         }
 
         public async Task<Result<UserNotificationPreferencesModel>> GetNotificationPreferencesAsync(UserId userId, CancellationToken cancellationToken) {
@@ -1438,7 +1438,7 @@ public partial class UsersFeatureTests {
                 invitation.ClientUser?.ProfileImage,
                 invitation.ClientUser?.BirthDate,
                 invitation.ClientUser?.Gender,
-                invitation.ClientUser?.Height,
+                invitation.ClientUser?.HeightCm,
                 invitation.ClientUser?.ActivityLevel ?? ActivityLevel.Moderate,
                 invitation.DietologistUser?.Email,
                 invitation.DietologistUser?.FirstName,

@@ -483,7 +483,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.NotNull(payload);
         Assert.Equal("Validation.Invalid", payload.Error);
         Assert.NotNull(payload.Errors);
-        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "desiredWeight", StringComparison.Ordinal));
+        Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "desiredWeightKg", StringComparison.Ordinal));
     }
 
     [Fact]

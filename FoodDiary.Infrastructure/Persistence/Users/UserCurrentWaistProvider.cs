@@ -11,7 +11,7 @@ public sealed class UserCurrentWaistProvider(FoodDiaryDbContext context) : IUser
             .Where(entry => entry.UserId == userId)
             .OrderByDescending(entry => entry.Date)
             .ThenByDescending(entry => entry.CreatedOnUtc)
-            .Select(entry => (double?)entry.Circumference)
+            .Select(entry => (double?)entry.CircumferenceCm)
             .FirstOrDefaultAsync(cancellationToken)
             .ConfigureAwait(false);
     }

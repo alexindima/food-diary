@@ -7,6 +7,6 @@ namespace FoodDiary.Application.BodyMetrics.WaistEntries.Models;
 public sealed record WaistHistoryPageSummaryModel(
     IReadOnlyList<WaistEntryModel> Entries,
     IReadOnlyList<WaistEntrySummaryModel> Summary,
-    double? Height,
+    double? HeightCm,
     UserDesiredWaistModel Goal,
     IReadOnlyList<WaistGoalHistoryModel> GoalHistory);

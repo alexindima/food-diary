@@ -33,11 +33,11 @@ import {
 
 type WeightEntryFormModel = {
     date: string;
-    weight: string;
+    weightKg: string;
 };
 
 type DesiredWeightFormModel = {
-    weight: string;
+    weightKg: string;
 };
 
 type WeightCustomRangeFormModel = {
@@ -69,8 +69,8 @@ export class WeightHistoryFacade {
     public readonly entryError = signal<string | null>(null);
     public readonly entrySaveVersion = signal(0);
     public readonly isEditing = signal(false);
-    public readonly weightGoal = signal<DesiredWeightResponse>({ desiredWeight: null, startWeight: null, startedAtUtc: null });
-    public readonly desiredWeight = computed(() => this.weightGoal().desiredWeight);
+    public readonly weightGoal = signal<DesiredWeightResponse>({ desiredWeightKg: null, startWeightKg: null, startedAtUtc: null });
+    public readonly desiredWeightKg = computed(() => this.weightGoal().desiredWeightKg);
     public readonly weightGoalHistory = signal<WeightGoalHistoryItem[]>([]);
     public readonly hasCompletedWeightGoals = computed(() => this.weightGoalHistory().some(goal => goal.status !== 'Active'));
     public readonly lastCompletedWeightGoal = computed(() => this.weightGoalHistory().find(goal => goal.status !== 'Active') ?? null);
@@ -84,7 +84,7 @@ export class WeightHistoryFacade {
 
     public readonly formModel = signal<WeightEntryFormModel>({
         date: formatWeightHistoryDateInput(new Date()),
-        weight: '',
+        weightKg: '',
     });
     private readonly submitWeightEntryFormAsync = async (): Promise<void> => {
         await this.submitAsync();
@@ -93,8 +93,8 @@ export class WeightHistoryFacade {
         this.formModel,
         path => {
             required(path.date);
-            required(path.weight);
-            validate(path.weight, ({ value }) => {
+            required(path.weightKg);
+            validate(path.weightKg, ({ value }) => {
                 const parsed = parseDecimalInput(value());
                 return parsed === null || parsed < MIN_WEIGHT_KG || parsed > MAX_WEIGHT_KG
                     ? { kind: 'weightRange', message: 'Weight is out of range' }
@@ -108,7 +108,7 @@ export class WeightHistoryFacade {
         },
     );
 
-    public readonly desiredWeightModel = signal<DesiredWeightFormModel>({ weight: '' });
+    public readonly desiredWeightModel = signal<DesiredWeightFormModel>({ weightKg: '' });
     public readonly desiredWeightForm = form(this.desiredWeightModel);
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
@@ -117,7 +117,7 @@ export class WeightHistoryFacade {
         buildWeightHistoryChartPoints(this.summaryPoints(), resolveTranslateLanguage(this.translate)),
     );
 
-    public readonly latestWeight = computed<number | null>(() => this.latestEntry()?.weight ?? null);
+    public readonly latestWeight = computed<number | null>(() => this.latestEntry()?.weightKg ?? null);
     public readonly latestWeightDate = computed<string | null>(() => this.latestEntry()?.date ?? null);
 
     public readonly bmiViewModel = computed(() => buildBmiViewModel(this.userHeightCm(), this.latestWeight()));
@@ -190,7 +190,7 @@ export class WeightHistoryFacade {
                 return;
             }
 
-            this.form.weight().value.set(payload.weight.toString());
+            this.form.weightKg().value.set(payload.weightKg.toString());
         } catch (error: unknown) {
             this.handleEntrySaveError(error);
         }
@@ -201,7 +201,7 @@ export class WeightHistoryFacade {
         this.editingEntryId.set(entry.id);
         this.formModel.set({
             date: formatWeightHistoryDateInput(new Date(entry.date)),
-            weight: entry.weight.toString(),
+            weightKg: entry.weightKg.toString(),
         });
     }
 
@@ -209,7 +209,7 @@ export class WeightHistoryFacade {
         this.resetEditingState();
         this.formModel.set({
             date: formatWeightHistoryDateInput(new Date()),
-            weight: this.latestWeight()?.toString() ?? '',
+            weightKg: this.latestWeight()?.toString() ?? '',
         });
     }
 
@@ -255,7 +255,7 @@ export class WeightHistoryFacade {
             .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
                 this.weightGoal.set(goal);
-                this.desiredWeightModel.set({ weight: goal.desiredWeight?.toString() ?? '' });
+                this.desiredWeightModel.set({ weightKg: goal.desiredWeightKg?.toString() ?? '' });
                 this.desiredWeightSaveVersion.update(version => version + 1);
                 this.loadWeightGoalHistory();
             });
@@ -274,14 +274,14 @@ export class WeightHistoryFacade {
             .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
                 this.weightGoal.set(goal);
-                this.desiredWeightModel.set({ weight: '' });
+                this.desiredWeightModel.set({ weightKg: '' });
                 this.desiredWeightSaveVersion.update(version => version + 1);
                 this.loadWeightGoalHistory();
             });
     }
 
     private parseDesiredWeight(): number | null | undefined {
-        const rawValue = this.desiredWeightModel().weight.trim();
+        const rawValue = this.desiredWeightModel().weightKg.trim();
         if (rawValue.length === 0) {
             return null;
         }
@@ -345,12 +345,12 @@ export class WeightHistoryFacade {
                 if (this.selectedRange() === 'month') {
                     this.rollingMonthSummaryPoints.set(page.summary);
                 }
-                this.userHeightCm.set(page.height);
+                this.userHeightCm.set(page.heightCm);
                 this.weightGoal.set(page.goal);
                 this.weightGoalHistory.set(page.goalHistory);
-                this.desiredWeightModel.set({ weight: page.goal.desiredWeight?.toString() ?? '' });
+                this.desiredWeightModel.set({ weightKg: page.goal.desiredWeightKg?.toString() ?? '' });
                 if (!this.isEditing()) {
-                    this.form.weight().value.set(latestEntry?.weight.toString() ?? '');
+                    this.form.weightKg().value.set(latestEntry?.weightKg.toString() ?? '');
                 }
             });
     }
@@ -397,18 +397,18 @@ export class WeightHistoryFacade {
     }
 
     private buildPayload(): CreateWeightEntryPayload | null {
-        const { date: rawDate, weight: rawWeight } = this.formModel();
+        const { date: rawDate, weightKg: rawWeight } = this.formModel();
         if (rawDate.length === 0 || rawWeight.length === 0) {
             return null;
         }
 
         const date = new Date(rawDate);
         const utcDate = normalizeStartOfDay(date);
-        const weight = Number(rawWeight);
+        const weightKg = Number(rawWeight);
 
         return {
             date: utcDate.toISOString(),
-            weight,
+            weightKg,
         };
     }
 

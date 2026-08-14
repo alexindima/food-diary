@@ -157,15 +157,15 @@ public sealed class GetAttentionSignalsQueryHandler(
         double changePercent) {
         AttentionSignalWeightPointReadModel[] points = [
             .. metrics.WeightPoints
-                .Where(point => point.Weight > 0)
+                .Where(point => point.WeightKg > 0)
                 .OrderBy(point => point.Date),
         ];
         if (points.Length < 2) {
             return;
         }
 
-        double percent = Math.Abs(points[^1].Weight - points[0].Weight) /
-                         points[0].Weight * 100;
+        double percent = Math.Abs(points[^1].WeightKg - points[0].WeightKg) /
+                         points[0].WeightKg * 100;
         if (percent < changePercent) {
             return;
         }

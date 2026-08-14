@@ -16655,7 +16655,7 @@
       "structuralRiskScore": 1.72
     },
     {
-      "path": "FoodDiary.Domain/ValueObjects/DesiredWaist.cs",
+      "path": "FoodDiary.Domain/ValueObjects/DesiredWaistCm.cs",
       "nonBlankLines": 17,
       "decisionPoints": 2,
       "criticalSymbols": 0,
@@ -16663,7 +16663,7 @@
       "structuralRiskScore": 3.34
     },
     {
-      "path": "FoodDiary.Domain/ValueObjects/DesiredWeight.cs",
+      "path": "FoodDiary.Domain/ValueObjects/DesiredWeightKg.cs",
       "nonBlankLines": 17,
       "decisionPoints": 2,
       "criticalSymbols": 0,
@@ -30176,11 +30176,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-profile-completeness.mapper.ts",
-      "nonBlankLines": 7,
+      "nonBlankLines": 9,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.14
+      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-tour.ts",
@@ -31544,11 +31544,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.ts",
-      "nonBlankLines": 62,
+      "nonBlankLines": 63,
       "decisionPoints": 4,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.24
+      "structuralRiskScore": 7.26
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.ts",

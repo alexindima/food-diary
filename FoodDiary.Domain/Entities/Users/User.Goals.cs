@@ -28,8 +28,8 @@ public sealed partial class User {
             CarbTarget: carbTarget,
             FiberTarget: fiberTarget,
             WaterGoal: waterGoal,
-            DesiredWeight: desiredWeight,
-            DesiredWaist: desiredWaist));
+            DesiredWeightKg: desiredWeight,
+            DesiredWaistCm: desiredWaist));
     }
 
     public void UpdateGoals(UserGoalUpdate update) {
@@ -42,8 +42,8 @@ public sealed partial class User {
             fiberTarget: update.FiberTarget,
             waterGoal: update.WaterGoal);
 
-        EnsureDesiredWeight(update.DesiredWeight, nameof(update.DesiredWeight));
-        EnsureDesiredWaist(update.DesiredWaist, nameof(update.DesiredWaist));
+        EnsureDesiredWeight(update.DesiredWeightKg, nameof(update.DesiredWeightKg));
+        EnsureDesiredWaist(update.DesiredWaistCm, nameof(update.DesiredWaistCm));
         EnsureDayCalorieTarget(update.MondayCalories, nameof(update.MondayCalories));
         EnsureDayCalorieTarget(update.TuesdayCalories, nameof(update.TuesdayCalories));
         EnsureDayCalorieTarget(update.WednesdayCalories, nameof(update.WednesdayCalories));
@@ -59,8 +59,8 @@ public sealed partial class User {
             CarbTarget: updatedGoals.CarbTarget,
             FiberTarget: updatedGoals.FiberTarget,
             WaterGoal: updatedGoals.WaterGoal,
-            DesiredWeight: update.DesiredWeight ?? DesiredWeight,
-            DesiredWaist: update.DesiredWaist ?? DesiredWaist,
+            DesiredWeightKg: update.DesiredWeightKg ?? DesiredWeightKg,
+            DesiredWaistCm: update.DesiredWaistCm ?? DesiredWaistCm,
             CalorieCyclingEnabled: update.CalorieCyclingEnabled ?? CalorieCyclingEnabled,
             MondayCalories: update.MondayCalories ?? MondayCalories,
             TuesdayCalories: update.TuesdayCalories ?? TuesdayCalories,
@@ -85,7 +85,7 @@ public sealed partial class User {
     public void UpdateDesiredWeight(double? desiredWeight) {
         EnsureNotDeleted();
         EnsureDesiredWeight(desiredWeight, nameof(desiredWeight));
-        ApplyGoalState(GetGoalState() with { DesiredWeight = desiredWeight });
+        ApplyGoalState(GetGoalState() with { DesiredWeightKg = desiredWeight });
         SetModified();
     }
 
@@ -111,7 +111,7 @@ public sealed partial class User {
     public void UpdateDesiredWaist(double? desiredWaist) {
         EnsureNotDeleted();
         EnsureDesiredWaist(desiredWaist, nameof(desiredWaist));
-        ApplyGoalState(GetGoalState() with { DesiredWaist = desiredWaist });
+        ApplyGoalState(GetGoalState() with { DesiredWaistCm = desiredWaist });
         SetModified();
     }
 

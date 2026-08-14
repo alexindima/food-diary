@@ -1,6 +1,6 @@
 <fd-ui-dialog
     size="sm"
-    [title]="(desiredWeight() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.CONFIGURE_GOAL') | translate"
+    [title]="(desiredWeightKg() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.CONFIGURE_GOAL') | translate"
     [dismissible]="!isSaving()"
     (close)="close()"
 >
@@ -16,13 +16,13 @@
             (suffixButtonClicked)="weightField().value.set('')"
         />
         <div class="fd-row fd-wrap fd-justify-end fd-gap-actions">
-            @if (desiredWeight() !== null) {
+            @if (desiredWeightKg() !== null) {
                 <fd-ui-button type="button" variant="danger" fill="text" [loading]="isSaving()" (click)="cancelGoal()">
                     {{ 'WEIGHT_HISTORY.CANCEL_GOAL' | translate }}
                 </fd-ui-button>
             }
             <fd-ui-button type="button" [loading]="isSaving()" (click)="save()">
-                {{ (desiredWeight() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.START_NEW_GOAL') | translate }}
+                {{ (desiredWeightKg() === null ? 'WEIGHT_HISTORY.SET_GOAL' : 'WEIGHT_HISTORY.START_NEW_GOAL') | translate }}
             </fd-ui-button>
         </div>
     </div>

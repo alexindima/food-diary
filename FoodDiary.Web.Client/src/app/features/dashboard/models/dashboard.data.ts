@@ -53,13 +53,13 @@ export type WeeklyCaloriesPoint = {
 export type DashboardWeight = {
     latest: WeightEntrySummary | null;
     previous: WeightEntrySummary | null;
-    desired: number | null;
+    desiredWeightKg: number | null;
 };
 
 export type DashboardWaist = {
     latest: WaistEntrySummary | null;
     previous: WaistEntrySummary | null;
-    desired: number | null;
+    desiredWaistCm: number | null;
 };
 
 export type DashboardMeals = {
@@ -69,10 +69,10 @@ export type DashboardMeals = {
 
 export type WeightEntrySummary = {
     date: string;
-    weight: number;
+    weightKg: number;
 };
 
 export type WaistEntrySummary = {
     date: string;
-    circumference: number;
+    circumferenceCm: number;
 };

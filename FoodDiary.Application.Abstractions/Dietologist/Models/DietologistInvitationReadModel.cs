@@ -13,7 +13,7 @@ public sealed record DietologistInvitationReadModel(
     string? ClientProfileImage,
     DateTime? ClientBirthDate,
     string? ClientGender,
-    double? ClientHeight,
+    double? ClientHeightCm,
     ActivityLevel ClientActivityLevel,
     string? DietologistUserEmail,
     string? DietologistFirstName,

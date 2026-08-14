@@ -135,7 +135,7 @@ public sealed class BulkCreateRecommendationsHandlerTests {
             ClientProfileImage: null,
             ClientBirthDate: null,
             ClientGender: null,
-            ClientHeight: null,
+            ClientHeightCm: null,
             ClientActivityLevel: ActivityLevel.Moderate,
             DietologistUserEmail: "dietologist@example.com",
             DietologistFirstName: "Dietologist",

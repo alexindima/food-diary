@@ -68,8 +68,8 @@ public sealed partial class User {
             LastName: lastName,
             BirthDate: birthDate,
             Gender: gender,
-            Weight: weight,
-            Height: height));
+            WeightKg: weight,
+            HeightCm: height));
     }
 
     public void UpdatePersonalInfo(UserPersonalInfoUpdate update) {
@@ -80,8 +80,8 @@ public sealed partial class User {
             update.LastName,
             update.BirthDate,
             update.Gender,
-            update.Weight,
-            update.Height)) {
+            update.WeightKg,
+            update.HeightCm)) {
             SetModified();
         }
     }
@@ -176,13 +176,13 @@ public sealed partial class User {
             }
         }
 
-        if (weight.HasValue && !NullableAreClose(state.Weight, weight.Value)) {
-            state = state with { Weight = weight };
+        if (weight.HasValue && !NullableAreClose(state.WeightKg, weight.Value)) {
+            state = state with { WeightKg = weight };
             changed = true;
         }
 
-        if (height.HasValue && !NullableAreClose(state.Height, height.Value)) {
-            state = state with { Height = height };
+        if (height.HasValue && !NullableAreClose(state.HeightCm, height.Value)) {
+            state = state with { HeightCm = height };
             changed = true;
         }
 

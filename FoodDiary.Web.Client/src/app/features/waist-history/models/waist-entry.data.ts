@@ -2,12 +2,12 @@ export type WaistEntry = {
     id: string;
     userId: string;
     date: string;
-    circumference: number;
+    circumferenceCm: number;
 };
 
 export type CreateWaistEntryPayload = {
     date: string;
-    circumference: number;
+    circumferenceCm: number;
 };
 
 export type UpdateWaistEntryPayload = CreateWaistEntryPayload;
@@ -22,7 +22,7 @@ export type WaistEntryFilters = {
 export type WaistEntrySummaryPoint = {
     startDate: string;
     endDate: string;
-    averageCircumference: number;
+    averageCircumferenceCm: number;
 };
 
 export type WaistEntrySummaryFilters = {
@@ -34,7 +34,7 @@ export type WaistEntrySummaryFilters = {
 export type WaistHistoryPageSummary = {
     entries: WaistEntry[];
     summary: WaistEntrySummaryPoint[];
-    height: number | null;
+    heightCm: number | null;
     goal: DesiredWaistResponse;
     goalHistory: WaistGoalHistoryItem[];
 };

@@ -178,7 +178,7 @@ public class WaistEntriesFeatureTests {
         WaistEntrySummaryModel summary = Assert.Single(result.Value);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), summary.StartDate);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), summary.EndDate);
-        Assert.Equal(82, summary.AverageCircumference);
+        Assert.Equal(82, summary.AverageCircumferenceCm);
     }
 
     [Fact]
@@ -313,11 +313,11 @@ public class WaistEntriesFeatureTests {
             result.Value,
             entry => {
                 Assert.Equal(newer.Id.Value, entry.Id);
-                Assert.Equal(81, entry.Circumference);
+                Assert.Equal(81, entry.CircumferenceCm);
             },
             entry => {
                 Assert.Equal(older.Id.Value, entry.Id);
-                Assert.Equal(82, entry.Circumference);
+                Assert.Equal(82, entry.CircumferenceCm);
             });
     }
 
@@ -508,7 +508,7 @@ public class WaistEntriesFeatureTests {
         ResultAssert.Success(result);
         Assert.NotNull(result.Value);
         Assert.Equal(latest.Id.Value, result.Value.Id);
-        Assert.Equal(81, result.Value.Circumference);
+        Assert.Equal(81, result.Value.CircumferenceCm);
     }
 
     [Fact]
@@ -537,8 +537,8 @@ public class WaistEntriesFeatureTests {
         Assert.Multiple(
             () => Assert.Equal([newer.Id.Value, older.Id.Value], entries.Select(entry => entry.Id)),
             () => Assert.Equal(newer.Id.Value, latest?.Id),
-            () => Assert.Equal(82, summaries[0].AverageCircumference),
-            () => Assert.Equal(0, summaries[1].AverageCircumference));
+            () => Assert.Equal(82, summaries[0].AverageCircumferenceCm),
+            () => Assert.Equal(0, summaries[1].AverageCircumferenceCm));
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {
@@ -644,7 +644,7 @@ public class WaistEntriesFeatureTests {
                 descending,
                 cancellationToken).ConfigureAwait(false);
 
-            return [.. entries.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
+            return [.. entries.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))];
         }
 
         public async Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(
@@ -653,7 +653,7 @@ public class WaistEntriesFeatureTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) {
             IReadOnlyList<WaistEntry> entries = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-            return [.. entries.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
+            return [.. entries.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))];
         }
 
         async Task<IReadOnlyList<WaistEntryModel>> IWaistEntryReadService.GetEntriesAsync(
@@ -716,7 +716,7 @@ public class WaistEntriesFeatureTests {
                 return new WaistEntrySummaryModel(start, end, 0);
             }
 
-            double avg = bucketEntries.Average(entry => entry.Circumference);
+            double avg = bucketEntries.Average(entry => entry.CircumferenceCm);
             return new WaistEntrySummaryModel(start, end, Math.Round(avg, 2, MidpointRounding.ToEven));
         }
     }

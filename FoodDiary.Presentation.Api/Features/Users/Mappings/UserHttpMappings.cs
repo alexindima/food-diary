@@ -31,12 +31,12 @@ public static class UserHttpMappings {
 
     extension(UpdateDesiredWeightHttpRequest request) {
         public UpdateDesiredWeightCommand ToDesiredWeightCommand(Guid userId) =>
-                new(userId, request.DesiredWeight);
+                new(userId, request.DesiredWeightKg);
     }
 
     extension(UpdateDesiredWaistHttpRequest request) {
         public UpdateDesiredWaistCommand ToDesiredWaistCommand(Guid userId) =>
-                new(userId, request.DesiredWaist);
+                new(userId, request.DesiredWaistCm);
     }
 
     extension(Guid userId) {
@@ -54,8 +54,8 @@ public static class UserHttpMappings {
                 LastName: request.LastName,
                 BirthDate: request.BirthDate,
                 Gender: request.Gender,
-                Weight: request.Weight,
-                Height: request.Height,
+                WeightKg: request.WeightKg,
+                HeightCm: request.HeightCm,
                 ActivityLevel: request.ActivityLevel,
                 StepGoal: request.StepGoal,
                 HydrationGoal: request.HydrationGoal,

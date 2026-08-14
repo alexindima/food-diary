@@ -12,8 +12,8 @@ public sealed class WaistGoalInvariantTests {
         var goal = WaistGoal.Start(UserId.New(), 75, 88.5, startedAtUtc);
 
         Assert.Multiple(
-            () => Assert.Equal(75, goal.TargetWaist),
-            () => Assert.Equal(88.5, goal.StartWaist),
+            () => Assert.Equal(75, goal.TargetWaistCm),
+            () => Assert.Equal(88.5, goal.StartWaistCm),
             () => Assert.Equal(startedAtUtc, goal.StartedAtUtc),
             () => Assert.Equal(WaistGoalStatus.Active, goal.Status),
             () => Assert.Null(goal.EndedAtUtc));
@@ -29,8 +29,8 @@ public sealed class WaistGoalInvariantTests {
         Assert.Multiple(
             () => Assert.Equal(WaistGoalStatus.Replaced, goal.Status),
             () => Assert.Equal(endedAtUtc, goal.EndedAtUtc),
-            () => Assert.Equal(84, goal.EndWaist),
-            () => Assert.Equal(88.5, goal.StartWaist));
+            () => Assert.Equal(84, goal.EndWaistCm),
+            () => Assert.Equal(88.5, goal.StartWaistCm));
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public sealed class WaistGoalInvariantTests {
 
         Assert.Multiple(
             () => Assert.Equal(WaistGoalStatus.Cancelled, goal.Status),
-            () => Assert.Equal(87, goal.EndWaist));
+            () => Assert.Equal(87, goal.EndWaistCm));
     }
 
     [Fact]

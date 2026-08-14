@@ -34,8 +34,8 @@ public sealed class GoalsHttpMappingsTests {
             () => Assert.Equal(250, command.CarbTarget),
             () => Assert.Equal(30, command.FiberTarget),
             () => Assert.Equal(2500, command.WaterGoal),
-            () => Assert.Equal(75, command.DesiredWeight),
-            () => Assert.Equal(80, command.DesiredWaist),
+            () => Assert.Equal(75, command.DesiredWeightKg),
+            () => Assert.Equal(80, command.DesiredWaistCm),
             () => Assert.True(command.CalorieCyclingEnabled),
             () => Assert.Equal(1800, command.MondayCalories),
             () => Assert.Equal(2000, command.SundayCalories));
@@ -58,7 +58,7 @@ public sealed class GoalsHttpMappingsTests {
 
     [Fact]
     public void GoalsModel_ToHttpResponse_WithNullValues() {
-        var model = new GoalsModel(DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeight: null, DesiredWaist: null,
+        var model = new GoalsModel(DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeightKg: null, DesiredWaistCm: null,
         CalorieCyclingEnabled: false, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null);
 
         GoalsHttpResponse response = model.ToHttpResponse();

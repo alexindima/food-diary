@@ -27,12 +27,12 @@ const MOCK_SNAPSHOT: DashboardSnapshot = {
     weight: {
         latest: null,
         previous: null,
-        desired: null,
+        desiredWeightKg: null,
     },
     waist: {
         latest: null,
         previous: null,
-        desired: null,
+        desiredWaistCm: null,
     },
     meals: {
         items: [],

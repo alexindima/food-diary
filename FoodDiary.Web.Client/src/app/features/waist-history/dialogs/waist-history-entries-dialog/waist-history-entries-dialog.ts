@@ -12,7 +12,7 @@ import { buildWaistEntryViewModels } from '../../lib/waist-history-chart.mapper'
 import type { WaistEntry } from '../../models/waist-entry.data';
 
 export type WaistHistoryEntriesDialogResult = { action: 'edit' | 'remove'; entry: WaistEntry };
-export type WaistHistoryEntriesDialogData = { entries: WaistEntry[]; desiredWaist: number | null };
+export type WaistHistoryEntriesDialogData = { entries: WaistEntry[]; desiredWaistCm: number | null };
 
 @Component({
     selector: 'fd-waist-history-entries-dialog',
@@ -30,7 +30,7 @@ export class WaistHistoryEntriesDialogComponent {
         const today = formatDateInputValue(new Date());
         return buildWaistEntryViewModels(this.data.entries, resolveTranslateLanguage(this.translateService)).map((item, index, items) => {
             const olderEntry = items.at(index + 1)?.entry;
-            const change = olderEntry === undefined ? null : item.entry.circumference - olderEntry.circumference;
+            const change = olderEntry === undefined ? null : item.entry.circumferenceCm - olderEntry.circumferenceCm;
             return { ...item, isToday: item.entry.date.startsWith(today), change };
         });
     });

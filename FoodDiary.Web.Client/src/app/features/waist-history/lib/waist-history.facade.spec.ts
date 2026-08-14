@@ -32,12 +32,12 @@ let userService: {
 beforeEach(() => {
     waistEntriesService = createWaistEntriesServiceMock();
     userService = {
-        getWaistGoal: vi.fn().mockReturnValue(of({ desiredWaist: TARGET_WAIST, startWaist: 84, startedAtUtc: '2026-03-01T00:00:00Z' })),
+        getWaistGoal: vi.fn().mockReturnValue(of({ desiredWaistCm: TARGET_WAIST, startWaistCm: 84, startedAtUtc: '2026-03-01T00:00:00Z' })),
         getWaistGoalHistory: vi.fn().mockReturnValue(of([])),
-        getInfo: vi.fn().mockReturnValue(of({ height: 180 })),
+        getInfo: vi.fn().mockReturnValue(of({ heightCm: 180 })),
         updateWaistGoal: vi
             .fn()
-            .mockReturnValue(of({ desiredWaist: UPDATED_TARGET_WAIST, startWaist: 82, startedAtUtc: '2026-04-01T00:00:00Z' })),
+            .mockReturnValue(of({ desiredWaistCm: UPDATED_TARGET_WAIST, startWaistCm: 82, startedAtUtc: '2026-04-01T00:00:00Z' })),
     };
 
     TestBed.configureTestingModule({
@@ -72,8 +72,8 @@ describe('WaistHistoryFacade loading', () => {
         expect(userService.getInfo).not.toHaveBeenCalled();
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
-        expect(facade.desiredWaist()).toBe(TARGET_WAIST);
-        expect(facade.formModel().circumference).toBe('82');
+        expect(facade.desiredWaistCm()).toBe(TARGET_WAIST);
+        expect(facade.formModel().circumferenceCm).toBe('82');
         expect(facade.whtViewModel()?.value).toBe(EXPECTED_WHTR);
     });
 });
@@ -87,14 +87,14 @@ describe('WaistHistoryFacade entries', () => {
 
         facade.formModel.set({
             date: '2026-04-02',
-            circumference: '81.7',
+            circumferenceCm: '81.7',
         });
 
         facade.submit();
 
         expect(waistEntriesService.create).toHaveBeenCalledWith({
             date: '2026-04-02T00:00:00.000Z',
-            circumference: 81.7,
+            circumferenceCm: 81.7,
         });
         await vi.waitFor(() => {
             expect(waistEntriesService.getPageSummary).toHaveBeenCalledTimes(1);
@@ -104,7 +104,7 @@ describe('WaistHistoryFacade entries', () => {
     it('does not submit invalid form', () => {
         facade.formModel.set({
             date: '',
-            circumference: '',
+            circumferenceCm: '',
         });
 
         facade.submit();
@@ -118,7 +118,7 @@ describe('WaistHistoryFacade entries', () => {
         waistEntriesService.create.mockReturnValueOnce(throwError(() => ({ error: { error: 'WaistEntry.AlreadyExists' } })));
         facade.formModel.set({
             date: '2026-04-02',
-            circumference: '81.7',
+            circumferenceCm: '81.7',
         });
 
         facade.submit();
@@ -131,7 +131,7 @@ describe('WaistHistoryFacade entries', () => {
     });
 
     it('switches to edit mode and updates the existing entry', async () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 };
+        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 };
 
         facade.startEdit(entry);
         facade.submit();
@@ -141,23 +141,23 @@ describe('WaistHistoryFacade entries', () => {
         });
         expect(waistEntriesService.update).toHaveBeenCalledWith('entry-1', {
             date: '2026-04-01T00:00:00.000Z',
-            circumference: 82,
+            circumferenceCm: 82,
         });
     });
 
     it('cancels editing and restores latest circumference in the form', () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 };
-        facade.entries.set([entry, { id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', circumference: 80.5 }]);
+        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 };
+        facade.entries.set([entry, { id: 'entry-2', userId: 'user-1', date: '2026-05-01T00:00:00Z', circumferenceCm: 80.5 }]);
 
         facade.startEdit(entry);
         facade.cancelEdit();
 
         expect(facade.isEditing()).toBe(false);
-        expect(facade.formModel().circumference).toBe('80.5');
+        expect(facade.formModel().circumferenceCm).toBe('80.5');
     });
 
     it('deletes entry and exits edit mode when edited entry is removed', () => {
-        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 };
+        const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 };
         facade.startEdit(entry);
 
         facade.deleteEntry(entry);
@@ -200,13 +200,13 @@ describe('WaistHistoryFacade ranges', () => {
 
 describe('WaistHistoryFacade desired waist', () => {
     it('saves desired waist after validation', () => {
-        facade.desiredWaistModel.set({ circumference: `${UPDATED_TARGET_WAIST}` });
+        facade.desiredWaistModel.set({ circumferenceCm: `${UPDATED_TARGET_WAIST}` });
 
         facade.saveDesiredWaist();
 
         expect(userService.updateWaistGoal).toHaveBeenCalledWith(UPDATED_TARGET_WAIST);
-        expect(facade.desiredWaist()).toBe(UPDATED_TARGET_WAIST);
-        expect(facade.desiredWaistModel().circumference).toBe(`${UPDATED_TARGET_WAIST}`);
+        expect(facade.desiredWaistCm()).toBe(UPDATED_TARGET_WAIST);
+        expect(facade.desiredWaistModel().circumferenceCm).toBe(`${UPDATED_TARGET_WAIST}`);
     });
 });
 
@@ -215,16 +215,16 @@ function createWaistEntriesServiceMock(): typeof waistEntriesService {
         getPageSummary: vi.fn().mockReturnValue(of(createWaistPageSummary())),
         getEntries: vi.fn().mockReturnValue(
             of([
-                { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 },
-                { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', circumference: 83.5 },
+                { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 },
+                { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', circumferenceCm: 83.5 },
             ]),
         ),
         getSummary: vi
             .fn()
-            .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82 }])),
-        getLatest: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 })),
-        create: vi.fn().mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', circumference: 81.7 })),
-        update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 })),
+            .mockReturnValue(of([{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumferenceCm: 82 }])),
+        getLatest: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 })),
+        create: vi.fn().mockReturnValue(of({ id: 'entry-3', userId: 'user-1', date: '2026-04-02T00:00:00Z', circumferenceCm: 81.7 })),
+        update: vi.fn().mockReturnValue(of({ id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 })),
         remove: vi.fn().mockReturnValue(of(void 0)),
     };
 }
@@ -232,12 +232,12 @@ function createWaistEntriesServiceMock(): typeof waistEntriesService {
 function createWaistPageSummary(): WaistHistoryPageSummary {
     return {
         entries: [
-            { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 },
-            { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', circumference: 83.5 },
+            { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumferenceCm: 82 },
+            { id: 'entry-2', userId: 'user-1', date: '2026-03-30T00:00:00Z', circumferenceCm: 83.5 },
         ],
-        summary: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference: 82 }],
-        height: 180,
-        goal: { desiredWaist: TARGET_WAIST, startWaist: 84, startedAtUtc: '2026-03-01T00:00:00Z' },
+        summary: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumferenceCm: 82 }],
+        heightCm: 180,
+        goal: { desiredWaistCm: TARGET_WAIST, startWaistCm: 84, startedAtUtc: '2026-03-01T00:00:00Z' },
         goalHistory: [],
     };
 }

@@ -14,11 +14,11 @@ import type { WeightHistoryChartPoint } from '../../lib/weight-history-chart.map
 export class WeightHistoryChartCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly chartPoints = input.required<readonly WeightHistoryChartPoint[]>();
-    public readonly desiredWeight = input.required<number | null>();
+    public readonly desiredWeightKg = input.required<number | null>();
     public readonly goalLabel = input.required<string>();
     protected readonly hasPoints = computed(() => this.chartPoints().some(point => point.value !== null));
     protected readonly referenceLines = computed<readonly FdUiLineChartReferenceLine[]>(() => {
-        const desiredWeight = this.desiredWeight();
-        return desiredWeight === null ? [] : [{ value: desiredWeight, label: this.goalLabel() }];
+        const desiredWeightKg = this.desiredWeightKg();
+        return desiredWeightKg === null ? [] : [{ value: desiredWeightKg, label: this.goalLabel() }];
     });
 }

@@ -622,7 +622,7 @@ export class UserManageComponent {
             language: userFormFields.language().value(),
             theme: userFormFields.theme().value(),
             uiStyle: userFormFields.uiStyle().value(),
-            height: userFormFields.height().value(),
+            heightCm: userFormFields.heightCm().value(),
             activityLevel: userFormFields.activityLevel().value(),
             stepGoal: userFormFields.stepGoal().value(),
             profileImage: userFormFields.profileImage().value(),
@@ -658,8 +658,8 @@ export class UserManageComponent {
                 this.userForm.lastName().value.set(normalizeOptionalTextInput(value));
                 break;
             }
-            case 'height': {
-                this.userForm.height().value.set(parseOptionalNumberInput(value));
+            case 'heightCm': {
+                this.userForm.heightCm().value.set(parseOptionalNumberInput(value));
                 break;
             }
             default: {
@@ -687,7 +687,7 @@ export class UserManageComponent {
             'language',
             'theme',
             'uiStyle',
-            'height',
+            'heightCm',
             'activityLevel',
             'stepGoal',
         ] as const;

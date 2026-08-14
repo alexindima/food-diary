@@ -7,11 +7,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
-    private const double MaxWeight = DesiredWeight.MaxValue;
+    private const double MaxWeight = DesiredWeightKg.MaxValue;
 
     public UserId UserId { get; private set; }
     public DateTime Date { get; private set; }
-    public double Weight { get; private set; }
+    public double WeightKg { get; private set; }
 
     public User User { get; private set; } = null!;
 
@@ -29,7 +29,7 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
         var entry = new WeightEntry(WeightEntryId.New()) {
             UserId = userId,
             Date = normalizedDate,
-            Weight = normalizedWeight,
+            WeightKg = normalizedWeight,
         };
 
         entry.SetCreated();
@@ -41,8 +41,8 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
 
         if (weight.HasValue) {
             double normalizedWeight = NormalizeWeight(weight.Value);
-            if (!AreSame(Weight, normalizedWeight)) {
-                Weight = normalizedWeight;
+            if (!AreSame(WeightKg, normalizedWeight)) {
+                WeightKg = normalizedWeight;
                 changed = true;
             }
         }
@@ -72,11 +72,11 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
 
     private static double NormalizeWeight(double value) {
         if (double.IsNaN(value) || double.IsInfinity(value)) {
-            throw new ArgumentOutOfRangeException(nameof(value), "Weight must be a finite number.");
+            throw new ArgumentOutOfRangeException(nameof(value), "WeightKg must be a finite number.");
         }
 
         return value is <= 0 or > MaxWeight
-            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Weight must be in range (0, {MaxWeight}]."))
+            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"WeightKg must be in range (0, {MaxWeight}]."))
             : value;
     }
 

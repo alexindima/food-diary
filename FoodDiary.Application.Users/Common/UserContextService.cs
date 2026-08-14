@@ -67,8 +67,8 @@ internal sealed class UserContextService(
             user.Email,
             user.Language,
             user.DashboardLayoutJson,
-            user.DesiredWeight,
-            user.DesiredWaist,
+            user.DesiredWeightKg,
+            user.DesiredWaistCm,
             user.HydrationGoal,
             user.WaterGoal,
             user.ProteinTarget,
@@ -127,8 +127,8 @@ internal sealed class UserContextService(
         return Result.Success(new UserTdeeProfileModel(
             user.CalculateBmr(),
             user.CalculateEstimatedTdee(),
-            user.Weight,
-            user.DesiredWeight,
+            user.WeightKg,
+            user.DesiredWeightKg,
             user.DailyCalorieTarget));
     }
 
@@ -186,7 +186,7 @@ internal sealed class UserContextService(
     private static UserDesiredWeightModel ToDesiredWeightModel(User user) {
         FoodDiary.Domain.Entities.Tracking.WeightGoal? goal = user.WeightGoals.SingleOrDefault(
             item => item.Status == FoodDiary.Domain.Enums.WeightGoalStatus.Active);
-        return new UserDesiredWeightModel(user.DesiredWeight, goal?.StartWeight, goal?.StartedAtUtc);
+        return new UserDesiredWeightModel(user.DesiredWeightKg, goal?.StartWeightKg, goal?.StartedAtUtc);
     }
 
     public async Task<Result<IReadOnlyList<WeightGoalHistoryModel>>> GetWeightGoalHistoryAsync(
@@ -210,7 +210,7 @@ internal sealed class UserContextService(
     private static UserDesiredWaistModel ToDesiredWaistModel(User user) {
         FoodDiary.Domain.Entities.Tracking.WaistGoal? goal = user.WaistGoals.SingleOrDefault(
             item => item.Status == FoodDiary.Domain.Enums.WaistGoalStatus.Active);
-        return new UserDesiredWaistModel(user.DesiredWaist, goal?.StartWaist, goal?.StartedAtUtc);
+        return new UserDesiredWaistModel(user.DesiredWaistCm, goal?.StartWaistCm, goal?.StartedAtUtc);
     }
 
     public async Task<Result<IReadOnlyList<WaistGoalHistoryModel>>> GetWaistGoalHistoryAsync(
@@ -234,7 +234,7 @@ internal sealed class UserContextService(
 
         User user = userResult.Value;
         return Result.Success(new WeightHistoryProfileModel(
-            user.Height,
+            user.HeightCm,
             ToDesiredWeightModel(user),
             ToWeightGoalHistory(user)));
     }
@@ -249,7 +249,7 @@ internal sealed class UserContextService(
 
         User user = userResult.Value;
         return Result.Success(new WaistHistoryProfileModel(
-            user.Height,
+            user.HeightCm,
             ToDesiredWaistModel(user),
             ToWaistGoalHistory(user)));
     }
@@ -259,9 +259,9 @@ internal sealed class UserContextService(
             .OrderByDescending(static goal => goal.StartedAtUtc)
             .Select(static goal => new WeightGoalHistoryModel(
                 goal.Id.Value,
-                goal.TargetWeight,
-                goal.StartWeight,
-                goal.EndWeight,
+                goal.TargetWeightKg,
+                goal.StartWeightKg,
+                goal.EndWeightKg,
                 goal.StartedAtUtc,
                 goal.EndedAtUtc,
                 goal.Status.ToString()))];
@@ -271,9 +271,9 @@ internal sealed class UserContextService(
             .OrderByDescending(static goal => goal.StartedAtUtc)
             .Select(static goal => new WaistGoalHistoryModel(
                 goal.Id.Value,
-                goal.TargetWaist,
-                goal.StartWaist,
-                goal.EndWaist,
+                goal.TargetWaistCm,
+                goal.StartWaistCm,
+                goal.EndWaistCm,
                 goal.StartedAtUtc,
                 goal.EndedAtUtc,
                 goal.Status.ToString()))];

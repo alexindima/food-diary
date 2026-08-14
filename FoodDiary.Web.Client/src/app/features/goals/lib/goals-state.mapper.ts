@@ -63,8 +63,8 @@ export function buildGoalsRequest(state: GoalsState): UpdateGoalsRequest {
         carbTarget: state.macros.carbs,
         fiberTarget: state.macros.fiber,
         waterGoal: state.waterValue,
-        desiredWeight: normalizeDesiredBodyTarget(state.bodyTargets.weight),
-        desiredWaist: normalizeDesiredBodyTarget(state.bodyTargets.waist),
+        desiredWeightKg: normalizeDesiredBodyTarget(state.bodyTargets.weight),
+        desiredWaistCm: normalizeDesiredBodyTarget(state.bodyTargets.waist),
         calorieCyclingEnabled: state.calorieCyclingEnabled,
         ...(state.calorieCyclingEnabled && state.dayCalories),
     };

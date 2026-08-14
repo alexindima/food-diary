@@ -55,7 +55,7 @@ public class WaistEntryInvariantTests {
 
         entry.Update(circumference: 86.5, date: newDate);
 
-        Assert.Equal(86.5, entry.Circumference);
+        Assert.Equal(86.5, entry.CircumferenceCm);
         Assert.Equal(DateTime.SpecifyKind(newDate.ToUniversalTime().Date, DateTimeKind.Utc), entry.Date);
         Assert.NotNull(entry.ModifiedOnUtc);
     }

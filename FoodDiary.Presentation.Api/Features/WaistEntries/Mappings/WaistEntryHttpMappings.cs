@@ -16,7 +16,7 @@ public static class WaistEntryHttpMappings {
                 new(
                     userId,
                     request.Date,
-                    request.Circumference);
+                    request.CircumferenceCm);
     }
 
     extension(UpdateWaistEntryHttpRequest request) {
@@ -27,6 +27,6 @@ public static class WaistEntryHttpMappings {
                     userId,
                     entryId,
                     request.Date,
-                    request.Circumference);
+                    request.CircumferenceCm);
     }
 }

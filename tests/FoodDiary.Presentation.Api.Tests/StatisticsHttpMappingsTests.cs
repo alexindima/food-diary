@@ -78,7 +78,7 @@ public sealed class StatisticsHttpMappingsTests {
 
         Assert.Multiple(
             () => Assert.Equal(14000, Assert.Single(response.Nutrition).TotalCalories),
-            () => Assert.Equal(75.3, Assert.Single(response.Weight).AverageWeight),
-            () => Assert.Equal(82.1, Assert.Single(response.Waist).AverageCircumference));
+            () => Assert.Equal(75.3, Assert.Single(response.Weight).AverageWeightKg),
+            () => Assert.Equal(82.1, Assert.Single(response.Waist).AverageCircumferenceCm));
     }
 }

@@ -244,10 +244,10 @@ public sealed class DashboardSnapshotBuilderTests {
         ResultAssert.Success(result);
         Assert.Equal(selectedDate.Date, weightRepository.LastDateTo?.Date);
         Assert.Equal(selectedDate.Date, waistRepository.LastDateTo?.Date);
-        Assert.Equal(82, result.Value.Weight.Latest?.Weight);
-        Assert.Equal(83, result.Value.Weight.Previous?.Weight);
-        Assert.Equal(91, result.Value.Waist.Latest?.Circumference);
-        Assert.Equal(92, result.Value.Waist.Previous?.Circumference);
+        Assert.Equal(82, result.Value.Weight.Latest?.WeightKg);
+        Assert.Equal(83, result.Value.Weight.Previous?.WeightKg);
+        Assert.Equal(91, result.Value.Waist.Latest?.CircumferenceCm);
+        Assert.Equal(92, result.Value.Waist.Previous?.CircumferenceCm);
     }
 
     [Fact]
@@ -480,8 +480,8 @@ public sealed class DashboardSnapshotBuilderTests {
             user.Email,
             user.Language,
             user.DashboardLayoutJson,
-            user.DesiredWeight,
-            user.DesiredWaist,
+            user.DesiredWeightKg,
+            user.DesiredWaistCm,
             user.HydrationGoal,
             user.WaterGoal,
             user.ProteinTarget,
@@ -667,7 +667,7 @@ public sealed class DashboardSnapshotBuilderTests {
             bool descending,
             CancellationToken cancellationToken = default) {
             IReadOnlyList<WeightEntry> filtered = await GetEntriesAsync(userId, dateFrom, dateTo, limit, descending, cancellationToken).ConfigureAwait(false);
-            return [.. filtered.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
+            return [.. filtered.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))];
         }
 
         public async Task<IReadOnlyList<WeightEntryReadModel>> GetByPeriodReadModelsAsync(
@@ -676,7 +676,7 @@ public sealed class DashboardSnapshotBuilderTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) {
             IReadOnlyList<WeightEntry> filtered = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-            return [.. filtered.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Weight))];
+            return [.. filtered.Select(entry => new WeightEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.WeightKg))];
         }
     }
 
@@ -728,7 +728,7 @@ public sealed class DashboardSnapshotBuilderTests {
             bool descending,
             CancellationToken cancellationToken = default) {
             IReadOnlyList<WaistEntry> filtered = await GetEntriesAsync(userId, dateFrom, dateTo, limit, descending, cancellationToken).ConfigureAwait(false);
-            return [.. filtered.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
+            return [.. filtered.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))];
         }
 
         public async Task<IReadOnlyList<WaistEntryReadModel>> GetByPeriodReadModelsAsync(
@@ -737,7 +737,7 @@ public sealed class DashboardSnapshotBuilderTests {
             DateTime dateTo,
             CancellationToken cancellationToken = default) {
             IReadOnlyList<WaistEntry> filtered = await GetByPeriodAsync(userId, dateFrom, dateTo, cancellationToken).ConfigureAwait(false);
-            return [.. filtered.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.Circumference))];
+            return [.. filtered.Select(entry => new WaistEntryReadModel(entry.Id.Value, entry.UserId.Value, entry.Date, entry.CircumferenceCm))];
         }
     }
 
@@ -775,8 +775,8 @@ public sealed class DashboardSnapshotBuilderTests {
             user.Email,
             user.Language,
             user.DashboardLayoutJson,
-            user.DesiredWeight,
-            user.DesiredWaist,
+            user.DesiredWeightKg,
+            user.DesiredWaistCm,
             user.HydrationGoal,
             user.WaterGoal,
             user.ProteinTarget,

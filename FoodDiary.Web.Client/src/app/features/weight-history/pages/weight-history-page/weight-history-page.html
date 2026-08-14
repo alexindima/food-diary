@@ -92,7 +92,7 @@
                                 —
                             }
                         </div>
-                        @if (desiredWeight(); as goal) {
+                        @if (desiredWeightKg(); as goal) {
                             <div class="weight-history-page__metric-caption fd-ui-caption">
                                 {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: goal | number: '1.0-2' } }}
                             </div>
@@ -120,8 +120,8 @@
                 data-tour-id="weight-history-chart"
                 [isLoading]="isSummaryLoading()"
                 [chartPoints]="chartPoints()"
-                [desiredWeight]="desiredWeight()"
-                [goalLabel]="'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: (desiredWeight() | number: '1.0-2') }"
+                [desiredWeightKg]="desiredWeightKg()"
+                [goalLabel]="'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: (desiredWeightKg() | number: '1.0-2') }"
             >
                 <fd-period-filter
                     chartControls
@@ -147,8 +147,8 @@
                 data-tour-id="weight-history-goal"
                 [currentWeight]="latestWeight()"
                 [currentWeightDate]="latestWeightDate()"
-                [desiredWeight]="desiredWeight()"
-                [startWeight]="weightGoal().startWeight"
+                [desiredWeightKg]="desiredWeightKg()"
+                [startWeightKg]="weightGoal().startWeightKg"
                 [startedAtUtc]="weightGoal().startedAtUtc"
                 [hasGoalHistory]="hasCompletedWeightGoals()"
                 [lastCompletedGoal]="lastCompletedWeightGoal()"
@@ -161,7 +161,7 @@
                     [isLoading]="isLoading()"
                     [entries]="entriesDescending()"
                     [currentWeight]="latestWeight()"
-                    [desiredWeight]="desiredWeight()"
+                    [desiredWeightKg]="desiredWeightKg()"
                     (editEntry)="startEdit($event)"
                     (removeEntry)="deleteEntry($event)"
                     (showAllEntries)="openEntriesDialog()"

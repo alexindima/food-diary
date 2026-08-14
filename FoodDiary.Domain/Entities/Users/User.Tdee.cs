@@ -11,7 +11,7 @@ public sealed partial class User {
     /// Returns null if required profile data (weight, height, birth date, gender) is missing.
     /// </summary>
     public double? CalculateBmr() {
-        if (Weight is null || Height is null || BirthDate is null || Gender is null) {
+        if (WeightKg is null || HeightCm is null || BirthDate is null || Gender is null) {
             return null;
         }
 
@@ -21,7 +21,7 @@ public sealed partial class User {
         }
 
         // Mifflin-St Jeor: 10 * weight(kg) + 6.25 * height(cm) - 5 * age + offset
-        double bmr = (10.0 * Weight.Value) + (6.25 * Height.Value) - (5.0 * age);
+        double bmr = (10.0 * WeightKg.Value) + (6.25 * HeightCm.Value) - (5.0 * age);
 
         bmr += Gender.ToUpperInvariant() switch {
             "M" => 5.0,

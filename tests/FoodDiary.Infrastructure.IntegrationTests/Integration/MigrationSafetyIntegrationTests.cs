@@ -83,6 +83,15 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
             IMigrator migrator = legacyContext.GetService<IMigrator>();
             await migrator.MigrateAsync(BeforeFastingProtocolRenameMigration);
 
+            // The current EF model uses explicit unit names while this test intentionally
+            // seeds a schema from before that rename migration.
+            await legacyContext.Database.ExecuteSqlRawAsync("""
+                ALTER TABLE "Users" RENAME COLUMN "Weight" TO "WeightKg";
+                ALTER TABLE "Users" RENAME COLUMN "Height" TO "HeightCm";
+                ALTER TABLE "Users" RENAME COLUMN "DesiredWeight" TO "DesiredWeightKg";
+                ALTER TABLE "Users" RENAME COLUMN "DesiredWaist" TO "DesiredWaistCm";
+                """);
+
             var user = User.Create($"fasting-migration-{Guid.NewGuid():N}@example.com", "hash");
             legacyContext.Users.Add(user);
             legacyContext.FastingSessions.AddRange(protocols.Select(protocol =>
@@ -97,6 +106,13 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
                 DateTime.UtcNow,
                 protocol: FastingProtocol.Fast24.ToString()));
             await legacyContext.SaveChangesAsync();
+
+            await legacyContext.Database.ExecuteSqlRawAsync("""
+                ALTER TABLE "Users" RENAME COLUMN "WeightKg" TO "Weight";
+                ALTER TABLE "Users" RENAME COLUMN "HeightCm" TO "Height";
+                ALTER TABLE "Users" RENAME COLUMN "DesiredWeightKg" TO "DesiredWeight";
+                ALTER TABLE "Users" RENAME COLUMN "DesiredWaistCm" TO "DesiredWaist";
+                """);
 
             await legacyContext.Database.ExecuteSqlRawAsync("""
                 UPDATE "FastingSessions"

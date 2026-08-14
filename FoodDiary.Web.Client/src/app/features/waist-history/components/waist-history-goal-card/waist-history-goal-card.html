@@ -7,7 +7,7 @@
                         {{ 'WAIST_HISTORY.GOAL_REMAINING' | translate: { value: progress.remaining | number: '1.0-2' } }}
                     </div>
                     <div class="fd-ui-caption fd-ui-text-muted">
-                        {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: desiredWaist() | number: '1.0-2' } }}
+                        {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: desiredWaistCm() | number: '1.0-2' } }}
                     </div>
                 </div>
                 <div class="waist-history-page__goal-percent fd-ui-stat-value">{{ progress.percent | number: '1.0-0' }}%</div>
@@ -48,7 +48,9 @@
                 <div class="waist-history-page__goal-stat fd-row fd-align-center">
                     <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="hourglass_top" size="lg" /></div>
                     <div>
-                        <div class="fd-ui-stat-value">{{ progress.startWaist | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}</div>
+                        <div class="fd-ui-stat-value">
+                            {{ progress.startWaistCm | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                        </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}</div>
                     </div>
                 </div>
@@ -71,7 +73,7 @@
             </div>
         </div>
     }
-    @if (desiredWaist() === null) {
+    @if (desiredWaistCm() === null) {
         <div class="waist-history-page__goal-empty fd-stack fd-gap-card-header">
             <div class="fd-ui-card-title">{{ 'WAIST_HISTORY.GOAL_NOT_SET' | translate }}</div>
             <div class="fd-ui-body-sm fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_EMPTY_DESCRIPTION' | translate }}</div>
@@ -81,7 +83,7 @@
                         <div>
                             <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.LAST_GOAL' | translate }}</div>
                             <div class="fd-ui-card-title">
-                                {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: lastGoal.targetWaist | number: '1.0-2' } }}
+                                {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: lastGoal.targetWaistCm | number: '1.0-2' } }}
                             </div>
                         </div>
                         @if (lastGoal.change !== null) {
@@ -112,7 +114,7 @@
             fill="outline"
             icon="track_changes"
             (click)="configureGoal.emit()"
-            >{{ (desiredWaist() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.CONFIGURE_GOAL') | translate }}</fd-ui-button
+            >{{ (desiredWaistCm() === null ? 'WAIST_HISTORY.SET_GOAL' : 'WAIST_HISTORY.CONFIGURE_GOAL') | translate }}</fd-ui-button
         >
     </div>
 </fd-ui-card>

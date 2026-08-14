@@ -116,10 +116,10 @@ public sealed class HistoryPageSummaryHandlerTests {
         Assert.Multiple(
             () => Assert.Single(weight.Value.Entries),
             () => Assert.Single(weight.Value.Summary),
-            () => Assert.Equal(180, weight.Value.Height),
+            () => Assert.Equal(180, weight.Value.HeightCm),
             () => Assert.Single(waist.Value.Entries),
             () => Assert.Single(waist.Value.Summary),
-            () => Assert.Equal(180, waist.Value.Height));
+            () => Assert.Equal(180, waist.Value.HeightCm));
     }
 
     private static GetWeightHistoryPageSummaryQueryHandler CreateWeightHandler(

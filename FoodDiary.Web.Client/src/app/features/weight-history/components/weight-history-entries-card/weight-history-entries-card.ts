@@ -25,17 +25,17 @@ export class WeightHistoryEntriesCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly entries = input.required<WeightEntry[]>();
     public readonly currentWeight = input.required<number | null>();
-    public readonly desiredWeight = input.required<number | null>();
+    public readonly desiredWeightKg = input.required<number | null>();
     protected readonly items = computed(() => {
         const today = formatDateInputValue(new Date());
         return buildWeightEntryViewModels(this.entries(), resolveTranslateLanguage(this.translateService)).map((item, index, items) => {
             const olderEntry = items.at(index + 1)?.entry;
-            const change = olderEntry === undefined ? null : item.entry.weight - olderEntry.weight;
+            const change = olderEntry === undefined ? null : item.entry.weightKg - olderEntry.weightKg;
             return {
                 ...item,
                 isToday: item.entry.date.startsWith(today),
                 change,
-                tone: getWeightChangeTone(change, this.currentWeight(), this.desiredWeight()),
+                tone: getWeightChangeTone(change, this.currentWeight(), this.desiredWeightKg()),
             };
         });
     });

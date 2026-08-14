@@ -22,7 +22,7 @@ public sealed class UpdateWaistEntryCommandHandler(
         Result<WaistEntryId> waistEntryIdResult = RequiredIdParser.Parse(
             command.WaistEntryId,
             nameof(command.WaistEntryId),
-            "Waist entry id must not be empty.",
+            "WaistCm entry id must not be empty.",
             value => new WaistEntryId(value));
         if (waistEntryIdResult.IsFailure) {
             return RequiredIdParser.ToFailure<WaistEntryModel, WaistEntryId>(waistEntryIdResult);
@@ -59,7 +59,7 @@ public sealed class UpdateWaistEntryCommandHandler(
                 Errors.WaistEntry.AlreadyExists(normalizedDate));
         }
 
-        entry.Update(command.Circumference, normalizedDate);
+        entry.Update(command.CircumferenceCm, normalizedDate);
         await waistEntryRepository.UpdateAsync(entry, cancellationToken).ConfigureAwait(false);
         return Result.Success(entry.ToModel());
     }

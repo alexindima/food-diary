@@ -24,8 +24,8 @@ export class WaistHistoryGoalCardComponent {
     private readonly translateService = inject(TranslateService);
     public readonly currentWaist = input.required<number | null>();
     public readonly currentWaistDate = input.required<string | null>();
-    public readonly desiredWaist = input.required<number | null>();
-    public readonly startWaist = input.required<number | null>();
+    public readonly desiredWaistCm = input.required<number | null>();
+    public readonly startWaistCm = input.required<number | null>();
     public readonly startedAtUtc = input.required<string | null>();
     public readonly hasGoalHistory = input.required<boolean>();
     public readonly lastCompletedGoal = input.required<WaistGoalHistoryItem | null>();
@@ -47,7 +47,7 @@ export class WaistHistoryGoalCardComponent {
         }
         const language = resolveTranslateLanguage(this.translateService);
         const options = { day: 'numeric', month: 'short', year: 'numeric' } as const;
-        const change = goal.endWaist === null ? null : goal.endWaist - goal.startWaist;
+        const change = goal.endWaistCm === null ? null : goal.endWaistCm - goal.startWaistCm;
         return {
             ...goal,
             startDate: formatDateValue(goal.startedAtUtc, language, options),
@@ -58,8 +58,8 @@ export class WaistHistoryGoalCardComponent {
 
     protected readonly progress = computed(() => {
         const current = this.currentWaist();
-        const goal = this.desiredWaist();
-        const start = this.startWaist();
+        const goal = this.desiredWaistCm();
+        const start = this.startWaistCm();
         if (current === null || goal === null || start === null) {
             return null;
         }
@@ -72,7 +72,7 @@ export class WaistHistoryGoalCardComponent {
         const daysElapsed = this.daysBetweenEntries();
         const weeklyRate = daysElapsed > 0 ? (completedDistance / daysElapsed) * DAYS_PER_WEEK : 0;
         const daysToGoal = weeklyRate > 0 ? Math.ceil((remaining / weeklyRate) * DAYS_PER_WEEK) : null;
-        return { percent, change: completedDistance, remaining, weeklyRate, daysToGoal, startWaist: start, currentWaist: current };
+        return { percent, change: completedDistance, remaining, weeklyRate, daysToGoal, startWaistCm: start, currentWaist: current };
     });
 
     private daysBetweenEntries(): number {

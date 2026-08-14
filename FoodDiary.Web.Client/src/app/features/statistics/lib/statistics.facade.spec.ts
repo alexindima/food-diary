@@ -120,10 +120,10 @@ describe('StatisticsFacade stale requests', () => {
 
         expect(facade.chartStatisticsData()?.calories).toEqual([RETRY_TOTAL_CALORIES]);
         expect(facade.weightSummaryPoints()).toEqual([
-            { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageWeight: SECOND_WEIGHT_AVERAGE },
+            { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageWeightKg: SECOND_WEIGHT_AVERAGE },
         ]);
         expect(facade.waistSummaryPoints()).toEqual([
-            { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageCircumference: SECOND_WAIST_AVERAGE },
+            { startDate: '2026-04-02T00:00:00Z', endDate: '2026-04-02T23:59:59Z', averageCircumferenceCm: SECOND_WAIST_AVERAGE },
         ]);
     });
 });
@@ -207,13 +207,13 @@ function createStatisticsResponse(totalCalories: number): AggregatedStatistics[]
 
 function createStatisticsSummary(
     totalCalories: number,
-    averageWeight = DEFAULT_WEIGHT_AVERAGE,
-    averageCircumference = DEFAULT_WAIST_AVERAGE,
+    averageWeightKg = DEFAULT_WEIGHT_AVERAGE,
+    averageCircumferenceCm = DEFAULT_WAIST_AVERAGE,
 ): StatisticsSummary {
     return {
         nutrition: createStatisticsResponse(totalCalories),
-        weight: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeight }],
-        waist: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumference }],
+        weight: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageWeightKg }],
+        waist: [{ startDate: '2026-04-01T00:00:00Z', endDate: '2026-04-01T23:59:59Z', averageCircumferenceCm }],
     };
 }
 

@@ -52,7 +52,7 @@ internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext conte
                 entry.Date >= dateFromUtc &&
                 entry.Date <= dateToUtc)
             .OrderBy(entry => entry.Date)
-            .Select(entry => new WeightProjection(entry.UserId, entry.Date, entry.Weight))
+            .Select(entry => new WeightProjection(entry.UserId, entry.Date, entry.WeightKg))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
@@ -83,7 +83,7 @@ internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext conte
                 ],
                 [
                     .. weightsByUser[goal.UserId]
-                        .Select(entry => new AttentionSignalWeightPointReadModel(entry.Date, entry.Weight)),
+                        .Select(entry => new AttentionSignalWeightPointReadModel(entry.Date, entry.WeightKg)),
                 ])),
         ];
     }
@@ -91,5 +91,5 @@ internal sealed class AttentionSignalMetricsReadService(FoodDiaryDbContext conte
     private sealed record UserGoalProjection(UserId UserId, double DailyCalorieTarget);
     private sealed record MealProjection(UserId UserId, DateTime Date, double Calories);
     private sealed record LastMealProjection(UserId UserId, DateTime Date);
-    private sealed record WeightProjection(UserId UserId, DateTime Date, double Weight);
+    private sealed record WeightProjection(UserId UserId, DateTime Date, double WeightKg);
 }

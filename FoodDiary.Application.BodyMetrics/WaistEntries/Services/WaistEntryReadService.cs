@@ -76,7 +76,7 @@ internal sealed class WaistEntryReadService(IWaistEntryReadModelRepository waist
             return new WaistEntrySummaryModel(start, end, 0);
         }
 
-        double avg = bucketEntries.Average(entry => entry.Circumference);
+        double avg = bucketEntries.Average(entry => entry.CircumferenceCm);
         return new WaistEntrySummaryModel(start, end, Math.Round(avg, 2, MidpointRounding.ToEven));
     }
 }

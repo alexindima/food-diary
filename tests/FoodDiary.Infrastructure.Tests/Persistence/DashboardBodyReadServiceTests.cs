@@ -45,20 +45,20 @@ public sealed class DashboardBodyReadServiceTests {
 
         Assert.Collection(
             result.LatestWeightEntries,
-            latest => Assert.Equal(77, latest.Weight),
-            previous => Assert.Equal(78, previous.Weight));
+            latest => Assert.Equal(77, latest.WeightKg),
+            previous => Assert.Equal(78, previous.WeightKg));
         Assert.Collection(
             result.LatestWaistEntries,
-            latest => Assert.Equal(87, latest.Circumference),
-            previous => Assert.Equal(88, previous.Circumference));
+            latest => Assert.Equal(87, latest.CircumferenceCm),
+            previous => Assert.Equal(88, previous.CircumferenceCm));
         Assert.Collection(
             result.WeightTrend,
-            first => Assert.Equal(79, first.AverageWeight),
-            second => Assert.Equal(78, second.AverageWeight));
+            first => Assert.Equal(79, first.AverageWeightKg),
+            second => Assert.Equal(78, second.AverageWeightKg));
         Assert.Collection(
             result.WaistTrend,
-            first => Assert.Equal(90, first.AverageCircumference),
-            second => Assert.Equal(88, second.AverageCircumference));
+            first => Assert.Equal(90, first.AverageCircumferenceCm),
+            second => Assert.Equal(88, second.AverageCircumferenceCm));
         Assert.Equal(750, result.HydrationTotalMl);
     }
 
@@ -115,8 +115,8 @@ public sealed class DashboardBodyReadServiceTests {
 
         Assert.Empty(result.LatestWeightEntries);
         Assert.Empty(result.LatestWaistEntries);
-        Assert.All(result.WeightTrend, point => Assert.Equal(0, point.AverageWeight));
-        Assert.All(result.WaistTrend, point => Assert.Equal(0, point.AverageCircumference));
+        Assert.All(result.WeightTrend, point => Assert.Equal(0, point.AverageWeightKg));
+        Assert.All(result.WaistTrend, point => Assert.Equal(0, point.AverageCircumferenceCm));
         Assert.Equal(0, result.HydrationTotalMl);
     }
 

@@ -6,5 +6,5 @@ namespace FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
 
 public record UpdateDesiredWeightCommand(
     Guid? UserId,
-    double? DesiredWeight
+    double? DesiredWeightKg
 ) : ICommand<Result<UserDesiredWeightModel>>, IUserRequest;

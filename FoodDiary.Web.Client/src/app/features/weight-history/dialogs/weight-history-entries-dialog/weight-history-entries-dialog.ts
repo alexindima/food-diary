@@ -20,7 +20,7 @@ export type WeightHistoryEntriesDialogResult = {
 export type WeightHistoryEntriesDialogData = {
     entries: WeightEntry[];
     currentWeight: number | null;
-    desiredWeight: number | null;
+    desiredWeightKg: number | null;
 };
 
 @Component({
@@ -39,12 +39,12 @@ export class WeightHistoryEntriesDialogComponent {
         const today = formatDateInputValue(new Date());
         return buildWeightEntryViewModels(this.data.entries, resolveTranslateLanguage(this.translateService)).map((item, index, items) => {
             const olderEntry = items.at(index + 1)?.entry;
-            const change = olderEntry === undefined ? null : item.entry.weight - olderEntry.weight;
+            const change = olderEntry === undefined ? null : item.entry.weightKg - olderEntry.weightKg;
             return {
                 ...item,
                 isToday: item.entry.date.startsWith(today),
                 change,
-                tone: getWeightChangeTone(change, this.data.currentWeight, this.data.desiredWeight),
+                tone: getWeightChangeTone(change, this.data.currentWeight, this.data.desiredWeightKg),
             };
         });
     });

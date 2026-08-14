@@ -28,7 +28,7 @@ public sealed class WaistEntryHttpMappingsTests {
         Assert.Multiple(
             () => Assert.Equal(userId, command.UserId),
             () => Assert.Equal(date, command.Date),
-            () => Assert.Equal(80.5, command.Circumference));
+            () => Assert.Equal(80.5, command.CircumferenceCm));
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public sealed class WaistEntryHttpMappingsTests {
             () => Assert.Equal(userId, command.UserId),
             () => Assert.Equal(entryId, command.WaistEntryId),
             () => Assert.Equal(date, command.Date),
-            () => Assert.Equal(79.8, command.Circumference));
+            () => Assert.Equal(79.8, command.CircumferenceCm));
     }
 
     [Fact]
@@ -140,7 +140,7 @@ public sealed class WaistEntryHttpMappingsTests {
             () => Assert.Equal(id, response.Id),
             () => Assert.Equal(userId, response.UserId),
             () => Assert.Equal(date, response.Date),
-            () => Assert.Equal(80.5, response.Circumference));
+            () => Assert.Equal(80.5, response.CircumferenceCm));
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public sealed class WaistEntryHttpMappingsTests {
         Assert.Multiple(
             () => Assert.Equal(from, response.StartDate),
             () => Assert.Equal(to, response.EndDate),
-            () => Assert.Equal(80.2, response.AverageCircumference));
+            () => Assert.Equal(80.2, response.AverageCircumferenceCm));
     }
 
     [Fact]
@@ -177,9 +177,9 @@ public sealed class WaistEntryHttpMappingsTests {
         WaistGoalHistoryHttpResponse history = Assert.Single(response.GoalHistory);
         Assert.Multiple(
             () => Assert.Equal(entryId, entry.Id),
-            () => Assert.Equal(80.2, summary.AverageCircumference),
-            () => Assert.Equal(180, response.Height),
-            () => Assert.Equal(75, response.Goal.DesiredWaist),
+            () => Assert.Equal(80.2, summary.AverageCircumferenceCm),
+            () => Assert.Equal(180, response.HeightCm),
+            () => Assert.Equal(75, response.Goal.DesiredWaistCm),
             () => Assert.Equal(goalId, history.Id),
             () => Assert.Equal("Cancelled", history.Status));
     }

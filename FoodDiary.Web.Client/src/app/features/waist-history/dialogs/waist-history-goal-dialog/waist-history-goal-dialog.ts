@@ -18,9 +18,9 @@ export class WaistHistoryGoalDialogComponent {
     private readonly facade = inject(WaistHistoryFacade);
     private readonly dialogRef = inject(FdUiDialogRef<WaistHistoryGoalDialogComponent, void>);
     private readonly initialSaveVersion = this.facade.desiredWaistSaveVersion();
-    protected readonly desiredWaist = this.facade.desiredWaist;
+    protected readonly desiredWaistCm = this.facade.desiredWaistCm;
     protected readonly form = this.facade.desiredWaistForm;
-    protected readonly waistField = this.facade.desiredWaistForm.circumference;
+    protected readonly waistField = this.facade.desiredWaistForm.circumferenceCm;
     protected readonly isSaving = this.facade.isDesiredWaistSaving;
 
     public constructor() {

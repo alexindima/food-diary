@@ -8,7 +8,7 @@ public sealed record ClientSummaryModel(
     string? ProfileImage,
     DateTime? BirthDate,
     string? Gender,
-    double? Height,
+    double? HeightCm,
     string? ActivityLevel,
     DietologistPermissionsModel Permissions,
     DateTime AcceptedAtUtc);

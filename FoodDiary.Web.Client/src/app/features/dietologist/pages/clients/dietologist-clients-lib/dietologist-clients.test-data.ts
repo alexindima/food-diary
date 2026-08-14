@@ -11,7 +11,7 @@ export function createClient(overrides: Partial<ClientSummary> = {}): ClientSumm
         profileImage: null,
         birthDate: null,
         gender: 'Male',
-        height: 180,
+        heightCm: 180,
         activityLevel: 'Moderate',
         acceptedAtUtc: VALID_CLIENT_ACCEPTED_AT_UTC,
         permissions: {

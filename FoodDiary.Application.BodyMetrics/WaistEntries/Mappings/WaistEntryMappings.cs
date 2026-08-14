@@ -9,12 +9,12 @@ public static class WaistEntryMappings {
             entry.Id.Value,
             entry.UserId.Value,
             entry.Date,
-            entry.Circumference);
+            entry.CircumferenceCm);
 
     public static WaistEntryModel ToModel(this WaistEntryReadModel entry) =>
         new(
             entry.Id,
             entry.UserId,
             entry.Date,
-            entry.Circumference);
+            entry.CircumferenceCm);
 }

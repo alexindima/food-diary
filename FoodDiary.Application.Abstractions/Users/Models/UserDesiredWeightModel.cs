@@ -1,6 +1,6 @@
 namespace FoodDiary.Application.Abstractions.Users.Models;
 
 public sealed record UserDesiredWeightModel(
-    double? DesiredWeight,
-    double? StartWeight = null,
+    double? DesiredWeightKg,
+    double? StartWeightKg = null,
     DateTime? StartedAtUtc = null);

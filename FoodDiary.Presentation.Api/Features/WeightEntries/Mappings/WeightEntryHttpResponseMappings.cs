@@ -8,13 +8,13 @@ namespace FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 public static class WeightEntryHttpResponseMappings {
     extension(WeightEntryModel model) {
         public WeightEntryHttpResponse ToHttpResponse() {
-            return new WeightEntryHttpResponse(model.Id, model.UserId, model.Date, model.Weight);
+            return new WeightEntryHttpResponse(model.Id, model.UserId, model.Date, model.WeightKg);
         }
     }
 
     extension(WeightEntrySummaryModel model) {
         public WeightEntrySummaryHttpResponse ToHttpResponse() {
-            return new WeightEntrySummaryHttpResponse(model.StartDate, model.EndDate, model.AverageWeight);
+            return new WeightEntrySummaryHttpResponse(model.StartDate, model.EndDate, model.AverageWeightKg);
         }
     }
 
@@ -23,7 +23,7 @@ public static class WeightEntryHttpResponseMappings {
                 new(
                     [.. model.Entries.Select(static entry => entry.ToHttpResponse())],
                     [.. model.Summary.Select(static point => point.ToHttpResponse())],
-                    model.Height,
+                    model.HeightCm,
                     model.Goal.ToHttpResponse(),
                     [.. model.GoalHistory.Select(static goal => goal.ToHttpResponse())]);
     }

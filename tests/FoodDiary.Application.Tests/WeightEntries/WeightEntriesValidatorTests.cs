@@ -21,7 +21,7 @@ public class WeightEntriesValidatorTests {
     public async Task CreateWeight_WithZeroWeight_HasError() {
         TestValidationResult<CreateWeightEntryCommand> result = await new CreateWeightEntryCommandValidator().TestValidateAsync(
             new CreateWeightEntryCommand(Guid.NewGuid(), DateTime.UtcNow, 0));
-        result.ShouldHaveValidationErrorFor(c => c.Weight);
+        result.ShouldHaveValidationErrorFor(c => c.WeightKg);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public class WeightEntriesValidatorTests {
     public async Task UpdateWeight_WithZeroWeight_HasError() {
         TestValidationResult<UpdateWeightEntryCommand> result = await new UpdateWeightEntryCommandValidator().TestValidateAsync(
             new UpdateWeightEntryCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, 0));
-        result.ShouldHaveValidationErrorFor(c => c.Weight);
+        result.ShouldHaveValidationErrorFor(c => c.WeightKg);
     }
 
     [Fact]

@@ -9,12 +9,12 @@ public static class WeightEntryMappings {
             entry.Id.Value,
             entry.UserId.Value,
             entry.Date,
-            entry.Weight);
+            entry.WeightKg);
 
     public static WeightEntryModel ToModel(this WeightEntryReadModel entry) =>
         new(
             entry.Id,
             entry.UserId,
             entry.Date,
-            entry.Weight);
+            entry.WeightKg);
 }

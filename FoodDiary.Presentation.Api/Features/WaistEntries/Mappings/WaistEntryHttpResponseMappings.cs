@@ -8,13 +8,13 @@ namespace FoodDiary.Presentation.Api.Features.WaistEntries.Mappings;
 public static class WaistEntryHttpResponseMappings {
     extension(WaistEntryModel model) {
         public WaistEntryHttpResponse ToHttpResponse() {
-            return new WaistEntryHttpResponse(model.Id, model.UserId, model.Date, model.Circumference);
+            return new WaistEntryHttpResponse(model.Id, model.UserId, model.Date, model.CircumferenceCm);
         }
     }
 
     extension(WaistEntrySummaryModel model) {
         public WaistEntrySummaryHttpResponse ToHttpResponse() {
-            return new WaistEntrySummaryHttpResponse(model.StartDate, model.EndDate, model.AverageCircumference);
+            return new WaistEntrySummaryHttpResponse(model.StartDate, model.EndDate, model.AverageCircumferenceCm);
         }
     }
 
@@ -23,7 +23,7 @@ public static class WaistEntryHttpResponseMappings {
                 new(
                     [.. model.Entries.Select(static entry => entry.ToHttpResponse())],
                     [.. model.Summary.Select(static point => point.ToHttpResponse())],
-                    model.Height,
+                    model.HeightCm,
                     model.Goal.ToHttpResponse(),
                     [.. model.GoalHistory.Select(static goal => goal.ToHttpResponse())]);
     }

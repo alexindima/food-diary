@@ -7,8 +7,8 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
-using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
+using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaistCm;
+using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeightKg;
 
 namespace FoodDiary.Domain.Entities.Users;
 
@@ -37,10 +37,10 @@ public sealed partial class User : AggregateRoot<UserId> {
     public string? LastName { get; private set; }
     public DateTime? BirthDate { get; private set; }
     public string? Gender { get; private set; }
-    public double? Weight { get; private set; }
-    public double? DesiredWeight { get; private set; }
-    public double? DesiredWaist { get; private set; }
-    public double? Height { get; private set; }
+    public double? WeightKg { get; private set; }
+    public double? DesiredWeightKg { get; private set; }
+    public double? DesiredWaistCm { get; private set; }
+    public double? HeightCm { get; private set; }
     public ActivityLevel ActivityLevel { get; private set; } = ActivityLevel.Moderate;
     public double? DailyCalorieTarget { get; private set; }
     public double? ProteinTarget { get; private set; }
@@ -222,8 +222,8 @@ public sealed partial class User : AggregateRoot<UserId> {
             CarbTarget,
             FiberTarget,
             WaterGoal,
-            DesiredWeight,
-            DesiredWaist,
+            DesiredWeightKg,
+            DesiredWaistCm,
             CalorieCyclingEnabled,
             MondayCalories,
             TuesdayCalories,
@@ -241,8 +241,8 @@ public sealed partial class User : AggregateRoot<UserId> {
         CarbTarget = state.CarbTarget;
         FiberTarget = state.FiberTarget;
         WaterGoal = state.WaterGoal;
-        DesiredWeight = state.DesiredWeight;
-        DesiredWaist = state.DesiredWaist;
+        DesiredWeightKg = state.DesiredWeightKg;
+        DesiredWaistCm = state.DesiredWaistCm;
         CalorieCyclingEnabled = state.CalorieCyclingEnabled;
         MondayCalories = state.MondayCalories;
         TuesdayCalories = state.TuesdayCalories;
@@ -269,8 +269,8 @@ public sealed partial class User : AggregateRoot<UserId> {
             LastName,
             BirthDate,
             Gender,
-            Weight,
-            Height,
+            WeightKg,
+            HeightCm,
             ActivityLevel,
             ProfileImage,
             ProfileImageAssetId,
@@ -303,8 +303,8 @@ public sealed partial class User : AggregateRoot<UserId> {
         LastName = state.LastName;
         BirthDate = state.BirthDate;
         Gender = state.Gender;
-        Weight = state.Weight;
-        Height = state.Height;
+        WeightKg = state.WeightKg;
+        HeightCm = state.HeightCm;
         ActivityLevel = state.ActivityLevel;
     }
 

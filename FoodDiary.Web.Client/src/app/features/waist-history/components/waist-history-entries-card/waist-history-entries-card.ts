@@ -30,7 +30,7 @@ export class WaistHistoryEntriesCardComponent {
             return {
                 ...item,
                 isToday: item.entry.date.startsWith(today),
-                change: olderEntry === undefined ? null : item.entry.circumference - olderEntry.circumference,
+                change: olderEntry === undefined ? null : item.entry.circumferenceCm - olderEntry.circumferenceCm,
             };
         });
     });

@@ -246,7 +246,7 @@ public partial class DietologistFeatureTests {
         typeof(User).GetProperty(nameof(User.LastName))!.SetValue(client, "Walker");
         typeof(User).GetProperty(nameof(User.ProfileImage))!.SetValue(client, "https://cdn.example.com/avatar.jpg");
         typeof(User).GetProperty(nameof(User.Gender))!.SetValue(client, "F");
-        typeof(User).GetProperty(nameof(User.Height))!.SetValue(client, 170d);
+        typeof(User).GetProperty(nameof(User.HeightCm))!.SetValue(client, 170d);
         typeof(User).GetProperty(nameof(User.ActivityLevel))!.SetValue(client, ActivityLevel.High);
         typeof(User).GetProperty(nameof(User.BirthDate))!.SetValue(client, new DateTime(1990, 1, 1, 0, 0, 0, DateTimeKind.Utc));
 
@@ -283,7 +283,7 @@ public partial class DietologistFeatureTests {
         Assert.Null(clientSummary.ProfileImage);
         Assert.Null(clientSummary.BirthDate);
         Assert.Null(clientSummary.Gender);
-        Assert.Null(clientSummary.Height);
+        Assert.Null(clientSummary.HeightCm);
         Assert.Null(clientSummary.ActivityLevel);
         Assert.False(clientSummary.Permissions.ShareProfile);
     }

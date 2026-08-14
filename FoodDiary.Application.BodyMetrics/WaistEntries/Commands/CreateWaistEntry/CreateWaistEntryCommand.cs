@@ -7,5 +7,5 @@ namespace FoodDiary.Application.BodyMetrics.WaistEntries.Commands.CreateWaistEnt
 public record CreateWaistEntryCommand(
     Guid? UserId,
     DateTime Date,
-    double Circumference
+    double CircumferenceCm
 ) : ICommand<Result<WaistEntryModel>>, IUserRequest;

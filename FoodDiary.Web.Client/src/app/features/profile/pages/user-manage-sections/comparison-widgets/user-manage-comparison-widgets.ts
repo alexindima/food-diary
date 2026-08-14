@@ -61,7 +61,7 @@ export class UserManageComparisonWidgetsComponent {
         return calculateProfileCompleteness({
             birthDate: form.birthDate().value(),
             gender: form.gender().value(),
-            height: form.height().value(),
+            heightCm: form.heightCm().value(),
             activityLevel: form.activityLevel().value(),
         });
     });
@@ -85,12 +85,12 @@ export class UserManageComparisonWidgetsComponent {
 
     protected onHeightChange(value: string | number | null): void {
         if (value === null || String(value).trim().length === 0) {
-            this.userFormPatch.emit({ height: null });
+            this.userFormPatch.emit({ heightCm: null });
             return;
         }
 
         const parsed = Number(value);
-        this.userFormPatch.emit({ height: Number.isFinite(parsed) ? parsed : null });
+        this.userFormPatch.emit({ heightCm: Number.isFinite(parsed) ? parsed : null });
     }
 
     protected onMeasurementSystemChange(value: string | null): void {

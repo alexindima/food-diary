@@ -1,7 +1,7 @@
 using System.Globalization;
 using FluentValidation;
-using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
-using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
+using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaistCm;
+using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeightKg;
 
 namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 
@@ -87,20 +87,20 @@ public sealed class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsC
     }
 
     private void ConfigureBodyTargets() {
-        When(x => x.DesiredWeight.HasValue, () => {
-            RuleFor(x => x.DesiredWeight)
+        When(x => x.DesiredWeightKg.HasValue, () => {
+            RuleFor(x => x.DesiredWeightKg)
                 .GreaterThan(0)
                 .LessThanOrEqualTo(DesiredWeightValueObject.MaxValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]"));
+                .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWeightKg must be in range (0, {DesiredWeightValueObject.MaxValue}]"));
         });
 
-        When(x => x.DesiredWaist.HasValue, () => {
-            RuleFor(x => x.DesiredWaist)
+        When(x => x.DesiredWaistCm.HasValue, () => {
+            RuleFor(x => x.DesiredWaistCm)
                 .GreaterThan(0)
                 .LessThanOrEqualTo(DesiredWaistValueObject.MaxValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWaist must be in range (0, {DesiredWaistValueObject.MaxValue}]"));
+                .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWaistCm must be in range (0, {DesiredWaistValueObject.MaxValue}]"));
         });
     }
 

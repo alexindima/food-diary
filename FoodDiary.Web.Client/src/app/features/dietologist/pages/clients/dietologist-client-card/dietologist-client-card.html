@@ -25,9 +25,9 @@
             <span class="dietologist-clients__email fd-ui-caption">{{ itemView.client.email }}</span>
             @if (itemView.client.permissions.shareProfile) {
                 <div class="dietologist-clients__meta fd-row fd-wrap fd-gap-xs">
-                    @if (itemView.client.height) {
+                    @if (itemView.client.heightCm) {
                         <span class="dietologist-clients__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline">
-                            {{ itemView.client.height }} cm
+                            {{ itemView.client.heightCm }} cm
                         </span>
                     }
                     @if (itemView.client.gender) {

@@ -136,8 +136,8 @@ public class TdeeFeatureTests {
                 return Task.FromResult(Result.Success(new TdeeUserProfile(
                     user.CalculateBmr(),
                     user.CalculateEstimatedTdee(),
-                    user.Weight,
-                    user.DesiredWeight,
+                    user.WeightKg,
+                    user.DesiredWeightKg,
                     user.DailyCalorieTarget)));
             });
         return service;

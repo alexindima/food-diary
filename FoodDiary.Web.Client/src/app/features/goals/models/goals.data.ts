@@ -5,8 +5,8 @@ export type GoalsResponse = {
     carbTarget?: number | null;
     fiberTarget?: number | null;
     waterGoal?: number | null;
-    desiredWeight?: number | null;
-    desiredWaist?: number | null;
+    desiredWeightKg?: number | null;
+    desiredWaistCm?: number | null;
     calorieCyclingEnabled: boolean;
     mondayCalories?: number | null;
     tuesdayCalories?: number | null;
@@ -24,8 +24,8 @@ export type UpdateGoalsRequest = {
     carbTarget?: number | null;
     fiberTarget?: number | null;
     waterGoal?: number | null;
-    desiredWeight?: number | null;
-    desiredWaist?: number | null;
+    desiredWeightKg?: number | null;
+    desiredWaistCm?: number | null;
     calorieCyclingEnabled?: boolean | null;
     mondayCalories?: number | null;
     tuesdayCalories?: number | null;

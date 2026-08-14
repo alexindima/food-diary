@@ -71,8 +71,8 @@ export class StatisticsFacade {
     public readonly hasStatisticsData = computed(() => (this.chartStatisticsData()?.calories.length ?? 0) > 0);
     public readonly hasBodyData = computed(() => {
         return (
-            this.weightSummaryPoints().some(point => point.averageWeight > 0) ||
-            this.waistSummaryPoints().some(point => point.averageCircumference > 0)
+            this.weightSummaryPoints().some(point => point.averageWeightKg > 0) ||
+            this.waistSummaryPoints().some(point => point.averageCircumferenceCm > 0)
         );
     });
     public readonly dashboardCardsView = computed(() =>
@@ -81,12 +81,12 @@ export class StatisticsFacade {
             user: this.userProfile(),
             weightPoints: buildBodyChartPoints(
                 this.weightSummaryPoints(),
-                point => point.averageWeight,
+                point => point.averageWeightKg,
                 date => this.formatSummaryLabel(date),
             ),
             waistPoints: buildBodyChartPoints(
                 this.waistSummaryPoints(),
-                point => point.averageCircumference,
+                point => point.averageCircumferenceCm,
                 date => this.formatSummaryLabel(date),
             ),
             quantizationDays: getQuantizationDays(

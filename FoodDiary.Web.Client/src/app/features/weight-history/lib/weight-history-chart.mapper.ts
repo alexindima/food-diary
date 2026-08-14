@@ -20,7 +20,7 @@ export function buildWeightHistoryChartPoints(
 
     return ordered.map(point => ({
         label: formatWeightHistoryDateLabel(point.startDate, locale, showYear),
-        value: point.averageWeight > 0 ? point.averageWeight : null,
+        value: point.averageWeightKg > 0 ? point.averageWeightKg : null,
     }));
 }
 

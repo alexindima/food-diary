@@ -6,16 +6,16 @@ import { environment } from '../../../../environments/environment';
 import { fallbackApiError } from '../../../shared/lib/api-error.utils';
 
 export type ProfileMeasurementSummary = {
-    weight: number | null;
-    waist: number | null;
+    weightKg: number | null;
+    waistCm: number | null;
 };
 
 type LatestWeightResponse = {
-    weight: number;
+    weightKg: number;
 };
 
 type LatestWaistResponse = {
-    circumference: number;
+    circumferenceCm: number;
 };
 
 @Service()
@@ -24,17 +24,17 @@ export class ProfileMeasurementsService {
 
     public getLatest(): Observable<ProfileMeasurementSummary> {
         return forkJoin({
-            weight: this.http.get<LatestWeightResponse | null>(`${environment.apiUrls.weights}/latest`),
-            waist: this.http.get<LatestWaistResponse | null>(`${environment.apiUrls.waists}/latest`),
+            weightKg: this.http.get<LatestWeightResponse | null>(`${environment.apiUrls.weights}/latest`),
+            waistCm: this.http.get<LatestWaistResponse | null>(`${environment.apiUrls.waists}/latest`),
         }).pipe(
-            map(({ weight, waist }) => ({
-                weight: weight?.weight ?? null,
-                waist: waist?.circumference ?? null,
+            map(({ weightKg, waistCm }) => ({
+                weightKg: weightKg?.weightKg ?? null,
+                waistCm: waistCm?.circumferenceCm ?? null,
             })),
             catchError((error: unknown) =>
                 fallbackApiError('Profile measurements fetch error', error, {
-                    weight: null,
-                    waist: null,
+                    weightKg: null,
+                    waistCm: null,
                 }),
             ),
         );

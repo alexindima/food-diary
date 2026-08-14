@@ -79,7 +79,7 @@ public static class DietologistHttpResponseMappings {
     extension(ClientSummaryModel model) {
         public ClientSummaryHttpResponse ToHttpResponse() =>
                 new(model.UserId, model.Email, model.FirstName, model.LastName,
-                    model.ProfileImage, model.BirthDate, model.Gender, model.Height, model.ActivityLevel,
+                    model.ProfileImage, model.BirthDate, model.Gender, model.HeightCm, model.ActivityLevel,
                     model.Permissions.ToHttpResponse(), model.AcceptedAtUtc);
     }
 

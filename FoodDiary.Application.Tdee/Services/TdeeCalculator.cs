@@ -18,7 +18,7 @@ public static class TdeeCalculator {
         int periodDays,
         IReadOnlyList<ExerciseEntryModel>? exerciseEntries = null) {
         return CalculateAdaptiveCore(
-            [.. weightEntries.Select(entry => new WeightSample(entry.Date, entry.Weight))],
+            [.. weightEntries.Select(entry => new WeightSample(entry.Date, entry.WeightKg))],
             dailyCalories,
             periodDays,
             exerciseEntries?.Select(entry => new ExerciseSample(entry.CaloriesBurned)).ToArray());
@@ -137,21 +137,21 @@ public static class TdeeCalculator {
     private static double GetEmaWeight(IReadOnlyList<WeightSample> sorted, bool fromStart) {
         if (sorted.Count <= 3) {
             IEnumerable<WeightSample> entries = fromStart ? sorted.Take(sorted.Count) : sorted.TakeLast(sorted.Count);
-            return entries.Average(w => w.Weight);
+            return entries.Average(w => w.WeightKg);
         }
 
         int half = sorted.Count / 2;
         if (fromStart) {
-            double ema = sorted[0].Weight;
+            double ema = sorted[0].WeightKg;
             for (int i = 1; i <= half; i++) {
-                ema = (EmaAlpha * sorted[i].Weight) + ((1 - EmaAlpha) * ema);
+                ema = (EmaAlpha * sorted[i].WeightKg) + ((1 - EmaAlpha) * ema);
             }
 
             return ema;
         } else {
-            double ema = sorted[^1].Weight;
+            double ema = sorted[^1].WeightKg;
             for (int i = sorted.Count - 2; i >= sorted.Count - 1 - half; i--) {
-                ema = (EmaAlpha * sorted[i].Weight) + ((1 - EmaAlpha) * ema);
+                ema = (EmaAlpha * sorted[i].WeightKg) + ((1 - EmaAlpha) * ema);
             }
 
             return ema;
@@ -169,7 +169,7 @@ public static class TdeeCalculator {
         };
     }
 
-    private sealed record WeightSample(DateTime Date, double Weight);
+    private sealed record WeightSample(DateTime Date, double WeightKg);
 
     private sealed record ExerciseSample(double CaloriesBurned);
 }

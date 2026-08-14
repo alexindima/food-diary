@@ -366,11 +366,11 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 ["count"] = goals.Length,
                 ["statuses"] = ToJsonArray(goals.Select(goal => goal.GetProperty("status").GetString() ?? string.Empty)),
                 ["allHaveStartDates"] = goals.All(goal => goal.GetProperty("startedAtUtc").ValueKind == JsonValueKind.String),
-                ["completedHasEndWeight"] = goals.Single(goal => string.Equals(
+                ["completedHasEndWeightKg"] = goals.Single(goal => string.Equals(
                     goal.GetProperty("status").GetString(),
                     "Replaced",
                     StringComparison.Ordinal))
-                    .GetProperty("endWeight").ValueKind == JsonValueKind.Number,
+                    .GetProperty("endWeightKg").ValueKind == JsonValueKind.Number,
             },
             IndentedJsonOptions);
 
@@ -397,11 +397,11 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 ["count"] = goals.Length,
                 ["statuses"] = ToJsonArray(goals.Select(goal => goal.GetProperty("status").GetString() ?? string.Empty)),
                 ["allHaveStartDates"] = goals.All(goal => goal.GetProperty("startedAtUtc").ValueKind == JsonValueKind.String),
-                ["completedHasEndWaist"] = goals.Single(goal => string.Equals(
+                ["completedHasEndWaistCm"] = goals.Single(goal => string.Equals(
                     goal.GetProperty("status").GetString(),
                     "Replaced",
                     StringComparison.Ordinal))
-                    .GetProperty("endWaist").ValueKind == JsonValueKind.Number,
+                    .GetProperty("endWaistCm").ValueKind == JsonValueKind.Number,
             },
             IndentedJsonOptions);
 
@@ -579,8 +579,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     private static JsonObject BuildDesiredWeightSnapshot(JsonElement root) {
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
-            ["desiredWeight"] = root.GetProperty("desiredWeight").GetDouble(),
-            ["startWeight"] = root.GetProperty("startWeight").GetDouble(),
+            ["desiredWeightKg"] = root.GetProperty("desiredWeightKg").GetDouble(),
+            ["startWeightKg"] = root.GetProperty("startWeightKg").GetDouble(),
             ["hasStartedAtUtc"] = root.TryGetProperty("startedAtUtc", out JsonElement startedAtUtc)
                 && startedAtUtc.ValueKind == JsonValueKind.String,
         };
@@ -589,8 +589,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     private static JsonObject BuildDesiredWaistSnapshot(JsonElement root) {
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
-            ["desiredWaist"] = root.GetProperty("desiredWaist").GetDouble(),
-            ["startWaist"] = root.GetProperty("startWaist").GetDouble(),
+            ["desiredWaistCm"] = root.GetProperty("desiredWaistCm").GetDouble(),
+            ["startWaistCm"] = root.GetProperty("startWaistCm").GetDouble(),
             ["hasStartedAtUtc"] = root.GetProperty("startedAtUtc").ValueKind == JsonValueKind.String,
         };
     }

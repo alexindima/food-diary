@@ -175,7 +175,7 @@ export class UserService extends ApiService {
 
     public getDesiredWeight(): Observable<number | null> {
         return this.get<DesiredWeightResponse>('desired-weight').pipe(
-            map(response => response.desiredWeight ?? null),
+            map(response => response.desiredWeightKg ?? null),
             catchError((error: unknown) => fallbackApiError('Get desired weight error', error, null)),
         );
     }
@@ -184,8 +184,8 @@ export class UserService extends ApiService {
         return this.get<DesiredWeightResponse>('desired-weight').pipe(
             catchError((error: unknown) =>
                 fallbackApiError('Get weight goal error', error, {
-                    desiredWeight: null,
-                    startWeight: null,
+                    desiredWeightKg: null,
+                    startWeightKg: null,
                     startedAtUtc: null,
                 }),
             ),
@@ -200,22 +200,22 @@ export class UserService extends ApiService {
 
     public updateDesiredWeight(value: number | null): Observable<number | null> {
         return this.put<DesiredWeightResponse>('desired-weight', {
-            desiredWeight: value,
+            desiredWeightKg: value,
         }).pipe(
-            map(response => response.desiredWeight ?? null),
+            map(response => response.desiredWeightKg ?? null),
             catchError((error: unknown) => rethrowApiError('Update desired weight error', error)),
         );
     }
 
     public updateWeightGoal(value: number | null): Observable<DesiredWeightResponse> {
-        return this.put<DesiredWeightResponse>('desired-weight', { desiredWeight: value }).pipe(
+        return this.put<DesiredWeightResponse>('desired-weight', { desiredWeightKg: value }).pipe(
             catchError((error: unknown) => rethrowApiError('Update weight goal error', error)),
         );
     }
 
     public getDesiredWaist(): Observable<number | null> {
         return this.get<DesiredWaistResponse>('desired-waist').pipe(
-            map(response => response.desiredWaist ?? null),
+            map(response => response.desiredWaistCm ?? null),
             catchError((error: unknown) => fallbackApiError('Get desired waist error', error, null)),
         );
     }
@@ -224,8 +224,8 @@ export class UserService extends ApiService {
         return this.get<DesiredWaistResponse>('desired-waist').pipe(
             catchError((error: unknown) =>
                 fallbackApiError('Get waist goal error', error, {
-                    desiredWaist: null,
-                    startWaist: null,
+                    desiredWaistCm: null,
+                    startWaistCm: null,
                     startedAtUtc: null,
                 }),
             ),
@@ -240,15 +240,15 @@ export class UserService extends ApiService {
 
     public updateDesiredWaist(value: number | null): Observable<number | null> {
         return this.put<DesiredWaistResponse>('desired-waist', {
-            desiredWaist: value,
+            desiredWaistCm: value,
         }).pipe(
-            map(response => response.desiredWaist ?? null),
+            map(response => response.desiredWaistCm ?? null),
             catchError((error: unknown) => rethrowApiError('Update desired waist error', error)),
         );
     }
 
     public updateWaistGoal(value: number | null): Observable<DesiredWaistResponse> {
-        return this.put<DesiredWaistResponse>('desired-waist', { desiredWaist: value }).pipe(
+        return this.put<DesiredWaistResponse>('desired-waist', { desiredWaistCm: value }).pipe(
             catchError((error: unknown) => rethrowApiError('Update waist goal error', error)),
         );
     }

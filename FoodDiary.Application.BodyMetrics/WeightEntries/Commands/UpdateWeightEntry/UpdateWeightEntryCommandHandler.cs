@@ -22,7 +22,7 @@ public sealed class UpdateWeightEntryCommandHandler(
         Result<WeightEntryId> weightEntryIdResult = RequiredIdParser.Parse(
             command.WeightEntryId,
             nameof(command.WeightEntryId),
-            "Weight entry id must not be empty.",
+            "WeightKg entry id must not be empty.",
             value => new WeightEntryId(value));
         if (weightEntryIdResult.IsFailure) {
             return RequiredIdParser.ToFailure<WeightEntryModel, WeightEntryId>(weightEntryIdResult);
@@ -59,7 +59,7 @@ public sealed class UpdateWeightEntryCommandHandler(
                 Errors.WeightEntry.AlreadyExists(normalizedDate));
         }
 
-        existingEntry.Update(command.Weight, normalizedDate);
+        existingEntry.Update(command.WeightKg, normalizedDate);
         await weightEntryRepository.UpdateAsync(existingEntry, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(existingEntry.ToModel());
