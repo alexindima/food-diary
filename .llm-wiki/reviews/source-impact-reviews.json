@@ -291,13 +291,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "15dd9d4b6d1ffa81a143b70fe96758a7dbd4cfe859edfc4b7ff0b156a1cda342"
+                                            "sha256":  "3b7ef7392956a7b2b6eafbf94187e7f6774b19c020880940739735f5b3ff9738"
                                         }
                                     ],
-                        "reason":  "Namespace trace now uses Roslyn semantic edges; internal extractor project remains cataloged but is excluded from production architecture drift.",
+                        "reason":  "Coverage-only test additions exercise existing contracts without changing backend HTTP routes, payloads, status codes, dependency boundaries, or runtime behavior; regenerated indexes and module pages were inspected for consistency.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
-                        "reviewedAtUtc":  "2026-08-14T01:50:04.5285046Z"
+                        "gitHead":  "254bc6d91712afd11c871bd78535d7e65b6b906b",
+                        "reviewedAtUtc":  "2026-08-14T10:00:19.8196919Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -306,13 +306,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "76ea39253aff61999c7f27a87af431adba67c8bf2a438e0c51a9ca100d1eeac6"
+                                            "sha256":  "4b0a06d3e6c22744999076e11a5ca8e9c8d54f196bbf2eea971812bbf9581bec"
                                         }
                                     ],
-                        "reason":  "Exclude internal Wiki tooling from backend contract discovery so generated indexes remain identical on Windows and Linux.",
+                        "reason":  "Coverage-only test additions exercise existing application, infrastructure, DI, outbox, and HTTP behavior without changing production contracts or runtime implementation.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "82d61b370ff449272ac012cea9d6c5921b50da53",
-                        "reviewedAtUtc":  "2026-08-14T03:30:15.2006099Z"
+                        "gitHead":  "254bc6d91712afd11c871bd78535d7e65b6b906b",
+                        "reviewedAtUtc":  "2026-08-14T11:45:19.5877046Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -686,12 +686,24 @@
                                         {
                                             "path":  ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
                                             "sha256":  "af0f6f75285771d96dd5ba5861ed6f1cd4e92ef8690f5537b01a82d3f74eea02"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "d113755ff7dfe30e7f90b353e9f5952753a0903a8b085a530ce3c99c21a4845a"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+                                            "sha256":  "e78986f98ccc4fdee8fbf60ae32140d79294d2ff8459c6ccbf52995f46641add"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
                                         }
                                     ],
-                        "reason":  "Exclude internal Wiki tooling from backend contract discovery so generated indexes remain identical on Windows and Linux.",
+                        "reason":  "Reviewed after second-pass coverage-only changes: application behavior, HTTP and persistence contracts, module dependencies, and Wiki workflow implementations are unchanged. Added focused unit tests and a PostgreSQL integration test; generated index changes reflect test discovery only.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "82d61b370ff449272ac012cea9d6c5921b50da53",
-                        "reviewedAtUtc":  "2026-08-14T03:30:15.5643083Z"
+                        "gitHead":  "254bc6d91712afd11c871bd78535d7e65b6b906b",
+                        "reviewedAtUtc":  "2026-08-14T08:27:51.1429139Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -881,13 +893,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "32c74fca9a8172441c328a6333dddff25cb6fca1146d32ac9ac006ed33f3fe60"
+                                            "sha256":  "43abb714705b2ee7a9242400a55197e481c39eed1f8a8b5a96f277104bcd58ac"
                                         }
                                     ],
-                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
+                        "reason":  "Coverage-only tests exercise existing admin authorization, UTC normalization, repository alias, outbox processing, and empty webhook behavior without changing production contracts or runtime implementation.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
-                        "reviewedAtUtc":  "2026-08-14T01:43:29.4831117Z"
+                        "gitHead":  "254bc6d91712afd11c871bd78535d7e65b6b906b",
+                        "reviewedAtUtc":  "2026-08-14T11:14:44.6913984Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

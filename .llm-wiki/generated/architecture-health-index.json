@@ -12,7 +12,7 @@
                     "unconsumedBackendContracts":  0,
                     "selectorUnreferencedComponents":  149,
                     "componentsWithoutDirectSpecs":  126,
-                    "criticalSymbolsWithoutTestReferences":  32,
+                    "criticalSymbolsWithoutTestReferences":  29,
                     "explicitDebtMarkers":  3
                 },
     "projectDependencyViolations":  [
@@ -5380,16 +5380,6 @@
                                      ],
     "criticalSymbolsWithoutTestReferences":  [
                                                  {
-                                                     "name":  "CreateAdminAchievementDefinitionCommandHandler",
-                                                     "role":  "CommandHandler",
-                                                     "path":  "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
-                                                     "line":  7,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
                                                      "name":  "IngestMailRelayDeliveryEventCommandHandler",
                                                      "role":  "CommandHandler",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandHandler.cs",
@@ -5404,16 +5394,6 @@
                                                      "role":  "CommandHandler",
                                                      "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
                                                      "line":  4,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "UpdateAdminAchievementDefinitionCommandHandler",
-                                                     "role":  "CommandHandler",
-                                                     "path":  "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
-                                                     "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 
@@ -5484,16 +5464,6 @@
                                                      "role":  "Controller",
                                                      "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
                                                      "line":  13,
-                                                     "testReferenceCount":  0,
-                                                     "testReferences":  [
-
-                                                                        ]
-                                                 },
-                                                 {
-                                                     "name":  "GetAdminAchievementDefinitionsQueryHandler",
-                                                     "role":  "QueryHandler",
-                                                     "path":  "FoodDiary.Application.Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
-                                                     "line":  7,
                                                      "testReferenceCount":  0,
                                                      "testReferences":  [
 

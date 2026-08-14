@@ -7,8 +7,8 @@
     "summary":  {
                     "productionFiles":  4215,
                     "criticalSymbols":  540,
-                    "criticalSymbolsWithTestReferences":  508,
-                    "criticalSymbolsWithoutTestReferences":  32,
+                    "criticalSymbolsWithTestReferences":  511,
+                    "criticalSymbolsWithoutTestReferences":  29,
                     "debtMarkers":  3
                 },
     "hotspots":  [
@@ -5571,8 +5571,8 @@
                       "nonBlankLines":  12,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.24
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.24
                   },
                   {
                       "path":  "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandValidator.cs",
@@ -5819,8 +5819,8 @@
                       "nonBlankLines":  12,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.24
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.24
                   },
                   {
                       "path":  "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandValidator.cs",
@@ -6211,8 +6211,8 @@
                       "nonBlankLines":  12,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.24
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.24
                   },
                   {
                       "path":  "FoodDiary.Application.Admin/Queries/GetAdminAiPrompts/GetAdminAiPromptsQuery.cs",
@@ -34754,9 +34754,9 @@
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application.Admin/Commands/CreateAdminAchievementDefinition/CreateAdminAchievementDefinitionCommandHandler.cs",
                                 "line":  7,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs"
                                                    ]
                             },
                             {
@@ -35810,9 +35810,9 @@
                                 "role":  "CommandHandler",
                                 "path":  "FoodDiary.Application.Admin/Commands/UpdateAdminAchievementDefinition/UpdateAdminAchievementDefinitionCommandHandler.cs",
                                 "line":  7,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs"
                                                    ]
                             },
                             {
@@ -37034,10 +37034,11 @@
                                 "role":  "Handler",
                                 "path":  "FoodDiary.Application.Gamification/Services/AchievementReconciliationHandler.cs",
                                 "line":  8,
-                                "testReferenceCount":  2,
+                                "testReferenceCount":  3,
                                 "testReferences":  [
                                                        "tests/FoodDiary.Application.Tests/Gamification/AchievementReconciliationHandlerTests.cs",
-                                                       "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs"
+                                                       "tests/FoodDiary.Infrastructure.IntegrationTests/Integration/UserAchievementStoreIntegrationTests.cs",
+                                                       "tests/FoodDiary.Infrastructure.Tests/Persistence/AchievementPersistenceTests.cs"
                                                    ]
                             },
                             {
@@ -37117,9 +37118,9 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application.Admin/Queries/GetAdminAchievementDefinitions/GetAdminAchievementDefinitionsQueryHandler.cs",
                                 "line":  7,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs"
                                                    ]
                             },
                             {

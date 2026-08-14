@@ -123,6 +123,26 @@ public class DietologistAccessPolicyTests {
         Assert.NotNull(DietologistAccessPolicy.EnsurePermission(perms, "Unknown"));
     }
 
+    [Fact]
+    public void HasAnyDashboardPermission_ReflectsDashboardVisibleCategories() {
+        var none = new DietologistPermissionsModel(
+            ShareMeals: false,
+            ShareStatistics: false,
+            ShareWeight: false,
+            ShareWaist: false,
+            ShareGoals: true,
+            ShareHydration: false,
+            ShareProfile: true,
+            ShareFasting: false);
+        DietologistPermissionsModel meals = none with { ShareMeals = true };
+        DietologistPermissionsModel fasting = none with { ShareFasting = true };
+
+        Assert.Multiple(
+            () => Assert.False(DietologistAccessPolicy.HasAnyDashboardPermission(none)),
+            () => Assert.True(DietologistAccessPolicy.HasAnyDashboardPermission(meals)),
+            () => Assert.True(DietologistAccessPolicy.HasAnyDashboardPermission(fasting)));
+    }
+
     private static IDietologistInvitationRepository CreateInvitationRepository(DietologistInvitation? invitation) {
         IDietologistInvitationRepository repository = Substitute.For<IDietologistInvitationRepository>();
         ((IDietologistInvitationReadRepository)repository)

@@ -233,6 +233,40 @@ public partial class BillingFeatureTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
+    [Fact]
+    public async Task StartPremiumTrial_WhenStartingTrialFails_ReturnsFailure() {
+        var userId = UserId.New();
+        UserBillingProfileModel profile = new(
+            UserId: userId,
+            Email: "trial-start-failure@example.com",
+            IsActive: true,
+            IsDeleted: false,
+            HasPaidPremium: false,
+            PremiumTrialStartedAtUtc: null,
+            PremiumTrialEndsAtUtc: null);
+        IBillingUserContextService userContextService = Substitute.For<IBillingUserContextService>();
+        userContextService
+            .EnsureCanAccessAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<Error?>(null));
+        userContextService
+            .GetAccessibleUserAsync(userId, Arg.Any<CancellationToken>())
+            .Returns(Result.Success(profile));
+        userContextService
+            .StartPremiumTrialAsync(userId, Now, TimeSpan.FromDays(7), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<UserBillingProfileModel>(Errors.Authentication.InvalidToken));
+        var handler = new StartPremiumTrialCommandHandler(
+            userContextService,
+            new InMemoryBillingSubscriptionRepository(),
+            new FakeBillingPublicConfigProvider(),
+            new FixedDateTimeProvider(Now));
+
+        Result<BillingOverviewModel> result = await handler.Handle(
+            new StartPremiumTrialCommand(userId.Value),
+            CancellationToken.None);
+
+        Assert.Equal("Authentication.InvalidToken", ResultAssert.Failure(result).Code);
+    }
+
     [Theory]
     [InlineData("active")]
     [InlineData("trialing")]

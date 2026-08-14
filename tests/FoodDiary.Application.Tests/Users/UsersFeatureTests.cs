@@ -1100,6 +1100,23 @@ public partial class UsersFeatureTests {
             () => Assert.False(dietologist.IsDietologist));
     }
 
+    [Fact]
+    public async Task UserContextService_FeatureProfiles_WhenUserIsMissing_ReturnAccessFailures() {
+        var userId = UserId.New();
+        var service = new UserContextService(
+            Substitute.For<IUserLookupRepository>(),
+            Substitute.For<IUserWriteRepository>());
+
+        Result<UserAiProfileModel> ai = await service.GetAiProfileAsync(userId, CancellationToken.None);
+        Result<UserDashboardProfileModel> dashboard = await service.GetDashboardProfileAsync(userId, CancellationToken.None);
+        Result<UserTdeeProfileModel> tdee = await service.GetTdeeProfileAsync(userId, CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Equal("Authentication.InvalidToken", ResultAssert.Failure(ai).Code),
+            () => Assert.Equal("Authentication.InvalidToken", ResultAssert.Failure(dashboard).Code),
+            () => Assert.Equal("Authentication.InvalidToken", ResultAssert.Failure(tdee).Code));
+    }
+
     private static IUserContextService CreateAccessCheckedFailingUserContext(UserId userId) {
         IUserContextService userContextService = Substitute.For<IUserContextService>();
         userContextService

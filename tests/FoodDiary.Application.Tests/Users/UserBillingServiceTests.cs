@@ -72,6 +72,35 @@ public sealed class UserBillingServiceTests {
     }
 
     [Fact]
+    public async Task StartPremiumTrialAsync_WhenUserIsMissing_ReturnsAccessFailureWithoutWriting() {
+        IUserWriteRepository writer = Substitute.For<IUserWriteRepository>();
+        UserBillingService service = CreateService(Substitute.For<IUserLookupRepository>(), writer);
+
+        Result<UserBillingProfileModel> result = await service.StartPremiumTrialAsync(
+            UserId.New(),
+            Now,
+            TimeSpan.FromDays(7),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
+        await writer.DidNotReceiveWithAnyArgs().UpdateAsync(default!, default);
+    }
+
+    [Fact]
+    public async Task EnsureCanAccessAsync_ReturnsPolicyResult() {
+        User user = CreateUser();
+        UserBillingService accessibleService = CreateService(CreateReader(user));
+        UserBillingService missingService = CreateService(Substitute.For<IUserLookupRepository>());
+
+        Error? accessible = await accessibleService.EnsureCanAccessAsync(user.Id, CancellationToken.None);
+        Error? missing = await missingService.EnsureCanAccessAsync(UserId.New(), CancellationToken.None);
+
+        Assert.Multiple(
+            () => Assert.Null(accessible),
+            () => Assert.Equal("Authentication.InvalidToken", missing?.Code));
+    }
+
+    [Fact]
     public async Task PremiumRoleMethods_DelegateByUserId() {
         IUserRoleMembershipService roles = Substitute.For<IUserRoleMembershipService>();
         UserBillingService service = CreateService(Substitute.For<IUserLookupRepository>(), roleMembershipService: roles);

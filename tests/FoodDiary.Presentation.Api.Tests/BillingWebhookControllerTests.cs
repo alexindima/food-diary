@@ -75,11 +75,57 @@ public sealed class BillingWebhookControllerTests {
     }
 
     [Fact]
+    public async Task HandleWebhook_WithExplicitlyEmptyBody_DispatchesEmptyPayload() {
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
+        BillingWebhookController controller = CreateController(sender, payload: string.Empty);
+        controller.Request.ContentLength = 0;
+
+        IActionResult result = await controller.HandleWebhook("YooKassa");
+
+        Assert.IsType<NoContentResult>(result);
+        ProcessBillingWebhookCommand command = Assert.IsType<ProcessBillingWebhookCommand>(sentRequest);
+        Assert.Equal(string.Empty, command.Payload);
+    }
+
+    [Fact]
+    public async Task HandleWebhook_WithEmptyChunkedBody_DispatchesEmptyPayload() {
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
+        BillingWebhookController controller = CreateController(sender, payload: string.Empty);
+        controller.Request.ContentLength = null;
+
+        IActionResult result = await controller.HandleWebhook("YooKassa");
+
+        Assert.IsType<NoContentResult>(result);
+        ProcessBillingWebhookCommand command = Assert.IsType<ProcessBillingWebhookCommand>(sentRequest);
+        Assert.Equal(string.Empty, command.Payload);
+    }
+
+    [Fact]
     public async Task HandleWebhook_WhenSeekableBodyReadFails_RestoresBodyPositionAndDoesNotDispatch() {
         bool dispatched = false;
         ISender sender = SubstituteSender.Create(Result.Success(), _ => dispatched = true);
         var httpContext = new DefaultHttpContext();
         var body = new ThrowingSeekableReadStream();
+        httpContext.Request.Body = body;
+        httpContext.Request.ContentLength = 2;
+        var controller = new BillingWebhookController(sender, new BillingWebhookHttpProcessor()) {
+            ControllerContext = new ControllerContext { HttpContext = httpContext },
+        };
+
+        await Assert.ThrowsAsync<IOException>(() => controller.HandleWebhook("Stripe"));
+
+        Assert.False(dispatched);
+        Assert.Equal(0, body.Position);
+    }
+
+    [Fact]
+    public async Task HandleWebhook_WhenBodyReadFailsAsynchronously_RestoresBodyPositionAndDoesNotDispatch() {
+        bool dispatched = false;
+        ISender sender = SubstituteSender.Create(Result.Success(), _ => dispatched = true);
+        var httpContext = new DefaultHttpContext();
+        var body = new AsynchronouslyThrowingSeekableReadStream();
         httpContext.Request.Body = body;
         httpContext.Request.ContentLength = 2;
         var controller = new BillingWebhookController(sender, new BillingWebhookHttpProcessor()) {
@@ -169,6 +215,17 @@ public sealed class BillingWebhookControllerTests {
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) {
             Position = 1;
             throw new IOException("Simulated request body read failure.");
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class AsynchronouslyThrowingSeekableReadStream : MemoryStream {
+        public override async ValueTask<int> ReadAsync(
+            Memory<byte> buffer,
+            CancellationToken cancellationToken = default) {
+            Position = 1;
+            await Task.Yield();
+            throw new IOException("Simulated asynchronous request body read failure.");
         }
     }
 

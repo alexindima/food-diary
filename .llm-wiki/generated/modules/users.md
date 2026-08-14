@@ -152,6 +152,8 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UpdateUserCommandHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserApplicationServiceDelegationTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserBillingServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserNotificationProfileServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersDependencyInjectionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/UsersModuleExtractionTests.cs`

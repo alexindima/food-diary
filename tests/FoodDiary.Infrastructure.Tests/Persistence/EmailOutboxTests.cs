@@ -5,6 +5,7 @@ using FoodDiary.Infrastructure.Persistence.Email;
 using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Infrastructure.Persistence.Achievements;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -234,6 +235,35 @@ public sealed class EmailOutboxTests {
             () => Assert.Equal(2, all.Count),
             () => Assert.Equal(image.ObjectKey, imagePreview.Summary),
             () => Assert.Equal(webPush.NotificationId.Value.ToString(), pushPreview.Summary));
+    }
+
+    [Fact]
+    public async Task ReplayTooling_PreviewsAndReplaysAchievementEvaluationDeadLetter() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now.AddMinutes(-2));
+        message.MarkDeadLettered("achievement failure", Now.AddMinutes(-1));
+        context.AchievementEvaluationOutbox.Add(message);
+        await context.SaveChangesAsync();
+        var service = new OutboxDeadLetterReplayService(context, new FixedDateTimeProvider(Now));
+
+        OutboxDeadLetterMessageModel? preview = await service.GetDeadLetterAsync(
+            "achievement_evaluation",
+            message.Id,
+            CancellationToken.None);
+        OutboxReplayAuditModel audit = await service.ReplayAsync(
+            "achievement_evaluation",
+            message.Id,
+            "operator@example.com",
+            "Reconciliation recovered",
+            expectedAttemptCount: 1,
+            CancellationToken.None);
+
+        Assert.NotNull(preview);
+        Assert.Multiple(
+            () => Assert.Equal(message.UserId.Value.ToString(), preview.Summary),
+            () => Assert.Equal("achievement failure", preview.LastError),
+            () => Assert.Equal("achievement failure", audit.PreviousError),
+            () => Assert.Null(message.DeadLetteredOnUtc));
     }
 
     [Fact]

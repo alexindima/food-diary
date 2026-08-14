@@ -177,6 +177,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RecommendationCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.RelationshipCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistFeatureTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistInvitationTokenGeneratorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistResidualCoverageTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/DietologistValidatorTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Dietologist/RecommendationCommentHandlerTests.cs`

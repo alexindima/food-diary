@@ -45,4 +45,24 @@ public sealed class NotificationFactoryTests {
             () => Assert.Equal(NotificationTypes.WeeklyGoalReminder, weeklyGoal.Type),
             () => Assert.Equal("goal-id", weeklyGoal.ReferenceId));
     }
+
+    [Fact]
+    public void InvitationAndDueSoonFactories_MapTypesAndReferences() {
+        var userId = UserId.New();
+
+        Notification received = NotificationFactory.CreateDietologistInvitationReceived(userId, "Client", "received-id");
+        Notification accepted = NotificationFactory.CreateDietologistInvitationAccepted(userId, "Dietologist", "accepted-id");
+        Notification declined = NotificationFactory.CreateDietologistInvitationDeclined(userId, "Dietologist", "declined-id");
+        Notification dueSoon = NotificationFactory.CreateClientTaskDueSoon(userId);
+
+        Assert.Multiple(
+            () => Assert.Equal(NotificationTypes.DietologistInvitationReceived, received.Type),
+            () => Assert.Equal("received-id", received.ReferenceId),
+            () => Assert.Equal(NotificationTypes.DietologistInvitationAccepted, accepted.Type),
+            () => Assert.Equal("accepted-id", accepted.ReferenceId),
+            () => Assert.Equal(NotificationTypes.DietologistInvitationDeclined, declined.Type),
+            () => Assert.Equal("declined-id", declined.ReferenceId),
+            () => Assert.Equal(NotificationTypes.ClientTaskDueSoon, dueSoon.Type),
+            () => Assert.Null(dueSoon.ReferenceId));
+    }
 }

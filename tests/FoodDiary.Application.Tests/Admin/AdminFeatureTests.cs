@@ -124,6 +124,49 @@ public partial class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task StartAdminImpersonationHandler_WithDeletedTarget_ReturnsForbiddenWithoutSession() {
+        User actor = CreateUserWithRoles("admin-deleted-target@example.com", [RoleNames.Admin]);
+        User target = CreateUserWithRoles("deleted-target@example.com", []);
+        target.DeleteAccount(DateTime.UtcNow);
+        var sessionRepository = new RecordingImpersonationSessionRepository();
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target, sessionRepository);
+
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
+            new StartAdminImpersonationCommand(
+                actor.Id.Value,
+                target.Id.Value,
+                "Support case",
+                "127.0.0.1",
+                "Test"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.ImpersonationForbidden", result.Error.Code);
+        Assert.Equal(0, sessionRepository.AddCallCount);
+    }
+
+    [Fact]
+    public async Task StartAdminImpersonationHandler_WithAdminTarget_ReturnsForbiddenWithoutSession() {
+        User actor = CreateUserWithRoles("admin-actor@example.com", [RoleNames.Admin]);
+        User target = CreateUserWithRoles("admin-target@example.com", [RoleNames.Admin]);
+        var sessionRepository = new RecordingImpersonationSessionRepository();
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target, sessionRepository);
+
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
+            new StartAdminImpersonationCommand(
+                actor.Id.Value,
+                target.Id.Value,
+                "Support case",
+                "127.0.0.1",
+                "Test"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.ImpersonationForbidden", result.Error.Code);
+        Assert.Equal(0, sessionRepository.AddCallCount);
+    }
+
+    [Fact]
     public async Task StartAdminImpersonationHandler_WithSameActorAndTarget_ReturnsValidationFailure() {
         User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, actor);

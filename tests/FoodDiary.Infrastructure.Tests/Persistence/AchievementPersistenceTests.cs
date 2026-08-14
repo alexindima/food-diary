@@ -1,10 +1,12 @@
 using FoodDiary.Domain.Entities.Achievements;
+using FoodDiary.Application.Abstractions.Achievements.Common;
 using FoodDiary.Domain.Entities.WeeklyGoals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
@@ -44,6 +46,49 @@ public sealed class AchievementPersistenceTests {
             () => Assert.NotNull(message.ProcessedOnUtc),
             () => Assert.Null(message.LockedUntilUtc),
             () => Assert.Null(message.LastError));
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxProcessor_ProcessesDueMessage() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
+        context.AchievementEvaluationOutbox.Add(message);
+        await context.SaveChangesAsync();
+        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
+        var processor = new AchievementEvaluationOutboxProcessor(
+            context,
+            handler,
+            TimeProvider.System,
+            NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 10);
+
+        Assert.Equal(1, processed);
+        await handler.Received(1).ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task AchievementEvaluationOutboxProcessor_WhenReconciliationFails_RecordsRetryForUser() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var message = AchievementEvaluationOutboxMessage.Create(UserId.New(), Now);
+        context.AchievementEvaluationOutbox.Add(message);
+        await context.SaveChangesAsync();
+        IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
+        handler
+            .ReconcileAsync(message.UserId, message.CreatedOnUtc, Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(new InvalidOperationException("Simulated reconciliation failure.")));
+        var processor = new AchievementEvaluationOutboxProcessor(
+            context,
+            handler,
+            TimeProvider.System,
+            NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 10);
+
+        Assert.Multiple(
+            () => Assert.Equal(0, processed),
+            () => Assert.Equal(1, message.AttemptCount),
+            () => Assert.Contains("Simulated reconciliation failure", message.LastError, StringComparison.Ordinal));
     }
 
     [Fact]

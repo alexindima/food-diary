@@ -52,4 +52,21 @@ public sealed class EnumValueParserTests {
         ResultAssert.Failure(shared, "Validation.Invalid");
         ResultAssert.Failure(meals, "Validation.Invalid");
     }
+
+    [Fact]
+    public void DietologistParser_CoversPredicateAndCustomErrorOverloads() {
+        var customError = new Error("Custom.Invalid", "Custom enum error.");
+
+        Result<DayOfWeek> valid = DietologistEnumValueParser.ParseRequired<DayOfWeek>("Friday", customError);
+        Result<DayOfWeek> invalid = DietologistEnumValueParser.ParseRequired<DayOfWeek>("invalid", customError);
+
+        Assert.Multiple(
+            () => Assert.True(DietologistEnumValueParser.CanParse<DayOfWeek>("Monday")),
+            () => Assert.False(DietologistEnumValueParser.CanParse<DayOfWeek>("invalid")),
+            () => Assert.True(DietologistEnumValueParser.CanParseOptional<DayOfWeek>(value: null)),
+            () => Assert.True(DietologistEnumValueParser.CanParseDefined<DayOfWeek>("Tuesday")),
+            () => Assert.False(DietologistEnumValueParser.CanParseDefined<DayOfWeek>("999")),
+            () => Assert.Equal(DayOfWeek.Friday, ResultAssert.Success(valid)),
+            () => Assert.Equal(customError, ResultAssert.Failure(invalid)));
+    }
 }

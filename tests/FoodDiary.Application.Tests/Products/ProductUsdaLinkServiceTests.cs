@@ -32,6 +32,44 @@ public sealed class ProductUsdaLinkServiceTests {
         await repository.DidNotReceive().UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
     }
 
+    [Fact]
+    public async Task IsAccessibleForUpdateAsync_ReturnsWhetherOwnedProductExists() {
+        Product product = CreateProduct();
+
+        bool accessible = await new ProductUsdaLinkService(CreateRepository(product))
+            .IsAccessibleForUpdateAsync(product.Id, product.UserId, CancellationToken.None);
+        bool missing = await new ProductUsdaLinkService(CreateRepository(product: null))
+            .IsAccessibleForUpdateAsync(ProductId.New(), UserId.New(), CancellationToken.None);
+
+        Assert.True(accessible);
+        Assert.False(missing);
+    }
+
+    [Fact]
+    public async Task LinkAsync_WhenProductIsMissing_DoesNotPersist() {
+        IProductWriteRepository repository = CreateRepository(product: null);
+        var service = new ProductUsdaLinkService(repository);
+
+        bool linked = await service.LinkAsync(ProductId.New(), UserId.New(), 171077, CancellationToken.None);
+
+        Assert.False(linked);
+        await repository.DidNotReceive().UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task UnlinkAsync_WhenProductIsAccessible_RemovesLinkAndPersists() {
+        Product product = CreateProduct();
+        product.LinkToUsdaFood(171077);
+        IProductWriteRepository repository = CreateRepository(product);
+        var service = new ProductUsdaLinkService(repository);
+
+        bool unlinked = await service.UnlinkAsync(product.Id, product.UserId, CancellationToken.None);
+
+        Assert.True(unlinked);
+        Assert.Null(product.UsdaFdcId);
+        await repository.Received(1).UpdateAsync(product, CancellationToken.None);
+    }
+
     private static IProductWriteRepository CreateRepository(Product? product) {
         IProductWriteRepository repository = Substitute.For<IProductWriteRepository>();
         repository

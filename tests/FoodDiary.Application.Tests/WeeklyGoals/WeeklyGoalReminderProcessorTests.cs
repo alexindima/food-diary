@@ -48,6 +48,27 @@ public sealed class WeeklyGoalReminderProcessorTests {
         await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
+    [Fact]
+    public async Task ProcessAsync_WhenReminderConfigurationIsMissing_DoesNothing() {
+        var goal = WeeklyGoal.Create(
+            UserId.New(), WeekStart, WeeklyGoalType.DiaryLogging, targetDays: 5,
+            reminderEnabled: false, reminderTimeMinutes: null, timeZoneOffsetMinutes: null);
+        IWeeklyGoalRepository repository = Substitute.For<IWeeklyGoalRepository>();
+        repository.GetReminderCandidatesAsync(
+                Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns([goal]);
+        INotificationWriter writer = Substitute.For<INotificationWriter>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        var processor = new WeeklyGoalReminderProcessor(
+            repository, writer, unitOfWork, new FixedTimeProvider(ReminderUtcTime));
+
+        int sent = await processor.ProcessAsync(CancellationToken.None);
+
+        Assert.Equal(0, sent);
+        await writer.DidNotReceiveWithAnyArgs().AddAsync(default!, default, default);
+        await unitOfWork.DidNotReceiveWithAnyArgs().SaveChangesAsync(default);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(utcNow);

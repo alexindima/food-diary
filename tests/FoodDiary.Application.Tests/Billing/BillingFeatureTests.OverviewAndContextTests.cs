@@ -85,6 +85,32 @@ public partial class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task BillingUserContextService_StartPremiumTrialAsync_ForwardsRequest() {
+        var userId = UserId.New();
+        IUserBillingService userBillingService = Substitute.For<IUserBillingService>();
+        UserBillingProfileModel profile = new(
+            UserId: userId,
+            Email: "trial@example.com",
+            IsActive: true,
+            IsDeleted: false,
+            HasPaidPremium: false,
+            PremiumTrialStartedAtUtc: null,
+            PremiumTrialEndsAtUtc: null);
+        userBillingService
+            .StartPremiumTrialAsync(userId, Now, TimeSpan.FromDays(7), Arg.Any<CancellationToken>())
+            .Returns(Result.Success(profile));
+        var service = new BillingUserContextService(userBillingService);
+
+        Result<UserBillingProfileModel> result = await service.StartPremiumTrialAsync(
+            userId,
+            Now,
+            TimeSpan.FromDays(7),
+            CancellationToken.None);
+
+        Assert.Same(profile, ResultAssert.Success(result));
+    }
+
+    [Fact]
     public async Task GetBillingOverview_WithExistingSubscription_ReturnsBillingTimelineAndRenewalState() {
         var premiumRole = Role.Create(RoleNames.Premium);
         var user = User.Create("premium@example.com", "hash");

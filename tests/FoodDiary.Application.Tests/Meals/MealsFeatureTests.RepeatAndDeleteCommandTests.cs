@@ -1,4 +1,6 @@
 using FoodDiary.Application.Abstractions.Achievements.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Meals.Commands.DeleteMeal;
 using FoodDiary.Application.Meals.Commands.RepeatMeal;
@@ -13,6 +15,18 @@ using FoodDiary.Application.Meals.Models;
 namespace FoodDiary.Application.Tests.Meals;
 
 public partial class MealsFeatureTests {
+    [Fact]
+    public void RepeatMealCommandHandler_WithoutAchievementOutbox_UsesCompatibilityConstructor() {
+        IMealRepository repository = Substitute.For<IMealRepository>();
+
+        var handler = new RepeatMealCommandHandler(
+            repository,
+            repository,
+            Substitute.For<IMealNutritionService>(),
+            Substitute.For<ICurrentUserAccessService>());
+
+        Assert.NotNull(handler);
+    }
 
     [Fact]
     public async Task DeleteMealCommandHandler_WithEmptyMealId_ReturnsValidationFailure() {

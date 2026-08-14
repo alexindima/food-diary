@@ -206,6 +206,7 @@ Source: `FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs`
 
 Test paths below are discovery evidence, not proof that a boundary assertion executed or passed.
 
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminAchievementDefinitionHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.LessonCommandTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.MappingTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Admin/AdminFeatureTests.ReadQueryTests.cs`

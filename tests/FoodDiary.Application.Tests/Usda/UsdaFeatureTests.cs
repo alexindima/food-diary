@@ -63,6 +63,32 @@ public class UsdaFeatureTests {
     }
 
     [Fact]
+    public async Task LinkProductToUsdaFood_WhenLinkIsRejected_ReturnsNotAccessible() {
+        var userId = UserId.New();
+        var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
+        var usdaFood = new UsdaFood { FdcId = 171077, Description = "Chicken, breast" };
+        IProductUsdaLinkService productLinkService = CreateProductLinkService(product);
+        productLinkService
+            .LinkAsync(
+                productId: product.Id,
+                userId: userId,
+                fdcId: usdaFood.FdcId,
+                cancellationToken: Arg.Any<CancellationToken>())
+            .Returns(returnThis: false);
+        var handler = new LinkProductToUsdaFoodCommandHandler(
+            productLinkService,
+            CreateUsdaFoodRepository(usdaFood),
+            Substitute.For<ICurrentUserAccessService>());
+
+        Result result = await handler.Handle(
+            new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, usdaFood.FdcId),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task UnlinkProductFromUsdaFood_WithValidData_Succeeds() {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
