@@ -257,17 +257,17 @@
                     {
                         "pageId":  "workflow-adaptive-development",
                         "pagePath":  ".llm-wiki/workflows/adaptive-development.md",
-                        "pageSha256":  "6985f3df5242db030eb9a91836ac06d8c1707540254dd36959ab658202ca6286",
+                        "pageSha256":  "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAdaptiveVerification.ps1",
-                                            "sha256":  "9c90e1f57c5da72ab0622b56ac585a5eecb392cb95d50e59007fed5a6f50344f"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
+                                            "sha256":  "87c0ec4cff3a4e49b1b3953095fbfe495cd0a25c95012f2668f4d70e83bd3dc9"
                                         }
                                     ],
-                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
+                        "reason":  "Discover logical subfeatures inside extracted physical modules and invalidate readiness cache when scanner code changes.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
-                        "reviewedAtUtc":  "2026-08-14T00:06:47.1890989Z"
+                        "gitHead":  "ceb62356f31280ade0371ba6394bb950a73372e9",
+                        "reviewedAtUtc":  "2026-08-14T03:57:42.2269977Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",

@@ -19,7 +19,8 @@ if (-not (Test-Path -LiteralPath $folderModulePath -PathType Container) -and
 $cachePath = $null
 if (@($DependencyFixturePath | Where-Object { $_ }).Count -eq 0) {
     $graphFingerprint = & (Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1') -Action fingerprint -Format Json | ConvertFrom-Json
-    $cacheKeyText = "$($graphFingerprint.fingerprint)|$Module|tests=$([bool]$IncludeTests)|compile=$([bool]$CompileProbe)"
+    $toolFingerprint = (Get-FileHash -LiteralPath $PSCommandPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    $cacheKeyText = "$($graphFingerprint.fingerprint)|tool=$toolFingerprint|$Module|tests=$([bool]$IncludeTests)|compile=$([bool]$CompileProbe)"
     $sha = [Security.Cryptography.SHA256]::Create()
     try { $cacheKey = ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($cacheKeyText))) -replace '-', '').ToLowerInvariant() }
     finally { $sha.Dispose() }
@@ -62,9 +63,12 @@ $internalFeatureNamespaces = [Collections.Generic.HashSet[string]]::new([StringC
 foreach ($path in $moduleSourcePaths) {
     $text = [IO.File]::ReadAllText((Join-Path $repositoryRoot $path))
     $scanText = [regex]::Replace($text, '(?s)"(?:\\.|[^"\\])*"|//[^\r\n]*|/\*.*?\*/', { param($match) ' ' * $match.Length })
-    foreach ($match in [regex]::Matches($scanText, '(?m)^\s*namespace\s+FoodDiary\.Application\.(?<feature>[A-Z][A-Za-z0-9_]+)(?:\.|\s*[;{])')) {
+    foreach ($match in [regex]::Matches($scanText, '(?m)^\s*namespace\s+FoodDiary\.Application\.(?<feature>[A-Z][A-Za-z0-9_]+)(?:\.(?<subfeature>[A-Z][A-Za-z0-9_]+))?(?:\.|\s*[;{])')) {
         $feature = $match.Groups['feature'].Value
         if ($feature -ne 'Abstractions') { $null = $internalFeatureNamespaces.Add($feature) }
+        if ($feature -eq $Module -and $match.Groups['subfeature'].Success) {
+            $null = $internalFeatureNamespaces.Add($match.Groups['subfeature'].Value)
+        }
     }
 }
 $sourceDependencies = [Collections.Generic.List[object]]::new()
