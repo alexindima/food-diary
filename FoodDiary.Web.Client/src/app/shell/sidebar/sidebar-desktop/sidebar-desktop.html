@@ -25,6 +25,7 @@
             [pendingRoute]="pendingRoute()"
             [isCollapsed]="isCollapsed()"
             (toggleMenu)="userMenuToggle.emit($event)"
+            (dismissMenu)="userMenuDismiss.emit()"
             (directRouteClick)="directRouteClick.emit($event)"
             (logout)="logout.emit()"
         />

@@ -43,6 +43,7 @@ export class SidebarDesktopComponent {
     public readonly foodTrackingToggle = output();
     public readonly bodyTrackingToggle = output();
     public readonly userMenuToggle = output<HTMLElement>();
+    public readonly userMenuDismiss = output();
     public readonly directRouteClick = output<SidebarDirectRouteRequest>();
     public readonly logout = output();
     public readonly collapsedToggle = output();

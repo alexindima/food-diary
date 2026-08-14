@@ -177,17 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "dc247c634b9ba4d1bb49cddd83f30935adfcd43b809a278ca2ac2263b0440b73"
-        },
-        {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "cf6613d771cfee8b00bfae1f18755b19a75e0c82445114cc06f70f8fd117cd6a"
+          "sha256": "c9d8711c10c54184c9ac1c07e0c77a39a4eb863a805dd3382dcf9179263dccd5"
         }
       ],
-      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "reason": "Frontend profile layout and shared select rendering changed; generated frontend, contract, quality, and architecture indexes were refreshed, while documented workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
-      "reviewedAtUtc": "2026-08-14T13:13:42.4005076Z"
+      "gitHead": "c1f9a7c759c24cfcae241e4388df635b8425fbbb",
+      "reviewedAtUtc": "2026-08-14T21:23:12.0755436Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -771,13 +767,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "536fa732569a67d6ce1d981b18dfb608381c05ab398402fe7cc671b8f265d405"
+          "sha256": "11fab42cde1f09343af8885a9c301663dfa9bd5697447c83a22531a2b53f4cd0"
         }
       ],
-      "reason": "Reviewed CI reliability fixes: serialized cold code-graph refreshes, deterministic timing sample ordering, process-safe MCP transport tests, and lightweight health checks preserve existing architecture and quality semantics.",
+      "reason": "Frontend profile layout and shared select rendering changed; generated frontend, contract, quality, and architecture indexes were refreshed, while documented workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "c6ee2fa66946b112bff9033e1939dcf5f994d677",
-      "reviewedAtUtc": "2026-08-14T15:51:34.4906910Z"
+      "gitHead": "c1f9a7c759c24cfcae241e4388df635b8425fbbb",
+      "reviewedAtUtc": "2026-08-14T21:23:13.9009014Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -974,17 +970,21 @@
     {
       "pageId": "workflow-trace-feature",
       "pagePath": ".llm-wiki/workflows/trace-feature.md",
-      "pageSha256": "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
+      "pageSha256": "e1655efc476bf4c727322d870d5951e28a7f1165ff29555671079e5ffa61f874",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-          "sha256": "c22d6016f956f55b5510afe0864085a9c9d27ba4cd0d726826cdec9ead8a2385"
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "b078ab9a523762ed3141d98b4d73313daa1d9e1e3ae82d0bd2dc18630dc5071f"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "d4914d34a9e2352181c8c1d94251e9f99ca2bc1f4cccff3fb303c77c318ef306"
         }
       ],
-      "reason": "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
+      "reason": "Frontend profile layout and shared select rendering changed; generated frontend, contract, quality, and architecture indexes were refreshed, while documented workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "1bb3717d689db4bebf9873edee6b24722b37954a",
-      "reviewedAtUtc": "2026-08-14T01:43:31.3886080Z"
+      "gitHead": "c1f9a7c759c24cfcae241e4388df635b8425fbbb",
+      "reviewedAtUtc": "2026-08-14T21:23:14.7689099Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1072,13 +1072,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "99e35e859a32418b59935aec99d0243a1db3d990addf93aede27cc887ace2074"
+          "sha256": "b078ab9a523762ed3141d98b4d73313daa1d9e1e3ae82d0bd2dc18630dc5071f"
         }
       ],
-      "reason": "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+      "reason": "Frontend profile layout and shared select rendering changed; generated frontend, contract, quality, and architecture indexes were refreshed, while documented workflow guidance remains current.",
       "baseRef": "HEAD",
-      "gitHead": "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-      "reviewedAtUtc": "2026-08-13T12:13:00.2562684Z"
+      "gitHead": "c1f9a7c759c24cfcae241e4388df635b8425fbbb",
+      "reviewedAtUtc": "2026-08-14T21:23:12.9842645Z"
     },
     {
       "pageId": "workflow.query-context",

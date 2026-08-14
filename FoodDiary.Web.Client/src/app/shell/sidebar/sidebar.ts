@@ -405,8 +405,10 @@ export class SidebarComponent {
         }
     };
 
-    private closeUserMenu(): void {
+    protected closeUserMenu(restoreFocus = true): void {
         this.isUserMenuOpen.set(false);
-        this.lastUserMenuTrigger?.focus();
+        if (restoreFocus) {
+            this.lastUserMenuTrigger?.focus();
+        }
     }
 }

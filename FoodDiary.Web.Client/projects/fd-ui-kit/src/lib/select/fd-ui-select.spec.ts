@@ -84,6 +84,16 @@ describe('FdUiSelectComponent rendering', () => {
         const errorEl = requireElement('.fd-ui-select__error');
         expect(errorEl.textContent.trim()).toBe('This field is required');
     });
+
+    it('should render the selected label in the truncation container and preserve its full title', async () => {
+        const { component, fixture, requireElement } = await setupSelectAsync();
+        fixture.componentRef.setInput('options', TEST_OPTIONS);
+        component.value.set('banana');
+        fixture.detectChanges();
+
+        expect(requireElement('.fd-ui-select__value').textContent.trim()).toBe('Banana');
+        expect(requireElement('.fd-ui-select__control').getAttribute('title')).toBe('Banana');
+    });
 });
 
 describe('FdUiSelectComponent signal form control', () => {

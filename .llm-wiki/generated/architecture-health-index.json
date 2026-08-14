@@ -11,7 +11,7 @@
     "ambiguousBackendContracts": 3,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 149,
-    "componentsWithoutDirectSpecs": 126,
+    "componentsWithoutDirectSpecs": 127,
     "criticalSymbolsWithoutTestReferences": 17,
     "explicitDebtMarkers": 3
   },
@@ -4557,6 +4557,80 @@
         {
           "name": "filtersEdit",
           "type": ""
+        }
+      ],
+      "specPath": null
+    },
+    {
+      "class": "UserManageComparisonWidgetsComponent",
+      "selector": "fd-user-manage-comparison-widgets",
+      "feature": "profile",
+      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
+      "inputs": [
+        {
+          "name": "userForm",
+          "type": "FieldTree<UserFormValues>",
+          "required": true
+        },
+        {
+          "name": "profileStatus",
+          "type": "ProfileStatusViewModel",
+          "required": true
+        },
+        {
+          "name": "passwordActionState",
+          "type": "PasswordActionState",
+          "required": true
+        },
+        {
+          "name": "genderOptions",
+          "type": "Array<FdUiSelectOption<Gender | null>>",
+          "required": true
+        },
+        {
+          "name": "languageOptions",
+          "type": "Array<FdUiSelectOption<string | null>>",
+          "required": true
+        },
+        {
+          "name": "themeOptions",
+          "type": "Array<FdUiSelectOption<AppThemeName | null>>",
+          "required": true
+        },
+        {
+          "name": "uiStyleOptions",
+          "type": "Array<FdUiSelectOption<AppUiStyleName | null>>",
+          "required": true
+        },
+        {
+          "name": "activityLevelOptions",
+          "type": "Array<FdUiSelectOption<ActivityLevelOption | null>>",
+          "required": true
+        },
+        {
+          "name": "currentWeight",
+          "type": "number | null",
+          "required": true
+        },
+        {
+          "name": "currentWaist",
+          "type": "number | null",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "passwordChange",
+          "type": ""
+        },
+        {
+          "name": "saveNow",
+          "type": ""
+        },
+        {
+          "name": "userFormPatch",
+          "type": "UserManageAccountFormPatch | UserManageBodyFormPatch"
         }
       ],
       "specPath": null

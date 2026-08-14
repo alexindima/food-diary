@@ -48,6 +48,7 @@ import {
 } from '../user-manage-sections/account-card/user-manage-account-card';
 import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card';
 import { UserManageBodyCardComponent, type UserManageBodyFormPatch } from '../user-manage-sections/body-card/user-manage-body-card';
+import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
 import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card';
 import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-card/user-manage-privacy-card';
@@ -97,6 +98,7 @@ type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
         UserManageNotificationsCardComponent,
         UserManagePrivacyCardComponent,
         UserManageSecurityCardComponent,
+        UserManageComparisonWidgetsComponent,
     ],
     templateUrl: './user-manage.html',
     styleUrl: './user-manage.scss',
@@ -182,6 +184,8 @@ export class UserManageComponent {
         key: 'USER_MANAGE.PROFILE_STATUS_SAVED',
         tone: 'success',
     });
+    protected readonly currentWeight = this.facade.currentWeight;
+    protected readonly currentWaist = this.facade.currentWaist;
     protected readonly dietologistInviteEmailError = signal<string | null>(null);
     protected readonly billingView = computed<BillingViewModel | null>(() => buildBillingView(this.billingOverview()));
 

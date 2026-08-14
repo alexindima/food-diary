@@ -21,6 +21,7 @@ import {
     type WebPushSubscriptionItem,
 } from '../../../shared/notifications/notification.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
+import { ProfileMeasurementsService } from '../api/profile-measurements.service';
 import { ChangePasswordDialogComponent } from '../dialogs/change-password-dialog/change-password-dialog';
 import { PasswordSuccessDialogComponent } from '../dialogs/password-success-dialog/password-success-dialog';
 import { UpdateSuccessDialogComponent } from '../dialogs/update-success-dialog/update-success-dialog';
@@ -36,6 +37,7 @@ export class ProfileManageFacade {
     private readonly localizationService = inject(LocalizationService);
     private readonly notificationService = inject(NotificationService);
     private readonly themeService = inject(ThemeService);
+    private readonly profileMeasurementsService = inject(ProfileMeasurementsService);
     private readonly profileAutosaveQueue: AutosaveQueue<UpdateUserDto> = createAutosaveQueue({
         debounceMs: 700,
         isBusy: () => this.isSavingProfile(),
@@ -53,6 +55,8 @@ export class ProfileManageFacade {
     public readonly isUpdatingNotifications = signal(false);
     public readonly webPushSubscriptions = signal<WebPushSubscriptionItem[]>([]);
     public readonly dietologistRelationship = signal<DietologistRelationship | null>(null);
+    public readonly currentWeight = signal<number | null>(null);
+    public readonly currentWaist = signal<number | null>(null);
     public readonly isLoadingWebPushSubscriptions = signal(false);
     public readonly removingWebPushSubscriptionEndpoint = signal<string | null>(null);
     private webPushSubscriptionsRequestId = 0;
@@ -61,6 +65,14 @@ export class ProfileManageFacade {
 
     public initialize(): void {
         this.loadUser();
+        this.loadLatestMeasurements();
+    }
+
+    private loadLatestMeasurements(): void {
+        this.profileMeasurementsService.getLatest().subscribe(summary => {
+            this.currentWeight.set(summary.weight);
+            this.currentWaist.set(summary.waist);
+        });
     }
 
     public submitUpdate(updateData: UpdateUserDto): void {

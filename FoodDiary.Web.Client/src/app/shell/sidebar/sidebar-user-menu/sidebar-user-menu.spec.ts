@@ -88,8 +88,10 @@ describe('SidebarUserMenuComponent', () => {
     it('emits profile route and logout actions from open menu', async () => {
         const fixture = createComponent({ isOpen: true });
         const directRouteSpy = vi.fn();
+        const dismissSpy = vi.fn();
         const logoutSpy = vi.fn();
         fixture.componentInstance.directRouteClick.subscribe(directRouteSpy);
+        fixture.componentInstance.dismissMenu.subscribe(dismissSpy);
         fixture.componentInstance.logout.subscribe(logoutSpy);
         const host = getHost(fixture);
 
@@ -98,6 +100,7 @@ describe('SidebarUserMenuComponent', () => {
         requireElement(host, 'button[role="menuitem"]').click();
 
         expect(directRouteSpy).toHaveBeenCalledWith({ route: '/profile' });
+        expect(dismissSpy).toHaveBeenCalledOnce();
         expect(logoutSpy).toHaveBeenCalledOnce();
     });
 
@@ -118,6 +121,32 @@ describe('SidebarUserMenuComponent', () => {
 
         expect(focusSpy).toHaveBeenCalled();
         focusSpy.mockRestore();
+    });
+});
+
+describe('SidebarUserMenuComponent outside dismissal', () => {
+    beforeEach(() => {
+        TestBed.resetTestingModule();
+    });
+
+    it('dismisses an open menu when pointer input starts outside the component', () => {
+        const fixture = createComponent({ isOpen: true });
+        const dismissSpy = vi.fn();
+        fixture.componentInstance.dismissMenu.subscribe(dismissSpy);
+
+        document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+
+        expect(dismissSpy).toHaveBeenCalledOnce();
+    });
+
+    it('keeps an open menu visible when pointer input starts inside the component', () => {
+        const fixture = createComponent({ isOpen: true });
+        const dismissSpy = vi.fn();
+        fixture.componentInstance.dismissMenu.subscribe(dismissSpy);
+
+        requireElement(getHost(fixture), '[role="menu"]').dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+
+        expect(dismissSpy).not.toHaveBeenCalled();
     });
 });
 

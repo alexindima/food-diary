@@ -75,6 +75,16 @@
     display: flex;
     align-items: center;
     line-height: var(--fd-text-body-line-height);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.fd-ui-select__value {
+    display: block;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .fd-ui-select__control:disabled {
@@ -172,6 +182,14 @@
     min-height: var(--fd-space-menu-item-min-height);
     line-height: var(--fd-text-body-sm-line-height);
     padding: var(--fd-space-menu-item-padding);
+
+    span {
+        display: block;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 .fd-ui-select__menu-item:hover,

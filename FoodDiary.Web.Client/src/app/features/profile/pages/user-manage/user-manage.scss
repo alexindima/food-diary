@@ -10,6 +10,14 @@
         }
     }
 
+    &__legacy-label {
+        align-items: center;
+        padding-top: var(--fd-space-md);
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-body-sm-size);
+        font-weight: var(--fd-font-weight-semibold);
+    }
+
     &__card {
         padding: 0;
         border-radius: var(--fd-radius-card);

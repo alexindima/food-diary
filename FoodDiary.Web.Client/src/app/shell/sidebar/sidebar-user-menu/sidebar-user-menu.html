@@ -38,7 +38,7 @@
                 class="sidebar__user-menu-link fd-row fd-gap-xs"
                 role="menuitem"
                 [class.is-pending]="pendingRoute() === '/profile'"
-                (click)="directRouteClick.emit({ route: '/profile' })"
+                (click)="directRouteClick.emit({ route: '/profile' }); dismissMenu.emit()"
             >
                 <fd-ui-icon name="settings" />
                 <span>{{ 'HEADER.PROFILE' | translate }}</span>

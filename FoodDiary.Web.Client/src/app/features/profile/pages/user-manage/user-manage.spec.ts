@@ -463,6 +463,8 @@ type ProfileManageFacadeMock = {
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
     webPushSubscriptions: WritableSignal<WebPushSubscriptionItem[]>;
     dietologistRelationship: WritableSignal<DietologistRelationship | null>;
+    currentWeight: WritableSignal<number | null>;
+    currentWaist: WritableSignal<number | null>;
     isLoadingWebPushSubscriptions: ReturnType<typeof signal<boolean>>;
     removingWebPushSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
     initialize: ReturnType<typeof vi.fn>;
@@ -689,6 +691,8 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         isUpdatingNotifications: signal(false),
         webPushSubscriptions: signal([]),
         dietologistRelationship: signal(relationship),
+        currentWeight: signal<number | null>(null),
+        currentWaist: signal<number | null>(null),
         isLoadingWebPushSubscriptions: signal(false),
         removingWebPushSubscriptionEndpoint: signal<string | null>(null),
         initialize: vi.fn(),

@@ -31,12 +31,13 @@
             [attr.aria-haspopup]="'listbox'"
             [attr.aria-controls]="`${id()}-listbox`"
             [attr.aria-activedescendant]="activeOptionId()"
+            [attr.title]="selectedLabel() || null"
             (focus)="onFocus()"
             (blur)="onBlur()"
             (click)="toggleMenu($event)"
             (keydown)="onControlKeydown($event)"
         >
-            {{ selectedLabel() }}
+            <span class="fd-ui-select__value">{{ selectedLabel() }}</span>
         </button>
 
         <ng-template
@@ -74,7 +75,7 @@
                         [attr.aria-selected]="isEqual(option.value, internalValue())"
                         (click)="onOptionSelect(option)"
                     >
-                        <span>{{ option.label }}</span>
+                        <span [attr.title]="option.label">{{ option.label }}</span>
                     </button>
                 }
             </div>

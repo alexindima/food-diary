@@ -4279,6 +4279,27 @@
         "PROFILE_STATUS_INVALID": "Finish required fields to save",
         "PROFILE_STATUS_SAVING": "Saving changes...",
         "PROFILE_STATUS_ERROR": "Failed to save changes",
+        "COMPARISON": {
+            "NEW_DESIGN": "New design",
+            "CURRENT_DESIGN": "Current design",
+            "COMPLETENESS": "Profile completeness",
+            "COMPLETENESS_HINT": "Birth date, gender, height, and activity improve personal calculations.",
+            "BODY_HINT": "These details are used for calorie, nutrition, and activity recommendations.",
+            "HEIGHT_CM": "Height, cm",
+            "UNIT_SYSTEM": "Unit format",
+            "UNIT_SYSTEM_METRIC": "Metric (kg, cm)",
+            "UNIT_SYSTEM_IMPERIAL": "Imperial (lb, ft/in)",
+            "APPEARANCE": "Appearance",
+            "APPEARANCE_HINT": "Theme and interface style",
+            "CURRENT_WEIGHT": "Current weight",
+            "CURRENT_WAIST": "Current waist",
+            "OPEN_WEIGHT_HISTORY": "Open weight history",
+            "OPEN_WAIST_HISTORY": "Open waist history",
+            "KG": "kg",
+            "CM": "cm",
+            "OTHER_SECTIONS": "Other profile sections",
+            "SAVE_NOW": "Save now"
+        },
         "PERSONAL_SECTION": "Personal Information",
         "BODY_SECTION": "Body Metrics",
         "HEIGHT": "Height",
@@ -4287,10 +4308,10 @@
         "SELECT_ACTIVITY_LEVEL": "Select activity level",
         "ACTIVITY_LEVEL_OPTIONS": {
             "MINIMAL": "Minimal (sedentary)",
-            "LIGHT": "Light activity",
-            "MODERATE": "Moderate activity",
-            "HIGH": "High activity",
-            "EXTREME": "Extreme activity"
+            "LIGHT": "Light",
+            "MODERATE": "Moderate",
+            "HIGH": "High",
+            "EXTREME": "Extreme"
         },
         "LANGUAGE_OPTIONS": {
             "EN": "English",

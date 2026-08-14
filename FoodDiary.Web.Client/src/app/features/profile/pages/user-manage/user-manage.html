@@ -25,6 +25,26 @@
             (submit)="onUserFormSubmit($event)"
         >
             <div class="user-manage__stack fd-stack fd-gap-card-profile">
+                <fd-user-manage-comparison-widgets
+                    [userForm]="userForm"
+                    [profileStatus]="profileStatus()"
+                    [passwordActionState]="passwordActionState()"
+                    [genderOptions]="genderOptions"
+                    [languageOptions]="languageOptions"
+                    [themeOptions]="themeOptions"
+                    [uiStyleOptions]="uiStyleOptions"
+                    [activityLevelOptions]="activityLevelOptions"
+                    [currentWeight]="currentWeight()"
+                    [currentWaist]="currentWaist()"
+                    (passwordChange)="openChangePasswordDialog()"
+                    (saveNow)="onSubmit()"
+                    (userFormPatch)="onUserFormPatch($event)"
+                />
+
+                <div class="user-manage__legacy-label fd-row fd-gap-xs">
+                    <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_DESIGN' | translate }}</span>
+                </div>
+
                 <fd-user-manage-account-card
                     data-tour-id="user-manage-account"
                     [userForm]="userForm"
@@ -39,6 +59,7 @@
                 />
 
                 <fd-user-manage-security-card
+                    id="legacy-security"
                     data-tour-id="user-manage-security"
                     [email]="accountEmail()"
                     [hasGoogleIdentity]="hasGoogleIdentity()"
@@ -47,6 +68,7 @@
                 />
 
                 <fd-user-manage-billing-card
+                    id="legacy-billing"
                     data-tour-id="user-manage-billing"
                     [isLoadingBilling]="isLoadingBilling()"
                     [billingError]="billingError()"
@@ -65,6 +87,7 @@
                 />
 
                 <fd-user-manage-notifications-card
+                    id="legacy-notifications"
                     data-tour-id="user-manage-notifications"
                     [pushNotificationsEnabled]="notifications.pushNotificationsEnabled()"
                     [isUpdatingNotifications]="notifications.isUpdatingNotifications()"
@@ -92,6 +115,7 @@
                 />
 
                 <fd-user-manage-dietologist-card
+                    id="legacy-dietologist"
                     data-tour-id="user-manage-dietologist"
                     [dietologistForm]="dietologistForm"
                     [dietologistRelationship]="dietologistRelationship()"
@@ -109,6 +133,7 @@
             </div>
 
             <fd-user-manage-privacy-card
+                id="legacy-privacy"
                 data-tour-id="user-manage-privacy"
                 [hasAiConsent]="hasAiConsent()"
                 [isRevokingAiConsent]="isRevokingAiConsent()"
