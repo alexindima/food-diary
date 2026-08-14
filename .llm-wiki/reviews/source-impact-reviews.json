@@ -574,14 +574,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiIndexTiming.ps1",
-          "sha256": "35ebe8991882824a8e15754582cf5e35545c526a823a46a5ca7c8ef4a51435aa"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiParallelSmoke.ps1",
+          "sha256": "ebb8d7b8f9d90fab56ba6bfe064fcc31c2d1a8563047266eb76817552b227899"
         }
       ],
-      "reason": "Reviewed CI reliability fixes: serialized cold code-graph refreshes, deterministic timing sample ordering, process-safe MCP transport tests, and lightweight health checks preserve existing architecture and quality semantics.",
+      "reason": "Full verification now prewarms the shared code graph before parallel graph-dependent smoke groups, eliminating cold-build queue timeouts while preserving worker parallelism.",
       "baseRef": "HEAD",
-      "gitHead": "c6ee2fa66946b112bff9033e1939dcf5f994d677",
-      "reviewedAtUtc": "2026-08-14T15:51:33.9091007Z"
+      "gitHead": "786b156abe9f3af3169e1dc16f99156c5e310481",
+      "reviewedAtUtc": "2026-08-14T16:48:31.5077418Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",

@@ -86,6 +86,17 @@ if ($groups.Count -eq 0) {
     exit 0
 }
 
+$graphDependentGroups = @(
+    'adaptive-evals', 'code-graph', 'contract-consumers', 'extraction-readiness',
+    'research-confidence', 'trace-output'
+)
+if (@($groups | Where-Object { $_ -in $graphDependentGroups }).Count -gt 0) {
+    Write-Host 'Parallel affected smoke prewarming the shared code graph before worker fan-out.'
+    $graphManager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
+    $null = & $graphManager -Action build -Format Json
+    if ($LASTEXITCODE -ne 0) { throw "Code graph prewarm failed with exit code $LASTEXITCODE." }
+}
+
 $runRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/parallel-smoke/$PID"
 $null = New-Item -ItemType Directory -Path $runRoot -Force
 $wrapper = Join-Path $PSScriptRoot 'Invoke-LlmWikiObservedStage.ps1'
