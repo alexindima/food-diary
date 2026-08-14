@@ -205,21 +205,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/repository-catalog.json",
-                                            "sha256":  "44063d11d2d697c593d74ba5a9c2a88b32f99114f949d62959a24fd7085cf961"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiCatalog.ps1",
-                                            "sha256":  "0288e19676851f41d9539e7f51739997546f6892f61352f552cbf22515f7c169"
-                                        },
-                                        {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
+                                            "sha256":  "ac081e4a0507785e144118bfce5d186a1fc49832d2b260110fbffb19774a7d4b"
                                         }
                                     ],
-                        "reason":  "Reviewed final source set including ADR 0011 for the Application.Runtime boundary and refreshed all affected compiled indexes.",
+                        "reason":  "Reviewed Roslyn-based C# graph extraction, incremental cache behavior, generated symbol/contract/quality deltas, and architecture-test exclusion for the non-production Wiki tool; product boundaries and public runtime contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:19:46.8585044Z"
+                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
+                        "reviewedAtUtc":  "2026-08-14T01:09:51.0262382Z"
                     },
                     {
                         "pageId":  "workflow.review-diff",
@@ -288,21 +280,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "15dd9d4b6d1ffa81a143b70fe96758a7dbd4cfe859edfc4b7ff0b156a1cda342"
-                                        },
-                                        {
-                                            "path":  "docs/architecture/backend-modules.json",
-                                            "sha256":  "cc3e203588b5dedca64e0e03a8254e4e1f84425f793ca8b18707117f15e47c50"
-                                        },
-                                        {
-                                            "path":  "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-                                            "sha256":  "4e7264e560f72da5cb13f932a457aa90a8801f910ba0661834ab08cebcffce88"
+                                            "sha256":  "23d83c8899e9ae33566c01fde41498303b09e33f56ab36ecaf8cd83d6efaef82"
                                         }
                                     ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+                        "reason":  "Reviewed Roslyn-based C# graph extraction, incremental cache behavior, generated symbol/contract/quality deltas, and architecture-test exclusion for the non-production Wiki tool; product boundaries and public runtime contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:17:59.5745054Z"
+                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
+                        "reviewedAtUtc":  "2026-08-14T01:09:47.7345671Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -311,13 +295,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "e915fdf57a1fa72348ca12bf47a38abfc15b19575244d1883a2380f9dc01d38f"
+                                            "sha256":  "eabfce42d14b7b43bdf6d3a58e73ac9b3b86d11946a092ca9b61972e5dfb2b31"
                                         }
                                     ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+                        "reason":  "Reviewed Roslyn-based C# graph extraction, incremental cache behavior, generated symbol/contract/quality deltas, and architecture-test exclusion for the non-production Wiki tool; product boundaries and public runtime contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:17:59.9527738Z"
+                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
+                        "reviewedAtUtc":  "2026-08-14T01:09:48.5538981Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -682,14 +666,14 @@
                         "pageSha256":  "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
                         "sources":  [
                                         {
-                                            "path":  ".github/workflows/ci-tests.yml",
-                                            "sha256":  "973a0c1710771d7e9529d634b9dba341595eb2b865daf07dc667ec083b9999ef"
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+                                            "sha256":  "846e7b9db26498a9b662496400c7d6bc6feb5b5b691deaad06c29d86c372e7c4"
                                         }
                                     ],
-                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
+                        "reason":  "Reviewed Roslyn-based C# graph extraction, incremental cache behavior, generated symbol/contract/quality deltas, and architecture-test exclusion for the non-production Wiki tool; product boundaries and public runtime contracts are unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
-                        "reviewedAtUtc":  "2026-08-14T00:06:48.5552250Z"
+                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
+                        "reviewedAtUtc":  "2026-08-14T01:09:49.3333174Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -879,13 +863,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "9ce380b587048bdfe4a1b7df055fa38eafc2d5c8eeeb764d86cb40ac9d88a0e1"
+                                            "sha256":  "30ef65bf765baacffa3bc36f61b6fd97f0d1c57f4e025f4f3942803e342dedd4"
                                         }
                                     ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+                        "reason":  "Reviewed automatic incremental Roslyn semantic enrichment, syntax-first cold bootstrap, fully-qualified symbol identities, resolved overload/interface edges, SQLite schema migration, generated index deltas, and non-production tool-project isolation; runtime product contracts remain unchanged.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:18:01.4200224Z"
+                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
+                        "reviewedAtUtc":  "2026-08-14T01:24:03.3050456Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",

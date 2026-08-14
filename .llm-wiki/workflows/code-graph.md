@@ -28,9 +28,22 @@ Build or incrementally refresh the graph:
 ```
 
 The first build scans tracked and untracked C#, TypeScript, HTML, and project
-files. Later builds use file size and modification time before hashing and
-parsing only candidates whose metadata changed. Updates run in one SQLite
+files. C# declarations, identifier references, inheritance, method calls,
+object construction, DI, mediator, HTTP, and migration relations are extracted
+from Roslyn syntax trees in one batch; regex parsing remains limited to the
+lighter non-C# formats. Later builds use file size and modification time before
+hashing and parsing only candidates whose metadata changed. A no-op refresh
+does not start Roslyn. Updates run in one SQLite
 transaction and deleted files cascade to their symbols and token edges.
+
+Semantic enrichment is automatic for ordinary incremental updates. SQLite
+selects declaration files referenced by the changed C# identifiers, and Roslyn
+records fully-qualified declaration IDs, selected overloads, implemented types,
+and constructed types. A cold rebuild intentionally stays syntax-first so it
+does not turn graph bootstrap into a minute-long compilation; exact commands
+remain available immediately, while files touched by normal development gain
+semantic edges without an extra flag. Syntax edges remain the fallback when a
+bounded compilation contains unresolved external types.
 
 Query the graph:
 
@@ -77,6 +90,9 @@ registrations, mediator handlers/dispatch, HTTP routes and clients, Angular
 imports/lazy routes/templates, project references, test ownership,
 configuration keys, workflow actions, and migration tables/columns. Every edge
 stores source path, line, evidence text, parser version context, and confidence.
+Typed Roslyn references are ranked before lexical token matches; token matches
+remain a compatibility safety net while semantic project compilation is added
+incrementally.
 
 `graph-coverage` is the promotion gate from graph-first to graph-only. It
 compares the SQLite declarations with every symbol in the committed C# and

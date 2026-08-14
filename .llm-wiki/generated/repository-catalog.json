@@ -13,7 +13,7 @@
                     "docs/**/*.md"
                 ],
     "summary":  {
-                    "dotnetProjects":  92,
+                    "dotnetProjects":  93,
                     "testProjects":  29,
                     "frontendProjects":  4,
                     "applicationModules":  0,
@@ -26,6 +26,26 @@
                 },
     "dotnet":  {
                    "projects":  [
+                                    {
+                                        "name":  "LlmWiki.RoslynExtractor",
+                                        "assemblyName":  "LlmWiki.RoslynExtractor",
+                                        "path":  ".llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj",
+                                        "sdk":  "Microsoft.NET.Sdk",
+                                        "outputType":  "Exe",
+                                        "targetFrameworks":  [
+                                                                 "net10.0"
+                                                             ],
+                                        "isTestProject":  false,
+                                        "projectReferences":  [
+
+                                                              ],
+                                        "packageReferences":  [
+                                                                  {
+                                                                      "name":  "Microsoft.CodeAnalysis.CSharp",
+                                                                      "version":  null
+                                                                  }
+                                                              ]
+                                    },
                                     {
                                         "name":  "FoodDiary.Analyzers",
                                         "assemblyName":  "FoodDiary.Analyzers",

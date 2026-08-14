@@ -72,7 +72,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('index-selection')
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput)\.ps1$') {
         $null = $smokeGroups.Add('trace-output')
-    } elseif ($path -match '^\.llm-wiki/tools/(?:Manage-LlmWikiCodeGraph|Measure-LlmWikiCodeGraph|Test-LlmWikiCodeGraph|Get-LlmWikiGraphResearch|Get-LlmWikiGraphTestPlan)\.ps1$' -or $path -eq '.llm-wiki/tools/code-graph.mjs') {
+    } elseif ($path -match '^\.llm-wiki/tools/(?:Manage-LlmWikiCodeGraph|Measure-LlmWikiCodeGraph|Test-LlmWikiCodeGraph|Test-LlmWikiRoslynExtractor|Get-LlmWikiGraphResearch|Get-LlmWikiGraphTestPlan)\.ps1$' -or $path -eq '.llm-wiki/tools/code-graph.mjs' -or $path -like '.llm-wiki/tools/roslyn-extractor/*') {
         $null = $smokeGroups.Add('code-graph')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiTaskBaseline|Get-LlmWikiDiffContext|Test-LlmWikiTaskBaseline)\.ps1$') {
         $null = $smokeGroups.Add('task-baseline')
@@ -216,6 +216,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'code-graph' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiRoslynExtractor.ps1')
+            if ($LASTEXITCODE -ne 0) { throw "Roslyn extractor smoke failed with exit code $LASTEXITCODE." }
             & (Join-Path $toolsRoot 'Test-LlmWikiCodeGraph.ps1')
             if (-not $?) { exit 1 }
         }

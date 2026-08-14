@@ -34,7 +34,7 @@ if (@(Compare-Object @($scanConsumers.consumers.path) @($graphConsumers.consumer
     throw 'Graph-prefiltered contract consumers differ from the authoritative repository scan.'
 }
 $coverage = & $manager coverage -Format Json | ConvertFrom-Json
-foreach ($requiredKind in @('di-service','mediator-handler','project-reference','http-client','template-component','test-ownership','configuration-key','migration-table')) {
+foreach ($requiredKind in @('di-service','mediator-handler','method-call','type-construction','type-inheritance','project-reference','http-client','template-component','test-ownership','configuration-key','migration-table')) {
     if ($requiredKind -notin @($coverage.relationKinds.kind)) { throw "Code graph coverage omitted typed relationship kind '$requiredKind'." }
 }
 foreach ($shadow in @($coverage.legacySymbolCoverage)) {

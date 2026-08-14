@@ -5,7 +5,7 @@
                       "structuralRiskScore":  "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
                   },
     "summary":  {
-                    "productionFiles":  4214,
+                    "productionFiles":  4215,
                     "criticalSymbols":  540,
                     "criticalSymbolsWithTestReferences":  508,
                     "criticalSymbolsWithoutTestReferences":  32,
@@ -147,6 +147,14 @@
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  85.86
+                     },
+                     {
+                         "path":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
+                         "nonBlankLines":  185,
+                         "decisionPoints":  53,
+                         "criticalSymbols":  0,
+                         "unreferencedCriticalSymbols":  0,
+                         "structuralRiskScore":  83.2
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard-lib/client-dashboard.mapper.ts",
@@ -803,17 +811,17 @@
                          "criticalSymbols":  1,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  40.8
-                     },
-                     {
-                         "path":  "FoodDiary.Application.Identity/Authentication/Services/UserAgents/UserAgentParser.cs",
-                         "nonBlankLines":  80,
-                         "decisionPoints":  26,
-                         "criticalSymbols":  0,
-                         "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  40.6
                      }
                  ],
     "files":  [
+                  {
+                      "path":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
+                      "nonBlankLines":  185,
+                      "decisionPoints":  53,
+                      "criticalSymbols":  0,
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  83.2
+                  },
                   {
                       "path":  "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
                       "nonBlankLines":  56,

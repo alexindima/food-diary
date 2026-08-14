@@ -1,12 +1,56 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, extname, resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '5';
+const parserVersion = '7-roslyn-semantic-v2';
+const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
+const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
+
+function ensureRoslynExtractor() {
+  const sources = [roslynProject, resolve(dirname(roslynProject), 'Program.cs')];
+  const requiresBuild = !existsSync(roslynDll)
+    || sources.some((path) => statSync(path).mtimeMs > statSync(roslynDll).mtimeMs);
+  if (requiresBuild) execFileSync('dotnet', ['build', roslynProject, '-c', 'Release', '--nologo', '--verbosity', 'quiet'], {
+    cwd: repositoryRoot,
+    stdio: ['ignore', 'ignore', 'pipe'],
+  });
+}
+
+function extractCSharp(database, candidates, knownPaths) {
+  const paths = candidates.map((item) => item.path);
+  if (paths.length === 0) return new Map();
+  ensureRoslynExtractor();
+  let contextPaths;
+  if (paths.length > 500) {
+    contextPaths = [...knownPaths].filter((path) => path.endsWith('.cs'));
+  } else {
+    const identifiers = [...new Set(candidates.flatMap((item) => [...item.text.matchAll(/\b[A-Za-z_]\w{2,}\b/g)].map((match) => match[0])))];
+    const declarationPaths = new Set();
+    for (let offset = 0; offset < identifiers.length; offset += 400) {
+      const batch = identifiers.slice(offset, offset + 400);
+      const placeholders = batch.map(() => '?').join(',');
+      for (const row of database.prepare(`SELECT DISTINCT f.path FROM symbols s JOIN files f ON f.id=s.file_id WHERE s.name IN (${placeholders}) COLLATE NOCASE`).all(...batch)) {
+        declarationPaths.add(row.path);
+        if (declarationPaths.size >= 300) break;
+      }
+      if (declarationPaths.size >= 300) break;
+    }
+    contextPaths = [...new Set([...paths, ...declarationPaths])].filter((path) => existsSync(resolve(repositoryRoot, path)));
+  }
+  const process = spawnSync('dotnet', [roslynDll, '--stdin'], {
+    cwd: repositoryRoot,
+    input: JSON.stringify({ paths, contextPaths, semantic: paths.length <= 500 }),
+    encoding: 'utf8',
+    maxBuffer: 128 * 1024 * 1024,
+  });
+  if (process.status !== 0) throw new Error(`Roslyn extractor failed (${process.status}): ${process.stderr}`);
+  return new Map(JSON.parse(process.stdout).map((result) => [result.path, { language: 'csharp', ...result, projectReferences: [] }]));
+}
 
 function gitPaths() {
   const output = execFileSync('git', ['-C', repositoryRoot, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], {
@@ -159,6 +203,12 @@ function openDatabase(databasePath) {
     CREATE INDEX IF NOT EXISTS ix_tokens_token ON file_tokens(token COLLATE NOCASE);
     CREATE INDEX IF NOT EXISTS ix_edges_kind_target ON typed_edges(kind, target COLLATE NOCASE);
   `);
+  const ensureColumn = (table, column, definition) => {
+    if (!database.prepare(`PRAGMA table_info(${table})`).all().some((item) => item.name === column)) database.exec(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+  };
+  ensureColumn('symbols', 'symbol_id', 'TEXT');
+  ensureColumn('typed_edges', 'target_id', 'TEXT');
+  database.exec('CREATE INDEX IF NOT EXISTS ix_symbols_symbol_id ON symbols(symbol_id); CREATE INDEX IF NOT EXISTS ix_edges_target_id ON typed_edges(target_id);');
   return database;
 }
 
@@ -170,14 +220,35 @@ function build(database, force = false) {
   const existing = new Map(database.prepare('SELECT id, path, size, mtime_ms, content_hash FROM files').all().map((item) => [item.path, item]));
   const deleteFile = database.prepare('DELETE FROM files WHERE id = ?');
   const insertFile = database.prepare('INSERT INTO files(path, language, size, mtime_ms, content_hash) VALUES (?, ?, ?, ?, ?)');
-  const insertSymbol = database.prepare('INSERT INTO symbols(file_id, kind, name, line) VALUES (?, ?, ?, ?)');
+  const insertSymbol = database.prepare('INSERT INTO symbols(file_id, kind, name, line, symbol_id) VALUES (?, ?, ?, ?, ?)');
   const insertToken = database.prepare('INSERT OR IGNORE INTO file_tokens(file_id, token) VALUES (?, ?)');
   const insertReference = database.prepare('INSERT OR IGNORE INTO project_references(file_id, target_path) VALUES (?, ?)');
-  const insertEdge = database.prepare('INSERT OR IGNORE INTO typed_edges(file_id, kind, target, line, evidence, confidence) VALUES (?, ?, ?, ?, ?, ?)');
+  const insertEdge = database.prepare('INSERT OR IGNORE INTO typed_edges(file_id, kind, target, line, evidence, confidence, target_id) VALUES (?, ?, ?, ?, ?, ?, ?)');
   let scanned = 0;
   let updated = 0;
   let unchanged = 0;
   let removed = 0;
+  const candidates = [];
+
+  for (const path of knownPaths) {
+    const absolutePath = resolve(repositoryRoot, path);
+    const stat = statSync(absolutePath);
+    const prior = existing.get(path);
+    if (!force && prior && prior.size === stat.size && Math.abs(prior.mtime_ms - stat.mtimeMs) < 0.001) {
+      unchanged += 1;
+      continue;
+    }
+    const text = readFileSync(absolutePath, 'utf8');
+    const contentHash = sha256(text);
+    scanned += 1;
+    if (!force && prior && prior.content_hash === contentHash) {
+      candidates.push({ path, stat, prior, text: null, contentHash, metadataOnly: true });
+      unchanged += 1;
+      continue;
+    }
+    candidates.push({ path, stat, prior, text, contentHash, metadataOnly: false });
+  }
+  const roslynResults = extractCSharp(database, candidates.filter((item) => !item.metadataOnly && languageOf(item.path) === 'csharp'), knownPaths);
 
   database.exec('BEGIN IMMEDIATE');
   try {
@@ -187,29 +258,19 @@ function build(database, force = false) {
         removed += 1;
       }
     }
-    for (const path of knownPaths) {
-      const absolutePath = resolve(repositoryRoot, path);
-      const stat = statSync(absolutePath);
-      const prior = existing.get(path);
-      if (!force && prior && prior.size === stat.size && Math.abs(prior.mtime_ms - stat.mtimeMs) < 0.001) {
-        unchanged += 1;
-        continue;
-      }
-      const text = readFileSync(absolutePath, 'utf8');
-      const contentHash = sha256(text);
-      scanned += 1;
-      if (!force && prior && prior.content_hash === contentHash) {
+    for (const candidate of candidates) {
+      const { path, stat, prior, text, contentHash, metadataOnly } = candidate;
+      if (metadataOnly) {
         database.prepare('UPDATE files SET size = ?, mtime_ms = ? WHERE id = ?').run(stat.size, stat.mtimeMs, prior.id);
-        unchanged += 1;
         continue;
       }
       if (prior) deleteFile.run(prior.id);
-      const extracted = extract(path, text);
+      const extracted = roslynResults.get(path) ?? extract(path, text);
       const fileId = Number(insertFile.run(path, extracted.language, stat.size, stat.mtimeMs, contentHash).lastInsertRowid);
-      for (const symbol of extracted.symbols) insertSymbol.run(fileId, symbol.kind, symbol.name, symbol.line);
+      for (const symbol of extracted.symbols) insertSymbol.run(fileId, symbol.kind, symbol.name, symbol.line, symbol.symbolId ?? null);
       for (const token of extracted.tokens) insertToken.run(fileId, token);
       for (const reference of extracted.projectReferences) insertReference.run(fileId, reference);
-      for (const edge of extracted.edges) insertEdge.run(fileId, edge.kind, edge.target, edge.line, edge.evidence, edge.confidence);
+      for (const edge of extracted.edges) insertEdge.run(fileId, edge.kind, edge.target, edge.line, edge.evidence, edge.confidence, edge.targetId ?? null);
       updated += 1;
     }
     database.prepare('INSERT OR REPLACE INTO metadata(key, value) VALUES (?, ?)').run('parser_version', parserVersion);
@@ -237,7 +298,7 @@ function build(database, force = false) {
 function findSymbols(database, query, limit) {
   const exactCount = database.prepare('SELECT COUNT(*) count FROM symbols WHERE name = ? COLLATE NOCASE').get(query).count;
   return database.prepare(`
-    SELECT s.id, s.name, s.kind, s.line, f.path, f.language
+    SELECT s.id, s.name, s.kind, s.line, s.symbol_id symbolId, f.path, f.language
     FROM symbols s JOIN files f ON f.id = s.file_id
     WHERE ${exactCount > 0 ? 's.name = ? COLLATE NOCASE' : 's.name LIKE ? COLLATE NOCASE'}
     ORDER BY CASE WHEN s.kind = 'method' THEN 1 ELSE 0 END, length(s.name), f.path, s.line
@@ -250,14 +311,25 @@ function consumers(database, query, limit) {
   const names = [...new Set(symbols.map((symbol) => symbol.name))];
   if (names.length === 0) return { query, symbols: [], consumers: [] };
   const placeholders = names.map(() => '?').join(',');
+  const symbolIds = [...new Set(symbols.map((symbol) => symbol.symbolId).filter(Boolean))];
+  const idClause = symbolIds.length > 0 ? ` OR e.target_id IN (${symbolIds.map(() => '?').join(',')})` : '';
   const paths = new Set(symbols.map((symbol) => symbol.path));
-  const rows = database.prepare(`
+  const typedRows = database.prepare(`
+    SELECT DISTINCT e.target symbol, f.path, f.language, e.kind relationKind, 'typed' source
+    FROM typed_edges e JOIN files f ON f.id = e.file_id
+    WHERE (e.target IN (${placeholders}) COLLATE NOCASE ${idClause})
+    ORDER BY f.path LIMIT ?
+  `).all(...names, ...symbolIds, limit * 2).filter((row) => !paths.has(row.path));
+  const typedPaths = new Set(typedRows.map((row) => row.path));
+  const tokenRows = database.prepare(`
     SELECT DISTINCT t.token symbol, f.path, f.language
     FROM file_tokens t JOIN files f ON f.id = t.file_id
     WHERE t.token IN (${placeholders}) COLLATE NOCASE
     ORDER BY f.path LIMIT ?
-  `).all(...names, limit * 3).filter((row) => !paths.has(row.path)).slice(0, limit);
-  return { query, symbols, consumers: rows };
+  `).all(...names, limit * 3)
+    .filter((row) => !paths.has(row.path) && !typedPaths.has(row.path))
+    .map((row) => ({ ...row, relationKind: null, source: 'token' }));
+  return { query, symbols, consumers: [...typedRows, ...tokenRows].slice(0, limit) };
 }
 
 function impact(database, paths, limit) {
@@ -307,7 +379,7 @@ function relations(database, paths, kinds, limit) {
   const kindList = kinds.filter(Boolean);
   const kindClause = kindList.length > 0 ? `AND e.kind IN (${kindList.map(() => '?').join(',')})` : '';
   const rows = database.prepare(`
-    SELECT f.path, e.kind, e.target, e.line, e.evidence, e.confidence
+    SELECT f.path, e.kind, e.target, e.target_id targetId, e.line, e.evidence, e.confidence
     FROM typed_edges e JOIN files f ON f.id = e.file_id
     WHERE (${pathClauses}) ${kindClause}
     ORDER BY f.path, e.line, e.kind LIMIT ?
