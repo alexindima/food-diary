@@ -19,12 +19,18 @@ and scoped `AGENTS.md` files.
 From the repository root:
 
 ```powershell
-dotnet run --project FoodDiary.Development.Mcp
+dotnet build FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj
+dotnet run --project FoodDiary.Development.Mcp --no-build
 ```
 
 The client must launch the process from within the repository tree. When that is
 not possible, set `FOODDIARY_REPOSITORY_ROOT` to the absolute repository path.
 All protocol traffic uses stdout; host diagnostics use stderr.
+
+The registered client command uses `--no-build`. This prevents concurrent Codex
+MCP discovery processes from trying to overwrite the same Windows apphost while
+another server instance is running. Build the project after changing or pulling
+the MCP implementation, then restart Codex so it launches the updated binary.
 
 The trusted-project `.codex/config.toml` registers this server for Codex. Restart
 the desktop app or extension after pulling/building the project. The configured

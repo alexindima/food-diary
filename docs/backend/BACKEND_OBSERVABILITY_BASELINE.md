@@ -228,6 +228,17 @@ Readiness checks owned PostgreSQL state; MailRelay also checks RabbitMQ when it
 is the configured backend. Queue state in PostgreSQL remains the source of
 truth, so broker-only metrics are never sufficient evidence of delivery.
 
+MailInbox exposes the `FoodDiary.MailInbox` meter and activity source at the
+SMTP ingestion boundary:
+
+- `fooddiary.mailinbox.ingestion.events`
+- `fooddiary.mailinbox.ingestion.duration_ms`
+- `fooddiary.mailinbox.message.size_bytes`
+
+The only metric dimension is the bounded outcome (`success`, `failure`, or
+`canceled`). Sender/recipient addresses, subject, message id, stored id, raw
+MIME, and exception messages must never become metric dimensions.
+
 Do not attach email addresses, subjects, message bodies, provider payloads, or
 credentials to metric tags or traces. Correlation identifiers may be logged or
 propagated, but must not be used as metric dimensions because of cardinality.

@@ -17,6 +17,8 @@ Rules for `MailInbox/FoodDiary.MailInbox.Application/`.
 - Do not reference MailInbox client, infrastructure, presentation, or host projects.
 - Do not reference ASP.NET, EF Core/Npgsql, MailKit/MimeKit, SmtpServer, `IConfiguration`, or `IOptions<T>`.
 - Async application interfaces should accept `CancellationToken`.
+- Keep service-wide metric instruments and activity sources under `Telemetry/`.
+- Telemetry dimensions must be bounded and must not contain message content, addresses, subjects, or identifiers.
 
 ## Commands
 - Build: `dotnet build MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj`

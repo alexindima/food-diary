@@ -17,6 +17,8 @@ Rules for `MailInbox/FoodDiary.MailInbox.Infrastructure/`.
 - Treat SMTP envelope recipients as authoritative for accepted delivery; MIME `To:` headers are only fallback metadata.
 - Readiness checks should verify required MailInbox schema objects, not only database connectivity.
 - Avoid logging message bodies or secrets by default.
+- Keep OpenTelemetry exporter configuration under `Options/` and registration in the infrastructure composition extension.
+- SMTP ingestion telemetry may report bounded outcomes, duration, and byte size; never use email metadata as metric tags.
 
 ## Commands
 - Build: `dotnet build MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj`

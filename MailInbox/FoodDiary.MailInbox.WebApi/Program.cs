@@ -14,7 +14,8 @@ if (!builder.Environment.IsDevelopment()) {
 builder.Services
     .AddMailInboxApplication()
     .AddMailInboxPresentation(builder.Configuration)
-    .AddMailInboxInfrastructure(builder.Configuration);
+    .AddMailInboxInfrastructure(builder.Configuration)
+    .AddMailInboxTelemetry();
 
 WebApplication app = builder.Build();
 

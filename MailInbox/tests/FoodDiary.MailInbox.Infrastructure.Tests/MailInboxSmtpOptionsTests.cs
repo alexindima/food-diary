@@ -5,6 +5,7 @@ using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Metrics;
 using Microsoft.Extensions.Options;
 using Npgsql;
 
@@ -166,6 +167,7 @@ public sealed class MailInboxSmtpOptionsTests {
         services.AddSingleton<IConfiguration>(configuration);
         services.AddLogging();
         services.AddMailInboxInfrastructure(configuration);
+        services.AddMailInboxTelemetry();
         using ServiceProvider provider = services.BuildServiceProvider();
 
         NpgsqlInboundMailStore store = provider.GetRequiredService<NpgsqlInboundMailStore>();
@@ -175,6 +177,7 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.IsType<DmarcReportParser>(provider.GetRequiredService<DmarcReportParser>());
         Assert.IsType<SmtpInboundMessageStore>(provider.GetRequiredService<SmtpInboundMessageStore>());
         Assert.IsType<MailInboxMailboxFilter>(provider.GetRequiredService<MailInboxMailboxFilter>());
+        Assert.NotNull(provider.GetRequiredService<MeterProvider>());
 
         IHostedService[] hostedServices = [.. provider.GetServices<IHostedService>()];
         Assert.Contains(hostedServices, static service => service is MailInboxSchemaInitializerHostedService);

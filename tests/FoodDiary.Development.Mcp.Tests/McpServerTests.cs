@@ -16,6 +16,7 @@ public sealed class McpServerTests {
                 "--project",
                 "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj",
                 "--no-launch-profile",
+                "--no-build",
             ],
             WorkingDirectory = repositoryRoot,
             ShutdownTimeout = TimeSpan.FromSeconds(10),

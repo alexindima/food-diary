@@ -45,7 +45,7 @@ Assessment date: 2026-08-14.
 | Notifications | Extraction analyzer reports ready at module level. Repository/directory and composition findings are owner-side infrastructure evidence, not foreign writers. | Feed/preferences, web-push outbox, live refresh, and user lifecycle require a clear projection and deletion protocol. | Keep in-process until independent delivery scaling or availability justifies duplicated user projections and eventual consistency. |
 | Dietologist | Extraction analyzer reports ready; no aggregate, repository, or directory leaks. | Attention signals intentionally use a consumer-owned batch projection over primary data. Moving it would require replicated meal/body/activity projections. | Boundary is clean, but data fan-in makes physical extraction unattractive without a strong team or scaling reason. |
 | MailRelay | Already a separate bounded context, process, database, client package, readiness probe, and telemetry source. | PostgreSQL queue is authoritative; RabbitMQ is optional transport acceleration. | Reference implementation for a successfully separated support service. |
-| MailInbox | Already a separate bounded context, process, database, client package, and readiness probe. | Owns inbound SMTP/MIME and persistence. | Keep separated; add service-specific telemetry when production diagnosis requires more than logs/readiness. |
+| MailInbox | Already a separate bounded context, process, database, client package, readiness probe, and SMTP-ingestion telemetry source. | Owns inbound SMTP/MIME and persistence. | Keep separated; tune dashboards and alerts from observed ingestion volume and latency. |
 
 ## Safe extraction sequence
 

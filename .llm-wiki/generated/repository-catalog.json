@@ -1744,6 +1744,14 @@
             "version": null
           },
           {
+            "name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Extensions.Hosting",
+            "version": null
+          },
+          {
             "name": "SmtpServer",
             "version": null
           }

@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3213,
-    "symbols": 3221,
+    "sourceFiles": 3215,
+    "symbols": 3224,
     "interfaceImplementationLinks": 229,
     "dependencyInjectionRegistrations": 230,
     "kinds": {
-      "class": 1648,
+      "class": 1651,
       "enum": 49,
       "interface": 409,
       "record": 1002,
@@ -31,8 +31,8 @@
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 57,
-      "Other": 1189,
+      "Options": 59,
+      "Other": 1190,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -21006,6 +21006,13 @@
       "line": 4
     },
     {
+      "name": "MailInboxTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Telemetry/MailInboxTelemetry.cs",
+      "line": 5
+    },
+    {
       "name": "MailInboxClientServiceCollectionExtensions",
       "kind": "class",
       "role": "Other",
@@ -21080,7 +21087,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 9
+      "line": 14
     },
     {
       "name": "MailInboxSmtpOptions",
@@ -21088,6 +21095,20 @@
       "role": "Options",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs",
       "line": 2
+    },
+    {
+      "name": "OpenTelemetryOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "OtlpOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/OpenTelemetryOptions.cs",
+      "line": 11
     },
     {
       "name": "DmarcReportParser",
@@ -21143,7 +21164,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "InitializerCommand",
@@ -21304,7 +21325,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.WebApi/Program.cs",
-      "line": 26
+      "line": 27
     },
     {
       "name": "IMailRelayDeliveryPolicy",
@@ -25760,7 +25781,7 @@
       "implementation": "NpgsqlMailInboxReadinessChecker",
       "lifetime": "Singleton",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 30
+      "line": 40
     },
     {
       "service": "IMailRelayDeliveryPolicy",

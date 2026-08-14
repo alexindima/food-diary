@@ -1,7 +1,9 @@
 using System.Buffers;
 using System.Text;
+using System.Diagnostics.Metrics;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Messages.Models;
+using FoodDiary.MailInbox.Application.Telemetry;
 using FoodDiary.MailInbox.Domain.Messages;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -14,6 +16,40 @@ namespace FoodDiary.MailInbox.Infrastructure.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class SmtpInboundMessageStoreTests {
+    [Fact]
+    public async Task SaveAsync_RecordsBoundedTelemetryWithoutMessageMetadata() {
+        var measurements = new List<(string Instrument, string Outcome)>();
+        using var listener = new MeterListener {
+            InstrumentPublished = (instrument, meterListener) => {
+                if (string.Equals(instrument.Meter.Name, MailInboxTelemetry.MeterName, StringComparison.Ordinal)) {
+                    meterListener.EnableMeasurementEvents(instrument);
+                }
+            },
+        };
+        listener.SetMeasurementEventCallback<long>((instrument, _, tags, _) =>
+            measurements.Add((instrument.Name, GetOutcome(tags))));
+        listener.SetMeasurementEventCallback<double>((instrument, _, tags, _) =>
+            measurements.Add((instrument.Name, GetOutcome(tags))));
+        listener.Start();
+        var messageStore = new SmtpInboundMessageStore(
+            new RecordingInboundMailStore(),
+            FixedTime,
+            NullLogger<SmtpInboundMessageStore>.Instance);
+
+        await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction(["private-recipient@fooddiary.club"]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(CreateRawMime(includeToHeader: true))),
+            CancellationToken.None);
+
+        Assert.Contains(measurements, static value =>
+            value is ("fooddiary.mailinbox.ingestion.events", "success"));
+        Assert.Contains(measurements, static value =>
+            value is ("fooddiary.mailinbox.ingestion.duration_ms", "success"));
+        Assert.Contains(measurements, static value =>
+            value is ("fooddiary.mailinbox.message.size_bytes", "success"));
+    }
+
     [Fact]
     public async Task SaveAsync_WhenMessageHasToRecipients_StoresEnvelopeRecipients() {
         var store = new RecordingInboundMailStore();
@@ -87,6 +123,13 @@ public sealed class SmtpInboundMessageStoreTests {
         using var stream = new MemoryStream();
         message.WriteTo(stream);
         return Encoding.UTF8.GetString(stream.ToArray());
+    }
+
+    private static string GetOutcome(ReadOnlySpan<KeyValuePair<string, object?>> tags) {
+        Assert.Single(tags.ToArray());
+        KeyValuePair<string, object?> tag = tags[0];
+        Assert.Equal("fooddiary.mailinbox.outcome", tag.Key);
+        return Assert.IsType<string>(tag.Value);
     }
 
     [ExcludeFromCodeCoverage]
