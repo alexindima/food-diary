@@ -16,16 +16,17 @@ $sandboxDirectory = Join-Path $repositoryRoot '.artifacts/llm-wiki/memory-isolat
 $sandboxPath = Join-Path $sandboxDirectory 'memories.json'
 $previousOverride = $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH
 function Get-TestEventHash([object]$Event) {
+    $normalizedEvent = $Event | ConvertTo-Json -Depth 30 | ConvertFrom-Json
     $payload = [pscustomobject][ordered]@{
-        schemaVersion = $Event.schemaVersion
-        sequence = $Event.sequence
-        kind = $Event.kind
-        id = $Event.id
-        createdAtUtc = $Event.createdAtUtc
-        previousHash = $Event.previousHash
-        memory = $Event.memory
-        targetId = $Event.targetId
-        reason = $Event.reason
+        schemaVersion = $normalizedEvent.schemaVersion
+        sequence = $normalizedEvent.sequence
+        kind = $normalizedEvent.kind
+        id = $normalizedEvent.id
+        createdAtUtc = $normalizedEvent.createdAtUtc
+        previousHash = $normalizedEvent.previousHash
+        memory = $normalizedEvent.memory
+        targetId = $normalizedEvent.targetId
+        reason = $normalizedEvent.reason
     }
     $json = ConvertTo-Json -InputObject $payload -Depth 30 -Compress
     $bytes = [Text.Encoding]::UTF8.GetBytes($json)
