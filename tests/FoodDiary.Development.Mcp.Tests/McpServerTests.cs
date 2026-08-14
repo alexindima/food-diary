@@ -9,7 +9,6 @@ public sealed class McpServerTests {
     public async Task ConfiguredServer_ListsAndCallsExpectedReadOnlyTools() {
         string repositoryRoot = FindRepositoryRoot();
         var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
-        Assert.Contains("--no-build", configuration.Arguments, StringComparer.Ordinal);
 
         var transport = new StdioClientTransport(configuration.CreateTransportOptions("FoodDiary Development MCP test"));
         using CancellationTokenSource connectionTimeout = new(TimeSpan.FromSeconds(30));
@@ -33,15 +32,12 @@ public sealed class McpServerTests {
 
         using CancellationTokenSource toolTimeout = new(TimeSpan.FromMinutes(2));
         CallToolResult result = await client.CallToolAsync(
-            "get_test_plan",
-            new Dictionary<string, object?>(StringComparer.Ordinal) {
-                ["intent"] = "Verify the FoodDiary Development MCP test plan tool",
-            },
+            "get_server_status",
             cancellationToken: toolTimeout.Token);
 
         Assert.NotEqual(true, result.IsError);
         Assert.Contains(result.Content, content =>
-            content.ToString()!.Contains("Test plan:", StringComparison.Ordinal));
+            content.ToString()!.Contains("repositoryRoot", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

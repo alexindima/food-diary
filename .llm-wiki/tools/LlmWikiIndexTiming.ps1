@@ -20,7 +20,7 @@ function Get-LlmWikiMedian([double[]]$Values) {
 
 function Get-LlmWikiIndexTimingStats([string]$RepositoryRoot, [string]$Mode) {
     return @(Read-LlmWikiIndexTimings $RepositoryRoot | Where-Object mode -eq $Mode | Group-Object tool | ForEach-Object {
-        $recent = @($_.Group | Sort-Object recordedAtUtc -Descending | Select-Object -First 5)
+        $recent = @($_.Group | Sort-Object sequence -Descending | Select-Object -First 5)
         [pscustomobject]@{
             tool = $_.Name
             sampleCount = $recent.Count
@@ -32,17 +32,38 @@ function Get-LlmWikiIndexTimingStats([string]$RepositoryRoot, [string]$Mode) {
 function Add-LlmWikiIndexTimings([string]$RepositoryRoot, [string]$Mode, [object[]]$Timings) {
     if (@($Timings).Count -eq 0) { return }
     $samples = [Collections.Generic.List[object]]::new()
-    foreach ($sample in @(Read-LlmWikiIndexTimings $RepositoryRoot)) { $samples.Add($sample) }
+    [long]$sequence = 0
+    foreach ($sample in @(Read-LlmWikiIndexTimings $RepositoryRoot)) {
+        $sequence++
+        if (-not $sample.PSObject.Properties['sequence']) {
+            $sample | Add-Member -NotePropertyName sequence -NotePropertyValue $sequence
+        } else {
+            $sequence = [Math]::Max($sequence, [long]$sample.sequence)
+        }
+        $samples.Add($sample)
+    }
+    $lastRecordedAt = [DateTimeOffset]::MinValue
+    foreach ($sample in $samples) {
+        $parsed = [DateTimeOffset]::MinValue
+        if ([DateTimeOffset]::TryParse([string]$sample.recordedAtUtc, [ref]$parsed) -and $parsed -gt $lastRecordedAt) {
+            $lastRecordedAt = $parsed
+        }
+    }
     foreach ($timing in $Timings) {
+        $recordedAt = [DateTimeOffset]::UtcNow
+        if ($recordedAt -le $lastRecordedAt) { $recordedAt = $lastRecordedAt.AddTicks(1) }
+        $lastRecordedAt = $recordedAt
+        $sequence++
         $samples.Add([pscustomobject][ordered]@{
             tool = [string]$timing.tool
             mode = $Mode
             durationSeconds = [Math]::Round([double]$timing.durationSeconds, 2)
-            recordedAtUtc = [DateTimeOffset]::UtcNow.ToString('o')
+            recordedAtUtc = $recordedAt.ToString('o')
+            sequence = $sequence
         })
     }
     $retained = @($samples | Group-Object { "$($_.mode)|$($_.tool)" } | ForEach-Object {
-        @($_.Group | Sort-Object recordedAtUtc -Descending | Select-Object -First 5)
+        @($_.Group | Sort-Object sequence -Descending | Select-Object -First 5)
     } | Sort-Object recordedAtUtc)
     $path = Get-LlmWikiIndexTimingPath $RepositoryRoot
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $path) -Force

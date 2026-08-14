@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { DatabaseSync } from 'node:sqlite';
@@ -11,6 +11,37 @@ const parserVersion = '9-typescript-compiler-api-v1';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-extractor.mjs');
+
+function withBuildLock(callback) {
+  const lockPath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/build.lock');
+  mkdirSync(dirname(lockPath), { recursive: true });
+  const deadline = Date.now() + 300_000;
+  while (true) {
+    try {
+      mkdirSync(lockPath);
+      writeFileSync(resolve(lockPath, 'owner.json'), JSON.stringify({ pid: process.pid, createdAtUtc: new Date().toISOString() }));
+      break;
+    } catch (error) {
+      if (error.code !== 'EEXIST') throw error;
+      try {
+        if (Date.now() - statSync(lockPath).mtimeMs > 300_000) {
+          rmSync(lockPath, { recursive: true, force: true });
+          continue;
+        }
+      } catch (statError) {
+        if (statError.code !== 'ENOENT') throw statError;
+        continue;
+      }
+      if (Date.now() >= deadline) throw new Error(`Timed out waiting for code graph build lock: ${lockPath}`);
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 100);
+    }
+  }
+  try {
+    return callback();
+  } finally {
+    rmSync(lockPath, { recursive: true, force: true });
+  }
+}
 
 function ensureRoslynExtractor() {
   const sources = [roslynProject, resolve(dirname(roslynProject), 'Program.cs')];
@@ -580,7 +611,7 @@ const databasePath = resolve(repositoryRoot, options.database ?? '.artifacts/llm
 const database = openDatabase(databasePath);
 try {
   let result;
-  if (action === 'build') result = build(database, options.force === 'true');
+  if (action === 'build') result = withBuildLock(() => build(database, options.force === 'true'));
   else if (action === 'symbol') result = { query: options.query ?? '', symbols: findSymbols(database, options.query ?? '', Number(options.limit ?? 20)) };
   else if (action === 'consumers') result = consumers(database, options.query ?? '', Number(options.limit ?? 50));
   else if (action === 'impact') result = impact(database, (options.path ?? '').split(';').filter(Boolean), Number(options.limit ?? 100));

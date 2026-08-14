@@ -47,14 +47,15 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
         process.StandardInput.Close();
 
-        Task<string> standardOutput = process.StandardOutput.ReadToEndAsync(cancellationToken);
-        Task<string> standardError = process.StandardError.ReadToEndAsync(cancellationToken);
+        Task<string> standardOutput = Task.Run(process.StandardOutput.ReadToEnd, cancellationToken);
+        Task<string> standardError = Task.Run(process.StandardError.ReadToEnd, cancellationToken);
+        var processExit = Task.Run(process.WaitForExit, CancellationToken.None);
         using CancellationTokenSource timeout = new(CommandTimeout);
         using var linkedCancellation =
             CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
 
         try {
-            await process.WaitForExitAsync(linkedCancellation.Token).ConfigureAwait(false);
+            await processExit.WaitAsync(linkedCancellation.Token).ConfigureAwait(false);
         } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
             TryKill(process);
             throw new DevelopmentMcpException(

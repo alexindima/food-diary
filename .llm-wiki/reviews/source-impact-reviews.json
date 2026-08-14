@@ -241,21 +241,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "79dde5136856d6e189dfd4f43df9c04d2d971bab5b037bd12cfa86ff7a8ecb2c"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiCodeGraph.ps1",
-          "sha256": "e55ec7730a4151d8b9035e4706468d2ee60fa7cab5588dcd8fd06e41256dd58c"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "07b63a27728409259560314f05b0f454fceb98f18afc4d199876608a8d963b27"
+          "sha256": "cf25ea579d23b00e029e53b04bdb7d76f7bb34fe188faa946e23ffe5ed42d406"
         }
       ],
-      "reason": "Reviewed the explicit ChangedPathList facade contract used by MCP snapshots; it only normalizes process-safe input into the existing ChangedPath array and does not alter routing, index, dispatch, or review semantics.",
+      "reason": "Reviewed CI reliability fixes: serialized cold code-graph refreshes, deterministic timing sample ordering, process-safe MCP transport tests, and lightweight health checks preserve existing architecture and quality semantics.",
       "baseRef": "HEAD",
-      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
-      "reviewedAtUtc": "2026-08-14T14:33:44.4962382Z"
+      "gitHead": "c6ee2fa66946b112bff9033e1939dcf5f994d677",
+      "reviewedAtUtc": "2026-08-14T15:51:33.4188164Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -582,14 +574,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "07b63a27728409259560314f05b0f454fceb98f18afc4d199876608a8d963b27"
+          "path": ".llm-wiki/tools/LlmWikiIndexTiming.ps1",
+          "sha256": "35ebe8991882824a8e15754582cf5e35545c526a823a46a5ca7c8ef4a51435aa"
         }
       ],
-      "reason": "Reviewed the explicit ChangedPathList facade contract used by MCP snapshots; it only normalizes process-safe input into the existing ChangedPath array and does not alter routing, index, dispatch, or review semantics.",
+      "reason": "Reviewed CI reliability fixes: serialized cold code-graph refreshes, deterministic timing sample ordering, process-safe MCP transport tests, and lightweight health checks preserve existing architecture and quality semantics.",
       "baseRef": "HEAD",
-      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
-      "reviewedAtUtc": "2026-08-14T14:33:45.1558444Z"
+      "gitHead": "c6ee2fa66946b112bff9033e1939dcf5f994d677",
+      "reviewedAtUtc": "2026-08-14T15:51:33.9091007Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -779,17 +771,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2d8c57a30a61a1782816d55e639e6b28092ae74403f5e8e5cd8da0e8ae72d474"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiQualityRisk.ps1",
-          "sha256": "87b1edef52eea86d3f2a9df8ef2264eb07b0705c6d58631d260ce81bd1476d16"
+          "sha256": "536fa732569a67d6ce1d981b18dfb608381c05ab398402fe7cc671b8f265d405"
         }
       ],
-      "reason": "Reviewed final snapshot caching and MCP concurrency changes plus regenerated quality metadata; SQLite remains derived, generated publication indexes remain compatible, and no durable architecture boundary changed.",
+      "reason": "Reviewed CI reliability fixes: serialized cold code-graph refreshes, deterministic timing sample ordering, process-safe MCP transport tests, and lightweight health checks preserve existing architecture and quality semantics.",
       "baseRef": "HEAD",
-      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
-      "reviewedAtUtc": "2026-08-14T14:29:36.7793437Z"
+      "gitHead": "c6ee2fa66946b112bff9033e1939dcf5f994d677",
+      "reviewedAtUtc": "2026-08-14T15:51:34.4906910Z"
     },
     {
       "pageId": "workflow-release-readiness",

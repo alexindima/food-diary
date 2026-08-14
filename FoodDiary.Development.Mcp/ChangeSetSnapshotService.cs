@@ -92,9 +92,9 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             DateTimeOffset.UtcNow);
     }
 
-    private async Task<string> RunGitAsync(
+    private Task<string> RunGitAsync(
         IReadOnlyList<string> arguments,
-        CancellationToken cancellationToken) {
+        CancellationToken cancellationToken) => Task.Run(() => {
         using Process process = new() {
             StartInfo = new ProcessStartInfo {
                 FileName = "git",
@@ -110,17 +110,18 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         }
 
         process.Start();
-        Task<string> output = process.StandardOutput.ReadToEndAsync(cancellationToken);
-        Task<string> error = process.StandardError.ReadToEndAsync(cancellationToken);
-        await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
+        string output = process.StandardOutput.ReadToEnd();
+        string error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+        cancellationToken.ThrowIfCancellationRequested();
         if (process.ExitCode != 0) {
             throw new DevelopmentMcpException(
                 DevelopmentMcpErrorCodes.RepositoryNotFound,
-                $"Git change-set snapshot failed: {(await error.ConfigureAwait(false)).Trim()}");
+                $"Git change-set snapshot failed: {error.Trim()}");
         }
 
-        return await output.ConfigureAwait(false);
-    }
+        return output;
+    }, cancellationToken);
 
     private static string[] ParseChangedPaths(string porcelain) {
         string[] records = porcelain.Split('\0', StringSplitOptions.RemoveEmptyEntries);
