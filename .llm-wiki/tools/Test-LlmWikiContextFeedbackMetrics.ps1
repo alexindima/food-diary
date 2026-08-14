@@ -20,9 +20,26 @@ function New-Receipt([string]$Id, [string[]]$Helpful, [string[]]$Noisy, [string[
         quality = [pscustomobject]@{ score = 100; verification = 100; acceptance = 100; reviews = 100; completion = 100; measured = $true }
         reason = 'fixture'; feedbackHash = ''
     }
-    $payload = [pscustomobject][ordered]@{}
-    foreach ($name in @('schemaVersion','feedbackId','dispatchId','workspace','owner','dispatchOutcome','dispatchHeadEventHash','recordedAtUtc','contextBundleHash','bundleItemPaths','requiredCapabilities','helpfulPaths','noisyPaths','missingPaths','quality','reason')) {
-        $payload | Add-Member -NotePropertyName $name -NotePropertyValue $receipt.$name
+    # Hash the JSON-round-tripped shape because that is exactly what the production validator reads.
+    # PowerShell editions can otherwise retain different in-memory collection metadata before serialization.
+    $normalized = $receipt | ConvertTo-Json -Depth 30 | ConvertFrom-Json
+    $payload = [pscustomobject][ordered]@{
+        schemaVersion = $normalized.schemaVersion
+        feedbackId = $normalized.feedbackId
+        dispatchId = $normalized.dispatchId
+        workspace = $normalized.workspace
+        owner = $normalized.owner
+        dispatchOutcome = $normalized.dispatchOutcome
+        dispatchHeadEventHash = $normalized.dispatchHeadEventHash
+        recordedAtUtc = $normalized.recordedAtUtc
+        contextBundleHash = $normalized.contextBundleHash
+        bundleItemPaths = @($normalized.bundleItemPaths)
+        requiredCapabilities = @($normalized.requiredCapabilities)
+        helpfulPaths = @($normalized.helpfulPaths)
+        noisyPaths = @($normalized.noisyPaths)
+        missingPaths = @($normalized.missingPaths)
+        quality = $normalized.quality
+        reason = $normalized.reason
     }
     $receipt.feedbackHash = Get-Hash $payload
     $receipt
@@ -42,7 +59,10 @@ try {
     $first = New-Receipt ('1' * 32) @('src/helpful.cs') @() @('src/missing.cs')
     [IO.File]::WriteAllText((Join-Path $fixtureRoot 'one.json'), (($first | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
     $one = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextFeedback.ps1') metrics -Format Json | ConvertFrom-Json
-    if (-not $one.valid -or $one.metrics.validReceiptCount -ne 1 -or @($one.metrics.profiles).Count -ne 2) { throw 'Single feedback receipt metrics are invalid.' }
+    if (-not $one.valid -or $one.metrics.validReceiptCount -ne 1 -or @($one.metrics.profiles).Count -ne 2) {
+        $diagnostic = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextFeedback.ps1') list -Format Json | ConvertFrom-Json
+        throw "Single feedback receipt metrics are invalid: $($one | ConvertTo-Json -Depth 10 -Compress); receipts=$($diagnostic | ConvertTo-Json -Depth 10 -Compress)"
+    }
 
     $second = New-Receipt ('2' * 32) @('src/helpful.cs') @('src/noisy.cs') @()
     [IO.File]::WriteAllText((Join-Path $fixtureRoot 'two.json'), (($second | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
