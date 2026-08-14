@@ -2,7 +2,7 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'decision',
+        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'coverage-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
@@ -1050,6 +1050,12 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('Objective')) { $testPlanArguments.Intent = $Objective }
         if ($Compact) { $testPlanArguments.Compact = $true }
         Invoke-WikiTool 'Get-LlmWikiTestPlan.ps1' $testPlanArguments
+    }
+    'coverage-plan' {
+        $coverageArguments = @{ Query = $Query; Format = $Format }
+        if ($PSBoundParameters.ContainsKey('ProposedPath')) { $coverageArguments.ProposedPath = @($ProposedPath) }
+        elseif ($PSBoundParameters.ContainsKey('ChangedPath')) { $coverageArguments.ProposedPath = @($ChangedPath) }
+        Invoke-WikiTool 'Get-LlmWikiCoveragePlan.ps1' $coverageArguments
     }
     { $_ -in @('verification-record', 'verification-list') } {
         $receiptArguments = @{
@@ -2458,7 +2464,7 @@ switch ($Command) {
         Write-Host 'FoodDiary LLM Wiki'
         Write-Host ''
         Write-Host 'Usage:'
-        Write-Host '  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-BaseRef <ref>] [-ChangedPath <path[]>]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-Verify] [-BaseRef <ref>] [-ChangedPath <path[]>]  # one-command stale-index recovery + resumable verify'
         Write-Host "  ./.llm-wiki/wiki.ps1 completion [-Reason '<grouped source-review rationale>'] [-ChangedPath <path[]>]  # update -> reviews -> resumable verify"
         Write-Host "  ./.llm-wiki/wiki.ps1 repair-verify ...  # compatibility alias for completion"
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
@@ -2473,6 +2479,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 brief'
         Write-Host '  ./.llm-wiki/wiki.ps1 plan -Objective <text> [-ChangedPath <path>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 test-plan'
+        Write-Host "  ./.llm-wiki/wiki.ps1 coverage-plan -PlannedPath '<exact test file>' [-Query '<uncovered lines/branches>']"
         Write-Host "  ./.llm-wiki/wiki.ps1 verification-record -EvidenceCommand '<command>' -Status passed -DurationSeconds <seconds> [-CoverageScope <scope>]"
         Write-Host '  ./.llm-wiki/wiki.ps1 verification-list'
         Write-Host '  ./.llm-wiki/wiki.ps1 decision'

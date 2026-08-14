@@ -148,6 +148,39 @@ $frontendFiles = @($context.frontendSymbols | Select-Object -First $Limit | ForE
     [pscustomobject][ordered]@{ path = $_.path; symbol = $(if ($_.PSObject.Properties['name']) { $_.name } else { '' }); line = $(if ($_.PSObject.Properties['line']) { $_.line } else { $null }); provenance = 'compiled-frontend-index' }
 })
 $groundedPaths = @($scopePaths + (Get-ObjectPropertyValues $implementationFiles 'path') + (Get-ObjectPropertyValues $symbolFiles 'path') + (Get-ObjectPropertyValues $frontendFiles 'path') | Where-Object { $_ } | Sort-Object -Unique)
+$runtimeFlowEvidence = [pscustomobject][ordered]@{
+    status = 'not-requested'
+    sourcePaths = @()
+    downstreamConsumers = @()
+    dependencies = @()
+    confidence = 'not-rated'
+}
+if (@($ProposedPath).Count -gt 0) {
+    try {
+        $graphResearch = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphResearch.ps1') `
+            -Objective $Objective `
+            -ProposedPath @($ProposedPath) `
+            -Limit ([Math]::Max(20, $Limit)) `
+            -Format Json | ConvertFrom-Json
+        $runtimeFlowEvidence = [pscustomobject][ordered]@{
+            status = 'available'
+            sourcePaths = @($graphResearch.matchedPaths)
+            downstreamConsumers = @($graphResearch.downstreamConsumers)
+            dependencies = @($graphResearch.dependencies)
+            confidence = [string]$graphResearch.confidence
+        }
+    } catch {
+        $runtimeFlowEvidence = [pscustomobject][ordered]@{
+            status = 'unavailable'
+            sourcePaths = @($ProposedPath)
+            downstreamConsumers = @()
+            dependencies = @()
+            confidence = 'low'
+            diagnostic = $_.Exception.Message
+            recoveryCommand = './.llm-wiki/wiki.ps1 graph-build; rerun research with the same -PlannedPath'
+        }
+    }
+}
 
 $extractionDelta = $null
 if ($Objective -match '(?i)IUserContextService|extraction|profile.{0,20}boundar|\u043f\u0440\u043e\u0435\u043a\u0446') {
@@ -241,6 +274,7 @@ $result = [pscustomobject][ordered]@{
         focusedTests = @($contextTests | Select-Object -First $Limit)
         guides = @($contextAgentGuides | Select-Object -First $Limit)
         wikiPages = @($contextWikiPages | Select-Object -First $Limit)
+        runtimeFlow = $runtimeFlowEvidence
     }
     researchLanes = @(
         [pscustomobject][ordered]@{ id = 'flow'; purpose = 'Current implementation and entry points'; evidenceCount = @($implementationFiles).Count + @($symbolFiles).Count + @($frontendFiles).Count; sources = @((Get-ObjectPropertyValues @($implementationFiles) 'path') + (Get-ObjectPropertyValues @($symbolFiles) 'path') + (Get-ObjectPropertyValues @($frontendFiles) 'path') | Sort-Object -Unique) }
@@ -298,6 +332,9 @@ Write-Host "Purpose: $($result.workflow.purpose); assessment complete: $($result
 Write-Host "Assessment status: $($result.readiness.assessmentStatus); design checkpoint: $($result.readiness.designCheckpoint); implementation readiness: $($result.readiness.implementationStatus)"
 Write-Host "Objective: $Objective"
 Write-Host "Grounded paths: $($result.discovery.groundedPaths.Count)"
+if ($result.discovery.runtimeFlow.status -ne 'not-requested') {
+    Write-Host "Runtime flow: $($result.discovery.runtimeFlow.status), confidence=$($result.discovery.runtimeFlow.confidence), downstream=$(@($result.discovery.runtimeFlow.downstreamConsumers).Count), dependencies=$(@($result.discovery.runtimeFlow.dependencies).Count)"
+}
 foreach ($item in @($result.discovery.implementationFiles | Select-Object -First 5)) { Write-Host "  Source: $($item.path) (score=$($item.score), $($item.provenance))" }
 foreach ($item in @($result.precedents | Select-Object -First 3)) { Write-Host "  Precedent: $($item.shortHash) $($item.subject)" }
 foreach ($item in $result.knownFailures) { Write-Host "  Known failure: $($item.id) - $($item.symptom)" }

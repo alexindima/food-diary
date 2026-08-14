@@ -372,7 +372,8 @@ function Invoke-PipelineBatch([string]$StageName, [string[]]$ToolNames, [bool]$C
             Write-Host 'One or more compiled indexes are stale. Regenerate the complete dependency-aware set with:'
             Write-Host '  ./.llm-wiki/wiki.ps1 update'
             Write-Host 'For an iterative scoped refresh, use:'
-            Write-Host '  ./.llm-wiki/wiki.ps1 update -AffectedOnly'
+            Write-Host '  ./.llm-wiki/wiki.ps1 update -AffectedOnly -Verify'
+            Write-Host 'This one-command flow updates the dependency-aware set and resumes only verification stages invalidated by the new artifacts.'
         }
         throw "LLM Wiki index pipeline stage '$StageName' failed: $($failed -join ', ')"
     }

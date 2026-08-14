@@ -25,4 +25,13 @@ $compact = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') `
 if (@($compact.discovery.groundedPaths | Where-Object { $_ -match 'Dietologist' }).Count -eq 0) { throw 'Compact module research did not stay grounded in the selected module.' }
 if (@($compact.precedents).Count -ne 0) { throw 'Compact research unexpectedly ran historical precedent analysis.' }
 
+$testOnlyFlow = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphResearch.ps1') `
+    -Objective 'Add focused coverage for uncovered user administration branches' `
+    -ProposedPath 'tests/FoodDiary.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs' `
+    -Limit 20 `
+    -Format Json | ConvertFrom-Json
+if (@($testOnlyFlow.dependencies).Count -eq 0) { throw 'Graph-backed runtime-flow evidence did not identify code referenced by the focused test.' }
+$researchSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1'))
+if ($researchSource -notmatch 'runtimeFlowEvidence' -or $researchSource -notmatch 'Get-LlmWikiGraphResearch') { throw 'Ordinary research no longer attaches graph-backed runtime-flow evidence for PlannedPath.' }
+
 Write-Host 'LLM Wiki research confidence tests passed.'

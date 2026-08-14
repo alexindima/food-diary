@@ -79,13 +79,13 @@ switch ($Action) {
     }
     default {
         $data = Read-Knowledge
-        $matches = if ([string]::IsNullOrWhiteSpace($Query)) {
+        $matches = @($(if ([string]::IsNullOrWhiteSpace($Query)) {
             @($data.entries)
         } else {
             @($data.entries | Where-Object {
                 (($_ | ConvertTo-Json -Depth 5 -Compress) -match [regex]::Escape($Query))
             })
-        }
+        }))
         if ($matches.Count -eq 0) {
             Write-Host "No known failures matched '$Query'."
             exit 0

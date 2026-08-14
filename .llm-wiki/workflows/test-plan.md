@@ -11,12 +11,26 @@ tags:
 sources:
   - docs/TESTING_STRATEGY.md
   - .llm-wiki/tools/Get-LlmWikiTestPlan.ps1
+  - .llm-wiki/tools/Get-LlmWikiCoveragePlan.ps1
   - .llm-wiki/tools/LlmWikiVerificationReceipts.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationReceipts.ps1
   - .llm-wiki/policies/change-policies.json
 ---
 
 # Generate a change-aware test plan
+
+For line or branch coverage work with an exact test file, compile reproducible
+commands before editing:
+
+```powershell
+./.llm-wiki/wiki.ps1 coverage-plan `
+  -PlannedPath 'tests/FoodDiary.Application.Tests/Admin/UserAdministrationMutationServiceTests.cs' `
+  -Query 'cover the reported uncovered branches'
+```
+
+The result includes the focused `dotnet test` command, the repository XPlat
+coverage command, and a dotCover invocation with an explicit target working
+directory, assembly filters, and integration-test guidance.
 
 When invoked through a task brief or change packet, the test planner reuses the
 already classified diff and policy result instead of rescanning the same paths.

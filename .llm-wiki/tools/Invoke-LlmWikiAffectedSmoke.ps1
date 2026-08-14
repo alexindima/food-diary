@@ -82,7 +82,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('task-scope')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiUiContinuation|Test-LlmWikiUiContinuation|Get-LlmWikiTestPlan)\.ps1$') {
         $null = $smokeGroups.Add('ui-continuation')
-    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiResearchPacket|Test-LlmWikiResearchConfidence)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiAdaptiveWorkflow|Get-LlmWikiResearchPacket|Test-LlmWikiResearchConfidence|Get-LlmWikiCoveragePlan|Test-LlmWikiCoveragePlan|Manage-LlmWikiFailures|Test-LlmWikiFailuresSearch)\.ps1$') {
         $null = $smokeGroups.Add('research-confidence')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiImplementationBrief|LlmWikiExtractionPlanning|LlmWikiRequirementCriteria|Get-LlmWikiImplementationPlan|Get-LlmWikiChangePacket|Manage-LlmWikiChangeManifest|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Manage-LlmWikiRequirementModel|Manage-LlmWikiAcceptanceMatrix|Manage-LlmWikiProofOfChange|Initialize-LlmWikiTaskWorkspace|Start-LlmWikiDevelopment|Test-LlmWikiImplementationPlan|Test-LlmWikiGovernedExtraction|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
         $null = $smokeGroups.Add('implementation-plan')
@@ -256,6 +256,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'research-confidence' {
             & (Join-Path $toolsRoot 'Test-LlmWikiResearchConfidence.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiCoveragePlan.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiFailuresSearch.ps1')
             if (-not $?) { exit 1 }
         }
         'implementation-plan' {

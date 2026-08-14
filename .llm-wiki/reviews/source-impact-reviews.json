@@ -220,13 +220,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "de8f749c716bf9fad3f3701eee32577ea35c426b200731af09be9dc42562df85"
+                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
                                         }
                                     ],
-                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
+                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
-                        "reviewedAtUtc":  "2026-08-14T01:43:30.1056197Z"
+                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
+                        "reviewedAtUtc":  "2026-08-14T02:46:31.2771195Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -336,17 +336,17 @@
                     {
                         "pageId":  "workflow-code-graph",
                         "pagePath":  ".llm-wiki/workflows/code-graph.md",
-                        "pageSha256":  "eb508cc44ccf8e6c713e2b93dbe0ad08161f782aaffd7e8fa2db7344608da89a",
+                        "pageSha256":  "826a06dc3f0b033a6f1c97f4c6e51d628ac5c56475a6a08ef69870464905be00",
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "8693c1711df81757453c23ea0cb25b153b64cc3d8915502ba9e85145b4692835"
+                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
                                         }
                                     ],
-                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
+                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
-                        "reviewedAtUtc":  "2026-08-13T21:15:07.7025658Z"
+                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
+                        "reviewedAtUtc":  "2026-08-14T02:46:29.7488648Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -533,22 +533,14 @@
                         "pageSha256":  "e81fa2b3a04a1494e8f592d61f2407a135f90a5899cf6cf94a01515c984e07b3",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiManualQaPlan.ps1",
-                                            "sha256":  "c31978475df5a4e37ad37fbfb65f0144d31ffb077e5e456edbc86f4f1eb4e218"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "b120156c72ea34eeefbb54e882ac5e1d5798fe0920da5187c190eff36856ff46"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
-                                            "sha256":  "19ebaf65f02f4192dd2cd6e2c35428e7b63a40279e9af131980a3deac01b3afd"
+                                            "sha256":  "5a4ed71eaa238fbebf114ac797aeb36a17195a9ad3ab43a8af307ce4ebbd4b0d"
                                         }
                                     ],
-                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
-                        "reviewedAtUtc":  "2026-08-13T18:24:59.6866789Z"
+                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
+                        "reviewedAtUtc":  "2026-08-14T02:46:29.9829842Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -587,6 +579,21 @@
                         "baseRef":  "HEAD",
                         "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
                         "reviewedAtUtc":  "2026-08-12T18:49:14.9736782Z"
+                    },
+                    {
+                        "pageId":  "workflow-failure-knowledge",
+                        "pagePath":  ".llm-wiki/workflows/failure-knowledge.md",
+                        "pageSha256":  "35bfa8131be82949fafdf792276d7187342b85a0a926275e51379c9c7e80e233",
+                        "sources":  [
+                                        {
+                                            "path":  ".llm-wiki/tools/Manage-LlmWikiFailures.ps1",
+                                            "sha256":  "58c0e4d1253b6de9189b0dc3618ceb0297f3b8c7e884d94c6a70f6d36c43ee8c"
+                                        }
+                                    ],
+                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+                        "baseRef":  "HEAD",
+                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
+                        "reviewedAtUtc":  "2026-08-14T02:46:30.2788656Z"
                     },
                     {
                         "pageId":  "workflow-failure-prediction",
@@ -667,17 +674,21 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "2b1f22f9fd19010c1f1c122f0038c51a48b635f5e4dd7909ce0d6c4c268d9374"
+                                            "sha256":  "d113755ff7dfe30e7f90b353e9f5952753a0903a8b085a530ce3c99c21a4845a"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+                                            "sha256":  "e78986f98ccc4fdee8fbf60ae32140d79294d2ff8459c6ccbf52995f46641add"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "de8f749c716bf9fad3f3701eee32577ea35c426b200731af09be9dc42562df85"
+                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
                                         }
                                     ],
-                        "reason":  "Namespace trace uses Roslyn semantic edges, and SQLite-writing trace/code-graph smoke checks run in one serialized group while unrelated checks remain parallel.",
+                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
-                        "reviewedAtUtc":  "2026-08-14T01:52:51.4816493Z"
+                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
+                        "reviewedAtUtc":  "2026-08-14T02:46:30.5420002Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -701,13 +712,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "b120156c72ea34eeefbb54e882ac5e1d5798fe0920da5187c190eff36856ff46"
+                                            "sha256":  "5a4ed71eaa238fbebf114ac797aeb36a17195a9ad3ab43a8af307ce4ebbd4b0d"
                                         }
                                     ],
-                        "reason":  "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1abccf78c96b875ed9a5ec0f234151145da191c9",
-                        "reviewedAtUtc":  "2026-08-13T18:25:00.7009814Z"
+                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
+                        "reviewedAtUtc":  "2026-08-14T02:46:30.8350428Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -1010,13 +1021,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "de8f749c716bf9fad3f3701eee32577ea35c426b200731af09be9dc42562df85"
+                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
                                         }
                                     ],
-                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
+                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
-                        "reviewedAtUtc":  "2026-08-14T01:43:30.7339794Z"
+                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
+                        "reviewedAtUtc":  "2026-08-14T02:46:31.6058340Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",

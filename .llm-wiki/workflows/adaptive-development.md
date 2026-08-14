@@ -140,6 +140,11 @@ The router selects one FoodDiary-specific profile:
 | `bug` | corrective behavior in one bounded flow | research, implementation, focused tests, diff, `verify-fast`; strict publication verification stays in hooks and CI |
 | `pattern-extension` | grounded extension of a current, tested repository precedent, including an analogous additive API or migration | precedent brief, compatibility delta, implementation, focused parity tests, `verify-strict-affected` |
 | `test-only` | grounded additions or strengthening inside test sources/fixtures only | coverage brief, test implementation, focused test execution, affected refresh plus `verify-fast` |
+
+For a test-only route with an exact test path, the coverage brief also emits
+`coverage-plan`. This provides focused XPlat and dotCover commands and keeps
+production security/privacy context as behavior-under-test evidence rather than
+escalating the unchanged production boundary.
 | `feature` | new behavior or a cross-cutting product slice | research, design, implementation phases, conformance-aware review, full verify |
 | `critical` | auth, credentials, identity/private data, payments, migrations, providers, email/invitations, configuration, or delivery boundaries | research, decision checkpoint, design, governed workspace, full verify, independent critique |
 | `architectural` | project references, DI/ownership boundaries, module topology, or durable architecture constraints | research, decision checkpoint, design, governed workspace, conformance, independent critique |
