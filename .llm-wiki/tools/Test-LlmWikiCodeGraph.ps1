@@ -46,6 +46,11 @@ if (@($recipeRelations.relations | Where-Object { $_.target -eq 'CreateRecipeCom
 }
 $migrationRelations = & $manager relations -ChangedPath 'FoodDiary.Infrastructure/Migrations/20251108210736_InitialCreate.cs' -RelationKind migration-table -Limit 100 -Format Json | ConvertFrom-Json
 if (@($migrationRelations.relations).Count -eq 0) { throw 'Typed graph did not preserve migration table provenance.' }
+$namespaceTrace = & $manager trace -Query 'FoodDiary.Presentation.Api.Features.Auth' -Limit 100 -Format Json | ConvertFrom-Json
+if (@($namespaceTrace.consumers | Where-Object { $_.relationKind -eq 'namespace-filter' -and $_.path -match 'ControllerConventionsTests.cs$' }).Count -eq 0 -or
+    @($namespaceTrace.namespaceFilters | Where-Object { [int]$_.matchedDeclarations -gt 0 }).Count -eq 0) {
+    throw 'Code graph did not connect a namespace convention literal to matching production declarations.'
+}
 $graphTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath $recipesBoundary -Limit 100 -Format Json | ConvertFrom-Json
 if (@($graphTestPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 1) {
     throw 'Graph-only test plan did not classify a direct Recipes test consumer as required.'

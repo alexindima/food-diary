@@ -78780,19 +78780,6 @@
                                                       "Shared/FoodDiary.Mediator/IRequest.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeatureNamespaceTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  2
-                          },
-                          {
-                              "contract":  "IRequest",
-                              "roles":  [
-                                            "Request"
-                                        ],
-                              "definitionPaths":  [
-                                                      "Shared/FoodDiary.Mediator/IRequest.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeaturesRootNamespaceTests.cs",
                               "isTest":  true,
                               "referenceCount":  2
@@ -79004,6 +78991,19 @@
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  4
+                          },
+                          {
+                              "contract":  "IRequest",
+                              "roles":  [
+                                            "Request"
+                                        ],
+                              "definitionPaths":  [
+                                                      "Shared/FoodDiary.Mediator/IRequest.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/Features/Coverage/BaseApiControllerFeatureNamespaceTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  2
                           },
                           {
                               "contract":  "IRequest",
@@ -81120,19 +81120,6 @@
                                                       "Shared/FoodDiary.Mediator/ISender.cs"
                                                   ],
                               "consumerArea":  "FoodDiary",
-                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeatureNamespaceTests.cs",
-                              "isTest":  true,
-                              "referenceCount":  3
-                          },
-                          {
-                              "contract":  "ISender",
-                              "roles":  [
-                                            "Other"
-                                        ],
-                              "definitionPaths":  [
-                                                      "Shared/FoodDiary.Mediator/ISender.cs"
-                                                  ],
-                              "consumerArea":  "FoodDiary",
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeaturesRootNamespaceTests.cs",
                               "isTest":  true,
                               "referenceCount":  3
@@ -81344,6 +81331,19 @@
                               "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/FavoriteRecipesControllerTests.cs",
                               "isTest":  true,
                               "referenceCount":  5
+                          },
+                          {
+                              "contract":  "ISender",
+                              "roles":  [
+                                            "Other"
+                                        ],
+                              "definitionPaths":  [
+                                                      "Shared/FoodDiary.Mediator/ISender.cs"
+                                                  ],
+                              "consumerArea":  "FoodDiary",
+                              "consumerPath":  "tests/FoodDiary.Presentation.Api.Tests/Features/Coverage/BaseApiControllerFeatureNamespaceTests.cs",
+                              "isTest":  true,
+                              "referenceCount":  3
                           },
                           {
                               "contract":  "ISender",

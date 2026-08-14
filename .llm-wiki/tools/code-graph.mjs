@@ -7,7 +7,7 @@ import { DatabaseSync } from 'node:sqlite';
 
 const repositoryRoot = resolve(import.meta.dirname, '../..');
 const defaultDatabasePath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/code-graph.sqlite');
-const parserVersion = '7-roslyn-semantic-v2';
+const parserVersion = '8-roslyn-qualified-literals-v1';
 const roslynProject = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj');
 const roslynDll = resolve(repositoryRoot, '.llm-wiki/tools/roslyn-extractor/bin/Release/net10.0/LlmWiki.RoslynExtractor.dll');
 
@@ -309,7 +309,15 @@ function findSymbols(database, query, limit) {
 function consumers(database, query, limit) {
   const symbols = findSymbols(database, query, 50);
   const names = [...new Set(symbols.map((symbol) => symbol.name))];
-  if (names.length === 0) return { query, symbols: [], consumers: [] };
+  if (names.length === 0) {
+    const rows = database.prepare(`
+      SELECT DISTINCT e.target symbol, f.path, f.language, e.kind relationKind, 'typed' source
+      FROM typed_edges e JOIN files f ON f.id = e.file_id
+      WHERE e.target = ? COLLATE NOCASE OR e.target LIKE ? COLLATE NOCASE
+      ORDER BY CASE WHEN e.target = ? COLLATE NOCASE THEN 0 ELSE 1 END, f.path LIMIT ?
+    `).all(query, `${query}.%`, query, limit);
+    return { query, symbols: [], consumers: rows };
+  }
   const placeholders = names.map(() => '?').join(',');
   const symbolIds = [...new Set(symbols.map((symbol) => symbol.symbolId).filter(Boolean))];
   const idClause = symbolIds.length > 0 ? ` OR e.target_id IN (${symbolIds.map(() => '?').join(',')})` : '';
@@ -369,7 +377,18 @@ function impact(database, paths, limit) {
 function trace(database, query, limit) {
   const direct = consumers(database, query, limit);
   const paths = direct.symbols.map((symbol) => symbol.path);
-  return { query, ...direct, impact: impact(database, paths, limit) };
+  const namespaceFilters = database.prepare(`
+    SELECT f.path, e.line, e.target namespace,
+      (SELECT COUNT(DISTINCT declaration_file.id)
+       FROM typed_edges declaration
+       JOIN files declaration_file ON declaration_file.id = declaration.file_id
+       WHERE declaration.kind = 'declared-namespace'
+         AND (declaration.target = e.target COLLATE NOCASE OR declaration.target LIKE (e.target || '.%') COLLATE NOCASE)) matchedDeclarations
+    FROM typed_edges e JOIN files f ON f.id = e.file_id
+    WHERE e.kind = 'namespace-filter' AND (e.target = ? COLLATE NOCASE OR e.target LIKE ? COLLATE NOCASE OR ? LIKE (e.target || '.%') COLLATE NOCASE)
+    ORDER BY f.path, e.line LIMIT ?
+  `).all(query, `${query}.%`, query, limit);
+  return { query, ...direct, namespaceFilters, impact: impact(database, paths, limit) };
 }
 
 function relations(database, paths, kinds, limit) {

@@ -81,7 +81,11 @@ foreach ($source in @($allowed.Keys | Sort-Object)) {
 }
 $untrackedProductionProjects = @(
     $projects |
-        Where-Object { -not $_.isTestProject -and $_.path -notmatch '^tests/' -and -not $allowed.ContainsKey($_.name) } |
+        Where-Object {
+            -not $_.isTestProject -and
+            $_.path -notmatch '^(?:tests/|\.llm-wiki/tools/)' -and
+            -not $allowed.ContainsKey($_.name)
+        } |
         Select-Object name, path
 )
 

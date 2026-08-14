@@ -219,14 +219,14 @@
                         "pageSha256":  "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "de8f749c716bf9fad3f3701eee32577ea35c426b200731af09be9dc42562df85"
                                         }
                                     ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:18:02.0368042Z"
+                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
+                        "reviewedAtUtc":  "2026-08-14T01:43:30.1056197Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -280,13 +280,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/architecture-health-index.json",
-                                            "sha256":  "23d83c8899e9ae33566c01fde41498303b09e33f56ab36ecaf8cd83d6efaef82"
+                                            "sha256":  "15dd9d4b6d1ffa81a143b70fe96758a7dbd4cfe859edfc4b7ff0b156a1cda342"
                                         }
                                     ],
-                        "reason":  "Reviewed Roslyn-based C# graph extraction, incremental cache behavior, generated symbol/contract/quality deltas, and architecture-test exclusion for the non-production Wiki tool; product boundaries and public runtime contracts are unchanged.",
+                        "reason":  "Namespace trace now uses Roslyn semantic edges; internal extractor project remains cataloged but is excluded from production architecture drift.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
-                        "reviewedAtUtc":  "2026-08-14T01:09:47.7345671Z"
+                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
+                        "reviewedAtUtc":  "2026-08-14T01:50:04.5285046Z"
                     },
                     {
                         "pageId":  "workflow-backend-contract-review",
@@ -295,13 +295,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/backend-contract-index.json",
-                                            "sha256":  "eabfce42d14b7b43bdf6d3a58e73ac9b3b86d11946a092ca9b61972e5dfb2b31"
+                                            "sha256":  "ef3fd3aef11ade3247510f1afcf3b2f43472ae69664f4edce5264345070cd312"
                                         }
                                     ],
-                        "reason":  "Reviewed Roslyn-based C# graph extraction, incremental cache behavior, generated symbol/contract/quality deltas, and architecture-test exclusion for the non-production Wiki tool; product boundaries and public runtime contracts are unchanged.",
+                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
-                        "reviewedAtUtc":  "2026-08-14T01:09:48.5538981Z"
+                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
+                        "reviewedAtUtc":  "2026-08-14T01:43:27.9247094Z"
                     },
                     {
                         "pageId":  "workflow-change-manifest",
@@ -667,13 +667,17 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "846e7b9db26498a9b662496400c7d6bc6feb5b5b691deaad06c29d86c372e7c4"
+                                            "sha256":  "2b1f22f9fd19010c1f1c122f0038c51a48b635f5e4dd7909ce0d6c4c268d9374"
+                                        },
+                                        {
+                                            "path":  ".llm-wiki/wiki.ps1",
+                                            "sha256":  "de8f749c716bf9fad3f3701eee32577ea35c426b200731af09be9dc42562df85"
                                         }
                                     ],
-                        "reason":  "Reviewed Roslyn-based C# graph extraction, incremental cache behavior, generated symbol/contract/quality deltas, and architecture-test exclusion for the non-production Wiki tool; product boundaries and public runtime contracts are unchanged.",
+                        "reason":  "Namespace trace uses Roslyn semantic edges, and SQLite-writing trace/code-graph smoke checks run in one serialized group while unrelated checks remain parallel.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
-                        "reviewedAtUtc":  "2026-08-14T01:09:49.3333174Z"
+                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
+                        "reviewedAtUtc":  "2026-08-14T01:52:51.4816493Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -863,13 +867,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/generated/quality-index.json",
-                                            "sha256":  "30ef65bf765baacffa3bc36f61b6fd97f0d1c57f4e025f4f3942803e342dedd4"
+                                            "sha256":  "32c74fca9a8172441c328a6333dddff25cb6fca1146d32ac9ac006ed33f3fe60"
                                         }
                                     ],
-                        "reason":  "Reviewed automatic incremental Roslyn semantic enrichment, syntax-first cold bootstrap, fully-qualified symbol identities, resolved overload/interface edges, SQLite schema migration, generated index deltas, and non-production tool-project isolation; runtime product contracts remain unchanged.",
+                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "9f0d4c49e26487d750f8477968a707128c70ceb4",
-                        "reviewedAtUtc":  "2026-08-14T01:24:03.3050456Z"
+                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
+                        "reviewedAtUtc":  "2026-08-14T01:43:29.4831117Z"
                     },
                     {
                         "pageId":  "workflow-release-readiness",
@@ -1006,13 +1010,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "8693c1711df81757453c23ea0cb25b153b64cc3d8915502ba9e85145b4692835"
+                                            "sha256":  "de8f749c716bf9fad3f3701eee32577ea35c426b200731af09be9dc42562df85"
                                         }
                                     ],
-                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
+                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
-                        "reviewedAtUtc":  "2026-08-13T21:15:09.4030161Z"
+                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
+                        "reviewedAtUtc":  "2026-08-14T01:43:30.7339794Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
@@ -1069,18 +1073,14 @@
                         "pageSha256":  "aa8a6cbad3f7ccd39d71249321bc2a2450bad77ed00f7de72a1935fc813d5981",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Find-LlmWikiFrontendTrace.ps1",
-                                            "sha256":  "74d3aea0b2fe96b7d29e52cf92753a734fb10093a293bd6d7df3e00d1ffd2fed"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-                                            "sha256":  "2e3e316751d7cbce2e6320d40303b6323b28d0409f3cca2f0211bd09929e770c"
+                                            "sha256":  "c22d6016f956f55b5510afe0864085a9c9d27ba4cd0d726826cdec9ead8a2385"
                                         }
                                     ],
-                        "reason":  "Reviewed broad backend graph-miss routing: heterogeneous frontend paths are handled safely, unavailable frontend fragments are optional, and module-bounded backend queries use graph impact instead of an arbitrary frontend match.",
+                        "reason":  "Reviewed Roslyn qualified-name literal extraction, namespace/folder mismatch evidence, namespace convention filter coverage, graph-first namespace trace routing, generated index deltas, and false-positive controls for ordinary user-facing strings.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "354ac80380bbf5a9d6ba7a52bdf67649b9bf4810",
-                        "reviewedAtUtc":  "2026-08-13T21:15:10.0264659Z"
+                        "gitHead":  "1bb3717d689db4bebf9873edee6b24722b37954a",
+                        "reviewedAtUtc":  "2026-08-14T01:43:31.3886080Z"
                     },
                     {
                         "pageId":  "workflow-verification-planner",

@@ -4,7 +4,7 @@
                     "productionProjectEdges":  303,
                     "dependencyViolations":  0,
                     "unusedAllowances":  0,
-                    "untrackedProductionProjects":  1,
+                    "untrackedProductionProjects":  0,
                     "moduleCycleNodes":  0,
                     "backendBusinessModules":  33,
                     "moduleHotspotReviewCandidates":  0,
@@ -22,10 +22,7 @@
 
                                 ],
     "untrackedProductionProjects":  [
-                                        {
-                                            "name":  "LlmWiki.RoslynExtractor",
-                                            "path":  ".llm-wiki/tools/roslyn-extractor/LlmWiki.RoslynExtractor.csproj"
-                                        }
+
                                     ],
     "moduleCycleNodes":  [
 

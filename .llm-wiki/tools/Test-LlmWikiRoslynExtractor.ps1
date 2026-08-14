@@ -6,7 +6,10 @@ $project = Join-Path $PSScriptRoot 'roslyn-extractor/LlmWiki.RoslynExtractor.csp
 $fixtureRoot = Join-Path ([System.IO.Path]::GetTempPath()) "llm-wiki-roslyn-$([guid]::NewGuid().ToString('N'))"
 New-Item -ItemType Directory -Path $fixtureRoot -Force | Out-Null
 try {
-    $fixture = Join-Path $fixtureRoot 'Fixture.cs'
+    Set-Content -LiteralPath (Join-Path $fixtureRoot 'Fixture.csproj') -Value '<Project Sdk="Microsoft.NET.Sdk" />' -Encoding utf8
+    $fixtureDirectory = Join-Path $fixtureRoot 'Features/Coverage'
+    New-Item -ItemType Directory -Path $fixtureDirectory -Force | Out-Null
+    $fixture = Join-Path $fixtureDirectory 'Fixture.cs'
     @'
 // public class FakeComment { }
 namespace Fixture;
@@ -18,6 +21,8 @@ public sealed class RealHandler : IRequestHandler<RealCommand> {
         services.AddScoped<IRealService, RealService>();
     }
     public void ResolveOverload() => Overloaded(42);
+    public bool SelectsNamespace() => string.Equals(typeof(RealHandler).Namespace, "Fixture.Production.Controllers", StringComparison.Ordinal);
+    public string UserText() => "This is ordinary user-facing text";
     private void Overloaded(int value) { }
     private void Overloaded(string value) { }
 }
@@ -44,6 +49,15 @@ internal sealed class RealCommand { }
     }
     if (@($result.edges | Where-Object { $_.kind -eq 'resolved-type-inheritance' -and $_.target -eq 'IRealService' -and $_.targetId -match 'global::Fixture.IRealService' }).Count -ne 1) {
         throw 'Roslyn semantic extraction did not resolve the implemented interface.'
+    }
+    if (@($result.edges | Where-Object { $_.kind -eq 'namespace-filter' -and $_.target -eq 'Fixture.Production.Controllers' }).Count -ne 1) {
+        throw 'Roslyn extractor omitted a namespace convention filter.'
+    }
+    if (@($result.edges | Where-Object { $_.kind -eq 'namespace-path-mismatch' -and $_.target -eq 'Fixture' -and $_.targetId -eq 'Fixture.Features.Coverage' }).Count -ne 1) {
+        throw 'Roslyn extractor did not identify a namespace/folder mismatch.'
+    }
+    if (@($result.edges | Where-Object target -eq 'This is ordinary user-facing text').Count -ne 0) {
+        throw 'Roslyn extractor classified ordinary text as a qualified code literal.'
     }
     Write-Host 'LLM Wiki Roslyn extractor regression passed: syntax-aware declarations and typed relations are accurate.'
 } finally {

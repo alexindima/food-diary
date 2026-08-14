@@ -45,6 +45,14 @@ remain available immediately, while files touched by normal development gain
 semantic edges without an extra flag. Syntax edges remain the fallback when a
 bounded compilation contains unresolved external types.
 
+Roslyn also records declared namespaces, namespace-shaped string literals, and
+reflection/convention filters that compare `Type.Namespace`. During an
+incremental edit it compares the declared namespace with the `.csproj` and
+source folder, exposing `namespace-path-mismatch` evidence without treating
+ordinary user-facing strings as code. A trace for a qualified namespace works
+even when no type has that exact name and reports how many declarations each
+convention filter actually selects; zero matches are labelled `EMPTY`.
+
 Query the graph:
 
 ```powershell

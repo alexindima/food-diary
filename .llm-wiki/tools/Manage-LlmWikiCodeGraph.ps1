@@ -42,7 +42,14 @@ switch ($Action) {
     'trace' {
         Write-Host "Code graph trace for '$Query': $(@($result.symbols).Count) symbol(s), $(@($result.consumers).Count) consumer(s)."
         foreach ($item in @($result.symbols)) { Write-Host " - symbol: $($item.path):$($item.line) [$($item.name)]" }
-        foreach ($item in @($result.consumers)) { Write-Host " - consumer: $($item.path)" }
+        foreach ($item in @($result.consumers)) {
+            $relation = if ($item.PSObject.Properties['relationKind'] -and -not [string]::IsNullOrWhiteSpace([string]$item.relationKind)) { [string]$item.relationKind } else { [string]$item.source }
+            Write-Host " - consumer: $($item.path) [$relation]"
+        }
+        foreach ($item in @($result.namespaceFilters)) {
+            $status = if ([int]$item.matchedDeclarations -eq 0) { 'EMPTY' } else { "$($item.matchedDeclarations) declaration(s)" }
+            Write-Host " - namespace filter: $($item.path):$($item.line) -> $($item.namespace) [$status]"
+        }
     }
     'impact' {
         Write-Host "Code graph impact: $(@($result.declaredSymbols).Count) declaration(s), $(@($result.consumers).Count) consumer(s), $(@($result.references).Count) referenced declaration(s)."

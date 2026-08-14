@@ -750,13 +750,15 @@ switch ($Command) {
             $graphProbe = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') `
                 -Action trace -Query $Query -Limit ([Math]::Min($Limit, 30)) -Format Json | ConvertFrom-Json
             $graphSymbols = [object[]]@($graphProbe.symbols)
-            if ($graphSymbols.Length -gt 0) {
+            $graphConsumers = [object[]]@($graphProbe.consumers)
+            $graphNamespaceFilters = [object[]]@($graphProbe.namespaceFilters)
+            if ($graphSymbols.Length -gt 0 -or $graphConsumers.Length -gt 0 -or $graphNamespaceFilters.Length -gt 0) {
                 Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
                     Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
                 }
                 break
             }
-            Write-Host "Code graph found no exact symbol for '$Query'; falling back to semantic trace."
+            Write-Host "Code graph found no exact symbol, typed relation, or qualified literal for '$Query'; falling back to semantic trace."
         }
         $traceArguments = @{
             Query = $Query; Format = $Format; Limit = [Math]::Min($Limit, 30)

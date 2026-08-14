@@ -49,4 +49,10 @@ if (-not ($facadeOutput -match 'classified as backend') -or -not ($facadeOutput 
     throw 'Broad backend semantic fallback was incorrectly captured by the optional frontend probe.'
 }
 
+$namespaceFacadeOutput = @(& (Join-Path $PSScriptRoot '../wiki.ps1') trace -Fast -Query 'FoodDiary.Presentation.Api.Features.Auth' 6>&1 | ForEach-Object { $_.ToString() })
+$namespaceFacadeText = $namespaceFacadeOutput -join [Environment]::NewLine
+if ($LASTEXITCODE -ne 0 -or $namespaceFacadeText -notmatch 'namespace filter:.*ControllerConventionsTests.cs' -or $namespaceFacadeText -match 'falling back to semantic trace') {
+    throw "Qualified namespace trace did not stay on the graph route: $($namespaceFacadeOutput -join [Environment]::NewLine)"
+}
+
 Write-Host 'LLM Wiki trace-output smoke passed: compact text is bounded and full trace remains available.'

@@ -36,7 +36,7 @@ IEnumerable<MetadataReference> references = ((string?)AppContext.GetData("TRUSTE
     .Select(path => MetadataReference.CreateFromFile(path));
 var results = new List<ExtractionResult>();
 if (!semantic) {
-    results.AddRange(paths.Select(path => Extract(path, trees[path], null)));
+    results.AddRange(paths.Select(path => Extract(path, trees[path], null, null)));
 } else {
     HashSet<string> targetPaths = paths.ToHashSet(StringComparer.OrdinalIgnoreCase);
     Dictionary<string, string> projectKeys = contextPaths.Distinct(StringComparer.OrdinalIgnoreCase)
@@ -48,17 +48,27 @@ if (!semantic) {
             .Select(item => item.Value)
             .ToArray();
         CSharpCompilation compilation = CSharpCompilation.Create($"LlmWiki.SemanticGraph.{results.Count}", groupTrees, references);
-        results.AddRange(groupTargets.Select(path => Extract(path, trees[path], compilation)));
+        results.AddRange(groupTargets.Select(path => Extract(path, trees[path], compilation, group.Key)));
     }
 }
 Console.WriteLine(JsonSerializer.Serialize(results, options));
 return 0;
 
-static ExtractionResult Extract(string path, SyntaxTree tree, CSharpCompilation? compilation) {
+static ExtractionResult Extract(string path, SyntaxTree tree, CSharpCompilation? compilation, string? projectRoot) {
     var root = tree.GetRoot();
     SemanticModel? semanticModel = compilation?.GetSemanticModel(tree, ignoreAccessibility: true);
     var symbols = new List<GraphSymbol>();
     var edges = new List<GraphEdge>();
+
+    BaseNamespaceDeclarationSyntax? namespaceDeclaration = root.DescendantNodes().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault();
+    if (namespaceDeclaration is not null) {
+        string declaredNamespace = namespaceDeclaration.Name.ToString();
+        AddEdge(edges, "declared-namespace", declaredNamespace, namespaceDeclaration, "high");
+        string? expectedNamespace = ExpectedNamespace(path, projectRoot);
+        if (expectedNamespace is not null && !string.Equals(declaredNamespace, expectedNamespace, StringComparison.Ordinal)) {
+            AddEdge(edges, "namespace-path-mismatch", declaredNamespace, namespaceDeclaration, "high", expectedNamespace);
+        }
+    }
 
     foreach (var declaration in root.DescendantNodes().OfType<MemberDeclarationSyntax>()) {
         var symbol = declaration switch {
@@ -121,6 +131,15 @@ static ExtractionResult Extract(string path, SyntaxTree tree, CSharpCompilation?
             AddEdge(edges, "http-attribute", value?.Token.ValueText ?? name.Replace("Attribute", string.Empty, StringComparison.Ordinal), attribute, "high");
         }
     }
+    foreach (var literal in root.DescendantNodes().OfType<LiteralExpressionSyntax>().Where(item => item.IsKind(SyntaxKind.StringLiteralExpression))) {
+        string value = literal.Token.ValueText;
+        if (!LooksLikeQualifiedName(value)) continue;
+        AddEdge(edges, "qualified-name-literal", value, literal, "medium");
+        InvocationExpressionSyntax? invocation = literal.Ancestors().OfType<InvocationExpressionSyntax>().FirstOrDefault();
+        if (invocation is not null && invocation.ToString().Contains("Namespace", StringComparison.Ordinal)) {
+            AddEdge(edges, "namespace-filter", value.TrimEnd('*').TrimEnd('.'), invocation, "high");
+        }
+    }
 
     var tokens = root.DescendantTokens()
         .Where(token => token.IsKind(SyntaxKind.IdentifierToken))
@@ -148,6 +167,22 @@ static string ProjectKey(string path) {
         directory = Path.GetDirectoryName(directory);
     }
     return Path.GetDirectoryName(path) ?? string.Empty;
+}
+
+static string? ExpectedNamespace(string path, string? projectRoot) {
+    if (string.IsNullOrWhiteSpace(projectRoot)) return null;
+    string? projectFile = Directory.EnumerateFiles(projectRoot, "*.csproj", SearchOption.TopDirectoryOnly).SingleOrDefault();
+    string projectName = projectFile is null ? Path.GetFileName(projectRoot) : Path.GetFileNameWithoutExtension(projectFile);
+    string? directory = Path.GetDirectoryName(Path.GetFullPath(path));
+    if (directory is null) return projectName;
+    string relative = Path.GetRelativePath(projectRoot, directory);
+    return relative == "." ? projectName : $"{projectName}.{relative.Replace(Path.DirectorySeparatorChar, '.').Replace(Path.AltDirectorySeparatorChar, '.')}";
+}
+
+static bool LooksLikeQualifiedName(string value) {
+    string normalized = value.TrimEnd('*').TrimEnd('.');
+    string[] segments = normalized.Split('.', StringSplitOptions.RemoveEmptyEntries);
+    return segments.Length >= 3 && segments.All(segment => SyntaxFacts.IsValidIdentifier(segment));
 }
 
 static bool IsMediatorHandler(string name) => name is "IRequestHandler" or "ICommandHandler" or "IQueryHandler" or "INotificationHandler";

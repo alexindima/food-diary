@@ -132,6 +132,11 @@ if ($smokeGroups.Contains('adaptive-evals')) {
     $null = $smokeGroups.Remove('adaptive-routing')
     $null = $smokeGroups.Remove('adaptive-experience')
 }
+if ($smokeGroups.Contains('code-graph') -and $smokeGroups.Contains('trace-output')) {
+    # Both groups refresh the shared SQLite graph. Run the trace assertions inside
+    # code-graph so independent smoke groups can remain parallel without writer races.
+    $null = $smokeGroups.Remove('trace-output')
+}
 if ($forcedGroups.Count -gt 0) {
     $requestedGroups = $forcedGroups
     $selectedGroups = @($smokeGroups | Where-Object { $_ -in $requestedGroups })
@@ -220,6 +225,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if ($LASTEXITCODE -ne 0) { throw "Roslyn extractor smoke failed with exit code $LASTEXITCODE." }
             & (Join-Path $toolsRoot 'Test-LlmWikiCodeGraph.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiTraceOutput.ps1')
+            if (-not $?) { exit 1 }
         }
         'git-paths' {
             & (Join-Path $toolsRoot 'Test-LlmWikiGitPaths.ps1')
@@ -239,6 +246,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             & (Join-Path $toolsRoot 'Test-LlmWikiGeneratedArtifacts.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiBackendModuleModel.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiArchitectureHealthToolExclusion.ps1')
             if (-not $?) { exit 1 }
         }
         'ui-continuation' {

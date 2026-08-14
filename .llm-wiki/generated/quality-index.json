@@ -101,6 +101,14 @@
                          "structuralRiskScore":  100.02
                      },
                      {
+                         "path":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
+                         "nonBlankLines":  217,
+                         "decisionPoints":  63,
+                         "criticalSymbols":  0,
+                         "unreferencedCriticalSymbols":  0,
+                         "structuralRiskScore":  98.84
+                     },
+                     {
                          "path":  "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
                          "nonBlankLines":  491,
                          "decisionPoints":  57,
@@ -147,14 +155,6 @@
                          "criticalSymbols":  0,
                          "unreferencedCriticalSymbols":  0,
                          "structuralRiskScore":  85.86
-                     },
-                     {
-                         "path":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
-                         "nonBlankLines":  185,
-                         "decisionPoints":  53,
-                         "criticalSymbols":  0,
-                         "unreferencedCriticalSymbols":  0,
-                         "structuralRiskScore":  83.2
                      },
                      {
                          "path":  "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard-lib/client-dashboard.mapper.ts",
@@ -816,11 +816,11 @@
     "files":  [
                   {
                       "path":  ".llm-wiki/tools/roslyn-extractor/Program.cs",
-                      "nonBlankLines":  185,
-                      "decisionPoints":  53,
+                      "nonBlankLines":  217,
+                      "decisionPoints":  63,
                       "criticalSymbols":  0,
                       "unreferencedCriticalSymbols":  0,
-                      "structuralRiskScore":  83.2
+                      "structuralRiskScore":  98.84
                   },
                   {
                       "path":  "FoodDiary.Analyzers/ExpressionTreeSpanOverloadAnalyzer.cs",
@@ -36364,10 +36364,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Controllers/BaseApiController.cs",
                                 "line":  15,
-                                "testReferenceCount":  6,
+                                "testReferenceCount":  5,
                                 "testReferences":  [
                                                        "tests/FoodDiary.ArchitectureTests/LayeringTests.cs",
-                                                       "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeatureNamespaceTests.cs",
                                                        "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeaturesRootNamespaceTests.cs",
                                                        "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerNoNamespaceTests.cs",
                                                        "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerTests.cs",
