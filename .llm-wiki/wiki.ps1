@@ -90,6 +90,7 @@ param(
     [switch]$Fast,
     [switch]$Detached,
     [switch]$Compact,
+    [switch]$SkipHistory,
     [switch]$FailOnUnreviewed,
     [switch]$Check,
     [string]$EvidencePath = '.artifacts/llm-wiki/evidence.json',
@@ -115,6 +116,7 @@ param(
     [string]$EvidenceCommand,
     [string[]]$CoverageScope,
     [string]$Reason,
+    [string]$ReviewReason,
     [string]$Symptom,
     [string]$RepairAttemptId,
     [string]$RepairCandidateId,
@@ -475,6 +477,19 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
         if ($VerifyAfterUpdate) {
+            if (-not [string]::IsNullOrWhiteSpace($ReviewReason)) {
+                Write-Host 'Update completed; recording the explicitly supplied rationale for the affected source-impact set.'
+                $impactArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
+                if ($PSBoundParameters.ContainsKey('ChangedPath')) { $impactArguments.ChangedPath = @($ChangedPath) }
+                $impact = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') @impactArguments | ConvertFrom-Json
+                $pending = @($impact.impacts | Where-Object { -not $_.Reviewed -and [string]::IsNullOrWhiteSpace([string]$_.GeneratedBy) })
+                foreach ($item in $pending) {
+                    $reviewArguments = @{ Id = [string]$item.Id; Reason = $ReviewReason; BaseRef = $BaseRef }
+                    if ($PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = @($ChangedPath) }
+                    Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
+                }
+                Write-Host "NeedsReview resolved explicitly: recorded=$($pending.Count)."
+            }
             Write-Host 'Update completed; continuing with resumable affected verify using the same change set.'
             $verifyArguments = @{
                 BaseRef = $BaseRef
@@ -892,7 +907,7 @@ switch ($Command) {
             Invoke-WikiTool 'Get-LlmWikiGraphResearch.ps1' $fastResearchArguments
             break
         }
-        $researchArguments = @{ Objective = $Objective; Purpose = $ResearchPurpose; BaseRef = $BaseRef; Format = $Format; Limit = $Limit; Compact = $Compact }
+        $researchArguments = @{ Objective = $Objective; Purpose = $ResearchPurpose; BaseRef = $BaseRef; Format = $Format; Limit = $Limit; Compact = $Compact; SkipHistory = $SkipHistory }
         if (-not [string]::IsNullOrWhiteSpace($Module)) { $researchArguments.Module = $Module }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $researchArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $researchArguments.ChangedPath = $ChangedPath }
@@ -2464,9 +2479,10 @@ switch ($Command) {
         Write-Host 'FoodDiary LLM Wiki'
         Write-Host ''
         Write-Host 'Usage:'
-        Write-Host '  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-Verify] [-BaseRef <ref>] [-ChangedPath <path[]>]  # one-command stale-index recovery + resumable verify'
+        Write-Host "  ./.llm-wiki/wiki.ps1 update [-AffectedOnly] [-Verify] [-ReviewReason '<rationale>'] [-BaseRef <ref>] [-ChangedPath <path[]>]  # one-command stale-index recovery + explicit review + resumable verify"
         Write-Host "  ./.llm-wiki/wiki.ps1 completion [-Reason '<grouped source-review rationale>'] [-ChangedPath <path[]>]  # update -> reviews -> resumable verify"
         Write-Host "  ./.llm-wiki/wiki.ps1 repair-verify ...  # compatibility alias for completion"
+        Write-Host '  ./.llm-wiki/wiki.ps1 research -Intent <task> [-PlannedPath <path[]>] [-SkipHistory]  # current-source research; test-only skips history automatically'
         Write-Host '  ./.llm-wiki/wiki.ps1 lint [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 smoke -SmokeGroup portable|linux|tools [-AffectedOnly] [-ChangedPath <path[]>]'
         Write-Host '  ./.llm-wiki/wiki.ps1 verify-fast [-BaseRef <ref>] [-ChangedPath <path[]>]'

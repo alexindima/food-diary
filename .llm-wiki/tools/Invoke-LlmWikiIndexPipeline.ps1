@@ -10,6 +10,7 @@ param(
     [string]$Area = 'All',
     [string]$BaseRef = 'HEAD',
     [string[]]$ChangedPath,
+    [string]$ChangedPathFile,
     [ValidateRange(1, 8)]
     [int]$MaxConcurrency = 4,
     [ValidateRange(30, 3600)]
@@ -80,7 +81,19 @@ function Get-WorkspaceChangedPaths {
     return @($paths | ForEach-Object { $_.Replace('\', '/') } | Sort-Object -Unique)
 }
 
-if ($AffectedOnly -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
+if (-not [string]::IsNullOrWhiteSpace($ChangedPathFile)) {
+    $absoluteChangedPathFile = [IO.Path]::GetFullPath($(if ([IO.Path]::IsPathRooted($ChangedPathFile)) { $ChangedPathFile } else { Join-Path $repositoryRoot $ChangedPathFile }))
+    $artifactsRoot = [IO.Path]::GetFullPath((Join-Path $repositoryRoot '.artifacts/llm-wiki'))
+    if (-not $absoluteChangedPathFile.StartsWith($artifactsRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        throw 'ChangedPathFile must resolve under .artifacts/llm-wiki.'
+    }
+    if (-not (Test-Path -LiteralPath $absoluteChangedPathFile -PathType Leaf)) { throw "ChangedPathFile does not exist: $ChangedPathFile" }
+    $ChangedPath = @([IO.File]::ReadAllLines($absoluteChangedPathFile) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+}
+
+if ($AffectedOnly -and
+    -not $PSBoundParameters.ContainsKey('ChangedPath') -and
+    -not $PSBoundParameters.ContainsKey('ChangedPathFile')) {
     $ChangedPath = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef, '--') -FailureMessage "Unable to collect changed paths from '$BaseRef'.")
     if ($BaseRef -eq 'HEAD') {
         $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'Unable to collect untracked paths.')

@@ -2,6 +2,7 @@
 param()
 
 $ErrorActionPreference = 'Stop'
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $pipelinePath = Join-Path $PSScriptRoot 'Invoke-LlmWikiIndexPipeline.ps1'
 
 function Get-IndexPlan([string[]]$ChangedPath, [switch]$RequiredOnly) {
@@ -38,6 +39,21 @@ foreach ($unexpectedTool in @(
     'Build-LlmWikiArchitectureHealthIndex.ps1'
 )) {
     Assert-Plan ($csharpTestPlan -notmatch [regex]::Escape($unexpectedTool)) "C# test-only change selected unrelated index: $unexpectedTool"
+}
+
+$changedPathFile = Join-Path $repositoryRoot '.artifacts/llm-wiki/index-selection-staged-paths.txt'
+$null = New-Item -ItemType Directory -Path (Split-Path -Parent $changedPathFile) -Force
+try {
+    [IO.File]::WriteAllLines($changedPathFile, @(
+        'tests/FoodDiary.Infrastructure.Tests/Persistence/EmailOutboxTests.cs',
+        '.llm-wiki/generated/quality-index.json',
+        '.llm-wiki/reviews/source-impact-reviews.json'
+    ))
+    $stagedPlan = (& $pipelinePath -AffectedOnly -Plan -ChangedPathFile $changedPathFile) -join [Environment]::NewLine
+    Assert-Plan ($stagedPlan -match 'Build-LlmWikiQualityIndex.ps1') 'ChangedPathFile did not preserve the staged test-only delta.'
+    Assert-Plan ($stagedPlan -notmatch 'Build-LlmWikiBackendContractIndex.ps1') 'Generated/review paths widened the staged test-only index plan.'
+} finally {
+    Remove-Item -LiteralPath $changedPathFile -Force -ErrorAction SilentlyContinue
 }
 
 $productionCSharpPlan = Get-IndexPlan 'FoodDiary.Infrastructure/Persistence/EmailOutbox.cs'

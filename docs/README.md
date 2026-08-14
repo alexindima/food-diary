@@ -23,6 +23,7 @@ This directory contains long-form repository documentation. Keep root-level mark
 ## Backend Operations And Governance
 
 - `backend/ARCHITECTURE_IMPROVEMENT_ROADMAP.md`
+- `backend/MODULE_EXTRACTION_READINESS.md`
 - `backend/BACKEND_API_CONTRACT_GOVERNANCE.md`
 - `backend/BACKEND_CRITICAL_FLOW_MATRIX.md`
 - `backend/BACKEND_DEFINITION_OF_DONE.md`

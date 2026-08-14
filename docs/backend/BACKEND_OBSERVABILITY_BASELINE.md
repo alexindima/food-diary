@@ -57,10 +57,11 @@ Metrics:
 - `fooddiary.job.last_success_age`
 - `fooddiary.job.failure_streak`
 
-Current tagged jobs:
-
-- `images.cleanup`
-- `users.cleanup`
+Every recurring JobManager job runs through `JobExecutionObserver`. The stable
+`fooddiary.job.name` values are owned by `JobNames`; adding a recurring job
+without the observer is an architecture regression. The observer records
+success, cancellation, failure, duration, processed/deleted counts, last-success
+age, and failure streak where applicable.
 
 Current outcome tags:
 
@@ -209,6 +210,27 @@ Current diagnostic value:
 - auth recovery incidents become easier to separate into token-generation success versus mail-delivery failure
 - localized template or SMTP failures become measurable without relying only on logs
 - registration, verification resend, and password reset now have an observable dependency boundary
+
+## Mail service signals and readiness
+
+MailRelay exposes the `FoodDiary.MailRelay` meter and activity source. Its
+metrics distinguish queue, outbox, inbox, delivery, and presentation outcomes:
+
+- `fooddiary.mailrelay.queue.events`
+- `fooddiary.mailrelay.outbox.events`
+- `fooddiary.mailrelay.inbox.events`
+- `fooddiary.mailrelay.delivery.events`
+- `fooddiary.mailrelay.presentation.requests`
+- `fooddiary.mailrelay.presentation.duration_ms`
+
+MailRelay and MailInbox expose separate liveness and readiness endpoints.
+Readiness checks owned PostgreSQL state; MailRelay also checks RabbitMQ when it
+is the configured backend. Queue state in PostgreSQL remains the source of
+truth, so broker-only metrics are never sufficient evidence of delivery.
+
+Do not attach email addresses, subjects, message bodies, provider payloads, or
+credentials to metric tags or traces. Correlation identifiers may be logged or
+propagated, but must not be used as metric dimensions because of cardinality.
 
 ## Added Storage Boundary Signals
 

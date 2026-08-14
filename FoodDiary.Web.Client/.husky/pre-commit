@@ -104,9 +104,12 @@ if [ -n "$WIKI_INDEX_INPUT_FILES" ]; then
     echo "PowerShell is required for the LLM Wiki index freshness check."
     exit 1
   fi
-  # Let the pipeline read the Git delta itself. Passing the complete staged path
-  # list can exceed Windows' process argument limit during large refactors.
-  hook_run "LLM Wiki affected index freshness" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ReuseUnchangedChecks || exit 1
+  # Persist the exact staged source delta instead of passing a long argument list
+  # or letting generated Wiki bookkeeping widen the working-tree scope.
+  WIKI_STAGED_PATH_FILE=.artifacts/llm-wiki/pre-commit-staged-paths.txt
+  mkdir -p .artifacts/llm-wiki
+  printf '%s\n' "$WIKI_INDEX_INPUT_FILES" > "$WIKI_STAGED_PATH_FILE"
+  hook_run "LLM Wiki affected index freshness" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ChangedPathFile "$WIKI_STAGED_PATH_FILE" -ReuseUnchangedChecks || exit 1
 else
   hook_step_skip "LLM Wiki affected index freshness" "no compiled-index inputs changed"
 fi

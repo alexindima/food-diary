@@ -36,6 +36,22 @@ try {
         Assert-TestOnly (@($criterion.mapping.changedPaths) -contains $testPath) "Criterion $($criterion.id) was not linked to the test delta."
         Assert-TestOnly (@($criterion.mapping.changedPaths) -notcontains $generatedPath) "Criterion $($criterion.id) was linked to derived Wiki output."
     }
+
+    $testOnlyPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
+        -ChangedPath @(
+            'tests/FoodDiary.Application.Tests/Authentication/UserAgentParserTests.cs',
+            '.llm-wiki/generated/quality-index.json',
+            '.llm-wiki/reviews/source-impact-reviews.json'
+        ) `
+        -Format Json | ConvertFrom-Json
+    $testOnlyRuleIds = @($testOnlyPolicy.matchedRules | ForEach-Object { [string]$_.id })
+    Assert-TestOnly (@($testOnlyRuleIds | Where-Object { $_ -ne 'llm-wiki' }).Count -eq 0) 'Test-only authentication coverage triggered production change-policy rules.'
+    Assert-TestOnly (@($testOnlyPolicy.reviewObligations).Count -eq 0) 'Test-only coverage triggered production review obligations.'
+
+    $productionPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
+        -ChangedPath 'FoodDiary.Application/Authentication/Commands/LinkGoogle/LinkGoogleCommandHandler.cs' `
+        -Format Json | ConvertFrom-Json
+    Assert-TestOnly (@($productionPolicy.matchedRules).Count -gt 0) 'Production authentication changes lost change-policy coverage.'
     Write-Host 'LLM Wiki test-only governance regression passed: routing scope, manifest, and acceptance mapping stay proportional.'
 } finally {
     if (Test-Path -LiteralPath $tempRoot) { Remove-Item -LiteralPath $tempRoot -Recurse -Force }

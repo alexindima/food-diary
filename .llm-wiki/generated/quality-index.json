@@ -7,8 +7,8 @@
     "summary":  {
                     "productionFiles":  4215,
                     "criticalSymbols":  540,
-                    "criticalSymbolsWithTestReferences":  511,
-                    "criticalSymbolsWithoutTestReferences":  29,
+                    "criticalSymbolsWithTestReferences":  523,
+                    "criticalSymbolsWithoutTestReferences":  17,
                     "debtMarkers":  3
                 },
     "hotspots":  [
@@ -6523,8 +6523,8 @@
                       "nonBlankLines":  19,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.38
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.38
                   },
                   {
                       "path":  "FoodDiary.Application.Admin/Queries/GetCollaborationAudit/GetCollaborationAuditQuery.cs",
@@ -10147,8 +10147,8 @@
                       "nonBlankLines":  16,
                       "decisionPoints":  1,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  8.82
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  3.82
                   },
                   {
                       "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/RemoveFavoriteProduct/RemoveFavoriteProductCommand.cs",
@@ -10259,8 +10259,8 @@
                       "nonBlankLines":  10,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.2
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
                   },
                   {
                       "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/RemoveFavoriteRecipe/RemoveFavoriteRecipeCommand.cs",
@@ -20403,8 +20403,8 @@
                       "nonBlankLines":  19,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.38
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.38
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminEmailTemplatesController.cs",
@@ -22027,8 +22027,8 @@
                       "nonBlankLines":  25,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.5
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.5
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Fasting/Mappings/FastingHttpMappings.cs",
@@ -23523,8 +23523,8 @@
                       "nonBlankLines":  17,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.34
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.34
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Users/UsersController.cs",
@@ -23547,16 +23547,16 @@
                       "nonBlankLines":  17,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.34
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.34
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
                       "nonBlankLines":  17,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.34
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.34
                   },
                   {
                       "path":  "FoodDiary.Presentation.Api/Features/Version/IApiVersionInfo.cs",
@@ -33211,8 +33211,8 @@
                       "nonBlankLines":  10,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.2
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
                   },
                   {
                       "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandValidator.cs",
@@ -33235,8 +33235,8 @@
                       "nonBlankLines":  10,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.2
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.2
                   },
                   {
                       "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandValidator.cs",
@@ -34035,16 +34035,16 @@
                       "nonBlankLines":  24,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.48
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.48
                   },
                   {
                       "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
                       "nonBlankLines":  15,
                       "decisionPoints":  0,
                       "criticalSymbols":  1,
-                      "unreferencedCriticalSymbols":  1,
-                      "structuralRiskScore":  7.3
+                      "unreferencedCriticalSymbols":  0,
+                      "structuralRiskScore":  2.3
                   },
                   {
                       "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayProviderEventsController.cs",
@@ -35267,9 +35267,9 @@
                                 "role":  "CommandHandler",
                                 "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestMailRelayDeliveryEventCommandHandler.cs",
                                 "line":  4,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
                                                    ]
                             },
                             {
@@ -35277,9 +35277,9 @@
                                 "role":  "CommandHandler",
                                 "path":  "MailRelay/FoodDiary.MailRelay.Application/Emails/Commands/IngestManyMailRelayDeliveryEventsCommandHandler.cs",
                                 "line":  4,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "MailRelay/tests/FoodDiary.MailRelay.Application.Tests/MailRelayApplicationFeatureTests.cs"
                                                    ]
                             },
                             {
@@ -36184,9 +36184,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Features/Admin/AdminDashboardController.cs",
                                 "line":  16,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs"
                                                    ]
                             },
                             {
@@ -36440,8 +36440,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs",
                                 "line":  16,
-                                "testReferenceCount":  1,
+                                "testReferenceCount":  2,
                                 "testReferences":  [
+                                                       "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
                                                        "tests/FoodDiary.Presentation.Api.Tests/DashboardControllerTests.cs"
                                                    ]
                             },
@@ -36540,9 +36541,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Features/Fasting/FastingReadController.cs",
                                 "line":  14,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs"
                                                    ]
                             },
                             {
@@ -36590,8 +36591,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Features/Goals/GoalsController.cs",
                                 "line":  14,
-                                "testReferenceCount":  2,
+                                "testReferenceCount":  3,
                                 "testReferences":  [
+                                                       "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs",
                                                        "tests/FoodDiary.Presentation.Api.Tests/GoalsControllerTests.cs",
                                                        "tests/FoodDiary.Presentation.Api.Tests/WeeklyGoalsControllerTests.cs"
                                                    ]
@@ -36665,9 +36667,9 @@
                                 "role":  "Controller",
                                 "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayDeliveryEventsController.cs",
                                 "line":  13,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs"
                                                    ]
                             },
                             {
@@ -36685,9 +36687,9 @@
                                 "role":  "Controller",
                                 "path":  "MailRelay/FoodDiary.MailRelay.Presentation/Features/Email/MailRelayMessagesController.cs",
                                 "line":  11,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "MailRelay/tests/FoodDiary.MailRelay.Presentation.Tests/MailRelayControllerSurfaceTests.cs"
                                                    ]
                             },
                             {
@@ -36923,9 +36925,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Features/Users/UserOverviewController.cs",
                                 "line":  13,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs"
                                                    ]
                             },
                             {
@@ -36974,9 +36976,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Features/Users/WaistGoalsController.cs",
                                 "line":  13,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs"
                                                    ]
                             },
                             {
@@ -37024,9 +37026,9 @@
                                 "role":  "Controller",
                                 "path":  "FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs",
                                 "line":  13,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Presentation.Api.Tests/ControllerSurfaceGapTests.cs"
                                                    ]
                             },
                             {
@@ -37298,9 +37300,9 @@
                                 "role":  "QueryHandler",
                                 "path":  "FoodDiary.Application.Admin/Queries/GetAdminUsers/GetAdminUsersQueryHandler.cs",
                                 "line":  8,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Admin/GetAdminUsersQueryHandlerTests.cs"
                                                    ]
                             },
                             {
@@ -38384,9 +38386,9 @@
                                 "role":  "Validator",
                                 "path":  "FoodDiary.Application.Favorites/FavoriteProducts/Commands/AddFavoriteProduct/AddFavoriteProductCommandValidator.cs",
                                 "line":  4,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Favorites/FavoriteCommandValidatorTests.cs"
                                                    ]
                             },
                             {
@@ -38394,9 +38396,9 @@
                                 "role":  "Validator",
                                 "path":  "FoodDiary.Application.Favorites/FavoriteRecipes/Commands/AddFavoriteRecipe/AddFavoriteRecipeCommandValidator.cs",
                                 "line":  4,
-                                "testReferenceCount":  0,
+                                "testReferenceCount":  1,
                                 "testReferences":  [
-
+                                                       "tests/FoodDiary.Application.Tests/Favorites/FavoriteCommandValidatorTests.cs"
                                                    ]
                             },
                             {

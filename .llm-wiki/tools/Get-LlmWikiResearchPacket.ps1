@@ -15,7 +15,8 @@ param(
     [ValidateRange(1, 30)]
     [int]$Limit = 10,
     [string]$Module,
-    [switch]$Compact
+    [switch]$Compact,
+    [switch]$SkipHistory
 )
 
 $ErrorActionPreference = 'Stop'
@@ -35,7 +36,7 @@ Write-Host "Research [1/3]: classify and scan current sources$(if ($Module) { " 
 $queryCacheEntry = $null
 $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'research' -Arguments @{
     Objective = $Objective; BaseRef = $BaseRef; HeadRef = $HeadRef
-    ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; Compact = [bool]$Compact
+    ChangedPath = @($ChangedPath); ProposedPath = @($ProposedPath); Purpose = $Purpose; Limit = $Limit; Module = $Module; Compact = [bool]$Compact; SkipHistory = [bool]$SkipHistory
 }
 $cachedResearch = Read-LlmWikiQueryCache -Entry $queryCacheEntry
 if ($null -ne $cachedResearch) {
@@ -96,8 +97,11 @@ $precedentScopeCandidates = $scopePaths +
     @(Get-ObjectPropertyValues @($context.symbols) 'path' | Select-Object -First $Limit) +
     @(Get-ObjectPropertyValues @($context.frontendSymbols) 'path' | Select-Object -First $Limit)
 $precedentScopePaths = @($precedentScopeCandidates | Where-Object { $_ } | Sort-Object -Unique)
-$precedents = if ($Compact) {
-    [pscustomobject]@{ precedents = @(); confidence = 'deferred'; authority = 'Historical precedent analysis was deferred by compact research.' }
+$historyDeferred = $Compact -or $SkipHistory -or [string]$workflow.profile -eq 'test-only'
+$precedents = if ($historyDeferred) {
+    $deferredReason = if ($SkipHistory) { 'the explicit -SkipHistory option' } elseif ([string]$workflow.profile -eq 'test-only') { 'the test-only fast path' } else { 'compact research' }
+    Write-Host "Research [3/3]: Git precedents deferred by $deferredReason."
+    [pscustomobject]@{ precedents = @(); confidence = 'deferred'; authority = "Historical precedent analysis was deferred by $deferredReason; use wiki.ps1 precedents when history is materially useful." }
 } else {
     Write-Host 'Research [3/3]: scan bounded Git precedents...'
     & (Join-Path $PSScriptRoot 'Get-LlmWikiGitPrecedents.ps1') `

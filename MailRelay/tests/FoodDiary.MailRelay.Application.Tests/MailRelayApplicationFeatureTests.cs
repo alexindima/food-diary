@@ -253,6 +253,41 @@ public sealed class MailRelayApplicationFeatureTests {
         Assert.Single(store.RecordedEvents);
     }
 
+    [Fact]
+    public async Task IngestMailRelayDeliveryEventCommandHandler_DelegatesToIngestionService() {
+        var store = new RecordingQueueStore();
+        var handler = new IngestMailRelayDeliveryEventCommandHandler(new MailRelayDeliveryEventIngestionService(store));
+        var request = new IngestMailEventRequest(
+            MailRelayDeliveryEventType.Complaint,
+            "user@example.com",
+            "ses");
+
+        Result<MailRelayDeliveryEventEntry> result = await handler.Handle(
+            new IngestMailRelayDeliveryEventCommand(request),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(request, Assert.Single(store.RecordedEvents));
+    }
+
+    [Fact]
+    public async Task IngestManyMailRelayDeliveryEventsCommandHandler_DelegatesEntireBatch() {
+        var store = new RecordingQueueStore();
+        var handler = new IngestManyMailRelayDeliveryEventsCommandHandler(new MailRelayDeliveryEventIngestionService(store));
+        IngestMailEventRequest[] requests = [
+            new(MailRelayDeliveryEventType.Bounce, "first@example.com", "ses"),
+            new(MailRelayDeliveryEventType.Complaint, "second@example.com", "ses"),
+        ];
+
+        Result<IReadOnlyList<MailRelayDeliveryEventEntry>> result = await handler.Handle(
+            new IngestManyMailRelayDeliveryEventsCommand(requests),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(2, result.Value.Count);
+        Assert.Equal(requests, store.RecordedEvents);
+    }
+
     private static MailRelayEmailUseCases CreateUseCases(RecordingQueueStore store) =>
         new(store, new RecordingDispatchNotifier(), new NoOpMailRelayDeliveryPolicy());
 

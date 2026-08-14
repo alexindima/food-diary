@@ -40,6 +40,13 @@ $changedPaths = @(
         ForEach-Object { ConvertTo-RepositoryPath $_ } |
         Sort-Object -Unique
 )
+$primaryChangedPaths = @($changedPaths | Where-Object { $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' })
+$testOnlyChange = $primaryChangedPaths.Count -gt 0 -and @($primaryChangedPaths | Where-Object {
+    $_ -notmatch '(?i)(^|/)(tests?|__tests__)/' -and
+    $_ -notmatch '(?i)\.Tests?/' -and
+    $_ -notmatch '(?i)(?:^|/)[^/]*(?:Tests?|Specs?)\.(?:cs|ts)$' -and
+    $_ -notmatch '(?i)(?:spec|test)\.ts$'
+}).Count -eq 0
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json
 $matchedRules = [System.Collections.Generic.List[object]]::new()
 $requiredChecksById = [ordered]@{}
@@ -47,6 +54,7 @@ $reviewObligationsById = [ordered]@{}
 $violations = [System.Collections.Generic.List[object]]::new()
 
 foreach ($rule in $policy.rules) {
+    if ($testOnlyChange -and $rule.id -ne 'llm-wiki') { continue }
     $matchingPaths = @(
         $changedPaths | Where-Object {
             $candidatePath = $_

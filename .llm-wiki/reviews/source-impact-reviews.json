@@ -147,14 +147,14 @@
                         "pageSha256":  "d09bef3a0319b7a8b848d8b35f4b8415ad8b349af18b18892057db2b6e63fca1",
                         "sources":  [
                                         {
-                                            "path":  "AGENTS.md",
-                                            "sha256":  "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
                                         }
                                     ],
-                        "reason":  "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-                        "reviewedAtUtc":  "2026-08-13T22:18:00.2588830Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:47.7303451Z"
                     },
                     {
                         "pageId":  "workflow.evals",
@@ -162,14 +162,14 @@
                         "pageSha256":  "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/evals/cases.json",
-                                            "sha256":  "e68052dcd82119dd8f57dfff57db725017f9b00ee251d9aa65127e6f5d9b1074"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
                                         }
                                     ],
-                        "reason":  "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
-                        "reviewedAtUtc":  "2026-08-14T00:06:47.8533210Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:48.4834148Z"
                     },
                     {
                         "pageId":  "workflow.evidence-bundle",
@@ -177,18 +177,14 @@
                         "pageSha256":  "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1",
-                                            "sha256":  "2014060080165545c723db6597a0272612bfd7489ac39f43b7160475bc353bd2"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-                                            "sha256":  "86d0979768a76d5e5c8fa9dc9a6fa27f2ca2e71eba544dda6f6e6a887170bfc2"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
                                         }
                                     ],
-                        "reason":  "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-                        "reviewedAtUtc":  "2026-08-12T18:49:15.2521829Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:48.8332155Z"
                     },
                     {
                         "pageId":  "workflow.frontend-contract-review",
@@ -231,13 +227,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
+                                            "sha256":  "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
                                         }
                                     ],
-                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
-                        "reviewedAtUtc":  "2026-08-14T02:46:31.2771195Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:49.8500592Z"
                     },
                     {
                         "pageId":  "workflow-acceptance-evidence-matrix",
@@ -260,14 +256,14 @@
                         "pageSha256":  "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiExtractionReadiness.ps1",
-                                            "sha256":  "87c0ec4cff3a4e49b1b3953095fbfe495cd0a25c95012f2668f4d70e83bd3dc9"
+                                            "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
+                                            "sha256":  "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
                                         }
                                     ],
-                        "reason":  "Discover logical subfeatures inside extracted physical modules and invalidate readiness cache when scanner code changes.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "ceb62356f31280ade0371ba6394bb950a73372e9",
-                        "reviewedAtUtc":  "2026-08-14T03:57:42.2269977Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:47.5308215Z"
                     },
                     {
                         "pageId":  "workflow-api-compatibility",
@@ -351,13 +347,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
+                                            "sha256":  "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
                                         }
                                     ],
-                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
-                        "reviewedAtUtc":  "2026-08-14T02:46:29.7488648Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:47.9689541Z"
                     },
                     {
                         "pageId":  "workflow-confidence-ledger",
@@ -545,13 +541,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "5a4ed71eaa238fbebf114ac797aeb36a17195a9ad3ab43a8af307ce4ebbd4b0d"
+                                            "sha256":  "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
                                         }
                                     ],
-                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
-                        "reviewedAtUtc":  "2026-08-14T02:46:29.9829842Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:48.2225054Z"
                     },
                     {
                         "pageId":  "workflow-domain-data-review",
@@ -684,26 +680,18 @@
                         "pageSha256":  "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
-                                            "sha256":  "af0f6f75285771d96dd5ba5861ed6f1cd4e92ef8690f5537b01a82d3f74eea02"
-                                        },
-                                        {
-                                            "path":  ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-                                            "sha256":  "d113755ff7dfe30e7f90b353e9f5952753a0903a8b085a530ce3c99c21a4845a"
-                                        },
-                                        {
                                             "path":  ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-                                            "sha256":  "e78986f98ccc4fdee8fbf60ae32140d79294d2ff8459c6ccbf52995f46641add"
+                                            "sha256":  "36c880aba0619e3f12338772e958cc1ca687916323b1936d947f36c39dfd76fb"
                                         },
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
+                                            "sha256":  "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
                                         }
                                     ],
-                        "reason":  "Reviewed after second-pass coverage-only changes: application behavior, HTTP and persistence contracts, module dependencies, and Wiki workflow implementations are unchanged. Added focused unit tests and a PostgreSQL integration test; generated index changes reflect test discovery only.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "254bc6d91712afd11c871bd78535d7e65b6b906b",
-                        "reviewedAtUtc":  "2026-08-14T08:27:51.1429139Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:49.2343984Z"
                     },
                     {
                         "pageId":  "workflow-instruction-effectiveness",
@@ -727,13 +715,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-                                            "sha256":  "5a4ed71eaa238fbebf114ac797aeb36a17195a9ad3ab43a8af307ce4ebbd4b0d"
+                                            "sha256":  "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
                                         }
                                     ],
-                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
-                        "reviewedAtUtc":  "2026-08-14T02:46:30.8350428Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:49.5321577Z"
                     },
                     {
                         "pageId":  "workflow-learned-regression-evals",
@@ -1005,14 +993,14 @@
                         "pageSha256":  "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
                         "sources":  [
                                         {
-                                            "path":  ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-                                            "sha256":  "782e64b5f13606801130aa5e69c40f173073bb011e45656ccdc8e4ba42473871"
+                                            "path":  ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+                                            "sha256":  "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
                                         }
                                     ],
-                        "reason":  "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
-                        "reviewedAtUtc":  "2026-08-13T18:57:51.2475948Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:50.1417766Z"
                     },
                     {
                         "pageId":  "workflow-task-contract",
@@ -1036,13 +1024,13 @@
                         "sources":  [
                                         {
                                             "path":  ".llm-wiki/wiki.ps1",
-                                            "sha256":  "2d9551e6b409b02c2803f10855023ab71a2727e92208aec3456dd7cb5f15168a"
+                                            "sha256":  "3fa9e9d17d7139f26ffca2f2aeebf11dd811261034c6816946a5bfa20c336080"
                                         }
                                     ],
-                        "reason":  "Coverage-task routing now stays path-grounded, includes graph runtime evidence and reproducible coverage commands, while stale-index recovery uses one resumable flow.",
+                        "reason":  "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
                         "baseRef":  "HEAD",
-                        "gitHead":  "e88cb13c402e186ba313fc13d78cc0e9ba490a88",
-                        "reviewedAtUtc":  "2026-08-14T02:46:31.6058340Z"
+                        "gitHead":  "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
+                        "reviewedAtUtc":  "2026-08-14T12:05:50.5136012Z"
                     },
                     {
                         "pageId":  "workflow-task-scheduler",
