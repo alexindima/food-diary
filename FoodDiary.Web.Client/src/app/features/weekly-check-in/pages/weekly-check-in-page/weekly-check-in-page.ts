@@ -12,6 +12,8 @@ import { firstValueFrom, map } from 'rxjs';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { WeeklyGoalDialogComponent, type WeeklyGoalDialogData } from '../../dialogs/weekly-goal-dialog/weekly-goal-dialog';
@@ -25,6 +27,8 @@ import { WEEKLY_CHECK_IN_TOUR } from './weekly-check-in-tour';
     selector: 'fd-weekly-check-in-page',
     imports: [
         TranslatePipe,
+        MeasurementUnitPipe,
+        MeasurementValuePipe,
         DecimalPipe,
         FdUiHintDirective,
         FdUiIconComponent,
@@ -48,6 +52,7 @@ export class WeeklyCheckInPageComponent {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly translateService = inject(TranslateService);
+    protected readonly measurements = inject(MeasurementSystemService);
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isRefreshing = this.facade.isRefreshing;

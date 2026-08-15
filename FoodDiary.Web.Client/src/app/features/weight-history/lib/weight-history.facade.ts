@@ -9,6 +9,7 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
+import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import type { DesiredWeightResponse, WeightGoalHistoryItem } from '../../../shared/models/user.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { WeightEntriesService } from '../api/weight-entries.service';
@@ -33,11 +34,11 @@ import {
 
 type WeightEntryFormModel = {
     date: string;
-    weightKg: string;
+    weight: string;
 };
 
 type DesiredWeightFormModel = {
-    weightKg: string;
+    weight: string;
 };
 
 type WeightCustomRangeFormModel = {
@@ -50,6 +51,7 @@ export class WeightHistoryFacade {
     private readonly userService = inject(UserService);
     private readonly invalidation = inject(NutritionDataInvalidationService);
     private readonly translate = inject(TranslateService);
+    private readonly measurements = inject(MeasurementSystemService);
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly userHeightCm = signal<number | null>(null);
@@ -57,6 +59,7 @@ export class WeightHistoryFacade {
     private readonly editingEntryId = signal<string | null>(null);
     private readonly initialized = signal(false);
     private lastLoadedRangeKey: string | null = null;
+    private currentMeasurementSystem: MeasurementSystem = this.measurements.system();
 
     public readonly selectedRange = signal<WeightHistoryRange>(this.defaultRange);
     public readonly currentRange = computed<WeightHistoryDateRange>(() =>
@@ -84,7 +87,7 @@ export class WeightHistoryFacade {
 
     public readonly formModel = signal<WeightEntryFormModel>({
         date: formatWeightHistoryDateInput(new Date()),
-        weightKg: '',
+        weight: '',
     });
     private readonly submitWeightEntryFormAsync = async (): Promise<void> => {
         await this.submitAsync();
@@ -93,10 +96,11 @@ export class WeightHistoryFacade {
         this.formModel,
         path => {
             required(path.date);
-            required(path.weightKg);
-            validate(path.weightKg, ({ value }) => {
+            required(path.weight);
+            validate(path.weight, ({ value }) => {
                 const parsed = parseDecimalInput(value());
-                return parsed === null || parsed < MIN_WEIGHT_KG || parsed > MAX_WEIGHT_KG
+                const weightKg = parsed === null ? null : this.measurements.canonicalWeight(parsed);
+                return weightKg === null || weightKg < MIN_WEIGHT_KG || weightKg > MAX_WEIGHT_KG
                     ? { kind: 'weightRange', message: 'Weight is out of range' }
                     : undefined;
             });
@@ -108,7 +112,7 @@ export class WeightHistoryFacade {
         },
     );
 
-    public readonly desiredWeightModel = signal<DesiredWeightFormModel>({ weightKg: '' });
+    public readonly desiredWeightModel = signal<DesiredWeightFormModel>({ weight: '' });
     public readonly desiredWeightForm = form(this.desiredWeightModel);
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
@@ -123,6 +127,16 @@ export class WeightHistoryFacade {
     public readonly bmiViewModel = computed(() => buildBmiViewModel(this.userHeightCm(), this.latestWeight()));
 
     public constructor() {
+        effect(() => {
+            const system = this.measurements.system();
+            if (system === this.currentMeasurementSystem) {
+                return;
+            }
+
+            this.currentMeasurementSystem = system;
+            this.syncDisplayForms();
+        });
+
         effect(() => {
             if (!this.initialized()) {
                 return;
@@ -190,7 +204,7 @@ export class WeightHistoryFacade {
                 return;
             }
 
-            this.form.weightKg().value.set(payload.weightKg.toString());
+            this.form.weight().value.set(this.formatDisplayWeight(payload.weightKg));
         } catch (error: unknown) {
             this.handleEntrySaveError(error);
         }
@@ -201,7 +215,7 @@ export class WeightHistoryFacade {
         this.editingEntryId.set(entry.id);
         this.formModel.set({
             date: formatWeightHistoryDateInput(new Date(entry.date)),
-            weightKg: entry.weightKg.toString(),
+            weight: this.formatDisplayWeight(entry.weightKg),
         });
     }
 
@@ -209,7 +223,7 @@ export class WeightHistoryFacade {
         this.resetEditingState();
         this.formModel.set({
             date: formatWeightHistoryDateInput(new Date()),
-            weightKg: this.latestWeight()?.toString() ?? '',
+            weight: this.formatDisplayWeight(this.latestWeight()),
         });
     }
 
@@ -255,7 +269,7 @@ export class WeightHistoryFacade {
             .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
                 this.weightGoal.set(goal);
-                this.desiredWeightModel.set({ weightKg: goal.desiredWeightKg?.toString() ?? '' });
+                this.desiredWeightModel.set({ weight: this.formatDisplayWeight(goal.desiredWeightKg) });
                 this.desiredWeightSaveVersion.update(version => version + 1);
                 this.loadWeightGoalHistory();
             });
@@ -274,20 +288,21 @@ export class WeightHistoryFacade {
             .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
                 this.weightGoal.set(goal);
-                this.desiredWeightModel.set({ weightKg: '' });
+                this.desiredWeightModel.set({ weight: '' });
                 this.desiredWeightSaveVersion.update(version => version + 1);
                 this.loadWeightGoalHistory();
             });
     }
 
     private parseDesiredWeight(): number | null | undefined {
-        const rawValue = this.desiredWeightModel().weightKg.trim();
+        const rawValue = this.desiredWeightModel().weight.trim();
         if (rawValue.length === 0) {
             return null;
         }
 
         const parsedValue = parseDecimalInput(rawValue);
-        return parsedValue === null || parsedValue <= 0 || parsedValue > MAX_WEIGHT_KG ? undefined : parsedValue;
+        const weightKg = parsedValue === null ? null : this.measurements.canonicalWeight(parsedValue);
+        return weightKg === null || weightKg <= 0 || weightKg > MAX_WEIGHT_KG ? undefined : weightKg;
     }
 
     public changeRange(value: string): void {
@@ -348,9 +363,9 @@ export class WeightHistoryFacade {
                 this.userHeightCm.set(page.heightCm);
                 this.weightGoal.set(page.goal);
                 this.weightGoalHistory.set(page.goalHistory);
-                this.desiredWeightModel.set({ weightKg: page.goal.desiredWeightKg?.toString() ?? '' });
+                this.desiredWeightModel.set({ weight: this.formatDisplayWeight(page.goal.desiredWeightKg) });
                 if (!this.isEditing()) {
-                    this.form.weightKg().value.set(latestEntry?.weightKg.toString() ?? '');
+                    this.form.weight().value.set(this.formatDisplayWeight(latestEntry?.weightKg ?? null));
                 }
             });
     }
@@ -397,14 +412,14 @@ export class WeightHistoryFacade {
     }
 
     private buildPayload(): CreateWeightEntryPayload | null {
-        const { date: rawDate, weightKg: rawWeight } = this.formModel();
+        const { date: rawDate, weight: rawWeight } = this.formModel();
         if (rawDate.length === 0 || rawWeight.length === 0) {
             return null;
         }
 
         const date = new Date(rawDate);
         const utcDate = normalizeStartOfDay(date);
-        const weightKg = Number(rawWeight);
+        const weightKg = this.measurements.canonicalWeight(Number(rawWeight));
 
         return {
             date: utcDate.toISOString(),
@@ -416,6 +431,17 @@ export class WeightHistoryFacade {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
         this.form.date().value.set(formatWeightHistoryDateInput(new Date()));
+    }
+
+    private syncDisplayForms(): void {
+        const editingEntry = this.entries().find(entry => entry.id === this.editingEntryId());
+        const entryWeightKg = editingEntry?.weightKg ?? this.latestWeight();
+        this.form.weight().value.set(this.formatDisplayWeight(entryWeightKg));
+        this.desiredWeightModel.set({ weight: this.formatDisplayWeight(this.desiredWeightKg()) });
+    }
+
+    private formatDisplayWeight(weightKg: number | null): string {
+        return weightKg === null ? '' : this.measurements.displayWeight(weightKg).toString();
     }
 
     private handleEntrySaveError(error: unknown): void {

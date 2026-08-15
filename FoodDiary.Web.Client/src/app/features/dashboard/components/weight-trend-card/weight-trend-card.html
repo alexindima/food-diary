@@ -12,10 +12,10 @@
                     <div class="weight-trend-card__value-row fd-row fd-align-baseline fd-gap-xs fd-min-w-0">
                         <div class="weight-trend-card__value fd-ui-metric-hero">
                             @if (hasValue()) {
-                                {{ currentWeight() | number: '1.0-1' }}
+                                {{ displayCurrentValue() | number: '1.0-1' }}
                             }
                         </div>
-                        <div class="weight-trend-card__unit fd-ui-metric-unit fd-ui-text-muted">{{ unitKey() | translate }}</div>
+                        <div class="weight-trend-card__unit fd-ui-metric-unit fd-ui-text-muted">{{ displayUnitKey() | translate }}</div>
                     </div>
                     <div class="fd-ui-caption fd-ui-text-muted">{{ 'WEIGHT_TREND_CARD.LATEST_MEASUREMENT' | translate }}</div>
                 </div>
@@ -27,7 +27,7 @@
                         [class.weight-trend-card__delta--negative]="changeTone() === 'negative'"
                     >
                         @if (hasMeaningfulChange()) {
-                            {{ formattedChangeValue() }} {{ unitKey() | translate }}
+                            {{ formattedChangeValue() }} {{ displayUnitKey() | translate }}
                         } @else {
                             {{ 'WEIGHT_TREND_CARD.NO_CHANGE' | translate }}
                         }
@@ -45,7 +45,7 @@
                         [minValue]="chartBounds().minimum"
                         [maxValue]="chartBounds().maximum"
                         [referenceLines]="referenceLines()"
-                        [valueSuffix]="unitKey() | translate"
+                        [valueSuffix]="displayUnitKey() | translate"
                         [showArea]="false"
                         [showPoints]="true"
                     />

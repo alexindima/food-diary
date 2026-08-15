@@ -11,13 +11,17 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
     public Task<CallToolResult> GetChangeContextAsync(
         [Description("The intended code or architecture change.")] string intent,
         [Description("Optional likely repository path used to focus the result.")] string? plannedPath,
+        [Description("Return the complete Wiki brief instead of the compact default summary.")] bool includeDetailedContext = false,
         [Description("Include verbose raw Wiki output for diagnostics. Defaults to false.")] bool includeRawOutput = false,
         CancellationToken cancellationToken = default) =>
         ToolExecution.RunToolAsync(
             async () => {
                 WikiCommandResult result = await queries
-                    .GetChangeContextAsync(intent, plannedPath, cancellationToken)
+                    .GetChangeContextAsync(intent, plannedPath, !includeDetailedContext, cancellationToken)
                     .ConfigureAwait(false);
+                if (!includeDetailedContext) {
+                    result = result.ToCompactChangeContext(includeRawOutput: includeRawOutput);
+                }
                 return includeRawOutput ? result : result.WithoutRawOutput();
             },
             cancellationToken);

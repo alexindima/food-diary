@@ -6,10 +6,14 @@ public sealed class WikiQueryService(
     public async Task<WikiCommandResult> GetChangeContextAsync(
         string intent,
         string? plannedPath,
+        bool compact,
         CancellationToken cancellationToken) {
         ArgumentException.ThrowIfNullOrWhiteSpace(intent);
 
         List<string> arguments = ["-Format", "Json", "-Objective", intent];
+        if (compact) {
+            arguments.Add("-Compact");
+        }
         if (!string.IsNullOrWhiteSpace(plannedPath)) {
             arguments.Add("-ProposedPath");
             arguments.Add(plannedPath);
@@ -43,9 +47,7 @@ public sealed class WikiQueryService(
         if (!hasChangeScope) {
             hasChangeScope = AddChangeSet(arguments, snapshot);
         }
-        if (!hasChangeScope) {
-            AddPaths(arguments, "-ProposedPath", plannedPaths);
-        }
+        AddPaths(arguments, "-ProposedPath", plannedPaths);
 
         if (!HasScope(arguments)) {
             throw new DevelopmentMcpException(

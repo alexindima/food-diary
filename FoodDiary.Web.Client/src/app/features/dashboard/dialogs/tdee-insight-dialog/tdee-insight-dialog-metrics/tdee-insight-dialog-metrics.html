@@ -27,7 +27,7 @@
         <div class="tdee-dialog__metric fd-stack fd-gap-xxs">
             <span class="tdee-dialog__metric-label fd-ui-meta-text fd-ui-text-muted">{{ 'TDEE_CARD.WEIGHT_TREND' | translate }}</span>
             <span class="tdee-dialog__metric-value fd-ui-stat-value"
-                >{{ weightTrendFormatted() }} {{ 'TDEE_CARD.KG_WEEK' | translate }}</span
+                >{{ displayWeightTrend() }} {{ measurements.weightUnitKey() | translate }}/{{ 'GENERAL.TIME.WEEK_SHORT' | translate }}</span
             >
         </div>
     }

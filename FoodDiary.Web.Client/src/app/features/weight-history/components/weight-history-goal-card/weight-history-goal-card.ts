@@ -7,6 +7,8 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateValue } from '../../../../shared/lib/local-date.utils';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WeightGoalHistoryItem } from '../../../../shared/models/user.data';
 import { getWeightRemainingToGoal } from '../../lib/weight-history-progress.utils';
 
@@ -16,12 +18,21 @@ const MILLISECONDS_PER_DAY = 86_400_000;
 
 @Component({
     selector: 'fd-weight-history-goal-card',
-    imports: [DecimalPipe, FdUiButtonComponent, FdUiCardComponent, FdUiIconComponent, TranslatePipe],
+    imports: [
+        DecimalPipe,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        FdUiIconComponent,
+        MeasurementUnitPipe,
+        MeasurementValuePipe,
+        TranslatePipe,
+    ],
     templateUrl: './weight-history-goal-card.html',
     styleUrl: '../../pages/weight-history-page/weight-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryGoalCardComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly translateService = inject(TranslateService);
     public readonly currentWeight = input.required<number | null>();
     public readonly currentWeightDate = input.required<string | null>();

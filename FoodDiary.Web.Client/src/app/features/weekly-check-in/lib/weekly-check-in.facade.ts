@@ -1,6 +1,7 @@
 import { computed, effect, inject, Injectable, resource, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import { WeeklyCheckInService } from '../api/weekly-check-in.service';
 import { WeeklyGoalService } from '../api/weekly-goal.service';
 import type { WeeklyCheckInData } from '../models/weekly-check-in.data';
@@ -13,6 +14,7 @@ const MONDAY_OFFSET = 6;
 
 @Injectable()
 export class WeeklyCheckInFacade {
+    private readonly measurements = inject(MeasurementSystemService);
     private readonly service = inject(WeeklyCheckInService);
     private readonly goalService = inject(WeeklyGoalService);
     private readonly lastLoadedData = signal<WeeklyCheckInData | null>(null);
@@ -44,7 +46,7 @@ export class WeeklyCheckInFacade {
     public readonly trends = computed(() => this.data()?.trends);
     public readonly suggestions = computed(() => this.data()?.suggestions ?? []);
     public readonly suggestionRows = computed(() => buildWeeklyCheckInSuggestionRows(this.suggestions()));
-    public readonly trendCards = computed(() => buildWeeklyCheckInTrendCards(this.trends()));
+    public readonly trendCards = computed(() => buildWeeklyCheckInTrendCards(this.trends(), this.measurements.system()));
     public readonly review = computed(() => buildWeeklyReview(this.thisWeek(), this.trends(), this.suggestions()));
     public readonly weeklyGoal = computed(() => (this.goalResource.hasValue() ? this.goalResource.value() : null));
     public readonly selectedWeekGoal = computed(() =>

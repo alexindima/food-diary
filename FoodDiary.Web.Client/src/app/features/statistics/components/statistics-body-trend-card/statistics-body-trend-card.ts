@@ -14,6 +14,7 @@ import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-s
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { merge, startWith } from 'rxjs';
 
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type {
     StatisticsBodyMetricData,
     StatisticsBodyMetricKey,
@@ -41,6 +42,7 @@ const CHART_PADDING_RATIO = 0.2;
 })
 export class StatisticsBodyTrendCardComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly measurements = inject(MeasurementSystemService);
     private readonly translationChange = toSignal(
         merge(this.translateService.onLangChange, this.translateService.onTranslationChange).pipe(startWith(null)),
         { initialValue: null },
@@ -54,9 +56,21 @@ export class StatisticsBodyTrendCardComponent {
         { value: 'waist', labelKey: 'STATISTICS.DASHBOARD.BODY.WAIST' },
     ];
     protected readonly metric = computed<StatisticsBodyMetricData>(() => this.data()[this.selectedMetric()]);
+    protected readonly displayMetric = computed<StatisticsBodyMetricData>(() => {
+        const metric = this.metric();
+        return {
+            ...metric,
+            current: this.displayValue(metric.current),
+            change: this.displayValue(metric.change),
+            goal: this.displayValue(metric.goal),
+            points: metric.points.map(point => ({ ...point, value: this.displayValue(point.value) })),
+        };
+    });
     protected readonly hasData = computed(() => this.metric().points.some(point => point.value !== null));
     protected readonly measurementCount = computed(() => this.metric().points.filter(point => point.value !== null).length);
-    protected readonly unitKey = computed(() => (this.selectedMetric() === 'weight' ? 'GENERAL.UNITS.KG' : 'GENERAL.UNITS.CM'));
+    protected readonly unitKey = computed(() =>
+        this.selectedMetric() === 'weight' ? this.measurements.weightUnitKey() : this.measurements.lengthUnitKey(),
+    );
     protected readonly metricIcon = computed(() => (this.selectedMetric() === 'weight' ? 'monitor_weight' : 'straighten'));
     protected readonly currentLabelKey = computed(() =>
         this.selectedMetric() === 'weight' ? 'STATISTICS.DASHBOARD.BODY.CURRENT_WEIGHT' : 'STATISTICS.DASHBOARD.BODY.CURRENT_WAIST',
@@ -71,15 +85,15 @@ export class StatisticsBodyTrendCardComponent {
     );
     protected readonly historyRoute = computed(() => (this.selectedMetric() === 'weight' ? '/weight-history' : '/waist-history'));
     protected readonly distanceToGoal = computed(() => {
-        const current = this.metric().current;
-        const goal = this.metric().goal;
+        const current = this.displayMetric().current;
+        const goal = this.displayMetric().goal;
         return current === null || goal === null ? null : Math.abs(current - goal);
     });
     protected readonly hasPositiveChange = computed(() => (this.metric().change ?? 0) < 0);
     protected readonly hasNegativeChange = computed(() => (this.metric().change ?? 0) > 0);
     protected readonly changePrefix = computed(() => (this.hasNegativeChange() ? '+' : ''));
     protected readonly bounds = computed(() => {
-        const metric = this.metric();
+        const metric = this.displayMetric();
         const values = metric.points.map(point => point.value).filter((value): value is number => value !== null);
         if (metric.goal !== null) {
             values.push(metric.goal);
@@ -94,7 +108,7 @@ export class StatisticsBodyTrendCardComponent {
     });
     protected readonly referenceLines = computed<readonly FdUiLineChartReferenceLine[]>(() => {
         this.translationChange();
-        const goal = this.metric().goal;
+        const goal = this.displayMetric().goal;
         return goal === null
             ? []
             : [
@@ -115,5 +129,13 @@ export class StatisticsBodyTrendCardComponent {
         if (value === 'weight' || value === 'waist') {
             this.selectedMetric.set(value);
         }
+    }
+
+    private displayValue(value: number | null): number | null {
+        if (value === null) {
+            return null;
+        }
+
+        return this.selectedMetric() === 'weight' ? this.measurements.displayWeight(value) : this.measurements.displayLength(value);
     }
 }

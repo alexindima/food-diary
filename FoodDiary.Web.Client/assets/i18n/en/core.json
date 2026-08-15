@@ -51,6 +51,9 @@
             "FT": "ft",
             "IN": "in"
         },
+        "TIME": {
+            "WEEK_SHORT": "week"
+        },
         "NUTRIENTS": {
             "CALORIES": "Calories",
             "PROTEIN": "Proteins",

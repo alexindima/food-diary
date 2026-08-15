@@ -8,7 +8,7 @@
         <fd-ui-input
             type="number"
             [step]="0.1"
-            [label]="'WEIGHT_HISTORY.DESIRED_WEIGHT_LABEL' | translate"
+            [label]="'WEIGHT_HISTORY.DESIRED_WEIGHT_LABEL' | translate: { unit: 'weight' | measurementUnit | translate }"
             [ariaLabel]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
             [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
             [suffixButtonIcon]="weightField().value() ? 'backspace' : undefined"

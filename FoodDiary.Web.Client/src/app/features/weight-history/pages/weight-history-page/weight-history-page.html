@@ -50,7 +50,8 @@
                         <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.CURRENT_WEIGHT' | translate }}</div>
                         <div class="weight-history-page__metric-value fd-ui-metric-lg">
                             @if (latestWeight(); as value) {
-                                {{ value | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                                {{ value | measurementValue: 'weight' : measurements.system() | number: '1.0-2' }}
+                                {{ 'weight' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
                             }
@@ -70,8 +71,9 @@
                             [class.weight-history-page__metric-value--negative]="weightChange()?.tone === 'negative'"
                         >
                             @if (weightChange(); as change) {
-                                {{ change.value > 0 ? '+' : '' }}{{ change.value | number: '1.0-2' }}
-                                {{ 'GENERAL.UNITS.KG' | translate }}
+                                {{ change.value > 0 ? '+' : ''
+                                }}{{ change.value | measurementValue: 'weight' : measurements.system() | number: '1.0-2' }}
+                                {{ 'weight' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
                             }
@@ -87,14 +89,22 @@
                         <div class="weight-history-page__metric-label fd-ui-body-sm">{{ 'WEIGHT_HISTORY.TO_GOAL' | translate }}</div>
                         <div class="weight-history-page__metric-value fd-ui-metric-lg">
                             @if (weightToGoal(); as goal) {
-                                {{ goal.value | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                                {{ goal.value | measurementValue: 'weight' : measurements.system() | number: '1.0-2' }}
+                                {{ 'weight' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
                             }
                         </div>
                         @if (desiredWeightKg(); as goal) {
                             <div class="weight-history-page__metric-caption fd-ui-caption">
-                                {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: goal | number: '1.0-2' } }}
+                                {{
+                                    'WEIGHT_HISTORY.GOAL_VALUE'
+                                        | translate
+                                            : {
+                                                  value: goal | measurementValue: 'weight' | number: '1.0-2',
+                                                  unit: 'weight' | measurementUnit | translate,
+                                              }
+                                }}
                             </div>
                         }
                     </div>
@@ -121,7 +131,14 @@
                 [isLoading]="isSummaryLoading()"
                 [chartPoints]="chartPoints()"
                 [desiredWeightKg]="desiredWeightKg()"
-                [goalLabel]="'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: (desiredWeightKg() | number: '1.0-2') }"
+                [goalLabel]="
+                    'WEIGHT_HISTORY.GOAL_VALUE'
+                        | translate
+                            : {
+                                  value: desiredWeightKg() | measurementValue: 'weight' | number: '1.0-2',
+                                  unit: 'weight' | measurementUnit | translate,
+                              }
+                "
             >
                 <fd-period-filter
                     chartControls

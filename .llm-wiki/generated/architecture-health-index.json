@@ -2437,6 +2437,11 @@
           "required": false
         },
         {
+          "name": "measurementKind",
+          "type": "'weight' | 'length'",
+          "required": false
+        },
+        {
           "name": "emptyStateKey",
           "type": "string",
           "required": false

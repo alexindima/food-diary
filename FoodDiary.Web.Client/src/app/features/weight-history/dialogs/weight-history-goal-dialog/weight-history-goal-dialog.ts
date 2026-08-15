@@ -6,22 +6,25 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
+import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 
 @Component({
     selector: 'fd-weight-history-goal-dialog',
-    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, TranslatePipe],
+    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, MeasurementUnitPipe, TranslatePipe],
     templateUrl: './weight-history-goal-dialog.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryGoalDialogComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WeightHistoryFacade);
     private readonly dialogRef = inject(FdUiDialogRef<WeightHistoryGoalDialogComponent, void>);
     private readonly initialSaveVersion = this.facade.desiredWeightSaveVersion();
 
     protected readonly desiredWeightKg = this.facade.desiredWeightKg;
     protected readonly form = this.facade.desiredWeightForm;
-    protected readonly weightField = this.facade.desiredWeightForm.weightKg;
+    protected readonly weightField = this.facade.desiredWeightForm.weight;
     protected readonly isSaving = this.facade.isDesiredWeightSaving;
 
     public constructor() {

@@ -27,7 +27,7 @@
                         axisValueSuffix=""
                         [axisUnit]="unitKey() | translate"
                         [title]="'STATISTICS.DASHBOARD.BODY.TITLE' | translate"
-                        [points]="metric().points"
+                        [points]="displayMetric().points"
                         [minValue]="bounds().minimum"
                         [maxValue]="bounds().maximum"
                         [defaultMaxValue]="bounds().maximum"
@@ -59,8 +59,8 @@
                     <strong class="fd-ui-action-text">{{ currentLabelKey() | translate }}</strong>
                     <span class="fd-ui-caption fd-ui-text-muted">{{ 'STATISTICS.DASHBOARD.BODY.LATEST_MEASUREMENT' | translate }}</span>
                 </div>
-                @if (metric().current !== null) {
-                    <strong class="fd-ui-stat-value">{{ metric().current | number: '1.0-1' }} {{ unitKey() | translate }}</strong>
+                @if (displayMetric().current !== null) {
+                    <strong class="fd-ui-stat-value">{{ displayMetric().current | number: '1.0-1' }} {{ unitKey() | translate }}</strong>
                 } @else {
                     <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>
                 }
@@ -74,13 +74,13 @@
                         {{ 'STATISTICS.DASHBOARD.BODY.CHANGE' | translate: { days: metric().timeframeDays } }}
                     </span>
                 </div>
-                @if (metric().change !== null) {
+                @if (displayMetric().change !== null) {
                     <strong
                         class="statistics-body-trend-card__change fd-ui-stat-value"
                         [class.statistics-body-trend-card__change--positive]="hasPositiveChange()"
                         [class.statistics-body-trend-card__change--negative]="hasNegativeChange()"
                     >
-                        {{ changePrefix() }}{{ metric().change | number: '1.0-1' }} {{ unitKey() | translate }}
+                        {{ changePrefix() }}{{ displayMetric().change | number: '1.0-1' }} {{ unitKey() | translate }}
                     </strong>
                 } @else {
                     <strong class="fd-ui-stat-value fd-ui-text-muted">—</strong>
@@ -93,7 +93,7 @@
                     <strong class="fd-ui-action-text">{{ 'STATISTICS.DASHBOARD.BODY.TO_GOAL' | translate }}</strong>
                     <span class="fd-ui-caption fd-ui-text-muted">
                         @if (metric().goal !== null) {
-                            {{ 'STATISTICS.DASHBOARD.BODY.GOAL_VALUE' | translate: { value: (metric().goal | number: '1.0-1') } }}
+                            {{ 'STATISTICS.DASHBOARD.BODY.GOAL_VALUE' | translate: { value: (displayMetric().goal | number: '1.0-1') } }}
                         } @else {
                             {{ 'STATISTICS.DASHBOARD.BODY.GOAL_EMPTY' | translate }}
                         }

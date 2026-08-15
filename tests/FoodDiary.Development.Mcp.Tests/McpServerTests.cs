@@ -1,6 +1,7 @@
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp.Tests;
 
@@ -29,6 +30,10 @@ public sealed class McpServerTests {
             configuration.EnabledTools.Order(StringComparer.Ordinal),
             StringComparer.Ordinal));
         Assert.All(tools, tool => Assert.True(tool.ProtocolTool.Annotations?.ReadOnlyHint));
+        Assert.Contains(
+            "includeDetailedContext",
+            tools.Single(tool => string.Equals(tool.Name, "get_change_context", StringComparison.Ordinal)).ProtocolTool.InputSchema.ToString(),
+            StringComparison.Ordinal);
         Assert.Contains("Use these tools first", client.ServerInstructions, StringComparison.Ordinal);
 
         using CancellationTokenSource toolTimeout = new(TimeSpan.FromMinutes(2));
@@ -102,6 +107,33 @@ public sealed class McpServerTests {
             repositoryRoot,
             timeout.Token);
         Assert.True(build.ExitCode == 0, build.Output);
+    }
+
+    [Fact]
+    public async Task ConfiguredServer_ReturnsCompactChangeContextByDefault() {
+        string repositoryRoot = FindRepositoryRoot();
+        var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
+        var transport = new StdioClientTransport(configuration.CreateTransportOptions("FoodDiary MCP compact context test"));
+        using CancellationTokenSource timeout = new(TimeSpan.FromMinutes(2));
+        await using McpClient client = await McpClient.CreateAsync(
+            transport,
+            cancellationToken: timeout.Token);
+
+        CallToolResult result = await client.CallToolAsync(
+            "get_change_context",
+            new Dictionary<string, object?>(StringComparer.Ordinal) {
+                ["intent"] = "Summarize the current FoodDiary measurement display changes",
+                ["plannedPath"] = "FoodDiary.Web.Client/src/app",
+            },
+            cancellationToken: timeout.Token);
+
+        Assert.NotEqual(true, result.IsError);
+        JsonElement structuredContent = result.StructuredContent!.Value;
+        JsonElement data = structuredContent.GetProperty("data");
+        JsonElement summary = data.GetProperty("structuredOutput");
+        Assert.True(summary.GetProperty("compact").GetBoolean());
+        Assert.False(summary.TryGetProperty("rolloutPlan", out _));
+        Assert.True(structuredContent.GetRawText().Length < 30_000);
     }
 
     private static async Task<CallToolResult> CallStatusAsync(

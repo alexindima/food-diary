@@ -9,8 +9,8 @@
 >
     <div class="waist-summary-card__content fd-stack fd-gap-xxs">
         <strong class="waist-summary-card__value fd-ui-metric-lg">
-            @if (latest()) {
-                {{ latest() | number: '1.0-1' }} {{ 'WAIST_CARD.CM' | translate }}
+            @if (displayLatest()) {
+                {{ displayLatest() | number: '1.0-1' }} {{ measurements.lengthUnitKey() | translate }}
             } @else {
                 {{ 'WAIST_CARD.NO_DATA' | translate }}
             }

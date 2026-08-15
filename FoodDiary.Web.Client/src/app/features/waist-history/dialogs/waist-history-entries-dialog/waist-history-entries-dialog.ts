@@ -8,6 +8,8 @@ import { FdUiDialogShellComponent } from 'fd-ui-kit/dialog-shell/fd-ui-dialog-sh
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { buildWaistEntryViewModels } from '../../lib/waist-history-chart.mapper';
 import type { WaistEntry } from '../../models/waist-entry.data';
 
@@ -16,12 +18,13 @@ export type WaistHistoryEntriesDialogData = { entries: WaistEntry[]; desiredWais
 
 @Component({
     selector: 'fd-waist-history-entries-dialog',
-    imports: [DecimalPipe, FdUiButtonComponent, FdUiDialogShellComponent, TranslatePipe],
+    imports: [DecimalPipe, FdUiButtonComponent, FdUiDialogShellComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './waist-history-entries-dialog.html',
     styleUrl: '../../pages/waist-history-page/waist-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryEntriesDialogComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly data = inject<WaistHistoryEntriesDialogData>(FD_UI_DIALOG_DATA);
     private readonly dialogRef = inject(FdUiDialogRef<WaistHistoryEntriesDialogComponent, WaistHistoryEntriesDialogResult>);
     private readonly translateService = inject(TranslateService);

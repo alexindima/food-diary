@@ -61,6 +61,7 @@ $scopes = @($diff.scopes)
 $scenarios = [System.Collections.Generic.List[object]]::new()
 $discoveredTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $directTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+$plannedDirectoryTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $siblingTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $consumerTests = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 $directConsumerProjects = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
@@ -69,6 +70,22 @@ $changedTestFiles = @(
         Where-Object { $_ -match '\.cs$' -and $_ -match '(^|/)tests/' -or $_ -match '\.(spec|test)\.ts$' } |
         Sort-Object -Unique
 )
+
+foreach ($proposedDirectory in @($ProposedPath)) {
+    $normalizedDirectory = ([string]$proposedDirectory).Replace('\', '/').TrimEnd('/')
+    $absoluteDirectory = Join-Path $repositoryRoot $normalizedDirectory
+    if (-not (Test-Path -LiteralPath $absoluteDirectory -PathType Container)) { continue }
+    $directoryTests = @(
+        Get-ChildItem -LiteralPath $absoluteDirectory -Recurse -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -match '\.(?:spec|test)\.(?:ts|js)$' } |
+            Select-Object -First (($Limit * 2) + 1)
+    )
+    if ($directoryTests.Count -gt ($Limit * 2)) { continue }
+    foreach ($test in $directoryTests) {
+        $relativeTest = $test.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+        $null = $plannedDirectoryTests.Add($relativeTest)
+    }
+}
 
 foreach ($changedPath in @($diff.changedPaths | Where-Object {
     $_ -match '^FoodDiary\.Web\.Client/.+\.(ts|html|scss)$' -and
@@ -183,6 +200,7 @@ function Add-RankedTests {
     }
 }
 Add-RankedTests $changedTestFiles 100 'changed-test'
+Add-RankedTests @($plannedDirectoryTests | Sort-Object) 95 'planned-directory-spec'
 Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
 Add-RankedTests @($consumerTests | Sort-Object) 80 'direct-component-consumer'
 Add-RankedTests @($directTests | Sort-Object) 90 'references-changed-symbol'

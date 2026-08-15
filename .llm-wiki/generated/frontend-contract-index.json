@@ -3,11 +3,11 @@
   "summary": {
     "components": 423,
     "componentsWithoutDirectSpecs": 127,
-    "inputs": 1321,
+    "inputs": 1323,
     "outputs": 411,
     "apiCalls": 221,
     "templatesWithTranslations": 265,
-    "translationKeys": 1456,
+    "translationKeys": 1451,
     "consumerEdges": 970,
     "consumedComponents": 273,
     "unconsumedComponents": 149
@@ -1597,6 +1597,11 @@
           "required": false
         },
         {
+          "name": "measurementKind",
+          "type": "'weight' | 'length'",
+          "required": false
+        },
+        {
           "name": "emptyStateKey",
           "type": "string",
           "required": false
@@ -1962,6 +1967,11 @@
         {
           "name": "unitKey",
           "type": "string",
+          "required": false
+        },
+        {
+          "name": "measurementKind",
+          "type": "'weight' | 'length'",
           "required": false
         },
         {
@@ -12496,7 +12506,7 @@
       "inputs": [
         {
           "name": "form",
-          "type": "FieldTree<{ date: string; circumferenceCm: string }>",
+          "type": "FieldTree<{ date: string; circumference: string }>",
           "required": true
         },
         {
@@ -12848,7 +12858,7 @@
       "inputs": [
         {
           "name": "form",
-          "type": "FieldTree<{ date: string; weightKg: string }>",
+          "type": "FieldTree<{ date: string; weight: string }>",
           "required": true
         },
         {
@@ -15961,10 +15971,10 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/components/tdee-insight-card/tdee-insight-card-details/tdee-insight-card-details.html",
       "keys": [
+        "GENERAL.TIME.WEEK_SHORT",
         "TDEE_CARD.BMR",
         "TDEE_CARD.FORMULA_ESTIMATE",
         "TDEE_CARD.KCAL",
-        "TDEE_CARD.KG_WEEK",
         "TDEE_CARD.WEIGHT_TREND"
       ]
     },
@@ -16040,10 +16050,10 @@
       "feature": "dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/dialogs/tdee-insight-dialog/tdee-insight-dialog-metrics/tdee-insight-dialog-metrics.html",
       "keys": [
+        "GENERAL.TIME.WEEK_SHORT",
         "TDEE_CARD.BMR",
         "TDEE_CARD.FORMULA_ESTIMATE",
         "TDEE_CARD.KCAL",
-        "TDEE_CARD.KG_WEEK",
         "TDEE_CARD.WEIGHT_TREND",
         "TDEE_DIALOG.ADAPTIVE"
       ]
@@ -16698,8 +16708,6 @@
       "feature": "goals",
       "path": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-side-cards.html",
       "keys": [
-        "GENERAL.UNITS.CM",
-        "GENERAL.UNITS.KG",
         "GENERAL.UNITS.ML",
         "GOALS_PAGE.BODY_TARGET_WAIST",
         "GOALS_PAGE.BODY_TARGET_WEIGHT",
@@ -18278,7 +18286,6 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/waist-summary-card/waist-summary-card.html",
       "keys": [
-        "WAIST_CARD.CM",
         "WAIST_CARD.NO_DATA",
         "WAIST_CARD.TITLE"
       ]
@@ -18287,7 +18294,6 @@
       "feature": "shared",
       "path": "FoodDiary.Web.Client/src/app/components/shared/weight-summary-card/weight-summary-card.html",
       "keys": [
-        "WEIGHT_CARD.KG",
         "WEIGHT_CARD.NO_DATA",
         "WEIGHT_CARD.TITLE"
       ]
@@ -18549,7 +18555,6 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-chart-card/waist-history-chart-card.html",
       "keys": [
-        "GENERAL.UNITS.CM",
         "WAIST_HISTORY.CHART_TITLE",
         "WAIST_HISTORY.LOADING",
         "WAIST_HISTORY.NO_DATA_FOR_CHART"
@@ -18559,7 +18564,6 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-entries-card/waist-history-entries-card.html",
       "keys": [
-        "GENERAL.UNITS.CM",
         "WAIST_HISTORY.DELETE",
         "WAIST_HISTORY.EDIT",
         "WAIST_HISTORY.LOADING",
@@ -18587,7 +18591,6 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/components/waist-history-goal-card/waist-history-goal-card.html",
       "keys": [
-        "GENERAL.UNITS.CM",
         "WAIST_HISTORY.CM_PER_WEEK",
         "WAIST_HISTORY.GOAL_AVERAGE_RATE",
         "WAIST_HISTORY.GOAL_CURRENT_WAIST",
@@ -18620,7 +18623,6 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-goal-history-dialog/waist-goal-history-dialog.html",
       "keys": [
-        "GENERAL.UNITS.CM",
         "WAIST_HISTORY.GOAL_HISTORY",
         "WAIST_HISTORY.GOAL_NOW",
         "WAIST_HISTORY.GOAL_START_WAIST",
@@ -18631,7 +18633,6 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/dialogs/waist-history-entries-dialog/waist-history-entries-dialog.html",
       "keys": [
-        "GENERAL.UNITS.CM",
         "WAIST_HISTORY.ALL_ENTRIES_TITLE",
         "WAIST_HISTORY.DELETE",
         "WAIST_HISTORY.EDIT",
@@ -18652,7 +18653,6 @@
       "feature": "waist-history",
       "path": "FoodDiary.Web.Client/src/app/features/waist-history/pages/waist-history-page/waist-history-page.html",
       "keys": [
-        "GENERAL.UNITS.CM",
         "WAIST_HISTORY.CURRENT_WAIST",
         "WAIST_HISTORY.CUSTOM_RANGE_FROM_LABEL",
         "WAIST_HISTORY.CUSTOM_RANGE_PLACEHOLDER",
@@ -18692,7 +18692,6 @@
       "path": "FoodDiary.Web.Client/src/app/features/weekly-check-in/components/weekly-check-in-stats-card/weekly-check-in-stats-card.html",
       "keys": [
         "GENERAL.UNITS.G",
-        "GENERAL.UNITS.KG",
         "GENERAL.UNITS.ML",
         "WEEKLY_CHECK_IN.AVG_CALORIES",
         "WEEKLY_CHECK_IN.AVG_PROTEIN",
@@ -18755,7 +18754,6 @@
       "keys": [
         "GENERAL.UNITS.G",
         "GENERAL.UNITS.KCAL",
-        "GENERAL.UNITS.KG",
         "WEEKLY_CHECK_IN.COVERAGE_ARIA",
         "WEEKLY_CHECK_IN.COVERAGE_TITLE",
         "WEEKLY_CHECK_IN.DISCLAIMER",
@@ -18801,7 +18799,6 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-chart-card/weight-history-chart-card.html",
       "keys": [
-        "GENERAL.UNITS.KG",
         "WEIGHT_HISTORY.CHART_TITLE",
         "WEIGHT_HISTORY.LOADING",
         "WEIGHT_HISTORY.NO_DATA_FOR_CHART"
@@ -18811,7 +18808,6 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-entries-card/weight-history-entries-card.html",
       "keys": [
-        "DASHBOARD.KG",
         "WEIGHT_HISTORY.DELETE",
         "WEIGHT_HISTORY.EDIT",
         "WEIGHT_HISTORY.LOADING",
@@ -18839,7 +18835,6 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/components/weight-history-goal-card/weight-history-goal-card.html",
       "keys": [
-        "GENERAL.UNITS.KG",
         "WEIGHT_HISTORY.GOAL_AVERAGE_RATE",
         "WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT",
         "WEIGHT_HISTORY.GOAL_DAYS_TO_GOAL",
@@ -18863,7 +18858,6 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-goal-history-dialog/weight-goal-history-dialog.html",
       "keys": [
-        "GENERAL.UNITS.KG",
         "WEIGHT_HISTORY.GOAL_HISTORY",
         "WEIGHT_HISTORY.GOAL_NOW",
         "WEIGHT_HISTORY.GOAL_START_WEIGHT",
@@ -18874,7 +18868,6 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/dialogs/weight-history-entries-dialog/weight-history-entries-dialog.html",
       "keys": [
-        "DASHBOARD.KG",
         "WEIGHT_HISTORY.ALL_ENTRIES_TITLE",
         "WEIGHT_HISTORY.DELETE",
         "WEIGHT_HISTORY.EDIT",
@@ -18895,7 +18888,6 @@
       "feature": "weight-history",
       "path": "FoodDiary.Web.Client/src/app/features/weight-history/pages/weight-history-page/weight-history-page.html",
       "keys": [
-        "GENERAL.UNITS.KG",
         "WEIGHT_HISTORY.BMI_CARD_TITLE",
         "WEIGHT_HISTORY.CURRENT_WEIGHT",
         "WEIGHT_HISTORY.CUSTOM_RANGE_FROM_LABEL",
@@ -19959,6 +19951,7 @@
         "firstMeasurementKey",
         "iconName",
         "isLoading",
+        "measurementKind",
         "points",
         "shouldRender",
         "stableTrendKey",
@@ -33194,6 +33187,7 @@
         "firstMeasurementKey",
         "iconName",
         "isLoading",
+        "measurementKind",
         "points",
         "stableTrendKey",
         "targetValue",

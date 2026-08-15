@@ -6,14 +6,22 @@
                     <div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ goal.statusKey | translate }}</div>
                         <div class="fd-ui-card-title">
-                            {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: goal.targetWaistCm | number: '1.0-2' } }}
+                            {{
+                                'WAIST_HISTORY.GOAL_VALUE'
+                                    | translate
+                                        : {
+                                              value: goal.targetWaistCm | measurementValue: 'length' | number: '1.0-2',
+                                              unit: 'length' | measurementUnit | translate,
+                                          }
+                            }}
                         </div>
                     </div>
                     @if (goal.status === 'Active') {
                         <fd-ui-icon name="track_changes" size="lg" />
                     } @else {
                         <div class="fd-ui-stat-value">
-                            {{ goal.change > 0 ? '+' : '' }}{{ goal.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                            {{ goal.change > 0 ? '+' : '' }}{{ goal.change | measurementValue: 'length' | number: '1.0-2' }}
+                            {{ 'length' | measurementUnit | translate }}
                         </div>
                     }
                 </div>
@@ -28,11 +36,13 @@
                 }
                 <div class="waist-goal-history__values fd-grid fd-ui-caption fd-ui-text-muted">
                     <span
-                        >{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}: {{ goal.startWaistCm | number: '1.0-2' }}
-                        {{ 'GENERAL.UNITS.CM' | translate }}</span
+                        >{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}:
+                        {{ goal.startWaistCm | measurementValue: 'length' | number: '1.0-2' }}
+                        {{ 'length' | measurementUnit | translate }}</span
                     ><span
                         >{{ (goal.status === 'Active' ? 'WAIST_HISTORY.GOAL_CURRENT_WAIST' : 'WAIST_HISTORY.GOAL_END_WAIST') | translate }}:
-                        {{ goal.displayEndWaist | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}</span
+                        {{ goal.displayEndWaist | measurementValue: 'length' | number: '1.0-2' }}
+                        {{ 'length' | measurementUnit | translate }}</span
                     >
                 </div>
             </article>

@@ -9,12 +9,12 @@
                 xAxisLabelLayout="stacked"
                 [class.waist-history-page__chart--loading]="isLoading()"
                 [title]="'WAIST_HISTORY.CHART_TITLE' | translate"
-                [points]="chartPoints()"
+                [points]="displayChartPoints()"
                 [referenceLines]="referenceLines()"
                 [showArea]="false"
                 [showAxisLabels]="true"
                 [showGrid]="true"
-                [valueSuffix]="'GENERAL.UNITS.CM' | translate"
+                [valueSuffix]="'length' | measurementUnit | translate"
             />
         } @else if (!isLoading()) {
             <p class="waist-history-page__empty-chart fd-ui-body-sm">{{ 'WAIST_HISTORY.NO_DATA_FOR_CHART' | translate }}</p>

@@ -51,6 +51,9 @@
             "FT": "фут",
             "IN": "дюйм"
         },
+        "TIME": {
+            "WEEK_SHORT": "нед"
+        },
         "NUTRIENTS": {
             "CALORIES": "Калории",
             "PROTEIN": "Белки",

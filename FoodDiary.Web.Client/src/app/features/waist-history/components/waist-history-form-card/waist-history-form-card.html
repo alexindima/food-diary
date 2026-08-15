@@ -12,9 +12,9 @@
             class="waist-history-page__form-control"
             type="number"
             [step]="0.1"
-            [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate"
+            [label]="'WAIST_HISTORY.CIRCUMFERENCE_LABEL' | translate: { unit: 'length' | measurementUnit | translate }"
             [placeholder]="'WAIST_HISTORY.CIRCUMFERENCE_PLACEHOLDER' | translate"
-            [formField]="form().circumferenceCm"
+            [formField]="form().circumference"
         />
     </div>
 

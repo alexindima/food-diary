@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output } f
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
+import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
+
 const TREND_EPSILON = 0.01;
 const TREND_DISPLAY_FRACTION_DIGITS = 1;
 
@@ -20,11 +22,19 @@ export class WeightSummaryCardComponent {
     public readonly cardClick = output();
 
     private readonly translateService = inject(TranslateService);
+    protected readonly measurements = inject(MeasurementSystemService);
+    protected readonly displayLatest = computed(() => {
+        const latest = this.latest();
+        return latest === null ? null : this.measurements.displayWeight(latest);
+    });
 
     protected readonly metaText = computed(() => {
         const desiredValue = this.desired();
         if (desiredValue !== null) {
-            return this.translateService.instant('WEIGHT_CARD.GOAL', { value: desiredValue });
+            return this.translateService.instant('WEIGHT_CARD.GOAL', {
+                value: this.measurements.displayWeight(desiredValue),
+                unit: this.translateService.instant(this.measurements.weightUnitKey()),
+            });
         }
 
         return this.translateService.instant('WEIGHT_CARD.META_EMPTY');
@@ -58,7 +68,7 @@ export class WeightSummaryCardComponent {
         }
 
         return {
-            label: `${direction} ${Math.abs(diff).toFixed(TREND_DISPLAY_FRACTION_DIGITS)} ${this.translateService.instant('WEIGHT_CARD.KG')}`,
+            label: `${direction} ${Math.abs(this.measurements.displayWeight(diff)).toFixed(TREND_DISPLAY_FRACTION_DIGITS)} ${this.translateService.instant(this.measurements.weightUnitKey())}`,
             status,
         };
     });

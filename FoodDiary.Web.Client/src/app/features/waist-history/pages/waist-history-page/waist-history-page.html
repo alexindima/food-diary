@@ -50,7 +50,8 @@
                         <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.CURRENT_WAIST' | translate }}</div>
                         <div class="waist-history-page__metric-value fd-ui-metric-lg">
                             @if (latestWaist(); as value) {
-                                {{ value | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                                {{ value | measurementValue: 'length' : measurements.system() | number: '1.0-2' }}
+                                {{ 'length' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
                             }
@@ -69,7 +70,9 @@
                             [class.waist-history-page__metric-value--negative]="waistChange()?.tone === 'negative'"
                         >
                             @if (waistChange(); as change) {
-                                {{ change.value > 0 ? '+' : '' }}{{ change.value | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                                {{ change.value > 0 ? '+' : ''
+                                }}{{ change.value | measurementValue: 'length' : measurements.system() | number: '1.0-2' }}
+                                {{ 'length' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
                             }
@@ -84,14 +87,22 @@
                         <div class="waist-history-page__metric-label fd-ui-body-sm">{{ 'WAIST_HISTORY.TO_GOAL' | translate }}</div>
                         <div class="waist-history-page__metric-value fd-ui-metric-lg">
                             @if (waistToGoal(); as value) {
-                                {{ value | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                                {{ value | measurementValue: 'length' : measurements.system() | number: '1.0-2' }}
+                                {{ 'length' | measurementUnit: measurements.system() | translate }}
                             } @else {
                                 —
                             }
                         </div>
                         @if (desiredWaistCm(); as goal) {
                             <div class="waist-history-page__metric-caption fd-ui-caption">
-                                {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: goal | number: '1.0-2' } }}
+                                {{
+                                    'WAIST_HISTORY.GOAL_VALUE'
+                                        | translate
+                                            : {
+                                                  value: goal | measurementValue: 'length' | number: '1.0-2',
+                                                  unit: 'length' | measurementUnit | translate,
+                                              }
+                                }}
                             </div>
                         }
                     </div>
@@ -117,7 +128,14 @@
                 [isLoading]="isSummaryLoading()"
                 [chartPoints]="chartPoints()"
                 [desiredWaistCm]="desiredWaistCm()"
-                [goalLabel]="'WAIST_HISTORY.GOAL_VALUE' | translate: { value: (desiredWaistCm() | number: '1.0-2') }"
+                [goalLabel]="
+                    'WAIST_HISTORY.GOAL_VALUE'
+                        | translate
+                            : {
+                                  value: desiredWaistCm() | measurementValue: 'length' | number: '1.0-2',
+                                  unit: 'length' | measurementUnit | translate,
+                              }
+                "
             >
                 <fd-period-filter
                     chartControls

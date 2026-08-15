@@ -234,8 +234,12 @@
                 <div class="check-in__metric">
                     <fd-ui-icon name="monitor_weight" />
                     <strong
-                        >{{ (thisWeek()?.weightEnd ?? 0) - (thisWeek()?.weightStart ?? thisWeek()?.weightEnd ?? 0) | number: '1.1-1' }}
-                        <small>{{ 'GENERAL.UNITS.KG' | translate }}</small></strong
+                        >{{
+                            (thisWeek()?.weightEnd ?? 0) - (thisWeek()?.weightStart ?? thisWeek()?.weightEnd ?? 0)
+                                | measurementValue: 'weight' : measurements.system()
+                                | number: '1.1-1'
+                        }}
+                        <small>{{ 'weight' | measurementUnit: measurements.system() | translate }}</small></strong
                     >
                     <span>{{ 'WEEKLY_CHECK_IN.METRICS.WEIGHT' | translate }}</span>
                 </div>

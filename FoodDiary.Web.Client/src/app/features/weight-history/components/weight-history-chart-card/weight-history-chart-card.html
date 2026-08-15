@@ -9,12 +9,12 @@
                 xAxisLabelLayout="stacked"
                 [class.weight-history-page__chart--loading]="isLoading()"
                 [title]="'WEIGHT_HISTORY.CHART_TITLE' | translate"
-                [points]="chartPoints()"
+                [points]="displayChartPoints()"
                 [referenceLines]="referenceLines()"
                 [showArea]="false"
                 [showAxisLabels]="true"
                 [showGrid]="true"
-                [valueSuffix]="'GENERAL.UNITS.KG' | translate"
+                [valueSuffix]="'weight' | measurementUnit | translate"
             />
         } @else if (!isLoading()) {
             <p class="weight-history-page__empty-chart fd-ui-body-sm">{{ 'WEIGHT_HISTORY.NO_DATA_FOR_CHART' | translate }}</p>

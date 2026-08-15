@@ -6,21 +6,24 @@ import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
+import { MeasurementUnitPipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 
 @Component({
     selector: 'fd-waist-history-goal-dialog',
-    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, TranslatePipe],
+    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiInputComponent, FormField, MeasurementUnitPipe, TranslatePipe],
     templateUrl: './waist-history-goal-dialog.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryGoalDialogComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WaistHistoryFacade);
     private readonly dialogRef = inject(FdUiDialogRef<WaistHistoryGoalDialogComponent, void>);
     private readonly initialSaveVersion = this.facade.desiredWaistSaveVersion();
     protected readonly desiredWaistCm = this.facade.desiredWaistCm;
     protected readonly form = this.facade.desiredWaistForm;
-    protected readonly waistField = this.facade.desiredWaistForm.circumferenceCm;
+    protected readonly waistField = this.facade.desiredWaistForm.circumference;
     protected readonly isSaving = this.facade.isDesiredWaistSaving;
 
     public constructor() {

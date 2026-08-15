@@ -64,7 +64,7 @@ function setupComponent(
     });
 
     const fixture = TestBed.createComponent(WeightHistoryFormCardComponent);
-    const model = signal({ date: '2026-05-15', weightKg: '71.5' });
+    const model = signal({ date: '2026-05-15', weight: '71.5' });
     fixture.componentRef.setInput(
         'form',
         TestBed.runInInjectionContext(() => {

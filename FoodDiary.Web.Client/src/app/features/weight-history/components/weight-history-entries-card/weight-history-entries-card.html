@@ -18,7 +18,8 @@
                             }
                         </div>
                         <div class="weight-history-page__entry-weight fd-ui-caption">
-                            {{ item.entry.weightKg | number: '1.0-2' }} {{ 'DASHBOARD.KG' | translate }}
+                            {{ item.entry.weightKg | measurementValue: 'weight' | number: '1.0-2' }}
+                            {{ 'weight' | measurementUnit | translate }}
                         </div>
                         <div
                             class="weight-history-page__entry-change fd-ui-caption"
@@ -28,8 +29,8 @@
                             @if (item.change === null || item.change === 0) {
                                 —
                             } @else {
-                                {{ item.change > 0 ? '+' : '' }}{{ item.change | number: '1.0-2' }}
-                                {{ 'DASHBOARD.KG' | translate }}
+                                {{ item.change > 0 ? '+' : '' }}{{ item.change | measurementValue: 'weight' | number: '1.0-2' }}
+                                {{ 'weight' | measurementUnit | translate }}
                             }
                         </div>
                         <div class="weight-history-page__entry-actions fd-row fd-gap-actions fd-justify-end">

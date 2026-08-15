@@ -6,14 +6,22 @@
                     <div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ goal.statusKey | translate }}</div>
                         <div class="weight-goal-history__target fd-ui-card-title">
-                            {{ 'WEIGHT_HISTORY.GOAL_VALUE' | translate: { value: goal.targetWeightKg | number: '1.0-2' } }}
+                            {{
+                                'WEIGHT_HISTORY.GOAL_VALUE'
+                                    | translate
+                                        : {
+                                              value: goal.targetWeightKg | measurementValue: 'weight' | number: '1.0-2',
+                                              unit: 'weight' | measurementUnit | translate,
+                                          }
+                            }}
                         </div>
                     </div>
                     @if (goal.status === 'Active') {
                         <fd-ui-icon name="track_changes" size="lg" />
                     } @else {
                         <div class="weight-goal-history__change fd-ui-stat-value">
-                            {{ goal.change > 0 ? '+' : '' }}{{ goal.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                            {{ goal.change > 0 ? '+' : '' }}{{ goal.change | measurementValue: 'weight' | number: '1.0-2' }}
+                            {{ 'weight' | measurementUnit | translate }}
                         </div>
                     }
                 </div>
@@ -33,14 +41,15 @@
 
                 <div class="weight-goal-history__weights fd-grid fd-ui-caption fd-ui-text-muted">
                     <span>
-                        {{ 'WEIGHT_HISTORY.GOAL_START_WEIGHT' | translate }}: {{ goal.startWeightKg | number: '1.0-2' }}
-                        {{ 'GENERAL.UNITS.KG' | translate }}
+                        {{ 'WEIGHT_HISTORY.GOAL_START_WEIGHT' | translate }}:
+                        {{ goal.startWeightKg | measurementValue: 'weight' | number: '1.0-2' }} {{ 'weight' | measurementUnit | translate }}
                     </span>
                     <span>
                         {{
                             (goal.status === 'Active' ? 'WEIGHT_HISTORY.GOAL_CURRENT_WEIGHT' : 'WEIGHT_HISTORY.GOAL_END_WEIGHT')
                                 | translate
-                        }}: {{ goal.displayEndWeight | number: '1.0-2' }} {{ 'GENERAL.UNITS.KG' | translate }}
+                        }}: {{ goal.displayEndWeight | measurementValue: 'weight' | number: '1.0-2' }}
+                        {{ 'weight' | measurementUnit | translate }}
                     </span>
                 </div>
             </article>

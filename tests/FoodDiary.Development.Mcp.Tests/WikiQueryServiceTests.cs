@@ -23,6 +23,7 @@ public sealed class WikiQueryServiceTests {
         await service.GetChangeContextAsync(
             "Add MCP; Write-Error must stay data",
             "FoodDiary.Development.Mcp",
+            compact: true,
             cancellationToken);
 
         await _executor.Received(1).ExecuteAsync(
@@ -33,6 +34,7 @@ public sealed class WikiQueryServiceTests {
                     "Json",
                     "-Objective",
                     "Add MCP; Write-Error must stay data",
+                    "-Compact",
                     "-ProposedPath",
                     "FoodDiary.Development.Mcp",
                     "-ChangedPath",
@@ -66,6 +68,31 @@ public sealed class WikiQueryServiceTests {
                 "Json",
                 "-ChangedPath",
                 "FoodDiary.Development.Mcp/WikiQueryService.cs",
+            })),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetTestPlanAsync_PreservesPlannedPathsAlongsideCurrentChanges() {
+        WikiQueryService service = new(_executor, _snapshots);
+
+        await service.GetTestPlanAsync(
+            intent: "Change measurement presentation",
+            plannedPaths: ["FoodDiary.Web.Client/src/app/features/weight-history"],
+            changedPaths: null,
+            CancellationToken.None);
+
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] {
+                "-Format",
+                "Json",
+                "-Objective",
+                "Change measurement presentation",
+                "-ChangedPath",
+                "FoodDiary.Development.Mcp/WikiQueryService.cs",
+                "-ProposedPath",
+                "FoodDiary.Web.Client/src/app/features/weight-history",
             })),
             CancellationToken.None);
     }
@@ -130,7 +157,7 @@ public sealed class WikiQueryServiceTests {
     }
 
     [Fact]
-    public async Task GetTestPlanAsync_PrefersExplicitChangedPaths() {
+    public async Task GetTestPlanAsync_PrefersExplicitChangesAndKeepsPlannedScope() {
         WikiQueryService service = new(_executor, _snapshots);
 
         await service.GetTestPlanAsync(
@@ -143,7 +170,7 @@ public sealed class WikiQueryServiceTests {
             "test-plan",
             Arg.Is<IReadOnlyList<string>>(arguments =>
                 arguments.Contains("explicit/changed.cs", StringComparer.Ordinal) &&
-                !arguments.Contains("planned/path", StringComparer.Ordinal) &&
+                arguments.Contains("planned/path", StringComparer.Ordinal) &&
                 !arguments.Contains("FoodDiary.Development.Mcp/WikiQueryService.cs", StringComparer.Ordinal)),
             CancellationToken.None);
     }

@@ -12,9 +12,9 @@
             class="weight-history-page__form-control"
             type="number"
             [step]="0.1"
-            [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate"
+            [label]="'WEIGHT_HISTORY.WEIGHT_LABEL' | translate: { unit: 'weight' | measurementUnit | translate }"
             [placeholder]="'WEIGHT_HISTORY.WEIGHT_PLACEHOLDER' | translate"
-            [formField]="form().weightKg"
+            [formField]="form().weight"
         />
     </div>
 

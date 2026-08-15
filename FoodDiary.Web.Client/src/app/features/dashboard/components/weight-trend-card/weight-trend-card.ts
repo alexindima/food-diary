@@ -8,6 +8,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { DashboardWidgetFrameComponent } from '../../../../components/shared/dashboard-widget-frame/dashboard-widget-frame';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { compareDatesAsc, formatDateValue, parseDateValue } from '../../../../shared/lib/local-date.utils';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import {
     WEIGHT_TREND_CHART_MINIMUM_PADDING,
     WEIGHT_TREND_CHART_RANGE_PADDING_RATIO,
@@ -33,6 +34,7 @@ export type WeightTrendPoint = {
 })
 export class WeightTrendCardComponent {
     private readonly translateService = inject(TranslateService);
+    private readonly measurements = inject(MeasurementSystemService);
     public readonly title = input<string>('WEIGHT_CARD.TITLE');
     public readonly currentWeight = input.required<number | null>();
     public readonly change = input.required<number | null>();
@@ -45,6 +47,7 @@ export class WeightTrendCardComponent {
     public readonly points = input.required<WeightTrendPoint[]>();
     public readonly isLoading = input.required<boolean>();
     public readonly unitKey = input<string>('WEIGHT_CARD.KG');
+    public readonly measurementKind = input<'weight' | 'length'>('weight');
     public readonly emptyStateKey = input<string>('WEIGHT_TREND_CARD.NO_DATA');
     public readonly iconName = input<string | null>('monitor_weight');
     public readonly accentColor = input<string>('var(--fd-color-blue-500)');
@@ -63,7 +66,7 @@ export class WeightTrendCardComponent {
 
         return points.map((point, index) => ({
             label: this.formatPointLabel(point.date),
-            value: point.value,
+            value: this.displayValue(point.value),
             xPosition: range > 0 ? ((timestamps[index] ?? firstTimestamp) - firstTimestamp) / range : undefined,
         }));
     });
@@ -88,7 +91,7 @@ export class WeightTrendCardComponent {
     );
     protected readonly referenceLines = computed<readonly FdUiLineChartReferenceLine[]>(() => {
         const targetValue = this.targetValue();
-        return targetValue === null ? [] : [{ value: targetValue, color: this.accentColor() }];
+        return targetValue === null ? [] : [{ value: this.displayValue(targetValue), color: this.accentColor() }];
     });
 
     protected readonly changeTone = computed<'positive' | 'negative' | 'neutral'>(() => {
@@ -110,13 +113,21 @@ export class WeightTrendCardComponent {
         if (delta === null) {
             return null;
         }
-        const rounded = Math.round(delta * WEIGHT_TREND_ROUNDING_FACTOR) / WEIGHT_TREND_ROUNDING_FACTOR;
+        const displayDelta = this.displayValue(delta);
+        const rounded = Math.round(displayDelta * WEIGHT_TREND_ROUNDING_FACTOR) / WEIGHT_TREND_ROUNDING_FACTOR;
         const sign = rounded > 0 ? '+' : '';
         return `${sign}${rounded.toFixed(WEIGHT_TREND_DISPLAY_FRACTION_DIGITS)}`;
     });
     protected readonly hasMeaningfulChange = computed(() => Math.abs(this.change() ?? 0) > WEIGHT_TREND_EPSILON);
 
     protected readonly hasValue = computed(() => this.hasMeasurements() && this.currentWeight() !== null);
+    protected readonly displayCurrentValue = computed(() => {
+        const value = this.currentWeight();
+        return value === null ? null : this.displayValue(value);
+    });
+    protected readonly displayUnitKey = computed(() =>
+        this.measurementKind() === 'weight' ? this.measurements.weightUnitKey() : this.measurements.lengthUnitKey(),
+    );
 
     private formatPointLabel(date: string | Date): string {
         return (
@@ -130,5 +141,9 @@ export class WeightTrendCardComponent {
 
     private toTimestamp(date: string | Date): number {
         return parseDateValue(date)?.getTime() ?? 0;
+    }
+
+    private displayValue(value: number): number {
+        return this.measurementKind() === 'weight' ? this.measurements.displayWeight(value) : this.measurements.displayLength(value);
     }
 }

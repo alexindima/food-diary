@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
+import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import type { WeightHistoryPageSummary } from '../models/weight-entry.data';
 import { WeightHistoryFacade } from './weight-history.facade';
@@ -16,6 +17,7 @@ const LATEST_WEIGHT = 74.2;
 const INDEPENDENT_LATEST_WEIGHT = 72.6;
 
 let facade: WeightHistoryFacade;
+let measurements: MeasurementSystemService;
 let weightEntriesService: {
     create: ReturnType<typeof vi.fn>;
     getEntries: ReturnType<typeof vi.fn>;
@@ -61,6 +63,8 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(WeightHistoryFacade);
+    measurements = TestBed.inject(MeasurementSystemService);
+    measurements.setSystem('metric');
 });
 
 describe('WeightHistoryFacade loading', () => {
@@ -79,7 +83,7 @@ describe('WeightHistoryFacade loading', () => {
         expect(facade.summaryPoints()).toHaveLength(1);
         expect(facade.desiredWeightKg()).toBe(TARGET_WEIGHT);
         expect(facade.latestWeight()).toBe(LATEST_WEIGHT);
-        expect(facade.formModel().weightKg).toBe(LATEST_WEIGHT.toString());
+        expect(facade.formModel().weight).toBe(LATEST_WEIGHT.toString());
         expect(facade.bmiViewModel()?.value).toBe(EXPECTED_BMI);
     });
 
@@ -130,6 +134,20 @@ describe('WeightHistoryFacade loading', () => {
     });
 });
 
+describe('WeightHistoryFacade measurement boundary', () => {
+    it('converts imperial form input to the canonical API value', () => {
+        measurements.setSystem('imperial');
+        facade.formModel.set({ date: '2026-04-02', weight: '162.7' });
+
+        facade.submit();
+
+        expect(weightEntriesService.create).toHaveBeenCalledWith({
+            date: '2026-04-02T00:00:00.000Z',
+            weightKg: UPDATED_ENTRY_WEIGHT,
+        });
+    });
+});
+
 describe('WeightHistoryFacade entries', () => {
     it('submits a new entry and reloads the list', async () => {
         facade.initialize();
@@ -139,7 +157,7 @@ describe('WeightHistoryFacade entries', () => {
 
         facade.formModel.set({
             date: '2026-04-02',
-            weightKg: '73.8',
+            weight: '73.8',
         });
 
         facade.submit();
@@ -156,7 +174,7 @@ describe('WeightHistoryFacade entries', () => {
     it('does not submit invalid form', () => {
         facade.formModel.set({
             date: '',
-            weightKg: '',
+            weight: '',
         });
 
         facade.submit();
@@ -170,7 +188,7 @@ describe('WeightHistoryFacade entries', () => {
         weightEntriesService.create.mockReturnValueOnce(throwError(() => ({ error: { error: 'WeightEntry.AlreadyExists' } })));
         facade.formModel.set({
             date: '2026-04-02',
-            weightKg: '73.8',
+            weight: '73.8',
         });
 
         facade.submit();
@@ -206,7 +224,7 @@ describe('WeightHistoryFacade entries', () => {
         facade.cancelEdit();
 
         expect(facade.isEditing()).toBe(false);
-        expect(facade.formModel().weightKg).toBe('73.1');
+        expect(facade.formModel().weight).toBe('73.1');
     });
 
     it('deletes entry and exits edit mode when edited entry is removed', () => {
@@ -253,13 +271,13 @@ describe('WeightHistoryFacade ranges', () => {
 
 describe('WeightHistoryFacade desired weight', () => {
     it('saves desired weight after validation', () => {
-        facade.desiredWeightModel.set({ weightKg: `${UPDATED_TARGET_WEIGHT}` });
+        facade.desiredWeightModel.set({ weight: `${UPDATED_TARGET_WEIGHT}` });
 
         facade.saveDesiredWeight();
 
         expect(userService.updateWeightGoal).toHaveBeenCalledWith(UPDATED_TARGET_WEIGHT);
         expect(facade.desiredWeightKg()).toBe(UPDATED_TARGET_WEIGHT);
-        expect(facade.desiredWeightModel().weightKg).toBe(`${UPDATED_TARGET_WEIGHT}`);
+        expect(facade.desiredWeightModel().weight).toBe(`${UPDATED_TARGET_WEIGHT}`);
     });
 
     it('cancels the active goal without form validation', () => {
@@ -269,7 +287,7 @@ describe('WeightHistoryFacade desired weight', () => {
 
         expect(userService.updateWeightGoal).toHaveBeenCalledWith(null);
         expect(facade.weightGoal()).toEqual({ desiredWeightKg: null, startWeightKg: null, startedAtUtc: null });
-        expect(facade.desiredWeightModel().weightKg).toBe('');
+        expect(facade.desiredWeightModel().weight).toBe('');
     });
 });
 

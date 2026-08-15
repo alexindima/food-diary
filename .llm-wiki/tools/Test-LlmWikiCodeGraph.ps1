@@ -55,4 +55,18 @@ $graphTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -Pro
 if (@($graphTestPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 1) {
     throw 'Graph-only test plan did not classify a direct Recipes test consumer as required.'
 }
+$measurementPaths = @(
+    'FoodDiary.Web.Client/src/app/features/weight-history'
+    'FoodDiary.Web.Client/src/app/features/waist-history'
+    'FoodDiary.Web.Client/src/app/shared/measurements'
+)
+$measurementTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath $measurementPaths -Limit 100 -Format Json | ConvertFrom-Json
+$measurementSpecs = @(Get-ChildItem -LiteralPath @($measurementPaths | ForEach-Object { Join-Path $repositoryRoot $_ }) -Recurse -File | Where-Object Name -match '\.spec\.ts$')
+if ($measurementSpecs.Count -lt 20 -or @($measurementTestPlan.required | Where-Object { $_ -match '/(?:weight-history|waist-history|shared/measurements)/.+\.spec\.ts$' }).Count -ne $measurementSpecs.Count) {
+    throw 'Graph-only test plan did not prioritize every spec under the planned frontend directories.'
+}
+$broadFrontendPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath 'FoodDiary.Web.Client/src/app/features' -Limit 20 -Format Json | ConvertFrom-Json
+if (@($broadFrontendPlan.scopeTooBroad).Count -ne 1 -or $broadFrontendPlan.confidence -ne 'low') {
+    throw 'Graph-only test plan did not diagnose an overly broad frontend scope.'
+}
 Write-Host "LLM Wiki code graph regression passed: $($warm.files) files, $($warm.symbols) symbols, incremental no-op and Recipes queries are valid."

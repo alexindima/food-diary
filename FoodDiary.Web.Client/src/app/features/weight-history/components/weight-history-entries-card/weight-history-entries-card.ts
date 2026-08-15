@@ -6,6 +6,8 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { buildWeightEntryViewModels } from '../../lib/weight-history-chart.mapper';
 import { getWeightChangeTone } from '../../lib/weight-history-progress.utils';
 import type { WeightEntry } from '../../models/weight-entry.data';
@@ -14,12 +16,13 @@ const RECENT_ENTRY_LIMIT = 5;
 
 @Component({
     selector: 'fd-weight-history-entries-card',
-    imports: [DecimalPipe, FdUiButtonComponent, FdUiCardComponent, TranslatePipe],
+    imports: [DecimalPipe, FdUiButtonComponent, FdUiCardComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './weight-history-entries-card.html',
     styleUrl: '../../pages/weight-history-page/weight-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightHistoryEntriesCardComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly translateService = inject(TranslateService);
 
     public readonly isLoading = input.required<boolean>();

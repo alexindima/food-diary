@@ -1,3 +1,4 @@
+import { centimetersToInches, kilogramsToPounds, type MeasurementSystem } from '../../../shared/measurements/measurement-system.service';
 import type { WeekTrend } from '../models/weekly-check-in.data';
 import type {
     WeeklyCheckInSuggestionViewModel,
@@ -20,7 +21,10 @@ export function buildWeeklyCheckInSuggestionRows(suggestions: string[]): WeeklyC
     }));
 }
 
-export function buildWeeklyCheckInTrendCards(trends: WeekTrend | null | undefined): WeeklyCheckInTrendCardViewModel[] {
+export function buildWeeklyCheckInTrendCards(
+    trends: WeekTrend | null | undefined,
+    measurementSystem: MeasurementSystem = 'metric',
+): WeeklyCheckInTrendCardViewModel[] {
     if (trends === null || trends === undefined) {
         return [];
     }
@@ -56,8 +60,8 @@ export function buildWeeklyCheckInTrendCards(trends: WeekTrend | null | undefine
             buildWeeklyCheckInTrendCard({
                 key: 'weight',
                 labelKey: 'WEEKLY_CHECK_IN.WEIGHT',
-                value: trends.weightChange,
-                unitKey: 'GENERAL.UNITS.KG',
+                value: displayWeight(trends.weightChange, measurementSystem),
+                unitKey: weightUnitKey(measurementSystem),
                 numberFormat: '1.1-1',
                 invertPositive: true,
             }),
@@ -71,8 +75,8 @@ export function buildWeeklyCheckInTrendCards(trends: WeekTrend | null | undefine
             buildWeeklyCheckInTrendCard({
                 key: 'waist',
                 labelKey: 'WEEKLY_CHECK_IN.WAIST',
-                value: trends.waistChange,
-                unitKey: 'GENERAL.UNITS.CM',
+                value: displayLength(trends.waistChange, measurementSystem),
+                unitKey: lengthUnitKey(measurementSystem),
                 numberFormat: '1.1-1',
                 invertPositive: true,
             }),
@@ -116,4 +120,20 @@ export function getWeeklyCheckInTrendColor(value: number, invertPositive = false
 
     const isPositive = invertPositive ? value < 0 : value > 0;
     return isPositive ? TREND_COLOR_POSITIVE : TREND_COLOR_NEGATIVE;
+}
+
+function displayWeight(weightKg: number, system: MeasurementSystem): number {
+    return system === 'imperial' ? kilogramsToPounds(weightKg) : weightKg;
+}
+
+function displayLength(lengthCm: number, system: MeasurementSystem): number {
+    return system === 'imperial' ? centimetersToInches(lengthCm) : lengthCm;
+}
+
+function weightUnitKey(system: MeasurementSystem): string {
+    return system === 'imperial' ? 'GENERAL.UNITS.LB' : 'GENERAL.UNITS.KG';
+}
+
+function lengthUnitKey(system: MeasurementSystem): string {
+    return system === 'imperial' ? 'GENERAL.UNITS.IN' : 'GENERAL.UNITS.CM';
 }

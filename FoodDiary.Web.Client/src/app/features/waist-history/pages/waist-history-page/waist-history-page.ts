@@ -9,6 +9,8 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -31,6 +33,8 @@ import { WAIST_HISTORY_TOUR } from './waist-history-tour';
 @Component({
     selector: 'fd-waist-history-page',
     imports: [
+        MeasurementUnitPipe,
+        MeasurementValuePipe,
         TranslatePipe,
         DecimalPipe,
         FdUiHintDirective,
@@ -51,6 +55,7 @@ import { WAIST_HISTORY_TOUR } from './waist-history-tour';
     providers: [WaistHistoryFacade],
 })
 export class WaistHistoryPageComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WaistHistoryFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);

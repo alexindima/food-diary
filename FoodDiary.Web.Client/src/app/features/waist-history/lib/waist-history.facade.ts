@@ -9,6 +9,7 @@ import { resolveTranslateLanguage } from '../../../shared/i18n/translate-languag
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
+import { type MeasurementSystem, MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import type { DesiredWaistResponse, WaistGoalHistoryItem } from '../../../shared/models/user.data';
 import { NutritionDataInvalidationService } from '../../../shared/state/nutrition-data-invalidation.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
@@ -28,11 +29,11 @@ import { buildWhtViewModel } from './waist-history-wht.mapper';
 
 type WaistEntryFormModel = {
     date: string;
-    circumferenceCm: string;
+    circumference: string;
 };
 
 type DesiredWaistFormModel = {
-    circumferenceCm: string;
+    circumference: string;
 };
 
 type WaistCustomRangeFormModel = {
@@ -45,6 +46,7 @@ export class WaistHistoryFacade {
     private readonly userService = inject(UserService);
     private readonly invalidation = inject(NutritionDataInvalidationService);
     private readonly translate = inject(TranslateService);
+    private readonly measurements = inject(MeasurementSystemService);
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly defaultRange: WaistHistoryRange = 'month';
@@ -52,6 +54,7 @@ export class WaistHistoryFacade {
     private readonly userHeightCm = signal<number | null>(null);
     private readonly initialized = signal(false);
     private lastLoadedRangeKey: string | null = null;
+    private currentMeasurementSystem: MeasurementSystem = this.measurements.system();
 
     public readonly selectedRange = signal<WaistHistoryRange>(this.defaultRange);
     public readonly currentRange = computed<WaistHistoryDateRange>(() =>
@@ -76,12 +79,12 @@ export class WaistHistoryFacade {
     public readonly isDesiredWaistSaving = signal(false);
     public readonly desiredWaistSaveVersion = signal(0);
     public readonly latestEntry = signal<WaistEntry | null>(null);
-    public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumferenceCm: '' });
+    public readonly desiredWaistModel = signal<DesiredWaistFormModel>({ circumference: '' });
     public readonly desiredWaistForm = form(this.desiredWaistModel);
 
     public readonly formModel = signal<WaistEntryFormModel>({
         date: formatWaistHistoryDateInput(new Date()),
-        circumferenceCm: '',
+        circumference: '',
     });
     private readonly submitWaistEntryFormAsync = async (): Promise<void> => {
         await this.submitAsync();
@@ -90,10 +93,11 @@ export class WaistHistoryFacade {
         this.formModel,
         path => {
             required(path.date);
-            required(path.circumferenceCm);
-            validate(path.circumferenceCm, ({ value }) => {
+            required(path.circumference);
+            validate(path.circumference, ({ value }) => {
                 const parsed = parseDecimalInput(value());
-                return parsed === null || parsed < MIN_WAIST_CM || parsed > MAX_WAIST_CM
+                const circumferenceCm = parsed === null ? null : this.measurements.canonicalLength(parsed);
+                return circumferenceCm === null || circumferenceCm < MIN_WAIST_CM || circumferenceCm > MAX_WAIST_CM
                     ? { kind: 'waistRange', message: 'Waist circumference is out of range' }
                     : undefined;
             });
@@ -117,6 +121,16 @@ export class WaistHistoryFacade {
     public readonly whtViewModel = computed(() => buildWhtViewModel(this.userHeightCm(), this.latestWaist()));
 
     public constructor() {
+        effect(() => {
+            const system = this.measurements.system();
+            if (system === this.currentMeasurementSystem) {
+                return;
+            }
+
+            this.currentMeasurementSystem = system;
+            this.syncDisplayForms();
+        });
+
         effect(() => {
             if (!this.initialized()) {
                 return;
@@ -184,7 +198,7 @@ export class WaistHistoryFacade {
                 return;
             }
 
-            this.form.circumferenceCm().value.set(payload.circumferenceCm.toString());
+            this.form.circumference().value.set(this.formatDisplayWaist(payload.circumferenceCm));
         } catch (error: unknown) {
             this.handleEntrySaveError(error);
         }
@@ -195,7 +209,7 @@ export class WaistHistoryFacade {
         this.editingEntryId.set(entry.id);
         this.formModel.set({
             date: formatWaistHistoryDateInput(new Date(entry.date)),
-            circumferenceCm: entry.circumferenceCm.toString(),
+            circumference: this.formatDisplayWaist(entry.circumferenceCm),
         });
     }
 
@@ -204,7 +218,7 @@ export class WaistHistoryFacade {
         const latest = (this.entriesDescending() as Array<WaistEntry | undefined>)[0];
         this.formModel.set({
             date: formatWaistHistoryDateInput(new Date()),
-            circumferenceCm: latest !== undefined ? latest.circumferenceCm.toString() : '',
+            circumference: this.formatDisplayWaist(latest?.circumferenceCm ?? null),
         });
     }
 
@@ -250,7 +264,7 @@ export class WaistHistoryFacade {
             .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
                 this.waistGoal.set(goal);
-                this.desiredWaistModel.set({ circumferenceCm: goal.desiredWaistCm?.toString() ?? '' });
+                this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(goal.desiredWaistCm) });
                 this.desiredWaistSaveVersion.update(version => version + 1);
                 this.loadWaistGoalHistory();
             });
@@ -269,7 +283,7 @@ export class WaistHistoryFacade {
             .subscribe(goal => {
                 this.invalidation.reportGoalMutation();
                 this.waistGoal.set(goal);
-                this.desiredWaistModel.set({ circumferenceCm: '' });
+                this.desiredWaistModel.set({ circumference: '' });
                 this.desiredWaistSaveVersion.update(version => version + 1);
                 this.loadWaistGoalHistory();
             });
@@ -294,13 +308,14 @@ export class WaistHistoryFacade {
     }
 
     private parseDesiredWaist(): number | null | undefined {
-        const rawValue = this.desiredWaistModel().circumferenceCm.trim();
+        const rawValue = this.desiredWaistModel().circumference.trim();
         if (rawValue.length === 0) {
             return null;
         }
 
         const parsedValue = parseDecimalInput(rawValue);
-        return parsedValue === null || parsedValue <= 0 || parsedValue > MAX_DESIRED_WAIST_CM ? undefined : parsedValue;
+        const circumferenceCm = parsedValue === null ? null : this.measurements.canonicalLength(parsedValue);
+        return circumferenceCm === null || circumferenceCm <= 0 || circumferenceCm > MAX_DESIRED_WAIST_CM ? undefined : circumferenceCm;
     }
 
     private loadEntries(force = false): void {
@@ -343,9 +358,9 @@ export class WaistHistoryFacade {
                 this.userHeightCm.set(page.heightCm);
                 this.waistGoal.set(page.goal);
                 this.waistGoalHistory.set(page.goalHistory);
-                this.desiredWaistModel.set({ circumferenceCm: page.goal.desiredWaistCm?.toString() ?? '' });
+                this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(page.goal.desiredWaistCm) });
                 if (!this.isEditing()) {
-                    this.form.circumferenceCm().value.set(latestEntry?.circumferenceCm.toString() ?? '');
+                    this.form.circumference().value.set(this.formatDisplayWaist(latestEntry?.circumferenceCm ?? null));
                 }
             });
     }
@@ -392,14 +407,14 @@ export class WaistHistoryFacade {
     }
 
     private buildPayload(): CreateWaistEntryPayload | null {
-        const { date: rawDate, circumferenceCm: rawCircumference } = this.formModel();
+        const { date: rawDate, circumference: rawCircumference } = this.formModel();
         if (rawDate.length === 0 || rawCircumference.length === 0) {
             return null;
         }
 
         const date = new Date(rawDate);
         const utcDate = normalizeStartOfDay(date);
-        const circumferenceCm = Number(rawCircumference);
+        const circumferenceCm = this.measurements.canonicalLength(Number(rawCircumference));
 
         return {
             date: utcDate.toISOString(),
@@ -411,6 +426,17 @@ export class WaistHistoryFacade {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
         this.form.date().value.set(formatWaistHistoryDateInput(new Date()));
+    }
+
+    private syncDisplayForms(): void {
+        const editingEntry = this.entries().find(entry => entry.id === this.editingEntryId());
+        const circumferenceCm = editingEntry?.circumferenceCm ?? this.latestWaist();
+        this.form.circumference().value.set(this.formatDisplayWaist(circumferenceCm));
+        this.desiredWaistModel.set({ circumference: this.formatDisplayWaist(this.desiredWaistCm()) });
+    }
+
+    private formatDisplayWaist(circumferenceCm: number | null): string {
+        return circumferenceCm === null ? '' : this.measurements.displayLength(circumferenceCm).toString();
     }
 
     private handleEntrySaveError(error: unknown): void {

@@ -10,6 +10,8 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
 import { NavigationService } from '../../../../services/navigation.service';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
@@ -33,6 +35,8 @@ import { WEIGHT_HISTORY_TOUR } from './weight-history-tour';
 @Component({
     selector: 'fd-weight-history-page',
     imports: [
+        MeasurementUnitPipe,
+        MeasurementValuePipe,
         TranslatePipe,
         DecimalPipe,
         FdUiHintDirective,
@@ -53,6 +57,7 @@ import { WEIGHT_HISTORY_TOUR } from './weight-history-tour';
     providers: [WeightHistoryFacade],
 })
 export class WeightHistoryPageComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WeightHistoryFacade);
     private readonly tourService = inject(FdTourService);

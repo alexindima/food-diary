@@ -8,7 +8,7 @@
         <fd-ui-input
             type="number"
             [step]="0.1"
-            [label]="'WAIST_HISTORY.DESIRED_WAIST_LABEL' | translate"
+            [label]="'WAIST_HISTORY.DESIRED_WAIST_LABEL' | translate: { unit: 'length' | measurementUnit | translate }"
             [ariaLabel]="'WAIST_HISTORY.GOAL_CARD_TITLE' | translate"
             [placeholder]="'WAIST_HISTORY.GOAL_PLACEHOLDER' | translate"
             [suffixButtonIcon]="waistField().value() ? 'backspace' : undefined"

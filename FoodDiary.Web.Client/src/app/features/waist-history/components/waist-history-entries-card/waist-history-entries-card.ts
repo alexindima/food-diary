@@ -6,6 +6,8 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue } from '../../../../shared/lib/local-date.utils';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { buildWaistEntryViewModels } from '../../lib/waist-history-chart.mapper';
 import type { WaistEntry } from '../../models/waist-entry.data';
 
@@ -13,12 +15,13 @@ const RECENT_ENTRY_LIMIT = 5;
 
 @Component({
     selector: 'fd-waist-history-entries-card',
-    imports: [DecimalPipe, FdUiButtonComponent, FdUiCardComponent, TranslatePipe],
+    imports: [DecimalPipe, FdUiButtonComponent, FdUiCardComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './waist-history-entries-card.html',
     styleUrl: '../../pages/waist-history-page/waist-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryEntriesCardComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly translateService = inject(TranslateService);
 
     public readonly isLoading = input.required<boolean>();

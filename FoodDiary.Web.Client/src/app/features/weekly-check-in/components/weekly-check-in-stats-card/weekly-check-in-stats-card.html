@@ -17,10 +17,10 @@
                 <span class="fd-ui-caption">{{ 'WEEKLY_CHECK_IN.AVG_PROTEIN' | translate }}</span
                 ><strong class="fd-ui-stat-value">{{ w.avgProteins | number: '1.0-0' }} {{ 'GENERAL.UNITS.G' | translate }}</strong>
             </div>
-            @if (w.weightEnd) {
+            @if (displayWeight(); as weight) {
                 <div class="check-in__stat-row fd-row fd-justify-between">
                     <span class="fd-ui-caption">{{ 'WEEKLY_CHECK_IN.WEIGHT' | translate }}</span
-                    ><strong class="fd-ui-stat-value">{{ w.weightEnd | number: '1.1-1' }} {{ 'GENERAL.UNITS.KG' | translate }}</strong>
+                    ><strong class="fd-ui-stat-value">{{ weight | number: '1.1-1' }} {{ measurements.weightUnitKey() | translate }}</strong>
                 </div>
             }
             <div class="check-in__stat-row fd-row fd-justify-between">

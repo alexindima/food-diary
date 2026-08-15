@@ -4,6 +4,7 @@ import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
+import { MeasurementSystemService } from '../../../shared/measurements/measurement-system.service';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import type { WaistHistoryPageSummary } from '../models/waist-entry.data';
 import { WaistHistoryFacade } from './waist-history.facade';
@@ -13,6 +14,7 @@ const UPDATED_TARGET_WAIST = 77;
 const EXPECTED_WHTR = 0.46;
 
 let facade: WaistHistoryFacade;
+let measurements: MeasurementSystemService;
 let waistEntriesService: {
     create: ReturnType<typeof vi.fn>;
     getEntries: ReturnType<typeof vi.fn>;
@@ -56,6 +58,8 @@ beforeEach(() => {
     });
 
     facade = TestBed.inject(WaistHistoryFacade);
+    measurements = TestBed.inject(MeasurementSystemService);
+    measurements.setSystem('metric');
 });
 
 describe('WaistHistoryFacade loading', () => {
@@ -73,12 +77,24 @@ describe('WaistHistoryFacade loading', () => {
         expect(facade.entries()).toHaveLength(2);
         expect(facade.summaryPoints()).toHaveLength(1);
         expect(facade.desiredWaistCm()).toBe(TARGET_WAIST);
-        expect(facade.formModel().circumferenceCm).toBe('82');
+        expect(facade.formModel().circumference).toBe('82');
         expect(facade.whtViewModel()?.value).toBe(EXPECTED_WHTR);
     });
 });
 
 describe('WaistHistoryFacade entries', () => {
+    it('converts imperial form input to the canonical API value', () => {
+        measurements.setSystem('imperial');
+        facade.formModel.set({ date: '2026-04-02', circumference: '32.2' });
+
+        facade.submit();
+
+        expect(waistEntriesService.create).toHaveBeenCalledWith({
+            date: '2026-04-02T00:00:00.000Z',
+            circumferenceCm: 81.79,
+        });
+    });
+
     it('submits a new entry and reloads the list', async () => {
         facade.initialize();
         TestBed.tick();
@@ -87,7 +103,7 @@ describe('WaistHistoryFacade entries', () => {
 
         facade.formModel.set({
             date: '2026-04-02',
-            circumferenceCm: '81.7',
+            circumference: '81.7',
         });
 
         facade.submit();
@@ -104,7 +120,7 @@ describe('WaistHistoryFacade entries', () => {
     it('does not submit invalid form', () => {
         facade.formModel.set({
             date: '',
-            circumferenceCm: '',
+            circumference: '',
         });
 
         facade.submit();
@@ -118,7 +134,7 @@ describe('WaistHistoryFacade entries', () => {
         waistEntriesService.create.mockReturnValueOnce(throwError(() => ({ error: { error: 'WaistEntry.AlreadyExists' } })));
         facade.formModel.set({
             date: '2026-04-02',
-            circumferenceCm: '81.7',
+            circumference: '81.7',
         });
 
         facade.submit();
@@ -153,7 +169,7 @@ describe('WaistHistoryFacade entries', () => {
         facade.cancelEdit();
 
         expect(facade.isEditing()).toBe(false);
-        expect(facade.formModel().circumferenceCm).toBe('80.5');
+        expect(facade.formModel().circumference).toBe('80.5');
     });
 
     it('deletes entry and exits edit mode when edited entry is removed', () => {
@@ -200,13 +216,13 @@ describe('WaistHistoryFacade ranges', () => {
 
 describe('WaistHistoryFacade desired waist', () => {
     it('saves desired waist after validation', () => {
-        facade.desiredWaistModel.set({ circumferenceCm: `${UPDATED_TARGET_WAIST}` });
+        facade.desiredWaistModel.set({ circumference: `${UPDATED_TARGET_WAIST}` });
 
         facade.saveDesiredWaist();
 
         expect(userService.updateWaistGoal).toHaveBeenCalledWith(UPDATED_TARGET_WAIST);
         expect(facade.desiredWaistCm()).toBe(UPDATED_TARGET_WAIST);
-        expect(facade.desiredWaistModel().circumferenceCm).toBe(`${UPDATED_TARGET_WAIST}`);
+        expect(facade.desiredWaistModel().circumference).toBe(`${UPDATED_TARGET_WAIST}`);
     });
 });
 

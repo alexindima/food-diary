@@ -7,6 +7,8 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateValue } from '../../../../shared/lib/local-date.utils';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WeightGoalHistoryItem } from '../../../../shared/models/user.data';
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 
@@ -23,12 +25,13 @@ const PERCENT_MAX = 100;
 
 @Component({
     selector: 'fd-weight-goal-history-dialog',
-    imports: [DecimalPipe, FdUiDialogComponent, FdUiIconComponent, TranslatePipe],
+    imports: [DecimalPipe, FdUiDialogComponent, FdUiIconComponent, MeasurementUnitPipe, MeasurementValuePipe, TranslatePipe],
     templateUrl: './weight-goal-history-dialog.html',
     styleUrl: './weight-goal-history-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeightGoalHistoryDialogComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly facade = inject(WeightHistoryFacade);
     private readonly translate = inject(TranslateService);
     private readonly dialogRef = inject(FdUiDialogRef<WeightGoalHistoryDialogComponent, void>);

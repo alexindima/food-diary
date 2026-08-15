@@ -28,9 +28,9 @@
                     id="goals-editor-weight"
                     type="number"
                     min="0"
-                    [value]="bodyTargets().weight"
+                    [value]="displayBodyTargets().weight"
                     (input)="updateBodyTarget('weight', $event)"
-                /><span>{{ 'GENERAL.UNITS.KG' | translate }}</span></span
+                /><span>{{ measurements.weightUnitKey() | translate }}</span></span
             >
         </div>
         <div class="goals-editor-body-row">
@@ -40,9 +40,9 @@
                     id="goals-editor-waist"
                     type="number"
                     min="0"
-                    [value]="bodyTargets().waist"
+                    [value]="displayBodyTargets().waist"
                     (input)="updateBodyTarget('waist', $event)"
-                /><span>{{ 'GENERAL.UNITS.CM' | translate }}</span></span
+                /><span>{{ measurements.lengthUnitKey() | translate }}</span></span
             >
         </div>
     </section>

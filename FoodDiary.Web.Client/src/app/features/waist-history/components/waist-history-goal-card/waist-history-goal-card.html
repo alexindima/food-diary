@@ -4,10 +4,24 @@
             <div class="waist-history-page__goal-heading fd-row fd-justify-between fd-align-end fd-gap-card-header">
                 <div>
                     <div class="fd-ui-card-title">
-                        {{ 'WAIST_HISTORY.GOAL_REMAINING' | translate: { value: progress.remaining | number: '1.0-2' } }}
+                        {{
+                            'WAIST_HISTORY.GOAL_REMAINING'
+                                | translate
+                                    : {
+                                          value: progress.remaining | measurementValue: 'length' | number: '1.0-2',
+                                          unit: 'length' | measurementUnit | translate,
+                                      }
+                        }}
                     </div>
                     <div class="fd-ui-caption fd-ui-text-muted">
-                        {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: desiredWaistCm() | number: '1.0-2' } }}
+                        {{
+                            'WAIST_HISTORY.GOAL_VALUE'
+                                | translate
+                                    : {
+                                          value: desiredWaistCm() | measurementValue: 'length' | number: '1.0-2',
+                                          unit: 'length' | measurementUnit | translate,
+                                      }
+                        }}
                     </div>
                 </div>
                 <div class="waist-history-page__goal-percent fd-ui-stat-value">{{ progress.percent | number: '1.0-0' }}%</div>
@@ -25,7 +39,10 @@
                 <div class="waist-history-page__goal-stat fd-row fd-align-center">
                     <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="straighten" size="lg" /></div>
                     <div>
-                        <div class="fd-ui-stat-value">{{ progress.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}</div>
+                        <div class="fd-ui-stat-value">
+                            {{ progress.change | measurementValue: 'length' | number: '1.0-2' }}
+                            {{ 'length' | measurementUnit | translate }}
+                        </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_PERIOD_CHANGE' | translate }}</div>
                     </div>
                 </div>
@@ -40,7 +57,8 @@
                     <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="trending_down" size="lg" /></div>
                     <div>
                         <div class="fd-ui-stat-value">
-                            {{ progress.weeklyRate | number: '1.0-2' }} {{ 'WAIST_HISTORY.CM_PER_WEEK' | translate }}
+                            {{ progress.weeklyRate | measurementValue: 'length' | number: '1.0-2' }}
+                            {{ 'WAIST_HISTORY.CM_PER_WEEK' | translate: { unit: 'length' | measurementUnit | translate } }}
                         </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_AVERAGE_RATE' | translate }}</div>
                     </div>
@@ -49,7 +67,8 @@
                     <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="hourglass_top" size="lg" /></div>
                     <div>
                         <div class="fd-ui-stat-value">
-                            {{ progress.startWaistCm | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                            {{ progress.startWaistCm | measurementValue: 'length' | number: '1.0-2' }}
+                            {{ 'length' | measurementUnit | translate }}
                         </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_START_WAIST' | translate }}</div>
                     </div>
@@ -58,7 +77,8 @@
                     <div class="waist-history-page__goal-stat-icon"><fd-ui-icon name="straighten" size="lg" /></div>
                     <div>
                         <div class="fd-ui-stat-value">
-                            {{ progress.currentWaist | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                            {{ progress.currentWaist | measurementValue: 'length' | number: '1.0-2' }}
+                            {{ 'length' | measurementUnit | translate }}
                         </div>
                         <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.GOAL_CURRENT_WAIST' | translate }}</div>
                     </div>
@@ -83,13 +103,21 @@
                         <div>
                             <div class="fd-ui-caption fd-ui-text-muted">{{ 'WAIST_HISTORY.LAST_GOAL' | translate }}</div>
                             <div class="fd-ui-card-title">
-                                {{ 'WAIST_HISTORY.GOAL_VALUE' | translate: { value: lastGoal.targetWaistCm | number: '1.0-2' } }}
+                                {{
+                                    'WAIST_HISTORY.GOAL_VALUE'
+                                        | translate
+                                            : {
+                                                  value: lastGoal.targetWaistCm | measurementValue: 'length' | number: '1.0-2',
+                                                  unit: 'length' | measurementUnit | translate,
+                                              }
+                                }}
                             </div>
                         </div>
                         @if (lastGoal.change !== null) {
                             <div class="fd-row fd-align-center fd-gap-xs fd-ui-stat-value">
                                 <fd-ui-icon name="trending_down" size="sm" />{{ lastGoal.change > 0 ? '+' : ''
-                                }}{{ lastGoal.change | number: '1.0-2' }} {{ 'GENERAL.UNITS.CM' | translate }}
+                                }}{{ lastGoal.change | measurementValue: 'length' | number: '1.0-2' }}
+                                {{ 'length' | measurementUnit | translate }}
                             </div>
                         }
                     </div>

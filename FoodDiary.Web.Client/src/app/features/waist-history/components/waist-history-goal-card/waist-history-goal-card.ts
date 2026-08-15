@@ -7,6 +7,8 @@ import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateValue } from '../../../../shared/lib/local-date.utils';
+import { MeasurementUnitPipe, MeasurementValuePipe } from '../../../../shared/measurements/measurement-display.pipe';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WaistGoalHistoryItem } from '../../../../shared/models/user.data';
 
 const PERCENT_MAX = 100;
@@ -15,12 +17,21 @@ const MILLISECONDS_PER_DAY = 86_400_000;
 
 @Component({
     selector: 'fd-waist-history-goal-card',
-    imports: [DecimalPipe, FdUiButtonComponent, FdUiCardComponent, FdUiIconComponent, TranslatePipe],
+    imports: [
+        DecimalPipe,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        FdUiIconComponent,
+        MeasurementUnitPipe,
+        MeasurementValuePipe,
+        TranslatePipe,
+    ],
     templateUrl: './waist-history-goal-card.html',
     styleUrl: '../../pages/waist-history-page/waist-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WaistHistoryGoalCardComponent {
+    protected readonly measurements = inject(MeasurementSystemService);
     private readonly translateService = inject(TranslateService);
     public readonly currentWaist = input.required<number | null>();
     public readonly currentWaistDate = input.required<string | null>();
