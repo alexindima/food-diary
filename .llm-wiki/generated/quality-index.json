@@ -15416,11 +15416,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSetSnapshotService.cs",
-      "nonBlankLines": 143,
-      "decisionPoints": 20,
+      "nonBlankLines": 159,
+      "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 32.86
+      "structuralRiskScore": 34.68
     },
     {
       "path": "FoodDiary.Development.Mcp/DevelopmentContext.cs",
@@ -15552,11 +15552,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/WikiQueryService.cs",
-      "nonBlankLines": 73,
+      "nonBlankLines": 78,
       "decisionPoints": 3,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.96
+      "structuralRiskScore": 6.06
     },
     {
       "path": "FoodDiary.Development.Mcp/WikiTools.cs",

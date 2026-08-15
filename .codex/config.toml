@@ -1,6 +1,6 @@
 [mcp_servers.fooddiary_development]
-command = "dotnet"
-args = ["FoodDiary.Development.Mcp/bin/Debug/net10.0/FoodDiary.Development.Mcp.dll", "--no-build"]
+command = "scripts\\Start-FoodDiaryDevelopmentMcp.cmd"
+args = ["--no-build"]
 cwd = "."
 startup_timeout_sec = 60
 tool_timeout_sec = 150

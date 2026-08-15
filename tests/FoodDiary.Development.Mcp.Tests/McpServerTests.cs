@@ -1,5 +1,6 @@
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol;
+using System.Diagnostics;
 
 namespace FoodDiary.Development.Mcp.Tests;
 
@@ -56,6 +57,40 @@ public sealed class McpServerTests {
         });
     }
 
+    [Fact]
+    public async Task ConfiguredServer_AggregatesContextWithoutLockingBuildOutput() {
+        string repositoryRoot = FindRepositoryRoot();
+        var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
+        var transport = new StdioClientTransport(configuration.CreateTransportOptions("FoodDiary MCP aggregate test"));
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(90));
+        await using McpClient client = await McpClient.CreateAsync(
+            transport,
+            cancellationToken: timeout.Token);
+
+        var stopwatch = Stopwatch.StartNew();
+        CallToolResult result = await client.CallToolAsync(
+            "get_development_context",
+            new Dictionary<string, object?>(StringComparer.Ordinal) {
+                ["intent"] = "Improve FoodDiary Development MCP latency",
+                ["query"] = "WikiQueryService GetDevelopmentContextAsync",
+                ["plannedPath"] = "FoodDiary.Development.Mcp",
+            },
+            cancellationToken: timeout.Token);
+        stopwatch.Stop();
+
+        Assert.NotEqual(true, result.IsError);
+        Assert.Contains(result.Content, content =>
+            content.ToString()!.Contains("snapshotFingerprint", StringComparison.OrdinalIgnoreCase));
+        Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(60), $"Aggregate context took {stopwatch.Elapsed}.");
+
+        ProcessResult build = await RunProcessAsync(
+            "dotnet",
+            ["build", "FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj", "--no-restore"],
+            repositoryRoot,
+            timeout.Token);
+        Assert.True(build.ExitCode == 0, build.Output);
+    }
+
     private static async Task<CallToolResult> CallStatusAsync(
         CodexMcpTestConfiguration configuration,
         string name) {
@@ -67,6 +102,34 @@ public sealed class McpServerTests {
         return await client.CallToolAsync(
             "get_server_status",
             cancellationToken: timeout.Token);
+    }
+
+    private static async Task<ProcessResult> RunProcessAsync(
+        string fileName,
+        IReadOnlyList<string> arguments,
+        string workingDirectory,
+        CancellationToken cancellationToken) {
+        using Process process = new() {
+            StartInfo = new ProcessStartInfo {
+                FileName = fileName,
+                WorkingDirectory = workingDirectory,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            },
+        };
+        foreach (string argument in arguments) {
+            process.StartInfo.ArgumentList.Add(argument);
+        }
+
+        process.Start();
+        Task<string> standardOutput = process.StandardOutput.ReadToEndAsync(cancellationToken);
+        Task<string> standardError = process.StandardError.ReadToEndAsync(cancellationToken);
+        await process.WaitForExitAsync(cancellationToken);
+        return new ProcessResult(
+            process.ExitCode,
+            string.Join(Environment.NewLine, await standardOutput, await standardError));
     }
 
     private static string FindRepositoryRoot() {

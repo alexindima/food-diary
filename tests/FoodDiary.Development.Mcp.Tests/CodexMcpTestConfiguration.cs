@@ -52,8 +52,8 @@ internal sealed record CodexMcpTestConfiguration(
 
     public StdioClientTransportOptions CreateTransportOptions(string name) => new() {
         Name = name,
-        Command = "dotnet",
-        Arguments = [Path.Combine(AppContext.BaseDirectory, "FoodDiary.Development.Mcp.dll")],
+        Command = Command,
+        Arguments = Arguments,
         WorkingDirectory = WorkingDirectory,
         ShutdownTimeout = TimeSpan.FromSeconds(10),
     };

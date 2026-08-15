@@ -29,6 +29,8 @@ public sealed class WikiQueryServiceTests {
             "brief",
             Arg.Is<IReadOnlyList<string>>(arguments =>
                 arguments.SequenceEqual(new[] {
+                    "-Format",
+                    "Json",
                     "-Intent",
                     "Add MCP; Write-Error must stay data",
                     "-PlannedPath",
@@ -56,6 +58,8 @@ public sealed class WikiQueryServiceTests {
         await _executor.Received(1).ExecuteAsync(
             "test-plan",
             Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] {
+                "-Format",
+                "Json",
                 "-ChangedPathList",
                 "FoodDiary.Development.Mcp/WikiQueryService.cs",
             })),
@@ -77,9 +81,23 @@ public sealed class WikiQueryServiceTests {
         await _executor.Received(1).ExecuteAsync(
             "trace",
             Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] {
+                "-Format",
+                "Json",
                 "-Fast",
                 "-Query",
                 "SomeCommand",
+            })),
+            CancellationToken.None);
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] {
+                "-Format",
+                "Json",
+                "-Fast",
+                "-Intent",
+                "Change a backend flow",
+                "-ChangedPathList",
+                "FoodDiary.Development.Mcp/WikiQueryService.cs",
             })),
             CancellationToken.None);
     }

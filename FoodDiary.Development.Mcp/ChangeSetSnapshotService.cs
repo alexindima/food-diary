@@ -6,6 +6,7 @@ using System.Text;
 namespace FoodDiary.Development.Mcp;
 
 public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDisposable {
+    private static readonly TimeSpan GitTimeout = TimeSpan.FromSeconds(15);
     private readonly string _repositoryRoot = RepositoryRootResolver.Resolve();
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly FileSystemWatcher _watcher;
@@ -92,36 +93,52 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             DateTimeOffset.UtcNow);
     }
 
-    private Task<string> RunGitAsync(
+    private async Task<string> RunGitAsync(
         IReadOnlyList<string> arguments,
-        CancellationToken cancellationToken) => Task.Run(() => {
-            using Process process = new() {
-                StartInfo = new ProcessStartInfo {
-                    FileName = "git",
-                    WorkingDirectory = _repositoryRoot,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                },
-            };
-            foreach (string argument in arguments) {
-                process.StartInfo.ArgumentList.Add(argument);
-            }
+        CancellationToken cancellationToken) {
+        using Process process = new() {
+            StartInfo = new ProcessStartInfo {
+                FileName = "git",
+                WorkingDirectory = _repositoryRoot,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            },
+        };
+        process.StartInfo.ArgumentList.Add("-c");
+        process.StartInfo.ArgumentList.Add("core.fsmonitor=false");
+        foreach (string argument in arguments) {
+            process.StartInfo.ArgumentList.Add(argument);
+        }
 
-            process.Start();
-            string output = process.StandardOutput.ReadToEnd();
-            string error = process.StandardError.ReadToEnd();
-            process.WaitForExit();
-            cancellationToken.ThrowIfCancellationRequested();
-            if (process.ExitCode != 0) {
-                throw new DevelopmentMcpException(
-                    DevelopmentMcpErrorCodes.RepositoryNotFound,
-                    $"Git change-set snapshot failed: {error.Trim()}");
-            }
+        process.Start();
+        process.StandardInput.Close();
+        Task<string> standardOutput = process.StandardOutput.ReadToEndAsync(cancellationToken);
+        Task<string> standardError = process.StandardError.ReadToEndAsync(cancellationToken);
+        using CancellationTokenSource timeout = new(GitTimeout);
+        using var linkedCancellation =
+            CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
+        try {
+            await process.WaitForExitAsync(linkedCancellation.Token).ConfigureAwait(false);
+        } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
+            process.Kill(entireProcessTree: true);
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.Timeout,
+                $"Git change-set snapshot exceeded {GitTimeout}.");
+        }
 
-            return output;
-        }, cancellationToken);
+        string output = await standardOutput.ConfigureAwait(false);
+        string error = await standardError.ConfigureAwait(false);
+        if (process.ExitCode != 0) {
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.RepositoryNotFound,
+                $"Git change-set snapshot failed: {error.Trim()}");
+        }
+
+        return output;
+    }
 
     private static string[] ParseChangedPaths(string porcelain) {
         string[] records = porcelain.Split('\0', StringSplitOptions.RemoveEmptyEntries);

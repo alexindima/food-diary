@@ -767,13 +767,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "247099b514c69f3eedadb2dc2a7f8080a15fe5cba4aaf8b2fbec330cb929f6a2"
+          "sha256": "03b63facac60998a453a7f8eb99ac2b598913b4e345f7b33d629099ae98dfb89"
         }
       ],
-      "reason": "Reviewed after Prettier-only normalization of five already verified frontend files; behavior, contracts, ownership, and risk profile are unchanged.",
+      "reason": "Reviewed quality-risk workflow after adding config-driven MCP latency, concurrency, and build-lock regression coverage; no workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
-      "reviewedAtUtc": "2026-08-14T22:45:39.0119413Z"
+      "gitHead": "2a936b4ece050b8e25b2125eb0af6d771c8ca97b",
+      "reviewedAtUtc": "2026-08-14T23:27:48.2931806Z"
     },
     {
       "pageId": "workflow-release-readiness",
