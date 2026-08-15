@@ -63,6 +63,10 @@ public sealed class UpsertCycleDayCommandHandler(
     }
 
     private static void ApplyBleeding(CycleProfile profile, UpsertCycleDayCommand command) {
+        if (command.ClearBleeding) {
+            profile.ClearBleedingEntries(command.Date);
+        }
+
         if (command.Bleeding is null) {
             return;
         }

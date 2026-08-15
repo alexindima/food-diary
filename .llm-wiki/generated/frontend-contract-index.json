@@ -7,7 +7,7 @@
     "outputs": 409,
     "apiCalls": 221,
     "templatesWithTranslations": 263,
-    "translationKeys": 1435,
+    "translationKeys": 1436,
     "consumerEdges": 959,
     "consumedComponents": 272,
     "unconsumedComponents": 149
@@ -15832,6 +15832,7 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "keys": [
+        "COMMON.CANCEL",
         "CYCLE_TRACKING.AVG_LENGTH",
         "CYCLE_TRACKING.BBT",
         "CYCLE_TRACKING.BLEEDING_TYPE",
@@ -15851,6 +15852,7 @@
         "CYCLE_TRACKING.IS_BLEEDING",
         "CYCLE_TRACKING.IS_REGULAR",
         "CYCLE_TRACKING.LOG_DAY_TITLE",
+        "CYCLE_TRACKING.LOG_TODAY",
         "CYCLE_TRACKING.LUTEAL_LENGTH",
         "CYCLE_TRACKING.MODE",
         "CYCLE_TRACKING.NOTES",
@@ -21706,7 +21708,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "occurrences": 7,
+      "occurrences": 9,
       "inputsUsed": [
         "appearance",
         "ariaLabel",

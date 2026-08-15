@@ -283,6 +283,38 @@ describe('CycleTrackingFacade day form editing', () => {
             notes: 'note',
         });
     });
+
+    it('requests scoped bleeding removal when editing a day with bleeding turned off', async () => {
+        const date = '2026-04-02T00:00:00.000Z';
+        cyclesService.getCurrent.mockReturnValue(
+            of({
+                ...createCycleResponse(),
+                bleedingEntries: [createBleedingEntry('bleeding-1', date)],
+            }),
+        );
+        cyclesService.upsertDay.mockReturnValue(
+            of({
+                cycleProfileId: 'cycle-1',
+                date,
+                bleedingEntries: [],
+                symptoms: [],
+                fertilitySignal: null,
+            }),
+        );
+        facade.initialize();
+        facade.editDay(date);
+        facade.dayModel.update(value => ({ ...value, isBleeding: false }));
+
+        facade.saveDay();
+
+        expect(cyclesService.upsertDay.mock.calls[0][1]).toMatchObject({
+            bleeding: null,
+            clearBleeding: true,
+        });
+        await vi.waitFor(() => {
+            expect(facade.bleedingEntries()).toEqual([]);
+        });
+    });
 });
 
 describe('CycleTrackingFacade symptom values', () => {

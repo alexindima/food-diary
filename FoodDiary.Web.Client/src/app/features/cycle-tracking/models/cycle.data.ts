@@ -209,6 +209,7 @@ export type CycleLogDay = {
 export type UpsertCycleDayPayload = {
     date: string;
     bleeding?: BleedingLogPayload | null;
+    clearBleeding?: boolean;
     symptoms: SymptomLogPayload[];
     fertilitySignal?: FertilitySignalPayload | null;
 };

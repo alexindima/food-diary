@@ -94,6 +94,8 @@ export class CycleTrackingPageComponent {
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly languageVersion = signal(0);
+    protected readonly isDayEditorOpen = signal(false);
+    protected readonly areAdvancedDayFieldsOpen = signal(false);
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSavingCycle = this.facade.isSavingCycle;
@@ -191,10 +193,26 @@ export class CycleTrackingPageComponent {
 
     protected editDay(date: string): void {
         this.facade.editDay(date);
+        this.isDayEditorOpen.set(true);
     }
 
     protected cancelDayEdit(): void {
         this.facade.cancelDayEdit();
+        this.isDayEditorOpen.set(false);
+        this.areAdvancedDayFieldsOpen.set(false);
+    }
+
+    protected openDayEditor(): void {
+        this.facade.cancelDayEdit();
+        this.isDayEditorOpen.set(true);
+    }
+
+    protected closeDayEditor(): void {
+        this.cancelDayEdit();
+    }
+
+    protected toggleAdvancedDayFields(): void {
+        this.areAdvancedDayFieldsOpen.update(value => !value);
     }
 
     protected clearDay(date: string): void {

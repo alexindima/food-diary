@@ -4,4 +4,5 @@ public sealed record UpsertCycleDayHttpRequest(
     DateTime Date,
     BleedingLogHttpModel? Bleeding,
     IReadOnlyCollection<SymptomLogHttpModel> Symptoms,
-    FertilitySignalHttpModel? FertilitySignal);
+    FertilitySignalHttpModel? FertilitySignal,
+    bool ClearBleeding = false);

@@ -306,6 +306,7 @@ export class CycleTrackingFacade {
                               clearNotes: false,
                           }
                         : null,
+                    clearBleeding: this.shouldClearBleeding(formValue),
                     symptoms,
                     fertilitySignal: this.buildFertilitySignalPayload(formValue),
                 })
@@ -343,6 +344,21 @@ export class CycleTrackingFacade {
         this.editingDayDate.set(null);
         this.cycle.set(updatedCycle);
         this.loadNutritionSummary(updatedCycle);
+    }
+
+    private shouldClearBleeding(formValue: CycleDayFormModel): boolean {
+        const editingDate = this.editingDayDate();
+        if (editingDate === null) {
+            return false;
+        }
+
+        const editingDateKey = toCycleDateKey(editingDate);
+        const existingEntries = this.bleedingEntries().filter(entry => toCycleDateKey(entry.date) === editingDateKey);
+        if (!formValue.isBleeding) {
+            return existingEntries.length > 0;
+        }
+
+        return existingEntries.some(entry => entry.type !== formValue.bleedingType);
     }
 
     public editDay(date: string): void {

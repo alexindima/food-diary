@@ -169,6 +169,33 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertCycleDayCommandHandler_WithClearBleeding_RemovesOnlyBleedingEntries() {
+        var user = User.Create("cycle-day-clear-bleeding@example.com", "hash");
+        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
+        profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpsertCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<CycleLogDayModel> result = await handler.Handle(
+            new UpsertCycleDayCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                date,
+                Bleeding: null,
+                Symptoms: [],
+                FertilitySignal: null,
+                ClearBleeding: true),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Empty(result.Value.BleedingEntries);
+        Assert.Single(result.Value.Symptoms);
+        Assert.True(repository.WasUpdated);
+    }
+
+    [Fact]
     public async Task ClearCycleDayCommandHandler_WithExistingDay_RemovesAllDayLogs() {
         var user = User.Create("cycle-day-clear@example.com", "hash");
         DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);

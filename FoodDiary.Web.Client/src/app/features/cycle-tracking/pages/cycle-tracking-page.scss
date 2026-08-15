@@ -18,6 +18,12 @@
         margin-bottom: var(--fd-space-card-gap);
     }
 
+    &__advanced-action {
+        justify-content: flex-start;
+        border-top: var(--fd-border-muted);
+        padding-top: var(--fd-space-sm);
+    }
+
     &__card {
         min-width: 0;
         height: 100%;

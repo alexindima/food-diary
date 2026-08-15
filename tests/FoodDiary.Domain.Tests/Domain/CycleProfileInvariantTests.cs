@@ -546,4 +546,26 @@ public class CycleProfileInvariantTests {
         Assert.False(removed);
         Assert.Null(profile.ModifiedOnUtc);
     }
+
+    [Fact]
+    public void ClearBleedingEntries_RemovesOnlyBleedingDataForDate() {
+        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
+        profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
+        profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
+        profile.UpsertFertilitySignal(
+            date,
+            basalBodyTemperatureCelsius: 36.6,
+            ovulationTestResult: OvulationTestResult.Negative,
+            cervicalFluid: null,
+            hadSex: null,
+            notes: null);
+
+        bool removed = profile.ClearBleedingEntries(date);
+
+        Assert.True(removed);
+        Assert.Empty(profile.BleedingEntries);
+        Assert.Single(profile.SymptomEntries);
+        Assert.Single(profile.FertilitySignals);
+    }
 }
