@@ -2580,7 +2580,6 @@
         "PERSONAL_SECTION": "Личная информация",
         "BODY_SECTION": "Параметры тела",
         "HEIGHT": "Рост",
-        "HEIGHT_PLACEHOLDER": "Введите рост (см)",
         "ACTIVITY_LEVEL": "Уровень активности",
         "SELECT_ACTIVITY_LEVEL": "Выберите уровень активности",
         "ACTIVITY_LEVEL_OPTIONS": {
@@ -3177,7 +3176,6 @@
         "BMR": "Базовый метаболизм",
         "FORMULA_ESTIMATE": "Оценка по формуле",
         "WEIGHT_TREND": "Тренд веса",
-        "KG_WEEK": "кг/нед",
         "SUGGESTED_GOAL": "Рекомендуемая цель: {{ value }} ккал",
         "APPLY": "Применить",
         "CONFIDENCE": {

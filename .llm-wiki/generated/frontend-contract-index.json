@@ -7,7 +7,7 @@
     "outputs": 411,
     "apiCalls": 221,
     "templatesWithTranslations": 265,
-    "translationKeys": 1451,
+    "translationKeys": 1449,
     "consumerEdges": 970,
     "consumedComponents": 273,
     "unconsumedComponents": 149
@@ -17467,8 +17467,9 @@
       "keys": [
         "USER_MANAGE.ACTIVITY_LEVEL",
         "USER_MANAGE.BODY_SECTION",
-        "USER_MANAGE.HEIGHT",
-        "USER_MANAGE.HEIGHT_PLACEHOLDER",
+        "USER_MANAGE.COMPARISON.HEIGHT_CM",
+        "USER_MANAGE.COMPARISON.HEIGHT_FT",
+        "USER_MANAGE.COMPARISON.HEIGHT_IN",
         "USER_MANAGE.SELECT_ACTIVITY_LEVEL"
       ]
     },
@@ -27519,10 +27520,9 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.html",
-      "occurrences": 1,
+      "occurrences": 3,
       "inputsUsed": [
         "label",
-        "placeholder",
         "size",
         "type"
       ],

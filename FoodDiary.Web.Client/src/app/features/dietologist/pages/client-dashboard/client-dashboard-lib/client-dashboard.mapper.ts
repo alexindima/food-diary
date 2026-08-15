@@ -1,3 +1,9 @@
+import {
+    centimetersToImperialHeight,
+    centimetersToInches,
+    kilogramsToPounds,
+    type MeasurementSystem,
+} from '../../../../../shared/measurements/measurement-system.service';
 import type { ClientSummary, DietologistPermissions } from '../../../../../shared/models/dietologist.data';
 import type { DietologistClientGoals, DietologistRecommendation } from '../../../../../shared/models/dietologist.data';
 import type { DashboardSnapshot } from '../../../../dashboard/models/dashboard.data';
@@ -67,24 +73,24 @@ export function getClientDashboardTitle(client: ClientSummary): string {
     return fullName.length > 0 ? fullName : client.email;
 }
 
-export function buildClientProfileChips(client: ClientSummary | null): string[] {
+export function buildClientProfileChips(client: ClientSummary | null, system: MeasurementSystem = 'metric'): string[] {
     if (client?.permissions.shareProfile !== true) {
         return [];
     }
 
-    return [formatProfileChip(client.heightCm, ' cm'), client.gender, client.activityLevel].filter(
+    return [formatHeight(client.heightCm, system), client.gender, client.activityLevel].filter(
         (value): value is string => value !== null && value.length > 0,
     );
 }
 
-export function buildClientProfileDetails(client: ClientSummary | null): ClientProfileDetail[] {
+export function buildClientProfileDetails(client: ClientSummary | null, system: MeasurementSystem = 'metric'): ClientProfileDetail[] {
     if (client?.permissions.shareProfile !== true) {
         return [];
     }
 
     return [
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.EMAIL', value: client.email },
-        { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.HEIGHT', value: formatNullableNumber(client.heightCm, ' cm') },
+        { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.HEIGHT', value: formatHeight(client.heightCm, system) ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.GENDER', value: client.gender ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.ACTIVITY', value: client.activityLevel ?? '-' },
         { labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.PROFILE.BIRTH_DATE', value: formatDateOnly(client.birthDate) },
@@ -166,7 +172,11 @@ export function buildNutritionTiles(snapshot: DashboardSnapshot | null): ClientM
     ];
 }
 
-export function buildBodyTiles(snapshot: DashboardSnapshot | null, permissions?: DietologistPermissions): ClientMetricTile[] {
+export function buildBodyTiles(
+    snapshot: DashboardSnapshot | null,
+    permissions?: DietologistPermissions,
+    system: MeasurementSystem = 'metric',
+): ClientMetricTile[] {
     if (snapshot === null) {
         return [];
     }
@@ -174,11 +184,11 @@ export function buildBodyTiles(snapshot: DashboardSnapshot | null, permissions?:
     return [
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.WEIGHT',
-            value: formatNullableNumber(snapshot.weight.latest?.weightKg, ' kg'),
+            value: formatMeasurement(snapshot.weight.latest?.weightKg, system, 'weight'),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.WAIST',
-            value: formatNullableNumber(snapshot.waist.latest?.circumferenceCm, ' cm'),
+            value: formatMeasurement(snapshot.waist.latest?.circumferenceCm, system, 'length'),
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.HYDRATION',
@@ -202,7 +212,7 @@ export function buildBodyTiles(snapshot: DashboardSnapshot | null, permissions?:
     });
 }
 
-export function buildGoalTiles(goals: DietologistClientGoals | null): ClientMetricTile[] {
+export function buildGoalTiles(goals: DietologistClientGoals | null, system: MeasurementSystem = 'metric'): ClientMetricTile[] {
     if (goals === null) {
         return [];
     }
@@ -222,7 +232,7 @@ export function buildGoalTiles(goals: DietologistClientGoals | null): ClientMetr
         },
         {
             labelKey: 'DIETOLOGIST.CLIENT_DASHBOARD.METRICS.DESIRED_WEIGHT',
-            value: formatNullableNumber(goals.desiredWeightKg, ' kg'),
+            value: formatMeasurement(goals.desiredWeightKg, system, 'weight'),
         },
     ];
 }
@@ -253,27 +263,30 @@ export function buildMealViews(snapshot: DashboardSnapshot | null): ClientMealVi
     }));
 }
 
-export function buildWeightView(snapshot: DashboardSnapshot | null): ClientBodyMeasurementView | null {
+export function buildWeightView(
+    snapshot: DashboardSnapshot | null,
+    system: MeasurementSystem = 'metric',
+): ClientBodyMeasurementView | null {
     if (snapshot?.weight.latest === null || snapshot?.weight.latest === undefined) {
         return null;
     }
 
     return {
         date: snapshot.weight.latest.date,
-        value: formatNumber(snapshot.weight.latest.weightKg, ' kg'),
-        delta: formatDelta(snapshot.weight.latest.weightKg, snapshot.weight.previous?.weightKg, ' kg'),
+        value: formatMeasurement(snapshot.weight.latest.weightKg, system, 'weight'),
+        delta: formatMeasurementDelta(snapshot.weight.latest.weightKg, snapshot.weight.previous?.weightKg, system, 'weight'),
     };
 }
 
-export function buildWaistView(snapshot: DashboardSnapshot | null): ClientBodyMeasurementView | null {
+export function buildWaistView(snapshot: DashboardSnapshot | null, system: MeasurementSystem = 'metric'): ClientBodyMeasurementView | null {
     if (snapshot?.waist.latest === null || snapshot?.waist.latest === undefined) {
         return null;
     }
 
     return {
         date: snapshot.waist.latest.date,
-        value: formatNumber(snapshot.waist.latest.circumferenceCm, ' cm'),
-        delta: formatDelta(snapshot.waist.latest.circumferenceCm, snapshot.waist.previous?.circumferenceCm, ' cm'),
+        value: formatMeasurement(snapshot.waist.latest.circumferenceCm, system, 'length'),
+        delta: formatMeasurementDelta(snapshot.waist.latest.circumferenceCm, snapshot.waist.previous?.circumferenceCm, system, 'length'),
     };
 }
 
@@ -305,8 +318,58 @@ export function buildFastingView(snapshot: DashboardSnapshot | null): ClientFast
     };
 }
 
-function formatProfileChip(value: number | null | undefined, suffix: string): string | null {
-    return value === null || value === undefined ? null : `${value}${suffix}`;
+function formatHeight(value: number | null | undefined, system: MeasurementSystem): string | null {
+    if (value === null || value === undefined) {
+        return null;
+    }
+
+    if (system === 'imperial') {
+        const height = centimetersToImperialHeight(value);
+        return `${height.feet} ft ${height.inches} in`;
+    }
+
+    return `${value} cm`;
+}
+
+function formatMeasurement(value: number | null | undefined, system: MeasurementSystem, kind: 'weight' | 'length'): string {
+    if (value === null || value === undefined) {
+        return '-';
+    }
+
+    const converted = convertMeasurement(value, system, kind);
+    return `${converted} ${measurementUnit(system, kind)}`;
+}
+
+function formatMeasurementDelta(
+    current: number,
+    previous: number | null | undefined,
+    system: MeasurementSystem,
+    kind: 'weight' | 'length',
+): string | null {
+    if (previous === null || previous === undefined) {
+        return null;
+    }
+
+    const delta = convertMeasurement(current - previous, system, kind);
+    const roundedDelta = Math.round(delta * ONE_DECIMAL_PRECISION) / ONE_DECIMAL_PRECISION;
+    const normalizedDelta = Math.abs(roundedDelta) < STABLE_DELTA_THRESHOLD ? 0 : roundedDelta;
+    return `${normalizedDelta > 0 ? '+' : ''}${normalizedDelta} ${measurementUnit(system, kind)}`;
+}
+
+function convertMeasurement(value: number, system: MeasurementSystem, kind: 'weight' | 'length'): number {
+    if (system === 'metric') {
+        return Math.round(value * ONE_DECIMAL_PRECISION) / ONE_DECIMAL_PRECISION;
+    }
+
+    return kind === 'weight' ? kilogramsToPounds(value) : centimetersToInches(value);
+}
+
+function measurementUnit(system: MeasurementSystem, kind: 'weight' | 'length'): string {
+    if (kind === 'weight') {
+        return system === 'imperial' ? 'lb' : 'kg';
+    }
+
+    return system === 'imperial' ? 'in' : 'cm';
 }
 
 function formatNullableNumber(value: number | null | undefined, suffix: string): string {
@@ -345,19 +408,6 @@ function formatMealItems(meal: Meal): string {
     }
 
     return names.slice(0, MEAL_ITEM_PREVIEW_LIMIT).join(', ');
-}
-
-function formatDelta(current: number, previous: number | null | undefined, suffix: string): string | null {
-    if (previous === null || previous === undefined) {
-        return null;
-    }
-
-    const delta = current - previous;
-    if (Math.abs(delta) < STABLE_DELTA_THRESHOLD) {
-        return `0${suffix}`;
-    }
-
-    return `${delta > 0 ? '+' : ''}${Math.round(delta * ONE_DECIMAL_PRECISION) / ONE_DECIMAL_PRECISION}${suffix}`;
 }
 
 function formatFastingProtocol(session: FastingSession): string {

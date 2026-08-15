@@ -2974,7 +2974,7 @@
       "role": "Component",
       "selector": "fd-client-dashboard",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/client-dashboard/client-dashboard.ts",
-      "line": 122
+      "line": 123
     },
     {
       "name": "ClientDashboardFastingCardComponent",
@@ -3030,7 +3030,7 @@
       "role": "Component",
       "selector": "fd-dietologist-client-card",
       "path": "FoodDiary.Web.Client/src/app/features/dietologist/pages/clients/dietologist-client-card/dietologist-client-card.ts",
-      "line": 16
+      "line": 17
     },
     {
       "name": "DietologistClientsListComponent",
@@ -4192,7 +4192,7 @@
       "role": "Component",
       "selector": "fd-user-manage-body-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.ts",
-      "line": 20
+      "line": 26
     },
     {
       "name": "UserManageComparisonWidgetsComponent",
@@ -5948,8 +5948,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3285,
-      "russianProperties": 3285,
+      "englishProperties": 3283,
+      "russianProperties": 3283,
       "countsMatch": true
     },
     {

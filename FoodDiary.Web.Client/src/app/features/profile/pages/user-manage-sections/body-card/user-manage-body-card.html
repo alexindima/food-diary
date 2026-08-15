@@ -6,15 +6,35 @@
         </div>
     </div>
     <div class="user-manage__body fd-grid fd-gap-lg fd-align-start">
-        <fd-ui-input
-            data-user-field="height"
-            type="number"
-            size="lg"
-            [formField]="userForm().heightCm"
-            [label]="'USER_MANAGE.HEIGHT' | translate"
-            [placeholder]="'USER_MANAGE.HEIGHT_PLACEHOLDER' | translate"
-            (valueChange)="onHeightChange($event)"
-        />
+        @if (measurements.system() === 'metric') {
+            <fd-ui-input
+                data-user-field="height"
+                type="number"
+                size="lg"
+                [formField]="userForm().heightCm"
+                [label]="'USER_MANAGE.COMPARISON.HEIGHT_CM' | translate"
+                (valueChange)="onHeightChange($event)"
+            />
+        } @else {
+            <div class="fd-grid fd-grid-cols-2 fd-gap-sm">
+                <fd-ui-input
+                    data-user-field="height-feet"
+                    type="number"
+                    size="lg"
+                    [value]="imperialHeight().feet"
+                    [label]="'USER_MANAGE.COMPARISON.HEIGHT_FT' | translate"
+                    (valueChange)="onImperialHeightChange('feet', $event)"
+                />
+                <fd-ui-input
+                    data-user-field="height-inches"
+                    type="number"
+                    size="lg"
+                    [value]="imperialHeight().inches"
+                    [label]="'USER_MANAGE.COMPARISON.HEIGHT_IN' | translate"
+                    (valueChange)="onImperialHeightChange('inches', $event)"
+                />
+            </div>
+        }
         <fd-ui-select
             size="lg"
             [formField]="userForm().activityLevel"

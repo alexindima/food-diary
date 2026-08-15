@@ -18,6 +18,7 @@ import { catchError, firstValueFrom, forkJoin, type Observable, of, switchMap, t
 import { LocalizedDatePipe } from '../../../../shared/i18n/localized-date.pipe';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type {
     ClientSummary,
     ClientTask,
@@ -129,6 +130,7 @@ export class ClientDashboardComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
+    private readonly measurements = inject(MeasurementSystemService);
 
     protected readonly periodPresetDays = PERIOD_PRESET_DAYS;
     protected readonly client = signal<ClientSummary | null>(null);
@@ -215,11 +217,11 @@ export class ClientDashboardComponent {
     });
     protected readonly profileChips = computed(() => {
         const client = this.client();
-        return buildClientProfileChips(client).map(value => this.localizeProfileValue(value, client));
+        return buildClientProfileChips(client, this.measurements.system()).map(value => this.localizeProfileValue(value, client));
     });
     protected readonly profileDetails = computed<ClientProfileDetail[]>(() => {
         const client = this.client();
-        return buildClientProfileDetails(client).map(detail => ({
+        return buildClientProfileDetails(client, this.measurements.system()).map(detail => ({
             ...detail,
             value: this.localizeProfileValue(detail.value, client),
         }));
@@ -237,16 +239,18 @@ export class ClientDashboardComponent {
     protected readonly nutritionTiles = computed<ClientMetricTile[]>(() =>
         this.client()?.permissions.shareStatistics === true ? buildNutritionTiles(this.dashboard()) : [],
     );
-    protected readonly bodyTiles = computed<ClientMetricTile[]>(() => buildBodyTiles(this.dashboard(), this.client()?.permissions));
-    protected readonly goalTiles = computed<ClientMetricTile[]>(() => buildGoalTiles(this.goals()));
+    protected readonly bodyTiles = computed<ClientMetricTile[]>(() =>
+        buildBodyTiles(this.dashboard(), this.client()?.permissions, this.measurements.system()),
+    );
+    protected readonly goalTiles = computed<ClientMetricTile[]>(() => buildGoalTiles(this.goals(), this.measurements.system()));
     protected readonly mealItems = computed<ClientMealView[]>(() =>
         this.client()?.permissions.shareMeals === true ? buildMealViews(this.dashboard()) : [],
     );
     protected readonly weightSummary = computed<ClientBodyMeasurementView | null>(() =>
-        this.client()?.permissions.shareWeight === true ? buildWeightView(this.dashboard()) : null,
+        this.client()?.permissions.shareWeight === true ? buildWeightView(this.dashboard(), this.measurements.system()) : null,
     );
     protected readonly waistSummary = computed<ClientBodyMeasurementView | null>(() =>
-        this.client()?.permissions.shareWaist === true ? buildWaistView(this.dashboard()) : null,
+        this.client()?.permissions.shareWaist === true ? buildWaistView(this.dashboard(), this.measurements.system()) : null,
     );
     protected readonly hydrationSummary = computed<ClientHydrationView | null>(() =>
         this.client()?.permissions.shareHydration === true ? buildHydrationView(this.dashboard()) : null,

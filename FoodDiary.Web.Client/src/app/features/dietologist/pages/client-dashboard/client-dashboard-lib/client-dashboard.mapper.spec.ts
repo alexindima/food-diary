@@ -12,6 +12,7 @@ import {
     buildMealViews,
     buildNutritionTiles,
     buildRecommendationViews,
+    buildWaistView,
     buildWeightView,
     getClientDashboardTitle,
 } from './client-dashboard.mapper';
@@ -94,6 +95,20 @@ describe('client dashboard detail mapper', () => {
                 plannedDuration: '16 h',
             }),
         );
+    });
+
+    it('formats client measurements in the dietologist imperial system', () => {
+        const snapshot = createDashboardSnapshot();
+
+        expect(buildClientProfileChips(createClient(), 'imperial')).toContain('5 ft 11 in');
+        expect(buildBodyTiles(snapshot as never, undefined, 'imperial').map(tile => tile.value)).toEqual([
+            '161.4 lb',
+            '33.1 in',
+            '1500 ml',
+            '1',
+        ]);
+        expect(buildWeightView(snapshot as never, 'imperial')).toEqual(expect.objectContaining({ value: '161.4 lb', delta: '+2.6 lb' }));
+        expect(buildWaistView(snapshot as never, 'imperial')).toEqual(expect.objectContaining({ value: '33.1 in' }));
     });
 
     it('maps recommendations with read state keys', () => {

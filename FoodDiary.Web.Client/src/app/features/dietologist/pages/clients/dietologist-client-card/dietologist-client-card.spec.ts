@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
+import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
 import { createClient } from '../dietologist-clients-lib/dietologist-clients.test-data';
 import type { ClientCardViewModel } from '../dietologist-clients-lib/dietologist-clients.types';
 import { DietologistClientCardComponent } from './dietologist-client-card';
@@ -32,6 +33,14 @@ describe('DietologistClientCardComponent', () => {
         expect(card?.getAttribute('tabindex')).toBe('0');
         expect(card?.getAttribute('aria-label')).toBe('Alex Ivanov');
         expect(open).toHaveBeenCalledWith(fixture.componentInstance['item']().client);
+    });
+
+    it('renders height in the dietologist preferred unit system', () => {
+        const fixture = createComponent();
+        TestBed.inject(MeasurementSystemService).setSystem('imperial');
+        fixture.detectChanges();
+
+        expect(getHost(fixture).textContent).toContain('5 ft 11 in');
     });
 });
 

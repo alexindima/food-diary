@@ -1319,7 +1319,6 @@
         "PERSONAL_SECTION": "Personal Information",
         "BODY_SECTION": "Body Metrics",
         "HEIGHT": "Height",
-        "HEIGHT_PLACEHOLDER": "Enter your height (cm)",
         "ACTIVITY_LEVEL": "Activity level",
         "SELECT_ACTIVITY_LEVEL": "Select activity level",
         "ACTIVITY_LEVEL_OPTIONS": {
@@ -3177,7 +3176,6 @@
         "BMR": "Basal metabolic rate",
         "FORMULA_ESTIMATE": "Formula estimate",
         "WEIGHT_TREND": "Weight trend",
-        "KG_WEEK": "kg/week",
         "SUGGESTED_GOAL": "Suggested goal: {{ value }} kcal",
         "APPLY": "Apply",
         "CONFIDENCE": {
