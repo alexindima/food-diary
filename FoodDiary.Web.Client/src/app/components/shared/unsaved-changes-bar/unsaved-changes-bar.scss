@@ -1,0 +1,42 @@
+@use 'variables' as variables;
+
+:host {
+    display: contents;
+}
+
+.unsaved-changes-bar {
+    left: calc(var(--fd-layout-sidebar-width) + var(--fd-space-lg));
+    right: var(--fd-space-lg);
+    bottom: var(--fd-space-sm);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--fd-space-md);
+    padding: var(--fd-space-sm) var(--fd-space-md);
+    color: var(--fd-color-amber-500);
+    background: var(--fd-bg-surface-elevated);
+    border: var(--fd-border-muted);
+    border-radius: var(--fd-radius-card);
+    box-shadow: var(--fd-shadow-lg);
+
+    &__actions {
+        display: flex;
+        gap: var(--fd-space-sm);
+    }
+}
+
+@media #{variables.$media-tablet} {
+    .unsaved-changes-bar {
+        right: var(--fd-space-sm);
+        bottom: calc(var(--fd-layout-shell-current-mobile-viewport-bottom-padding) + var(--fd-space-xs));
+        left: var(--fd-space-sm);
+        align-items: stretch;
+        flex-direction: column;
+
+        &__actions {
+            width: 100%;
+            justify-content: flex-end;
+        }
+    }
+}

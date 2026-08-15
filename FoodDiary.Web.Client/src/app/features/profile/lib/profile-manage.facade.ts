@@ -12,7 +12,6 @@ import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { UserService } from '../../../shared/api/user.service';
 import { LocalizationService } from '../../../shared/i18n/localization.service';
-import { type AutosaveQueue, createAutosaveQueue } from '../../../shared/lib/autosave-queue';
 import type { DietologistRelationship } from '../../../shared/models/dietologist.data';
 import type { UpdateUserDto, User } from '../../../shared/models/user.data';
 import {
@@ -38,18 +37,12 @@ export class ProfileManageFacade {
     private readonly notificationService = inject(NotificationService);
     private readonly themeService = inject(ThemeService);
     private readonly profileMeasurementsService = inject(ProfileMeasurementsService);
-    private readonly profileAutosaveQueue: AutosaveQueue<UpdateUserDto> = createAutosaveQueue({
-        debounceMs: 700,
-        isBusy: () => this.isSavingProfile(),
-        persist: updateData => {
-            this.persistProfileUpdate(updateData);
-        },
-    });
 
     public readonly user = signal<User | null>(null);
     public readonly globalError = signal<string | null>(null);
     public readonly isDeleting = signal(false);
     public readonly isSavingProfile = signal(false);
+    public readonly profileSavedVersion = signal(0);
     public readonly isRevokingAiConsent = signal(false);
     public readonly isLinkingGoogle = signal(false);
     public readonly isUpdatingNotifications = signal(false);
@@ -95,10 +88,6 @@ export class ProfileManageFacade {
         });
     }
 
-    public queueProfileAutosave(updateData: UpdateUserDto): void {
-        this.profileAutosaveQueue.schedule(updateData);
-    }
-
     public openChangePasswordDialog(): void {
         this.dialogService
             .open(ChangePasswordDialogComponent, {
@@ -141,7 +130,6 @@ export class ProfileManageFacade {
                 filter((confirmed): confirmed is true => confirmed === true),
                 filter(() => !this.isDeleting() && !this.isSavingProfile()),
                 tap(() => {
-                    this.profileAutosaveQueue.clearPending();
                     this.isDeleting.set(true);
                 }),
                 switchMap(() =>
@@ -252,7 +240,11 @@ export class ProfileManageFacade {
     }
 
     public saveProfileNow(updateData: UpdateUserDto): void {
-        this.profileAutosaveQueue.flushNow(updateData);
+        if (this.isSavingProfile()) {
+            return;
+        }
+
+        this.persistProfileUpdate(updateData);
     }
 
     private loadUser(): void {
@@ -306,22 +298,14 @@ export class ProfileManageFacade {
                         this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
                     } else {
                         this.user.set(user);
+                        this.profileSavedVersion.update(version => version + 1);
                         void this.localizationService.applyLanguagePreferenceAsync(user.language ?? null);
                         this.themeService.syncWithUserPreferences(user.theme, user.uiStyle);
                         this.clearGlobalError();
                     }
-
-                    this.profileAutosaveQueue.scheduleIfPending();
                 },
                 error: () => {
                     this.setGlobalError('USER_MANAGE.UPDATE_ERROR');
-                    const hasQueuedUpdate = this.profileAutosaveQueue.hasPending();
-                    if (!hasQueuedUpdate) {
-                        this.profileAutosaveQueue.restore(updateData);
-                        return;
-                    }
-
-                    this.profileAutosaveQueue.scheduleIfPending();
                 },
             });
     }

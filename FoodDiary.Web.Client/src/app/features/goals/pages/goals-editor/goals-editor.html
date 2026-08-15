@@ -30,17 +30,14 @@
             (dayCaloriesChange)="updateDayCalories($event)"
         />
         @if (dirty()) {
-            <div class="goals-editor__actions fd-fixed-action-bar" role="status">
-                <span>{{ 'GOALS_PAGE.EDITOR.UNSAVED' | translate }}</span>
-                <div>
-                    <fd-ui-button variant="secondary" fill="outline" (click)="discard()">{{
-                        'GOALS_PAGE.EDITOR.DISCARD' | translate
-                    }}</fd-ui-button>
-                    <fd-ui-button [loading]="saving()" (click)="persist()">{{
-                        (saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.EDITOR.SAVE') | translate
-                    }}</fd-ui-button>
-                </div>
-            </div>
+            <fd-unsaved-changes-bar
+                [message]="'GOALS_PAGE.EDITOR.UNSAVED' | translate"
+                [discardLabel]="'GOALS_PAGE.EDITOR.DISCARD' | translate"
+                [saveLabel]="(saving() ? 'GOALS_PAGE.STATUS_SAVING' : 'GOALS_PAGE.EDITOR.SAVE') | translate"
+                [saving]="saving()"
+                (discard)="discard()"
+                (save)="persist()"
+            />
         }
     </div>
 }

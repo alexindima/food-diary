@@ -253,7 +253,7 @@ describe('UserManageComponent notification relationship refresh', () => {
     });
 });
 
-describe('UserManageComponent profile autosave feedback', () => {
+describe('UserManageComponent explicit profile save feedback', () => {
     it('should prevent native profile form submit when saving now', async () => {
         await createComponentAsync(null);
 
@@ -269,15 +269,42 @@ describe('UserManageComponent profile autosave feedback', () => {
         expect(facade.saveProfileNow).toHaveBeenCalledTimes(1);
     });
 
-    it('queues profile autosave when editable user fields change', async () => {
+    it('does not save when editable user fields change', async () => {
         await createComponentAsync(null);
 
         component['userForm'].firstName().markAsDirty();
         component['userForm'].firstName().value.set('Alex');
         fixture.detectChanges();
 
-        expect(facade.queueProfileAutosave).toHaveBeenCalledTimes(1);
-        expect(facade.queueProfileAutosave.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alex' }));
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(component['hasUnsavedProfileChanges']()).toBe(true);
+    });
+
+    it('clears unsaved state after the profile save succeeds', async () => {
+        await createComponentAsync(null, false, {
+            id: 'u1',
+            email: 'user@example.com',
+            hasPassword: true,
+            firstName: 'Before',
+            pushNotificationsEnabled: true,
+            fastingPushNotificationsEnabled: true,
+            socialPushNotificationsEnabled: false,
+            fastingCheckInReminderHours: 4,
+            fastingCheckInFollowUpReminderHours: 8,
+            isActive: true,
+            isEmailConfirmed: true,
+        });
+
+        component['userForm'].firstName().value.set('Alex');
+        fixture.detectChanges();
+        expect(component['hasUnsavedProfileChanges']()).toBe(true);
+
+        facade.user.update(current => (current === null ? current : { ...current, firstName: 'Alex' }));
+        facade.profileSavedVersion.update(version => version + 1);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component['hasUnsavedProfileChanges']()).toBe(false);
     });
 
     it('ignores bubbled input events outside profile fields', async () => {
@@ -289,10 +316,10 @@ describe('UserManageComponent profile autosave feedback', () => {
 
         component['onUserFormInput'](inputEvent);
 
-        expect(facade.queueProfileAutosave).not.toHaveBeenCalled();
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
     });
 
-    it('queues select changes using the emitted value', async () => {
+    it('keeps select changes local until save', async () => {
         await createComponentAsync(null, false, {
             id: 'u1',
             email: 'user@example.com',
@@ -311,24 +338,9 @@ describe('UserManageComponent profile autosave feedback', () => {
 
         component['onUserFormPatch']({ gender: Gender.Female });
 
-        expect(facade.queueProfileAutosave).toHaveBeenCalledTimes(1);
-        expect(facade.queueProfileAutosave.mock.calls[0][0]).toEqual(expect.objectContaining({ gender: 'F' }));
-    });
-
-    it('reports pending and saving profile states for autosave feedback', async () => {
-        await createComponentAsync(null);
-
-        expect(component['profileStatus']().key).toBe('USER_MANAGE.PROFILE_STATUS_SAVED');
-
-        component['userForm'].firstName().markAsDirty();
-        component['userForm'].firstName().value.set('Alex');
-        fixture.detectChanges();
-
-        expect(component['profileStatus']().key).toBe('USER_MANAGE.PROFILE_STATUS_PENDING');
-
-        facade.isSavingProfile.set(true);
-        fixture.detectChanges();
-        expect(component['profileStatus']().key).toBe('USER_MANAGE.PROFILE_STATUS_SAVING');
+        expect(facade.saveProfileNow).not.toHaveBeenCalled();
+        expect(component['userForm'].gender().value()).toBe('F');
+        expect(component['hasUnsavedProfileChanges']()).toBe(true);
     });
 });
 
@@ -458,6 +470,7 @@ type ProfileManageFacadeMock = {
     globalError: ReturnType<typeof signal<string | null>>;
     isDeleting: ReturnType<typeof signal<boolean>>;
     isSavingProfile: ReturnType<typeof signal<boolean>>;
+    profileSavedVersion: ReturnType<typeof signal<number>>;
     isRevokingAiConsent: ReturnType<typeof signal<boolean>>;
     isLinkingGoogle: ReturnType<typeof signal<boolean>>;
     isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
@@ -470,7 +483,6 @@ type ProfileManageFacadeMock = {
     initialize: ReturnType<typeof vi.fn>;
     clearGlobalError: ReturnType<typeof vi.fn>;
     submitUpdate: ReturnType<typeof vi.fn>;
-    queueProfileAutosave: ReturnType<typeof vi.fn>;
     saveProfileNow: ReturnType<typeof vi.fn>;
     openChangePasswordDialog: ReturnType<typeof vi.fn>;
     linkGoogle: ReturnType<typeof vi.fn>;
@@ -686,6 +698,7 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         globalError: signal<string | null>(null),
         isDeleting: signal(false),
         isSavingProfile: signal(false),
+        profileSavedVersion: signal(0),
         isRevokingAiConsent: signal(false),
         isLinkingGoogle: signal(false),
         isUpdatingNotifications: signal(false),
@@ -698,7 +711,6 @@ function createFacadeMock(relationship: DietologistRelationship | null, user: Us
         initialize: vi.fn(),
         clearGlobalError: vi.fn(),
         submitUpdate: vi.fn(),
-        queueProfileAutosave: vi.fn(),
         saveProfileNow: vi.fn(),
         openChangePasswordDialog: vi.fn(),
         linkGoogle: vi.fn(),

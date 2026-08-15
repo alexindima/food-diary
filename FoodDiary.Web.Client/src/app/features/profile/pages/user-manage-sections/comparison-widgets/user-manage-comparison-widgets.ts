@@ -1,22 +1,27 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { FdUiMenuComponent } from 'fd-ui-kit/menu/fd-ui-menu';
+import { FdUiMenuDividerComponent } from 'fd-ui-kit/menu/fd-ui-menu-divider';
+import { FdUiMenuItemComponent } from 'fd-ui-kit/menu/fd-ui-menu-item';
+import { FdUiMenuTriggerDirective } from 'fd-ui-kit/menu/fd-ui-menu-trigger.directive';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
-import { FdUiStatusBadgeComponent } from 'fd-ui-kit/status-badge/fd-ui-status-badge';
 
+import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import { MeasurementSystemService } from '../../../../../shared/measurements/measurement-system.service';
 import type { ActivityLevelOption, Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
-import type { PasswordActionState, ProfileStatusViewModel, UserFormValues } from '../../user-manage/user-manage-lib/user-manage.types';
+import type {
+    UserFormValues,
+    UserManageAccountFormPatch,
+    UserManageBodyFormPatch,
+} from '../../user-manage/user-manage-lib/user-manage.types';
 import { calculateProfileCompleteness } from '../../user-manage/user-manage-lib/user-profile-completeness.mapper';
-import type { UserManageAccountFormPatch } from '../account-card/user-manage-account-card';
-import type { UserManageBodyFormPatch } from '../body-card/user-manage-body-card';
 
 const ISO_DATE_LENGTH = 10;
 const MIN_HEIGHT_FEET = 1;
@@ -34,13 +39,16 @@ const IMPERIAL_HEIGHT_RANGES = {
         FormField,
         RouterLink,
         TranslatePipe,
-        FdUiButtonComponent,
         FdUiCardComponent,
         FdUiDateInputComponent,
         FdUiIconComponent,
         FdUiInputComponent,
+        FdUiMenuComponent,
+        FdUiMenuDividerComponent,
+        FdUiMenuItemComponent,
+        FdUiMenuTriggerDirective,
         FdUiSelectComponent,
-        FdUiStatusBadgeComponent,
+        ImageUploadFieldComponent,
     ],
     templateUrl: './user-manage-comparison-widgets.html',
     styleUrl: './user-manage-comparison-widgets.scss',
@@ -48,9 +56,8 @@ const IMPERIAL_HEIGHT_RANGES = {
 })
 export class UserManageComparisonWidgetsComponent {
     protected readonly measurements = inject(MeasurementSystemService);
+    protected readonly avatarClearRequest = signal(0);
     public readonly userForm = input.required<FieldTree<UserFormValues>>();
-    public readonly profileStatus = input.required<ProfileStatusViewModel>();
-    public readonly passwordActionState = input.required<PasswordActionState>();
     public readonly genderOptions = input.required<Array<FdUiSelectOption<Gender | null>>>();
     public readonly languageOptions = input.required<Array<FdUiSelectOption<string | null>>>();
     public readonly themeOptions = input.required<Array<FdUiSelectOption<AppThemeName | null>>>();
@@ -59,11 +66,13 @@ export class UserManageComparisonWidgetsComponent {
     public readonly currentWeight = input.required<number | null>();
     public readonly currentWaist = input.required<number | null>();
 
-    public readonly passwordChange = output();
-    public readonly saveNow = output();
     public readonly userFormPatch = output<UserManageAccountFormPatch | UserManageBodyFormPatch>();
 
     protected readonly measurementSystem = this.measurements.system;
+
+    protected requestAvatarClear(): void {
+        this.avatarClearRequest.update(request => request + 1);
+    }
     protected readonly displayedWeight = computed(() => {
         const weightKg = this.currentWeight();
         return weightKg === null ? null : this.measurements.displayWeight(weightKg);

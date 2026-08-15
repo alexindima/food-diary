@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, input, output } from '@an
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSwitchComponent } from 'fd-ui-kit/switch/fd-ui-switch';
 
@@ -23,7 +22,6 @@ export type FastingReminderHoursChange = {
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
-        FdUiCardComponent,
         FdUiInputComponent,
         FdUiSwitchComponent,
         UserManageConnectedDevicesComponent,

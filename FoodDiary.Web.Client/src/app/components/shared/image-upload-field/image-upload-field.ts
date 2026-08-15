@@ -85,6 +85,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     public readonly resizeMaxDimension = input<number | null>(null);
     public readonly resizeQuality = input<number>(DEFAULT_RESIZE_QUALITY);
     public readonly deleteOnClear = input<boolean>(false);
+    public readonly clearRequest = input(0);
     public readonly initialSelection = input<ImageSelection | null>(null);
     public readonly value = model<ImageSelection | null>(null);
     public readonly touched = model(false);
@@ -114,6 +115,7 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
     private cropImageElement: HTMLImageElement | null = null;
     private cropInteraction: CropInteraction | null = null;
     private pendingPreviewUrl: string | null = null;
+    private handledClearRequest = 0;
 
     protected readonly appearanceClass = computed(() => `image-upload-field--appearance-${this.appearance()}`);
 
@@ -137,6 +139,15 @@ export class ImageUploadFieldComponent implements FormValueControl<ImageSelectio
                 this.selection.set(selection);
                 this.imageChanged.emit(selection);
             }
+        });
+        effect(() => {
+            const request = this.clearRequest();
+            if (request === this.handledClearRequest) {
+                return;
+            }
+
+            this.handledClearRequest = request;
+            this.clearImage();
         });
     }
 

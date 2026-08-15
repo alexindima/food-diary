@@ -14,8 +14,6 @@ import { UpdateUserDto, type User } from '../../../shared/models/user.data';
 import { NotificationService } from '../../../shared/notifications/notification.service';
 import { ProfileManageFacade } from './profile-manage.facade';
 
-const AUTOSAVE_DEBOUNCE_MS = 700;
-
 const user: User = {
     id: 'u1',
     email: 'test@example.com',
@@ -241,12 +239,11 @@ describe('ProfileManageFacade account actions', () => {
         expect(userService.deleteCurrentUser).not.toHaveBeenCalled();
     });
 
-    it('clears pending profile autosave before confirmed account deletion', async () => {
+    it('deletes the account without submitting a profile update', async () => {
         dialogService.open.mockReturnValueOnce({ afterClosed: () => of(true) });
 
-        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Pending' }));
         facade.deleteAccount();
-        await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
+        await waitForAsyncTasksAsync();
 
         expect(userService.deleteCurrentUser).toHaveBeenCalledTimes(1);
         expect(userService.update).not.toHaveBeenCalled();
@@ -319,41 +316,28 @@ describe('ProfileManageFacade notification preferences', () => {
     });
 });
 
-describe('ProfileManageFacade autosave', () => {
-    it('debounces profile autosave and updates user without success dialog', async () => {
+describe('ProfileManageFacade explicit profile save', () => {
+    it('updates the user immediately without a success dialog', () => {
         facade.initialize();
 
-        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alex' }));
-        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alexa' }));
-
-        expect(userService.update).not.toHaveBeenCalled();
-
-        await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
+        facade.saveProfileNow(new UpdateUserDto({ firstName: 'Alexa' }));
 
         expect(userService.update).toHaveBeenCalledTimes(1);
         expect(userService.update.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alexa' }));
         expect(dialogService.open).not.toHaveBeenCalled();
+        expect(facade.profileSavedVersion()).toBe(1);
     });
 
-    it('queues the latest autosave payload while a save is in flight', async () => {
+    it('ignores another save while a profile save is in flight', () => {
         facade.initialize();
 
         const inFlightUpdate = new Subject<User | null>();
         userService.update.mockReturnValueOnce(inFlightUpdate.asObservable());
 
-        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alex' }));
-        await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
+        facade.saveProfileNow(new UpdateUserDto({ firstName: 'Alex' }));
         expect(userService.update).toHaveBeenCalledTimes(1);
 
-        facade.queueProfileAutosave(new UpdateUserDto({ firstName: 'Alexa' }));
+        facade.saveProfileNow(new UpdateUserDto({ firstName: 'Alexa' }));
         expect(userService.update).toHaveBeenCalledTimes(1);
-
-        inFlightUpdate.next(user);
-        inFlightUpdate.complete();
-        await waitForAsyncTasksAsync();
-        await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
-
-        expect(userService.update).toHaveBeenCalledTimes(2);
-        expect(userService.update.mock.calls[1][0]).toEqual(expect.objectContaining({ firstName: 'Alexa' }));
     });
 });

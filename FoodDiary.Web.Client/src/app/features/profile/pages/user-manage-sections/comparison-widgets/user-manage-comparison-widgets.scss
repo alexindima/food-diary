@@ -1,13 +1,6 @@
 @use 'variables' as variables;
 
 .profile-comparison {
-    &__label {
-        align-items: center;
-        color: var(--fd-color-emerald-300);
-        font-size: var(--fd-text-body-sm-size);
-        font-weight: var(--fd-font-weight-semibold);
-    }
-
     &__summary {
         width: 100%;
         --fd-card-content-justify: start;
@@ -15,7 +8,7 @@
 
     &__summary-layout {
         display: grid;
-        grid-template-columns: minmax(260px, 1fr) minmax(300px, 1fr) minmax(200px, auto);
+        grid-template-columns: minmax(280px, 0.8fr) minmax(420px, 1.4fr);
         align-items: center;
         gap: var(--fd-space-lg);
     }
@@ -25,22 +18,52 @@
         min-width: 0;
     }
 
+    &__avatar-control {
+        width: calc(var(--fd-size-control-xxl) + var(--fd-space-md));
+        height: calc(var(--fd-size-control-xxl) + var(--fd-space-md));
+        flex: 0 0 calc(var(--fd-size-control-xxl) + var(--fd-space-md));
+    }
+
     &__avatar {
+        position: relative;
         display: grid;
         place-items: center;
-        width: var(--fd-size-control-xl);
-        height: var(--fd-size-control-xl);
-        flex: 0 0 var(--fd-size-control-xl);
+        width: 100%;
+        height: 100%;
         overflow: hidden;
+        padding: 0;
+        border: 0;
         border-radius: var(--fd-radius-pill);
         background: var(--fd-bg-profile-section-icon-account);
         color: var(--fd-color-text-strong);
+        cursor: pointer;
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
+
+        &:where(:hover, :focus-visible, [aria-expanded='true']) .profile-comparison__avatar-overlay {
+            opacity: 1;
+        }
+
+        &:focus-visible {
+            outline: var(--fd-outline-focus);
+            outline-offset: var(--fd-outline-offset);
+        }
+    }
+
+    &__avatar-overlay {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        border-radius: inherit;
+        background: var(--fd-bg-scrim);
+        color: var(--fd-color-white);
+        opacity: 0;
+        transition: opacity 160ms ease;
     }
 
     &__identity-copy {
@@ -62,8 +85,7 @@
         }
     }
 
-    &__completion,
-    &__save-state {
+    &__completion {
         color: var(--fd-color-text-muted);
         font-size: var(--fd-text-body-sm-size);
     }
@@ -87,10 +109,6 @@
         }
     }
 
-    &__save-state {
-        align-items: flex-end;
-    }
-
     &__editor {
         grid-template-columns: minmax(0, 1.45fr) minmax(320px, 1fr);
         align-items: stretch;
@@ -112,6 +130,15 @@
     }
 
     &__fields {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &__imperial-height,
+    &__activity--wide {
+        grid-column: 1 / -1;
+    }
+
+    &__imperial-height {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
@@ -180,16 +207,21 @@
         color: var(--fd-color-text-muted);
     }
 
-    &__appearance {
+    &__accordion {
         summary {
             display: grid;
             grid-template-columns: auto minmax(160px, auto) minmax(0, 1fr) auto;
             align-items: center;
             gap: var(--fd-space-sm);
             padding: var(--fd-space-sm) var(--fd-space-md);
+            border-bottom: var(--fd-border-width-default) solid transparent;
+            background: var(--fd-bg-surface-raised);
             cursor: pointer;
             list-style: none;
             color: var(--fd-color-text);
+            transition:
+                background 160ms ease,
+                border-color 160ms ease;
 
             &::-webkit-details-marker {
                 display: none;
@@ -197,7 +229,7 @@
 
             &:hover,
             &:focus-visible {
-                background: var(--fd-bg-surface-raised);
+                background: color-mix(in srgb, var(--fd-bg-surface-raised) 92%, var(--fd-color-text) 8%);
             }
 
             > fd-ui-icon:first-child {
@@ -208,26 +240,33 @@
                 overflow: hidden;
                 color: var(--fd-color-text-muted);
                 font-size: var(--fd-text-body-sm-size);
+                line-height: var(--fd-text-body-line-height);
                 text-overflow: ellipsis;
                 white-space: nowrap;
             }
         }
-
     }
 
-    &__appearance:where([open]) &__appearance-chevron {
+    &__accordion:where([open]) > summary {
+        border-bottom-color: var(--fd-color-emerald-500);
+    }
+
+    &__accordion:where([open]) &__accordion-chevron {
         transform: rotate(180deg);
     }
 
-    &__appearance-chevron {
+    &__accordion-chevron {
         color: var(--fd-color-text-muted);
         transition: transform 160ms ease;
     }
 
     &__appearance-fields {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        padding: var(--fd-space-sm) var(--fd-space-md) var(--fd-space-md);
-        border-top: var(--fd-border-default);
+        padding: var(--fd-space-md);
+    }
+
+    &__accordion-content {
+        padding: var(--fd-space-md);
     }
 
     &__section-links {
@@ -236,39 +275,8 @@
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-surface);
 
-        > details {
-            border-bottom: var(--fd-border-default);
-        }
-
-        a {
-            display: grid;
-            grid-template-columns: auto minmax(160px, auto) minmax(0, 1fr) auto;
-            align-items: center;
-            gap: var(--fd-space-sm);
-            padding: var(--fd-space-sm) var(--fd-space-md);
-            color: var(--fd-color-text);
-            text-decoration: none;
-
-            + a {
-                border-top: var(--fd-border-default);
-            }
-
-            &:hover,
-            &:focus-visible {
-                background: var(--fd-bg-surface-raised);
-            }
-
-            > fd-ui-icon:first-child {
-                color: var(--fd-color-emerald-300);
-            }
-
-            span {
-                overflow: hidden;
-                color: var(--fd-color-text-muted);
-                font-size: var(--fd-text-body-sm-size);
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
+        > details + details {
+            border-top: var(--fd-border-default);
         }
     }
 
@@ -276,10 +284,6 @@
         &__summary-layout,
         &__editor {
             grid-template-columns: 1fr;
-        }
-
-        &__save-state {
-            align-items: flex-start;
         }
     }
 
@@ -290,15 +294,7 @@
             grid-template-columns: 1fr;
         }
 
-        &__section-links a {
-            grid-template-columns: auto minmax(0, 1fr) auto;
-
-            span {
-                display: none;
-            }
-        }
-
-        &__appearance summary {
+        &__accordion summary {
             grid-template-columns: auto minmax(0, 1fr) auto;
 
             span {

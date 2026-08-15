@@ -1,12 +1,4 @@
-<fd-ui-card class="user-manage__card user-manage__card--security fd-stack fd-gap-card-profile" tone="profile" density="profile">
-    <div class="user-manage__card-header fd-row fd-gap-sm">
-        <div class="user-manage__card-icon user-manage__card-icon--security"></div>
-        <div class="user-manage__card-text fd-stack fd-gap-xxs">
-            <div class="user-manage__card-title">{{ 'USER_MANAGE.SECURITY_SECTION' | translate }}</div>
-            <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.SECURITY_DESC' | translate }}</div>
-        </div>
-    </div>
-
+<div class="user-manage__security fd-stack fd-gap-sm">
     <div class="user-manage__login-method fd-row fd-gap-sm">
         <div class="user-manage__google-mark" aria-hidden="true">G</div>
         <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
@@ -46,4 +38,19 @@
             }
         </div>
     </div>
-</fd-ui-card>
+
+    <div class="user-manage__login-method fd-row fd-gap-sm">
+        <fd-ui-icon class="user-manage__login-method-icon" name="lock" />
+        <div class="user-manage__login-method-info fd-stack fd-gap-xxs">
+            <div class="user-manage__login-method-title">{{ 'USER_MANAGE.PASSWORD_METHOD_TITLE' | translate }}</div>
+            <div class="user-manage__login-method-description fd-ui-body-sm">
+                {{ passwordActionState().descriptionKey | translate }}
+            </div>
+        </div>
+        <div class="user-manage__login-method-action">
+            <fd-ui-button type="button" size="sm" variant="secondary" fill="outline" (click)="passwordChange.emit()">
+                {{ passwordActionState().buttonLabelKey | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</div>

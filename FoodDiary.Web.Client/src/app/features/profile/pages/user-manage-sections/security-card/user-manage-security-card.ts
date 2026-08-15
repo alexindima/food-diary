@@ -1,14 +1,16 @@
 import { ChangeDetectionStrategy, Component, effect, type ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { environment } from '../../../../../../environments/environment';
 import { GoogleIdentityService } from '../../../../../shared/auth/google-identity.service';
 import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
+import type { PasswordActionState } from '../../user-manage/user-manage-lib/user-manage.types';
 
 @Component({
     selector: 'fd-user-manage-security-card',
-    imports: [TranslatePipe, FdUiCardComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiIconComponent],
     templateUrl: './user-manage-security-card.html',
     styleUrl: '../../user-manage/user-manage.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,7 +24,9 @@ export class UserManageSecurityCardComponent {
     public readonly email = input.required<string>();
     public readonly hasGoogleIdentity = input.required<boolean>();
     public readonly isLinkingGoogle = input.required<boolean>();
+    public readonly passwordActionState = input.required<PasswordActionState>();
     public readonly googleCredential = output<string>();
+    public readonly passwordChange = output();
     protected readonly isGoogleReady = signal(false);
     protected readonly isGoogleUnavailable = signal(false);
 

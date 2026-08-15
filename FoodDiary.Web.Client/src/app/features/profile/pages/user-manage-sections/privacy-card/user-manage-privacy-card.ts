@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
-import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
 @Component({
     selector: 'fd-user-manage-privacy-card',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent],
+    imports: [TranslatePipe, FdUiButtonComponent],
     templateUrl: './user-manage-privacy-card.html',
     styleUrl: '../../user-manage/user-manage.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,18 +1,55 @@
-<section class="profile-comparison fd-stack fd-gap-md" [attr.aria-label]="'USER_MANAGE.COMPARISON.NEW_DESIGN' | translate">
-    <div class="profile-comparison__label fd-row fd-gap-xs">
-        <fd-ui-icon name="new_releases" size="sm" />
-        <span>{{ 'USER_MANAGE.COMPARISON.NEW_DESIGN' | translate }}</span>
-    </div>
-
+<div class="profile-comparison fd-stack fd-gap-md">
     <fd-ui-card class="profile-comparison__summary">
         <div class="profile-comparison__summary-layout">
             <div class="profile-comparison__identity fd-row fd-gap-md">
-                <div class="profile-comparison__avatar" aria-hidden="true">
-                    @if (profileImageUrl(); as imageUrl) {
-                        <img width="64" height="64" alt="" [src]="imageUrl" />
-                    } @else {
-                        <fd-ui-icon name="person" size="xl" />
-                    }
+                <div class="profile-comparison__avatar-control">
+                    <button
+                        type="button"
+                        class="profile-comparison__avatar"
+                        [fdUiMenuTrigger]="avatarMenu"
+                        [attr.aria-label]="'USER_MANAGE.COMPARISON.AVATAR_ACTIONS' | translate"
+                    >
+                        @if (profileImageUrl(); as imageUrl) {
+                            <img width="80" height="80" alt="" [src]="imageUrl" />
+                        } @else {
+                            <fd-ui-icon name="person" size="xl" />
+                        }
+                        <span class="profile-comparison__avatar-overlay" aria-hidden="true">
+                            <fd-ui-icon name="photo_camera" size="sm" />
+                        </span>
+                    </button>
+                    <fd-ui-menu #avatarMenu="fdUiMenu">
+                        <fd-ui-menu-item (itemClick)="avatarUploader.openFilePicker()">
+                            <fd-ui-icon name="photo_camera" />
+                            @if (profileImageUrl()) {
+                                {{ 'IMAGE_UPLOAD_FIELD.REPLACE' | translate }}
+                            } @else {
+                                {{ 'IMAGE_UPLOAD_FIELD.SELECT_FILE' | translate }}
+                            }
+                        </fd-ui-menu-item>
+                        @if (profileImageUrl()) {
+                            <fd-ui-menu-divider />
+                            <fd-ui-menu-item (itemClick)="requestAvatarClear()">
+                                <fd-ui-icon name="delete" />
+                                {{ 'IMAGE_UPLOAD_FIELD.REMOVE' | translate }}
+                            </fd-ui-menu-item>
+                        }
+                    </fd-ui-menu>
+                    <fd-image-upload-field
+                        #avatarUploader
+                        appearance="hidden"
+                        label="Avatar"
+                        recommendedSize="512 x 512"
+                        acceptedTypes="image/png,image/jpeg,image/webp"
+                        [value]="userForm().profileImage().value()"
+                        [maxSizeMb]="5"
+                        [cropEnabled]="true"
+                        [cropSize]="512"
+                        [cropAspectRatio]="1"
+                        [deleteOnClear]="true"
+                        [clearRequest]="avatarClearRequest()"
+                        (valueChange)="userFormPatch.emit({ profileImage: $event })"
+                    />
                 </div>
                 <div class="profile-comparison__identity-copy fd-stack fd-gap-xxs">
                     <strong>{{ identityTitle() }}</strong>
@@ -37,16 +74,6 @@
                 </div>
                 <span>{{ 'USER_MANAGE.COMPARISON.COMPLETENESS_HINT' | translate }}</span>
             </div>
-
-            <div class="profile-comparison__save-state fd-stack fd-gap-xs">
-                @let status = profileStatus();
-                <fd-ui-status-badge [tone]="status.tone">{{ status.key | translate }}</fd-ui-status-badge>
-                @if (status.key !== 'USER_MANAGE.PROFILE_STATUS_SAVED') {
-                    <fd-ui-button size="sm" variant="secondary" fill="outline" (click)="saveNow.emit()">
-                        {{ 'USER_MANAGE.COMPARISON.SAVE_NOW' | translate }}
-                    </fd-ui-button>
-                }
-            </div>
         </div>
     </fd-ui-card>
 
@@ -58,35 +85,30 @@
             </div>
             <div class="profile-comparison__fields fd-grid fd-gap-sm">
                 <fd-ui-input
-                    size="sm"
                     type="email"
                     [value]="userForm().email().value()"
                     [label]="'USER_MANAGE.EMAIL' | translate"
                     [readonly]="true"
                 />
                 <fd-ui-input
-                    size="sm"
                     data-user-field="username"
                     [formField]="userForm().username"
                     [label]="'USER_MANAGE.USERNAME' | translate"
                     (valueChange)="onTextFieldChange('username', $event)"
                 />
                 <fd-ui-input
-                    size="sm"
                     data-user-field="firstName"
                     [formField]="userForm().firstName"
                     [label]="'USER_MANAGE.FIRST_NAME' | translate"
                     (valueChange)="onTextFieldChange('firstName', $event)"
                 />
                 <fd-ui-input
-                    size="sm"
                     data-user-field="lastName"
                     [formField]="userForm().lastName"
                     [label]="'USER_MANAGE.LAST_NAME' | translate"
                     (valueChange)="onTextFieldChange('lastName', $event)"
                 />
                 <fd-ui-date-input
-                    size="sm"
                     [formField]="userForm().birthDate"
                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                     (valueChange)="onBirthDateChange($event)"
@@ -116,16 +138,6 @@
                     (valueChange)="onMeasurementSystemChange($event)"
                 />
             </div>
-            <fd-ui-button
-                class="profile-comparison__password"
-                size="sm"
-                variant="secondary"
-                fill="outline"
-                icon="lock"
-                (click)="passwordChange.emit()"
-            >
-                {{ passwordActionState().buttonLabelKey | translate }}
-            </fd-ui-button>
         </fd-ui-card>
 
         <fd-ui-card class="profile-comparison__widget fd-stack fd-gap-md">
@@ -144,7 +156,7 @@
                         (valueChange)="onHeightChange($event)"
                     />
                 } @else {
-                    <div class="fd-grid fd-grid-cols-2 fd-gap-sm">
+                    <div class="profile-comparison__imperial-height fd-grid fd-grid-cols-2 fd-gap-sm">
                         <fd-ui-input
                             size="sm"
                             type="number"
@@ -162,7 +174,9 @@
                     </div>
                 }
                 <fd-ui-select
+                    class="profile-comparison__activity"
                     size="sm"
+                    [class.profile-comparison__activity--wide]="measurementSystem() === 'imperial'"
                     [formField]="userForm().activityLevel"
                     [label]="'USER_MANAGE.ACTIVITY_LEVEL' | translate"
                     [options]="activityLevelOptions()"
@@ -208,12 +222,12 @@
     </div>
 
     <nav class="profile-comparison__section-links fd-stack" [attr.aria-label]="'USER_MANAGE.COMPARISON.OTHER_SECTIONS' | translate">
-        <details class="profile-comparison__appearance">
+        <details class="profile-comparison__accordion profile-comparison__appearance">
             <summary>
                 <fd-ui-icon name="palette" />
                 <strong>{{ 'USER_MANAGE.COMPARISON.APPEARANCE' | translate }}</strong>
                 <span>{{ 'USER_MANAGE.COMPARISON.APPEARANCE_HINT' | translate }}</span>
-                <fd-ui-icon class="profile-comparison__appearance-chevron" name="expand_more" />
+                <fd-ui-icon class="profile-comparison__accordion-chevron" name="expand_more" />
             </summary>
             <div class="profile-comparison__appearance-fields fd-grid fd-gap-sm">
                 <fd-ui-select
@@ -232,30 +246,60 @@
                 />
             </div>
         </details>
-        <a href="#legacy-security"
-            ><fd-ui-icon name="lock" /><strong>{{ 'USER_MANAGE.SECURITY_SECTION' | translate }}</strong
-            ><span>{{ 'USER_MANAGE.SECURITY_DESC' | translate }}</span
-            ><fd-ui-icon name="chevron_right"
-        /></a>
-        <a href="#legacy-billing"
-            ><fd-ui-icon name="credit_card" /><strong>{{ 'USER_MANAGE.BILLING_SECTION' | translate }}</strong
-            ><span>{{ 'USER_MANAGE.BILLING_DESC' | translate }}</span
-            ><fd-ui-icon name="chevron_right"
-        /></a>
-        <a href="#legacy-notifications"
-            ><fd-ui-icon name="notifications" /><strong>{{ 'USER_MANAGE.NOTIFICATIONS_SECTION' | translate }}</strong
-            ><span>{{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}</span
-            ><fd-ui-icon name="chevron_right"
-        /></a>
-        <a href="#legacy-dietologist"
-            ><fd-ui-icon name="group" /><strong>{{ 'USER_MANAGE.DIETOLOGIST_SECTION' | translate }}</strong
-            ><span>{{ 'USER_MANAGE.DIETOLOGIST_DESC' | translate }}</span
-            ><fd-ui-icon name="chevron_right"
-        /></a>
-        <a href="#legacy-privacy"
-            ><fd-ui-icon name="shield" /><strong>{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</strong
-            ><span>{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</span
-            ><fd-ui-icon name="chevron_right"
-        /></a>
+        <details class="profile-comparison__accordion">
+            <summary>
+                <fd-ui-icon name="lock" />
+                <strong>{{ 'USER_MANAGE.SECURITY_SECTION' | translate }}</strong>
+                <span>{{ 'USER_MANAGE.SECURITY_DESC' | translate }}</span>
+                <fd-ui-icon class="profile-comparison__accordion-chevron" name="expand_more" />
+            </summary>
+            <div class="profile-comparison__accordion-content">
+                <ng-content select="[profileSecurity]" />
+            </div>
+        </details>
+        <details class="profile-comparison__accordion">
+            <summary>
+                <fd-ui-icon name="credit_card" />
+                <strong>{{ 'USER_MANAGE.BILLING_SECTION' | translate }}</strong>
+                <span>{{ 'USER_MANAGE.BILLING_DESC' | translate }}</span>
+                <fd-ui-icon class="profile-comparison__accordion-chevron" name="expand_more" />
+            </summary>
+            <div class="profile-comparison__accordion-content">
+                <ng-content select="[profileBilling]" />
+            </div>
+        </details>
+        <details class="profile-comparison__accordion">
+            <summary>
+                <fd-ui-icon name="notifications" />
+                <strong>{{ 'USER_MANAGE.NOTIFICATIONS_SECTION' | translate }}</strong>
+                <span>{{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}</span>
+                <fd-ui-icon class="profile-comparison__accordion-chevron" name="expand_more" />
+            </summary>
+            <div class="profile-comparison__accordion-content">
+                <ng-content select="[profileNotifications]" />
+            </div>
+        </details>
+        <details class="profile-comparison__accordion">
+            <summary>
+                <fd-ui-icon name="group" />
+                <strong>{{ 'USER_MANAGE.DIETOLOGIST_SECTION' | translate }}</strong>
+                <span>{{ 'USER_MANAGE.DIETOLOGIST_DESC' | translate }}</span>
+                <fd-ui-icon class="profile-comparison__accordion-chevron" name="expand_more" />
+            </summary>
+            <div class="profile-comparison__accordion-content">
+                <ng-content select="[profileDietologist]" />
+            </div>
+        </details>
+        <details class="profile-comparison__accordion">
+            <summary>
+                <fd-ui-icon name="shield" />
+                <strong>{{ 'USER_MANAGE.PRIVACY_SECTION' | translate }}</strong>
+                <span>{{ 'USER_MANAGE.PRIVACY_DESC' | translate }}</span>
+                <fd-ui-icon class="profile-comparison__accordion-chevron" name="expand_more" />
+            </summary>
+            <div class="profile-comparison__accordion-content">
+                <ng-content select="[profilePrivacy]" />
+            </div>
+        </details>
     </nav>
-</section>
+</div>

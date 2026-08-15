@@ -45,6 +45,17 @@ describe('UserManageSecurityCardComponent', () => {
         expect(emitted).toHaveBeenCalledWith('credential');
     });
 
+    it('emits a password change request from the security section', async () => {
+        const fixture = await createFixtureAsync(true);
+        const emitted = vi.fn();
+        fixture.componentInstance.passwordChange.subscribe(emitted);
+
+        const button = (fixture.nativeElement as HTMLElement).querySelector('button');
+        button?.click();
+
+        expect(emitted).toHaveBeenCalledOnce();
+    });
+
     async function createFixtureAsync(hasGoogleIdentity: boolean): Promise<ComponentFixture<UserManageSecurityCardComponent>> {
         await TestBed.configureTestingModule({
             imports: [UserManageSecurityCardComponent],
@@ -55,6 +66,10 @@ describe('UserManageSecurityCardComponent', () => {
         fixture.componentRef.setInput('email', 'alex@example.com');
         fixture.componentRef.setInput('hasGoogleIdentity', hasGoogleIdentity);
         fixture.componentRef.setInput('isLinkingGoogle', false);
+        fixture.componentRef.setInput('passwordActionState', {
+            buttonLabelKey: 'USER_MANAGE.CHANGE_PASSWORD',
+            descriptionKey: 'USER_MANAGE.CHANGE_PASSWORD_DESCRIPTION',
+        });
         fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();

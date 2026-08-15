@@ -1,0 +1,11 @@
+<div class="unsaved-changes-bar fd-fixed-action-bar" role="status">
+    <span>{{ message() }}</span>
+    <div class="unsaved-changes-bar__actions">
+        <fd-ui-button variant="secondary" fill="outline" (click)="discard.emit()">
+            {{ discardLabel() }}
+        </fd-ui-button>
+        <fd-ui-button [loading]="saving()" (click)="save.emit()">
+            {{ saveLabel() }}
+        </fd-ui-button>
+    </div>
+</div>

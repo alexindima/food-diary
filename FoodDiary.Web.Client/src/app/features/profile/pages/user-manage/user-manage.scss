@@ -10,14 +10,6 @@
         }
     }
 
-    &__legacy-label {
-        align-items: center;
-        padding-top: var(--fd-space-md);
-        color: var(--fd-color-text-muted);
-        font-size: var(--fd-text-body-sm-size);
-        font-weight: var(--fd-font-weight-semibold);
-    }
-
     &__card {
         padding: 0;
         border-radius: var(--fd-radius-card);
@@ -389,6 +381,13 @@
         background: var(--fd-bg-surface);
         color: var(--fd-color-text-strong);
         font-weight: var(--fd-font-weight-bold);
+    }
+
+    &__login-method-icon {
+        width: var(--fd-size-control-md);
+        flex: 0 0 var(--fd-size-control-md);
+        color: var(--fd-color-emerald-300);
+        text-align: center;
     }
 
     &__login-method-info {

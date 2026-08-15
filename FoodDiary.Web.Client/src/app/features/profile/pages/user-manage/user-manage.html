@@ -27,8 +27,6 @@
             <div class="user-manage__stack fd-stack fd-gap-card-profile">
                 <fd-user-manage-comparison-widgets
                     [userForm]="userForm"
-                    [profileStatus]="profileStatus()"
-                    [passwordActionState]="passwordActionState()"
                     [genderOptions]="genderOptions"
                     [languageOptions]="languageOptions"
                     [themeOptions]="themeOptions"
@@ -36,114 +34,101 @@
                     [activityLevelOptions]="activityLevelOptions"
                     [currentWeight]="currentWeight()"
                     [currentWaist]="currentWaist()"
-                    (passwordChange)="openChangePasswordDialog()"
-                    (saveNow)="onSubmit()"
                     (userFormPatch)="onUserFormPatch($event)"
-                />
+                >
+                    <fd-user-manage-security-card
+                        profileSecurity
+                        data-tour-id="user-manage-security"
+                        [email]="accountEmail()"
+                        [hasGoogleIdentity]="hasGoogleIdentity()"
+                        [isLinkingGoogle]="isLinkingGoogle()"
+                        [passwordActionState]="passwordActionState()"
+                        (googleCredential)="linkGoogle($event)"
+                        (passwordChange)="openChangePasswordDialog()"
+                    />
 
-                <div class="user-manage__legacy-label fd-row fd-gap-xs">
-                    <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_DESIGN' | translate }}</span>
-                </div>
+                    <fd-user-manage-billing-card
+                        profileBilling
+                        data-tour-id="user-manage-billing"
+                        [isLoadingBilling]="isLoadingBilling()"
+                        [billingError]="billingError()"
+                        [billingView]="billingView()"
+                        [isOpeningBillingPortal]="isOpeningBillingPortal()"
+                        (billingReload)="reloadBillingOverview()"
+                        (billingPortalOpen)="openBillingPortal()"
+                        (premiumPageOpen)="openPremiumPage()"
+                    />
 
-                <fd-user-manage-account-card
-                    data-tour-id="user-manage-account"
-                    [userForm]="userForm"
-                    [profileStatus]="profileStatus()"
-                    [passwordActionState]="passwordActionState()"
-                    [genderOptions]="genderOptions"
-                    [languageOptions]="languageOptions"
-                    [themeOptions]="themeOptions"
-                    [uiStyleOptions]="uiStyleOptions"
-                    (passwordChange)="openChangePasswordDialog()"
-                    (userFormPatch)="onUserFormPatch($event)"
-                />
+                    <fd-user-manage-notifications-card
+                        profileNotifications
+                        data-tour-id="user-manage-notifications"
+                        [pushNotificationsEnabled]="notifications.pushNotificationsEnabled()"
+                        [isUpdatingNotifications]="notifications.isUpdatingNotifications()"
+                        [pushNotificationsBusy]="notifications.pushNotificationsBusy()"
+                        [pushNotificationsSubscribed]="notifications.pushNotificationsSubscribed()"
+                        [pushNotificationsSupported]="notifications.pushNotificationsSupported()"
+                        [notificationPermission]="notifications.notificationPermission()"
+                        [fastingPushNotificationsEnabled]="notifications.fastingPushNotificationsEnabled()"
+                        [socialPushNotificationsEnabled]="notifications.socialPushNotificationsEnabled()"
+                        [fastingReminderPresets]="notifications.fastingReminderPresets"
+                        [fastingCheckInReminderHours]="notifications.fastingCheckInReminderHours()"
+                        [fastingCheckInFollowUpReminderHours]="notifications.fastingCheckInFollowUpReminderHours()"
+                        [isSchedulingTestNotification]="notifications.isSchedulingTestNotification()"
+                        [isLoadingConnectedDevices]="notifications.isLoadingConnectedDevices()"
+                        [connectedDeviceItems]="notifications.connectedDeviceItems()"
+                        [removingConnectedDeviceEndpoint]="notifications.removingConnectedDeviceEndpoint()"
+                        (pushNotificationsToggle)="notifications.togglePushNotificationsAsync()"
+                        (fastingPushNotificationsToggle)="notifications.toggleFastingPushNotificationsAsync()"
+                        (socialPushNotificationsToggle)="notifications.toggleSocialPushNotificationsAsync()"
+                        (fastingReminderPresetApply)="notifications.applyFastingReminderPreset($event)"
+                        (fastingReminderHoursChange)="notifications.onFastingReminderHoursChange($event.value, $event.field)"
+                        (fastingReminderHoursSave)="notifications.saveFastingReminderHoursAsync()"
+                        (testNotificationSchedule)="notifications.scheduleTestNotification()"
+                        (connectedDeviceRemove)="notifications.removeConnectedDeviceAsync($event)"
+                    />
 
-                <fd-user-manage-security-card
-                    id="legacy-security"
-                    data-tour-id="user-manage-security"
-                    [email]="accountEmail()"
-                    [hasGoogleIdentity]="hasGoogleIdentity()"
-                    [isLinkingGoogle]="isLinkingGoogle()"
-                    (googleCredential)="linkGoogle($event)"
-                />
+                    <fd-user-manage-dietologist-card
+                        profileDietologist
+                        data-tour-id="user-manage-dietologist"
+                        [dietologistForm]="dietologistForm"
+                        [dietologistRelationship]="dietologistRelationship()"
+                        [dietologistPermissions]="dietologistPermissions()"
+                        [dietologistError]="dietologistError()"
+                        [dietologistInviteEmailError]="dietologistInviteEmailError()"
+                        [isLoadingDietologist]="isLoadingDietologist()"
+                        [isSavingDietologistPermissions]="isSavingDietologistPermissions()"
+                        [isSavingDietologistRelationshipAction]="isSavingDietologistRelationshipAction()"
+                        (dietologistInvite)="inviteDietologist()"
+                        (dietologistRevoke)="revokeDietologistRelationship()"
+                        (dietologistProfileToggle)="onDietologistProfileToggle($event)"
+                        (dietologistPermissionChange)="onDietologistPermissionChangeRequest($event)"
+                    />
 
-                <fd-user-manage-billing-card
-                    id="legacy-billing"
-                    data-tour-id="user-manage-billing"
-                    [isLoadingBilling]="isLoadingBilling()"
-                    [billingError]="billingError()"
-                    [billingView]="billingView()"
-                    [isOpeningBillingPortal]="isOpeningBillingPortal()"
-                    (billingReload)="reloadBillingOverview()"
-                    (billingPortalOpen)="openBillingPortal()"
-                    (premiumPageOpen)="openPremiumPage()"
-                />
-
-                <fd-user-manage-body-card
-                    data-tour-id="user-manage-body"
-                    [userForm]="userForm"
-                    [activityLevelOptions]="activityLevelOptions"
-                    (userFormPatch)="onUserFormPatch($event)"
-                />
-
-                <fd-user-manage-notifications-card
-                    id="legacy-notifications"
-                    data-tour-id="user-manage-notifications"
-                    [pushNotificationsEnabled]="notifications.pushNotificationsEnabled()"
-                    [isUpdatingNotifications]="notifications.isUpdatingNotifications()"
-                    [pushNotificationsBusy]="notifications.pushNotificationsBusy()"
-                    [pushNotificationsSubscribed]="notifications.pushNotificationsSubscribed()"
-                    [pushNotificationsSupported]="notifications.pushNotificationsSupported()"
-                    [notificationPermission]="notifications.notificationPermission()"
-                    [fastingPushNotificationsEnabled]="notifications.fastingPushNotificationsEnabled()"
-                    [socialPushNotificationsEnabled]="notifications.socialPushNotificationsEnabled()"
-                    [fastingReminderPresets]="notifications.fastingReminderPresets"
-                    [fastingCheckInReminderHours]="notifications.fastingCheckInReminderHours()"
-                    [fastingCheckInFollowUpReminderHours]="notifications.fastingCheckInFollowUpReminderHours()"
-                    [isSchedulingTestNotification]="notifications.isSchedulingTestNotification()"
-                    [isLoadingConnectedDevices]="notifications.isLoadingConnectedDevices()"
-                    [connectedDeviceItems]="notifications.connectedDeviceItems()"
-                    [removingConnectedDeviceEndpoint]="notifications.removingConnectedDeviceEndpoint()"
-                    (pushNotificationsToggle)="notifications.togglePushNotificationsAsync()"
-                    (fastingPushNotificationsToggle)="notifications.toggleFastingPushNotificationsAsync()"
-                    (socialPushNotificationsToggle)="notifications.toggleSocialPushNotificationsAsync()"
-                    (fastingReminderPresetApply)="notifications.applyFastingReminderPreset($event)"
-                    (fastingReminderHoursChange)="notifications.onFastingReminderHoursChange($event.value, $event.field)"
-                    (fastingReminderHoursSave)="notifications.saveFastingReminderHoursAsync()"
-                    (testNotificationSchedule)="notifications.scheduleTestNotification()"
-                    (connectedDeviceRemove)="notifications.removeConnectedDeviceAsync($event)"
-                />
-
-                <fd-user-manage-dietologist-card
-                    id="legacy-dietologist"
-                    data-tour-id="user-manage-dietologist"
-                    [dietologistForm]="dietologistForm"
-                    [dietologistRelationship]="dietologistRelationship()"
-                    [dietologistPermissions]="dietologistPermissions()"
-                    [dietologistError]="dietologistError()"
-                    [dietologistInviteEmailError]="dietologistInviteEmailError()"
-                    [isLoadingDietologist]="isLoadingDietologist()"
-                    [isSavingDietologistPermissions]="isSavingDietologistPermissions()"
-                    [isSavingDietologistRelationshipAction]="isSavingDietologistRelationshipAction()"
-                    (dietologistInvite)="inviteDietologist()"
-                    (dietologistRevoke)="revokeDietologistRelationship()"
-                    (dietologistProfileToggle)="onDietologistProfileToggle($event)"
-                    (dietologistPermissionChange)="onDietologistPermissionChangeRequest($event)"
-                />
+                    <fd-user-manage-privacy-card
+                        profilePrivacy
+                        data-tour-id="user-manage-privacy"
+                        [hasAiConsent]="hasAiConsent()"
+                        [isRevokingAiConsent]="isRevokingAiConsent()"
+                        [isDeleting]="isDeleting()"
+                        [isAccountActionBusy]="isSurfaceBusy()"
+                        (aiConsentRevoke)="onRevokeAiConsent()"
+                        (accountDelete)="onDeleteAccount()"
+                    />
+                </fd-user-manage-comparison-widgets>
             </div>
-
-            <fd-user-manage-privacy-card
-                id="legacy-privacy"
-                data-tour-id="user-manage-privacy"
-                [hasAiConsent]="hasAiConsent()"
-                [isRevokingAiConsent]="isRevokingAiConsent()"
-                [isDeleting]="isDeleting()"
-                [isAccountActionBusy]="isSurfaceBusy()"
-                (aiConsentRevoke)="onRevokeAiConsent()"
-                (accountDelete)="onDeleteAccount()"
-            />
 
             <fd-ui-form-error class="user-manage__error" [error]="globalError()" />
         </form>
+
+        @if (hasUnsavedProfileChanges()) {
+            <fd-unsaved-changes-bar
+                [message]="'UNSAVED_CHANGES.TITLE' | translate"
+                [discardLabel]="'UNSAVED_CHANGES.DISCARD' | translate"
+                [saveLabel]="(isSavingProfile() ? 'USER_MANAGE.PROFILE_STATUS_SAVING' : 'UNSAVED_CHANGES.SAVE') | translate"
+                [saving]="isSavingProfile()"
+                (discard)="discardUserFormChanges()"
+                (save)="onSubmit()"
+            />
+        }
     </fd-page-body>
 </div>

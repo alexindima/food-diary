@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
+import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
 import type { BodyTargetKey, MacroKey, MacroPreset, MacroPresetKey } from '../../lib/goals.facade';
 import type { DayCalorieKey, UpdateGoalsRequest } from '../../models/goals.data';
@@ -16,7 +16,7 @@ import { GoalsSummaryCardComponent } from './goals-summary-card';
     selector: 'fd-goals-editor',
     imports: [
         TranslatePipe,
-        FdUiButtonComponent,
+        UnsavedChangesBarComponent,
         GoalsSummaryCardComponent,
         GoalsNutritionCardComponent,
         GoalsSideCardsComponent,

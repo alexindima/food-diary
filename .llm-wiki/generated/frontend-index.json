@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1571,
-    "symbols": 610,
+    "typescriptFiles": 1566,
+    "symbols": 609,
     "routes": 86,
     "features": 37,
-    "specs": 559,
+    "specs": 556,
     "localeFiles": 5,
     "roles": {
-      "Component": 418,
+      "Component": 417,
       "Directive": 12,
       "Facade": 53,
       "Other": 17,
@@ -873,10 +873,8 @@
         "ProfileManageFacade",
         "ProfileMeasurementsService",
         "UpdateSuccessDialogComponent",
-        "UserManageAccountCardComponent",
         "UserManageBillingCardComponent",
         "UserManageBillingSummaryComponent",
-        "UserManageBodyCardComponent",
         "UserManageComparisonWidgetsComponent",
         "UserManageComponent",
         "UserManageConnectedDevicesComponent",
@@ -896,10 +894,8 @@
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/password-success-dialog/password-success-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/connected-devices/user-manage-connected-devices.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-permissions/user-manage-dietologist-permissions.spec.ts",
@@ -913,7 +909,6 @@
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-form.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-notifications.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-notifications.mapper.spec.ts",
-        "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-manage-profile-status.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage-lib/user-profile-completeness.mapper.spec.ts",
         "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.spec.ts"
       ]
@@ -2498,6 +2493,13 @@
       "role": "Component",
       "selector": "fd-skeleton",
       "path": "FoodDiary.Web.Client/src/app/components/shared/skeleton/skeleton.ts",
+      "line": 11
+    },
+    {
+      "name": "UnsavedChangesBarComponent",
+      "role": "Component",
+      "selector": "fd-unsaved-changes-bar",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.ts",
       "line": 11
     },
     {
@@ -4164,21 +4166,14 @@
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/profile/lib/profile-manage.facade.ts",
-      "line": 30
-    },
-    {
-      "name": "UserManageAccountCardComponent",
-      "role": "Component",
-      "selector": "fd-user-manage-account-card",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.ts",
-      "line": 39
+      "line": 29
     },
     {
       "name": "UserManageBillingCardComponent",
       "role": "Component",
       "selector": "fd-user-manage-billing-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.ts",
-      "line": 16
+      "line": 15
     },
     {
       "name": "UserManageBillingSummaryComponent",
@@ -4188,18 +4183,11 @@
       "line": 23
     },
     {
-      "name": "UserManageBodyCardComponent",
-      "role": "Component",
-      "selector": "fd-user-manage-body-card",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.ts",
-      "line": 26
-    },
-    {
       "name": "UserManageComparisonWidgetsComponent",
       "role": "Component",
       "selector": "fd-user-manage-comparison-widgets",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "line": 49
+      "line": 57
     },
     {
       "name": "UserManageConnectedDevicesComponent",
@@ -4213,7 +4201,7 @@
       "role": "Component",
       "selector": "fd-user-manage-dietologist-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.ts",
-      "line": 25
+      "line": 18
     },
     {
       "name": "UserManageDietologistPermissionsComponent",
@@ -4234,21 +4222,21 @@
       "role": "Component",
       "selector": "fd-user-manage-notifications-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/notifications-card/user-manage-notifications-card.ts",
-      "line": 35
+      "line": 33
     },
     {
       "name": "UserManagePrivacyCardComponent",
       "role": "Component",
       "selector": "fd-user-manage-privacy-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/privacy-card/user-manage-privacy-card.ts",
-      "line": 13
+      "line": 12
     },
     {
       "name": "UserManageSecurityCardComponent",
       "role": "Component",
       "selector": "fd-user-manage-security-card",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.ts",
-      "line": 16
+      "line": 18
     },
     {
       "name": "UserManageNotificationsFacade",
@@ -4262,7 +4250,7 @@
       "role": "Component",
       "selector": "fd-user-manage",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.ts",
-      "line": 108
+      "line": 106
     },
     {
       "name": "DietologistPromoComponent",
@@ -5890,7 +5878,7 @@
     {
       "path": "",
       "source": "FoodDiary.Web.Client/src/app/features/profile/profile.routes.ts",
-      "line": 7
+      "line": 8
     },
     {
       "path": "",

@@ -10,6 +10,7 @@ import {
     PLATFORM_ID,
     Renderer2,
     signal,
+    untracked,
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -29,10 +30,13 @@ import {
 } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { finalize } from 'rxjs';
+import { catchError, EMPTY, finalize } from 'rxjs';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import { UnsavedChangesBarComponent } from '../../../../components/shared/unsaved-changes-bar/unsaved-changes-bar';
+import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../../services/unsaved-changes.service';
+import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import type { ActivityLevelOption, Gender } from '../../../../shared/models/user.data';
 import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
@@ -42,12 +46,7 @@ import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
 import { PremiumBillingFacade } from '../../../premium/lib/premium-billing.facade';
 import type { BillingOverview } from '../../../premium/models/billing.models';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
-import {
-    UserManageAccountCardComponent,
-    type UserManageAccountFormPatch,
-} from '../user-manage-sections/account-card/user-manage-account-card';
 import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card';
-import { UserManageBodyCardComponent, type UserManageBodyFormPatch } from '../user-manage-sections/body-card/user-manage-body-card';
 import { UserManageComparisonWidgetsComponent } from '../user-manage-sections/comparison-widgets/user-manage-comparison-widgets';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
 import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card';
@@ -60,8 +59,9 @@ import type {
     DietologistPermissionChange,
     DietologistPermissionControlName,
     PasswordActionState,
-    ProfileStatusViewModel,
     UserFormValues,
+    UserManageAccountFormPatch,
+    UserManageBodyFormPatch,
 } from './user-manage-lib/user-manage.types';
 import { buildBillingView } from './user-manage-lib/user-manage-billing.mapper';
 import { getDietologistPermissions, mapDietologistRelationshipToForm } from './user-manage-lib/user-manage-dietologist-form.mapper';
@@ -75,7 +75,6 @@ import {
     parseOptionalNumberInput,
 } from './user-manage-lib/user-manage-form.mapper';
 import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
-import { buildProfileStatus } from './user-manage-lib/user-manage-profile-status.mapper';
 import { USER_MANAGE_TOUR } from './user-manage-tour';
 
 type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
@@ -90,10 +89,9 @@ type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
         FdUiFormErrorComponent,
         PageHeaderComponent,
         PageBodyComponent,
+        UnsavedChangesBarComponent,
         FdPageContainerDirective,
-        UserManageAccountCardComponent,
         UserManageBillingCardComponent,
-        UserManageBodyCardComponent,
         UserManageDietologistCardComponent,
         UserManageNotificationsCardComponent,
         UserManagePrivacyCardComponent,
@@ -111,6 +109,8 @@ export class UserManageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly facade = inject(ProfileManageFacade);
+    private readonly imageUploadFacade = inject(ImageUploadFacade);
+    private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
     protected readonly notifications = inject(UserManageNotificationsFacade);
@@ -125,6 +125,7 @@ export class UserManageComponent {
     private readonly isBrowser = isPlatformBrowser(this.platformId);
     private readonly userFormElement = viewChild<ElementRef<HTMLFormElement>>('userFormElement');
     private lastNotificationSyncVersion = -1;
+    private lastProfileSavedVersion = 0;
     private userFormDomListenersRegistered = false;
     private readonly pendingPasswordSetupIntent = signal(false);
 
@@ -180,14 +181,14 @@ export class UserManageComponent {
     protected readonly hasDietologistRelationship = computed(() => this.dietologistRelationship() !== null);
     protected readonly isDietologistPending = computed(() => this.dietologistRelationship()?.status === 'Pending');
     protected readonly isDietologistConnected = computed(() => this.dietologistRelationship()?.status === 'Accepted');
-    protected readonly profileStatus = signal<ProfileStatusViewModel>({
-        key: 'USER_MANAGE.PROFILE_STATUS_SAVED',
-        tone: 'success',
-    });
     protected readonly currentWeight = this.facade.currentWeight;
     protected readonly currentWaist = this.facade.currentWaist;
     protected readonly dietologistInviteEmailError = signal<string | null>(null);
     protected readonly billingView = computed<BillingViewModel | null>(() => buildBillingView(this.billingOverview()));
+    protected readonly hasUnsavedProfileChanges = computed(() => {
+        this.userFormInputVersion();
+        return this.hasUserFormChanges();
+    });
 
     public constructor() {
         this.buildSelectOptions();
@@ -198,11 +199,25 @@ export class UserManageComponent {
         this.watchUserProfile();
         this.watchPasswordSetupDialog();
         this.watchDietologistRelationship();
-        this.watchProfileStatusSignals();
         this.watchNotificationRelationshipRefresh();
         this.watchUserFormChanges();
         this.watchDietologistFormChanges();
         this.updateDietologistInviteEmailError();
+
+        const unsavedChangesHandler: UnsavedChangesHandler = {
+            hasChanges: () => this.hasUnsavedProfileChanges(),
+            save: () => {
+                this.onSubmit();
+                return true;
+            },
+            discard: () => {
+                this.discardUserFormChanges();
+            },
+        };
+        this.unsavedChangesService.register(unsavedChangesHandler);
+        this.destroyRef.onDestroy(() => {
+            this.unsavedChangesService.clear(unsavedChangesHandler);
+        });
 
         this.facade.initialize();
         this.loadBillingOverview();
@@ -267,12 +282,26 @@ export class UserManageComponent {
     private watchUserProfile(): void {
         effect(() => {
             const user = this.facade.user();
+            const profileSavedVersion = this.facade.profileSavedVersion();
             if (user === null) {
                 return;
             }
 
-            const userData = mapUserToForm(user);
-            this.applyUserData(userData);
+            const userData = {
+                ...createUserManageFormModel(),
+                ...mapUserToForm(user),
+            };
+            const wasProfileSaved = profileSavedVersion !== this.lastProfileSavedVersion;
+            this.lastProfileSavedVersion = profileSavedVersion;
+            const shouldApplyUserData =
+                wasProfileSaved ||
+                untracked(() => {
+                    const currentFormData = this.readUserFormValues();
+                    return !this.hasUserFormChanges(currentFormData) || this.areUserFormValuesEqual(userData, currentFormData);
+                });
+            if (shouldApplyUserData) {
+                this.applyUserData(userData);
+            }
             this.notifications.syncFromUser(user);
         });
     }
@@ -299,14 +328,6 @@ export class UserManageComponent {
         });
     }
 
-    private watchProfileStatusSignals(): void {
-        effect(() => {
-            this.globalError();
-            this.isSavingProfile();
-            this.updateProfileStatus();
-        });
-    }
-
     private watchNotificationRelationshipRefresh(): void {
         effect(() => {
             const version = this.notifications.notificationsChangedVersion();
@@ -326,10 +347,7 @@ export class UserManageComponent {
     private watchUserFormChanges(): void {
         effect(() => {
             this.userFormInputVersion();
-            const formData = this.readUserFormValues();
             this.facade.clearGlobalError();
-            this.queueUserAutosave(formData);
-            this.updateProfileStatus();
         });
     }
 
@@ -360,7 +378,7 @@ export class UserManageComponent {
             return;
         }
 
-        this.queueUserFormAutosaveCheck();
+        this.markUserFormChanged();
     }
 
     protected onUserFormPatch(patch: UserManageFormPatch): void {
@@ -369,7 +387,7 @@ export class UserManageComponent {
             ...patch,
         };
         this.userFormModel.set(formData);
-        this.queueUserFormAutosaveCheck(formData);
+        this.markUserFormChanged();
     }
 
     protected openChangePasswordDialog(): void {
@@ -540,19 +558,6 @@ export class UserManageComponent {
         );
     }
 
-    private updateProfileStatus(): void {
-        this.profileStatus.set(this.buildProfileStatus());
-    }
-
-    private buildProfileStatus(): ProfileStatusViewModel {
-        return buildProfileStatus({
-            globalError: this.globalError(),
-            isSaving: this.isSavingProfile(),
-            isDirty: this.hasUserFormChanges(),
-            isValid: true,
-        });
-    }
-
     protected reloadBillingOverview(): void {
         this.loadBillingOverview();
     }
@@ -599,15 +604,6 @@ export class UserManageComponent {
         };
         this.userForm().reset(formData);
         this.lastSyncedUserFormData.set(formData);
-        this.updateProfileStatus();
-    }
-
-    private queueUserAutosave(formData: UserFormValues): void {
-        if (!this.hasUserFormChanges(formData)) {
-            return;
-        }
-
-        this.facade.queueProfileAutosave(buildUserUpdateDto(formData));
     }
 
     private readUserFormValues(): UserFormValues {
@@ -668,15 +664,35 @@ export class UserManageComponent {
         }
     }
 
-    private queueUserFormAutosaveCheck(formData: UserFormValues = this.readUserFormValues()): void {
+    private markUserFormChanged(): void {
         this.facade.clearGlobalError();
-        this.queueUserAutosave(formData);
-        this.updateProfileStatus();
+        this.userFormInputVersion.update(version => version + 1);
+    }
+
+    protected discardUserFormChanges(): void {
+        const currentImage = this.readUserFormValues().profileImage;
+        const syncedFormData = this.lastSyncedUserFormData();
+        const syncedImage = syncedFormData.profileImage;
+        if (currentImage?.assetId !== null && currentImage?.assetId !== undefined && currentImage.assetId !== syncedImage?.assetId) {
+            this.imageUploadFacade
+                .deleteAsset(currentImage.assetId)
+                .pipe(
+                    catchError(() => EMPTY),
+                    takeUntilDestroyed(this.destroyRef),
+                )
+                .subscribe();
+        }
+
+        this.userForm().reset(syncedFormData);
+        this.facade.clearGlobalError();
         this.userFormInputVersion.update(version => version + 1);
     }
 
     private hasUserFormChanges(formData: UserFormValues = this.readUserFormValues()): boolean {
-        const synced = this.lastSyncedUserFormData();
+        return !this.areUserFormValuesEqual(formData, this.lastSyncedUserFormData());
+    }
+
+    private areUserFormValuesEqual(formData: UserFormValues, synced: UserFormValues): boolean {
         const comparableFields = [
             'username',
             'firstName',
@@ -693,9 +709,9 @@ export class UserManageComponent {
         ] as const;
 
         return (
-            comparableFields.some(field => formData[field] !== synced[field]) ||
-            formData.profileImage?.url !== synced.profileImage?.url ||
-            formData.profileImage?.assetId !== synced.profileImage?.assetId
+            comparableFields.every(field => formData[field] === synced[field]) &&
+            formData.profileImage?.url === synced.profileImage?.url &&
+            formData.profileImage?.assetId === synced.profileImage?.assetId
         );
     }
 

@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 423,
-    "componentsWithoutDirectSpecs": 127,
-    "inputs": 1323,
-    "outputs": 411,
+    "components": 422,
+    "componentsWithoutDirectSpecs": 128,
+    "inputs": 1318,
+    "outputs": 409,
     "apiCalls": 221,
-    "templatesWithTranslations": 265,
-    "translationKeys": 1449,
-    "consumerEdges": 970,
-    "consumedComponents": 273,
+    "templatesWithTranslations": 263,
+    "translationKeys": 1435,
+    "consumerEdges": 959,
+    "consumedComponents": 272,
     "unconsumedComponents": 149
   },
   "components": [
@@ -8208,61 +8208,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/profile/dialogs/update-success-dialog/update-success-dialog.spec.ts"
     },
     {
-      "class": "UserManageAccountCardComponent",
-      "selector": "fd-user-manage-account-card",
-      "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
-      "inputs": [
-        {
-          "name": "userForm",
-          "type": "FieldTree<UserFormValues>",
-          "required": true
-        },
-        {
-          "name": "profileStatus",
-          "type": "ProfileStatusViewModel",
-          "required": true
-        },
-        {
-          "name": "passwordActionState",
-          "type": "PasswordActionState",
-          "required": true
-        },
-        {
-          "name": "genderOptions",
-          "type": "Array<FdUiSelectOption<Gender | null>>",
-          "required": true
-        },
-        {
-          "name": "languageOptions",
-          "type": "Array<FdUiSelectOption<string | null>>",
-          "required": true
-        },
-        {
-          "name": "themeOptions",
-          "type": "Array<FdUiSelectOption<AppThemeName | null>>",
-          "required": true
-        },
-        {
-          "name": "uiStyleOptions",
-          "type": "Array<FdUiSelectOption<AppUiStyleName | null>>",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "passwordChange",
-          "type": ""
-        },
-        {
-          "name": "userFormPatch",
-          "type": "UserManageAccountFormPatch"
-        }
-      ],
-      "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.spec.ts"
-    },
-    {
       "class": "UserManageBillingCardComponent",
       "selector": "fd-user-manage-billing-card",
       "feature": "profile",
@@ -8337,32 +8282,6 @@
       "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.spec.ts"
     },
     {
-      "class": "UserManageBodyCardComponent",
-      "selector": "fd-user-manage-body-card",
-      "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.ts",
-      "templatePath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.html",
-      "inputs": [
-        {
-          "name": "userForm",
-          "type": "FieldTree<UserFormValues>",
-          "required": true
-        },
-        {
-          "name": "activityLevelOptions",
-          "type": "Array<FdUiSelectOption<ActivityLevelOption | null>>",
-          "required": true
-        }
-      ],
-      "outputs": [
-        {
-          "name": "userFormPatch",
-          "type": "UserManageBodyFormPatch"
-        }
-      ],
-      "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.spec.ts"
-    },
-    {
       "class": "UserManageComparisonWidgetsComponent",
       "selector": "fd-user-manage-comparison-widgets",
       "feature": "profile",
@@ -8372,16 +8291,6 @@
         {
           "name": "userForm",
           "type": "FieldTree<UserFormValues>",
-          "required": true
-        },
-        {
-          "name": "profileStatus",
-          "type": "ProfileStatusViewModel",
-          "required": true
-        },
-        {
-          "name": "passwordActionState",
-          "type": "PasswordActionState",
           "required": true
         },
         {
@@ -8421,14 +8330,6 @@
         }
       ],
       "outputs": [
-        {
-          "name": "passwordChange",
-          "type": ""
-        },
-        {
-          "name": "saveNow",
-          "type": ""
-        },
         {
           "name": "userFormPatch",
           "type": "UserManageAccountFormPatch | UserManageBodyFormPatch"
@@ -8796,12 +8697,21 @@
           "name": "isLinkingGoogle",
           "type": "boolean",
           "required": true
+        },
+        {
+          "name": "passwordActionState",
+          "type": "PasswordActionState",
+          "required": true
         }
       ],
       "outputs": [
         {
           "name": "googleCredential",
           "type": "string"
+        },
+        {
+          "name": "passwordChange",
+          "type": ""
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.spec.ts"
@@ -10683,6 +10593,11 @@
           "required": false
         },
         {
+          "name": "clearRequest",
+          "type": "",
+          "required": false
+        },
+        {
           "name": "initialSelection",
           "type": "ImageSelection | null",
           "required": false
@@ -11653,6 +11568,46 @@
       ],
       "outputs": [],
       "specPath": "FoodDiary.Web.Client/src/app/components/shared/skeleton/skeleton.spec.ts"
+    },
+    {
+      "class": "UnsavedChangesBarComponent",
+      "selector": "fd-unsaved-changes-bar",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.html",
+      "inputs": [
+        {
+          "name": "message",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "discardLabel",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "saveLabel",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "saving",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "save",
+          "type": ""
+        },
+        {
+          "name": "discard",
+          "type": ""
+        }
+      ],
+      "specPath": null
     },
     {
       "class": "UnsavedChangesDialogComponent",
@@ -17413,40 +17368,10 @@
     },
     {
       "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
-      "keys": [
-        "USER_MANAGE.ACCOUNT_DESC",
-        "USER_MANAGE.ACCOUNT_SECTION",
-        "USER_MANAGE.AVATAR",
-        "USER_MANAGE.AVATAR_DESC",
-        "USER_MANAGE.BIRTH_DATE",
-        "USER_MANAGE.BIRTH_DATE_PLACEHOLDER",
-        "USER_MANAGE.EMAIL",
-        "USER_MANAGE.EMAIL_PLACEHOLDER",
-        "USER_MANAGE.FIRST_NAME",
-        "USER_MANAGE.FIRST_NAME_PLACEHOLDER",
-        "USER_MANAGE.GENDER",
-        "USER_MANAGE.LANGUAGE",
-        "USER_MANAGE.LANGUAGE_PLACEHOLDER",
-        "USER_MANAGE.LAST_NAME",
-        "USER_MANAGE.LAST_NAME_PLACEHOLDER",
-        "USER_MANAGE.SELECT_GENDER",
-        "USER_MANAGE.THEME",
-        "USER_MANAGE.THEME_PLACEHOLDER",
-        "USER_MANAGE.UI_STYLE",
-        "USER_MANAGE.UI_STYLE_PLACEHOLDER",
-        "USER_MANAGE.USERNAME",
-        "USER_MANAGE.USERNAME_PLACEHOLDER"
-      ]
-    },
-    {
-      "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.html",
       "keys": [
-        "USER_MANAGE.BILLING_DESC",
         "USER_MANAGE.BILLING_LOADING",
-        "USER_MANAGE.BILLING_RETRY",
-        "USER_MANAGE.BILLING_SECTION"
+        "USER_MANAGE.BILLING_RETRY"
       ]
     },
     {
@@ -17463,20 +17388,11 @@
     },
     {
       "feature": "profile",
-      "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.html",
-      "keys": [
-        "USER_MANAGE.ACTIVITY_LEVEL",
-        "USER_MANAGE.BODY_SECTION",
-        "USER_MANAGE.COMPARISON.HEIGHT_CM",
-        "USER_MANAGE.COMPARISON.HEIGHT_FT",
-        "USER_MANAGE.COMPARISON.HEIGHT_IN",
-        "USER_MANAGE.SELECT_ACTIVITY_LEVEL"
-      ]
-    },
-    {
-      "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "keys": [
+        "IMAGE_UPLOAD_FIELD.REMOVE",
+        "IMAGE_UPLOAD_FIELD.REPLACE",
+        "IMAGE_UPLOAD_FIELD.SELECT_FILE",
         "USER_MANAGE.ACCOUNT_SECTION",
         "USER_MANAGE.ACTIVITY_LEVEL",
         "USER_MANAGE.BILLING_DESC",
@@ -17485,6 +17401,7 @@
         "USER_MANAGE.BODY_SECTION",
         "USER_MANAGE.COMPARISON.APPEARANCE",
         "USER_MANAGE.COMPARISON.APPEARANCE_HINT",
+        "USER_MANAGE.COMPARISON.AVATAR_ACTIONS",
         "USER_MANAGE.COMPARISON.BODY_HINT",
         "USER_MANAGE.COMPARISON.COMPLETENESS",
         "USER_MANAGE.COMPARISON.COMPLETENESS_HINT",
@@ -17493,11 +17410,9 @@
         "USER_MANAGE.COMPARISON.HEIGHT_CM",
         "USER_MANAGE.COMPARISON.HEIGHT_FT",
         "USER_MANAGE.COMPARISON.HEIGHT_IN",
-        "USER_MANAGE.COMPARISON.NEW_DESIGN",
         "USER_MANAGE.COMPARISON.OPEN_WAIST_HISTORY",
         "USER_MANAGE.COMPARISON.OPEN_WEIGHT_HISTORY",
         "USER_MANAGE.COMPARISON.OTHER_SECTIONS",
-        "USER_MANAGE.COMPARISON.SAVE_NOW",
         "USER_MANAGE.COMPARISON.UNIT_SYSTEM",
         "USER_MANAGE.COMPARISON.UNIT_SYSTEM_IMPERIAL",
         "USER_MANAGE.COMPARISON.UNIT_SYSTEM_METRIC",
@@ -17536,9 +17451,7 @@
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.html",
       "keys": [
-        "USER_MANAGE.DIETOLOGIST_DESC",
-        "USER_MANAGE.DIETOLOGIST_LOADING",
-        "USER_MANAGE.DIETOLOGIST_SECTION"
+        "USER_MANAGE.DIETOLOGIST_LOADING"
       ]
     },
     {
@@ -17562,7 +17475,6 @@
         "DISABLED_HINTS.OPERATION_BUSY",
         "DISABLED_HINTS.PUSH_NOT_SUPPORTED",
         "USER_MANAGE.FASTING_NOTIFICATIONS",
-        "USER_MANAGE.NOTIFICATIONS_DESC",
         "USER_MANAGE.NOTIFICATIONS_DEVICE_NOTE",
         "USER_MANAGE.NOTIFICATIONS_FASTING_HINT",
         "USER_MANAGE.NOTIFICATIONS_FASTING_LABEL",
@@ -17572,7 +17484,6 @@
         "USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVE",
         "USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SECOND",
         "USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_TITLE",
-        "USER_MANAGE.NOTIFICATIONS_SECTION",
         "USER_MANAGE.NOTIFICATIONS_SOCIAL_HINT",
         "USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL",
         "USER_MANAGE.NOTIFICATIONS_TEST_BUTTON",
@@ -17593,9 +17504,7 @@
         "USER_MANAGE.DELETE_ACCOUNT_BUTTON",
         "USER_MANAGE.DELETE_ACCOUNT_HINT",
         "USER_MANAGE.DELETE_ACCOUNT_LABEL",
-        "USER_MANAGE.PRIVACY_DESC",
-        "USER_MANAGE.PRIVACY_POLICY_LINK",
-        "USER_MANAGE.PRIVACY_SECTION"
+        "USER_MANAGE.PRIVACY_POLICY_LINK"
       ]
     },
     {
@@ -17607,15 +17516,15 @@
         "USER_MANAGE.GOOGLE_LOADING",
         "USER_MANAGE.GOOGLE_NOT_CONNECTED",
         "USER_MANAGE.GOOGLE_UNAVAILABLE",
-        "USER_MANAGE.SECURITY_DESC",
-        "USER_MANAGE.SECURITY_SECTION"
+        "USER_MANAGE.PASSWORD_METHOD_TITLE"
       ]
     },
     {
       "feature": "profile",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.html",
       "keys": [
-        "USER_MANAGE.COMPARISON.CURRENT_DESIGN",
+        "UNSAVED_CHANGES.DISCARD",
+        "UNSAVED_CHANGES.TITLE",
         "USER_MANAGE.EDIT_SUBTITLE",
         "USER_MANAGE.EDIT_TITLE",
         "USER_MANAGE.TOUR.START_TOUR"
@@ -21605,6 +21514,20 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "shared",
+      "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "fill",
+        "loading",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "shared",
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-dialog/unsaved-changes-dialog.html",
       "occurrences": 3,
       "inputsUsed": [
@@ -22323,20 +22246,6 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "goals",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "fill",
-        "loading",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "goals",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-page.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -23003,21 +22912,6 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "fill",
-        "icon",
-        "type",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.html",
       "occurrences": 1,
       "inputsUsed": [
@@ -23038,21 +22932,6 @@
         "fill",
         "loading",
         "type",
-        "variant"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiButtonComponent",
-      "selector": "fd-ui-button",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
-      "occurrences": 2,
-      "inputsUsed": [
-        "fill",
-        "icon",
-        "size",
         "variant"
       ],
       "outputsHandled": []
@@ -23126,6 +23005,21 @@
         "fill",
         "icon",
         "loading",
+        "size",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
         "size",
         "type",
         "variant"
@@ -24309,100 +24203,9 @@
       "selector": "fd-ui-card",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
       "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "density",
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-card/user-manage-billing-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "density",
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "density",
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 3,
       "inputsUsed": [],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/dietologist-card/user-manage-dietologist-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "density",
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/notifications-card/user-manage-notifications-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "density",
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/privacy-card/user-manage-privacy-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "density",
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiCardComponent",
-      "selector": "fd-ui-card",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "density",
-        "tone"
-      ],
       "outputsHandled": []
     },
     {
@@ -24861,25 +24664,10 @@
       "selector": "fd-ui-date-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
       "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "label",
-        "placeholder",
-        "size"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiDateInputComponent",
-      "selector": "fd-ui-date-input",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/date-input/fd-ui-date-input.ts",
-      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 1,
       "inputsUsed": [
-        "label",
-        "size"
+        "label"
       ],
       "outputsHandled": []
     },
@@ -26659,10 +26447,22 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
-      "occurrences": 20,
+      "occurrences": 22,
       "inputsUsed": [
         "name",
         "size"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiIconComponent",
+      "selector": "fd-ui-icon",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/icon/fd-ui-icon.ts",
+      "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/security-card/user-manage-security-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "name"
       ],
       "outputsHandled": []
     },
@@ -27503,36 +27303,6 @@
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
-      "occurrences": 4,
-      "inputsUsed": [
-        "label",
-        "placeholder",
-        "readonly",
-        "size",
-        "type"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiInputComponent",
-      "selector": "fd-ui-input",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.html",
-      "occurrences": 3,
-      "inputsUsed": [
-        "label",
-        "size",
-        "type"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiInputComponent",
-      "selector": "fd-ui-input",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 7,
       "inputsUsed": [
@@ -28195,6 +27965,16 @@
       "component": "FdUiMenuComponent",
       "selector": "fd-ui-menu",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
+      "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiMenuComponent",
+      "selector": "fd-ui-menu",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
       "consumerFeature": "shopping-lists",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/shopping-lists/pages/shopping-list-manage-controls/shopping-list-manage-controls.html",
       "occurrences": 1,
@@ -28207,6 +27987,16 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu.ts",
       "consumerFeature": "statistics",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/statistics/pages/statistics.html",
+      "occurrences": 1,
+      "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiMenuDividerComponent",
+      "selector": "fd-ui-menu-divider",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-divider.ts",
+      "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 1,
       "inputsUsed": [],
       "outputsHandled": []
@@ -28232,6 +28022,18 @@
         "disabled",
         "disabledReason"
       ],
+      "outputsHandled": [
+        "itemClick"
+      ]
+    },
+    {
+      "component": "FdUiMenuItemComponent",
+      "selector": "fd-ui-menu-item",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/menu/fd-ui-menu-item.ts",
+      "consumerFeature": "profile",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
+      "occurrences": 2,
+      "inputsUsed": [],
       "outputsHandled": [
         "itemClick"
       ]
@@ -28991,36 +28793,6 @@
       "selector": "fd-ui-select",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
-      "occurrences": 4,
-      "inputsUsed": [
-        "label",
-        "options",
-        "placeholder",
-        "size"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiSelectComponent",
-      "selector": "fd-ui-select",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "label",
-        "options",
-        "placeholder",
-        "size"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiSelectComponent",
-      "selector": "fd-ui-select",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
-      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 6,
       "inputsUsed": [
@@ -29160,31 +28932,7 @@
       "selector": "fd-ui-status-badge",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
       "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiStatusBadgeComponent",
-      "selector": "fd-ui-status-badge",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
-      "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/billing-summary/user-manage-billing-summary.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "tone"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiStatusBadgeComponent",
-      "selector": "fd-ui-status-badge",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/status-badge/fd-ui-status-badge.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 1,
       "inputsUsed": [
         "tone"
@@ -29919,15 +29667,17 @@
       "selector": "fd-image-upload-field",
       "componentPath": "FoodDiary.Web.Client/src/app/components/shared/image-upload-field/image-upload-field.ts",
       "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.html",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.html",
       "occurrences": 1,
       "inputsUsed": [
         "acceptedTypes",
+        "appearance",
+        "clearRequest",
         "cropAspectRatio",
         "cropEnabled",
         "cropSize",
         "deleteOnClear",
-        "description",
+        "label",
         "maxSizeMb",
         "recommendedSize"
       ],
@@ -32790,24 +32540,39 @@
       "outputsHandled": []
     },
     {
-      "component": "UserManageAccountCardComponent",
-      "selector": "fd-user-manage-account-card",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/account-card/user-manage-account-card.ts",
+      "component": "UnsavedChangesBarComponent",
+      "selector": "fd-unsaved-changes-bar",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.ts",
+      "consumerFeature": "goals",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/goals/pages/goals-editor/goals-editor.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "discardLabel",
+        "message",
+        "saveLabel",
+        "saving"
+      ],
+      "outputsHandled": [
+        "discard",
+        "save"
+      ]
+    },
+    {
+      "component": "UnsavedChangesBarComponent",
+      "selector": "fd-unsaved-changes-bar",
+      "componentPath": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.ts",
       "consumerFeature": "profile",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.html",
       "occurrences": 1,
       "inputsUsed": [
-        "genderOptions",
-        "languageOptions",
-        "passwordActionState",
-        "profileStatus",
-        "themeOptions",
-        "uiStyleOptions",
-        "userForm"
+        "discardLabel",
+        "message",
+        "saveLabel",
+        "saving"
       ],
       "outputsHandled": [
-        "passwordChange",
-        "userFormPatch"
+        "discard",
+        "save"
       ]
     },
     {
@@ -32846,21 +32611,6 @@
       ]
     },
     {
-      "component": "UserManageBodyCardComponent",
-      "selector": "fd-user-manage-body-card",
-      "componentPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/body-card/user-manage-body-card.ts",
-      "consumerFeature": "profile",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage/user-manage.html",
-      "occurrences": 1,
-      "inputsUsed": [
-        "activityLevelOptions",
-        "userForm"
-      ],
-      "outputsHandled": [
-        "userFormPatch"
-      ]
-    },
-    {
       "component": "UserManageComparisonWidgetsComponent",
       "selector": "fd-user-manage-comparison-widgets",
       "componentPath": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
@@ -32873,15 +32623,11 @@
         "currentWeight",
         "genderOptions",
         "languageOptions",
-        "passwordActionState",
-        "profileStatus",
         "themeOptions",
         "uiStyleOptions",
         "userForm"
       ],
       "outputsHandled": [
-        "passwordChange",
-        "saveNow",
         "userFormPatch"
       ]
     },
@@ -33022,10 +32768,12 @@
       "inputsUsed": [
         "email",
         "hasGoogleIdentity",
-        "isLinkingGoogle"
+        "isLinkingGoogle",
+        "passwordActionState"
       ],
       "outputsHandled": [
-        "googleCredential"
+        "googleCredential",
+        "passwordChange"
       ]
     },
     {

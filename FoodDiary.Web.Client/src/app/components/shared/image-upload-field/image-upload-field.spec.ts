@@ -115,6 +115,19 @@ describe('ImageUploadFieldComponent upload', () => {
 });
 
 describe('ImageUploadFieldComponent clearing', () => {
+    it('clears selection when the external clear request changes', async () => {
+        const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
+        fixture.componentRef.setInput('deleteOnClear', true);
+        component.value.set({ url: 'https://example.com/image.jpg', assetId: 'asset-1' });
+        fixture.detectChanges();
+
+        fixture.componentRef.setInput('clearRequest', 1);
+        fixture.detectChanges();
+
+        expect(component.value()).toEqual({ url: null, assetId: null });
+        expect(imageUploadService.deleteAsset).toHaveBeenCalledWith('asset-1');
+    });
+
     it('clears selection and deletes asset when configured', async () => {
         const { component, fixture, imageUploadService } = await setupImageUploadFieldAsync();
         fixture.componentRef.setInput('deleteOnClear', true);

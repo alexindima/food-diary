@@ -21,6 +21,12 @@ export type UserFormValues = {
     profileImage: ImageSelection | null;
 };
 
+export type UserManageAccountFormPatch = Partial<
+    Pick<UserFormValues, 'username' | 'firstName' | 'lastName' | 'birthDate' | 'gender' | 'language' | 'theme' | 'uiStyle' | 'profileImage'>
+>;
+
+export type UserManageBodyFormPatch = Partial<Pick<UserFormValues, 'heightCm' | 'activityLevel'>>;
+
 export type DietologistFormValues = {
     email: string;
     shareProfile: boolean;
@@ -57,11 +63,6 @@ export type BillingViewModel = {
     premiumActionVariant: 'secondary' | 'primary';
     premiumActionLabelKey: string;
     showManagedSupportNote: boolean;
-};
-
-export type ProfileStatusViewModel = {
-    key: string;
-    tone: 'success' | 'warning' | 'danger' | 'muted';
 };
 
 export type PasswordActionState = {

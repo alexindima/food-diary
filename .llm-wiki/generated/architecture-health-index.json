@@ -11,7 +11,7 @@
     "ambiguousBackendContracts": 3,
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 149,
-    "componentsWithoutDirectSpecs": 127,
+    "componentsWithoutDirectSpecs": 128,
     "criticalSymbolsWithoutTestReferences": 17,
     "explicitDebtMarkers": 3
   },
@@ -4579,16 +4579,6 @@
           "required": true
         },
         {
-          "name": "profileStatus",
-          "type": "ProfileStatusViewModel",
-          "required": true
-        },
-        {
-          "name": "passwordActionState",
-          "type": "PasswordActionState",
-          "required": true
-        },
-        {
           "name": "genderOptions",
           "type": "Array<FdUiSelectOption<Gender | null>>",
           "required": true
@@ -4625,14 +4615,6 @@
         }
       ],
       "outputs": [
-        {
-          "name": "passwordChange",
-          "type": ""
-        },
-        {
-          "name": "saveNow",
-          "type": ""
-        },
         {
           "name": "userFormPatch",
           "type": "UserManageAccountFormPatch | UserManageBodyFormPatch"
@@ -4912,6 +4894,46 @@
         }
       ],
       "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "UnsavedChangesBarComponent",
+      "selector": "fd-unsaved-changes-bar",
+      "feature": "shared",
+      "path": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/components/shared/unsaved-changes-bar/unsaved-changes-bar.html",
+      "inputs": [
+        {
+          "name": "message",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "discardLabel",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "saveLabel",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "saving",
+          "type": "",
+          "required": false
+        }
+      ],
+      "outputs": [
+        {
+          "name": "save",
+          "type": ""
+        },
+        {
+          "name": "discard",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {
