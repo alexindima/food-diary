@@ -18,9 +18,6 @@
         "hono": "4.12.34",
         "ip-address": "10.3.1",
         "js-yaml": "4.3.1",
-        "@lhci/utils": {
-            "js-yaml": "3.15.1"
-        },
         "lighthouse": {
             "ws": "7.5.11"
         },
@@ -133,7 +130,6 @@
         "@emnapi/runtime": "^1.11.3",
         "@emnapi/wasi-threads": "^2.0.1",
         "@eslint-community/eslint-plugin-eslint-comments": "^4.7.2",
-        "@lhci/cli": "^0.15.1",
         "@material-design-icons/font": "^0.14.15",
         "@playwright/test": "^1.62.1",
         "@storybook/angular": "^10.5.7",
@@ -144,6 +140,7 @@
         "@vitest/coverage-v8": "^4.1.10",
         "angular-eslint": "^22.1.0",
         "baseline-browser-mapping": "^2.11.12",
+        "chrome-launcher": "^1.2.1",
         "concurrently": "^10.0.4",
         "dependency-cruiser": "^18.1.1",
         "eslint": "^10.8.0",
@@ -158,6 +155,7 @@
         "eslint-plugin-unicorn": "^73.0.0",
         "husky": "^9.1.7",
         "jsdom": "^30.0.1",
+        "lighthouse": "^13.4.1",
         "ng-morph": "^5.0.1",
         "ng-packagr": "^22.1.1",
         "postcss-scss": "^4.0.9",

@@ -520,6 +520,21 @@
       "reviewedAtUtc": "2026-08-12T18:49:15.5471170Z"
     },
     {
+      "pageId": "workflow-frontend-visual-evidence",
+      "pagePath": ".llm-wiki/workflows/frontend-visual-evidence.md",
+      "pageSha256": "2b42317f0646f66ef48a014336e0cd5c11895a45ad80f867af0b849c6192652e",
+      "sources": [
+        {
+          "path": "FoodDiary.Web.Client/package.json",
+          "sha256": "a77e9fe175718daf1a83ac4a47bd4ca496ca1c4f5b54fc6239792e0b98e29c54"
+        }
+      ],
+      "reason": "CI now provisions TypeScript dependencies for cross-platform development MCP tests; Lighthouse collection keeps the existing five-route filesystem-report behavior while replacing vulnerable LHCI dependencies with current Lighthouse.",
+      "baseRef": "HEAD",
+      "gitHead": "2866636b16d0d4207e1b07ec0566bfe88edef01d",
+      "reviewedAtUtc": "2026-08-15T22:45:47.5682444Z"
+    },
+    {
       "pageId": "workflow-impact-simulation",
       "pagePath": ".llm-wiki/workflows/impact-simulation.md",
       "pageSha256": "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
@@ -574,14 +589,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "74a193c81fc59c8ecd57138c355e9dc04e78826275e57c166971206a170f459b"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "dbcf35e7857f45555c71dd47abcf6dbbec48b355b0350ca91eb45210a3c69ba6"
         }
       ],
-      "reason": "Verified planned directory test expansion prioritizes in-scope frontend specs, preserves graph consumers, diagnoses overly broad scope, and remains compatible with Windows PowerShell; focused code-graph and MCP regressions pass.",
+      "reason": "CI now provisions TypeScript dependencies for cross-platform development MCP tests; Lighthouse collection keeps the existing five-route filesystem-report behavior while replacing vulnerable LHCI dependencies with current Lighthouse.",
       "baseRef": "HEAD",
-      "gitHead": "d28b7954a31476d967461b0c026957f39f5e31da",
-      "reviewedAtUtc": "2026-08-15T12:43:35.5972869Z"
+      "gitHead": "2866636b16d0d4207e1b07ec0566bfe88edef01d",
+      "reviewedAtUtc": "2026-08-15T22:45:48.0880440Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -816,13 +831,13 @@
       "sources": [
         {
           "path": ".github/workflows/ci-tests.yml",
-          "sha256": "8016c0b373bfc72f2e85bcbfa332e5deb032e1080a6f9065bea3317441f0619f"
+          "sha256": "dbcf35e7857f45555c71dd47abcf6dbbec48b355b0350ca91eb45210a3c69ba6"
         }
       ],
-      "reason": "The standalone LLM Wiki CI job now installs the TypeScript compiler dependency required by compiler-backed graph extraction before full verification.",
+      "reason": "CI now provisions TypeScript dependencies for cross-platform development MCP tests; Lighthouse collection keeps the existing five-route filesystem-report behavior while replacing vulnerable LHCI dependencies with current Lighthouse.",
       "baseRef": "HEAD",
-      "gitHead": "9ea2f836763ef38e6ea904c50ca1462bc0606157",
-      "reviewedAtUtc": "2026-08-14T17:08:21.0161890Z"
+      "gitHead": "2866636b16d0d4207e1b07ec0566bfe88edef01d",
+      "reviewedAtUtc": "2026-08-15T22:45:48.6613080Z"
     },
     {
       "pageId": "workflow-risk-calibration",

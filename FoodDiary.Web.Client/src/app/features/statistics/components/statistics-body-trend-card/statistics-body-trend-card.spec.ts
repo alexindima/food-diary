@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import { StatisticsBodyTrendCardComponent } from './statistics-body-trend-card';
 
 describe('StatisticsBodyTrendCardComponent', () => {
@@ -11,6 +12,7 @@ describe('StatisticsBodyTrendCardComponent', () => {
             imports: [StatisticsBodyTrendCardComponent],
             providers: [provideTranslateTesting(), provideRouter([])],
         }).compileComponents();
+        TestBed.inject(MeasurementSystemService).setSystem('metric');
         const fixture = TestBed.createComponent(StatisticsBodyTrendCardComponent);
         fixture.componentRef.setInput('data', {
             weight: {

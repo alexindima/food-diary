@@ -64,7 +64,7 @@ function Add-LlmWikiIndexTimings([string]$RepositoryRoot, [string]$Mode, [object
     }
     $retained = @($samples | Group-Object { "$($_.mode)|$($_.tool)" } | ForEach-Object {
         @($_.Group | Sort-Object sequence -Descending | Select-Object -First 5)
-    } | Sort-Object recordedAtUtc)
+    } | Sort-Object { [long]$_.sequence })
     $path = Get-LlmWikiIndexTimingPath $RepositoryRoot
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $path) -Force
     $temporaryPath = "$path.$PID.tmp"

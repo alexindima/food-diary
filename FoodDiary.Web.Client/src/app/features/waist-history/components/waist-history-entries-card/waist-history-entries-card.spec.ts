@@ -2,6 +2,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
+import { MeasurementSystemService } from '../../../../shared/measurements/measurement-system.service';
 import type { WaistEntry } from '../../models/waist-entry.data';
 import { WaistHistoryEntriesCardComponent } from './waist-history-entries-card';
 
@@ -52,6 +53,7 @@ function setupComponent(entries: WaistEntry[]): {
         imports: [WaistHistoryEntriesCardComponent],
         providers: [provideTranslateTesting()],
     });
+    TestBed.inject(MeasurementSystemService).setSystem('metric');
 
     const fixture = TestBed.createComponent(WaistHistoryEntriesCardComponent);
     fixture.componentRef.setInput('isLoading', false);

@@ -43,6 +43,19 @@ internal sealed record CodexMcpTestConfiguration(
         string[] enabledTools = JsonSerializer.Deserialize<string[]>(values["enabled_tools"])
                                 ?? throw new InvalidOperationException("MCP enabled_tools are missing.");
 
+        if (!OperatingSystem.IsWindows() && command.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)) {
+            string configuration = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Name ?? "Debug";
+            string serverAssembly = Path.Combine(
+                repositoryRoot,
+                "FoodDiary.Development.Mcp",
+                "bin",
+                configuration,
+                "net10.0",
+                "FoodDiary.Development.Mcp.dll");
+            command = "dotnet";
+            arguments = [serverAssembly];
+        }
+
         return new CodexMcpTestConfiguration(
             command,
             arguments,
