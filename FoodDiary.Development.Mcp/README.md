@@ -7,7 +7,8 @@ analysis entrypoints without replacing repository source-of-truth checks.
 
 - `get_change_context` wraps `wiki.ps1 brief`.
 - `trace_backend_flow` wraps `wiki.ps1 trace`.
-- `get_test_plan` wraps `wiki.ps1 test-plan`.
+- `get_test_plan` wraps `wiki.ps1 test-plan` and accepts explicit
+  `changedPaths` or fallback `plannedPaths` when the worktree is clean.
 - `get_development_context` runs a compact brief, SQLite-backed trace, and fast
   test plan serially against one immutable Git/worktree snapshot. These Wiki
   commands share SQLite graph state, so serialization avoids refresh-lock
@@ -24,6 +25,11 @@ cache; repeated requests against the same Git HEAD and worktree avoid repeating
 expensive discovery. The standalone `get_test_plan` remains comprehensive,
 while the aggregate context deliberately uses the fast graph plan to stay
 within interactive tool timeouts.
+
+Large and Unicode-rich intents/path lists are serialized to a temporary JSON
+request file instead of being placed on the Windows command line. Tool results
+use MCP `structuredContent`; verbose `rawOutput` and duplicate `outputLines` are
+omitted unless `includeRawOutput` is explicitly enabled.
 
 ## Run
 

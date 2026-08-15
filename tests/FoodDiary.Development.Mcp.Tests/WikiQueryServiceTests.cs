@@ -31,11 +31,11 @@ public sealed class WikiQueryServiceTests {
                 arguments.SequenceEqual(new[] {
                     "-Format",
                     "Json",
-                    "-Intent",
+                    "-Objective",
                     "Add MCP; Write-Error must stay data",
-                    "-PlannedPath",
+                    "-ProposedPath",
                     "FoodDiary.Development.Mcp",
-                    "-ChangedPathList",
+                    "-ChangedPath",
                     "FoodDiary.Development.Mcp/WikiQueryService.cs",
                 })),
             cancellationToken);
@@ -53,14 +53,18 @@ public sealed class WikiQueryServiceTests {
     public async Task GetTestPlanAsync_UsesCurrentChangeSetWhenQueryIsMissing() {
         WikiQueryService service = new(_executor, _snapshots);
 
-        await service.GetTestPlanAsync(intent: null, CancellationToken.None);
+        await service.GetTestPlanAsync(
+            intent: null,
+            plannedPaths: null,
+            changedPaths: null,
+            CancellationToken.None);
 
         await _executor.Received(1).ExecuteAsync(
             "test-plan",
             Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] {
                 "-Format",
                 "Json",
-                "-ChangedPathList",
+                "-ChangedPath",
                 "FoodDiary.Development.Mcp/WikiQueryService.cs",
             })),
             CancellationToken.None);
@@ -94,11 +98,72 @@ public sealed class WikiQueryServiceTests {
                 "-Format",
                 "Json",
                 "-Fast",
-                "-Intent",
+                "-Objective",
                 "Change a backend flow",
-                "-ChangedPathList",
+                "-ChangedPath",
                 "FoodDiary.Development.Mcp/WikiQueryService.cs",
             })),
             CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_UsesPlannedPathForCleanWorktreeTestPlan() {
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+            "abc123",
+            "clean-snapshot",
+            [],
+            DateTimeOffset.UtcNow));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        await service.GetDevelopmentContextAsync(
+            "Change frontend measurements",
+            "MeasurementSystem",
+            "FoodDiary.Web.Client/src/app",
+            CancellationToken.None);
+
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.Contains(
+                "FoodDiary.Web.Client/src/app",
+                StringComparer.Ordinal)),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetTestPlanAsync_PrefersExplicitChangedPaths() {
+        WikiQueryService service = new(_executor, _snapshots);
+
+        await service.GetTestPlanAsync(
+            "Change frontend measurements",
+            ["planned/path"],
+            ["explicit/changed.cs"],
+            CancellationToken.None);
+
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments =>
+                arguments.Contains("explicit/changed.cs", StringComparer.Ordinal) &&
+                !arguments.Contains("planned/path", StringComparer.Ordinal) &&
+                !arguments.Contains("FoodDiary.Development.Mcp/WikiQueryService.cs", StringComparer.Ordinal)),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetTestPlanAsync_RequiresScopeForCleanWorktree() {
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+            "abc123",
+            "clean-snapshot",
+            [],
+            DateTimeOffset.UtcNow));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentMcpException exception = await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+            service.GetTestPlanAsync(
+                intent: null,
+                plannedPaths: null,
+                changedPaths: null,
+                CancellationToken.None));
+
+        Assert.Equal(DevelopmentMcpErrorCodes.TestPlanScopeRequired, exception.ErrorCode);
     }
 }

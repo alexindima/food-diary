@@ -9,9 +9,9 @@ public sealed class WikiQueryService(
         CancellationToken cancellationToken) {
         ArgumentException.ThrowIfNullOrWhiteSpace(intent);
 
-        List<string> arguments = ["-Format", "Json", "-Intent", intent];
+        List<string> arguments = ["-Format", "Json", "-Objective", intent];
         if (!string.IsNullOrWhiteSpace(plannedPath)) {
-            arguments.Add("-PlannedPath");
+            arguments.Add("-ProposedPath");
             arguments.Add(plannedPath);
         }
 
@@ -32,11 +32,26 @@ public sealed class WikiQueryService(
 
     public async Task<WikiCommandResult> GetTestPlanAsync(
         string? intent,
+        IReadOnlyList<string>? plannedPaths,
+        IReadOnlyList<string>? changedPaths,
         CancellationToken cancellationToken) {
         List<string> arguments = string.IsNullOrWhiteSpace(intent)
             ? ["-Format", "Json"]
-            : ["-Format", "Json", "-Intent", intent];
-        AddChangeSet(arguments, await snapshots.GetAsync(cancellationToken).ConfigureAwait(false));
+            : ["-Format", "Json", "-Objective", intent];
+        ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
+        bool hasChangeScope = AddPaths(arguments, "-ChangedPath", changedPaths);
+        if (!hasChangeScope) {
+            hasChangeScope = AddChangeSet(arguments, snapshot);
+        }
+        if (!hasChangeScope) {
+            AddPaths(arguments, "-ProposedPath", plannedPaths);
+        }
+
+        if (!HasScope(arguments)) {
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.TestPlanScopeRequired,
+                "Provide plannedPaths or changedPaths when the Git worktree is clean.");
+        }
 
         return await executor.ExecuteAsync("test-plan", arguments, cancellationToken).ConfigureAwait(false);
     }
@@ -50,15 +65,18 @@ public sealed class WikiQueryService(
         ArgumentException.ThrowIfNullOrWhiteSpace(query);
 
         ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
-        List<string> briefArguments = ["-Format", "Json", "-Compact", "-Intent", intent];
+        List<string> briefArguments = ["-Format", "Json", "-Compact", "-Objective", intent];
         if (!string.IsNullOrWhiteSpace(plannedPath)) {
-            briefArguments.Add("-PlannedPath");
+            briefArguments.Add("-ProposedPath");
             briefArguments.Add(plannedPath);
         }
         AddChangeSet(briefArguments, snapshot);
 
-        List<string> testArguments = ["-Format", "Json", "-Fast", "-Intent", intent];
-        AddChangeSet(testArguments, snapshot);
+        List<string> testArguments = ["-Format", "Json", "-Fast", "-Objective", intent];
+        if (!AddChangeSet(testArguments, snapshot) && !string.IsNullOrWhiteSpace(plannedPath)) {
+            testArguments.Add("-ProposedPath");
+            testArguments.Add(plannedPath);
+        }
 
         WikiCommandResult brief = await executor.ExecuteAsync(
             "brief",
@@ -81,12 +99,30 @@ public sealed class WikiQueryService(
             testPlan);
     }
 
-    private static void AddChangeSet(List<string> arguments, ChangeSetSnapshot snapshot) {
+    private static bool AddChangeSet(List<string> arguments, ChangeSetSnapshot snapshot) {
         if (snapshot.ChangedPaths.Count == 0) {
-            return;
+            return false;
         }
 
-        arguments.Add("-ChangedPathList");
-        arguments.Add(string.Join('\n', snapshot.ChangedPaths));
+        AddPaths(arguments, "-ChangedPath", snapshot.ChangedPaths);
+        return true;
     }
+
+    private static bool AddPaths(
+        List<string> arguments,
+        string parameter,
+        IReadOnlyList<string>? paths) {
+        string[] normalized = [.. (paths ?? [])
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Distinct(StringComparer.OrdinalIgnoreCase)];
+        foreach (string path in normalized) {
+            arguments.Add(parameter);
+            arguments.Add(path);
+        }
+        return normalized.Length > 0;
+    }
+
+    private static bool HasScope(IReadOnlyList<string> arguments) =>
+        arguments.Contains("-ChangedPath", StringComparer.Ordinal) ||
+        arguments.Contains("-ProposedPath", StringComparer.Ordinal);
 }

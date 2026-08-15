@@ -42,7 +42,12 @@ function Get-PathFingerprint([string]$RepositoryPath) {
     }
 }
 
-$session = & (Join-Path $PSScriptRoot 'Resolve-LlmWikiSession.ps1') -SessionId $SessionId -Create:($Action -eq 'Capture') -RepositoryRoot $RepositoryRoot -Format Object
+$session = & (Join-Path $PSScriptRoot 'Resolve-LlmWikiSession.ps1') `
+    -SessionId $SessionId `
+    -Create:($Action -eq 'Capture') `
+    -ReadOnly:($Action -in @('ChangedPaths', 'Status')) `
+    -RepositoryRoot $RepositoryRoot `
+    -Format Object
 $SessionId = [string]$session.id
 $gitDirectory = (Invoke-Git @('rev-parse', '--absolute-git-dir') | Select-Object -First 1)
 $stateDirectory = Join-Path $gitDirectory 'llm-wiki'

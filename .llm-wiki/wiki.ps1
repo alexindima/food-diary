@@ -82,6 +82,7 @@ param(
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string]$ChangedPathList,
+    [string]$RequestFile,
     [string[]]$RelationKind,
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
@@ -236,6 +237,29 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+if (-not [string]::IsNullOrWhiteSpace($RequestFile)) {
+    $request = Get-Content -LiteralPath $RequestFile -Raw | ConvertFrom-Json
+    if ([int]$request.schemaVersion -ne 1 -or $null -eq $request.arguments) {
+        throw 'Unsupported LLM Wiki request-file schema.'
+    }
+    foreach ($property in $request.arguments.PSObject.Properties) {
+        $parameterName = [string]$property.Name
+        if ($parameterName -in @('Command', 'RequestFile') -or
+            -not $MyInvocation.MyCommand.Parameters.ContainsKey($parameterName)) {
+            throw "Unsupported LLM Wiki request-file parameter '$parameterName'."
+        }
+        $parameterType = $MyInvocation.MyCommand.Parameters[$parameterName].ParameterType
+        $value = if ($parameterType -eq [Management.Automation.SwitchParameter]) {
+            [Management.Automation.SwitchParameter]::new([bool]$property.Value)
+        } elseif ($parameterType.IsArray) {
+            [string[]]@($property.Value)
+        } else {
+            $property.Value
+        }
+        Set-Variable -Name $parameterName -Value $value
+        $PSBoundParameters[$parameterName] = $value
+    }
+}
 $gitConfigCount = 0
 if (-not [string]::IsNullOrWhiteSpace($env:GIT_CONFIG_COUNT)) {
     $parsedGitConfigCount = 0
@@ -313,12 +337,19 @@ if ($Command -in @('verify', 'verify-full') -and $env:CI -ne 'true' -and -not $P
 
 $deltaAwareCommands = @('update', 'repair-verify', 'completion', 'smoke', 'verify', 'verify-fast', 'verify-strict-affected', 'verify-full', 'continue-ui', 'ui-finalize', 'research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'readiness', 'report', 'diff', 'impact', 'review', 'review-affected', 'ownership', 'policy')
 $explicitScopePlanningCommands = @('research', 'context', 'packet', 'brief', 'design', 'journeys', 'implementation-plan', 'plan', 'test-plan', 'decision')
+$readOnlyFacadeCommands = @('research', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'diff', 'ownership', 'api-compat')
 $taskBaselineContext = $null
 if ($Command -in @('develop', 'start')) {
     & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId $TaskSessionId -Format Text
 } elseif ($Command -in $deltaAwareCommands -and -not $PSBoundParameters.ContainsKey('ChangedPath') -and
     -not ($Command -in $explicitScopePlanningCommands -and $PSBoundParameters.ContainsKey('ProposedPath'))) {
-    $taskBaseline = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId $TaskSessionId -Format Object
+    $taskBaseline = try {
+        & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action ChangedPaths -SessionId $TaskSessionId -Format Object
+    } catch {
+        if ($Command -notin $readOnlyFacadeCommands) { throw }
+        Write-Warning 'Session registry is unavailable; continuing in ephemeral read-only mode.'
+        [pscustomobject]@{ available = $false }
+    }
     if ($taskBaseline.available) {
         $taskBaselineContext = $taskBaseline
         $ChangedPath = @($taskBaseline.changedPaths)
@@ -329,8 +360,10 @@ if ($Command -in @('develop', 'start')) {
         if ($workingTreePaths.Count -gt 0 -and $ChangedPath.Count -gt [Math]::Max(($workingTreePaths.Count * 3), ($workingTreePaths.Count + 50))) {
             Write-Warning "Stale task baseline '$($taskBaseline.sessionKey)' (age=$($taskBaseline.ageHours)h, commits-ahead=$($taskBaseline.commitsAhead)) contains $($ChangedPath.Count) paths but the current working delta contains $($workingTreePaths.Count). It is closed automatically; using the current delta."
             $ChangedPath = $workingTreePaths
-            & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Close -SessionId $TaskSessionId -Format Text
-            Write-Host "Next develop/start command will capture a fresh baseline for session '$($taskBaseline.sessionKey)'."
+            if ($Command -notin $readOnlyFacadeCommands) {
+                & (Join-Path $toolsRoot 'Manage-LlmWikiTaskBaseline.ps1') -Action Close -SessionId $TaskSessionId -Format Text
+                Write-Host "Next develop/start command will capture a fresh baseline for session '$($taskBaseline.sessionKey)'."
+            }
         }
         $PSBoundParameters['ChangedPath'] = $ChangedPath
     }
@@ -344,7 +377,6 @@ function Invoke-WikiTool {
 
     $toolPath = Join-Path $toolsRoot $Name
     $global:LASTEXITCODE = 0
-    $readOnlyFacadeCommands = @('develop', 'research', 'context', 'trace', 'packet', 'brief', 'integration-scan', 'precedents', 'solutions', 'design', 'journeys', 'ui-trace', 'implementation-plan', 'plan', 'test-plan', 'decision', 'dependencies', 'rollout', 'topology', 'privacy', 'diff', 'ownership', 'api-compat')
     if ($Command -in $readOnlyFacadeCommands) {
         & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') -ToolPath $toolPath -ToolArguments $ToolArguments
     } else {

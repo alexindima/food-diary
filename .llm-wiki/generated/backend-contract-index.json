@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1026,
+    "contracts": 1027,
     "ambiguousContracts": 3,
-    "consumerEdges": 7109,
-    "productionConsumerEdges": 4337,
+    "consumerEdges": 7110,
+    "productionConsumerEdges": 4338,
     "testConsumerEdges": 2772,
-    "consumedContracts": 1026,
+    "consumedContracts": 1027,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -16428,6 +16428,22 @@
       ],
       "definitionPaths": [
         "FoodDiary.Presentation.Api/Features/Dashboard/Responses/WeightPointHttpResponse.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "WikiCommandRequest",
+      "roles": [
+        "Request"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/WikiCommandRequest.cs"
       ],
       "ambiguous": false
     }
@@ -108861,6 +108877,19 @@
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dashboard/Responses/DashboardWeightHttpResponse.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "WikiCommandRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/WikiCommandRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/PowerShellWikiCommandExecutor.cs",
+      "isTest": false,
+      "referenceCount": 1
     }
   ]
 }

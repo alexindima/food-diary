@@ -37,8 +37,11 @@ public sealed class McpServerTests {
             cancellationToken: toolTimeout.Token);
 
         Assert.NotEqual(true, result.IsError);
-        Assert.Contains(result.Content, content =>
-            content.ToString()!.Contains("repositoryRoot", StringComparison.OrdinalIgnoreCase));
+        Assert.NotNull(result.StructuredContent);
+        Assert.Contains(
+            "repositoryRoot",
+            result.StructuredContent.Value.ToString(),
+            StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -52,8 +55,11 @@ public sealed class McpServerTests {
 
         Assert.All(results, result => {
             Assert.NotEqual(true, result.IsError);
-            Assert.Contains(result.Content, content =>
-                content.ToString()!.Contains("repositoryRoot", StringComparison.OrdinalIgnoreCase));
+            Assert.NotNull(result.StructuredContent);
+            Assert.Contains(
+                "repositoryRoot",
+                result.StructuredContent.Value.ToString(),
+                StringComparison.OrdinalIgnoreCase);
         });
     }
 
@@ -79,8 +85,15 @@ public sealed class McpServerTests {
         stopwatch.Stop();
 
         Assert.NotEqual(true, result.IsError);
-        Assert.Contains(result.Content, content =>
-            content.ToString()!.Contains("snapshotFingerprint", StringComparison.OrdinalIgnoreCase));
+        Assert.NotNull(result.StructuredContent);
+        Assert.Contains(
+            "snapshotFingerprint",
+            result.StructuredContent.Value.ToString(),
+            StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain(
+            "rawOutput",
+            result.StructuredContent.Value.ToString(),
+            StringComparison.OrdinalIgnoreCase);
         Assert.True(stopwatch.Elapsed < TimeSpan.FromSeconds(60), $"Aggregate context took {stopwatch.Elapsed}.");
 
         ProcessResult build = await RunProcessAsync(

@@ -46,7 +46,10 @@
             "ML": "ml",
             "PCS": "pcs",
             "KG": "kg",
-            "CM": "cm"
+            "CM": "cm",
+            "LB": "lb",
+            "FT": "ft",
+            "IN": "in"
         },
         "NUTRIENTS": {
             "CALORIES": "Calories",

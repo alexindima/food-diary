@@ -134,14 +134,33 @@
                 <strong>{{ 'USER_MANAGE.BODY_SECTION' | translate }}</strong>
             </div>
             <div class="profile-comparison__fields fd-grid fd-gap-sm">
-                <fd-ui-input
-                    size="sm"
-                    data-user-field="height"
-                    type="number"
-                    [formField]="userForm().heightCm"
-                    [label]="'USER_MANAGE.COMPARISON.HEIGHT_CM' | translate"
-                    (valueChange)="onHeightChange($event)"
-                />
+                @if (measurementSystem() === 'metric') {
+                    <fd-ui-input
+                        size="sm"
+                        data-user-field="height"
+                        type="number"
+                        [formField]="userForm().heightCm"
+                        [label]="'USER_MANAGE.COMPARISON.HEIGHT_CM' | translate"
+                        (valueChange)="onHeightChange($event)"
+                    />
+                } @else {
+                    <div class="fd-grid fd-grid-cols-2 fd-gap-sm">
+                        <fd-ui-input
+                            size="sm"
+                            type="number"
+                            [value]="imperialHeight().feet"
+                            [label]="'USER_MANAGE.COMPARISON.HEIGHT_FT' | translate"
+                            (valueChange)="onImperialHeightChange('feet', $event)"
+                        />
+                        <fd-ui-input
+                            size="sm"
+                            type="number"
+                            [value]="imperialHeight().inches"
+                            [label]="'USER_MANAGE.COMPARISON.HEIGHT_IN' | translate"
+                            (valueChange)="onImperialHeightChange('inches', $event)"
+                        />
+                    </div>
+                }
                 <fd-ui-select
                     size="sm"
                     [formField]="userForm().activityLevel"
@@ -157,9 +176,9 @@
                         <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WEIGHT' | translate }}</span>
                     </span>
                     <strong
-                        >{{ currentWeight() ?? '—' }}
-                        @if (currentWeight() !== null) {
-                            {{ 'USER_MANAGE.COMPARISON.KG' | translate }}
+                        >{{ displayedWeight() ?? '—' }}
+                        @if (displayedWeight() !== null) {
+                            {{ measurements.weightUnitKey() | translate }}
                         }
                     </strong>
                     <span class="profile-comparison__measurement-action fd-row fd-gap-xs">
@@ -173,9 +192,9 @@
                         <span>{{ 'USER_MANAGE.COMPARISON.CURRENT_WAIST' | translate }}</span>
                     </span>
                     <strong
-                        >{{ currentWaist() ?? '—' }}
-                        @if (currentWaist() !== null) {
-                            {{ 'USER_MANAGE.COMPARISON.CM' | translate }}
+                        >{{ displayedWaist() ?? '—' }}
+                        @if (displayedWaist() !== null) {
+                            {{ measurements.lengthUnitKey() | translate }}
                         }
                     </strong>
                     <span class="profile-comparison__measurement-action fd-row fd-gap-xs">

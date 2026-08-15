@@ -1300,6 +1300,8 @@
             "COMPLETENESS_HINT": "Birth date, gender, height, and activity improve personal calculations.",
             "BODY_HINT": "These details are used for calorie, nutrition, and activity recommendations.",
             "HEIGHT_CM": "Height, cm",
+            "HEIGHT_FT": "Height, ft",
+            "HEIGHT_IN": "Height, in",
             "UNIT_SYSTEM": "Unit format",
             "UNIT_SYSTEM_METRIC": "Metric (kg, cm)",
             "UNIT_SYSTEM_IMPERIAL": "Imperial (lb, ft/in)",

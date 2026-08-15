@@ -146,14 +146,18 @@
       "pageSha256": "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "6064ea1d6997e26c1501804dfb492955adfe3d69133044acc622d8cb997b0566"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1",
+          "sha256": "e6d4293c371b751dc3b09da227f3a2b28e541ba5964ef99f8a9af46c59cab0ca"
+        },
+        {
+          "path": ".llm-wiki/tools/Resolve-LlmWikiSession.ps1",
+          "sha256": "6b039bd3d2ea372a1cd2cb994a82ca4f4e77c80baf7710af686a084b57a0ef1c"
         }
       ],
-      "reason": "Reviewed the immutable change-set cache, SQLite query layer, parallel MCP snapshot flow, and compatibility-preserving compiled-index migration boundary; authoritative sources remain unchanged and generated JSON is retained while consumers exist.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
-      "reviewedAtUtc": "2026-08-14T14:24:53.8877786Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:35.1707852Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -192,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "03544be173da2be221d7cd456c7607ee953c88ae34a3d6e5d4444b5b38268bbf"
+          "sha256": "6599e157c3231711b904407609812a88d204fb66d02911c3ddee875d3edcc086"
         }
       ],
-      "reason": "Reviewed the immutable change-set cache, SQLite query layer, parallel MCP snapshot flow, and compatibility-preserving compiled-index migration boundary; authoritative sources remain unchanged and generated JSON is retained while consumers exist.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
-      "reviewedAtUtc": "2026-08-14T14:24:54.7445535Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:36.1700490Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -236,14 +240,14 @@
       "pageSha256": "3dd38cd9b305a117775fcdf2e4036dfb5e974a910bb601b8237af593c7b55796",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "9e0b056b37be9ad538d0ec9582585c77d63fba1e4c4fed7c51880b9124591c84"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "baf8929beb9444ae97722da64bbd7ecbc9459cf93b6d6cf489e220d6b1cc1590"
         }
       ],
-      "reason": "Validated SQLite code-graph build locking across the full open, build, and close lifecycle under four concurrent cold builders; solution-wide formatting now matches CI.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "210346cd15b0d2122bc54e749ea4e8c2c55daf64",
-      "reviewedAtUtc": "2026-08-14T16:20:24.0116589Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:36.7386761Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -570,14 +574,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "8016c0b373bfc72f2e85bcbfa332e5deb032e1080a6f9065bea3317441f0619f"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "baf8929beb9444ae97722da64bbd7ecbc9459cf93b6d6cf489e220d6b1cc1590"
         }
       ],
-      "reason": "The standalone LLM Wiki CI job now installs the TypeScript compiler dependency required by compiler-backed graph extraction before full verification.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "9ea2f836763ef38e6ea904c50ca1462bc0606157",
-      "reviewedAtUtc": "2026-08-14T17:08:20.6105214Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:38.1385598Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -767,13 +771,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "03b63facac60998a453a7f8eb99ac2b598913b4e345f7b33d629099ae98dfb89"
+          "sha256": "cf34668f9d4a2abcfcf2c0a98b566916a98a6ae69356b25814f8842dd06f2ea3"
         }
       ],
-      "reason": "Reviewed quality-risk workflow after adding config-driven MCP latency, concurrency, and build-lock regression coverage; no workflow guidance change is required.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "2a936b4ece050b8e25b2125eb0af6d771c8ca97b",
-      "reviewedAtUtc": "2026-08-14T23:27:48.2931806Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:38.9890070Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -910,13 +914,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "07b63a27728409259560314f05b0f454fceb98f18afc4d199876608a8d963b27"
+          "sha256": "baf8929beb9444ae97722da64bbd7ecbc9459cf93b6d6cf489e220d6b1cc1590"
         }
       ],
-      "reason": "Reviewed the explicit ChangedPathList facade contract used by MCP snapshots; it only normalizes process-safe input into the existing ChangedPath array and does not alter routing, index, dispatch, or review semantics.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
-      "reviewedAtUtc": "2026-08-14T14:33:46.6470398Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:40.2581681Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -974,13 +978,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "07ff3975fad77db23339d22431b3b128df3d3bc9a4bc8ec025bd20779b62cf29"
+          "sha256": "3a7d5dc7260ff532eeef0235ce29547ddd201ae1f5e548c6f84be09c89f4f743"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "eeffcc8f8b147e76a75b22841cafc5f8b35d994fa1eac3f265fa2de4d7841b3a"
         }
       ],
-      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
-      "reviewedAtUtc": "2026-08-14T22:39:21.3582388Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:40.9498520Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1068,13 +1076,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "07ff3975fad77db23339d22431b3b128df3d3bc9a4bc8ec025bd20779b62cf29"
+          "sha256": "3a7d5dc7260ff532eeef0235ce29547ddd201ae1f5e548c6f84be09c89f4f743"
         }
       ],
-      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
-      "reviewedAtUtc": "2026-08-14T22:39:19.7108850Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:37.5423617Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1098,13 +1106,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "07b63a27728409259560314f05b0f454fceb98f18afc4d199876608a8d963b27"
+          "sha256": "baf8929beb9444ae97722da64bbd7ecbc9459cf93b6d6cf489e220d6b1cc1590"
         }
       ],
-      "reason": "Reviewed the explicit ChangedPathList facade contract used by MCP snapshots; it only normalizes process-safe input into the existing ChangedPath array and does not alter routing, index, dispatch, or review semantics.",
+      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
       "baseRef": "HEAD",
-      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
-      "reviewedAtUtc": "2026-08-14T14:33:45.8993229Z"
+      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
+      "reviewedAtUtc": "2026-08-15T01:31:39.6119873Z"
     }
   ]
 }

@@ -5,4 +5,10 @@ public sealed record DevelopmentContext(
     string GitHead,
     WikiCommandResult ChangeContext,
     WikiCommandResult BackendTrace,
-    WikiCommandResult TestPlan);
+    WikiCommandResult TestPlan) {
+    public DevelopmentContext WithoutRawOutput() => this with {
+        ChangeContext = ChangeContext.WithoutRawOutput(),
+        BackendTrace = BackendTrace.WithoutRawOutput(),
+        TestPlan = TestPlan.WithoutRawOutput(),
+    };
+}

@@ -8,11 +8,11 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1568,
-    "symbols": 607,
+    "typescriptFiles": 1570,
+    "symbols": 608,
     "routes": 86,
     "features": 37,
-    "specs": 558,
+    "specs": 559,
     "localeFiles": 5,
     "roles": {
       "Component": 418,
@@ -20,7 +20,7 @@
       "Facade": 53,
       "Other": 17,
       "Pipe": 2,
-      "Service": 105
+      "Service": 106
     }
   },
   "features": [
@@ -4199,7 +4199,7 @@
       "role": "Component",
       "selector": "fd-user-manage-comparison-widgets",
       "path": "FoodDiary.Web.Client/src/app/features/profile/pages/user-manage-sections/comparison-widgets/user-manage-comparison-widgets.ts",
-      "line": 41
+      "line": 49
     },
     {
       "name": "UserManageConnectedDevicesComponent",
@@ -5301,6 +5301,13 @@
       "line": 34
     },
     {
+      "name": "MeasurementSystemService",
+      "role": "Service",
+      "selector": null,
+      "path": "FoodDiary.Web.Client/src/app/shared/measurements/measurement-system.service.ts",
+      "line": 19
+    },
+    {
       "name": "UpdateUserDto",
       "role": "Other",
       "selector": null,
@@ -5927,16 +5934,16 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3283,
-      "russianProperties": 3283,
+      "englishProperties": 3285,
+      "russianProperties": 3285,
       "countsMatch": true
     },
     {
       "name": "core.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 589,
-      "russianProperties": 589,
+      "englishProperties": 592,
+      "russianProperties": 592,
       "countsMatch": true
     },
     {

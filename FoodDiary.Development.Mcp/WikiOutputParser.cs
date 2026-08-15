@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Text.Json;
 
 namespace FoodDiary.Development.Mcp;
 
@@ -26,16 +27,27 @@ public static partial class WikiOutputParser {
                            line.Contains("warning", StringComparison.OrdinalIgnoreCase) ||
                            line.Contains("failed", StringComparison.OrdinalIgnoreCase))
             .Distinct(StringComparer.OrdinalIgnoreCase)];
+        JsonElement? structuredOutput = TryParseJson(rawOutput);
 
         return new WikiCommandResult(
             command,
             rawOutput,
+            structuredOutput,
             repositoryRoot,
             gitHead,
             lines,
             referencedPaths,
             requiredChecks,
             warnings);
+    }
+
+    private static JsonElement? TryParseJson(string rawOutput) {
+        try {
+            using var document = JsonDocument.Parse(rawOutput);
+            return document.RootElement.Clone();
+        } catch (JsonException) {
+            return null;
+        }
     }
 
     [GeneratedRegex(@"(?<![\w.-])(?:\.llm-wiki|docs|tests|FoodDiary[\w.-]*|MailInbox|MailRelay|Shared)[/\\][\w./\\-]+", RegexOptions.CultureInvariant, matchTimeoutMilliseconds: 100)]

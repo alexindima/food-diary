@@ -20,13 +20,34 @@ public sealed class PowerShellWikiCommandExecutorTests {
         WikiCommandResult result = await executor.ExecuteAsync(
             "test-plan",
             [
-                "-Intent",
+                "-Format",
+                "Json",
+                "-Fast",
+                "-Objective",
                 "Verify the FoodDiary Development MCP test plan tool",
-                "-ChangedPathList",
+                "-ChangedPath",
                 "FoodDiary.Development.Mcp/WikiQueryService.cs",
             ],
             timeout.Token);
 
-        Assert.Contains("Test plan:", result.RawOutput, StringComparison.Ordinal);
+        Assert.StartsWith("{", result.RawOutput, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_UsesRequestFileForLongUnicodeScope() {
+        PowerShellWikiCommandExecutor executor = new();
+        using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(60));
+        List<string> arguments = ["-Format", "Json", "-Fast", "-Objective", new string('я', 12_000)];
+        for (int index = 0; index < 250; index++) {
+            arguments.Add("-ChangedPath");
+            arguments.Add($"FoodDiary.Web.Client/src/app/измерения/компонент-{index.ToString(System.Globalization.CultureInfo.InvariantCulture)}.ts");
+        }
+
+        WikiCommandResult result = await executor.ExecuteAsync(
+            "test-plan",
+            arguments,
+            timeout.Token);
+
+        Assert.StartsWith("{", result.RawOutput, StringComparison.Ordinal);
     }
 }

@@ -2,6 +2,7 @@
 param(
     [string]$SessionId,
     [switch]$Create,
+    [switch]$ReadOnly,
     [string]$RepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path,
     [ValidateSet('Object', 'Json', 'Text')]
     [string]$Format = 'Object'
@@ -32,9 +33,15 @@ function Get-ExternalHint {
     return $null
 }
 
-$registry = if (Test-Path -LiteralPath $registryPath -PathType Leaf) {
-    Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
-} else {
+$registry = try {
+    if (Test-Path -LiteralPath $registryPath -PathType Leaf) {
+        Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
+    } else {
+        [pscustomobject]@{ schemaVersion = 1; sessions = @() }
+    }
+} catch {
+    if (-not $ReadOnly) { throw }
+    Write-Warning 'Session registry is not readable; continuing in ephemeral read-only mode.'
     [pscustomobject]@{ schemaVersion = 1; sessions = @() }
 }
 $sessions = @($registry.sessions)
@@ -52,7 +59,7 @@ if ($externalHint) {
     }
 }
 
-if ($null -eq $resolved -and $Create) {
+if ($null -eq $resolved -and $Create -and -not $ReadOnly) {
     $id = [guid]::NewGuid().ToString('N')
     $resolved = [pscustomobject][ordered]@{
         id = $id
@@ -63,19 +70,19 @@ if ($null -eq $resolved -and $Create) {
         workspacePath = ".artifacts/llm-wiki/tasks/session-$id"
     }
     $sessions += $resolved
-} elseif ($null -ne $resolved) {
+} elseif ($null -ne $resolved -and -not $ReadOnly) {
     $resolved.lastSeenAtUtc = [DateTime]::UtcNow.ToString('o')
 }
 
-if ($null -ne $resolved) {
+if ($null -ne $resolved -and -not $ReadOnly) {
     $registry = [pscustomobject][ordered]@{ schemaVersion = 1; sessions = @($sessions) }
     Write-Registry $registry
 }
 
 $result = if ($null -eq $resolved) {
-    [pscustomobject]@{ available = $false; id = 'default'; externalHint = $externalHint; workspacePath = '.artifacts/llm-wiki/tasks/current' }
+    [pscustomobject]@{ available = $false; readOnly = [bool]$ReadOnly; id = 'default'; externalHint = $externalHint; workspacePath = '.artifacts/llm-wiki/tasks/current' }
 } else {
-    [pscustomobject]@{ available = $true; id = [string]$resolved.id; externalHint = $externalHint; workspacePath = [string]$resolved.workspacePath }
+    [pscustomobject]@{ available = $true; readOnly = [bool]$ReadOnly; id = [string]$resolved.id; externalHint = $externalHint; workspacePath = [string]$resolved.workspacePath }
 }
 
 switch ($Format) {

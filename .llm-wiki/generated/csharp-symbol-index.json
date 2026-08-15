@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3228,
-    "symbols": 3237,
+    "sourceFiles": 3229,
+    "symbols": 3238,
     "interfaceImplementationLinks": 231,
     "dependencyInjectionRegistrations": 232,
     "kinds": {
       "class": 1657,
       "enum": 49,
       "interface": 411,
-      "record": 1007,
+      "record": 1008,
       "record struct": 113
     },
     "roles": {
@@ -38,7 +38,7 @@
       "ReadModelRepository": 29,
       "ReadRepository": 47,
       "Repository": 102,
-      "Request": 124,
+      "Request": 125,
       "Response": 171,
       "Service": 269,
       "Validator": 182,
@@ -12848,7 +12848,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/PowerShellWikiCommandExecutor.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "RepositoryRootResolver",
@@ -12876,6 +12876,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/ToolExecution.cs",
+      "line": 6
+    },
+    {
+      "name": "WikiCommandRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Development.Mcp/WikiCommandRequest.cs",
       "line": 2
     },
     {
@@ -12883,7 +12890,7 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/WikiCommandResult.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "WikiIndexStatus",
@@ -12897,7 +12904,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/WikiOutputParser.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "WikiQueryService",
@@ -12911,7 +12918,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/WikiTools.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "DomainConstants",
