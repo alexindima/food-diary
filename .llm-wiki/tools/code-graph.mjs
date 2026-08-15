@@ -307,7 +307,7 @@ function build(database, force = false) {
   const started = performance.now();
   const storedParserVersion = database.prepare("SELECT value FROM metadata WHERE key='parser_version'").get()?.value;
   if (storedParserVersion !== parserVersion) force = true;
-  const knownPaths = new Set(gitPaths());
+  const knownPaths = new Set(gitPaths().filter((path) => existsSync(resolve(repositoryRoot, path))));
   const existing = new Map(database.prepare('SELECT id, path, size, mtime_ms, content_hash FROM files').all().map((item) => [item.path, item]));
   const deleteFile = database.prepare('DELETE FROM files WHERE id = ?');
   const insertFile = database.prepare('INSERT INTO files(path, language, size, mtime_ms, content_hash) VALUES (?, ?, ?, ?, ?)');

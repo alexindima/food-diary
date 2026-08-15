@@ -1,7 +1,10 @@
 using System.Diagnostics;
 using System.Text.Json;
+using FoodDiary.Development.Mcp.Diagnostics;
+using FoodDiary.Development.Mcp.Infrastructure;
+using FoodDiary.Development.Mcp.Protocol;
 
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.Wiki;
 
 public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
     private static readonly TimeSpan CommandTimeout = TimeSpan.FromMinutes(2);

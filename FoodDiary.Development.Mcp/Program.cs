@@ -1,4 +1,7 @@
-using FoodDiary.Development.Mcp;
+using FoodDiary.Development.Mcp.ChangeSets;
+using FoodDiary.Development.Mcp.Diagnostics;
+using FoodDiary.Development.Mcp.Tools;
+using FoodDiary.Development.Mcp.Wiki;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -6,6 +9,7 @@ using Microsoft.Extensions.Logging;
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogLevel.Trace);
+builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<IServerStatusService, ServerStatusService>();
 builder.Services.AddSingleton<IChangeSetSnapshotService, ChangeSetSnapshotService>();
 builder.Services.AddSingleton<IWikiCommandExecutor, PowerShellWikiCommandExecutor>();

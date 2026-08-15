@@ -1,6 +1,9 @@
-namespace FoodDiary.Development.Mcp;
+using FoodDiary.Development.Mcp.Infrastructure;
+using FoodDiary.Development.Mcp.Protocol;
 
-public sealed class ServerStatusService : IServerStatusService {
+namespace FoodDiary.Development.Mcp.Diagnostics;
+
+public sealed class ServerStatusService(TimeProvider timeProvider) : IServerStatusService {
     private static readonly string[] IndexPaths = [
         ".llm-wiki/generated/repository-catalog.json",
         ".llm-wiki/generated/csharp-symbol-index.json",
@@ -41,7 +44,7 @@ public sealed class ServerStatusService : IServerStatusService {
             indexesStale ? DevelopmentMcpErrorCodes.IndexStale : "current",
             indexCheckSummary,
             indexes,
-            DateTimeOffset.UtcNow);
+            timeProvider.GetUtcNow());
     }
 
     public static async Task<string> ReadGitHeadAsync(

@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using System.Text.Json;
 
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.Wiki;
 
 public static partial class WikiOutputParser {
     public static WikiCommandResult Parse(

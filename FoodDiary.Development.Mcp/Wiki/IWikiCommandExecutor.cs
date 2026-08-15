@@ -1,4 +1,4 @@
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.Wiki;
 
 public interface IWikiCommandExecutor {
     Task<WikiCommandResult> ExecuteAsync(

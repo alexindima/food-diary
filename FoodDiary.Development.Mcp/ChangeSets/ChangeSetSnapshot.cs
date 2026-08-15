@@ -1,4 +1,4 @@
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.ChangeSets;
 
 public sealed record ChangeSetSnapshot(
     string GitHead,

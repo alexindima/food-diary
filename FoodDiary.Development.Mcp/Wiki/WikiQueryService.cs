@@ -1,4 +1,7 @@
-namespace FoodDiary.Development.Mcp;
+using FoodDiary.Development.Mcp.ChangeSets;
+using FoodDiary.Development.Mcp.Protocol;
+
+namespace FoodDiary.Development.Mcp.Wiki;
 
 public sealed class WikiQueryService(
     IWikiCommandExecutor executor,

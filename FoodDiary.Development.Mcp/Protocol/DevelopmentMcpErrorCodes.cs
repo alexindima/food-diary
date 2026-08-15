@@ -1,4 +1,4 @@
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.Protocol;
 
 public static class DevelopmentMcpErrorCodes {
     public const string RepositoryNotFound = "repository_not_found";

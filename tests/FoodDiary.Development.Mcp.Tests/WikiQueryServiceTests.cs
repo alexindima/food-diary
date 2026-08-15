@@ -11,7 +11,7 @@ public sealed class WikiQueryServiceTests {
         _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
             "abc123",
             "snapshot-hash",
-            ["FoodDiary.Development.Mcp/WikiQueryService.cs"],
+            ["FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs"],
             DateTimeOffset.UtcNow));
     }
 
@@ -38,7 +38,7 @@ public sealed class WikiQueryServiceTests {
                     "-ProposedPath",
                     "FoodDiary.Development.Mcp",
                     "-ChangedPath",
-                    "FoodDiary.Development.Mcp/WikiQueryService.cs",
+                    "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
                 })),
             cancellationToken);
     }
@@ -67,7 +67,7 @@ public sealed class WikiQueryServiceTests {
                 "-Format",
                 "Json",
                 "-ChangedPath",
-                "FoodDiary.Development.Mcp/WikiQueryService.cs",
+                "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
             })),
             CancellationToken.None);
     }
@@ -90,7 +90,7 @@ public sealed class WikiQueryServiceTests {
                 "-Objective",
                 "Change measurement presentation",
                 "-ChangedPath",
-                "FoodDiary.Development.Mcp/WikiQueryService.cs",
+                "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
                 "-ProposedPath",
                 "FoodDiary.Web.Client/src/app/features/weight-history",
             })),
@@ -128,7 +128,7 @@ public sealed class WikiQueryServiceTests {
                 "-Objective",
                 "Change a backend flow",
                 "-ChangedPath",
-                "FoodDiary.Development.Mcp/WikiQueryService.cs",
+                "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
             })),
             CancellationToken.None);
     }
@@ -171,7 +171,7 @@ public sealed class WikiQueryServiceTests {
             Arg.Is<IReadOnlyList<string>>(arguments =>
                 arguments.Contains("explicit/changed.cs", StringComparer.Ordinal) &&
                 arguments.Contains("planned/path", StringComparer.Ordinal) &&
-                !arguments.Contains("FoodDiary.Development.Mcp/WikiQueryService.cs", StringComparer.Ordinal)),
+                !arguments.Contains("FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs", StringComparer.Ordinal)),
             CancellationToken.None);
     }
 

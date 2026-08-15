@@ -1,4 +1,6 @@
-namespace FoodDiary.Development.Mcp;
+using FoodDiary.Development.Mcp.Wiki;
+
+namespace FoodDiary.Development.Mcp.Protocol;
 
 public sealed record DevelopmentContext(
     string SnapshotFingerprint,

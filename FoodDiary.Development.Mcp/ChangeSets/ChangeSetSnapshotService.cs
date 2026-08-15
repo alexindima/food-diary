@@ -2,19 +2,24 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
+using FoodDiary.Development.Mcp.Diagnostics;
+using FoodDiary.Development.Mcp.Infrastructure;
+using FoodDiary.Development.Mcp.Protocol;
 
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.ChangeSets;
 
 public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDisposable {
     private static readonly TimeSpan GitTimeout = TimeSpan.FromSeconds(15);
     private readonly string _repositoryRoot = RepositoryRootResolver.Resolve();
+    private readonly TimeProvider _timeProvider;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly FileSystemWatcher _watcher;
     private long _generation;
     private long _cachedGeneration = -1;
     private ChangeSetSnapshot? _cached;
 
-    public ChangeSetSnapshotService() {
+    public ChangeSetSnapshotService(TimeProvider timeProvider) {
+        _timeProvider = timeProvider;
         _watcher = new FileSystemWatcher(_repositoryRoot) {
             IncludeSubdirectories = true,
             NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName |
@@ -25,6 +30,9 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         _watcher.Created += OnChanged;
         _watcher.Deleted += OnChanged;
         _watcher.Renamed += OnChanged;
+    }
+
+    public ChangeSetSnapshotService() : this(TimeProvider.System) {
     }
 
     public async Task<ChangeSetSnapshot> GetAsync(CancellationToken cancellationToken) {
@@ -90,7 +98,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             head,
             Convert.ToHexString(hash.GetHashAndReset()).ToLowerInvariant(),
             changedPaths,
-            DateTimeOffset.UtcNow);
+            _timeProvider.GetUtcNow());
     }
 
     private async Task<string> RunGitAsync(

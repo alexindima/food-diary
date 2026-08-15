@@ -1,8 +1,11 @@
 using System.ComponentModel;
+using FoodDiary.Development.Mcp.Diagnostics;
+using FoodDiary.Development.Mcp.Protocol;
+using FoodDiary.Development.Mcp.Wiki;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.Tools;
 
 [McpServerToolType]
 public sealed class WikiTools(WikiQueryService queries, IServerStatusService statusService) {

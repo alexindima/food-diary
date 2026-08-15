@@ -1,8 +1,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FoodDiary.Development.Mcp.Protocol;
 using ModelContextProtocol.Protocol;
 
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.Tools;
 
 public static class ToolExecution {
     private static readonly JsonSerializerOptions JsonOptions =

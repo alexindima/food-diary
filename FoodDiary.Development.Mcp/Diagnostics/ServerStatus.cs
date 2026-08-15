@@ -1,4 +1,4 @@
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.Diagnostics;
 
 public sealed record ServerStatus(
     string Version,

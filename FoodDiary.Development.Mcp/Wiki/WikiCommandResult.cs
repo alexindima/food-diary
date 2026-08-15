@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace FoodDiary.Development.Mcp;
+namespace FoodDiary.Development.Mcp.Wiki;
 
 public sealed record WikiCommandResult(
     string Command,

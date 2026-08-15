@@ -4,7 +4,7 @@ namespace FoodDiary.Development.Mcp.Tests;
 public sealed class PowerShellWikiCommandExecutorTests {
     [Fact]
     public async Task ServerStatus_ReturnsWithoutRunningDeepVerification() {
-        ServerStatusService service = new();
+        ServerStatusService service = new(TimeProvider.System);
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(10));
 
         ServerStatus result = await service.GetStatusAsync(timeout.Token);
@@ -26,7 +26,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
                 "-Objective",
                 "Verify the FoodDiary Development MCP test plan tool",
                 "-ChangedPath",
-                "FoodDiary.Development.Mcp/WikiQueryService.cs",
+                "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
             ],
             timeout.Token);
 

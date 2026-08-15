@@ -1,4 +1,6 @@
-namespace FoodDiary.Development.Mcp;
+using FoodDiary.Development.Mcp.Protocol;
+
+namespace FoodDiary.Development.Mcp.Infrastructure;
 
 public static class RepositoryRootResolver {
     public const string RepositoryRootEnvironmentVariable = "FOODDIARY_REPOSITORY_ROOT";
