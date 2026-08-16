@@ -9,14 +9,15 @@ analysis entrypoints without replacing repository source-of-truth checks.
 - `trace_backend_flow` wraps `wiki.ps1 trace`.
 - `get_test_plan` wraps `wiki.ps1 test-plan` and accepts explicit
   `changedPaths` or fallback `plannedPaths` when the worktree is clean.
-- `get_development_context` runs a compact brief, SQLite-backed trace, and fast
-  test plan serially against one immutable Git/worktree snapshot. These Wiki
-  commands share SQLite graph state, so serialization avoids refresh-lock
-  contention and is faster than process-level parallelism.
+- `get_development_context` runs a SQLite-backed trace first, then a compact
+  brief and fast test plan concurrently. It refreshes the Git/worktree
+  fingerprint between phases and rejects the result if the snapshot changed.
 - `get_server_status` reports repository, Git HEAD, Wiki, index presence, and
   runtime identity (PID, process start, startup HEAD, assembly MVID/hash, and
   build timestamps). `runningCodeMatchesRepositoryHead` makes a process that
-  survived a commit visible; deep freshness remains explicitly `notChecked`.
+  survived a commit visible. Index content is fingerprinted, while source-to-index
+  freshness remains a lightweight timestamp-based diagnostic rather than deep
+  regeneration and verification.
 
 The server does not expose governed task lifecycle, generation, delivery, or
 repair commands. Wiki output remains derived navigation: callers must verify

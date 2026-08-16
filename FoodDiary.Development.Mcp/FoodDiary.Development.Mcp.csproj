@@ -10,4 +10,8 @@
     <PackageReference Include="ModelContextProtocol" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="FoodDiary.Development.Mcp.Tests" />
+  </ItemGroup>
+
 </Project>

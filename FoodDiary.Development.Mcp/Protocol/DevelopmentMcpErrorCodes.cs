@@ -6,6 +6,7 @@ public static class DevelopmentMcpErrorCodes {
     public const string WikiCommandFailed = "wiki_command_failed";
     public const string IndexStale = "index_stale";
     public const string TestPlanScopeRequired = "test_plan_scope_required";
+    public const string SnapshotChanged = "snapshot_changed";
     public const string Timeout = "timeout";
     public const string Cancelled = "cancelled";
     public const string Unexpected = "unexpected_error";

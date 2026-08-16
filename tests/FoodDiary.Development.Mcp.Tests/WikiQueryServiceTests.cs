@@ -8,11 +8,13 @@ public sealed class WikiQueryServiceTests {
     private readonly IChangeSetSnapshotService _snapshots = Substitute.For<IChangeSetSnapshotService>();
 
     public WikiQueryServiceTests() {
-        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+        ChangeSetSnapshot snapshot = new(
             "abc123",
             "snapshot-hash",
             ["FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs"],
-            DateTimeOffset.UtcNow));
+            DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
+        _snapshots.RefreshAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
     }
 
     [Fact]
@@ -129,6 +131,7 @@ public sealed class WikiQueryServiceTests {
 
         Assert.Equal("snapshot-hash", result.SnapshotFingerprint);
         await _snapshots.Received(1).GetAsync(CancellationToken.None);
+        await _snapshots.Received(2).RefreshAsync(CancellationToken.None);
         await _executor.Received(1).ExecuteAsync(
             "trace",
             Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] {
@@ -156,12 +159,37 @@ public sealed class WikiQueryServiceTests {
     }
 
     [Fact]
+    public async Task GetDevelopmentContextAsync_RejectsResultWhenSnapshotChangesAfterTrace() {
+        _snapshots.RefreshAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+            "abc123",
+            "changed-snapshot",
+            ["FoodDiary.Development.Mcp/Wiki/WikiTools.cs"],
+            DateTimeOffset.UtcNow));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentMcpException exception = await Assert.ThrowsAsync<DevelopmentMcpException>(() =>
+            service.GetDevelopmentContextAsync(
+                "Change backend flow",
+                "SomeCommand",
+                "FoodDiary.Application.Users",
+                CancellationToken.None));
+
+        Assert.Equal(DevelopmentMcpErrorCodes.SnapshotChanged, exception.ErrorCode);
+        await _executor.DidNotReceive().ExecuteAsync(
+            "brief",
+            Arg.Any<IReadOnlyList<string>>(),
+            Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task GetDevelopmentContextAsync_UsesPlannedPathForCleanWorktreeTestPlan() {
-        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+        ChangeSetSnapshot snapshot = new(
             "abc123",
             "clean-snapshot",
             [],
-            DateTimeOffset.UtcNow));
+            DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
+        _snapshots.RefreshAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
         WikiQueryService service = new(_executor, _snapshots);
 
         await service.GetDevelopmentContextAsync(
@@ -180,11 +208,13 @@ public sealed class WikiQueryServiceTests {
 
     [Fact]
     public async Task GetDevelopmentContextAsync_UsesTracePathsWhenPlannedPathIsMissing() {
-        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+        ChangeSetSnapshot snapshot = new(
             "abc123",
             "clean-snapshot",
             [],
-            DateTimeOffset.UtcNow));
+            DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
+        _snapshots.RefreshAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
         _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
             .Returns(CreateResult("trace", ["FoodDiary.Application.WeeklyCheckIn/CyclePredictionService.cs"]));
         WikiQueryService service = new(_executor, _snapshots);
@@ -232,11 +262,13 @@ public sealed class WikiQueryServiceTests {
 
     [Fact]
     public async Task GetDevelopmentContextAsync_FlagsScopeMismatchAndExpandsNarrowPlannedPath() {
-        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+        ChangeSetSnapshot snapshot = new(
             "abc123",
             "clean-snapshot",
             [],
-            DateTimeOffset.UtcNow));
+            DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
+        _snapshots.RefreshAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
         _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
             .Returns(CreateResult("trace", ["FoodDiary.Application.WeeklyCheckIn/CyclePredictionService.cs"]));
         WikiQueryService service = new(_executor, _snapshots);

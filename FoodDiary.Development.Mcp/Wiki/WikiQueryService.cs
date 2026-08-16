@@ -78,6 +78,7 @@ public sealed class WikiQueryService(
             ["-Format", "Json", "-Fast", "-Query", query],
             errors,
             cancellationToken).ConfigureAwait(false);
+        await EnsureSnapshotUnchangedAsync(snapshot, cancellationToken).ConfigureAwait(false);
         string[] expandedScopePaths = [.. new[] { plannedPath }
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .Cast<string>()
@@ -104,6 +105,7 @@ public sealed class WikiQueryService(
                 "No changed, planned, or traced repository paths were available for test planning."));
         }
         await Task.WhenAll(briefTask, testPlanTask).ConfigureAwait(false);
+        await EnsureSnapshotUnchangedAsync(snapshot, cancellationToken).ConfigureAwait(false);
 
         string[] effectiveLayers = InferLayers(snapshot.ChangedPaths.Concat(expandedScopePaths));
         return new DevelopmentContext(
@@ -118,6 +120,17 @@ public sealed class WikiQueryService(
             ScopeMismatch: HasScopeMismatch(plannedPath, trace?.ReferencedPaths),
             EffectiveLayers: effectiveLayers,
             CrossLayerScope: effectiveLayers.Length > 1);
+    }
+
+    private async Task EnsureSnapshotUnchangedAsync(
+        ChangeSetSnapshot expected,
+        CancellationToken cancellationToken) {
+        ChangeSetSnapshot current = await snapshots.RefreshAsync(cancellationToken).ConfigureAwait(false);
+        if (!string.Equals(expected.Fingerprint, current.Fingerprint, StringComparison.Ordinal)) {
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.SnapshotChanged,
+                "The Git/worktree snapshot changed while development context was being collected. Retry the request.");
+        }
     }
 
     private async Task<WikiCommandResult?> ExecuteComponentAsync(

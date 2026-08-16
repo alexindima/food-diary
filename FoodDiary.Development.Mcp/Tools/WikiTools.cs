@@ -63,7 +63,7 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
             cancellationToken);
 
     [McpServerTool(Name = "get_development_context", ReadOnly = true, Idempotent = true)]
-    [Description("Runs change context, backend trace, and focused test planning concurrently against one immutable Git/worktree snapshot.")]
+    [Description("Traces a backend flow, then builds change context and a focused test plan against one verified Git/worktree snapshot.")]
     public Task<CallToolResult> GetDevelopmentContextAsync(
         [Description("The intended code or architecture change.")] string intent,
         [Description("The backend command, query, route, handler, or feature to trace.")] string query,

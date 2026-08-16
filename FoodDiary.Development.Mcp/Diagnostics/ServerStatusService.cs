@@ -127,6 +127,8 @@ public sealed class ServerStatusService(
         CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
         string gitDirectory = await ResolveGitDirectoryAsync(repositoryRoot, cancellationToken).ConfigureAwait(false);
+        string commonGitDirectory = await ResolveCommonGitDirectoryAsync(gitDirectory, cancellationToken)
+            .ConfigureAwait(false);
         string head = (await File.ReadAllTextAsync(
             Path.Combine(gitDirectory, "HEAD"),
             cancellationToken).ConfigureAwait(false)).Trim();
@@ -135,13 +137,15 @@ public sealed class ServerStatusService(
         }
 
         string reference = head[5..];
-        string referencePath = Path.Combine(gitDirectory, reference.Replace('/', Path.DirectorySeparatorChar));
+        string referencePath = Path.Combine(
+            commonGitDirectory,
+            reference.Replace('/', Path.DirectorySeparatorChar));
         if (File.Exists(referencePath)) {
             return (await File.ReadAllTextAsync(referencePath, cancellationToken).ConfigureAwait(false)).Trim();
         }
 
         return (await File.ReadAllLinesAsync(
-            Path.Combine(gitDirectory, "packed-refs"),
+            Path.Combine(commonGitDirectory, "packed-refs"),
             cancellationToken).ConfigureAwait(false))
             .FirstOrDefault(line => line.EndsWith($" {reference}", StringComparison.Ordinal))
             ?.Split(' ', 2)[0]
@@ -167,5 +171,19 @@ public sealed class ServerStatusService(
         }
 
         return Path.GetFullPath(marker[prefix.Length..], repositoryRoot);
+    }
+
+    private static async Task<string> ResolveCommonGitDirectoryAsync(
+        string gitDirectory,
+        CancellationToken cancellationToken) {
+        string commonDirectoryMarker = Path.Combine(gitDirectory, "commondir");
+        if (!File.Exists(commonDirectoryMarker)) {
+            return gitDirectory;
+        }
+
+        string commonDirectory = (await File.ReadAllTextAsync(
+            commonDirectoryMarker,
+            cancellationToken).ConfigureAwait(false)).Trim();
+        return Path.GetFullPath(commonDirectory, gitDirectory);
     }
 }
