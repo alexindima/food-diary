@@ -737,13 +737,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "a72e77bbd4c2c8aef8c96ca071275a54ca5088932e317d4fc80069c1744928eb"
+          "sha256": "c3a0a7e88eea6baa73366827f520e44f36338c228329b8aeb54135531c00dd14"
         }
       ],
-      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
+      "reason": "Reviewed the regenerated quality and sensitive-data indexes for the Telegram startup retry. The change adds no new secret, identity, payload, persistence, or API data flow; startup warnings deliberately omit exception bodies and provider URLs, and focused tests cover the behavior.",
       "baseRef": "HEAD",
-      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
-      "reviewedAtUtc": "2026-08-14T22:39:20.1830501Z"
+      "gitHead": "eda684b9e6abd93b95e715d3deb5c8a87be87623",
+      "reviewedAtUtc": "2026-08-16T05:18:47.3465144Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -786,13 +786,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2274fadeb4d72916f016af8747fd18d0f9e72a82d44f7dff5d16dc92fcfba675"
+          "sha256": "72a834e7fd2a4bedf5940298dc06fece79fd5e38161d713aa3d0059ceb0414b8"
         }
       ],
-      "reason": "Reviewed quality index after final Prettier formatting of the profile redesign and explicit-save regression fix; behavior and module boundaries are unchanged.",
+      "reason": "Reviewed the regenerated quality and sensitive-data indexes for the Telegram startup retry. The change adds no new secret, identity, payload, persistence, or API data flow; startup warnings deliberately omit exception bodies and provider URLs, and focused tests cover the behavior.",
       "baseRef": "HEAD",
-      "gitHead": "77a40c565b61992d36e4296ae18748bb6ad49832",
-      "reviewedAtUtc": "2026-08-15T22:13:34.6643223Z"
+      "gitHead": "eda684b9e6abd93b95e715d3deb5c8a87be87623",
+      "reviewedAtUtc": "2026-08-16T05:18:47.6563539Z"
     },
     {
       "pageId": "workflow-release-readiness",

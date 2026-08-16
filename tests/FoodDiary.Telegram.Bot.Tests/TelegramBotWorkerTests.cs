@@ -81,6 +81,57 @@ public sealed class TelegramBotWorkerTests {
     }
 
     [Fact]
+    public async Task ExecuteAsync_WhenGetMeReturnsTransientApiFailure_RetriesAndStartsReceiver() {
+        var botClient = new RecordingTelegramBotClient();
+        botClient.GetMeExceptions.Enqueue(new ApiRequestException("bad gateway", 502));
+        var logger = new RecordingLogger<TelegramBotWorker>();
+        TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions(), logger);
+        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+        Task execution = InvokeExecuteAsync(worker, cts.Token);
+        await WaitForRequestCountAsync(botClient, "GetMeRequest", expectedCount: 2);
+        await WaitForRequestAsync(botClient, "GetUpdatesRequest");
+        await cts.CancelAsync();
+        await execution;
+
+        Assert.Equal(2, botClient.Requests.Count(request => string.Equals(request.GetType().Name, "GetMeRequest", StringComparison.Ordinal)));
+        Assert.Contains(logger.Entries, entry =>
+            entry.Level == LogLevel.Warning &&
+            entry.Message.Contains("startup request failed (502)", StringComparison.Ordinal));
+        Assert.DoesNotContain(logger.Messages, message => message.Contains("telegram-token", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WhenStartupTransportRetryIsCancelled_DoesNotCallProviderAgain() {
+        var botClient = new RecordingTelegramBotClient();
+        botClient.GetMeExceptions.Enqueue(new RequestException("transport failure"));
+        TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
+        using var cts = new CancellationTokenSource();
+
+        Task execution = InvokeExecuteAsync(worker, cts.Token);
+        await WaitForRequestAsync(botClient, "GetMeRequest");
+        Assert.False(execution.IsCompleted);
+
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => execution);
+        Assert.Single(botClient.Requests, request => string.Equals(request.GetType().Name, "GetMeRequest", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WhenGetMeReturnsNonTransientApiFailure_Propagates() {
+        var botClient = new RecordingTelegramBotClient();
+        botClient.GetMeExceptions.Enqueue(new ApiRequestException("unauthorized", 400));
+        TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
+
+        ApiRequestException exception = await Assert.ThrowsAsync<ApiRequestException>(() =>
+            InvokeExecuteAsync(worker, CancellationToken.None));
+
+        Assert.Equal(400, exception.ErrorCode);
+        Assert.Single(botClient.Requests, request => string.Equals(request.GetType().Name, "GetMeRequest", StringComparison.Ordinal));
+    }
+
+    [Fact]
     public async Task StartAsync_WhenStoppedAfterReceiverStarts_CompletesGracefully() {
         var botClient = new RecordingTelegramBotClient();
         TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
@@ -511,9 +562,16 @@ public sealed class TelegramBotWorkerTests {
         (TValue)instance.GetType().GetProperty(propertyName)!.GetValue(instance)!;
 
     private static async Task WaitForRequestAsync(RecordingTelegramBotClient botClient, string requestTypeName) {
+        await WaitForRequestCountAsync(botClient, requestTypeName, expectedCount: 1);
+    }
+
+    private static async Task WaitForRequestCountAsync(
+        RecordingTelegramBotClient botClient,
+        string requestTypeName,
+        int expectedCount) {
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         while (!timeout.IsCancellationRequested) {
-            if (botClient.Requests.Any(request => string.Equals(request.GetType().Name, requestTypeName, StringComparison.Ordinal))) {
+            if (botClient.Requests.Count(request => string.Equals(request.GetType().Name, requestTypeName, StringComparison.Ordinal)) >= expectedCount) {
                 return;
             }
 
@@ -544,6 +602,7 @@ public sealed class TelegramBotWorkerTests {
     [ExcludeFromCodeCoverage]
     private sealed class RecordingTelegramBotClient : ITelegramBotClient {
         public List<object> Requests { get; } = [];
+        public Queue<Exception> GetMeExceptions { get; } = [];
 
         public User MeResponse { get; init; } = new() {
             Id = 123,
@@ -574,6 +633,11 @@ public sealed class TelegramBotWorkerTests {
             IRequest<TResponse> request,
             CancellationToken cancellationToken = default) {
             Requests.Add(request);
+
+            if (string.Equals(request.GetType().Name, "GetMeRequest", StringComparison.Ordinal) &&
+                GetMeExceptions.TryDequeue(out Exception? exception)) {
+                return Task.FromException<TResponse>(exception);
+            }
 
             object response = request.GetType().Name switch {
                 "GetMeRequest" => MeResponse,
