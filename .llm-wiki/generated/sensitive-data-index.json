@@ -939,7 +939,7 @@
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "line": 234
+      "line": 262
     },
     {
       "category": "credential",
