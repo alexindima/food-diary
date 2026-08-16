@@ -72,13 +72,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
-          "sha256": "050cb607b2dacb8935b95c9fbbb138c02de27b2be41403105c0e69fccee91768"
+          "sha256": "f5b397d509236c1eccc088775964422bbed4b48f9e77e3886b4abde74f33f18b"
         }
       ],
-      "reason": "Production source indexes now exclude internal Wiki tooling consistently on Windows and Linux, removing cross-platform freshness drift.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "0616edfe4a49caaf8c83dc96f1876a9c3a199c47",
-      "reviewedAtUtc": "2026-08-14T03:09:04.6095534Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:27.1108442Z"
     },
     {
       "pageId": "system.frontend-index",
@@ -146,18 +146,22 @@
       "pageSha256": "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskBaseline.ps1",
-          "sha256": "e6d4293c371b751dc3b09da227f3a2b28e541ba5964ef99f8a9af46c59cab0ca"
+          "path": ".llm-wiki/knowledge/product-journeys.json",
+          "sha256": "ab19eb23c9854c5716fe334d9645536998126729659a5f9abdf3779d3d27d609"
         },
         {
-          "path": ".llm-wiki/tools/Resolve-LlmWikiSession.ps1",
-          "sha256": "6b039bd3d2ea372a1cd2cb994a82ca4f4e77c80baf7710af686a084b57a0ef1c"
+          "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "f697ba12f3e3d6511a12bab2d59922308fae71e1d42360ca80771d38a8936fe4"
+        },
+        {
+          "path": ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
+          "sha256": "3a709292ac83fc3bbccf073b1d88549af69ac0ea6ca7fe47573984cd44aea40d"
         }
       ],
-      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
-      "reviewedAtUtc": "2026-08-15T01:31:35.1707852Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:27.3573895Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -240,22 +244,14 @@
       "pageSha256": "3dd38cd9b305a117775fcdf2e4036dfb5e974a910bb601b8237af593c7b55796",
       "sources": [
         {
-          "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "edc1c9b10b5e376a6987696844a0551f493f6e066debdd73e63d770f36061683"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
-          "sha256": "27d33100337a134a8ed44ca51b9b078a723f74745de35385c77f19f01e734891"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
-          "sha256": "71d193cfa85ca6eebcbcec6828d8d889da06de8a1f96d0616d88c656bfbc2fcc"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3770ae26eb133289dc90640d80b974872dfe3b9875fb77e65a78b0b1c625e13b"
         }
       ],
-      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
-      "reviewedAtUtc": "2026-08-16T01:07:10.6671223Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:27.6177759Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -263,18 +259,14 @@
       "pageSha256": "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
-          "sha256": "785f052003ad3c8ad93e7a044ea2d3acd0c32d79fb00a8c783aaeed1028ec626"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:13.9049947Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:27.8492158Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -379,13 +371,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
         }
       ],
-      "reason": "Reviewed task-head pinning and directory-scope conformance changes; page guidance remains accurate.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "5dd18c0612e12cede5d0ac11276eba421e812817",
-      "reviewedAtUtc": "2026-08-12T08:06:40.6247774Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:28.0836021Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -548,14 +540,14 @@
       "pageSha256": "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiImpactSimulation.ps1",
-          "sha256": "03e766fda53fcd5a7c7dc44fb591bea821300443313ec5d9882f5c42f69d6a59"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
         }
       ],
-      "reason": "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-      "reviewedAtUtc": "2026-08-13T12:13:00.6211221Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:28.3569051Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -578,18 +570,14 @@
       "pageSha256": "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
-          "sha256": "716c306fd32a152e2d9c634937c9428bb54459b33f479043ee0f9cabeef51b33"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:16.0799017Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:28.6510244Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -597,18 +585,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
-          "sha256": "52cb5776bb545887cbd6400ca038fca76fae37b3e590c41edaaae8b2dae2c457"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
-          "sha256": "42799d54f5dbeae3dd2309c28c401768cce64aef1aa6c537dab3818f183afb0d"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3770ae26eb133289dc90640d80b974872dfe3b9875fb77e65a78b0b1c625e13b"
         }
       ],
-      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
-      "reviewedAtUtc": "2026-08-16T01:07:11.9001501Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:28.9282723Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -710,22 +694,14 @@
       "pageSha256": "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "794e4e0a24996152a4865b22178e8fc4af4217a2bfd62a549381a524332fdd10"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-          "sha256": "591f03a1a481b9c5655b492d8dfa3c2ba696b11a3baa23cabf0b29f104c395a3"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "ed8337f657c9b51e7218bbb0a80e24b164bc91452a7e6b25d919a85fe2803e32"
+          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:17.0097814Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:29.1810426Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -763,33 +739,29 @@
       "pageSha256": "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-          "sha256": "ac00a8b62a0d8ba7603ba33e271f0be99b61643bc31d17ab753dd9672e192a56"
+          "path": ".llm-wiki/knowledge/product-journeys.json",
+          "sha256": "ab19eb23c9854c5716fe334d9645536998126729659a5f9abdf3779d3d27d609"
         }
       ],
-      "reason": "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "1abccf78c96b875ed9a5ec0f234151145da191c9",
-      "reviewedAtUtc": "2026-08-13T18:25:01.2543407Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:29.4389341Z"
     },
     {
       "pageId": "workflow-proof-of-change",
       "pagePath": ".llm-wiki/workflows/proof-of-change.md",
-      "pageSha256": "8b82837eee71015fa0bc4c18f084e4ece9b7aedd383f14fb07def75df7fbda78",
+      "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
-          "sha256": "52458b277ebc3a74e0c238d228867aaeebe030f4d3e1b8e52dca8b8b3dbbaa07"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
         }
       ],
-      "reason": "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "1abccf78c96b875ed9a5ec0f234151145da191c9",
-      "reviewedAtUtc": "2026-08-13T18:25:01.7432111Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:29.7343909Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -827,14 +799,14 @@
       "pageSha256": "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "6b3dfdf272d220a0abf3ce06f28007fabb3305239b6eef8478954973c42d004d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
         }
       ],
-      "reason": "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
-      "reviewedAtUtc": "2026-08-13T18:57:50.0005326Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:30.0164642Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -941,13 +913,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "baf8929beb9444ae97722da64bbd7ecbc9459cf93b6d6cf489e220d6b1cc1590"
+          "sha256": "3770ae26eb133289dc90640d80b974872dfe3b9875fb77e65a78b0b1c625e13b"
         }
       ],
-      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
-      "reviewedAtUtc": "2026-08-15T01:31:40.2581681Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:30.5718209Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -974,14 +946,14 @@
       "pageSha256": "f87df1e5212521c9e920fd7bcea428c7ea79b68a5fd08213641a6862777077d6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiJson.ps1",
-          "sha256": "6865ea39534b9b67949058e0f1fd0da04df66f3d39b368f47c058a364a6f91ff"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
         }
       ],
-      "reason": "Development MCP partial context and deterministic JSON generation preserve the documented index pipeline, task workspace serialization, and quality-index contracts; affected pages remain current.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "afb53803f513cf1435447035c4bfbd2cde9c7d63",
-      "reviewedAtUtc": "2026-08-16T00:09:20.8863575Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:30.9093976Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1132,14 +1104,14 @@
       "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "565645d453c8ff66b52706f0f6806d7d3e7ea6d14d72a132e3373fb0374962b5"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "3770ae26eb133289dc90640d80b974872dfe3b9875fb77e65a78b0b1c625e13b"
         }
       ],
-      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
+      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
       "baseRef": "HEAD",
-      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
-      "reviewedAtUtc": "2026-08-16T01:07:13.5523708Z"
+      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
+      "reviewedAtUtc": "2026-08-16T12:00:30.2773006Z"
     }
   ]
 }

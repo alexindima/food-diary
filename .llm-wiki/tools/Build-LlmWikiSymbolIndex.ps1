@@ -181,8 +181,7 @@ $index = [ordered]@{
     dependencyInjectionRegistrations = @($registrations | Sort-Object path, line, service)
 }
 
-$json = $index | ConvertTo-Json -Depth 12
-$expectedContent = $json + [Environment]::NewLine
+$expectedContent = ConvertTo-LlmWikiCanonicalJson $index -Depth 12
 
 if ($Check) {
     if (-not (Test-Path -LiteralPath $outputPath)) {
@@ -201,6 +200,10 @@ if ($Check) {
 $outputDirectory = Split-Path -Parent $outputPath
 if (-not (Test-Path -LiteralPath $outputDirectory)) {
     New-Item -ItemType Directory -Path $outputDirectory | Out-Null
+}
+if (Test-LlmWikiTextEquivalent -ActualPath $outputPath -ExpectedText $expectedContent) {
+    Write-Host 'C# symbol index unchanged; preserved byte-identical output.'
+    return
 }
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($outputPath, $expectedContent, $utf8WithoutBom)

@@ -5,6 +5,7 @@ param(
     [string]$Action = 'status',
     [string]$WorkspacePath = '.artifacts/llm-wiki/tasks/current',
     [object]$PacketInput,
+    [string[]]$ChangedPath,
     [string]$HeadRef,
     [switch]$DryRun,
     [switch]$FailOnBlocked,
@@ -87,6 +88,7 @@ $packet = if ($null -ne $PacketInput) {
         Format = 'Json'
     }
     if (-not [string]::IsNullOrWhiteSpace($resolvedHeadRef)) { $packetArguments.HeadRef = $resolvedHeadRef }
+    if ($PSBoundParameters.ContainsKey('ChangedPath')) { $packetArguments.ChangedPath = @($ChangedPath) }
     & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | ConvertFrom-Json
 }
 

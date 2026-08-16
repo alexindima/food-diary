@@ -2008,6 +2008,7 @@ switch ($Command) {
             Format = $Format
         }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $taskWorkspaceArguments.HeadRef = $HeadRef }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $taskWorkspaceArguments.ChangedPath = @($ChangedPath) }
         Invoke-WikiTool 'Manage-LlmWikiTaskWorkspace.ps1' $taskWorkspaceArguments
     }
     'task-run' {

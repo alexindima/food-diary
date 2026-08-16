@@ -53,6 +53,16 @@
       "evidenceHints": ["domain and application tests", "API contract snapshot", "frontend state tests", "browser range and goal lifecycle evidence"]
     },
     {
+      "id": "FD-CYCLE",
+      "title": "Menstrual cycle tracking, prediction, and history",
+      "aliases": ["cycle", "cycle tracking", "menstrual", "period", "period history", "prediction", "цикл", "менструация"],
+      "pathPatterns": ["Cycle", "Menstrual", "PeriodStart", "cycle-tracking", "cycle-history", "cycle-prediction"],
+      "risk": "feature",
+      "scenarios": ["confirm-period-start", "edit-period-boundaries", "view-cycle-history", "recalculate-prediction", "reject-overlapping-period", "preserve-private-health-data"],
+      "requiredReviewAreas": ["domain-invariants", "api-compatibility", "privacy", "migration-safety", "localization", "accessibility"],
+      "evidenceHints": ["domain and application tests", "API contract snapshot", "persistence tests", "frontend state tests", "browser history and boundary-editing evidence"]
+    },
+    {
       "id": "FD-CATALOG",
       "title": "Products, recipes, and reusable food catalog",
       "aliases": ["product", "recipe", "catalog", "ingredient", "food"],

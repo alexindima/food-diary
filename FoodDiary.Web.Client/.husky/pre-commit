@@ -21,6 +21,20 @@ WIKI_POWERSHELL=$(command -v pwsh || command -v powershell.exe || true)
 
 cd FoodDiary.Web.Client
 
+# Report stale compiled Wiki artifacts before the slower formatter/build stages.
+if [ -n "$WIKI_INDEX_INPUT_FILES" ]; then
+  if [ -z "$WIKI_POWERSHELL" ]; then
+    echo "PowerShell is required for the LLM Wiki index freshness check."
+    exit 1
+  fi
+  WIKI_STAGED_PATH_FILE=.artifacts/llm-wiki/pre-commit-staged-paths.txt
+  mkdir -p ../.artifacts/llm-wiki
+  printf '%s\n' "$WIKI_INDEX_INPUT_FILES" > "../$WIKI_STAGED_PATH_FILE"
+  hook_run "LLM Wiki affected index freshness (preflight)" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File ../.llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ChangedPathFile "$WIKI_STAGED_PATH_FILE" -ReuseUnchangedChecks || exit 1
+else
+  hook_step_skip "LLM Wiki affected index freshness (preflight)" "no compiled-index inputs changed"
+fi
+
 if [ "$HAS_TS" -gt 0 ] || [ "$HAS_HTML" -gt 0 ]; then
   if [ -n "$STAGED_FRONTEND_FORMATTABLE_FILES" ]; then
     hook_step_start "Prettier on staged frontend files"
@@ -98,21 +112,6 @@ if [ -z "$WIKI_POWERSHELL" ]; then
   exit 1
 fi
 hook_run "Root and nested .NET artifact cleanup" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -IncludeRoot || exit 1
-
-if [ -n "$WIKI_INDEX_INPUT_FILES" ]; then
-  if [ -z "$WIKI_POWERSHELL" ]; then
-    echo "PowerShell is required for the LLM Wiki index freshness check."
-    exit 1
-  fi
-  # Persist the exact staged source delta instead of passing a long argument list
-  # or letting generated Wiki bookkeeping widen the working-tree scope.
-  WIKI_STAGED_PATH_FILE=.artifacts/llm-wiki/pre-commit-staged-paths.txt
-  mkdir -p .artifacts/llm-wiki
-  printf '%s\n' "$WIKI_INDEX_INPUT_FILES" > "$WIKI_STAGED_PATH_FILE"
-  hook_run "LLM Wiki affected index freshness" "$WIKI_POWERSHELL" -NoLogo -NoProfile -File .llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1 -Check -AffectedOnly -ChangedPathFile "$WIKI_STAGED_PATH_FILE" -ReuseUnchangedChecks || exit 1
-else
-  hook_step_skip "LLM Wiki affected index freshness" "no compiled-index inputs changed"
-fi
 
 PRE_COMMIT_ARTIFACTS_PATH=.artifacts/pre-commit
 
