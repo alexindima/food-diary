@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1566,
-    "symbols": 609,
+    "typescriptFiles": 1568,
+    "symbols": 610,
     "routes": 86,
     "features": 37,
-    "specs": 556,
+    "specs": 557,
     "localeFiles": 5,
     "roles": {
-      "Component": 417,
+      "Component": 418,
       "Directive": 12,
       "Facade": 53,
       "Other": 17,
@@ -300,6 +300,7 @@
       "name": "cycle-tracking",
       "root": "FoodDiary.Web.Client/src/app/features/cycle-tracking",
       "symbols": [
+        "CycleCalendarCardComponent",
         "CycleCurrentCardComponent",
         "CycleDayCarePromptsComponent",
         "CycleDayItemComponent",
@@ -319,6 +320,7 @@
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.mapper.spec.ts",
+        "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-days-card.spec.ts",
         "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-prediction-block/cycle-prediction-block.spec.ts",
@@ -1303,7 +1305,7 @@
       "role": "Component",
       "selector": "fd-ui-calendar",
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
-      "line": 60
+      "line": 69
     },
     {
       "name": "FdUiCardActionsDirective",
@@ -2650,6 +2652,13 @@
       "line": 105
     },
     {
+      "name": "CycleCalendarCardComponent",
+      "role": "Component",
+      "selector": "fd-cycle-calendar-card",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.ts",
+      "line": 25
+    },
+    {
       "name": "CycleCurrentCardComponent",
       "role": "Component",
       "selector": "fd-cycle-current-card",
@@ -2710,7 +2719,7 @@
       "role": "Component",
       "selector": "fd-cycle-tracking-page",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "line": 93
+      "line": 95
     },
     {
       "name": "DashboardService",
@@ -5936,8 +5945,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3316,
-      "russianProperties": 3316,
+      "englishProperties": 3322,
+      "russianProperties": 3322,
       "countsMatch": true
     },
     {

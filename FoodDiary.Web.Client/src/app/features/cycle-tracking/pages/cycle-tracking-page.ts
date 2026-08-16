@@ -50,6 +50,7 @@ import {
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
 } from '../models/cycle.data';
+import { CycleCalendarCardComponent } from './cycle-calendar-card/cycle-calendar-card';
 import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
 import { CycleFactorListComponent } from './cycle-factor-list/cycle-factor-list';
@@ -81,6 +82,7 @@ import { CYCLE_TRACKING_TOUR } from './cycle-tracking-page-lib/cycle-tracking-to
         FdUiDateInputComponent,
         FdUiCheckboxComponent,
         CycleCurrentCardComponent,
+        CycleCalendarCardComponent,
         CycleDaysCardComponent,
         CycleFactorListComponent,
         CycleNutritionSummaryCardComponent,
@@ -303,7 +305,7 @@ export class CycleTrackingPageComponent {
         }).format(new Date(value));
     }
 
-    private appLocale(): string {
+    protected appLocale(): string {
         this.languageVersion();
         return resolveAppLocale(this.translateService.getCurrentLang());
     }

@@ -1,0 +1,22 @@
+<fd-ui-card [title]="'CYCLE_TRACKING.CALENDAR_TITLE' | translate">
+    <p class="cycle-calendar__description fd-ui-body-sm">{{ 'CYCLE_TRACKING.CALENDAR_DESCRIPTION' | translate }}</p>
+    <fd-ui-calendar
+        appearance="embedded"
+        [locale]="locale()"
+        [min]="trackingStartDate()"
+        [max]="today"
+        [markers]="markers()"
+        (valueChange)="selectDate($event)"
+    />
+    <div class="cycle-calendar__legend fd-ui-body-sm" [attr.aria-label]="'CYCLE_TRACKING.CALENDAR_LEGEND' | translate">
+        <span
+            ><i class="cycle-calendar__dot cycle-calendar__dot--danger"></i
+            >{{ 'CYCLE_TRACKING.CALENDAR_LOGGED_BLEEDING' | translate }}</span
+        >
+        <span><i class="cycle-calendar__dot"></i>{{ 'CYCLE_TRACKING.CALENDAR_CONFIRMED_PERIOD' | translate }}</span>
+        <span
+            ><i class="cycle-calendar__dot cycle-calendar__dot--warning"></i
+            >{{ 'CYCLE_TRACKING.CALENDAR_PREDICTED_PERIOD' | translate }}</span
+        >
+    </div>
+</fd-ui-card>

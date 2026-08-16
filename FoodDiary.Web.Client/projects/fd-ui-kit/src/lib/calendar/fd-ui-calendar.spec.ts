@@ -114,6 +114,19 @@ function registerRenderTests(): void {
             expect(controls[0].getAttribute('aria-label')).toBe('CALENDAR.PREVIOUS_MONTH');
             expect(controls[1].getAttribute('aria-label')).toBe('CALENDAR.NEXT_MONTH');
         });
+
+        it('should render date markers and include their labels in the accessible date name', () => {
+            fixture.componentRef.setInput('markers', [
+                { date: '2025-03-15', tone: 'danger', label: 'Logged bleeding' },
+                { date: '2025-03-15', tone: 'warning', label: 'Predicted period' },
+            ]);
+            fixture.detectChanges();
+
+            const markedDate = requireElement('[data-date="2025-03-15"]');
+            expect(markedDate.querySelectorAll('.fd-ui-calendar__marker').length).toBe(2);
+            expect(markedDate.getAttribute('aria-label')).toContain('Logged bleeding');
+            expect(markedDate.getAttribute('aria-label')).toContain('Predicted period');
+        });
     });
 }
 

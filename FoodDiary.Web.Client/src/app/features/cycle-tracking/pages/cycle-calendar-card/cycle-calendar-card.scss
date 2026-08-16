@@ -1,0 +1,37 @@
+:host {
+    display: block;
+}
+
+.cycle-calendar__description {
+    margin: 0 0 var(--fd-space-card-content-gap);
+    color: var(--fd-color-text-muted);
+}
+
+.cycle-calendar__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--fd-space-sm);
+    margin-top: var(--fd-space-card-content-gap);
+    color: var(--fd-color-text-muted);
+
+    span {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-xs);
+    }
+}
+
+.cycle-calendar__dot {
+    width: var(--fd-space-xs);
+    height: var(--fd-space-xs);
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-color-primary-500);
+}
+
+.cycle-calendar__dot--danger {
+    background: var(--fd-color-danger);
+}
+
+.cycle-calendar__dot--warning {
+    background: var(--fd-color-warning);
+}

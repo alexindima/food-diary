@@ -165,6 +165,10 @@
             }
         </div>
 
+        @if (cycle(); as currentCycle) {
+            <fd-cycle-calendar-card [cycle]="currentCycle" [locale]="appLocale()" (dateSelected)="editDay($event)" />
+        }
+
         <div class="cycle-tracking__grid cycle-tracking__grid--log fd-grid fd-gap-card-content">
             @if (isDayEditorOpen()) {
                 <fd-ui-card

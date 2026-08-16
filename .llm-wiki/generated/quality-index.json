@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4266,
+    "productionFiles": 4267,
     "criticalSymbols": 549,
     "criticalSymbolsWithTestReferences": 527,
     "criticalSymbolsWithoutTestReferences": 22,
@@ -773,20 +773,20 @@
       "structuralRiskScore": 42.82
     },
     {
+      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
+      "nonBlankLines": 260,
+      "decisionPoints": 25,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 42.7
+    },
+    {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/datetime-input/fd-ui-datetime-input.ts",
       "nonBlankLines": 177,
       "decisionPoints": 26,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 42.54
-    },
-    {
-      "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
-      "nonBlankLines": 243,
-      "decisionPoints": 25,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.36
     },
     {
       "path": "FoodDiary.Application.Products/Products/Commands/UpdateProduct/ProductUpdateApplier.cs",
@@ -15528,19 +15528,19 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
-      "nonBlankLines": 166,
+      "nonBlankLines": 179,
       "decisionPoints": 21,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 34.82
+      "structuralRiskScore": 35.08
     },
     {
       "path": "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs",
-      "nonBlankLines": 4,
+      "nonBlankLines": 5,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.08
+      "structuralRiskScore": 0.1
     },
     {
       "path": "FoodDiary.Development.Mcp/Diagnostics/IServerStatusService.cs",
@@ -15568,11 +15568,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatusService.cs",
-      "nonBlankLines": 155,
-      "decisionPoints": 14,
+      "nonBlankLines": 171,
+      "decisionPoints": 15,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 24.1
+      "structuralRiskScore": 25.92
     },
     {
       "path": "FoodDiary.Development.Mcp/Diagnostics/WikiIndexStatus.cs",
@@ -15616,11 +15616,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentMcpErrorCodes.cs",
-      "nonBlankLines": 11,
+      "nonBlankLines": 12,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.22
+      "structuralRiskScore": 0.24
     },
     {
       "path": "FoodDiary.Development.Mcp/Protocol/DevelopmentMcpException.cs",
@@ -15696,11 +15696,11 @@
     },
     {
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
-      "nonBlankLines": 181,
-      "decisionPoints": 21,
+      "nonBlankLines": 193,
+      "decisionPoints": 23,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 35.12
+      "structuralRiskScore": 38.36
     },
     {
       "path": "FoodDiary.Domain/Common/DomainConstants.cs",
@@ -24984,11 +24984,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
-      "nonBlankLines": 243,
+      "nonBlankLines": 260,
       "decisionPoints": 25,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.36
+      "structuralRiskScore": 42.7
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card-actions.directive.ts",
@@ -27503,6 +27503,14 @@
       "structuralRiskScore": 4.8
     },
     {
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.ts",
+      "nonBlankLines": 79,
+      "decisionPoints": 9,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 15.08
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.ts",
       "nonBlankLines": 19,
       "decisionPoints": 0,
@@ -27600,11 +27608,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "nonBlankLines": 289,
+      "nonBlankLines": 291,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.28
+      "structuralRiskScore": 7.32
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard-api.tokens.ts",

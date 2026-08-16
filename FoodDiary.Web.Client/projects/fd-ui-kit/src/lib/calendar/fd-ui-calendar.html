@@ -44,10 +44,22 @@
                         [attr.data-date]="cell.iso"
                         [attr.tabindex]="cell.isActive ? 0 : -1"
                         [attr.aria-selected]="cell.isSelected"
+                        [attr.aria-label]="cell.ariaLabel"
                         (click)="selectDate(cell.date)"
                         (keydown)="onCellKeydown($event, cell.date)"
                     >
-                        {{ cell.label }}
+                        <span>{{ cell.label }}</span>
+                        @if (cell.markers.length > 0) {
+                            <span class="fd-ui-calendar__markers" aria-hidden="true">
+                                @for (marker of cell.markers; track marker.label + marker.tone) {
+                                    <span
+                                        class="fd-ui-calendar__marker"
+                                        [class.fd-ui-calendar__marker--danger]="marker.tone === 'danger'"
+                                        [class.fd-ui-calendar__marker--warning]="marker.tone === 'warning'"
+                                    ></span>
+                                }
+                            </span>
+                        }
                     </button>
                 }
                 @if (selectionMode() === 'week' && week[0].isSelected && selectedWeekLabel(); as label) {

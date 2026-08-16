@@ -1,15 +1,15 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 422,
+    "components": 423,
     "componentsWithoutDirectSpecs": 128,
-    "inputs": 1318,
-    "outputs": 411,
+    "inputs": 1321,
+    "outputs": 412,
     "apiCalls": 225,
-    "templatesWithTranslations": 263,
-    "translationKeys": 1452,
-    "consumerEdges": 959,
-    "consumedComponents": 272,
+    "templatesWithTranslations": 264,
+    "translationKeys": 1458,
+    "consumerEdges": 962,
+    "consumedComponents": 273,
     "unconsumedComponents": 149
   },
   "components": [
@@ -850,6 +850,32 @@
       "inputs": [],
       "outputs": [],
       "specPath": null
+    },
+    {
+      "class": "CycleCalendarCardComponent",
+      "selector": "fd-cycle-calendar-card",
+      "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.html",
+      "inputs": [
+        {
+          "name": "cycle",
+          "type": "CycleResponse",
+          "required": true
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "dateSelected",
+          "type": "string"
+        }
+      ],
+      "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.spec.ts"
     },
     {
       "class": "CycleCurrentCardComponent",
@@ -3765,6 +3791,11 @@
         {
           "name": "selectedWeekLabel",
           "type": "string | null",
+          "required": false
+        },
+        {
+          "name": "markers",
+          "type": "readonly FdUiCalendarMarker[]",
           "required": false
         }
       ],
@@ -15814,6 +15845,18 @@
     },
     {
       "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.html",
+      "keys": [
+        "CYCLE_TRACKING.CALENDAR_CONFIRMED_PERIOD",
+        "CYCLE_TRACKING.CALENDAR_DESCRIPTION",
+        "CYCLE_TRACKING.CALENDAR_LEGEND",
+        "CYCLE_TRACKING.CALENDAR_LOGGED_BLEEDING",
+        "CYCLE_TRACKING.CALENDAR_PREDICTED_PERIOD",
+        "CYCLE_TRACKING.CALENDAR_TITLE"
+      ]
+    },
+    {
+      "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.html",
       "keys": [
         "CYCLE_TRACKING.DISCREET_STATUS",
@@ -19522,6 +19565,21 @@
         "title"
       ],
       "outputsHandled": []
+    },
+    {
+      "component": "CycleCalendarCardComponent",
+      "selector": "fd-cycle-calendar-card",
+      "componentPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "cycle",
+        "locale"
+      ],
+      "outputsHandled": [
+        "dateSelected"
+      ]
     },
     {
       "component": "CycleCurrentCardComponent",
@@ -23817,6 +23875,22 @@
       "outputsHandled": []
     },
     {
+      "component": "FdUiCalendarComponent",
+      "selector": "fd-ui-calendar",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/calendar/fd-ui-calendar.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "locale",
+        "markers",
+        "max",
+        "min"
+      ],
+      "outputsHandled": []
+    },
+    {
       "component": "FdUiCardComponent",
       "selector": "fd-ui-card",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
@@ -23945,6 +24019,18 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.html",
       "occurrences": 1,
       "inputsUsed": [],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiCardComponent",
+      "selector": "fd-ui-card",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/card/fd-ui-card.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "title"
+      ],
       "outputsHandled": []
     },
     {

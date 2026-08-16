@@ -25,6 +25,13 @@ import {
 
 export type FdUiCalendarSelectionMode = 'date' | 'week';
 export type FdUiCalendarAppearance = 'standalone' | 'embedded';
+export type FdUiCalendarMarkerTone = 'brand' | 'danger' | 'warning';
+
+export type FdUiCalendarMarker = {
+    date: string;
+    tone: FdUiCalendarMarkerTone;
+    label: string;
+};
 
 const WEEK_DAYS_COUNT = 7;
 const CALENDAR_WEEKS_COUNT = 6;
@@ -48,6 +55,8 @@ type FdUiCalendarCell = {
     isSelected: boolean;
     isActive: boolean;
     isDisabled: boolean;
+    ariaLabel: string;
+    markers: readonly FdUiCalendarMarker[];
 };
 
 @Component({
@@ -73,6 +82,7 @@ export class FdUiCalendarComponent {
     public readonly appearance = input<FdUiCalendarAppearance>('standalone');
     public readonly locale = input<string | null>(null);
     public readonly selectedWeekLabel = input<string | null>(null);
+    public readonly markers = input<readonly FdUiCalendarMarker[]>([]);
 
     protected readonly visibleMonth = computed(() => {
         const month = this.displayMonth() ?? this.value() ?? this.activeDate();
@@ -114,6 +124,12 @@ export class FdUiCalendarComponent {
             Array.from({ length: WEEK_DAYS_COUNT }, (_day, dayIndex) => {
                 const cellDate = this.addDays(gridStart, weekIndex * WEEK_DAYS_COUNT + dayIndex);
                 const iso = this.toIsoDate(cellDate);
+                const markers = this.markers().filter(marker => marker.date === iso);
+                const dateLabel = new Intl.DateTimeFormat(this.effectiveLocale(), {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                }).format(cellDate);
 
                 return {
                     date: cellDate,
@@ -127,6 +143,8 @@ export class FdUiCalendarComponent {
                             : iso === selectedIso,
                     isActive: iso === activeIso,
                     isDisabled: this.isSelectionOutOfRange(cellDate),
+                    ariaLabel: [dateLabel, ...markers.map(marker => marker.label)].join('. '),
+                    markers,
                 } satisfies FdUiCalendarCell;
             }),
         );
