@@ -165,6 +165,16 @@ describe('CyclesService mutations', () => {
         req.flush(MOCK_CYCLE);
     });
 
+    it('should delete the cycle profile', () => {
+        service.deleteCycle('c-1').subscribe(result => {
+            expect(result).toBeNull();
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/c-1`);
+        expect(req.request.method).toBe('DELETE');
+        req.flush(null);
+    });
+
     it('should upsert cycle day', () => {
         const payload: UpsertCycleDayPayload = {
             date: '2026-03-05',

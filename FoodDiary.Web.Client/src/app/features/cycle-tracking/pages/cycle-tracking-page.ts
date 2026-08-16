@@ -106,6 +106,7 @@ export class CycleTrackingPageComponent {
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSavingCycle = this.facade.isSavingCycle;
     protected readonly isSavingSettings = this.facade.isSavingSettings;
+    protected readonly isDeletingCycle = this.facade.isDeletingCycle;
     protected readonly isSavingDay = this.facade.isSavingDay;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isSavingEpisode = this.facade.isSavingEpisode;
@@ -270,6 +271,27 @@ export class CycleTrackingPageComponent {
             )
             .subscribe(() => {
                 void this.facade.deleteMenstrualEpisodeAsync(episodeId);
+            });
+    }
+
+    protected deleteCycle(): void {
+        this.dialogService
+            .open(FdUiConfirmDialogComponent, {
+                size: 'sm',
+                data: {
+                    title: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE_TITLE'),
+                    message: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE_MESSAGE'),
+                    confirmLabel: this.translateService.instant('CYCLE_TRACKING.DELETE_CYCLE'),
+                    danger: true,
+                },
+            })
+            .afterClosed()
+            .pipe(
+                filter((confirmed): confirmed is true => confirmed === true),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                void this.facade.deleteCycleAsync();
             });
     }
 

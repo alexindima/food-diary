@@ -46,6 +46,11 @@ public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleReposito
         await Task.CompletedTask.ConfigureAwait(false);
     }
 
+    public Task DeleteAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
+        context.CycleProfiles.Remove(profile);
+        return Task.CompletedTask;
+    }
+
     public async Task<CycleProfile?> GetByIdAsync(
         CycleProfileId id,
         UserId userId,

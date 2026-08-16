@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "2bd74ca793a3e84b7a403c85664b53f3211609677b0f2ffdc25be6a36df51368"
+          "sha256": "847b7f72792ef7a3db735b78a0b5a83d87fcb30a7da3ab98d45092740520396e"
         }
       ],
-      "reason": "Reviewed the additive clearFertilitySignal HTTP contract, regenerated OpenAPI schema, date-scoped aggregate deletion, preservation of bleeding and symptoms, optional-default compatibility, focused and full regression evidence, and generated contract/domain indexes.",
+      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "247db76dfc46fd39ae6b6b24bff3e7397ea7ce78",
-      "reviewedAtUtc": "2026-08-16T21:17:20.7418237Z"
+      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
+      "reviewedAtUtc": "2026-08-16T23:41:25.1212191Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -725,13 +725,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c2497730885b2ff59cad1312b9e74e89432e1c74eceeb3d0e59fcbb0dcd92459"
+          "sha256": "528ea5e17bbfb515840708e1575c4567a4d43c43f69e66e986cf4abe209f57cf"
         }
       ],
-      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
+      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
-      "reviewedAtUtc": "2026-08-16T16:34:51.6810359Z"
+      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
+      "reviewedAtUtc": "2026-08-16T23:41:26.1438650Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f2e55a30d9052e7db9e2f7747dbc163844793fa4fca3bc3c0f66f22598e3f909"
+          "sha256": "b12bd5c3730d9d278f125e86292a81dea54763d3836b722c9d4cd77737bc2f91"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:31.3281748Z"
+      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
+      "reviewedAtUtc": "2026-08-16T23:41:26.7824790Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -988,14 +988,18 @@
       "pageSha256": "e1655efc476bf4c727322d870d5951e28a7f1165ff29555671079e5ffa61f874",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-          "sha256": "0c2c664cce13d3c957a768eb8417e87f91feb14d13cc31514f67cd0829166f12"
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "a279e40142985c020d46c07615b82231f174c02a1c65a86ba5ed83dc18c0f90a"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "a70e6312a77c32a1c078fa2bf96df475142d26891b5128a91ddddafcebd433b7"
         }
       ],
-      "reason": "Reviewed content-addressed context reuse, aggregate focused-smoke receipts, successful-only compile-probe caching, and trace/verification-receipt regressions; authoritative sources and cache invalidation remain intact.",
+      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "eaf3a61213bd8b3fc467d0899a645ae557feccd5",
-      "reviewedAtUtc": "2026-08-16T20:20:36.4538926Z"
+      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
+      "reviewedAtUtc": "2026-08-16T23:41:27.7813221Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1087,28 +1091,28 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7d5df759c62b06e857565a852f02684faadb58481649fd56b64128626c4605d6"
+          "sha256": "a279e40142985c020d46c07615b82231f174c02a1c65a86ba5ed83dc18c0f90a"
         }
       ],
-      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
+      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
-      "reviewedAtUtc": "2026-08-16T16:34:51.2666691Z"
+      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
+      "reviewedAtUtc": "2026-08-16T23:41:25.6760497Z"
     },
     {
       "pageId": "workflow.query-context",
       "pagePath": ".llm-wiki/workflows/query-context.md",
-      "pageSha256": "fbde1e3b8cec7d59d3bd96a9e14b252a9c9d6b5c88ee02ac0035f573bb091c0e",
+      "pageSha256": "2dfec194cda73daea58e75d5da83b0f6f3e61063f81254dbb483123d561c84a3",
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b9b252ddbd0d65e16877a4a77b5117fa77041ddfeabe692ad0cfcd5214cac588"
+          "sha256": "750564b384bbea2d6d7bbd2f6493df93db41988430413d74478fb7614c97454b"
         }
       ],
-      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
+      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
       "baseRef": "HEAD",
-      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
-      "reviewedAtUtc": "2026-08-16T16:34:52.9301692Z"
+      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
+      "reviewedAtUtc": "2026-08-16T23:41:27.1946884Z"
     },
     {
       "pageId": "workflow.review-diff",

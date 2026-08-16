@@ -5,20 +5,20 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4267,
-    "criticalSymbols": 549,
-    "criticalSymbolsWithTestReferences": 527,
+    "productionFiles": 4270,
+    "criticalSymbols": 551,
+    "criticalSymbolsWithTestReferences": 529,
     "criticalSymbolsWithoutTestReferences": 22,
     "debtMarkers": 3
   },
   "hotspots": [
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 824,
-      "decisionPoints": 95,
+      "nonBlankLines": 842,
+      "decisionPoints": 97,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 158.98
+      "structuralRiskScore": 162.34
     },
     {
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
@@ -2344,11 +2344,11 @@
     },
     {
       "path": "FoodDiary.Application.Abstractions/Cycles/Common/ICycleWriteRepository.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Application.Abstractions/Cycles/Models/BleedingEntryReadModel.cs",
@@ -7669,6 +7669,30 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 4.18
+    },
+    {
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommand.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
+    },
+    {
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
+      "nonBlankLines": 43,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.36
+    },
+    {
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommandValidator.cs",
+      "nonBlankLines": 8,
+      "decisionPoints": 0,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 2.16
     },
     {
       "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs",
@@ -19408,11 +19432,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/CycleRepository.cs",
-      "nonBlankLines": 97,
+      "nonBlankLines": 101,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.94
+      "structuralRiskScore": 5.02
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Tracking/DailyAdviceRepository.cs",
@@ -21720,19 +21744,19 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs",
-      "nonBlankLines": 57,
+      "nonBlankLines": 63,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.14
+      "structuralRiskScore": 3.26
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
-      "nonBlankLines": 119,
+      "nonBlankLines": 121,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.88
+      "structuralRiskScore": 3.92
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
@@ -27456,11 +27480,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "nonBlankLines": 73,
+      "nonBlankLines": 76,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.46
+      "structuralRiskScore": 1.52
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/cycle-tracking.routes.ts",
@@ -27480,11 +27504,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 824,
-      "decisionPoints": 95,
+      "nonBlankLines": 842,
+      "decisionPoints": 97,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 158.98
+      "structuralRiskScore": 162.34
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.mapper.ts",
@@ -27608,11 +27632,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "nonBlankLines": 291,
+      "nonBlankLines": 312,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.32
+      "structuralRiskScore": 7.74
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard-api.tokens.ts",
@@ -35429,6 +35453,16 @@
       ]
     },
     {
+      "name": "DeleteCycleProfileCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
+      "line": 12,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.DeleteProfile.cs"
+      ]
+    },
+    {
       "name": "DeleteExerciseEntryCommandHandler",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Exercises/Commands/DeleteExerciseEntry/DeleteExerciseEntryCommandHandler.cs",
@@ -39181,6 +39215,16 @@
       "testReferences": [
         "tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesFeatureTests.cs",
         "tests/FoodDiary.Application.Tests/WeightEntries/WeightEntriesValidatorTests.cs"
+      ]
+    },
+    {
+      "name": "DeleteCycleProfileCommandValidator",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesValidatorTests.cs"
       ]
     },
     {

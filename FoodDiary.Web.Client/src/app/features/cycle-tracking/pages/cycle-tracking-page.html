@@ -159,6 +159,9 @@
                             <fd-ui-button type="submit" [loading]="isSavingSettings()">
                                 {{ 'CYCLE_TRACKING.SAVE_SETTINGS' | translate }}
                             </fd-ui-button>
+                            <fd-ui-button type="button" variant="danger" [loading]="isDeletingCycle()" (click)="deleteCycle()">
+                                {{ 'CYCLE_TRACKING.DELETE_CYCLE' | translate }}
+                            </fd-ui-button>
                         </div>
                     </form>
                 </fd-ui-card>

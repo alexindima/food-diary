@@ -1,6 +1,7 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
@@ -10,6 +11,22 @@ namespace FoodDiary.Application.Tests.Cycles;
 
 [ExcludeFromCodeCoverage]
 public class CyclesValidatorTests {
+    [Fact]
+    public async Task DeleteCycleProfile_WithNullUserId_HasError() {
+        TestValidationResult<DeleteCycleProfileCommand> result = await new DeleteCycleProfileCommandValidator().TestValidateAsync(
+            new DeleteCycleProfileCommand(UserId: null, Guid.NewGuid()));
+
+        result.ShouldHaveValidationErrorFor(command => command.UserId);
+    }
+
+    [Fact]
+    public async Task DeleteCycleProfile_WithEmptyProfileId_HasError() {
+        TestValidationResult<DeleteCycleProfileCommand> result = await new DeleteCycleProfileCommandValidator().TestValidateAsync(
+            new DeleteCycleProfileCommand(Guid.NewGuid(), Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(command => command.CycleProfileId);
+    }
+
     [Fact]
     public async Task CreateCycle_WithNullUserId_HasError() {
         TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(

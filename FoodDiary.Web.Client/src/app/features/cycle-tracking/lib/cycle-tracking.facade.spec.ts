@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { submit } from '@angular/forms/signals';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ExportService } from '../../../shared/api/export.service';
@@ -23,6 +23,7 @@ let facade: CycleTrackingFacade;
 let cyclesService: {
     clearDay: ReturnType<typeof vi.fn<CyclesService['clearDay']>>;
     create: ReturnType<typeof vi.fn<CyclesService['create']>>;
+    deleteCycle: ReturnType<typeof vi.fn<CyclesService['deleteCycle']>>;
     deleteMenstrualEpisode: ReturnType<typeof vi.fn<CyclesService['deleteMenstrualEpisode']>>;
     getCurrent: ReturnType<typeof vi.fn<CyclesService['getCurrent']>>;
     getNutritionSummary: ReturnType<typeof vi.fn<CyclesService['getNutritionSummary']>>;
@@ -48,6 +49,7 @@ beforeEach(() => {
                 predictions: null,
             }),
         ),
+        deleteCycle: vi.fn<CyclesService['deleteCycle']>().mockReturnValue(of(void 0)),
         deleteMenstrualEpisode: vi
             .fn<CyclesService['deleteMenstrualEpisode']>()
             .mockReturnValue(of({ ...createCycleResponse(), menstrualEpisodes: [] })),
@@ -106,6 +108,28 @@ describe('CycleTrackingFacade current cycle', () => {
         expect(facade.cycle()?.id).toBe('cycle-1');
         expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(1);
         expect(facade.nutritionSummary()?.loggedCycleDays).toBe(LOGGED_CYCLE_DAYS);
+    });
+
+    it('deletes the current cycle and returns to the empty state', async () => {
+        facade.initialize();
+
+        await facade.deleteCycleAsync();
+
+        expect(cyclesService.deleteCycle).toHaveBeenCalledWith('cycle-1');
+        expect(facade.cycle()).toBeNull();
+        expect(facade.nutritionSummary()).toBeNull();
+        expect(facade.isDeletingCycle()).toBe(false);
+    });
+
+    it('keeps the current cycle when deletion fails', async () => {
+        cyclesService.deleteCycle.mockReturnValueOnce(throwError(() => new Error('delete failed')));
+        facade.initialize();
+
+        await expect(facade.deleteCycleAsync()).rejects.toThrow('delete failed');
+
+        expect(facade.cycle()?.id).toBe('cycle-1');
+        expect(facade.nutritionSummary()).not.toBeNull();
+        expect(facade.isDeletingCycle()).toBe(false);
     });
 
     it('creates a new cycle from form values', async () => {

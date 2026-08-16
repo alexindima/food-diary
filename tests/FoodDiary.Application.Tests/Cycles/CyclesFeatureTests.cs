@@ -60,6 +60,8 @@ public partial class CyclesFeatureTests {
 
         public Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
+        public Task DeleteAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
         public Task<CycleProfile?> GetByIdAsync(CycleProfileId id, UserId userId, bool includeDetails = false, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<CycleProfile?>(null);
 
         public Task<CycleProfile?> GetCurrentAsync(UserId userId, bool includeDetails = false, CancellationToken cancellationToken = default) => Task.FromResult<CycleProfile?>(null);
@@ -74,10 +76,17 @@ public partial class CyclesFeatureTests {
     private sealed class InMemoryCycleRepository(CycleProfile profile) : ICycleRepository {
         public bool WasUpdated { get; private set; }
 
+        public bool WasDeleted { get; private set; }
+
         public Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.FromResult(profile);
 
         public Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
             WasUpdated = true;
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
+            WasDeleted = true;
             return Task.CompletedTask;
         }
 

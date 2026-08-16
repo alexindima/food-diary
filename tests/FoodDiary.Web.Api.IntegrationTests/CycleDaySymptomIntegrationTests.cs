@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -11,6 +12,51 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 [ExcludeFromCodeCoverage]
 public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory factory)
     : IClassFixture<ApiWebApplicationFactory> {
+    [Fact]
+    public async Task DeleteCycle_WithOwnedProfile_ReturnsNoContentAndClearsCurrentCycle() {
+        HttpClient client = factory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        Guid cycleProfileId = await CreateCycleAsync(client);
+
+        HttpResponseMessage deleteResponse = await client.DeleteAsync($"/api/v1/cycles/{cycleProfileId}");
+        HttpResponseMessage repeatedDeleteResponse = await client.DeleteAsync($"/api/v1/cycles/{cycleProfileId}");
+        HttpResponseMessage currentResponse = await client.GetAsync("/api/v1/cycles/current");
+
+        Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, repeatedDeleteResponse.StatusCode);
+        currentResponse.EnsureSuccessStatusCode();
+        Assert.Empty(await currentResponse.Content.ReadAsStringAsync());
+    }
+
+    [Fact]
+    public async Task DeleteCycle_WithoutAuthentication_ReturnsUnauthorized() {
+        HttpClient client = factory.CreateClient();
+
+        HttpResponseMessage response = await client.DeleteAsync($"/api/v1/cycles/{Guid.NewGuid()}");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task DeleteCycle_WithForeignProfile_ReturnsNotFoundAndPreservesOwnerCycle() {
+        HttpClient ownerClient = factory.CreateClient();
+        string ownerToken = await RegisterAndGetAccessTokenAsync(ownerClient);
+        ownerClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", ownerToken);
+        Guid cycleProfileId = await CreateCycleAsync(ownerClient);
+        HttpClient otherClient = factory.CreateClient();
+        string otherToken = await RegisterAndGetAccessTokenAsync(otherClient);
+        otherClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", otherToken);
+
+        HttpResponseMessage deleteResponse = await otherClient.DeleteAsync($"/api/v1/cycles/{cycleProfileId}");
+        HttpResponseMessage currentResponse = await ownerClient.GetAsync("/api/v1/cycles/current");
+
+        Assert.Equal(HttpStatusCode.NotFound, deleteResponse.StatusCode);
+        currentResponse.EnsureSuccessStatusCode();
+        using var json = JsonDocument.Parse(await currentResponse.Content.ReadAsStringAsync());
+        Assert.Equal(cycleProfileId, json.RootElement.GetProperty("id").GetGuid());
+    }
+
     [Fact]
     public async Task UpsertDay_WithClearedSymptomCategory_PreservesOtherDayObservations() {
         HttpClient client = factory.CreateClient();

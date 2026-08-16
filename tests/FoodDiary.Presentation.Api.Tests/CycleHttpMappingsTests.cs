@@ -1,5 +1,6 @@
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Models;
@@ -112,6 +113,17 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
         Assert.Equal(date, command.Date);
+    }
+
+    [Fact]
+    public void CycleProfileId_ToDeleteCommand_MapsUserIdAndProfileId() {
+        var userId = Guid.NewGuid();
+        var cycleProfileId = Guid.NewGuid();
+
+        DeleteCycleProfileCommand command = cycleProfileId.ToDeleteCommand(userId);
+
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal(cycleProfileId, command.CycleProfileId);
     }
 
     [Fact]

@@ -110,6 +110,7 @@ export class CycleTrackingFacade {
     public readonly isLoading = signal(false);
     public readonly isSavingCycle = signal(false);
     public readonly isSavingSettings = signal(false);
+    public readonly isDeletingCycle = signal(false);
     public readonly isSavingDay = signal(false);
     public readonly isSavingFactor = signal(false);
     public readonly isSavingEpisode = signal(false);
@@ -341,6 +342,25 @@ export class CycleTrackingFacade {
             this.cycle.set(await firstValueFrom(this.cyclesService.updateSettings(currentCycle.id, payload)));
         } finally {
             this.isSavingSettings.set(false);
+        }
+    }
+
+    public async deleteCycleAsync(): Promise<void> {
+        const currentCycle = this.cycle();
+        if (currentCycle === null || this.isDeletingCycle()) {
+            return;
+        }
+
+        this.isDeletingCycle.set(true);
+        try {
+            await firstValueFrom(this.cyclesService.deleteCycle(currentCycle.id));
+            this.cycle.set(null);
+            this.nutritionSummary.set(null);
+            this.cancelDayEdit();
+            this.cancelFactorEdit();
+            this.cancelMenstrualEpisodeEdit();
+        } finally {
+            this.isDeletingCycle.set(false);
         }
     }
 

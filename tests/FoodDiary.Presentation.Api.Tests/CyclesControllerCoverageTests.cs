@@ -1,6 +1,7 @@
 using FoodDiary.Results;
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Models;
@@ -140,6 +141,22 @@ public sealed class CyclesControllerCoverageTests {
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
         Assert.Equal(date, command.Date);
+    }
+
+    [Fact]
+    public async Task Delete_SendsCommandAndReturnsNoContent() {
+        var userId = Guid.NewGuid();
+        var cycleProfileId = Guid.NewGuid();
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
+        CyclesController controller = CreateController(new CyclesController(sender));
+
+        IActionResult result = await controller.Delete(cycleProfileId, userId);
+
+        Assert.IsType<NoContentResult>(result);
+        DeleteCycleProfileCommand command = Assert.IsType<DeleteCycleProfileCommand>(sentRequest);
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal(cycleProfileId, command.CycleProfileId);
     }
 
     [Fact]

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.DeleteMenstrualEpisode;
+using FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
 using FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
@@ -65,6 +66,8 @@ public static class CycleHttpMappings {
     }
 
     extension(Guid cycleProfileId) {
+        public DeleteCycleProfileCommand ToDeleteCommand(Guid userId) => new(userId, cycleProfileId);
+
         public ClearCycleDayCommand ToClearDayCommand(Guid userId, DateTime date) =>
                 new(userId, cycleProfileId, date);
 

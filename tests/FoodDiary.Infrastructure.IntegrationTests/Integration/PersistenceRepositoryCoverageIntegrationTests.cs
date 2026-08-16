@@ -654,6 +654,44 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     [RequiresDockerFact]
+    public async Task CycleRepository_Delete_RemovesOnlyCycleAggregate() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"cycle-delete-{Guid.NewGuid():N}@example.com", "hash");
+        DateTime today = DateTime.UtcNow.Date;
+        var profile = CycleProfile.Create(user.Id, today.AddDays(-28));
+        AddCycleDetails(profile, today);
+        profile.ConfirmPeriodStart(today.AddDays(-3));
+        var meal = Meal.Create(user.Id, today, MealType.Dinner);
+        context.Users.Add(user);
+        context.Meals.Add(meal);
+        var repository = new CycleRepository(context);
+        await repository.AddAsync(profile);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        CycleProfile? tracked = await repository.GetByIdAsync(
+            profile.Id,
+            user.Id,
+            includeDetails: false,
+            asTracking: true);
+        Assert.NotNull(tracked);
+
+        await repository.DeleteAsync(tracked);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+
+        Assert.Multiple(
+            () => Assert.False(context.CycleProfiles.Any(item => item.Id == profile.Id)),
+            () => Assert.False(context.CycleBleedingEntries.Any(item => item.CycleProfileId == profile.Id)),
+            () => Assert.False(context.CycleSymptomEntries.Any(item => item.CycleProfileId == profile.Id)),
+            () => Assert.False(context.CycleFactors.Any(item => item.CycleProfileId == profile.Id)),
+            () => Assert.False(context.FertilitySignals.Any(item => item.CycleProfileId == profile.Id)),
+            () => Assert.False(context.CycleMenstrualEpisodes.Any(item => item.CycleProfileId == profile.Id)),
+            () => Assert.True(context.Users.Any(item => item.Id == user.Id)),
+            () => Assert.True(context.Meals.Any(item => item.Id == meal.Id)));
+    }
+
+    [RequiresDockerFact]
     public async Task CycleRepository_CurrentReadModel_DoesNotUseSingleQueryForMultipleCollections() {
         string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()

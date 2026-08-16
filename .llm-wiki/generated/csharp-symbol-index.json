@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3254,
-    "symbols": 3263,
+    "sourceFiles": 3257,
+    "symbols": 3266,
     "interfaceImplementationLinks": 231,
     "dependencyInjectionRegistrations": 232,
     "kinds": {
-      "class": 1668,
+      "class": 1670,
       "enum": 50,
       "interface": 411,
-      "record": 1020,
+      "record": 1021,
       "record struct": 114
     },
     "roles": {
-      "Command": 157,
-      "CommandHandler": 153,
+      "Command": 158,
+      "CommandHandler": 154,
       "Configuration": 84,
       "Controller": 89,
       "Entity": 82,
@@ -41,7 +41,7 @@
       "Request": 128,
       "Response": 172,
       "Service": 269,
-      "Validator": 186,
+      "Validator": 187,
       "ValueObject": 124,
       "WriteRepository": 46
     }
@@ -6199,6 +6199,27 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "DeleteCycleProfileCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommand.cs",
+      "line": 5
+    },
+    {
+      "name": "DeleteCycleProfileCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommandHandler.cs",
+      "line": 12
+    },
+    {
+      "name": "DeleteCycleProfileCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteCycleProfile/DeleteCycleProfileCommandValidator.cs",
+      "line": 4
     },
     {
       "name": "DeleteMenstrualEpisodeCommand",
@@ -18371,7 +18392,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "CycleHttpResponseMappings",

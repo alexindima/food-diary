@@ -8,6 +8,8 @@ public interface ICycleWriteRepository {
 
     Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default);
 
+    Task DeleteAsync(CycleProfile profile, CancellationToken cancellationToken = default);
+
     Task<CycleProfile?> GetByIdAsync(
         CycleProfileId id,
         UserId userId,
