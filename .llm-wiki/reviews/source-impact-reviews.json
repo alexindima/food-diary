@@ -241,13 +241,21 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/code-graph.mjs",
-          "sha256": "393c47856144c8c774fc7b9c22ce499cd708506afae152cc41bced61e80351b2"
+          "sha256": "edc1c9b10b5e376a6987696844a0551f493f6e066debdd73e63d770f36061683"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiGraphTestPlan.ps1",
+          "sha256": "27d33100337a134a8ed44ca51b9b078a723f74745de35385c77f19f01e734891"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiCodeGraph.ps1",
+          "sha256": "71d193cfa85ca6eebcbcec6828d8d889da06de8a1f96d0616d88c656bfbc2fcc"
         }
       ],
-      "reason": "Verified code graph incremental refresh now ignores tracked paths deleted by an uncommitted rename, removes 20 stale records, indexes 24 moved/new files, and passes the focused code-graph smoke regression.",
+      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
       "baseRef": "HEAD",
-      "gitHead": "0d7506f5ea06393443ee54d67c4390a54cc64ccf",
-      "reviewedAtUtc": "2026-08-15T20:05:36.9209460Z"
+      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
+      "reviewedAtUtc": "2026-08-16T01:07:10.6671223Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -589,14 +597,18 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
-          "sha256": "06d8b1c42b3d3fda7f0cb3f07e3e4e56a4236c01e71a89cf20fc75983b5b1e5a"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiIndexPipeline.ps1",
+          "sha256": "52cb5776bb545887cbd6400ca038fca76fae37b3e590c41edaaae8b2dae2c457"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiStrictAffected.ps1",
+          "sha256": "42799d54f5dbeae3dd2309c28c401768cce64aef1aa6c537dab3818f183afb0d"
         }
       ],
-      "reason": "Backend contract generation now uses version-independent canonical JSON and byte-identical no-op suppression; the documented pipeline contract remains current.",
+      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
       "baseRef": "HEAD",
-      "gitHead": "afb53803f513cf1435447035c4bfbd2cde9c7d63",
-      "reviewedAtUtc": "2026-08-16T00:13:41.2630847Z"
+      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
+      "reviewedAtUtc": "2026-08-16T01:07:11.9001501Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -786,13 +798,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4159c15b797b6e88389b276928cc2be0e11b2519478026d181cffc3753502dd4"
+          "sha256": "81a113740c8e241b893b0f6aebd1256d36a61ccd3175b60d0b88d21ff63504a7"
         }
       ],
-      "reason": "Prediction V2 changes focused cycle prediction behavior and tests; the final frontend refactor only extracts prediction refresh logic, makes data-sufficiency fallback exhaustive, and splits mapper test groups without changing the reviewed risk model.",
+      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
       "baseRef": "HEAD",
-      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
-      "reviewedAtUtc": "2026-08-16T00:46:42.6672624Z"
+      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
+      "reviewedAtUtc": "2026-08-16T01:07:12.7607038Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -898,14 +910,14 @@
       "pageSha256": "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "565645d453c8ff66b52706f0f6806d7d3e7ea6d14d72a132e3373fb0374962b5"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:50.1417766Z"
+      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
+      "reviewedAtUtc": "2026-08-16T01:07:14.2658582Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -1060,14 +1072,14 @@
       "pageSha256": "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "565645d453c8ff66b52706f0f6806d7d3e7ea6d14d72a132e3373fb0374962b5"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:48.4834148Z"
+      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
+      "reviewedAtUtc": "2026-08-16T01:07:11.2643999Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1120,14 +1132,14 @@
       "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "baf8929beb9444ae97722da64bbd7ecbc9459cf93b6d6cf489e220d6b1cc1590"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "565645d453c8ff66b52706f0f6806d7d3e7ea6d14d72a132e3373fb0374962b5"
         }
       ],
-      "reason": "Reviewed after session-resolution, buffered execution, structured output, and measurement UI changes; generated contract and navigation artifacts were refreshed and remain consistent with current source authority.",
+      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
       "baseRef": "HEAD",
-      "gitHead": "21947564b25f89e5ce594ad2ee77515e86a748fb",
-      "reviewedAtUtc": "2026-08-15T01:31:39.6119873Z"
+      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
+      "reviewedAtUtc": "2026-08-16T01:07:13.5523708Z"
     }
   ]
 }

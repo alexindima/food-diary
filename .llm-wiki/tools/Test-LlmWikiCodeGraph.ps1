@@ -52,8 +52,14 @@ if (@($namespaceTrace.consumers | Where-Object { $_.relationKind -eq 'namespace-
     throw 'Code graph did not connect a namespace convention literal to matching production declarations.'
 }
 $graphTestPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiGraphTestPlan.ps1') -ProposedPath $recipesBoundary -Limit 100 -Format Json | ConvertFrom-Json
-if (@($graphTestPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 1) {
-    throw 'Graph-only test plan did not classify a direct Recipes test consumer as required.'
+if (@($graphTestPlan.recommended | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 1 -or
+    @($graphTestPlan.required | Where-Object { $_ -match 'RecipesFeatureTests\.cs$' }).Count -ne 0) {
+    throw 'Graph-only test plan did not classify a transitive Recipes test consumer as recommended.'
+}
+$cyclePredictionImpact = & $manager impact -ChangedPath 'FoodDiary.Application.Cycles/Services/CyclePredictionService.cs' -Limit 100 -Format Json | ConvertFrom-Json
+if (@($cyclePredictionImpact.consumers | Where-Object { $_.language -ne 'csharp' }).Count -gt 0 -or
+    @($cyclePredictionImpact.references | Where-Object { $_.declarationPath -match '^FoodDiary\.Web\.Client/' }).Count -gt 0) {
+    throw 'C# cycle prediction impact retained an unexplained cross-language token link.'
 }
 $measurementPaths = @(
     'FoodDiary.Web.Client/src/app/features/weight-history'

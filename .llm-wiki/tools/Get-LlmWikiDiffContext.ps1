@@ -15,6 +15,7 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 . (Join-Path $PSScriptRoot 'LlmWikiGitRenames.ps1')
+. (Join-Path $PSScriptRoot 'LlmWikiChangeSemantics.ps1')
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
 $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
@@ -49,6 +50,7 @@ $changedPaths = @(
     $ChangedPath |
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
         ForEach-Object { ConvertTo-RepositoryPath $_ } |
+        Where-Object { -not (Test-LlmWikiBookkeepingPath $_) } |
         Sort-Object -Unique
 )
 $baselineExcludedPaths = @(

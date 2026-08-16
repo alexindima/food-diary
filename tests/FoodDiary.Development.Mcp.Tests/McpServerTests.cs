@@ -41,10 +41,18 @@ public sealed class McpServerTests {
             "get_server_status",
             cancellationToken: toolTimeout.Token);
 
-        Assert.NotEqual(true, result.IsError);
+        Assert.False(result.IsError is true, JsonSerializer.Serialize(result));
         Assert.NotNull(result.StructuredContent);
         Assert.Contains(
             "repositoryRoot",
+            result.StructuredContent.Value.ToString(),
+            StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(
+            "runtimeIdentity",
+            result.StructuredContent.Value.ToString(),
+            StringComparison.OrdinalIgnoreCase);
+        Assert.Contains(
+            "repositoryHeadAtStartup",
             result.StructuredContent.Value.ToString(),
             StringComparison.OrdinalIgnoreCase);
     }
@@ -84,12 +92,11 @@ public sealed class McpServerTests {
             new Dictionary<string, object?>(StringComparer.Ordinal) {
                 ["intent"] = "Improve FoodDiary Development MCP latency",
                 ["query"] = "WikiQueryService GetDevelopmentContextAsync",
-                ["plannedPath"] = "FoodDiary.Development.Mcp",
             },
             cancellationToken: timeout.Token);
         stopwatch.Stop();
 
-        Assert.NotEqual(true, result.IsError);
+        Assert.False(result.IsError is true, JsonSerializer.Serialize(result));
         Assert.NotNull(result.StructuredContent);
         Assert.Contains(
             "snapshotFingerprint",

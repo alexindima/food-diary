@@ -450,6 +450,11 @@ function consumers(database, query, limit) {
     SELECT DISTINCT t.token symbol, f.path, f.language
     FROM file_tokens t JOIN files f ON f.id = t.file_id
     WHERE t.token IN (${placeholders}) COLLATE NOCASE
+      AND EXISTS (
+        SELECT 1 FROM symbols declaration
+        JOIN files declaration_file ON declaration_file.id = declaration.file_id
+        WHERE declaration.name = t.token COLLATE NOCASE AND declaration_file.language = f.language
+      )
     ORDER BY f.path LIMIT ?
   `).all(...names, limit * 3)
     .filter((row) => !paths.has(row.path) && !typedPaths.has(row.path))
@@ -477,6 +482,11 @@ function impact(database, paths, limit) {
     downstream = database.prepare(`
       SELECT DISTINCT t.token symbol, f.path, f.language FROM file_tokens t JOIN files f ON f.id = t.file_id
       WHERE t.token IN (${nameSlots}) COLLATE NOCASE AND f.path NOT IN (${placeholders})
+        AND EXISTS (
+          SELECT 1 FROM symbols declaration
+          JOIN files declaration_file ON declaration_file.id = declaration.file_id
+          WHERE declaration.name = t.token COLLATE NOCASE AND declaration_file.language = f.language
+        )
       ORDER BY f.path LIMIT ?
     `).all(...names, ...normalized, limit);
   }
@@ -485,7 +495,7 @@ function impact(database, paths, limit) {
     FROM files f JOIN file_tokens t ON t.file_id = f.id
     JOIN symbols s ON s.name = t.token COLLATE NOCASE AND s.kind <> 'method'
     JOIN files sf ON sf.id = s.file_id
-    WHERE f.path IN (${placeholders}) AND sf.path NOT IN (${placeholders})
+    WHERE f.path IN (${placeholders}) AND sf.path NOT IN (${placeholders}) AND sf.language = f.language
     ORDER BY sf.path LIMIT ?
   `).all(...normalized, ...normalized, limit);
   return { requestedPaths: requested, paths: normalized, declaredSymbols, consumers: downstream, references };

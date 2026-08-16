@@ -4,14 +4,18 @@ namespace FoodDiary.Development.Mcp.Tests;
 public sealed class PowerShellWikiCommandExecutorTests {
     [Fact]
     public async Task ServerStatus_ReturnsWithoutRunningDeepVerification() {
-        ServerStatusService service = new(TimeProvider.System);
+        var runtimeIdentity = ServerRuntimeIdentity.Capture("startup-head");
+        ServerStatusService service = new(TimeProvider.System, runtimeIdentity);
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(10));
 
         ServerStatus result = await service.GetStatusAsync(timeout.Token);
 
         Assert.True(result.WikiAvailable);
         Assert.Equal("notChecked", result.DeepFreshness);
-        Assert.Equal(result.GitHead, result.LastVerifiedCommit);
+        Assert.Null(result.LastVerifiedCommit);
+        Assert.Equal(Environment.ProcessId, result.RuntimeIdentity.ProcessId);
+        Assert.Equal("startup-head", result.RuntimeIdentity.RepositoryHeadAtStartup);
+        Assert.False(result.RunningCodeMatchesRepositoryHead);
     }
 
     [Fact]

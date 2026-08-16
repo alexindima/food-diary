@@ -50,11 +50,18 @@ try {
         '.llm-wiki/reviews/source-impact-reviews.json'
     ))
     $stagedPlan = (& $pipelinePath -AffectedOnly -Plan -ChangedPathFile $changedPathFile) -join [Environment]::NewLine
+    Assert-Plan ($stagedPlan -match 'Affected path count: 1') 'Generated/review bookkeeping widened the staged path scope.'
     Assert-Plan ($stagedPlan -match 'Build-LlmWikiQualityIndex.ps1') 'ChangedPathFile did not preserve the staged test-only delta.'
     Assert-Plan ($stagedPlan -notmatch 'Build-LlmWikiBackendContractIndex.ps1') 'Generated/review paths widened the staged test-only index plan.'
 } finally {
     Remove-Item -LiteralPath $changedPathFile -Force -ErrorAction SilentlyContinue
 }
+
+$bookkeepingOnlyPlan = Get-IndexPlan @(
+    '.llm-wiki/generated/quality-index.json',
+    '.llm-wiki/reviews/source-impact-reviews.json'
+)
+Assert-Plan ([string]::IsNullOrWhiteSpace($bookkeepingOnlyPlan)) 'Bookkeeping-only changes created a self-sustaining index scope.'
 
 $productionCSharpPlan = Get-IndexPlan 'FoodDiary.Infrastructure/Persistence/EmailOutbox.cs'
 Assert-Plan ($productionCSharpPlan -match 'Build-LlmWikiCatalog.ps1' -and $productionCSharpPlan -match 'Build-LlmWikiSymbolIndex.ps1') 'Production C# changes lost conservative index coverage.'

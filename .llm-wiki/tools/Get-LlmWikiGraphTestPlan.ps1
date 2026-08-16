@@ -51,11 +51,10 @@ foreach ($consumer in @($impact.consumers)) {
 }
 $required = @(
     @($scoped | Sort-Object)
-    @($graphConsumers | Where-Object { -not $scoped.Contains($_) } | Sort-Object)
 ) | Select-Object -First $Limit
 $recommended = @(
     $graphConsumers |
-        Where-Object { $_ -notin $required } |
+        Where-Object { -not $scoped.Contains($_) } |
         Sort-Object |
         Select-Object -First $Limit
 )

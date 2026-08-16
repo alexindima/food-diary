@@ -7,9 +7,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+string repositoryRoot = FoodDiary.Development.Mcp.Infrastructure.RepositoryRootResolver.Resolve();
+string repositoryHeadAtStartup = await ServerStatusService
+    .ReadGitHeadAsync(repositoryRoot, CancellationToken.None)
+    .ConfigureAwait(false);
 
 builder.Logging.AddConsole(options => options.LogToStandardErrorThreshold = LogLevel.Trace);
 builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton(ServerRuntimeIdentity.Capture(repositoryHeadAtStartup));
 builder.Services.AddSingleton<IServerStatusService, ServerStatusService>();
 builder.Services.AddSingleton<IChangeSetSnapshotService, ChangeSetSnapshotService>();
 builder.Services.AddSingleton<IWikiCommandExecutor, PowerShellWikiCommandExecutor>();

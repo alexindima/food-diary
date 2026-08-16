@@ -67,8 +67,10 @@ function Get-PipelineCacheState([string[]]$ToolNames) {
     $generatedOutputs = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', '.llm-wiki/generated/**') -FailureMessage 'Unable to enumerate pipeline cache outputs.')
     $toolSet = @($ToolNames | Sort-Object -Unique) -join '|'
     $toolSetHash = (Get-StringSha256 $toolSet).Substring(0, 16)
+    $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for pipeline cache receipts.' }
     return [pscustomobject]@{
-        receiptPath = Join-Path $repositoryRoot ".artifacts/llm-wiki/index-cache/pipeline-$toolSetHash.json"
+        receiptPath = Join-Path $gitDirectory "llm-wiki/index-cache/pipeline-$toolSetHash.json"
         inputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $repositoryInputs
         outputFingerprint = Get-LlmWikiIndexInputFingerprint $repositoryRoot $generatedOutputs
         toolSet = $toolSet
@@ -140,6 +142,7 @@ if ($AffectedOnly) {
             Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
             ForEach-Object { $_ -split '[\r\n;]+' } |
             ForEach-Object { $_.Replace('\', '/') } |
+            Where-Object { -not (Test-LlmWikiBookkeepingPath $_) } |
             Sort-Object -Unique
     )
     if ($normalizedChangedPaths.Count -eq 0) {

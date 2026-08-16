@@ -13,7 +13,10 @@ analysis entrypoints without replacing repository source-of-truth checks.
   test plan serially against one immutable Git/worktree snapshot. These Wiki
   commands share SQLite graph state, so serialization avoids refresh-lock
   contention and is faster than process-level parallelism.
-- `get_server_status` reports repository, Git HEAD, Wiki, version, and index health.
+- `get_server_status` reports repository, Git HEAD, Wiki, index presence, and
+  runtime identity (PID, process start, startup HEAD, assembly MVID/hash, and
+  build timestamps). `runningCodeMatchesRepositoryHead` makes a process that
+  survived a commit visible; deep freshness remains explicitly `notChecked`.
 
 The server does not expose governed task lifecycle, generation, delivery, or
 repair commands. Wiki output remains derived navigation: callers must verify

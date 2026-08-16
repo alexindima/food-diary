@@ -3,7 +3,9 @@ using FoodDiary.Development.Mcp.Protocol;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
-public sealed class ServerStatusService(TimeProvider timeProvider) : IServerStatusService {
+public sealed class ServerStatusService(
+    TimeProvider timeProvider,
+    ServerRuntimeIdentity runtimeIdentity) : IServerStatusService {
     private static readonly string[] IndexPaths = [
         ".llm-wiki/generated/repository-catalog.json",
         ".llm-wiki/generated/csharp-symbol-index.json",
@@ -37,12 +39,14 @@ public sealed class ServerStatusService(TimeProvider timeProvider) : IServerStat
 
         return new ServerStatus(
             typeof(ServerStatusService).Assembly.GetName().Version?.ToString() ?? "unknown",
+            runtimeIdentity,
             repositoryRoot,
             gitHead,
+            string.Equals(runtimeIdentity.RepositoryHeadAtStartup, gitHead, StringComparison.Ordinal),
             WikiAvailable: true,
             indexFilesPresent,
             DeepFreshness: "notChecked",
-            LastVerifiedCommit: gitHead,
+            LastVerifiedCommit: null,
             indexFilesPresent ? "present" : DevelopmentMcpErrorCodes.IndexStale,
             indexCheckSummary,
             indexes,

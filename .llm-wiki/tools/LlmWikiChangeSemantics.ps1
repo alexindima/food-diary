@@ -43,3 +43,9 @@ function Get-LlmWikiPathDiff([string]$RepositoryRoot, [string]$Path) {
     }
     return $parts -join [Environment]::NewLine
 }
+
+function Test-LlmWikiBookkeepingPath([string]$Path) {
+    $normalized = $Path.Replace('\\', '/')
+    return $normalized -match '^\.llm-wiki/generated/' -or
+        $normalized -eq '.llm-wiki/reviews/source-impact-reviews.json'
+}

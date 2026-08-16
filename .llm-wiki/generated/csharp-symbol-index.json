@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3230,
-                    "symbols":  3239,
+                    "sourceFiles":  3231,
+                    "symbols":  3240,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  232,
                     "kinds":  {
                                   "class":  1657,
                                   "enum":  49,
                                   "interface":  411,
-                                  "record":  1009,
+                                  "record":  1010,
                                   "record struct":  113
                               },
                     "roles":  {
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  59,
-                                  "Other":  1200,
+                                  "Other":  1201,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -12809,6 +12809,13 @@
                         "line":  2
                     },
                     {
+                        "name":  "ServerRuntimeIdentity",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Development.Mcp/Diagnostics/ServerRuntimeIdentity.cs",
+                        "line":  6
+                    },
+                    {
                         "name":  "ServerStatus",
                         "kind":  "record",
                         "role":  "Other",
@@ -25109,21 +25116,21 @@
                                                  "implementation":  "ServerStatusService",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Development.Mcp/Program.cs",
-                                                 "line":  13
+                                                 "line":  18
                                              },
                                              {
                                                  "service":  "IChangeSetSnapshotService",
                                                  "implementation":  "ChangeSetSnapshotService",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Development.Mcp/Program.cs",
-                                                 "line":  14
+                                                 "line":  19
                                              },
                                              {
                                                  "service":  "IWikiCommandExecutor",
                                                  "implementation":  "PowerShellWikiCommandExecutor",
                                                  "lifetime":  "Singleton",
                                                  "path":  "FoodDiary.Development.Mcp/Program.cs",
-                                                 "line":  15
+                                                 "line":  20
                                              },
                                              {
                                                  "service":  "IAchievementDefinitionStore",
