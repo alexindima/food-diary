@@ -64,7 +64,9 @@ function Get-SearchTerms {
     )
 }
 
-$queryTerms = @(Get-SearchTerms $Query)
+$querySegments = @($Query -split '[,;\r\n]+' | ForEach-Object { $_.Trim() } | Where-Object { $_ } | Sort-Object -Unique)
+if ($querySegments.Count -eq 0) { $querySegments = @($Query.Trim()) }
+$queryTerms = @(Get-SearchTerms ($querySegments -join ' '))
 
 $sourceFiles = @(
     Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
@@ -99,7 +101,11 @@ foreach ($document in $sourceDocuments) {
         $repositoryPath = $document.repositoryPath
         $searchableText = "$requestName $handlerName $repositoryPath $content".ToLowerInvariant()
         $matchedTerms = @($queryTerms | Where-Object { $searchableText.Contains($_) })
-        $exactNameMatch = $requestName -like "*$Query*" -or $handlerName -like "*$Query*"
+        $matchedQueries = @($querySegments | Where-Object {
+            $requestName.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -ge 0 -or
+            $handlerName.IndexOf($_, [StringComparison]::OrdinalIgnoreCase) -ge 0
+        })
+        $exactNameMatch = $matchedQueries.Count -gt 0
         if (-not $exactNameMatch -and $matchedTerms.Count -eq 0) { continue }
         $score = ($matchedTerms.Count * 10)
         if ($exactNameMatch) { $score += 100 }
@@ -128,6 +134,7 @@ foreach ($document in $sourceDocuments) {
             dependencies = @($dependencies | Sort-Object -Unique)
             score = $score
             matchedTerms = $matchedTerms
+            matchedQueries = $matchedQueries
         })
     }
 }
@@ -139,6 +146,7 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
     $implementations = [System.Collections.Generic.List[object]]::new()
     $presentation = [System.Collections.Generic.List[object]]::new()
     $tests = [System.Collections.Generic.List[object]]::new()
+    $directConsumers = [System.Collections.Generic.List[object]]::new()
 
     foreach ($document in $sourceDocuments) {
         $file = $document.file
@@ -186,12 +194,26 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
             ($content -match $requestPattern -or $content -match "\b$([regex]::Escape($candidate.handler))\b")) {
             $tests.Add([pscustomobject]@{ path = $repositoryPath })
         }
+        if (-not $document.isTest -and $repositoryPath -ne $candidate.path -and
+            ($content -match $requestPattern -or $content -match "\b$([regex]::Escape($candidate.handler))\b")) {
+            $directConsumers.Add([pscustomobject]@{
+                path = $repositoryPath
+                symbols = @(
+                    $(if ($content -match $requestPattern) { $candidate.request })
+                    $(if ($content -match "\b$([regex]::Escape($candidate.handler))\b") { $candidate.handler })
+                )
+            })
+        }
     }
 
+    $filteredDirectConsumers = @($directConsumers | Where-Object {
+        $null -eq $requestDefinition -or $_.path -ne $requestDefinition.path
+    } | Group-Object path | ForEach-Object { $_.Group | Select-Object -First 1 } | Sort-Object path)
     $impactPaths = @(
         @($requestDefinition.path) + @($candidate.path) +
         @($implementations | ForEach-Object path) +
         @($presentation | ForEach-Object path) +
+        @($filteredDirectConsumers | ForEach-Object path) +
         @($tests | ForEach-Object path) |
             Where-Object { $_ } | Sort-Object -Unique
     )
@@ -201,6 +223,7 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
             score = $candidate.score
             queryTerms = $queryTerms
             matchedTerms = $candidate.matchedTerms
+            matchedQueries = $candidate.matchedQueries
         }
         requestDefinition = $requestDefinition
         handler = [pscustomobject]@{
@@ -212,10 +235,11 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
         implementations = @($implementations | Sort-Object contract, implementation, path -Unique)
         presentation = @($presentation | Sort-Object path -Unique)
         tests = @($tests | Sort-Object path -Unique)
+        directConsumers = $filteredDirectConsumers
         impact = [pscustomobject]@{
             paths = $impactPaths
             symbols = @(@($candidate.request, $candidate.handler) + @($implementations | ForEach-Object implementation) | Where-Object { $_ } | Sort-Object -Unique)
-            consumers = @(@($presentation | ForEach-Object path) + @($tests | ForEach-Object path) | Where-Object { $_ } | Sort-Object -Unique)
+            consumers = @(@($filteredDirectConsumers | ForEach-Object path) + @($presentation | ForEach-Object path) + @($tests | ForEach-Object path) | Where-Object { $_ } | Sort-Object -Unique)
         }
     })
 }

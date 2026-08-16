@@ -766,13 +766,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "475e1f89a5bc870668012893ca696f58a163690408e9e8aa378a973c31fa30aa"
+          "sha256": "0f4574912076b79b28cfdef400de971c458415c8299a2571a51403abdb71f802"
         }
       ],
-      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
+      "reason": "Reviewed MCP multi-symbol trace and effective-layer classification: each query segment is matched independently, direct production/test consumers are source-linked, and context exposes the union of Git, planned, and traced layers.",
       "baseRef": "HEAD",
-      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
-      "reviewedAtUtc": "2026-08-16T14:17:02.9394031Z"
+      "gitHead": "4f59c8f05a83d10809a74eefb8fb001c9d54cf70",
+      "reviewedAtUtc": "2026-08-16T15:02:16.5502847Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -988,18 +988,18 @@
       "pageSha256": "e1655efc476bf4c727322d870d5951e28a7f1165ff29555671079e5ffa61f874",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3190fc5c571ec0e86269f94cf42073105924feb6642619cca6c82abc297db3ce"
+          "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
+          "sha256": "d466386c47a919833f37062d84ebc34f3bbd92bc327338cc6464ca97f308afef"
         },
         {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "857fd0f596356916b8c813c5af53dab2b81b1f859c648e756afd40b15d08c19a"
+          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
+          "sha256": "e280946f7668c11a8cc01bc2c2560b9861fd3d87cb5839082c27971736e214ab"
         }
       ],
-      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
+      "reason": "Reviewed MCP multi-symbol trace and effective-layer classification: each query segment is matched independently, direct production/test consumers are source-linked, and context exposes the union of Git, planned, and traced layers.",
       "baseRef": "HEAD",
-      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
-      "reviewedAtUtc": "2026-08-16T14:17:03.6486255Z"
+      "gitHead": "4f59c8f05a83d10809a74eefb8fb001c9d54cf70",
+      "reviewedAtUtc": "2026-08-16T15:02:16.9107717Z"
     },
     {
       "pageId": "workflow-verification-planner",

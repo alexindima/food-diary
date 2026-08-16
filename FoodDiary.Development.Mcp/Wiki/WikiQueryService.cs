@@ -103,6 +103,7 @@ public sealed class WikiQueryService(
         }
         await Task.WhenAll(briefTask, testPlanTask).ConfigureAwait(false);
 
+        string[] effectiveLayers = InferLayers(snapshot.ChangedPaths.Concat(expandedScopePaths));
         return new DevelopmentContext(
             snapshot.Fingerprint,
             snapshot.GitHead,
@@ -112,7 +113,9 @@ public sealed class WikiQueryService(
             PartialSuccess: errors.Count > 0,
             ComponentErrors: errors,
             ExpandedScopePaths: expandedScopePaths,
-            ScopeMismatch: HasScopeMismatch(plannedPath, trace?.ReferencedPaths));
+            ScopeMismatch: HasScopeMismatch(plannedPath, trace?.ReferencedPaths),
+            EffectiveLayers: effectiveLayers,
+            CrossLayerScope: effectiveLayers.Length > 1);
     }
 
     private async Task<WikiCommandResult?> ExecuteComponentAsync(
@@ -168,5 +171,33 @@ public sealed class WikiQueryService(
             return !normalizedPath.Equals(normalizedPlannedPath, StringComparison.OrdinalIgnoreCase) &&
                 !normalizedPath.StartsWith($"{normalizedPlannedPath}/", StringComparison.OrdinalIgnoreCase);
         });
+    }
+
+    private static string[] InferLayers(IEnumerable<string> paths) => [.. paths
+        .Select(InferLayer)
+        .Where(layer => layer is not null)
+        .Cast<string>()
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .Order(StringComparer.OrdinalIgnoreCase)];
+
+    private static string? InferLayer(string path) {
+        string normalized = path.Replace('\\', '/');
+        if (normalized.StartsWith("FoodDiary.Web.Client/", StringComparison.OrdinalIgnoreCase)) {
+            return "Frontend";
+        }
+        if (normalized.StartsWith("FoodDiary.Presentation.Api/", StringComparison.OrdinalIgnoreCase) ||
+            normalized.StartsWith("FoodDiary.Web.Api/", StringComparison.OrdinalIgnoreCase)) {
+            return "Api";
+        }
+        if (normalized.StartsWith("FoodDiary.Infrastructure/", StringComparison.OrdinalIgnoreCase)) {
+            return "Infrastructure";
+        }
+        if (normalized.StartsWith("FoodDiary.Domain/", StringComparison.OrdinalIgnoreCase)) {
+            return "Domain";
+        }
+        if (normalized.StartsWith("FoodDiary.Application", StringComparison.OrdinalIgnoreCase)) {
+            return "Application";
+        }
+        return null;
     }
 }

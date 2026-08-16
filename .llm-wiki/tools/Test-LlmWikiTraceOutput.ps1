@@ -31,6 +31,19 @@ $backendCompact = @(& $backendTraceScript -Query 'StartPremiumTrial' -Compact 6>
 $backendFull = @(& $backendTraceScript -Query 'StartPremiumTrial' 6>&1 | ForEach-Object { $_.ToString() })
 if ($backendCompact -notcontains '  Compact trace: use -FullTrace for every match and consumer.') { throw 'Backend compact trace omitted its expansion hint.' }
 if ($backendCompact.Count -gt ($backendFull.Count + 1)) { throw 'Backend compact trace expanded output beyond its one-line hint.' }
+$multiSymbolTrace = @(& $backendTraceScript `
+    -Query 'UpdateMenstrualEpisode, ConfirmPeriodStart' `
+    -Format Json | ConvertFrom-Json)
+if ($multiSymbolTrace.Count -eq 1 -and $multiSymbolTrace[0] -is [Array]) {
+    $multiSymbolTrace = @($multiSymbolTrace[0])
+}
+if ($multiSymbolTrace.Count -lt 2) { throw 'Multi-symbol backend trace collapsed independent symbol queries.' }
+foreach ($expectedQuery in @('UpdateMenstrualEpisode', 'ConfirmPeriodStart')) {
+    $match = @($multiSymbolTrace | Where-Object { @($_.match.matchedQueries) -contains $expectedQuery })
+    if ($match.Count -eq 0 -or @($match[0].impact.symbols).Count -lt 2 -or @($match[0].impact.consumers).Count -eq 0) {
+        throw "Multi-symbol backend trace omitted direct symbols or consumers for '$expectedQuery'."
+    }
+}
 $noMatchQuery = 'zzqnosuchsymbol92841'
 $noMatch = @(& $backendTraceScript -Query $noMatchQuery -Compact 6>&1 | ForEach-Object { $_.ToString() })
 if ($LASTEXITCODE -ne 0 -or $noMatch -notcontains "No request handlers matched '$noMatchQuery'.") {

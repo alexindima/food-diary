@@ -11,7 +11,9 @@ public sealed record DevelopmentContext(
     bool PartialSuccess,
     IReadOnlyList<DevelopmentContextComponentError> ComponentErrors,
     IReadOnlyList<string> ExpandedScopePaths,
-    bool ScopeMismatch) {
+    bool ScopeMismatch,
+    IReadOnlyList<string> EffectiveLayers,
+    bool CrossLayerScope) {
     public DevelopmentContext WithoutRawOutput() => this with {
         ChangeContext = ChangeContext?.WithoutRawOutput(),
         BackendTrace = BackendTrace?.WithoutRawOutput(),

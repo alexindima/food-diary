@@ -228,6 +228,8 @@ public sealed class WikiQueryServiceTests {
             CancellationToken.None);
 
         Assert.True(result.ScopeMismatch);
+        Assert.True(result.CrossLayerScope);
+        Assert.Equal(["Application", "Frontend"], result.EffectiveLayers);
         await _executor.Received(1).ExecuteAsync(
             "brief",
             Arg.Is<IReadOnlyList<string>>(arguments => arguments.Contains(
