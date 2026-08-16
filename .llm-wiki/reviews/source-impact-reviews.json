@@ -146,22 +146,18 @@
       "pageSha256": "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
       "sources": [
         {
-          "path": ".llm-wiki/knowledge/product-journeys.json",
-          "sha256": "ab19eb23c9854c5716fe334d9645536998126729659a5f9abdf3779d3d27d609"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "f697ba12f3e3d6511a12bab2d59922308fae71e1d42360ca80771d38a8936fe4"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+          "sha256": "a76d408fe971cbbad68a3294c84d1ca6540517de7bfcc81c7e94bb2f2392e29b"
         },
         {
           "path": ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
-          "sha256": "3a709292ac83fc3bbccf073b1d88549af69ac0ea6ca7fe47573984cd44aea40d"
+          "sha256": "9e219c153f25136214cbbf026b5041de05c14d4315e91b0232541d1a8d4413a6"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:27.3573895Z"
+      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
+      "reviewedAtUtc": "2026-08-16T13:38:43.7210271Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -214,14 +210,14 @@
       "pageSha256": "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "cee057fcea7ba88b2c4ff8213a64da517e7bddcf59b141158dee3a464281c595"
         }
       ],
-      "reason": "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
+      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
       "baseRef": "HEAD",
-      "gitHead": "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-      "reviewedAtUtc": "2026-08-12T21:30:33.3048625Z"
+      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
+      "reviewedAtUtc": "2026-08-16T13:38:44.0008304Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -694,14 +690,14 @@
       "pageSha256": "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "cee057fcea7ba88b2c4ff8213a64da517e7bddcf59b141158dee3a464281c595"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:29.1810426Z"
+      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
+      "reviewedAtUtc": "2026-08-16T13:38:44.3578092Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -739,14 +735,14 @@
       "pageSha256": "a9831185cd84a2852b0d427375c97e941a27016fe0769f11665bfb0f5fee8146",
       "sources": [
         {
-          "path": ".llm-wiki/knowledge/product-journeys.json",
-          "sha256": "ab19eb23c9854c5716fe334d9645536998126729659a5f9abdf3779d3d27d609"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+          "sha256": "a76d408fe971cbbad68a3294c84d1ca6540517de7bfcc81c7e94bb2f2392e29b"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:29.4389341Z"
+      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
+      "reviewedAtUtc": "2026-08-16T13:38:44.6710759Z"
     },
     {
       "pageId": "workflow-proof-of-change",
@@ -784,14 +780,14 @@
       "pageSha256": "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "6b3dfdf272d220a0abf3ce06f28007fabb3305239b6eef8478954973c42d004d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "cee057fcea7ba88b2c4ff8213a64da517e7bddcf59b141158dee3a464281c595"
         }
       ],
-      "reason": "Reviewed rename-aware governed delivery semantics: Git-proven destinations preserve change lineage, refresh migrates mappings, and proof-of-change retains current-diff guarantees.",
+      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
       "baseRef": "HEAD",
-      "gitHead": "0d31e34b3a8e1068de0ec666cb90fe5682c200f0",
-      "reviewedAtUtc": "2026-08-13T18:57:49.3279010Z"
+      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
+      "reviewedAtUtc": "2026-08-16T13:38:45.0363017Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -799,14 +795,14 @@
       "pageSha256": "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
+          "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
+          "sha256": "95cf0e03d2c30a405b4477c96d2ab2a0b7ebc2e2dcec9623d0f7f1f08efbbf12"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:30.0164642Z"
+      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
+      "reviewedAtUtc": "2026-08-16T13:38:45.4400351Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -898,13 +894,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
-          "sha256": "b913fcdba8e023cec77a49bbfd12a9e91047f1eb31deafb54de131ce44abaa86"
+          "sha256": "4cc3a9954e2157fc1607b41ed2c18b9b902fb8f566661d919ca22e4f28952459"
         }
       ],
-      "reason": "Reviewed the workflow sources after adding normalized task scope, workspace-local evidence, proportional contract policies, requirement persistence and resumable per-group smoke verification; the documented workflow intent remains accurate.",
+      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
       "baseRef": "HEAD",
-      "gitHead": "400fc4abd3235d7389072b570d3ecd08a8a6f589",
-      "reviewedAtUtc": "2026-08-11T23:54:59.2181151Z"
+      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
+      "reviewedAtUtc": "2026-08-16T13:38:45.7916534Z"
     },
     {
       "pageId": "workflow-task-dispatch-receipts",
@@ -946,14 +942,30 @@
       "pageSha256": "f87df1e5212521c9e920fd7bcea428c7ea79b68a5fd08213641a6862777077d6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
+          "sha256": "a76d408fe971cbbad68a3294c84d1ca6540517de7bfcc81c7e94bb2f2392e29b"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "cee057fcea7ba88b2c4ff8213a64da517e7bddcf59b141158dee3a464281c595"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
+          "sha256": "4cc3a9954e2157fc1607b41ed2c18b9b902fb8f566661d919ca22e4f28952459"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
+          "sha256": "49ea4e917bf043ba17240c2124f5006ff7892a348329b2761bb96d2c36f97b30"
+        },
+        {
+          "path": ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
+          "sha256": "3dbce6eef3e5d1306d4489d55e96945db170242b1dcbab06d8772d3d94d7bac8"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed final governed delivery regression behavior, including independent verification-plan drift.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:30.9093976Z"
+      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
+      "reviewedAtUtc": "2026-08-16T13:41:57.7498387Z"
     },
     {
       "pageId": "workflow-test-plan",

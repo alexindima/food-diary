@@ -124,11 +124,13 @@ switch ($Action) {
             generatedActions = @($inputs.brief.generatedActions | Sort-Object -Unique)
             rolloutFlags = $inputs.brief.rolloutFlags
         }
+        $resolvedBase = git rev-parse --verify "$BaseRef^{commit}"
+        if ($LASTEXITCODE -ne 0) { throw "Unable to resolve BaseRef '$BaseRef'." }
         $manifest = [ordered]@{
             schemaVersion = 1
             objective = $Objective
             createdAtUtc = [DateTimeOffset]::UtcNow.ToString('O')
-            git = [ordered]@{ base = $BaseRef; headAtInit = [string]$head }
+            git = [ordered]@{ base = ([string]$resolvedBase).Trim(); requestedBase = $BaseRef; headAtInit = ([string]$head).Trim() }
             scope = [ordered]@{
                 plannedPaths = $plannedPaths
                 allowedPathPatterns = $allowedPatterns

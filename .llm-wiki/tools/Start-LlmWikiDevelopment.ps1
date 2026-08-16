@@ -34,7 +34,14 @@ $workflow = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') @workf
 $researchArguments = @{ Objective = $Objective; BaseRef = $BaseRef; Format = 'Json'; Limit = $Limit }
 if ($PSBoundParameters.ContainsKey('ProposedPath')) { $researchArguments.ProposedPath = $ProposedPath }
 $research = & (Join-Path $PSScriptRoot 'Get-LlmWikiResearchPacket.ps1') @researchArguments | ConvertFrom-Json
-$paths = @(@($ProposedPath) + @($workflow.inferred.paths) | Where-Object { $_ } | Sort-Object -Unique)
+$scopeTokens = @($ProposedPath | ForEach-Object {
+    [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
+} | Where-Object { $_.Length -ge 5 -and $_ -notin @('fooddiary', 'application', 'client', 'features', 'tests') } | Sort-Object -Unique)
+$researchPaths = @($research.discovery.groundedPaths | Where-Object {
+    $candidate = ([string]$_).ToLowerInvariant()
+    $scopeTokens.Count -eq 0 -or @($scopeTokens | Where-Object { $candidate.Contains($_) }).Count -gt 0
+} | Select-Object -First ($Limit * 3))
+$paths = @(@($ProposedPath) + @($workflow.inferred.paths) + $researchPaths | Where-Object { $_ } | Sort-Object -Unique)
 $extractionPlan = Get-LlmWikiExtractionPlan $Objective $repositoryRoot
 $isModuleExtraction = $null -ne $extractionPlan
 if ($isModuleExtraction) {
@@ -47,7 +54,11 @@ if ($isModuleExtraction) {
 } else {
     $criteria.Add('The primary requested outcome is implemented and observable.')
 }
-if ('Api' -in $scopes -or 'Contracts' -in $scopes) { $criteria.Add('HTTP routes, payloads, status codes, compatibility, and the OpenAPI snapshot match the implemented behavior.') }
+if ('Api' -in $scopes -or 'Contracts' -in $scopes) {
+    $criteria.Add('HTTP routes, payloads, and status codes match the intended behavior.')
+    $criteria.Add('Existing API consumers remain compatible with the implemented contract change.')
+    $criteria.Add('The OpenAPI snapshot matches the implemented HTTP contract.')
+}
 if ('Database' -in $scopes) { $criteria.Add('Persistence mappings and schema changes are verified; every migration includes its Designer and model snapshot updates when applicable.') }
 if ($Objective -match '(?i)\b(notification|notify|email|mail|message delivery|push)\b' -and
     @($paths | Where-Object { $_ -match '(?i)Notification|MailRelay|MailInbox|Email' }).Count -gt 0) {

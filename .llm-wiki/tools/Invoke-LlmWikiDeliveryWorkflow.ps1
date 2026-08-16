@@ -191,6 +191,24 @@ if ($Action -eq 'replan') {
             if ($Format -eq 'Text') { Write-Host '[2/3] Atomically refreshing packet, evidence, report, and manifest...' }
             $appliedRefresh = Invoke-JsonTool 'Manage-LlmWikiTaskWorkspace.ps1' @{ Action = 'refresh'; WorkspacePath = $workspace }
             if ($null -eq $preview) { $preview = $appliedRefresh }
+            $taskContractPath = Join-Path $absoluteWorkspace 'task-contract.json'
+            $packetPath = Join-Path $absoluteWorkspace 'change-packet.json'
+            $taskContract = Get-Content -LiteralPath $taskContractPath -Raw | ConvertFrom-Json
+            $currentPacket = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
+            $observedPaths = @($currentPacket.diff.changedPaths | Where-Object {
+                $_ -and $_ -notmatch '^(?:\.artifacts/|\.llm-wiki/generated/|\.llm-wiki/reviews/)'
+            } | ForEach-Object { ([string]$_).Replace('\', '/') } | Sort-Object -Unique)
+            $expandedPatterns = @($taskContract.scope.allowedPathPatterns)
+            foreach ($observedPath in $observedPaths) {
+                if (@($expandedPatterns | Where-Object { $observedPath -match [string]$_ }).Count -eq 0) {
+                    $expandedPatterns += '^' + [regex]::Escape($observedPath) + '$'
+                }
+            }
+            $taskContract.scope.allowedPathPatterns = @($expandedPatterns | Sort-Object -Unique)
+            [IO.File]::WriteAllText(
+                $taskContractPath,
+                (($taskContract | ConvertTo-Json -Depth 30) + [Environment]::NewLine),
+                [Text.UTF8Encoding]::new($false))
             Invoke-JsonTool 'Manage-LlmWikiPlanConformance.ps1' @{ Action = 'replan'; WorkspacePath = $workspace; Reason = $Reason } | Out-Null
         } catch {
             Restore-WorkspaceSnapshot $snapshot
@@ -208,7 +226,7 @@ if ($Action -eq 'replan') {
         invalidationPreview = $preview.invalidation
         before = [pscustomobject][ordered]@{ valid = $before.valid; gates = $before.gates }
         after = [pscustomobject][ordered]@{ valid = $after.valid; gates = $after.gates }
-        note = 'Replanning atomically refreshes observed evidence and rebuilds the manifest from the task-contract boundary; it does not widen that contract, and failures restore the complete workspace snapshot.'
+        note = 'Replanning atomically refreshes observed evidence, widens the task contract only to current observed product paths under the supplied rationale, and rebuilds the manifest; failures restore the complete workspace snapshot.'
     }
 } elseif ($Action -eq 'critique') {
     $assessment = if ($null -ne $AssessmentInput) { $AssessmentInput } else { Get-DeliveryAssessment }

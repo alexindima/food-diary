@@ -11,6 +11,7 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $PSScriptRoot 'LlmWikiVerificationReceipts.ps1')
 if ([System.IO.Path]::IsPathRooted($WorkspacePath) -or [System.IO.Path]::IsPathRooted($PacketPath)) {
     throw 'WorkspacePath and PacketPath must be repository-relative.'
 }
@@ -331,6 +332,19 @@ if ($Apply) {
     try {
         [System.IO.File]::WriteAllText($evidencePath, (($evidence | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($acceptancePath, (($acceptance | ConvertTo-Json -Depth 20) + [Environment]::NewLine), [System.Text.UTF8Encoding]::new($false))
+        $validReceipts = @(Get-LlmWikiVerificationReceipts $repositoryRoot | Where-Object validForCurrentState)
+        foreach ($check in @($newChecks | Where-Object status -eq 'pending')) {
+            $normalized = Normalize-LlmWikiVerificationCommand ([string]$check.command)
+            $receipt = $validReceipts | Where-Object normalizedCommand -eq $normalized | Select-Object -First 1
+            if ($null -eq $receipt) { continue }
+            & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvidence.ps1') check-record `
+                -Path "$normalizedWorkspacePath/evidence.json" `
+                -Id ([string]$check.id) `
+                -Status passed `
+                -Command ([string]$check.command) `
+                -DurationSeconds ([double]$receipt.durationSeconds) `
+                -Reason "Imported from content-addressed verification receipt recorded at $($receipt.recordedAtUtc)." | Out-Null
+        }
     } catch {
         [System.IO.File]::WriteAllText($evidencePath, $evidenceRaw, [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($acceptancePath, $acceptanceRaw, [System.Text.UTF8Encoding]::new($false))

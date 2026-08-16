@@ -55,10 +55,12 @@ switch ($Action) {
         }
         $head = git rev-parse HEAD
         if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve HEAD.' }
+        $resolvedBase = git rev-parse --verify "$BaseRef^{commit}"
+        if ($LASTEXITCODE -ne 0) { throw "Unable to resolve BaseRef '$BaseRef'." }
         $contract = [ordered]@{
             schemaVersion = 1
             objective = $Objective
-            git = [ordered]@{ base = $BaseRef; headAtStart = [string]$head }
+            git = [ordered]@{ base = ([string]$resolvedBase).Trim(); requestedBase = $BaseRef; headAtStart = ([string]$head).Trim() }
             scope = [ordered]@{
                 allowedPathPatterns = @($AllowedPath)
                 excludedPathPatterns = @($ExcludedPath)

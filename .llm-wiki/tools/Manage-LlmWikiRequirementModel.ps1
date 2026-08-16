@@ -275,19 +275,8 @@ if ($Action -eq 'expand') {
         }
     }
     $acceptance.criteria = @($expandedCriteria)
-    foreach ($recommendation in @($assessment.recommendations)) {
-        $nextNumber++
-        $criterion = [pscustomobject][ordered]@{
-            id = 'AC-{0:d3}' -f ([int]$nextNumber)
-            text = [string]$recommendation.text
-            status = 'pending'
-            origin = [pscustomobject][ordered]@{ kind = 'requirement-recommendation'; recommendationId = [string]$recommendation.id; rationale = [string]$recommendation.rationale }
-            mapping = [pscustomobject][ordered]@{ changedPaths = @(); scenarioIds = @(); checkIds = @(); reviewIds = @(); testPaths = @() }
-            resolution = [pscustomobject][ordered]@{ reason = $null; evidenceNote = $null }
-        }
-        $acceptance.criteria = @($acceptance.criteria) + $criterion
-        $added.Add($criterion)
-    }
+    # Expansion is corrective: recommendations remain advisory until a caller
+    # deliberately promotes one into acceptance scope.
     $temporaryPath = "$acceptancePath.$([guid]::NewGuid().ToString('N')).tmp"
     try {
         [IO.File]::WriteAllText($temporaryPath, (($acceptance | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
@@ -305,7 +294,7 @@ if ($Action -eq 'expand') {
     } finally {
         if (Test-Path -LiteralPath $temporaryModelPath) { [IO.File]::Delete($temporaryModelPath) }
     }
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') add -WorkspacePath $normalizedWorkspace -JournalType decision -Text "Expanded acceptance with $($added.Count) requirement recommendation(s)." -Rationale $Reason | Out-Null
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') add -WorkspacePath $normalizedWorkspace -JournalType decision -Text "Split acceptance into $($added.Count) additional atomic criterion/criteria." -Rationale $Reason | Out-Null
     $result = [pscustomobject][ordered]@{ action = 'expand'; valid = $expandedModel.valid; addedCount = $added.Count; addedCriteria = @($added); issues = @(); model = $expandedModel; savedPath = "$normalizedWorkspace/requirement-model.json" }
 } elseif ($Action -in @('assess', 'create')) {
     $receipt = New-Receipt (Get-Assessment)
