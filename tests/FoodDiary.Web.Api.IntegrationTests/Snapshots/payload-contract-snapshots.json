@@ -212,14 +212,19 @@
     "factorsCount": 0,
     "fertilitySignalsCount": 0,
     "predictionKeys": [
+      "algorithmVersion",
+      "completedCycleCount",
       "confidence",
+      "dataSufficiency",
       "nextPeriodStartFrom",
       "nextPeriodStartTo",
       "ovulationFrom",
       "ovulationTo",
+      "patternConsistency",
       "pmsWindowEnd",
       "pmsWindowStart",
-      "rationale"
+      "rationale",
+      "reasonCodes"
     ]
   },
   "dashboard-snapshot": {

@@ -35,7 +35,12 @@ public static class CycleHttpResponseMappings {
                         model.Predictions.PmsWindowStart,
                         model.Predictions.PmsWindowEnd,
                         model.Predictions.Confidence,
-                        model.Predictions.Rationale)
+                        model.Predictions.Rationale,
+                        model.Predictions.DataSufficiency,
+                        model.Predictions.PatternConsistency,
+                        model.Predictions.CompletedCycleCount,
+                        model.Predictions.ReasonCodes,
+                        model.Predictions.AlgorithmVersion)
             );
         }
     }

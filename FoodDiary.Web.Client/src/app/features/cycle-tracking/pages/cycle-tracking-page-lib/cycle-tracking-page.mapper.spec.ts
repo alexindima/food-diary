@@ -168,6 +168,9 @@ describe('cycle tracking prediction mapper', () => {
             ovulationRangeLabel: 'Apr 15 - Apr 16',
             pmsRangeLabel: '',
             confidenceLabel: 'Moderate',
+            dataSufficiencyKey: 'CYCLE_TRACKING.SUFFICIENCY_UNAVAILABLE',
+            completedCycleCount: 0,
+            explanationKey: 'CYCLE_TRACKING.PREDICTION_EXPLANATION',
             hasPredictionRanges: true,
             limitedReasonKey: null,
         });
@@ -210,6 +213,26 @@ describe('cycle tracking prediction mapper', () => {
 
         expect(view?.hasPredictionRanges).toBe(false);
         expect(view?.limitedReasonKey).toBe('CYCLE_TRACKING.PREDICTIONS_LIMITED');
+    });
+});
+
+describe('cycle tracking prediction v2 mapper', () => {
+    it('shows a learning state when completed cycle history is insufficient', () => {
+        const view = buildCyclePredictionView(
+            {
+                confidence: 'Learning',
+                rationale: 'At least three completed cycle intervals are needed.',
+                dataSufficiency: 'Insufficient',
+                completedCycleCount: 2,
+                reasonCodes: ['insufficient_completed_cycles'],
+                algorithmVersion: 'period-v2.0',
+            },
+            'en-US',
+        );
+
+        expect(view?.hasPredictionRanges).toBe(false);
+        expect(view?.completedCycleCount).toBe(2);
+        expect(view?.limitedReasonKey).toBe('CYCLE_TRACKING.PREDICTIONS_LEARNING');
     });
 });
 

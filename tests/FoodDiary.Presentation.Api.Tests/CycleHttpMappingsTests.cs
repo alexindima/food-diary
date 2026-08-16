@@ -164,7 +164,12 @@ public sealed class CycleHttpMappingsTests {
                 startDate.AddDays(24),
                 startDate.AddDays(30),
                 "Medium",
-                "test"));
+                "test",
+                "Limited",
+                "Consistent",
+                3,
+                ["estimated_from_completed_cycles"],
+                "period-v2.0"));
 
         CycleHttpResponse response = model.ToHttpResponse();
 

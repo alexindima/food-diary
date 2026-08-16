@@ -35,15 +35,16 @@ public partial class CyclesFeatureTests {
     }
 
     [Fact]
-    public void CyclePredictionService_CalculatePredictions_ReturnsRangeAndConfidence() {
+    public void CyclePredictionService_CalculatePredictions_WithNoCompletedCycles_ReturnsInsufficientData() {
         var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), showFertilityEstimates: true);
 
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
 
-        Assert.NotNull(predictions.NextPeriodStartFrom);
-        Assert.NotNull(predictions.NextPeriodStartTo);
-        Assert.NotNull(predictions.OvulationFrom);
-        Assert.Equal("Learning", predictions.Confidence);
+        Assert.Null(predictions.NextPeriodStartFrom);
+        Assert.Equal("Insufficient", predictions.DataSufficiency);
+        Assert.Equal(0, predictions.CompletedCycleCount);
+        Assert.Contains("insufficient_completed_cycles", predictions.ReasonCodes, StringComparer.Ordinal);
+        Assert.Equal("period-v2.0", predictions.AlgorithmVersion);
     }
 
     [Fact]
@@ -61,7 +62,7 @@ public partial class CyclesFeatureTests {
         Assert.Null(predictions.NextPeriodStartTo);
         Assert.Null(predictions.OvulationFrom);
         Assert.Null(predictions.OvulationTo);
-        Assert.Equal("Predictions are limited by the active tracking mode.", predictions.Rationale);
+        Assert.Contains("prediction_paused_by_state", predictions.ReasonCodes, StringComparer.Ordinal);
     }
 
     [Fact]
@@ -72,35 +73,69 @@ public partial class CyclesFeatureTests {
             new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc),
             notes: null);
+        AddBleedingEpisode(profile, new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 1, 29, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 2, 26, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 3, 25, 0, 0, 0, DateTimeKind.Utc));
 
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, new DateTime(2026, 3, 25, 0, 0, 0, DateTimeKind.Utc));
 
         Assert.NotNull(predictions.NextPeriodStartFrom);
-        Assert.NotNull(predictions.OvulationFrom);
-    }
-
-    [Theory]
-    [InlineData(CycleConfidence.High, 1)]
-    [InlineData(CycleConfidence.Medium, 2)]
-    [InlineData(CycleConfidence.Low, 4)]
-    [InlineData(CycleConfidence.Learning, 7)]
-    public void CyclePredictionService_CalculatePredictions_UsesConfidenceWindow(CycleConfidence confidence, int expectedWindowDays) {
-        DateTime trackingStart = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
-        var profile = CycleProfile.Create(UserId.New(), trackingStart, showFertilityEstimates: true);
-        SetPrivateProperty(profile, nameof(CycleProfile.Confidence), confidence);
-
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
-
-        DateTime expectedNextPeriodStart = trackingStart.AddDays(profile.AverageCycleLength);
-        Assert.Equal(expectedNextPeriodStart.AddDays(-expectedWindowDays), predictions.NextPeriodStartFrom);
-        Assert.Equal(expectedNextPeriodStart.AddDays(expectedWindowDays), predictions.NextPeriodStartTo);
+        Assert.Null(predictions.OvulationFrom);
+        Assert.Contains("fertility_estimate_not_available_in_v2", predictions.ReasonCodes, StringComparer.Ordinal);
     }
 
     [Fact]
-    public void CyclePredictionService_ForReadModel_UsesLatestBleedingAsAnchor() {
+    public void CyclePredictionService_CalculatePredictions_UsesEpisodeStartsAndSparseHistoryRange() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), showFertilityEstimates: false);
+        AddBleedingEpisode(profile, new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 1, 29, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 2, 26, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 3, 25, 0, 0, 0, DateTimeKind.Utc));
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, new DateTime(2026, 3, 25, 0, 0, 0, DateTimeKind.Utc));
+
+        Assert.Equal(new DateTime(2026, 4, 19, 0, 0, 0, DateTimeKind.Utc), predictions.NextPeriodStartFrom);
+        Assert.Equal(new DateTime(2026, 4, 24, 0, 0, 0, DateTimeKind.Utc), predictions.NextPeriodStartTo);
+        Assert.Equal(3, predictions.CompletedCycleCount);
+        Assert.Equal("Limited", predictions.DataSufficiency);
+        Assert.Equal("Consistent", predictions.PatternConsistency);
+    }
+
+    [Fact]
+    public void CyclePredictionService_CalculatePredictions_BridgesOneUnloggedDayWithinEpisode() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        profile.UpsertBleedingEntry(new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
+        profile.UpsertBleedingEntry(new DateTime(2026, 1, 3, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
+        AddBleedingEpisode(profile, new DateTime(2026, 1, 29, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 2, 26, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc));
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc));
+
+        Assert.Equal(3, predictions.CompletedCycleCount);
+        Assert.Equal(new DateTime(2026, 4, 21, 0, 0, 0, DateTimeKind.Utc), predictions.NextPeriodStartFrom);
+    }
+
+    [Fact]
+    public void CyclePredictionService_CalculatePredictions_RollsExpiredRangeForward() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 1, 29, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 2, 26, 0, 0, 0, DateTimeKind.Utc));
+        AddBleedingEpisode(profile, new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc));
+
+        DateTime currentDate = new(2026, 8, 16, 0, 0, 0, DateTimeKind.Utc);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, currentDate);
+
+        Assert.True(predictions.NextPeriodStartTo >= currentDate);
+    }
+
+    [Fact]
+    public void CyclePredictionService_ForReadModel_DoesNotUseSpottingOrLastBleedingDayAsAnchor() {
         var profileId = Guid.NewGuid();
-        DateTime trackingStart = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
-        DateTime latestBleeding = new(2026, 4, 10, 0, 0, 0, DateTimeKind.Utc);
+        DateTime trackingStart = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime latestEpisodeStart = new(2026, 3, 25, 0, 0, 0, DateTimeKind.Utc);
         var profile = new CycleProfileReadModel(
             profileId,
             UserId.New().Value,
@@ -116,18 +151,21 @@ public partial class CyclesFeatureTests {
             DiscreetNotifications: false,
             Notes: null,
             BleedingEntries: [
-                new BleedingEntryReadModel(Guid.NewGuid(), profileId, trackingStart.AddDays(3), BleedingType.Spotting, CycleFlowLevel.Light, PainImpact: null, Notes: null),
-                new BleedingEntryReadModel(Guid.NewGuid(), profileId, latestBleeding, BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, trackingStart.AddDays(-1), BleedingType.Spotting, CycleFlowLevel.Light, PainImpact: null, Notes: null),
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, trackingStart, BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, new DateTime(2026, 1, 29, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, new DateTime(2026, 2, 26, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, latestEpisodeStart, BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
+                new BleedingEntryReadModel(Guid.NewGuid(), profileId, latestEpisodeStart.AddDays(1), BleedingType.Bleeding, CycleFlowLevel.Medium, PainImpact: null, Notes: null),
             ],
             SymptomEntries: [],
             Factors: [],
             FertilitySignals: []);
 
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, latestEpisodeStart);
 
-        DateTime expectedNextPeriodStart = latestBleeding.AddDays(profile.AverageCycleLength);
-        Assert.Equal(expectedNextPeriodStart.AddDays(-1), predictions.NextPeriodStartFrom);
-        Assert.Equal(expectedNextPeriodStart.AddDays(1), predictions.NextPeriodStartTo);
+        Assert.Equal(latestEpisodeStart.AddDays(25), predictions.NextPeriodStartFrom);
+        Assert.Equal(latestEpisodeStart.AddDays(30), predictions.NextPeriodStartTo);
     }
 
     [Fact]
@@ -172,5 +210,16 @@ public partial class CyclesFeatureTests {
         Assert.True(model.HadSex);
         Assert.Equal("peak", model.Notes);
         Assert.False(model.ClearNotes);
+    }
+
+    private static void AddBleedingEpisode(CycleProfile profile, DateTime startDate) {
+        for (int day = 0; day < 5; day++) {
+            profile.UpsertBleedingEntry(
+                startDate.AddDays(day),
+                BleedingType.Bleeding,
+                CycleFlowLevel.Medium,
+                painImpact: null,
+                notes: null);
+        }
     }
 }

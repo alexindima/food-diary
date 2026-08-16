@@ -15822,7 +15822,7 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-prediction-block/cycle-prediction-block.html",
       "keys": [
-        "CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY",
+        "CYCLE_TRACKING.PREDICTION_HISTORY_BODY",
         "CYCLE_TRACKING.PRED_NEXT",
         "CYCLE_TRACKING.PRED_OVULATION",
         "CYCLE_TRACKING.PRED_PMS"

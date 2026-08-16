@@ -84,10 +84,38 @@ export function buildCyclePredictionView(prediction: CyclePredictions | null, lo
         nextPeriodRangeLabel,
         ovulationRangeLabel,
         pmsRangeLabel,
-        confidenceLabel: prediction.confidence,
+        confidenceLabel: prediction.dataSufficiency ?? prediction.confidence,
+        dataSufficiencyKey: getDataSufficiencyKey(prediction.dataSufficiency),
+        completedCycleCount: prediction.completedCycleCount ?? 0,
+        explanationKey: 'CYCLE_TRACKING.PREDICTION_EXPLANATION',
         hasPredictionRanges,
-        limitedReasonKey: hasPredictionRanges ? null : 'CYCLE_TRACKING.PREDICTIONS_LIMITED',
+        limitedReasonKey: hasPredictionRanges
+            ? null
+            : prediction.reasonCodes?.some(code => code === 'insufficient_completed_cycles' || code === 'ambiguous_episode_history') ===
+                true
+              ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING'
+              : 'CYCLE_TRACKING.PREDICTIONS_LIMITED',
     };
+}
+
+function getDataSufficiencyKey(value: string | undefined): string {
+    switch (value) {
+        case 'Established': {
+            return 'CYCLE_TRACKING.SUFFICIENCY_ESTABLISHED';
+        }
+        case 'Limited': {
+            return 'CYCLE_TRACKING.SUFFICIENCY_LIMITED';
+        }
+        case 'Insufficient': {
+            return 'CYCLE_TRACKING.SUFFICIENCY_INSUFFICIENT';
+        }
+        case undefined: {
+            return 'CYCLE_TRACKING.SUFFICIENCY_UNAVAILABLE';
+        }
+        default: {
+            return 'CYCLE_TRACKING.SUFFICIENCY_UNAVAILABLE';
+        }
+    }
 }
 
 export function buildCycleNutritionSummaryView(

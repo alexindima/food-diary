@@ -40,11 +40,29 @@
             </strong>
         </fd-ui-accent-surface>
     </div>
+    <div class="cycle-tracking__prediction-limited fd-stack fd-gap-2xs">
+        <strong class="fd-ui-title-sm">{{ prediction().explanationKey | translate }}</strong>
+        <span class="fd-ui-body-sm">
+            {{
+                'CYCLE_TRACKING.PREDICTION_HISTORY_BODY'
+                    | translate
+                        : {
+                              count: prediction().completedCycleCount,
+                              sufficiency: (prediction().dataSufficiencyKey | translate),
+                          }
+            }}
+        </span>
+    </div>
 } @else if (prediction().limitedReasonKey) {
     <div class="cycle-tracking__prediction-limited fd-stack fd-gap-2xs">
         <strong class="fd-ui-title-sm">{{ prediction().limitedReasonKey | translate }}</strong>
         <span class="fd-ui-body-sm">
-            {{ 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY' | translate: { confidence: prediction().confidenceLabel } }}
+            {{
+                (prediction().limitedReasonKey === 'CYCLE_TRACKING.PREDICTIONS_LEARNING'
+                    ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY'
+                    : 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY'
+                ) | translate: { confidence: prediction().confidenceLabel }
+            }}
         </span>
     </div>
 }

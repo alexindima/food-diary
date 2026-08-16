@@ -317,6 +317,16 @@ export class CycleTrackingFacade {
                 ),
         );
         this.applySavedDay(day);
+        await this.refreshPredictionsAsync();
+    }
+
+    private async refreshPredictionsAsync(): Promise<void> {
+        const refreshedCycle = await firstValueFrom(this.cyclesService.getCurrent());
+        if (refreshedCycle === null) {
+            return;
+        }
+
+        this.cycle.update(current => (current === null ? refreshedCycle : { ...current, predictions: refreshedCycle.predictions }));
     }
 
     private applySavedDay(day: CycleLogDay): void {

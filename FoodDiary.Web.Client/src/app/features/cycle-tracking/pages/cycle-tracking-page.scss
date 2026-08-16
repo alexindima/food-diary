@@ -61,7 +61,7 @@
 
     &__section-title {
         margin: 0;
-        color: var(--fd-color-text);
+        color: var(--fd-color-text-strong);
     }
 
     &__factor-list {
@@ -127,7 +127,7 @@
         border: var(--fd-border-muted);
         border-radius: var(--fd-radius-md);
         background: var(--fd-bg-muted-tint-subtle);
-        color: var(--fd-color-slate-700);
+        color: var(--fd-color-text);
     }
 
     &__privacy-note {

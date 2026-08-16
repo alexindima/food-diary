@@ -8,4 +8,9 @@ public sealed record CyclePredictionsModel(
     DateTime? PmsWindowStart,
     DateTime? PmsWindowEnd,
     string Confidence,
-    string Rationale);
+    string Rationale,
+    string DataSufficiency,
+    string PatternConsistency,
+    int CompletedCycleCount,
+    IReadOnlyCollection<string> ReasonCodes,
+    string AlgorithmVersion);

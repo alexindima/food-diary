@@ -123,6 +123,11 @@ export type CyclePredictions = {
     pmsWindowEnd?: string | null;
     confidence: string;
     rationale: string;
+    dataSufficiency?: string;
+    patternConsistency?: string;
+    completedCycleCount?: number;
+    reasonCodes?: string[];
+    algorithmVersion?: string;
 };
 
 export type CycleNutritionSummary = {

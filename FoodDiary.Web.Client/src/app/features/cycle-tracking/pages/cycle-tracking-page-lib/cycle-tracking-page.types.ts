@@ -41,6 +41,9 @@ export type CyclePredictionViewModel = {
     ovulationRangeLabel: string;
     pmsRangeLabel: string;
     confidenceLabel: string;
+    dataSufficiencyKey: string;
+    completedCycleCount: number;
+    explanationKey: string;
     hasPredictionRanges: boolean;
     limitedReasonKey: string | null;
 };

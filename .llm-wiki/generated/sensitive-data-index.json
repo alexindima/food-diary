@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1435,
+    "candidateFields": 1437,
     "credential": 152,
     "identity": 153,
-    "health": 634,
+    "health": 636,
     "financial": 199,
     "privateContent": 297,
-    "boundaryFiles": 181,
+    "boundaryFiles": 182,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 1
   },
@@ -3736,6 +3736,13 @@
     },
     {
       "category": "health",
+      "name": "CompletedCycleCount",
+      "type": "int",
+      "path": "FoodDiary.Application.Cycles/Models/CyclePredictionsModel.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
       "path": "FoodDiary.Application.Cycles/Models/CycleSymptomEntryModel.cs",
@@ -6000,6 +6007,13 @@
       "name": "HasEnoughNutritionData",
       "type": "bool",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "CompletedCycleCount",
+      "type": "int",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
       "line": 14
     },
     {
@@ -10505,6 +10519,13 @@
         "health"
       ],
       "fieldCount": 5
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleSymptomEntryHttpResponse.cs",

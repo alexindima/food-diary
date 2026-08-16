@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "cfc3a5d4de9c1b9708ab51793f4cbbe76bd42b398e3e9c926d59214564355727"
+          "sha256": "62f037c49ffe444a96dd9c11b525ab400c4e1347511ca054a7e657e3b4a34b6c"
         }
       ],
-      "reason": "Reviewed the MCP project folder and namespace reorganization: tool names and payload contracts remain unchanged, DI wiring resolves the same services, TimeProvider replaces direct clock reads, and the project builds cleanly.",
+      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "0d7506f5ea06393443ee54d67c4390a54cc64ccf",
-      "reviewedAtUtc": "2026-08-15T20:00:13.1710874Z"
+      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
+      "reviewedAtUtc": "2026-08-16T00:42:15.9821858Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -450,13 +450,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "c9c705aa0d3b7c2a0552c2e14bc1a2e45fe3283dfb5f21d3446086f65bbf8a06"
+          "sha256": "e050965c70ef3b46fb8251758ef80bc78d509af50b469933b9208b63bfc0bf5f"
         }
       ],
-      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
+      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
-      "reviewedAtUtc": "2026-08-14T22:39:19.2299394Z"
+      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
+      "reviewedAtUtc": "2026-08-16T00:42:16.3408437Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -737,13 +737,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "a72e77bbd4c2c8aef8c96ca071275a54ca5088932e317d4fc80069c1744928eb"
+          "sha256": "d1a5c78d59f54dedfb2c3e0eaf4ddfa75faee0e8f635a502bdc944b5e0c76d37"
         }
       ],
-      "reason": "Reviewed after canonical body-measurement fields were renamed to explicit Kg/Cm units across domain, persistence, API, and frontend contracts. Module ownership, authorization, privacy lifecycle, query topology, and dependency boundaries are unchanged; generated contract, domain-data, quality, sensitive-data, and architecture-health indexes match the verified implementation.",
+      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "1e54f061aa3a02209133fd6e2299e2cecd698c87",
-      "reviewedAtUtc": "2026-08-14T22:39:20.1830501Z"
+      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
+      "reviewedAtUtc": "2026-08-16T00:42:17.1748382Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -786,13 +786,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "bcfeefbde779a51f9fc63f24da58a4a14c6312ba50208a71cd2f0ca1d5cde1be"
+          "sha256": "4159c15b797b6e88389b276928cc2be0e11b2519478026d181cffc3753502dd4"
         }
       ],
-      "reason": "Development MCP partial context and deterministic JSON generation preserve the documented index pipeline, task workspace serialization, and quality-index contracts; affected pages remain current.",
+      "reason": "Prediction V2 changes focused cycle prediction behavior and tests; the final frontend refactor only extracts prediction refresh logic, makes data-sufficiency fallback exhaustive, and splits mapper test groups without changing the reviewed risk model.",
       "baseRef": "HEAD",
-      "gitHead": "afb53803f513cf1435447035c4bfbd2cde9c7d63",
-      "reviewedAtUtc": "2026-08-16T00:09:20.2185373Z"
+      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
+      "reviewedAtUtc": "2026-08-16T00:46:42.6672624Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -993,17 +993,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "cfe2859f8b92e4d94174009e8a36231143e23b386124166e29f463e3d423340f"
+          "sha256": "79d4c13a7baf7f5306bcf882392d89deb070a96a9cbb8b09107e39c7a211f5a4"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "35acd9825e355cffab83605d60632401fef9811c4b147522c85ef27d6a3a0387"
+          "sha256": "5c2fc7b450e99ccd669c1bbc3658abb9fbaaa22d088fde54f8d364f3dc2795c5"
         }
       ],
-      "reason": "Reviewed frontend indexes after removing the redundant profile status badge and mapper, repositioning completeness, and increasing the avatar to 80px; no cross-module behavior changed.",
+      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "77a40c565b61992d36e4296ae18748bb6ad49832",
-      "reviewedAtUtc": "2026-08-15T21:58:53.2301169Z"
+      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
+      "reviewedAtUtc": "2026-08-16T00:42:18.2159634Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1091,13 +1091,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "cfe2859f8b92e4d94174009e8a36231143e23b386124166e29f463e3d423340f"
+          "sha256": "79d4c13a7baf7f5306bcf882392d89deb070a96a9cbb8b09107e39c7a211f5a4"
         }
       ],
-      "reason": "Reviewed frontend indexes after removing the redundant profile status badge and mapper, repositioning completeness, and increasing the avatar to 80px; no cross-module behavior changed.",
+      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
       "baseRef": "HEAD",
-      "gitHead": "77a40c565b61992d36e4296ae18748bb6ad49832",
-      "reviewedAtUtc": "2026-08-15T21:58:51.5058649Z"
+      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
+      "reviewedAtUtc": "2026-08-16T00:42:16.8052023Z"
     },
     {
       "pageId": "workflow.query-context",

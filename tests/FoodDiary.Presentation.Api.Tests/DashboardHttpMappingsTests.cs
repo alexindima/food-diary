@@ -146,7 +146,20 @@ public sealed class DashboardHttpMappingsTests {
                 Symptoms: [],
                 Factors: [],
                 FertilitySignals: [],
-                new CyclePredictionsModel(date.AddDays(17), date.AddDays(19), OvulationFrom: null, OvulationTo: null, date.AddDays(13), date.AddDays(19), "Medium", "test")));
+                new CyclePredictionsModel(
+                    date.AddDays(17),
+                    date.AddDays(19),
+                    OvulationFrom: null,
+                    OvulationTo: null,
+                    date.AddDays(13),
+                    date.AddDays(19),
+                    "Medium",
+                    "test",
+                    "Limited",
+                    "Consistent",
+                    3,
+                    ["estimated_from_completed_cycles"],
+                    "period-v2.0")));
 
         DashboardSnapshotHttpResponse response = model.ToHttpResponse();
 
