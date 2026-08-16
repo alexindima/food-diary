@@ -17,6 +17,11 @@ controllers, C# symbols, dependency-injection registrations, tests, module
 dependencies, Angular features/routes/symbols/localization, ranked
 implementation files, and recommended verification commands.
 
+JSON callers reuse an exact content-addressed result keyed by the query
+arguments and the complete HEAD/worktree snapshot. Any source or generated-index
+edit changes that snapshot; unchanged orchestration calls avoid reparsing the
+catalog and symbol indexes. Text output remains an uncached interactive view.
+
 ## Examples
 
 ```powershell

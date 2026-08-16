@@ -28,12 +28,15 @@ if (@($DependencyFixturePath | Where-Object { $_ }).Count -eq 0) {
     $cachePath = Join-Path $cacheRoot "$cacheKey.json"
     if (Test-Path -LiteralPath $cachePath -PathType Leaf) {
         $cachedJson = [IO.File]::ReadAllText($cachePath)
-        if ($Format -eq 'Json') { Write-Output $cachedJson; exit 0 }
         $cached = $cachedJson | ConvertFrom-Json
-        Write-Host "Extraction readiness cache hit: $Module (ready=$($cached.moduleReadiness.ready), fingerprint=$($graphFingerprint.fingerprint.Substring(0,12)))."
-        Write-Host "Dependency readiness: actual=$(@($cached.dependencyReadiness.actualModules).Count), undeclared=$(@($cached.dependencyReadiness.undeclaredModules).Count), DI registrations=$(@($cached.dependencyReadiness.diRegistrations).Count)"
-        if ($CompileProbe) { Write-Host "Compile probe: $(if ($cached.compileProbe.passed) { 'passed (cached)' } else { 'failed (cached)' })" }
-        exit 0
+        $reusable = -not $CompileProbe -or [bool]$cached.compileProbe.passed
+        if ($reusable) {
+            if ($Format -eq 'Json') { Write-Output $cachedJson; exit 0 }
+            Write-Host "Extraction readiness cache hit: $Module (ready=$($cached.moduleReadiness.ready), fingerprint=$($graphFingerprint.fingerprint.Substring(0,12)))."
+            Write-Host "Dependency readiness: actual=$(@($cached.dependencyReadiness.actualModules).Count), undeclared=$(@($cached.dependencyReadiness.undeclaredModules).Count), DI registrations=$(@($cached.dependencyReadiness.diRegistrations).Count)"
+            if ($CompileProbe) { Write-Host 'Compile probe: passed (cached)' }
+            exit 0
+        }
     }
 }
 $aggregateName = if ($Module -eq 'Users') { 'User' } else { $Module.TrimEnd('s') }
@@ -274,7 +277,7 @@ $result = [pscustomobject]@{
     suggestedProjections = $projections
 }
 $resultJson = $result | ConvertTo-Json -Depth 10
-if ($cachePath) {
+if ($cachePath -and (-not $CompileProbe -or [bool]$compileProbeResult.passed)) {
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $cachePath) -Force
     [IO.File]::WriteAllText($cachePath, ($resultJson + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
 }

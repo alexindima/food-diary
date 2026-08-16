@@ -1,6 +1,11 @@
 [CmdletBinding()]
 param()
 $ErrorActionPreference = 'Stop'
+$readinessToolText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Raw
+if (-not $readinessToolText.Contains('$reusable = -not $CompileProbe -or [bool]$cached.compileProbe.passed') -or
+    -not $readinessToolText.Contains('$cachePath -and (-not $CompileProbe -or [bool]$compileProbeResult.passed)')) {
+    throw 'Extraction readiness must not reuse or persist interrupted/failed compile probes.'
+}
 $result = & (Join-Path $PSScriptRoot 'Get-LlmWikiExtractionReadiness.ps1') -Module Users -Format Json | ConvertFrom-Json
 if ($result.contractReadiness.aggregateBlockers -ne 0) { throw 'Current IUserContextService should have no aggregate blockers.' }
 if (-not $result.moduleReadiness.ready) { throw "Users module should be extraction-ready after external aggregate and mutation consumers are removed: $($result.moduleReadiness.blockers -join '; ')" }

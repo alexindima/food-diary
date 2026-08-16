@@ -149,8 +149,13 @@ if ($fullVerificationText -notmatch 'LLM Wiki tool verification profile' -or $fu
 if ($fullVerificationText -notmatch 'Invoke-LlmWikiParallelSmoke\.ps1' -or $fullVerificationText -notmatch 'AllGroups') {
     throw 'Full verification omitted the complete focused regression suite.'
 }
-if ($toolSmokeText -notmatch "ValidateSet\('Core', 'Full'\)" -or $toolSmokeText -notmatch 'Skipped governed task-workspace and orchestration smoke coverage') {
-    throw 'Tool smoke suite omitted its observable Core and Full profiles.'
+if ($toolSmokeText -notmatch "ValidateSet\('Focused', 'Core', 'Full'\)" -or $toolSmokeText -notmatch 'Skipped governed task-workspace and orchestration smoke coverage') {
+    throw 'Tool smoke suite omitted its observable Focused, Core, and Full profiles.'
+}
+if ($toolSmokeText -notmatch '\[string\]\$Profile = ''Focused''' -or
+    $toolSmokeText -notmatch 'Invoke-LlmWikiParallelSmoke\.ps1' -or
+    $toolSmokeText -notmatch 'monolithic core phase completed') {
+    throw 'Direct tool smoke must default to the parallel focused catalog while legacy audit profiles report phase timing.'
 }
 
 Write-Host 'LLM Wiki strict-affected smoke passed: scoped publication checks are uncached and non-deferred.'

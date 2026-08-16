@@ -66,7 +66,9 @@ not declared by that source set remain extraction blockers. The
 compile probe creates an ignored temporary SDK project from the module sources,
 builds it with inferred references, reports compiler diagnostics, and removes
 the fixture. A requested compile probe must pass before the module is reported
-ready.
+ready. Only successful compile-probe evidence is reusable: an interrupted or
+failed child build is recomputed on the next request instead of poisoning the
+readiness cache.
 
 For an explicit module-extraction intent, `start` expands discovery from the
 logical feature name to the physical implementation source set, abstraction

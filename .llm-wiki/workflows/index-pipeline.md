@@ -268,6 +268,10 @@ The pipeline prints per-generator and total duration to make remaining hotspots
 visible instead of treating index latency as an opaque fixed cost.
 
 Workers are isolated PowerShell processes with real exit-code propagation. A failed worker fails its stage and prevents dependent stages from running. Parallelism changes execution time only; every existing generator and freshness check still runs.
+After a complete focused group set passes, the runner records one aggregate
+content-addressed receipt. An unchanged repeat validates that fingerprint once
+and skips child-process fan-out; any relevant Wiki implementation edit restores
+the ordinary per-group validation path.
 
 `wiki verify` is the interactive affected gate. `wiki verify-full` and CI add the
 portable contract, index freshness, and the complete focused regression catalog.
@@ -275,7 +279,11 @@ The legacy monolithic `Core` and `Full` profiles are audit-only because they
 repeat hundreds of facade calls and do not scale for daily verification. Use
 `./.llm-wiki/tools/Invoke-LlmWikiFullVerification.ps1 -FullTools` or `-CoreTools`
 only when profiling that legacy coverage explicitly; neither mode is selected
-automatically.
+automatically. A direct `Test-LlmWikiTools.ps1` invocation defaults to the
+parallel focused catalog; `-MaxConcurrency` controls its worker count. Pass
+`-Profile Core` or `-Profile Full` explicitly to run legacy monolithic coverage;
+those profiles print phase timings, and `Full` includes the exhaustive
+orchestration audit.
 Full verification completes the index freshness checks before starting the stateful
 tools. This prevents tool-smoke readers from observing generated files while
 index workers are replacing them. Index workers remain concurrent within their

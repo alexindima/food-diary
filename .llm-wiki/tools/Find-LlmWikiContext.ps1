@@ -18,12 +18,29 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $catalogPath = Join-Path $wikiRoot 'generated/repository-catalog.json'
 $symbolIndexPath = Join-Path $wikiRoot 'generated/csharp-symbol-index.json'
 $frontendIndexPath = Join-Path $wikiRoot 'generated/frontend-index.json'
+. (Join-Path $PSScriptRoot 'LlmWikiQueryCache.ps1')
 
 if ([string]::IsNullOrWhiteSpace($Module) -and [string]::IsNullOrWhiteSpace($Query)) {
     throw 'Provide -Module, -Query, or both.'
 }
 if (-not (Test-Path -LiteralPath $catalogPath)) {
     throw 'Repository catalog is missing. Run Build-LlmWikiCatalog.ps1 first.'
+}
+
+$queryCacheEntry = $null
+if ($Format -eq 'Json') {
+    $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'context' -Arguments @{
+        Module = $Module
+        Query = $Query
+        ScopePath = @($ScopePath)
+        ChangeType = $ChangeType
+        Limit = $Limit
+    }
+    $cachedContext = Read-LlmWikiQueryCache -Entry $queryCacheEntry
+    if ($null -ne $cachedContext) {
+        Write-Output $cachedContext
+        return
+    }
 }
 
 function ConvertTo-RepositoryPath {
@@ -625,7 +642,9 @@ $context = [ordered]@{
 }
 
 if ($Format -eq 'Json') {
-    $context | ConvertTo-Json -Depth 12
+    $contextJson = $context | ConvertTo-Json -Depth 12
+    Write-LlmWikiQueryCache -Entry $queryCacheEntry -Content $contextJson
+    Write-Output $contextJson
     return
 }
 

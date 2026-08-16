@@ -92,10 +92,13 @@ symbols, typed edges, modules, contracts, tests, and quality risks. The database
 is disposable and incrementally rebuilt from authoritative code, current docs,
 and compiled indexes. MCP change-context and test-plan calls share an immutable
 HEAD/worktree snapshot; the combined `get_development_context` MCP tool runs its
-three read-only queries concurrently against that same snapshot. Compiled JSON
-files remain publication artifacts while any generator or compatibility reader
-still consumes them; migration to SQLite removes query-time reads first, and a
-file is deleted only after a repository consumer scan proves it unused.
+three read-only queries concurrently against that same snapshot. Exact context
+queries are content-addressed by arguments plus that snapshot, so repeated task
+and orchestration calls reuse the result instead of reparsing the compiled
+indexes. Compiled JSON files remain publication artifacts while any generator
+or compatibility reader still consumes them; migration to SQLite removes
+query-time reads first, starting with cold context discovery, and a file is
+deleted only after a repository consumer scan proves it unused.
 
 The unified developer entrypoint is:
 

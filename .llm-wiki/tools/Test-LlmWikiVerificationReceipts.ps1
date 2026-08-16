@@ -32,7 +32,12 @@ try {
     $plan = & (Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1') `
         -ChangedPath 'FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs' `
         -Format Json | ConvertFrom-Json
-    $applicationCheck = @($plan.commands | Where-Object id -eq 'application-contract-tests')[0]
+    $normalizedPlanCommand = Normalize-LlmWikiVerificationCommand $planCommand
+    $applicationCheck = @($plan.commands | Where-Object {
+        (Normalize-LlmWikiVerificationCommand ([string]$_.command)) -ceq $normalizedPlanCommand
+    } | Select-Object -First 1)
+    if ($applicationCheck.Count -eq 0) { throw 'Test plan omitted the focused application verification command.' }
+    $applicationCheck = $applicationCheck[0]
     if ($applicationCheck.status -ne 'satisfied' -or [double]$applicationCheck.receipt.durationSeconds -ne 21) {
         throw 'Test plan did not reuse matching verification evidence.'
     }

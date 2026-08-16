@@ -36,6 +36,11 @@ if ($combinedAdaptiveGroups -notcontains 'adaptive-evals' -or
 }
 
 $parallelRunner = Join-Path $PSScriptRoot 'Invoke-LlmWikiParallelSmoke.ps1'
+$parallelRunnerText = Get-Content -LiteralPath $parallelRunner -Raw
+if (-not $parallelRunnerText.Contains('Parallel affected smoke aggregate cache hit') -or
+    -not $parallelRunnerText.Contains("-Stage 'affected smoke'")) {
+    throw 'Parallel smoke does not short-circuit an unchanged complete group set with one aggregate fingerprint.'
+}
 $fullFocusedPlan = & $parallelRunner -AllGroups -Plan -Format Json | ConvertFrom-Json
 if (@($fullFocusedPlan.groups) -contains 'full-tools' -or @($fullFocusedPlan.groups) -contains 'tool-contract') {
     throw 'The complete focused catalog contains a fallback-only or monolithic smoke group.'

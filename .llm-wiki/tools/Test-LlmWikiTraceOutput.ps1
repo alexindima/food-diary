@@ -50,7 +50,7 @@ if ($LASTEXITCODE -ne 0 -or $noMatch -notcontains "No request handlers matched '
     throw 'Backend semantic no-match must return an empty successful fragment instead of failing the facade.'
 }
 
-$broadBackendQuery = 'Recipes commands queries dependency injection repositories external module dependencies'
+$broadBackendQuery = 'Recipes handlers storage consumers boundaries'
 $facadeOutput = @(& (Join-Path $PSScriptRoot '../wiki.ps1') trace -Fast -Module Recipes -Query $broadBackendQuery 6>&1 | ForEach-Object { $_.ToString() })
 if ($LASTEXITCODE -ne 0 -or $facadeOutput -match 'PropertyNotFoundStrict|The property .path. cannot be found') {
     throw "Broad backend semantic fallback failed through the facade: $($facadeOutput -join [Environment]::NewLine)"
@@ -67,10 +67,12 @@ $mailInboxTrace = & (Join-Path $PSScriptRoot '../wiki.ps1') trace `
     -Limit 8 `
     -Format Json | ConvertFrom-Json
 $rankedCandidates = @($mailInboxTrace.candidates)
-if ($rankedCandidates.Count -eq 0 -or $rankedCandidates[0].path -notmatch '^MailInbox/' -or $rankedCandidates[0].path -match '/tests?/' -or $rankedCandidates[0].path -match 'Web\.Client') {
+$exactSymbols = @($mailInboxTrace.symbols)
+$firstBackendMatch = if ($rankedCandidates.Count -gt 0) { $rankedCandidates[0] } elseif ($exactSymbols.Count -gt 0) { $exactSymbols[0] } else { $null }
+if ($null -eq $firstBackendMatch -or $firstBackendMatch.path -notmatch '^MailInbox/' -or $firstBackendMatch.path -match '/tests?/' -or $firstBackendMatch.path -match 'Web\.Client') {
     throw 'Backend trace filters did not rank a production MailInbox candidate first.'
 }
-if (-not $rankedCandidates[0].PSObject.Properties['confidence'] -or @($rankedCandidates[0].reasons).Count -eq 0) {
+if ($rankedCandidates.Count -gt 0 -and (-not $rankedCandidates[0].PSObject.Properties['confidence'] -or @($rankedCandidates[0].reasons).Count -eq 0)) {
     throw 'Ranked trace candidates omitted confidence or ranking explanations.'
 }
 

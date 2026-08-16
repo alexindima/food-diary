@@ -992,18 +992,14 @@
       "pageSha256": "e1655efc476bf4c727322d870d5951e28a7f1165ff29555671079e5ffa61f874",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "7d5df759c62b06e857565a852f02684faadb58481649fd56b64128626c4605d6"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "55a031ff2acdf1ec3dcd39de2e707d1ad6fbc0a30005b5f07b3cae8a36ab2733"
+          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
+          "sha256": "0c2c664cce13d3c957a768eb8417e87f91feb14d13cc31514f67cd0829166f12"
         }
       ],
-      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
+      "reason": "Reviewed content-addressed context reuse, aggregate focused-smoke receipts, successful-only compile-probe caching, and trace/verification-receipt regressions; authoritative sources and cache invalidation remain intact.",
       "baseRef": "HEAD",
-      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
-      "reviewedAtUtc": "2026-08-16T16:34:53.5379768Z"
+      "gitHead": "eaf3a61213bd8b3fc467d0899a645ae557feccd5",
+      "reviewedAtUtc": "2026-08-16T20:20:36.4538926Z"
     },
     {
       "pageId": "workflow-verification-planner",

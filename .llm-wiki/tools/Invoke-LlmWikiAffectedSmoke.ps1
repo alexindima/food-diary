@@ -94,6 +94,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('verification-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         $null = $smokeGroups.Add('query-cache')
+        if ($path -match '/LlmWikiQueryCache\.ps1$') { $null = $smokeGroups.Add('context-bundle') }
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiContractConsumers|Test-LlmWikiContractConsumers)\.ps1$') {
         $null = $smokeGroups.Add('contract-consumers')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiExtractionReadiness|Test-LlmWikiExtractionReadiness)\.ps1$') {
@@ -102,7 +103,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('knowledge-isolation')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiMemory|Test-LlmWikiMemoryIsolation)\.ps1$') {
         $null = $smokeGroups.Add('memory')
-    } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiContext|Manage-LlmWikiContextBundle)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiContext|Manage-LlmWikiContextBundle|Test-LlmWikiContextCache)\.ps1$') {
         $null = $smokeGroups.Add('context-bundle')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiContextFeedback|Test-LlmWikiContextFeedbackMetrics)\.ps1$') {
         $null = $smokeGroups.Add('context-feedback')
@@ -311,6 +312,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'context-bundle' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiContextCache.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') -Module Users -Format Json | Out-Null
             if (-not $?) { exit 1 }
         }
@@ -351,7 +354,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'full-tools' {
             & (Join-Path $toolsRoot 'Invoke-LlmWikiReadOnlyTool.ps1') `
-                -ToolPath (Join-Path $toolsRoot 'Test-LlmWikiTools.ps1')
+                -ToolPath (Join-Path $toolsRoot 'Test-LlmWikiTools.ps1') `
+                -ToolArguments @{ Profile = 'Full' }
             if (-not $?) { exit 1 }
         }
     }

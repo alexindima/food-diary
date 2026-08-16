@@ -86,6 +86,32 @@ if ($groups.Count -eq 0) {
     exit 0
 }
 
+$aggregateReceiptPath = $null
+$aggregateFingerprint = $null
+if (-not $NoCache) {
+    $groupMaterial = @($groups | Sort-Object) -join '|'
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { $groupKey = ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($groupMaterial))) -replace '-', '').ToLowerInvariant() }
+    finally { $sha.Dispose() }
+    $gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+    if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for the parallel smoke receipt.' }
+    $aggregateReceiptRoot = Join-Path $gitDirectory 'llm-wiki/parallel-smoke'
+    $aggregateReceiptPath = Join-Path $aggregateReceiptRoot "$groupKey.json"
+    $aggregateFingerprint = & (Join-Path $PSScriptRoot 'Get-LlmWikiVerificationStageFingerprint.ps1') `
+        -Stage 'affected smoke' `
+        -Arguments @{ groups = @($groups | Sort-Object) } `
+        -Format Text
+    if (Test-Path -LiteralPath $aggregateReceiptPath -PathType Leaf) {
+        try {
+            $aggregateReceipt = Get-Content -LiteralPath $aggregateReceiptPath -Raw | ConvertFrom-Json
+            if ([string]$aggregateReceipt.fingerprint -ceq [string]$aggregateFingerprint) {
+                Write-Host "Parallel affected smoke aggregate cache hit: $($groups.Count) group(s), previous duration $($aggregateReceipt.durationSeconds)s."
+                exit 0
+            }
+        } catch { }
+    }
+}
+
 $graphDependentGroups = @(
     'adaptive-evals', 'code-graph', 'contract-consumers', 'extraction-readiness',
     'research-confidence', 'trace-output'
@@ -180,4 +206,21 @@ try {
     }
 }
 $stopwatch.Stop()
+if ($aggregateReceiptPath) {
+    $null = New-Item -ItemType Directory -Path (Split-Path -Parent $aggregateReceiptPath) -Force
+    $aggregateReceipt = [ordered]@{
+        schemaVersion = 1
+        fingerprint = [string]$aggregateFingerprint
+        groups = @($groups | Sort-Object)
+        durationSeconds = [Math]::Round($stopwatch.Elapsed.TotalSeconds, 2)
+        recordedAtUtc = [DateTime]::UtcNow.ToString('o')
+    }
+    $temporaryReceiptPath = "$aggregateReceiptPath.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        [IO.File]::WriteAllText($temporaryReceiptPath, (($aggregateReceipt | ConvertTo-Json -Depth 5) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        Move-Item -LiteralPath $temporaryReceiptPath -Destination $aggregateReceiptPath -Force
+    } finally {
+        Remove-Item -LiteralPath $temporaryReceiptPath -Force -ErrorAction SilentlyContinue
+    }
+}
 Write-Host "Parallel affected smoke completed: $($groups.Count) group(s) in $([Math]::Round($stopwatch.Elapsed.TotalSeconds, 2))s (max concurrency $MaxConcurrency)."

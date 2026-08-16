@@ -1,13 +1,21 @@
 [CmdletBinding()]
 param(
-    [ValidateSet('Core', 'Full')]
-    [string]$Profile = 'Full'
+    [ValidateSet('Focused', 'Core', 'Full')]
+    [string]$Profile = 'Focused',
+    [ValidateRange(1, 8)]
+    [int]$MaxConcurrency = 4
 )
 
 $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = Split-Path -Parent $wikiRoot
+if ($Profile -eq 'Focused') {
+    Write-Host "LLM Wiki tool smoke: running the focused regression catalog with max concurrency $MaxConcurrency. Use -Profile Core or -Profile Full only for legacy audit coverage."
+    & (Join-Path $toolsRoot 'Invoke-LlmWikiParallelSmoke.ps1') -AllGroups -MaxConcurrency $MaxConcurrency
+    if (-not $?) { exit 1 }
+    return
+}
 $errors = [System.Collections.Generic.List[string]]::new()
 $canonicalMemoryRegistryPath = Join-Path $wikiRoot 'knowledge/memories.json'
 $canonicalMemoryRegistryHash = (Get-FileHash -LiteralPath $canonicalMemoryRegistryPath -Algorithm SHA256).Hash
@@ -27,6 +35,8 @@ foreach ($registryName in @('learning-promotions.json', 'learning-experiments.js
 $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH = $memoryRegistryPath
 $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT = $testKnowledgeRoot
 $schedulerMemoryId = "smoke-scheduler-context-$([guid]::NewGuid().ToString('N'))"
+$totalStopwatch = [Diagnostics.Stopwatch]::StartNew()
+Write-Host "LLM Wiki monolithic audit profile: $Profile. Use the default Focused profile for daily verification."
 
 function Assert-Wiki {
     param(
@@ -906,7 +916,9 @@ Assert-Wiki ($reviewJson.engineeringReadiness.verdict -eq 'conditional' -and $re
 Assert-Wiki (@($reviewJson.dimensions).Count -eq 9) 'Review report did not include every readiness dimension.'
 Assert-Wiki (-not (@($reviewJson.modules) -contains ',')) 'Review report emitted a malformed module placeholder.'
 
+Write-Host "LLM Wiki monolithic core phase completed in $([Math]::Round($totalStopwatch.Elapsed.TotalSeconds, 2))s."
 if ($Profile -eq 'Full') {
+    $governedStopwatch = [Diagnostics.Stopwatch]::StartNew()
     Write-Host 'Starting governed task-workspace and orchestration smoke coverage.'
 $taskWorkspacePath = '.artifacts/llm-wiki/tasks/tool-smoke-workspace'
 $absoluteTaskWorkspacePath = Join-Path (Split-Path -Parent $wikiRoot) $taskWorkspacePath
@@ -3642,6 +3654,7 @@ try {
         }
     }
     if ($Profile -eq 'Full') {
+        $extendedStopwatch = [Diagnostics.Stopwatch]::StartNew()
         Write-Host 'Starting extended orchestration smoke coverage.'
         $blockedSchedule = & (Join-Path $toolsRoot 'Get-LlmWikiTaskSchedule.ps1') -MaxConcurrency 2 -Format Json | ConvertFrom-Json
         Assert-Wiki ($blockedSchedule.selectedCount -eq 0 -and $blockedSchedule.blockedCount -ge 2) 'Task scheduler assigned an exact-path conflict.'
@@ -4660,7 +4673,8 @@ try {
             }
         }
         }
-        Write-Host 'Extended orchestration smoke coverage passed.'
+        $extendedStopwatch.Stop()
+        Write-Host "Extended orchestration smoke coverage passed in $([Math]::Round($extendedStopwatch.Elapsed.TotalSeconds, 2))s."
     } else {
         Write-Host 'Skipped extended orchestration smoke coverage for the Core profile.'
     }
@@ -4813,7 +4827,8 @@ try {
         Remove-Item -LiteralPath $absoluteTaskWorkspacePath -Recurse -Force
     }
 }
-    Write-Host 'Governed task-workspace and orchestration smoke coverage passed.'
+    $governedStopwatch.Stop()
+    Write-Host "Governed task-workspace and orchestration smoke coverage passed in $([Math]::Round($governedStopwatch.Elapsed.TotalSeconds, 2))s."
 } else {
     Write-Host 'Skipped governed task-workspace and orchestration smoke coverage for the Core profile.'
 }
@@ -4983,4 +4998,5 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host 'LLM Wiki tool smoke tests passed: context, diff, brief, test plan, decisions, ownership, trace, runtime/privacy topology, API/dependency/configuration/rollout checks, indexes, acceptance, evidence, and release readiness.'
+$totalStopwatch.Stop()
+Write-Host "LLM Wiki tool smoke tests passed in $([Math]::Round($totalStopwatch.Elapsed.TotalSeconds, 2))s: context, diff, brief, test plan, decisions, ownership, trace, runtime/privacy topology, API/dependency/configuration/rollout checks, indexes, acceptance, evidence, and release readiness."
