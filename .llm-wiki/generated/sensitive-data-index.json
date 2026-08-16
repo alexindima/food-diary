@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1445,
+    "candidateFields": 1448,
     "credential": 152,
     "identity": 153,
-    "health": 644,
+    "health": 647,
     "financial": 199,
     "privateContent": 297,
-    "boundaryFiles": 183,
+    "boundaryFiles": 184,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 1
   },
@@ -3682,6 +3682,20 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "AverageCycleLength",
+      "type": "int",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommand.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
       "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs",
       "line": 9
     },
@@ -5994,6 +6008,13 @@
       "type": "int?",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/CreateCycleHttpRequest.cs",
       "line": 6
+    },
+    {
+      "category": "health",
+      "name": "AverageCycleLength",
+      "type": "int",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs",
+      "line": 5
     },
     {
       "category": "health",
@@ -10530,6 +10551,13 @@
         "privateContent"
       ],
       "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpsertCycleFactorHttpRequest.cs",

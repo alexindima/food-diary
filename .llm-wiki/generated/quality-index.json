@@ -5,9 +5,9 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4262,
-    "criticalSymbols": 547,
-    "criticalSymbolsWithTestReferences": 525,
+    "productionFiles": 4266,
+    "criticalSymbols": 549,
+    "criticalSymbolsWithTestReferences": 527,
     "criticalSymbolsWithoutTestReferences": 22,
     "debtMarkers": 3
   },
@@ -22,11 +22,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 723,
-      "decisionPoints": 84,
+      "nonBlankLines": 793,
+      "decisionPoints": 91,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 140.46
+      "structuralRiskScore": 152.36
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
@@ -7693,6 +7693,30 @@
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 1,
       "structuralRiskScore": 7.16
+    },
+    {
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommand.cs",
+      "nonBlankLines": 14,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.28
+    },
+    {
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandHandler.cs",
+      "nonBlankLines": 56,
+      "decisionPoints": 3,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 7.62
+    },
+    {
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandValidator.cs",
+      "nonBlankLines": 34,
+      "decisionPoints": 1,
+      "criticalSymbols": 1,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 4.18
     },
     {
       "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs",
@@ -21696,19 +21720,19 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs",
-      "nonBlankLines": 48,
+      "nonBlankLines": 57,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.96
+      "structuralRiskScore": 3.14
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
-      "nonBlankLines": 103,
+      "nonBlankLines": 117,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.06
+      "structuralRiskScore": 2.34
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
@@ -21765,6 +21789,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 0.14
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateCycleSettingsHttpRequest.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateMenstrualEpisodeHttpRequest.cs",
@@ -27424,11 +27456,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "nonBlankLines": 67,
+      "nonBlankLines": 73,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 1.34
+      "structuralRiskScore": 1.46
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/cycle-tracking.routes.ts",
@@ -27448,11 +27480,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "nonBlankLines": 723,
-      "decisionPoints": 84,
+      "nonBlankLines": 793,
+      "decisionPoints": 91,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 140.46
+      "structuralRiskScore": 152.36
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.mapper.ts",
@@ -27464,11 +27496,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/models/cycle.data.ts",
-      "nonBlankLines": 231,
+      "nonBlankLines": 240,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.62
+      "structuralRiskScore": 4.8
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.ts",
@@ -27568,11 +27600,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "nonBlankLines": 287,
+      "nonBlankLines": 289,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 7.24
+      "structuralRiskScore": 7.28
     },
     {
       "path": "FoodDiary.Web.Client/src/app/features/dashboard/api/dashboard-api.tokens.ts",
@@ -36243,6 +36275,16 @@
       ]
     },
     {
+      "name": "UpdateCycleSettingsCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandHandler.cs",
+      "line": 15,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.SettingsCommands.cs"
+      ]
+    },
+    {
       "name": "UpdateDesiredWaistCommandHandler",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Users/Commands/UpdateDesiredWaist/UpdateDesiredWaistCommandHandler.cs",
@@ -40373,6 +40415,16 @@
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Application.Tests/Fasting/FastingValidatorTests.cs"
+      ]
+    },
+    {
+      "name": "UpdateCycleSettingsCommandValidator",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommandValidator.cs",
+      "line": 5,
+      "testReferenceCount": 1,
+      "testReferences": [
+        "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.SettingsCommands.cs"
       ]
     },
     {

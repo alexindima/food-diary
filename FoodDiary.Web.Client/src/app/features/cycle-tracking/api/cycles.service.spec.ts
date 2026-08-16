@@ -13,6 +13,7 @@ import {
     type CycleLogDay,
     type CycleNutritionSummary,
     type CycleResponse,
+    type UpdateCycleSettingsPayload,
     type UpsertCycleDayPayload,
     type UpsertCycleFactorPayload,
 } from '../models/cycle.data';
@@ -139,6 +140,27 @@ describe('CyclesService mutations', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
         expect(req.request.method).toBe('POST');
+        expect(req.request.body).toEqual(payload);
+        req.flush(MOCK_CYCLE);
+    });
+
+    it('should update cycle settings', () => {
+        const payload: UpdateCycleSettingsPayload = {
+            mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+            averageCycleLength: 30,
+            averagePeriodLength: 6,
+            lutealLength: 13,
+            isRegular: false,
+            showFertilityEstimates: false,
+            discreetNotifications: true,
+        };
+
+        service.updateSettings('c-1', payload).subscribe(cycle => {
+            expect(cycle).toEqual(MOCK_CYCLE);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/c-1/settings`);
+        expect(req.request.method).toBe('PUT');
         expect(req.request.body).toEqual(payload);
         req.flush(MOCK_CYCLE);
     });

@@ -103,6 +103,7 @@ export class CycleTrackingPageComponent {
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSavingCycle = this.facade.isSavingCycle;
+    protected readonly isSavingSettings = this.facade.isSavingSettings;
     protected readonly isSavingDay = this.facade.isSavingDay;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isSavingEpisode = this.facade.isSavingEpisode;
@@ -117,6 +118,7 @@ export class CycleTrackingPageComponent {
     protected readonly cycle = this.facade.cycle;
     protected readonly nutritionSummary = this.facade.nutritionSummary;
     protected readonly startCycleForm = this.facade.startCycleForm;
+    protected readonly settingsForm = this.facade.settingsForm;
     protected readonly dayForm = this.facade.dayForm;
     protected readonly factorForm = this.facade.factorForm;
     protected readonly episodeForm = this.facade.episodeForm;

@@ -5,6 +5,7 @@ using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
+using FoodDiary.Application.Cycles.Commands.UpdateCycleSettings;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
@@ -33,6 +34,20 @@ public static class CycleHttpMappings {
                     request.ShowFertilityEstimates,
                     request.DiscreetNotifications,
                     request.Notes);
+    }
+
+    extension(UpdateCycleSettingsHttpRequest request) {
+        public UpdateCycleSettingsCommand ToCommand(Guid userId, Guid cycleProfileId) =>
+            new(
+                userId,
+                cycleProfileId,
+                request.Mode,
+                request.AverageCycleLength,
+                request.AveragePeriodLength,
+                request.LutealLength,
+                request.IsRegular,
+                request.ShowFertilityEstimates,
+                request.DiscreetNotifications);
     }
 
     extension(UpsertCycleDayHttpRequest request) {

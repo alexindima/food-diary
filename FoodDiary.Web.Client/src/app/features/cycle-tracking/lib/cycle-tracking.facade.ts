@@ -30,6 +30,7 @@ import {
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
     type SymptomLogPayload,
+    type UpdateCycleSettingsPayload,
     type UpsertCycleFactorPayload,
 } from '../models/cycle.data';
 import {
@@ -66,6 +67,8 @@ type StartCycleFormModel = {
     showFertilityEstimates: boolean;
     discreetNotifications: boolean;
 };
+
+type CycleSettingsFormModel = Omit<StartCycleFormModel, 'trackingStartDate'>;
 
 export type CycleDayFormModel = {
     date: string | null;
@@ -106,6 +109,7 @@ export class CycleTrackingFacade {
 
     public readonly isLoading = signal(false);
     public readonly isSavingCycle = signal(false);
+    public readonly isSavingSettings = signal(false);
     public readonly isSavingDay = signal(false);
     public readonly isSavingFactor = signal(false);
     public readonly isSavingEpisode = signal(false);
@@ -150,6 +154,32 @@ export class CycleTrackingFacade {
                 action: this.submitStartCycleFormAsync,
             },
         },
+    );
+
+    public readonly settingsModel = signal<CycleSettingsFormModel>({
+        mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+        averageCycleLength: DEFAULT_AVERAGE_CYCLE_LENGTH,
+        averagePeriodLength: DEFAULT_AVERAGE_PERIOD_LENGTH,
+        lutealLength: DEFAULT_LUTEAL_LENGTH,
+        isRegular: false,
+        showFertilityEstimates: false,
+        discreetNotifications: true,
+    });
+    private readonly submitSettingsFormAsync = async (): Promise<void> => {
+        await this.saveSettingsAsync();
+    };
+    public readonly settingsForm = form(
+        this.settingsModel,
+        path => {
+            required(path.mode);
+            min(path.averageCycleLength, MIN_AVERAGE_CYCLE_LENGTH);
+            max(path.averageCycleLength, MAX_AVERAGE_CYCLE_LENGTH);
+            min(path.averagePeriodLength, MIN_AVERAGE_PERIOD_LENGTH);
+            max(path.averagePeriodLength, MAX_AVERAGE_PERIOD_LENGTH);
+            min(path.lutealLength, MIN_LUTEAL_LENGTH);
+            max(path.lutealLength, MAX_LUTEAL_LENGTH);
+        },
+        { submission: { action: this.submitSettingsFormAsync } },
     );
 
     public readonly dayModel = signal<CycleDayFormModel>({
@@ -277,6 +307,41 @@ export class CycleTrackingFacade {
         );
         this.cycle.set(cycle);
         this.loadNutritionSummary(cycle);
+    }
+
+    private async saveSettingsAsync(): Promise<void> {
+        const currentCycle = this.cycle();
+        if (currentCycle === null || this.settingsForm().invalid()) {
+            this.settingsForm().markAsTouched();
+            return;
+        }
+
+        const formValue = this.settingsModel();
+        if (
+            formValue.mode === null ||
+            formValue.averageCycleLength === null ||
+            formValue.averagePeriodLength === null ||
+            formValue.lutealLength === null
+        ) {
+            return;
+        }
+
+        const payload: UpdateCycleSettingsPayload = {
+            mode: formValue.mode,
+            averageCycleLength: formValue.averageCycleLength,
+            averagePeriodLength: formValue.averagePeriodLength,
+            lutealLength: formValue.lutealLength,
+            isRegular: formValue.isRegular,
+            showFertilityEstimates: formValue.showFertilityEstimates,
+            discreetNotifications: formValue.discreetNotifications,
+        };
+
+        this.isSavingSettings.set(true);
+        try {
+            this.cycle.set(await firstValueFrom(this.cyclesService.updateSettings(currentCycle.id, payload)));
+        } finally {
+            this.isSavingSettings.set(false);
+        }
     }
 
     private loadNutritionSummary(cycle: CycleResponse | null): void {
@@ -731,6 +796,17 @@ export class CycleTrackingFacade {
             )
             .subscribe(cycle => {
                 this.cycle.set(cycle);
+                if (cycle !== null) {
+                    this.settingsModel.set({
+                        mode: cycle.mode,
+                        averageCycleLength: cycle.averageCycleLength,
+                        averagePeriodLength: cycle.averagePeriodLength,
+                        lutealLength: cycle.lutealLength,
+                        isRegular: cycle.isRegular,
+                        showFertilityEstimates: cycle.showFertilityEstimates,
+                        discreetNotifications: cycle.discreetNotifications,
+                    });
+                }
                 this.loadNutritionSummary(cycle);
             });
     }

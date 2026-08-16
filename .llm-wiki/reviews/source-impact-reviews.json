@@ -166,13 +166,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "b6ac5721c2454bf4fb26f0cc368e6ec531872fd16cc31e641deb941f3448fa9f"
+          "sha256": "77fbfc8254ed3f36740524e2e8f2fa09edb96cdcab0d7e33ed763c33f0cca0ee"
         }
       ],
-      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
+      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
       "baseRef": "HEAD",
-      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
-      "reviewedAtUtc": "2026-08-16T14:17:00.8605484Z"
+      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
+      "reviewedAtUtc": "2026-08-16T16:34:50.2477985Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "309bbf149c1c0ead26046d74302f6d4957e50048aef340103218cbad96f4e35d"
+          "sha256": "7a939623edf17ded8c079735f2f6c2d5d165089d703ff93245ed5fff8edd0ff7"
         }
       ],
-      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
+      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:04:33.7903594Z"
+      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
+      "reviewedAtUtc": "2026-08-16T16:34:50.7946452Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -725,13 +725,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "dede454b1d4f43b05300e295217717425224a851d86c16ebebd97cec962c7ec8"
+          "sha256": "c2497730885b2ff59cad1312b9e74e89432e1c74eceeb3d0e59fcbb0dcd92459"
         }
       ],
-      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
+      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
       "baseRef": "HEAD",
-      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
-      "reviewedAtUtc": "2026-08-16T14:17:02.5339508Z"
+      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
+      "reviewedAtUtc": "2026-08-16T16:34:51.6810359Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "4c5e4af0abdb27558e9920466da7da1d66d4297f19bd4a454f7ee128d66cbd67"
+          "sha256": "f1f509fc21fea177ffa159b487ffb1d9c29883a02ccf27649d5aaffc95307ec5"
         }
       ],
-      "reason": "Reviewed regenerated quality index after final MCP status freshness implementation; quality-risk guidance remains accurate.",
+      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:06:29.4066039Z"
+      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
+      "reviewedAtUtc": "2026-08-16T16:34:52.2508089Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -993,25 +993,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "06000f1250aab89608e675e88c9a5fc5d8b835706d2a98f2f3fa796bc14177cd"
+          "sha256": "7d5df759c62b06e857565a852f02684faadb58481649fd56b64128626c4605d6"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "4d190d515555fb3357cc5af6a8bd183e97b68c201290c5d950b0c725600202fd"
-        },
-        {
-          "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-          "sha256": "d466386c47a919833f37062d84ebc34f3bbd92bc327338cc6464ca97f308afef"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiTraceOutput.ps1",
-          "sha256": "e280946f7668c11a8cc01bc2c2560b9861fd3d87cb5839082c27971736e214ab"
+          "sha256": "55a031ff2acdf1ec3dcd39de2e707d1ad6fbc0a30005b5f07b3cae8a36ab2733"
         }
       ],
-      "reason": "Generated frontend and quality indexes now reflect the additive prediction explanation fields, focused cycle tests, and rendered UI surface. Trace workflow sources reflect the expanded cross-layer trace scope from HEAD; the MCP layer classifier keeps the same Api result while avoiding a forbidden host namespace reference. Existing workflow guidance remains current.",
+      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
       "baseRef": "HEAD",
-      "gitHead": "7c54c7ab5cbe3e31f089c6df87ebd7a9834d34df",
-      "reviewedAtUtc": "2026-08-16T15:33:47.0510575Z"
+      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
+      "reviewedAtUtc": "2026-08-16T16:34:53.5379768Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1099,13 +1091,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "06000f1250aab89608e675e88c9a5fc5d8b835706d2a98f2f3fa796bc14177cd"
+          "sha256": "7d5df759c62b06e857565a852f02684faadb58481649fd56b64128626c4605d6"
         }
       ],
-      "reason": "Generated frontend and quality indexes now reflect the additive prediction explanation fields, focused cycle tests, and rendered UI surface. Trace workflow sources reflect the expanded cross-layer trace scope from HEAD; the MCP layer classifier keeps the same Api result while avoiding a forbidden host namespace reference. Existing workflow guidance remains current.",
+      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
       "baseRef": "HEAD",
-      "gitHead": "7c54c7ab5cbe3e31f089c6df87ebd7a9834d34df",
-      "reviewedAtUtc": "2026-08-16T15:33:46.1395914Z"
+      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
+      "reviewedAtUtc": "2026-08-16T16:34:51.2666691Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1114,13 +1106,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "b06a01da64172d2030463e1f29db88472104a85e2c2daf1e12394bae3dbb3b40"
+          "sha256": "b9b252ddbd0d65e16877a4a77b5117fa77041ddfeabe692ad0cfcd5214cac588"
         }
       ],
-      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
+      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
       "baseRef": "HEAD",
-      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
-      "reviewedAtUtc": "2026-08-16T14:17:03.2130722Z"
+      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
+      "reviewedAtUtc": "2026-08-16T16:34:52.9301692Z"
     },
     {
       "pageId": "workflow.review-diff",

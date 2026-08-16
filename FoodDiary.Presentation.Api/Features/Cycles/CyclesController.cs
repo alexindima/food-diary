@@ -32,6 +32,16 @@ public sealed class CyclesController(ISender mediator) : AuthorizedController(me
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateCycleHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
+    [HttpPut("{cycleProfileId:guid}/settings")]
+    [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateSettings(
+        Guid cycleProfileId,
+        [FromCurrentUser] Guid userId,
+        [FromBody] UpdateCycleSettingsHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
+
     [HttpPut("{cycleProfileId:guid}/days")]
     [ProducesResponseType<CycleLogDayHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

@@ -192,6 +192,16 @@ export type CreateCyclePayload = {
     notes?: string | null;
 };
 
+export type UpdateCycleSettingsPayload = {
+    mode: CycleTrackingMode;
+    averageCycleLength: number;
+    averagePeriodLength: number;
+    lutealLength: number;
+    isRegular: boolean;
+    showFertilityEstimates: boolean;
+    discreetNotifications: boolean;
+};
+
 export type BleedingLogPayload = {
     type: BleedingType;
     flow: CycleFlowLevel;

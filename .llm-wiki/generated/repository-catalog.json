@@ -20,7 +20,7 @@
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
     "controllers": 86,
-    "endpoints": 274,
+    "endpoints": 275,
     "agentGuides": 74,
     "documentationPages": 46
   },
@@ -4077,18 +4077,23 @@
           },
           {
             "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/settings",
             "line": 35
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
+            "line": 45
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
-            "line": 42
+            "line": 52
           },
           {
             "verb": "PUT",
             "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors",
-            "line": 49
+            "line": 59
           }
         ]
       },

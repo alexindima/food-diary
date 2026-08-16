@@ -38,6 +38,7 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
 - `GET /api/v{version:apiVersion}/cycles/current`
 - `GET /api/v{version:apiVersion}/cycles/current/nutrition-summary`
 - `POST /api/v{version:apiVersion}/cycles`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/settings`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
 - `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors`
@@ -91,6 +92,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.FactorCommands.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.MappingAndPrediction.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.NutritionSummary.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.SettingsCommands.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesValidatorTests.cs`
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/CyclesModuleExtractionTests.cs`
