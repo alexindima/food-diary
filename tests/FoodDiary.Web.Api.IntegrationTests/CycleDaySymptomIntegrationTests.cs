@@ -61,6 +61,40 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
         Assert.Equal(36.6, root.GetProperty("fertilitySignal").GetProperty("basalBodyTemperatureCelsius").GetDouble());
     }
 
+    [Fact]
+    public async Task UpsertDay_WithClearedFertilitySignal_PreservesOtherDayObservations() {
+        HttpClient client = factory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        Guid cycleProfileId = await CreateCycleAsync(client);
+        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
+
+        HttpResponseMessage initialResponse = await client.PutAsJsonAsync(
+            $"/api/v1/cycles/{cycleProfileId}/days",
+            new UpsertCycleDayHttpRequest(
+                date,
+                new BleedingLogHttpModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Medium, PainImpact: 3, Notes: null, ClearNotes: false),
+                [new SymptomLogHttpModel((int)CycleSymptomCategory.Pain, 4, [], Note: null, ClearNote: false)],
+                new FertilitySignalHttpModel(36.6, (int)OvulationTestResult.Negative, CervicalFluid: null, HadSex: null, Notes: null, ClearNotes: false)));
+        initialResponse.EnsureSuccessStatusCode();
+
+        HttpResponseMessage clearResponse = await client.PutAsJsonAsync(
+            $"/api/v1/cycles/{cycleProfileId}/days",
+            new UpsertCycleDayHttpRequest(
+                date,
+                Bleeding: null,
+                Symptoms: [],
+                FertilitySignal: null,
+                ClearFertilitySignal: true));
+        clearResponse.EnsureSuccessStatusCode();
+        using var json = JsonDocument.Parse(await clearResponse.Content.ReadAsStringAsync());
+
+        JsonElement root = json.RootElement;
+        Assert.Single(root.GetProperty("bleedingEntries").EnumerateArray());
+        Assert.Single(root.GetProperty("symptoms").EnumerateArray());
+        Assert.Equal(JsonValueKind.Null, root.GetProperty("fertilitySignal").ValueKind);
+    }
+
     private static async Task<Guid> CreateCycleAsync(HttpClient client) {
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/cycles",

@@ -19023,6 +19023,12 @@
           "Nullable": false
         },
         {
+          "Name": "clearFertilitySignal",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
           "Name": "clearSymptomCategories",
           "Required": false,
           "Type": "array",

@@ -208,6 +208,17 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return true;
     }
 
+    public bool ClearFertilitySignal(DateTime date) {
+        DateTime normalizedDate = NormalizeDate(date);
+        int removedCount = _fertilitySignals.RemoveAll(signal => signal.Date == normalizedDate);
+        if (removedCount == 0) {
+            return false;
+        }
+
+        SetModified();
+        return true;
+    }
+
     public bool ClearDay(DateTime date) {
         DateTime normalizedDate = NormalizeDate(date);
         int removedCount =

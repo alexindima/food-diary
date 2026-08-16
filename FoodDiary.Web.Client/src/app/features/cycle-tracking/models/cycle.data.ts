@@ -242,6 +242,7 @@ export type UpsertCycleDayPayload = {
     symptoms: SymptomLogPayload[];
     clearSymptomCategories?: CycleSymptomCategory[];
     fertilitySignal?: FertilitySignalPayload | null;
+    clearFertilitySignal?: boolean;
 };
 
 export type UpsertCycleFactorPayload = {

@@ -303,7 +303,9 @@ describe('CycleTrackingFacade day form editing', () => {
             notes: 'note',
         });
     });
+});
 
+describe('CycleTrackingFacade bleeding editing', () => {
     it('requests scoped bleeding removal when editing a day with bleeding turned off', async () => {
         const date = '2026-04-02T00:00:00.000Z';
         cyclesService.getCurrent.mockReturnValue(
@@ -334,6 +336,71 @@ describe('CycleTrackingFacade day form editing', () => {
         await vi.waitFor(() => {
             expect(facade.bleedingEntries()).toEqual([]);
         });
+    });
+});
+
+describe('CycleTrackingFacade fertility editing', () => {
+    it('requests scoped fertility removal and preserves other day observations', async () => {
+        const date = '2026-04-02T00:00:00.000Z';
+        const bleeding = createBleedingEntry('bleeding-1', date);
+        const symptom = {
+            id: 'symptom-1',
+            cycleProfileId: 'cycle-1',
+            date,
+            category: 1 as const,
+            intensity: 4,
+            tags: [],
+            note: null,
+        };
+        cyclesService.getCurrent.mockReturnValue(
+            of({
+                ...createCycleResponse(),
+                bleedingEntries: [bleeding],
+                symptoms: [symptom],
+                fertilitySignals: [
+                    {
+                        id: 'signal-1',
+                        cycleProfileId: 'cycle-1',
+                        date,
+                        basalBodyTemperatureCelsius: 36.62,
+                        ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
+                        cervicalFluid: 'egg white',
+                        hadSex: true,
+                        notes: null,
+                    },
+                ],
+            }),
+        );
+        cyclesService.upsertDay.mockReturnValue(
+            of({
+                cycleProfileId: 'cycle-1',
+                date,
+                bleedingEntries: [bleeding],
+                symptoms: [symptom],
+                fertilitySignal: null,
+            }),
+        );
+        facade.initialize();
+        facade.editDay(date);
+        facade.dayModel.update(value => ({
+            ...value,
+            basalBodyTemperatureCelsius: null,
+            ovulationTestResult: null,
+            cervicalFluid: null,
+            hadSex: false,
+        }));
+
+        facade.saveDay();
+
+        expect(cyclesService.upsertDay.mock.calls[0][1]).toMatchObject({
+            fertilitySignal: null,
+            clearFertilitySignal: true,
+        });
+        await vi.waitFor(() => {
+            expect(facade.fertilitySignals()).toEqual([]);
+        });
+        expect(facade.bleedingEntries()).toEqual([bleeding]);
+        expect(facade.symptoms()).toEqual([symptom]);
     });
 });
 

@@ -586,6 +586,22 @@ public class CycleProfileInvariantTests {
     }
 
     [Fact]
+    public void ClearFertilitySignal_RemovesOnlyFertilityDataForDate() {
+        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
+        profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
+        profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
+        profile.UpsertFertilitySignal(date, 36.6, OvulationTestResult.Negative, cervicalFluid: null, hadSex: null, notes: null);
+
+        bool removed = profile.ClearFertilitySignal(date);
+
+        Assert.True(removed);
+        Assert.Empty(profile.FertilitySignals);
+        Assert.Single(profile.BleedingEntries);
+        Assert.Single(profile.SymptomEntries);
+    }
+
+    [Fact]
     public void UpsertBleedingEntry_GroupsOneUnknownDayIntoOneInferredEpisode() {
         DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         var profile = CycleProfile.Create(UserId.New(), start);

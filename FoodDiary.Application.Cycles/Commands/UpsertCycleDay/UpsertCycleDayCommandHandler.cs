@@ -97,6 +97,10 @@ public sealed class UpsertCycleDayCommandHandler(
     }
 
     private static void ApplyFertilitySignal(CycleProfile profile, UpsertCycleDayCommand command) {
+        if (command.ClearFertilitySignal) {
+            profile.ClearFertilitySignal(command.Date);
+        }
+
         if (command.FertilitySignal is null) {
             return;
         }

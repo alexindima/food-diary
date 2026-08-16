@@ -60,7 +60,8 @@ public static class CycleHttpMappings {
                     request.Symptoms.Select(static symptom => symptom.ToCommandModel()).ToList(),
                     request.FertilitySignal?.ToCommandModel(),
                     request.ClearBleeding,
-                    request.ClearSymptomCategories ?? []);
+                    request.ClearSymptomCategories ?? [],
+                    request.ClearFertilitySignal);
     }
 
     extension(Guid cycleProfileId) {

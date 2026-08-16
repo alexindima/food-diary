@@ -12,5 +12,6 @@ public record UpsertCycleDayCommand(
     IReadOnlyCollection<SymptomLogCommandModel> Symptoms,
     FertilitySignalCommandModel? FertilitySignal,
     bool ClearBleeding = false,
-    IReadOnlyCollection<int>? ClearSymptomCategories = null
+    IReadOnlyCollection<int>? ClearSymptomCategories = null,
+    bool ClearFertilitySignal = false
 ) : ICommand<Result<CycleLogDayModel>>, IUserRequest;

@@ -391,6 +391,8 @@ export class CycleTrackingFacade {
         const entryDate = new Date(date);
         const symptoms = this.buildSymptomPayload(formValue);
         const clearSymptomCategories = this.buildSymptomClearCategories(formValue);
+        const fertilitySignal = this.buildFertilitySignalPayload(formValue);
+        const clearFertilitySignal = this.shouldClearFertilitySignal(fertilitySignal);
 
         this.isSavingDay.set(true);
         const day = await firstValueFrom(
@@ -409,7 +411,8 @@ export class CycleTrackingFacade {
                     clearBleeding: this.shouldClearBleeding(formValue),
                     symptoms,
                     clearSymptomCategories,
-                    fertilitySignal: this.buildFertilitySignalPayload(formValue),
+                    fertilitySignal,
+                    clearFertilitySignal,
                 })
                 .pipe(
                     finalize(() => {
@@ -417,7 +420,7 @@ export class CycleTrackingFacade {
                     }),
                 ),
         );
-        this.applySavedDay(day);
+        this.applySavedDay(day, clearFertilitySignal);
         await this.refreshPredictionsAsync();
     }
 
@@ -438,7 +441,7 @@ export class CycleTrackingFacade {
         );
     }
 
-    private applySavedDay(day: CycleLogDay): void {
+    private applySavedDay(day: CycleLogDay, clearFertilitySignal: boolean): void {
         const current = this.cycle();
         if (current === null) {
             return;
@@ -454,7 +457,9 @@ export class CycleTrackingFacade {
             symptoms: [...current.symptoms.filter(symptom => toCycleDateKey(symptom.date) !== dayDateKey), ...day.symptoms],
             fertilitySignals:
                 day.fertilitySignal === null || day.fertilitySignal === undefined
-                    ? current.fertilitySignals
+                    ? clearFertilitySignal
+                        ? current.fertilitySignals.filter(fertilitySignal => toCycleDateKey(fertilitySignal.date) !== dayDateKey)
+                        : current.fertilitySignals
                     : [
                           ...current.fertilitySignals.filter(fertilitySignal => toCycleDateKey(fertilitySignal.date) !== dayDateKey),
                           day.fertilitySignal,
@@ -478,6 +483,16 @@ export class CycleTrackingFacade {
         }
 
         return existingEntries.some(entry => entry.type !== formValue.bleedingType);
+    }
+
+    private shouldClearFertilitySignal(fertilitySignal: FertilitySignalPayload | null): boolean {
+        const editingDate = this.editingDayDate();
+        if (editingDate === null || fertilitySignal !== null) {
+            return false;
+        }
+
+        const editingDateKey = toCycleDateKey(editingDate);
+        return this.fertilitySignals().some(fertilitySignalItem => toCycleDateKey(fertilitySignalItem.date) === editingDateKey);
     }
 
     public editDay(date: string): void {

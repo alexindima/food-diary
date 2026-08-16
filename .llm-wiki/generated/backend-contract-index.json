@@ -107158,7 +107158,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.DayCommands.cs",
       "isTest": true,
-      "referenceCount": 9
+      "referenceCount": 10
     },
     {
       "contract": "UpsertCycleDayCommand",
@@ -107262,7 +107262,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 4
     },
     {
       "contract": "UpsertCycleFactorCommand",

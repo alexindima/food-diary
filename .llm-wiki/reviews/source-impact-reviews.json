@@ -162,17 +162,17 @@
     {
       "pageId": "workflow-api-compatibility",
       "pagePath": ".llm-wiki/workflows/api-compatibility.md",
-      "pageSha256": "037cc1091ca997ebc790af65de373c685931315349afb4750800c31f49bd7245",
+      "pageSha256": "e4d03f5ab9a2c80c857c2aa064ee82dfe7bc9fab9a91fee0fd1e3392e79a0e92",
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "77fbfc8254ed3f36740524e2e8f2fa09edb96cdcab0d7e33ed763c33f0cca0ee"
+          "sha256": "095621737b72abb2a59aaaae5ae5e58f2330985f376e5a51002f9e48e4f74b69"
         }
       ],
-      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
+      "reason": "Reviewed the additive clearFertilitySignal HTTP contract, regenerated OpenAPI schema, date-scoped aggregate deletion, preservation of bleeding and symptoms, optional-default compatibility, focused and full regression evidence, and generated contract/domain indexes.",
       "baseRef": "HEAD",
-      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
-      "reviewedAtUtc": "2026-08-16T16:34:50.2477985Z"
+      "gitHead": "247db76dfc46fd39ae6b6b24bff3e7397ea7ce78",
+      "reviewedAtUtc": "2026-08-16T21:17:20.0560487Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "5296534543549a206be1d4d807806abc7ef0ca77ccb32f90ac72cb98eb2bdf4e"
+          "sha256": "2bd74ca793a3e84b7a403c85664b53f3211609677b0f2ffdc25be6a36df51368"
         }
       ],
-      "reason": "Reviewed additive symptom-category clearing contract, domain invariant, privacy lifecycle, focused coverage, full HTTP integration, and frontend verification.",
+      "reason": "Reviewed the additive clearFertilitySignal HTTP contract, regenerated OpenAPI schema, date-scoped aggregate deletion, preservation of bleeding and symptoms, optional-default compatibility, focused and full regression evidence, and generated contract/domain indexes.",
       "baseRef": "HEAD",
-      "gitHead": "446c78716b4b3d00d96ecdcaf1275400d2f6187b",
-      "reviewedAtUtc": "2026-08-16T18:01:04.5991635Z"
+      "gitHead": "247db76dfc46fd39ae6b6b24bff3e7397ea7ce78",
+      "reviewedAtUtc": "2026-08-16T21:17:20.7418237Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -446,13 +446,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "2702417df12156e24a7acf3574abc0f08faf4dc943ba206edee1961243141ffb"
+          "sha256": "b8b024a611fb4f9e8c7592fff15dc5b9f9c6b0a56bf4f9cf2b6254d652cb4d55"
         }
       ],
-      "reason": "Reviewed additive symptom-category clearing contract, domain invariant, privacy lifecycle, focused coverage, full HTTP integration, and frontend verification.",
+      "reason": "Reviewed the additive clearFertilitySignal HTTP contract, regenerated OpenAPI schema, date-scoped aggregate deletion, preservation of bleeding and symptoms, optional-default compatibility, focused and full regression evidence, and generated contract/domain indexes.",
       "baseRef": "HEAD",
-      "gitHead": "446c78716b4b3d00d96ecdcaf1275400d2f6187b",
-      "reviewedAtUtc": "2026-08-16T18:01:04.8672748Z"
+      "gitHead": "247db76dfc46fd39ae6b6b24bff3e7397ea7ce78",
+      "reviewedAtUtc": "2026-08-16T21:17:21.1871392Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "e8c223af3c735244c1ef0ef0be0e989a973ce9a9bb1bff339818e6a55ba48034"
+          "sha256": "6803193a451f3be6d9afb4720e269602e48b3aec0829c35f5fffba94155146f2"
         }
       ],
-      "reason": "Reviewed additive symptom-category clearing contract, domain invariant, privacy lifecycle, focused coverage, full HTTP integration, and frontend verification.",
+      "reason": "Reviewed the formatting-only facade change after Prettier, refreshed quality metrics, and reconfirmed that scoped fertility deletion behavior, tests, contracts, privacy boundaries, and risk conclusions are unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "446c78716b4b3d00d96ecdcaf1275400d2f6187b",
-      "reviewedAtUtc": "2026-08-16T18:01:05.2895553Z"
+      "gitHead": "247db76dfc46fd39ae6b6b24bff3e7397ea7ce78",
+      "reviewedAtUtc": "2026-08-16T21:34:06.3360472Z"
     },
     {
       "pageId": "workflow-release-readiness",
