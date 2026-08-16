@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1437,
+    "candidateFields": 1443,
     "credential": 152,
     "identity": 153,
-    "health": 636,
+    "health": 642,
     "financial": 199,
     "privateContent": 297,
-    "boundaryFiles": 182,
+    "boundaryFiles": 183,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 1
   },
@@ -2525,6 +2525,13 @@
     },
     {
       "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "FoodDiary.Application.Abstractions/Cycles/Models/MenstrualEpisodeReadModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
       "name": "Weight",
       "type": "int",
       "path": "FoodDiary.Application.Abstractions/DailyAdvices/Models/DailyAdviceReadModel.cs",
@@ -3652,6 +3659,13 @@
     },
     {
       "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommand.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
       "name": "AverageCycleLength",
       "type": "int?",
       "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
@@ -3753,6 +3767,13 @@
       "name": "CycleProfileId",
       "type": "Guid",
       "path": "FoodDiary.Application.Cycles/Models/FertilitySignalModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "FoodDiary.Application.Cycles/Models/MenstrualEpisodeModel.cs",
       "line": 7
     },
     {
@@ -4929,7 +4950,7 @@
       "name": "AverageCycleLength",
       "type": "int",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 21
+      "line": 22
     },
     {
       "category": "health",
@@ -5042,6 +5063,20 @@
       "type": "CycleProfile",
       "path": "FoodDiary.Domain/Entities/Tracking/FertilitySignal.cs",
       "line": 16
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "CycleProfileId",
+      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "CycleProfile",
+      "type": "CycleProfile",
+      "path": "FoodDiary.Domain/Entities/Tracking/MenstrualEpisode.cs",
+      "line": 14
     },
     {
       "category": "health",
@@ -6028,6 +6063,13 @@
       "name": "CycleProfileId",
       "type": "Guid",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/FertilitySignalHttpResponse.cs",
+      "line": 5
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
       "line": 5
     },
     {
@@ -9248,7 +9290,7 @@
       "name": "Notes",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 28
+      "line": 29
     },
     {
       "category": "privateContent",
@@ -10541,6 +10583,13 @@
         "privateContent"
       ],
       "fieldCount": 2
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/MenstrualEpisodeHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Dashboard/Responses/DailyAdviceHttpResponse.cs",

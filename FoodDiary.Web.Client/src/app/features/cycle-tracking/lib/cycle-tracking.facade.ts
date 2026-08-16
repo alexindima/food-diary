@@ -326,7 +326,15 @@ export class CycleTrackingFacade {
             return;
         }
 
-        this.cycle.update(current => (current === null ? refreshedCycle : { ...current, predictions: refreshedCycle.predictions }));
+        this.cycle.update(current =>
+            current === null
+                ? refreshedCycle
+                : {
+                      ...current,
+                      menstrualEpisodes: refreshedCycle.menstrualEpisodes,
+                      predictions: refreshedCycle.predictions,
+                  },
+        );
     }
 
     private applySavedDay(day: CycleLogDay): void {
@@ -513,6 +521,20 @@ export class CycleTrackingFacade {
                 };
                 this.cycle.set(updatedCycle);
                 this.loadNutritionSummary(updatedCycle);
+            });
+    }
+
+    public confirmPeriodStart(date: string): void {
+        const currentCycle = this.cycle();
+        if (currentCycle === null) {
+            return;
+        }
+
+        this.cyclesService
+            .confirmPeriodStart(currentCycle.id, new Date(date).toISOString())
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(cycle => {
+                this.cycle.set(cycle);
             });
     }
 

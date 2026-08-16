@@ -177,6 +177,17 @@ describe('CyclesService mutations', () => {
         req.flush(null);
     });
 
+    it('should confirm a period start', () => {
+        service.confirmPeriodStart('c-1', '2026-03-05T00:00:00.000Z').subscribe(cycle => {
+            expect(cycle).toEqual(MOCK_CYCLE);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/c-1/period-start`);
+        expect(req.request.method).toBe('PUT');
+        expect(req.request.body).toEqual({ date: '2026-03-05T00:00:00.000Z' });
+        req.flush(MOCK_CYCLE);
+    });
+
     it('should upsert cycle factor', () => {
         const payload: UpsertCycleFactorPayload = {
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,

@@ -509,6 +509,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ["symptomsCount"] = root.GetProperty("symptoms").GetArrayLength(),
             ["factorsCount"] = root.GetProperty("factors").GetArrayLength(),
             ["fertilitySignalsCount"] = root.GetProperty("fertilitySignals").GetArrayLength(),
+            ["menstrualEpisodesCount"] = root.GetProperty("menstrualEpisodes").GetArrayLength(),
             ["predictionKeys"] = ToJsonArray(predictions.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
         };
     }

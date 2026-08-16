@@ -8,6 +8,14 @@
             >
                 {{ item().badgeLabelKey | translate }}
             </div>
+            @if (item().isPeriodStart) {
+                <div class="fd-ui-pill fd-ui-pill--compact fd-ui-pill--secondary fd-ui-meta-text">
+                    {{
+                        (item().isPeriodStartConfirmed ? 'CYCLE_TRACKING.PERIOD_START_CONFIRMED' : 'CYCLE_TRACKING.PERIOD_START_INFERRED')
+                            | translate
+                    }}
+                </div>
+            }
             <fd-ui-button
                 type="button"
                 size="sm"
@@ -17,6 +25,17 @@
                 [ariaLabel]="'CYCLE_TRACKING.EDIT_DAY' | translate"
                 (click)="editDay.emit(item().date)"
             />
+            @if (item().isPeriodStart && !item().isPeriodStartConfirmed) {
+                <fd-ui-button
+                    type="button"
+                    size="sm"
+                    fill="text"
+                    variant="secondary"
+                    icon="check_circle"
+                    [ariaLabel]="'CYCLE_TRACKING.CONFIRM_PERIOD_START' | translate"
+                    (click)="confirmPeriodStart.emit(item().date)"
+                />
+            }
             <fd-ui-button
                 type="button"
                 size="sm"

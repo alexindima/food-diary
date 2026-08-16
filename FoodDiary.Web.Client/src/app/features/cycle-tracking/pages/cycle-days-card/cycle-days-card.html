@@ -11,6 +11,7 @@
                     [isClearing]="clearingDate() === item.date"
                     (editDay)="editDay.emit($event)"
                     (clearDay)="clearDay.emit($event)"
+                    (confirmPeriodStart)="confirmPeriodStart.emit($event)"
                 />
             }
         </div>

@@ -25,6 +25,7 @@ public static class CycleHttpResponseMappings {
                 model.Symptoms.ToHttpResponseList(ToHttpResponse),
                 model.Factors.ToHttpResponseList(ToHttpResponse),
                 model.FertilitySignals.ToHttpResponseList(ToHttpResponse),
+                (model.MenstrualEpisodes ?? []).ToHttpResponseList(ToHttpResponse),
                 model.Predictions is null
                     ? null
                     : new CyclePredictionsHttpResponse(
@@ -117,5 +118,16 @@ public static class CycleHttpResponseMappings {
                     model.CervicalFluid,
                     model.HadSex,
                     model.Notes);
+    }
+
+    extension(MenstrualEpisodeModel model) {
+        public MenstrualEpisodeHttpResponse ToHttpResponse() =>
+            new(
+                model.Id,
+                model.CycleProfileId,
+                model.StartDate,
+                model.EndDate,
+                (int)model.Status,
+                model.ExcludedFromPredictions);
     }
 }

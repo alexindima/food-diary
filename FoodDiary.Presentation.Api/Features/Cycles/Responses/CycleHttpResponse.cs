@@ -18,4 +18,5 @@ public sealed record CycleHttpResponse(
     IReadOnlyCollection<CycleSymptomEntryHttpResponse> Symptoms,
     IReadOnlyCollection<CycleFactorHttpResponse> Factors,
     IReadOnlyCollection<FertilitySignalHttpResponse> FertilitySignals,
+    IReadOnlyCollection<MenstrualEpisodeHttpResponse> MenstrualEpisodes,
     CyclePredictionsHttpResponse? Predictions);

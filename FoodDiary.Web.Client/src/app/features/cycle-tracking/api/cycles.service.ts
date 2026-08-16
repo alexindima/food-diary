@@ -46,6 +46,12 @@ export class CyclesService extends ApiService {
         );
     }
 
+    public confirmPeriodStart(cycleProfileId: string, date: string): Observable<CycleResponse> {
+        return this.put<CycleResponse>(`${cycleProfileId}/period-start`, { date }).pipe(
+            catchError((error: unknown) => rethrowApiError('Period start confirmation error', error)),
+        );
+    }
+
     public upsertFactor(cycleProfileId: string, payload: UpsertCycleFactorPayload): Observable<CycleResponse> {
         return this.put<CycleResponse>(`${cycleProfileId}/factors`, payload).pipe(
             map(cycle => cycle),

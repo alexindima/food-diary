@@ -69,6 +69,8 @@ export type CycleDayViewModel = {
     notes: string | null;
     accentColor: string;
     badgeLabelKey: string;
+    isPeriodStart?: boolean;
+    isPeriodStartConfirmed?: boolean;
 };
 
 export type CycleDaySignalItemViewModel = {

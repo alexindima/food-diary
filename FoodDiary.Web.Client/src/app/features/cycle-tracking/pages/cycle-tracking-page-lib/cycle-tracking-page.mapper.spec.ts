@@ -312,6 +312,38 @@ describe('cycle tracking day item mapper', () => {
         });
     });
 
+    it('marks inferred and confirmed period starts', () => {
+        const inferred = buildCycleDayItems([BLEEDING_ENTRY], [], [], {
+            locale: 'en-US',
+            menstrualEpisodes: [
+                {
+                    id: '',
+                    cycleProfileId: 'cycle-1',
+                    startDate: BLEEDING_ENTRY.date,
+                    endDate: BLEEDING_ENTRY.date,
+                    status: 0,
+                    excludedFromPredictions: false,
+                },
+            ],
+        });
+        const confirmed = buildCycleDayItems([BLEEDING_ENTRY], [], [], {
+            locale: 'en-US',
+            menstrualEpisodes: [
+                {
+                    id: 'episode-1',
+                    cycleProfileId: 'cycle-1',
+                    startDate: BLEEDING_ENTRY.date,
+                    endDate: BLEEDING_ENTRY.date,
+                    status: 1,
+                    excludedFromPredictions: false,
+                },
+            ],
+        });
+
+        expect(inferred[0]).toMatchObject({ isPeriodStart: true, isPeriodStartConfirmed: false });
+        expect(confirmed[0]).toMatchObject({ isPeriodStart: true, isPeriodStartConfirmed: true });
+    });
+
     it('builds care prompts for severe pain, heavy flow, and prolonged bleeding', () => {
         const bleedingEntries = Array.from({ length: PROLONGED_BLEEDING_DAYS }, (_, index): BleedingEntry => {
             const date = new Date(Date.UTC(CARE_PROMPT_YEAR, APRIL_MONTH_INDEX, index + 1)).toISOString();

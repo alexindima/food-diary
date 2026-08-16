@@ -20,4 +20,5 @@ public sealed record CycleModel(
     IReadOnlyCollection<CycleSymptomEntryModel> Symptoms,
     IReadOnlyCollection<CycleFactorModel> Factors,
     IReadOnlyCollection<FertilitySignalModel> FertilitySignals,
-    CyclePredictionsModel? Predictions);
+    CyclePredictionsModel? Predictions,
+    IReadOnlyCollection<MenstrualEpisodeModel>? MenstrualEpisodes = null);

@@ -3,19 +3,20 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
 namespace FoodDiary.Infrastructure.Migrations
 {
     [DbContext(typeof(FoodDiaryDbContext))]
-    [ExcludeFromCodeCoverage]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260816013354_AddCycleMenstrualEpisodes")]
+    partial class AddCycleMenstrualEpisodes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

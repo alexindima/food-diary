@@ -19,4 +19,5 @@ public sealed record CycleProfileReadModel(
     IReadOnlyCollection<BleedingEntryReadModel> BleedingEntries,
     IReadOnlyCollection<CycleSymptomEntryReadModel> SymptomEntries,
     IReadOnlyCollection<CycleFactorReadModel> Factors,
-    IReadOnlyCollection<FertilitySignalReadModel> FertilitySignals);
+    IReadOnlyCollection<FertilitySignalReadModel> FertilitySignals,
+    IReadOnlyCollection<MenstrualEpisodeReadModel>? MenstrualEpisodes = null);

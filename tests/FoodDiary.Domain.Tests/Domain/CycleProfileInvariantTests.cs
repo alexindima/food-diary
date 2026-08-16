@@ -568,4 +568,33 @@ public class CycleProfileInvariantTests {
         Assert.Single(profile.SymptomEntries);
         Assert.Single(profile.FertilitySignals);
     }
+
+    [Fact]
+    public void UpsertBleedingEntry_GroupsOneUnknownDayIntoOneInferredEpisode() {
+        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), start);
+
+        profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
+        profile.UpsertBleedingEntry(start.AddDays(2), BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null);
+
+        MenstrualEpisode episode = Assert.Single(profile.MenstrualEpisodes);
+        Assert.Equal(start, episode.StartDate);
+        Assert.Equal(start.AddDays(2), episode.EndDate);
+        Assert.Equal(MenstrualEpisodeStatus.Inferred, episode.Status);
+    }
+
+    [Fact]
+    public void ConfirmPeriodStart_ReplacesOverlappingInferenceAndIsIdempotent() {
+        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), start);
+        profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
+        profile.UpsertBleedingEntry(start.AddDays(1), BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null);
+
+        MenstrualEpisode first = profile.ConfirmPeriodStart(start);
+        MenstrualEpisode second = profile.ConfirmPeriodStart(start);
+
+        Assert.Same(first, second);
+        Assert.Equal(MenstrualEpisodeStatus.Confirmed, Assert.Single(profile.MenstrualEpisodes).Status);
+        Assert.Equal(start.AddDays(1), first.EndDate);
+    }
 }

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
@@ -59,6 +60,11 @@ public static class CycleHttpMappings {
                     request.EndDate,
                     request.Notes,
                     request.ClearNotes);
+    }
+
+    extension(ConfirmPeriodStartHttpRequest request) {
+        public ConfirmPeriodStartCommand ToCommand(Guid userId, Guid cycleProfileId) =>
+            new(userId, cycleProfileId, request.Date);
     }
 
     extension(BleedingLogHttpModel model) {

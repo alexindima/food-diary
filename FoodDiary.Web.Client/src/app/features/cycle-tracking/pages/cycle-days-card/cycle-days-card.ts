@@ -18,4 +18,5 @@ export class CycleDaysCardComponent {
     public readonly clearingDate = input<string | null>(null);
     public readonly editDay = output<string>();
     public readonly clearDay = output<string>();
+    public readonly confirmPeriodStart = output<string>();
 }

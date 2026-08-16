@@ -196,6 +196,7 @@
       "isOnboardingComplete",
       "isRegular",
       "lutealLength",
+      "menstrualEpisodes",
       "mode",
       "notes",
       "predictions",
@@ -211,6 +212,7 @@
     "symptomsCount": 0,
     "factorsCount": 0,
     "fertilitySignalsCount": 0,
+    "menstrualEpisodesCount": 0,
     "predictionKeys": [
       "algorithmVersion",
       "completedCycleCount",

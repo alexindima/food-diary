@@ -18,4 +18,5 @@ export class CycleDayItemComponent {
     public readonly isClearing = input(false);
     public readonly editDay = output<string>();
     public readonly clearDay = output<string>();
+    public readonly confirmPeriodStart = output<string>();
 }

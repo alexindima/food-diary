@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 149,
     "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 17,
+    "criticalSymbolsWithoutTestReferences": 19,
     "explicitDebtMarkers": 3
   },
   "projectDependencyViolations": [],
@@ -1907,6 +1907,10 @@
         },
         {
           "name": "clearDay",
+          "type": "string"
+        },
+        {
+          "name": "confirmPeriodStart",
           "type": "string"
         }
       ],
@@ -5221,10 +5225,26 @@
   ],
   "criticalSymbolsWithoutTestReferences": [
     {
+      "name": "ConfirmPeriodStartCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandHandler.cs",
+      "line": 14,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
       "name": "BillingWebhookEventValidator",
       "role": "Validator",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
       "line": 6,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "ConfirmPeriodStartCommandValidator",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
+      "line": 4,
       "testReferenceCount": 0,
       "testReferences": []
     },

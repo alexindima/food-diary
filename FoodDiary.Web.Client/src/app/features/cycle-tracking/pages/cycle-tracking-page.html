@@ -293,6 +293,7 @@
                 [clearingDate]="clearingDayDate()"
                 (editDay)="editDay($event)"
                 (clearDay)="clearDay($event)"
+                (confirmPeriodStart)="confirmPeriodStart($event)"
             />
 
             <fd-cycle-nutrition-summary-card [isLoading]="isLoadingNutritionSummary()" [summary]="nutritionSummaryView()" />

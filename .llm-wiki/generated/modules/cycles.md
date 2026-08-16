@@ -39,6 +39,7 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
 - `GET /api/v{version:apiVersion}/cycles/current/nutrition-summary`
 - `POST /api/v{version:apiVersion}/cycles`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start`
 - `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors`
 
@@ -48,15 +49,15 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 11
+- Public contract files: 12
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 11
+- Public contract types: 12
 - Interfaces: 4
-- DTO/read-model/projection types: 5
+- DTO/read-model/projection types: 6
 - Enums: 0
 - Exported repository-shaped contracts: 4
 - Contracts referencing domain entities: 2
@@ -71,6 +72,7 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
 - `record CycleProfileReadModel`
 - `record CycleSymptomEntryReadModel`
 - `record FertilitySignalReadModel`
+- `record MenstrualEpisodeReadModel`
 
 ## Focused Tests
 

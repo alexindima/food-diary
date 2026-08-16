@@ -24,7 +24,8 @@ public static class CycleMappings {
             profile.SymptomEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Category).Select(entry => entry.ToModel()).ToList(),
             profile.Factors.OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type).Select(factor => factor.ToModel()).ToList(),
             profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList(),
-            predictions);
+            predictions,
+            BuildEpisodeModels(profile));
 
     public static CycleModel ToModel(this CycleProfile profile, CyclePredictionsModel? predictions = null) =>
         new(
@@ -45,7 +46,45 @@ public static class CycleMappings {
             profile.SymptomEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Category).Select(entry => entry.ToModel()).ToList(),
             profile.Factors.OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type).Select(factor => factor.ToModel()).ToList(),
             profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList(),
-            predictions);
+            predictions,
+            profile.MenstrualEpisodes.OrderBy(episode => episode.StartDate).Select(episode => episode.ToModel()).ToList());
+
+    private static IReadOnlyCollection<MenstrualEpisodeModel> BuildEpisodeModels(CycleProfileReadModel profile) {
+        var persisted = new List<MenstrualEpisodeModel>(
+            (profile.MenstrualEpisodes ?? []).Select(episode => episode.ToModel()));
+        DateTime[] bleedingDates = [.. profile.BleedingEntries
+            .Where(entry => entry.Type == global::FoodDiary.Domain.Enums.BleedingType.Bleeding)
+            .Select(entry => CycleProfile.NormalizeDate(entry.Date))
+            .Distinct()
+            .Order()];
+
+        for (int index = 0; index < bleedingDates.Length;) {
+            DateTime start = bleedingDates[index];
+            DateTime end = start;
+            while (++index < bleedingDates.Length && (bleedingDates[index] - end).Days <= 2) {
+                end = bleedingDates[index];
+            }
+
+            if (!persisted.Any(episode => episode.Status == global::FoodDiary.Domain.Enums.MenstrualEpisodeStatus.Confirmed &&
+                episode.StartDate >= start.AddDays(-2) && episode.StartDate <= end.AddDays(2))) {
+                persisted.Add(new MenstrualEpisodeModel(
+                    Guid.Empty,
+                    profile.Id,
+                    start,
+                    end,
+                    global::FoodDiary.Domain.Enums.MenstrualEpisodeStatus.Inferred,
+                    ExcludedFromPredictions: false));
+            }
+        }
+
+        return persisted.OrderBy(episode => episode.StartDate).ToList();
+    }
+
+    public static MenstrualEpisodeModel ToModel(this MenstrualEpisodeReadModel episode) =>
+        new(episode.Id, episode.CycleProfileId, episode.StartDate, episode.EndDate, episode.Status, episode.ExcludedFromPredictions);
+
+    public static MenstrualEpisodeModel ToModel(this MenstrualEpisode episode) =>
+        new(episode.Id.Value, episode.CycleProfileId.Value, episode.StartDate, episode.EndDate, episode.Status, episode.ExcludedFromPredictions);
 
     public static BleedingEntryModel ToModel(this BleedingEntryReadModel entry) =>
         new(

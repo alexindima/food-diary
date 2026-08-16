@@ -122,7 +122,10 @@ export class CycleTrackingPageComponent {
     protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
     protected readonly nutritionSummaryView = computed(() => buildCycleNutritionSummaryView(this.nutritionSummary(), this.appLocale()));
     protected readonly dayItems = computed(() =>
-        buildCycleDayItems(this.bleedingEntries(), this.symptoms(), this.fertilitySignals(), this.appLocale()),
+        buildCycleDayItems(this.bleedingEntries(), this.symptoms(), this.fertilitySignals(), {
+            locale: this.appLocale(),
+            menstrualEpisodes: this.cycle()?.menstrualEpisodes ?? [],
+        }),
     );
     protected readonly factorItems = computed(() => buildCycleFactorItems(this.factors(), this.appLocale()));
     protected readonly modeOptions = computed<Array<FdUiSelectOption<CycleTrackingMode>>>(() => {
@@ -217,6 +220,10 @@ export class CycleTrackingPageComponent {
 
     protected clearDay(date: string): void {
         this.facade.clearDay(date);
+    }
+
+    protected confirmPeriodStart(date: string): void {
+        this.facade.confirmPeriodStart(date);
     }
 
     protected editFactor(factorId: string): void {

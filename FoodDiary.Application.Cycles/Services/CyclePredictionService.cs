@@ -26,7 +26,7 @@ public static class CyclePredictionService {
         return CalculatePredictions(
             profile.Confidence,
             profile.ShowFertilityEstimates,
-            profile.BleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date),
+            ResolveEpisodeStarts(profile.BleedingEntries, profile.MenstrualEpisodes ?? []),
             currentDate ?? (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
     }
 
@@ -40,7 +40,7 @@ public static class CyclePredictionService {
         return CalculatePredictions(
             profile.Confidence,
             profile.ShowFertilityEstimates,
-            profile.BleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date),
+            ResolveEpisodeStarts(profile),
             currentDate ?? (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
     }
 
@@ -124,6 +124,34 @@ public static class CyclePredictionService {
         }
 
         return [.. starts];
+    }
+
+    private static IEnumerable<DateTime> ResolveEpisodeStarts(
+        IEnumerable<BleedingEntryReadModel> bleedingEntries,
+        IEnumerable<MenstrualEpisodeReadModel> persistedEpisodes) {
+        DateTime[] confirmed = [.. persistedEpisodes
+            .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && !episode.ExcludedFromPredictions)
+            .Select(static episode => episode.StartDate)];
+        DateTime[] inferred = BuildInferredEpisodeStarts(
+            bleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date));
+        return MergeEpisodeStarts(confirmed, inferred);
+    }
+
+    private static IEnumerable<DateTime> ResolveEpisodeStarts(CycleProfile profile) {
+        DateTime[] confirmed = [.. profile.MenstrualEpisodes
+            .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && !episode.ExcludedFromPredictions)
+            .Select(static episode => episode.StartDate)];
+        DateTime[] inferred = BuildInferredEpisodeStarts(
+            profile.BleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date));
+        return MergeEpisodeStarts(confirmed, inferred);
+    }
+
+    private static DateTime[] MergeEpisodeStarts(IEnumerable<DateTime> confirmedStarts, IEnumerable<DateTime> inferredStarts) {
+        DateTime[] confirmed = [.. confirmedStarts.Select(NormalizeDate).Distinct()];
+        return [.. confirmed
+            .Concat(inferredStarts.Select(NormalizeDate).Where(inferred => !confirmed.Any(confirmedStart => Math.Abs((confirmedStart - inferred).Days) <= 2)))
+            .Distinct()
+            .Order()];
     }
 
     private static int Median(IReadOnlyList<int> sortedValues) {

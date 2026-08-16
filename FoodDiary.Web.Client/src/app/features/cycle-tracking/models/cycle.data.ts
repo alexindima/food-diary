@@ -37,6 +37,8 @@ export const CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION = 3;
 export const CYCLE_FACTOR_TYPE_POSTPARTUM = 4;
 export const CYCLE_FACTOR_TYPE_PERIMENOPAUSE = 5;
 export const CYCLE_FACTOR_TYPE_NO_PERIOD = 6;
+export const MENSTRUAL_EPISODE_STATUS_INFERRED = 0;
+export const MENSTRUAL_EPISODE_STATUS_CONFIRMED = 1;
 
 export type CycleTrackingMode =
     | typeof CYCLE_TRACKING_MODE_PERIOD_TRACKING
@@ -114,6 +116,15 @@ export type FertilitySignal = {
     notes?: string | null;
 };
 
+export type MenstrualEpisode = {
+    id: string;
+    cycleProfileId: string;
+    startDate: string;
+    endDate?: string | null;
+    status: number;
+    excludedFromPredictions: boolean;
+};
+
 export type CyclePredictions = {
     nextPeriodStartFrom?: string | null;
     nextPeriodStartTo?: string | null;
@@ -162,6 +173,7 @@ export type CycleResponse = {
     symptoms: CycleSymptomEntry[];
     factors: CycleFactor[];
     fertilitySignals: FertilitySignal[];
+    menstrualEpisodes?: MenstrualEpisode[];
     predictions?: CyclePredictions | null;
 };
 

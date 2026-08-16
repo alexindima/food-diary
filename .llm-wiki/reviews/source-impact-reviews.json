@@ -181,13 +181,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "a3d292566b16a895ac7063075fe702f6559cdc29c18fd6828c06f8ec7a59daaf"
+          "sha256": "09d5a3642751c17e464b314a5b69728fc1853bb3b6f7bd9c9954e33523e9e216"
         }
       ],
-      "reason": "Reviewed frontend indexes after removing the redundant profile status badge and mapper, repositioning completeness, and increasing the avatar to 80px; no cross-module behavior changed.",
+      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
       "baseRef": "HEAD",
-      "gitHead": "77a40c565b61992d36e4296ae18748bb6ad49832",
-      "reviewedAtUtc": "2026-08-15T21:58:50.7422066Z"
+      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
+      "reviewedAtUtc": "2026-08-16T11:39:32.3246277Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "62f037c49ffe444a96dd9c11b525ab400c4e1347511ca054a7e657e3b4a34b6c"
+          "sha256": "a26a152d0f11a2312586ef680694436bc70091967773416f6c1d0a7823c6bf15"
         }
       ],
-      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
+      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
       "baseRef": "HEAD",
-      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
-      "reviewedAtUtc": "2026-08-16T00:42:15.9821858Z"
+      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
+      "reviewedAtUtc": "2026-08-16T11:39:32.8389476Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -458,13 +458,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "e050965c70ef3b46fb8251758ef80bc78d509af50b469933b9208b63bfc0bf5f"
+          "sha256": "ce69b11d91df663d654d31bcd9ebe7bfac5f181f7721827f7693b619b0464c79"
         }
       ],
-      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
+      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
       "baseRef": "HEAD",
-      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
-      "reviewedAtUtc": "2026-08-16T00:42:16.3408437Z"
+      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
+      "reviewedAtUtc": "2026-08-16T11:39:33.1197033Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -749,13 +749,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "d1a5c78d59f54dedfb2c3e0eaf4ddfa75faee0e8f635a502bdc944b5e0c76d37"
+          "sha256": "c3cc61115c63ea5b068ec9699020742d92c4692d048b6935fdce01baffce7210"
         }
       ],
-      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
+      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
       "baseRef": "HEAD",
-      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
-      "reviewedAtUtc": "2026-08-16T00:42:17.1748382Z"
+      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
+      "reviewedAtUtc": "2026-08-16T11:39:33.8043362Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -798,13 +798,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "81a113740c8e241b893b0f6aebd1256d36a61ccd3175b60d0b88d21ff63504a7"
+          "sha256": "0270fdd5c431a5e334b5789821fde4a9fe36150b4a20b40276d7c69d4768e0a6"
         }
       ],
-      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
+      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
       "baseRef": "HEAD",
-      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
-      "reviewedAtUtc": "2026-08-16T01:07:12.7607038Z"
+      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
+      "reviewedAtUtc": "2026-08-16T11:39:34.2543727Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1005,17 +1005,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "79d4c13a7baf7f5306bcf882392d89deb070a96a9cbb8b09107e39c7a211f5a4"
+          "sha256": "32ef34d3ed9b88240564046b6f7c99026d3f986311c8eb35e79c0fd37b92fb2a"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "5c2fc7b450e99ccd669c1bbc3658abb9fbaaa22d088fde54f8d364f3dc2795c5"
+          "sha256": "cf44ed31db2c16cc00b1a31f1e92548b8173bb46503cd0db024536599af60c88"
         }
       ],
-      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
+      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
       "baseRef": "HEAD",
-      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
-      "reviewedAtUtc": "2026-08-16T00:42:18.2159634Z"
+      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
+      "reviewedAtUtc": "2026-08-16T11:39:35.1071966Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1103,13 +1103,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "79d4c13a7baf7f5306bcf882392d89deb070a96a9cbb8b09107e39c7a211f5a4"
+          "sha256": "32ef34d3ed9b88240564046b6f7c99026d3f986311c8eb35e79c0fd37b92fb2a"
         }
       ],
-      "reason": "Prediction V2 intentionally adds five response metadata fields, derives forecasts from inferred bleeding episode starts, updates frontend prediction states, focused tests, API snapshots, and verified additive compatibility with zero breaking changes.",
+      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
       "baseRef": "HEAD",
-      "gitHead": "e07cd5f4c4eabcae481c903b43a7bd6e09b435a8",
-      "reviewedAtUtc": "2026-08-16T00:42:16.8052023Z"
+      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
+      "reviewedAtUtc": "2026-08-16T11:39:33.4714652Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1118,13 +1118,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "3ffb8620496310b5267d15e6e1290c3e7eeba12f23ab247e72afa48cdae35c45"
+          "sha256": "f5ac08b7b6dd58868906a0cffcc47fcf7673c6ca7332f1557daad89d016dca20"
         }
       ],
-      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
       "baseRef": "HEAD",
-      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
-      "reviewedAtUtc": "2026-08-14T13:13:43.5954058Z"
+      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
+      "reviewedAtUtc": "2026-08-16T11:39:34.5985653Z"
     },
     {
       "pageId": "workflow.review-diff",

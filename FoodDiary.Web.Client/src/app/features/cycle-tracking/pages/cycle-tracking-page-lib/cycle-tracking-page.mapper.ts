@@ -24,6 +24,8 @@ import {
     type CycleSymptomEntry,
     type CycleTrackingMode,
     type FertilitySignal,
+    MENSTRUAL_EPISODE_STATUS_CONFIRMED,
+    type MenstrualEpisode,
     OVULATION_TEST_RESULT_NEGATIVE,
     OVULATION_TEST_RESULT_POSITIVE,
 } from '../../models/cycle.data';
@@ -145,8 +147,10 @@ export function buildCycleDayItems(
     bleedingEntries: BleedingEntry[],
     symptoms: CycleSymptomEntry[],
     fertilitySignals: FertilitySignal[],
-    locale: string,
+    localeOrOptions: string | { locale: string; menstrualEpisodes: MenstrualEpisode[] },
 ): CycleDayViewModel[] {
+    const locale = typeof localeOrOptions === 'string' ? localeOrOptions : localeOrOptions.locale;
+    const menstrualEpisodes = typeof localeOrOptions === 'string' ? [] : localeOrOptions.menstrualEpisodes;
     const dates = new Set([
         ...bleedingEntries.map(entry => entry.date),
         ...symptoms.map(symptom => symptom.date),
@@ -160,6 +164,7 @@ export function buildCycleDayItems(
             const dateKey = toDateKey(date);
             const fertilitySignal = fertilitySignals.find(signal => signal.date === date) ?? null;
             const hasBleeding = dayBleeding.some(entry => entry.type === BLEEDING_TYPE_BLEEDING);
+            const startEpisode = menstrualEpisodes.find(episode => toDateKey(episode.startDate) === dateKey);
             return {
                 date,
                 dateLabel: formatCycleDate(date, locale, FULL_DATE_OPTIONS),
@@ -172,6 +177,8 @@ export function buildCycleDayItems(
                     dayBleeding.find(entry => entry.notes !== null && entry.notes !== undefined)?.notes ?? fertilitySignal?.notes ?? null,
                 accentColor: hasBleeding ? PERIOD_DAY_ACCENT_COLOR : DEFAULT_DAY_ACCENT_COLOR,
                 badgeLabelKey: hasBleeding ? 'CYCLE_TRACKING.BADGE_PERIOD' : 'CYCLE_TRACKING.BADGE_TRACKED',
+                isPeriodStart: startEpisode !== undefined,
+                isPeriodStartConfirmed: startEpisode?.status === MENSTRUAL_EPISODE_STATUS_CONFIRMED,
             };
         });
 }

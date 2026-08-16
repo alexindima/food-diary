@@ -13,6 +13,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     private readonly List<BleedingEntry> _bleedingEntries = [];
     private readonly List<CycleSymptomEntry> _symptomEntries = [];
     private readonly List<FertilitySignal> _fertilitySignals = [];
+    private readonly List<MenstrualEpisode> _menstrualEpisodes = [];
 
     public UserId UserId { get; private set; }
     public CycleTrackingMode Mode { get; private set; }
@@ -31,6 +32,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     public IReadOnlyCollection<BleedingEntry> BleedingEntries => _bleedingEntries.AsReadOnly();
     public IReadOnlyCollection<CycleSymptomEntry> SymptomEntries => _symptomEntries.AsReadOnly();
     public IReadOnlyCollection<FertilitySignal> FertilitySignals => _fertilitySignals.AsReadOnly();
+    public IReadOnlyCollection<MenstrualEpisode> MenstrualEpisodes => _menstrualEpisodes.AsReadOnly();
 
     private CycleProfile() {
     }
@@ -113,6 +115,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
 
         var entry = BleedingEntry.Create(Id, normalizedDate, type, flow, painImpact, notes);
         _bleedingEntries.Add(entry);
+        ReconcileMenstrualEpisodes();
         Confidence = CalculateConfidence();
         SetModified();
         return entry;
@@ -188,6 +191,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         }
 
         Confidence = CalculateConfidence();
+        ReconcileMenstrualEpisodes();
         SetModified();
         return true;
     }
@@ -204,9 +208,60 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         }
 
         Confidence = CalculateConfidence();
+        ReconcileMenstrualEpisodes();
         SetModified();
         return true;
     }
+
+    public MenstrualEpisode ConfirmPeriodStart(DateTime date) {
+        DateTime normalizedDate = NormalizeDate(date);
+        MenstrualEpisode? existing = _menstrualEpisodes.FirstOrDefault(episode =>
+            episode.StartDate == normalizedDate && episode.Status == MenstrualEpisodeStatus.Confirmed);
+        if (existing is not null) {
+            return existing;
+        }
+
+        var episode = MenstrualEpisode.Create(
+            Id,
+            normalizedDate,
+            FindInferredEpisodeEnd(normalizedDate),
+            MenstrualEpisodeStatus.Confirmed);
+        _menstrualEpisodes.Add(episode);
+        ReconcileMenstrualEpisodes();
+        SetModified();
+        return episode;
+    }
+
+    public void ReconcileMenstrualEpisodes() {
+        _menstrualEpisodes.RemoveAll(episode => episode.Status == MenstrualEpisodeStatus.Inferred);
+        DateTime[] bleedingDates = [.. _bleedingEntries
+            .Where(entry => entry.Type == BleedingType.Bleeding)
+            .Select(entry => entry.Date)
+            .Distinct()
+            .Order()];
+
+        for (int index = 0; index < bleedingDates.Length;) {
+            DateTime start = bleedingDates[index];
+            DateTime end = start;
+            while (++index < bleedingDates.Length && (bleedingDates[index] - end).Days <= 2) {
+                end = bleedingDates[index];
+            }
+
+            bool overlapsConfirmed = _menstrualEpisodes.Any(episode =>
+                episode.Status == MenstrualEpisodeStatus.Confirmed &&
+                episode.StartDate >= start.AddDays(-2) &&
+                episode.StartDate <= end.AddDays(2));
+            if (!overlapsConfirmed) {
+                _menstrualEpisodes.Add(MenstrualEpisode.Create(Id, start, end, MenstrualEpisodeStatus.Inferred));
+            }
+        }
+    }
+
+    private DateTime? FindInferredEpisodeEnd(DateTime startDate) =>
+        _menstrualEpisodes
+            .Where(episode => episode.Status == MenstrualEpisodeStatus.Inferred && startDate >= episode.StartDate && startDate <= episode.EndDate)
+            .Select(episode => episode.EndDate)
+            .FirstOrDefault();
 
     public DateTime? GetLastBleedingStart() =>
         _bleedingEntries

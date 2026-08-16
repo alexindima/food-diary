@@ -50,10 +50,16 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
             .HasForeignKey(e => e.CycleProfileId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasMany(e => e.MenstrualEpisodes)
+            .WithOne(e => e.CycleProfile)
+            .HasForeignKey(e => e.CycleProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.Navigation(e => e.Factors).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.BleedingEntries).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.SymptomEntries).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.FertilitySignals).UsePropertyAccessMode(PropertyAccessMode.Field);
+        builder.Navigation(e => e.MenstrualEpisodes).UsePropertyAccessMode(PropertyAccessMode.Field);
 
         builder.HasIndex(e => e.UserId).IsUnique();
     }

@@ -4,10 +4,10 @@
     "components": 422,
     "componentsWithoutDirectSpecs": 128,
     "inputs": 1318,
-    "outputs": 409,
-    "apiCalls": 221,
+    "outputs": 411,
+    "apiCalls": 222,
     "templatesWithTranslations": 263,
-    "translationKeys": 1436,
+    "translationKeys": 1437,
     "consumerEdges": 959,
     "consumedComponents": 272,
     "unconsumedComponents": 149
@@ -919,6 +919,10 @@
         {
           "name": "clearDay",
           "type": "string"
+        },
+        {
+          "name": "confirmPeriodStart",
+          "type": "string"
         }
       ],
       "specPath": null
@@ -953,6 +957,10 @@
         },
         {
           "name": "clearDay",
+          "type": "string"
+        },
+        {
+          "name": "confirmPeriodStart",
           "type": "string"
         }
       ],
@@ -13341,9 +13349,21 @@
       "feature": "cycle-tracking",
       "method": "PUT",
       "responseType": "CycleResponse",
-      "urlExpression": "`${cycleProfileId}/factors`",
+      "urlExpression": "`${cycleProfileId}/period-start`",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
       "line": 50,
+      "publicMethod": "confirmPeriodStart",
+      "transport": "InheritedApiService",
+      "baseUrlExpression": "environment.apiUrls.cycles",
+      "resolvedUrlExpression": "environment.apiUrls.cycles/`${cycleProfileId}/period-start`"
+    },
+    {
+      "feature": "cycle-tracking",
+      "method": "PUT",
+      "responseType": "CycleResponse",
+      "urlExpression": "`${cycleProfileId}/factors`",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
+      "line": 56,
       "publicMethod": "upsertFactor",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -15771,6 +15791,7 @@
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-day-item.html",
       "keys": [
         "CYCLE_TRACKING.CLEAR_DAY",
+        "CYCLE_TRACKING.CONFIRM_PERIOD_START",
         "CYCLE_TRACKING.EDIT_DAY",
         "CYCLE_TRACKING.SYMPTOM_VALUE"
       ]
@@ -19490,6 +19511,7 @@
       ],
       "outputsHandled": [
         "clearDay",
+        "confirmPeriodStart",
         "editDay"
       ]
     },
@@ -19507,6 +19529,7 @@
       ],
       "outputsHandled": [
         "clearDay",
+        "confirmPeriodStart",
         "editDay"
       ]
     },
@@ -21671,7 +21694,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-day-item.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "ariaLabel",
         "fill",
