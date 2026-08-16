@@ -30,18 +30,20 @@ public sealed class ServerStatusService(TimeProvider timeProvider) : IServerStat
                 file.Exists,
                 file.Exists ? new DateTimeOffset(file.LastWriteTimeUtc) : null);
         })];
-        bool indexesStale = indexes.Any(index => !index.Exists);
-        string indexCheckSummary = indexesStale
+        bool indexFilesPresent = indexes.All(index => index.Exists);
+        string indexCheckSummary = !indexFilesPresent
             ? "One or more required generated indexes are missing."
-            : "Required indexes exist. Deep freshness is enforced by wiki verify, not the health endpoint.";
+            : "Required index files exist. Deep freshness was not checked by this endpoint.";
 
         return new ServerStatus(
             typeof(ServerStatusService).Assembly.GetName().Version?.ToString() ?? "unknown",
             repositoryRoot,
             gitHead,
             WikiAvailable: true,
-            indexesStale,
-            indexesStale ? DevelopmentMcpErrorCodes.IndexStale : "current",
+            indexFilesPresent,
+            DeepFreshness: "notChecked",
+            LastVerifiedCommit: gitHead,
+            indexFilesPresent ? "present" : DevelopmentMcpErrorCodes.IndexStale,
             indexCheckSummary,
             indexes,
             timeProvider.GetUtcNow());

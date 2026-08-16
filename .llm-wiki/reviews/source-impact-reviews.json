@@ -589,14 +589,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "dbcf35e7857f45555c71dd47abcf6dbbec48b355b0350ca91eb45210a3c69ba6"
+          "path": ".llm-wiki/tools/Build-LlmWikiBackendContractIndex.ps1",
+          "sha256": "06d8b1c42b3d3fda7f0cb3f07e3e4e56a4236c01e71a89cf20fc75983b5b1e5a"
         }
       ],
-      "reason": "CI now provisions TypeScript dependencies for cross-platform development MCP tests; Lighthouse collection keeps the existing five-route filesystem-report behavior while replacing vulnerable LHCI dependencies with current Lighthouse.",
+      "reason": "Backend contract generation now uses version-independent canonical JSON and byte-identical no-op suppression; the documented pipeline contract remains current.",
       "baseRef": "HEAD",
-      "gitHead": "2866636b16d0d4207e1b07ec0566bfe88edef01d",
-      "reviewedAtUtc": "2026-08-15T22:45:48.0880440Z"
+      "gitHead": "afb53803f513cf1435447035c4bfbd2cde9c7d63",
+      "reviewedAtUtc": "2026-08-16T00:13:41.2630847Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -786,13 +786,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "2274fadeb4d72916f016af8747fd18d0f9e72a82d44f7dff5d16dc92fcfba675"
+          "sha256": "bcfeefbde779a51f9fc63f24da58a4a14c6312ba50208a71cd2f0ca1d5cde1be"
         }
       ],
-      "reason": "Reviewed quality index after final Prettier formatting of the profile redesign and explicit-save regression fix; behavior and module boundaries are unchanged.",
+      "reason": "Development MCP partial context and deterministic JSON generation preserve the documented index pipeline, task workspace serialization, and quality-index contracts; affected pages remain current.",
       "baseRef": "HEAD",
-      "gitHead": "77a40c565b61992d36e4296ae18748bb6ad49832",
-      "reviewedAtUtc": "2026-08-15T22:13:34.6643223Z"
+      "gitHead": "afb53803f513cf1435447035c4bfbd2cde9c7d63",
+      "reviewedAtUtc": "2026-08-16T00:09:20.2185373Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -959,17 +959,17 @@
     {
       "pageId": "workflow-task-workspace",
       "pagePath": ".llm-wiki/workflows/task-workspace.md",
-      "pageSha256": "ed76010c9aad57a33818df996ea02272f901beb3db5876d9d8298058d7ae9cff",
+      "pageSha256": "f87df1e5212521c9e920fd7bcea428c7ea79b68a5fd08213641a6862777077d6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
-          "sha256": "c72e9d79fb364545e68a89dc45c1159988cb6aa7958a30b6bc82fb62826bfa9b"
+          "path": ".llm-wiki/tools/LlmWikiJson.ps1",
+          "sha256": "6865ea39534b9b67949058e0f1fd0da04df66f3d39b368f47c058a364a6f91ff"
         }
       ],
-      "reason": "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+      "reason": "Development MCP partial context and deterministic JSON generation preserve the documented index pipeline, task workspace serialization, and quality-index contracts; affected pages remain current.",
       "baseRef": "HEAD",
-      "gitHead": "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-      "reviewedAtUtc": "2026-08-13T12:40:35.1364948Z"
+      "gitHead": "afb53803f513cf1435447035c4bfbd2cde9c7d63",
+      "reviewedAtUtc": "2026-08-16T00:09:20.8863575Z"
     },
     {
       "pageId": "workflow-test-plan",

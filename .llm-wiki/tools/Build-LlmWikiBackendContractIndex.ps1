@@ -100,7 +100,7 @@ $result = [ordered]@{
     contracts = $contracts
     consumerEdges = @($consumerEdges | Sort-Object contract, isTest, consumerPath)
 }
-$jsonText = ($result | ConvertTo-Json -Depth 10) + [Environment]::NewLine
+$jsonText = ConvertTo-LlmWikiCanonicalJson $result -Depth 10
 if ($Check) {
     if (-not (Test-LlmWikiJsonEquivalent -ActualPath $outputPath -ExpectedJson $jsonText -Depth 10)) {
         Write-Host 'Backend contract index is stale. Run ./.llm-wiki/wiki.ps1 update.'
@@ -111,6 +111,11 @@ if ($Check) {
     exit 0
 }
 $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+if (Test-LlmWikiTextEquivalent -ActualPath $outputPath -ExpectedText $jsonText) {
+    Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
+    Write-Host 'Backend contract index unchanged; preserved byte-identical output.'
+    exit 0
+}
 [System.IO.File]::WriteAllText($outputPath, $jsonText, $utf8WithoutBom)
 Write-LlmWikiIndexCache $cachePath $outputPath $inputFingerprint
 Write-Host 'Generated .llm-wiki/generated/backend-contract-index.json.'

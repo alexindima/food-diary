@@ -157,6 +157,84 @@ public sealed class WikiQueryServiceTests {
     }
 
     [Fact]
+    public async Task GetDevelopmentContextAsync_UsesTracePathsWhenPlannedPathIsMissing() {
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+            "abc123",
+            "clean-snapshot",
+            [],
+            DateTimeOffset.UtcNow));
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult("trace", ["FoodDiary.Application.WeeklyCheckIn/CyclePredictionService.cs"]));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Add cycle prediction",
+            "cycle prediction",
+            plannedPath: null,
+            CancellationToken.None);
+
+        Assert.False(result.PartialSuccess);
+        Assert.Contains(
+            "FoodDiary.Application.WeeklyCheckIn/CyclePredictionService.cs",
+            result.ExpandedScopePaths,
+            StringComparer.Ordinal);
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.Contains(
+                "FoodDiary.Application.WeeklyCheckIn/CyclePredictionService.cs",
+                StringComparer.Ordinal)),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_ReturnsPartialResultWhenTestPlanFails() {
+        _executor.ExecuteAsync("test-plan", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns<Task<WikiCommandResult>>(_ => throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.WikiCommandFailed,
+                "test plan failed"));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Change backend flow",
+            "SomeCommand",
+            "FoodDiary.Application.Users",
+            CancellationToken.None);
+
+        Assert.True(result.PartialSuccess);
+        Assert.Null(result.TestPlan);
+        Assert.Contains(result.ComponentErrors, error => string.Equals(
+            error.Component,
+            "test-plan",
+            StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_FlagsScopeMismatchAndExpandsNarrowPlannedPath() {
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(new ChangeSetSnapshot(
+            "abc123",
+            "clean-snapshot",
+            [],
+            DateTimeOffset.UtcNow));
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult("trace", ["FoodDiary.Application.WeeklyCheckIn/CyclePredictionService.cs"]));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Add cycle prediction across frontend and backend",
+            "cycle prediction",
+            "FoodDiary.Web.Client/src/app/features/cycle-tracking",
+            CancellationToken.None);
+
+        Assert.True(result.ScopeMismatch);
+        await _executor.Received(1).ExecuteAsync(
+            "brief",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.Contains(
+                "FoodDiary.Application.WeeklyCheckIn/CyclePredictionService.cs",
+                StringComparer.Ordinal)),
+            CancellationToken.None);
+    }
+
+    [Fact]
     public async Task GetTestPlanAsync_PrefersExplicitChangesAndKeepsPlannedScope() {
         WikiQueryService service = new(_executor, _snapshots);
 
@@ -193,4 +271,15 @@ public sealed class WikiQueryServiceTests {
 
         Assert.Equal(DevelopmentMcpErrorCodes.TestPlanScopeRequired, exception.ErrorCode);
     }
+
+    private static WikiCommandResult CreateResult(string command, IReadOnlyList<string> referencedPaths) => new(
+        command,
+        RawOutput: null,
+        StructuredOutput: null,
+        RepositoryRoot: "repository",
+        GitHead: "abc123",
+        OutputLines: [],
+        ReferencedPaths: referencedPaths,
+        RequiredChecks: [],
+        Warnings: []);
 }

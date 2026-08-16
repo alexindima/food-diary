@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using FoodDiary.Development.Mcp.Diagnostics;
 using FoodDiary.Development.Mcp.Infrastructure;
@@ -53,17 +54,26 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             },
         };
 
         process.StartInfo.ArgumentList.Add("-NoLogo");
         process.StartInfo.ArgumentList.Add("-NoProfile");
         process.StartInfo.ArgumentList.Add("-NonInteractive");
-        process.StartInfo.ArgumentList.Add("-File");
-        process.StartInfo.ArgumentList.Add(wikiPath);
-        process.StartInfo.ArgumentList.Add(command);
-        process.StartInfo.ArgumentList.Add("-RequestFile");
-        process.StartInfo.ArgumentList.Add(requestPath);
+        process.StartInfo.ArgumentList.Add("-ExecutionPolicy");
+        process.StartInfo.ArgumentList.Add("Bypass");
+        process.StartInfo.ArgumentList.Add("-Command");
+        process.StartInfo.ArgumentList.Add(
+            "[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);" +
+            "[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);" +
+            "$OutputEncoding=[Text.UTF8Encoding]::new($false);" +
+            "& $env:FOODDIARY_WIKI_PATH $env:FOODDIARY_WIKI_COMMAND " +
+            "-RequestFile $env:FOODDIARY_WIKI_REQUEST");
+        process.StartInfo.Environment["FOODDIARY_WIKI_PATH"] = wikiPath;
+        process.StartInfo.Environment["FOODDIARY_WIKI_COMMAND"] = command;
+        process.StartInfo.Environment["FOODDIARY_WIKI_REQUEST"] = requestPath;
 
         if (!process.Start()) {
             throw new DevelopmentMcpException(

@@ -112,3 +112,55 @@ function Test-LlmWikiTextEquivalent {
     $normalizedExpected = $ExpectedText.Replace("`r`n", "`n").Replace("`r", "`n")
     return $normalizedActual -ceq $normalizedExpected
 }
+
+function ConvertTo-LlmWikiCanonicalJson {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory, ValueFromPipeline)]
+        [AllowNull()]
+        [object]$Value,
+        [ValidateRange(1, 100)]
+        [int]$Depth = 30
+    )
+
+    process {
+        $compact = ConvertTo-Json -InputObject $Value -Depth $Depth -Compress
+        $builder = New-Object System.Text.StringBuilder
+        $indent = 0
+        $inString = $false
+        $escaped = $false
+
+        foreach ($character in $compact.ToCharArray()) {
+            if ($inString) {
+                $null = $builder.Append($character)
+                if ($escaped) { $escaped = $false }
+                elseif ($character -eq '\') { $escaped = $true }
+                elseif ($character -eq '"') { $inString = $false }
+                continue
+            }
+
+            if ($character -eq '"') {
+                $inString = $true
+                $null = $builder.Append($character)
+                continue
+            }
+
+            switch ($character) {
+                { $_ -eq '{' -or $_ -eq '[' } {
+                    $null = $builder.Append($character)
+                    $indent++
+                    $null = $builder.Append("`n").Append(' ' * ($indent * 2))
+                }
+                { $_ -eq '}' -or $_ -eq ']' } {
+                    $indent--
+                    $null = $builder.Append("`n").Append(' ' * ($indent * 2)).Append($character)
+                }
+                ',' { $null = $builder.Append(",`n").Append(' ' * ($indent * 2)) }
+                ':' { $null = $builder.Append(': ') }
+                default { $null = $builder.Append($character) }
+            }
+        }
+
+        return $builder.ToString() + "`n"
+    }
+}

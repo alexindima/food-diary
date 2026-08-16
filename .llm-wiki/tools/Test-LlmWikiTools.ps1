@@ -71,6 +71,11 @@ try {
 '@
     Assert-Wiki (Test-LlmWikiJsonEquivalent -ActualPath $jsonFixturePath -ExpectedJson $expectedJson) `
         'JSON freshness comparison remained sensitive to serializer whitespace.'
+    $canonicalJson = ConvertTo-LlmWikiCanonicalJson ([ordered]@{ name = 'portable'; values = @(1, 2, 3) })
+    Assert-Wiki ($canonicalJson -ceq ($expectedJson.TrimStart("`r", "`n").Replace("`r`n", "`n") + "`n")) `
+        'Canonical JSON output remained dependent on PowerShell serializer formatting.'
+    Assert-Wiki ($canonicalJson -ceq (ConvertTo-LlmWikiCanonicalJson (ConvertFrom-LlmWikiJson $canonicalJson))) `
+        'Repeated canonical JSON serialization was not byte-identical.'
     $dateFixture = ConvertFrom-LlmWikiJson '{"at":"2026-07-29T13:34:35.1234567Z"}'
     Assert-Wiki (
         $dateFixture.at -is [string] -and

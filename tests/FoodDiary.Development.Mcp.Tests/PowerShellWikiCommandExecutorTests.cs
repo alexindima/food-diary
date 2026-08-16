@@ -10,6 +10,8 @@ public sealed class PowerShellWikiCommandExecutorTests {
         ServerStatus result = await service.GetStatusAsync(timeout.Token);
 
         Assert.True(result.WikiAvailable);
+        Assert.Equal("notChecked", result.DeepFreshness);
+        Assert.Equal(result.GitHead, result.LastVerifiedCommit);
     }
 
     [Fact]

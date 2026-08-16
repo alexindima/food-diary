@@ -8,15 +8,15 @@
                        "registrations":  "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
                    },
     "summary":  {
-                    "sourceFiles":  3229,
-                    "symbols":  3238,
+                    "sourceFiles":  3230,
+                    "symbols":  3239,
                     "interfaceImplementationLinks":  231,
                     "dependencyInjectionRegistrations":  232,
                     "kinds":  {
                                   "class":  1657,
                                   "enum":  49,
                                   "interface":  411,
-                                  "record":  1008,
+                                  "record":  1009,
                                   "record struct":  113
                               },
                     "roles":  {
@@ -32,7 +32,7 @@
                                   "Mapper":  8,
                                   "Mapping":  4,
                                   "Options":  59,
-                                  "Other":  1199,
+                                  "Other":  1200,
                                   "Query":  161,
                                   "QueryHandler":  123,
                                   "ReadModelRepository":  29,
@@ -12844,6 +12844,13 @@
                         "line":  4
                     },
                     {
+                        "name":  "DevelopmentContextComponentError",
+                        "kind":  "record",
+                        "role":  "Other",
+                        "path":  "FoodDiary.Development.Mcp/Protocol/DevelopmentContextComponentError.cs",
+                        "line":  2
+                    },
+                    {
                         "name":  "DevelopmentMcpErrorCodes",
                         "kind":  "class",
                         "role":  "Other",
@@ -12890,7 +12897,7 @@
                         "kind":  "class",
                         "role":  "Other",
                         "path":  "FoodDiary.Development.Mcp/Wiki/PowerShellWikiCommandExecutor.cs",
-                        "line":  8
+                        "line":  9
                     },
                     {
                         "name":  "WikiCommandRequest",

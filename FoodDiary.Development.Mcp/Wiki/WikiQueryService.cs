@@ -70,38 +70,65 @@ public sealed class WikiQueryService(
         ArgumentException.ThrowIfNullOrWhiteSpace(query);
 
         ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
+        List<DevelopmentContextComponentError> errors = [];
+        WikiCommandResult? trace = await ExecuteComponentAsync(
+            "trace",
+            ["-Format", "Json", "-Fast", "-Query", query],
+            errors,
+            cancellationToken).ConfigureAwait(false);
+        string[] expandedScopePaths = [.. new[] { plannedPath }
+            .Where(path => !string.IsNullOrWhiteSpace(path))
+            .Cast<string>()
+            .Concat(trace?.ReferencedPaths ?? [])
+            .Distinct(StringComparer.OrdinalIgnoreCase)];
+
         List<string> briefArguments = ["-Format", "Json", "-Compact", "-Objective", intent];
-        if (!string.IsNullOrWhiteSpace(plannedPath)) {
-            briefArguments.Add("-ProposedPath");
-            briefArguments.Add(plannedPath);
-        }
+        AddPaths(briefArguments, "-ProposedPath", expandedScopePaths);
         AddChangeSet(briefArguments, snapshot);
 
         List<string> testArguments = ["-Format", "Json", "-Fast", "-Objective", intent];
-        if (!AddChangeSet(testArguments, snapshot) && !string.IsNullOrWhiteSpace(plannedPath)) {
-            testArguments.Add("-ProposedPath");
-            testArguments.Add(plannedPath);
+        if (!AddChangeSet(testArguments, snapshot)) {
+            AddPaths(testArguments, "-ProposedPath", expandedScopePaths);
         }
 
-        WikiCommandResult brief = await executor.ExecuteAsync(
-            "brief",
-            briefArguments,
-            cancellationToken).ConfigureAwait(false);
-        WikiCommandResult trace = await executor.ExecuteAsync(
-            "trace",
-            ["-Format", "Json", "-Fast", "-Query", query],
-            cancellationToken).ConfigureAwait(false);
-        WikiCommandResult testPlan = await executor.ExecuteAsync(
-            "test-plan",
-            testArguments,
-            cancellationToken).ConfigureAwait(false);
+        Task<WikiCommandResult?> briefTask = ExecuteComponentAsync(
+            "brief", briefArguments, errors, cancellationToken);
+        Task<WikiCommandResult?> testPlanTask = HasScope(testArguments)
+            ? ExecuteComponentAsync("test-plan", testArguments, errors, cancellationToken)
+            : Task.FromResult<WikiCommandResult?>(null);
+        if (!HasScope(testArguments)) {
+            errors.Add(new DevelopmentContextComponentError(
+                "test-plan",
+                DevelopmentMcpErrorCodes.TestPlanScopeRequired,
+                "No changed, planned, or traced repository paths were available for test planning."));
+        }
+        await Task.WhenAll(briefTask, testPlanTask).ConfigureAwait(false);
 
         return new DevelopmentContext(
             snapshot.Fingerprint,
             snapshot.GitHead,
-            brief,
+            await briefTask.ConfigureAwait(false),
             trace,
-            testPlan);
+            await testPlanTask.ConfigureAwait(false),
+            PartialSuccess: errors.Count > 0,
+            ComponentErrors: errors,
+            ExpandedScopePaths: expandedScopePaths,
+            ScopeMismatch: HasScopeMismatch(plannedPath, trace?.ReferencedPaths));
+    }
+
+    private async Task<WikiCommandResult?> ExecuteComponentAsync(
+        string command,
+        IReadOnlyList<string> arguments,
+        List<DevelopmentContextComponentError> errors,
+        CancellationToken cancellationToken) {
+        try {
+            return await executor.ExecuteAsync(command, arguments, cancellationToken).ConfigureAwait(false);
+        } catch (DevelopmentMcpException exception) {
+            lock (errors) {
+                errors.Add(new DevelopmentContextComponentError(command, exception.ErrorCode, exception.Message));
+            }
+            return null;
+        }
     }
 
     private static bool AddChangeSet(List<string> arguments, ChangeSetSnapshot snapshot) {
@@ -130,4 +157,17 @@ public sealed class WikiQueryService(
     private static bool HasScope(IReadOnlyList<string> arguments) =>
         arguments.Contains("-ChangedPath", StringComparer.Ordinal) ||
         arguments.Contains("-ProposedPath", StringComparer.Ordinal);
+
+    private static bool HasScopeMismatch(string? plannedPath, IReadOnlyList<string>? tracedPaths) {
+        if (string.IsNullOrWhiteSpace(plannedPath)) {
+            return false;
+        }
+
+        string normalizedPlannedPath = plannedPath.Replace('\\', '/').TrimEnd('/');
+        return (tracedPaths ?? []).Any(path => {
+            string normalizedPath = path.Replace('\\', '/');
+            return !normalizedPath.Equals(normalizedPlannedPath, StringComparison.OrdinalIgnoreCase) &&
+                !normalizedPath.StartsWith($"{normalizedPlannedPath}/", StringComparison.OrdinalIgnoreCase);
+        });
+    }
 }
