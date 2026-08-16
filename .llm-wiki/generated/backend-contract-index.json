@@ -3,8 +3,8 @@
   "summary": {
     "contracts": 1033,
     "ambiguousContracts": 3,
-    "consumerEdges": 7143,
-    "productionConsumerEdges": 4369,
+    "consumerEdges": 7144,
+    "productionConsumerEdges": 4370,
     "testConsumerEdges": 2774,
     "consumedContracts": 1033,
     "unconsumedContracts": 0
@@ -45246,6 +45246,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Development.Mcp/ChangeSets/ChangeSetSnapshotService.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "IChangeSetSnapshotService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Development.Mcp/ChangeSets/IChangeSetSnapshotService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Development.Mcp/Diagnostics/ServerStatusService.cs",
       "isTest": false,
       "referenceCount": 1
     },

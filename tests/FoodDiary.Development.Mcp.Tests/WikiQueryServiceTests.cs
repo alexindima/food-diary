@@ -59,6 +59,7 @@ public sealed class WikiQueryServiceTests {
             intent: null,
             plannedPaths: null,
             changedPaths: null,
+            executedChecks: null,
             CancellationToken.None);
 
         await _executor.Received(1).ExecuteAsync(
@@ -80,6 +81,7 @@ public sealed class WikiQueryServiceTests {
             intent: "Change measurement presentation",
             plannedPaths: ["FoodDiary.Web.Client/src/app/features/weight-history"],
             changedPaths: null,
+            executedChecks: null,
             CancellationToken.None);
 
         await _executor.Received(1).ExecuteAsync(
@@ -94,6 +96,24 @@ public sealed class WikiQueryServiceTests {
                 "-ProposedPath",
                 "FoodDiary.Web.Client/src/app/features/weight-history",
             })),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetTestPlanAsync_ForwardsExecutedChecksAsRequestScopedEvidence() {
+        WikiQueryService service = new(_executor, _snapshots);
+
+        await service.GetTestPlanAsync(
+            intent: null,
+            plannedPaths: null,
+            changedPaths: ["FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs"],
+            executedChecks: ["dotnet test tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj"],
+            cancellationToken: CancellationToken.None);
+
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.Contains("-ExecutedCheck", StringComparer.Ordinal) &&
+                arguments.Contains("dotnet test tests/FoodDiary.Development.Mcp.Tests/FoodDiary.Development.Mcp.Tests.csproj", StringComparer.Ordinal)),
             CancellationToken.None);
     }
 
@@ -246,7 +266,8 @@ public sealed class WikiQueryServiceTests {
             "Change frontend measurements",
             ["planned/path"],
             ["explicit/changed.cs"],
-            CancellationToken.None);
+            executedChecks: null,
+            cancellationToken: CancellationToken.None);
 
         await _executor.Received(1).ExecuteAsync(
             "test-plan",
@@ -271,7 +292,8 @@ public sealed class WikiQueryServiceTests {
                 intent: null,
                 plannedPaths: null,
                 changedPaths: null,
-                CancellationToken.None));
+                executedChecks: null,
+                cancellationToken: CancellationToken.None));
 
         Assert.Equal(DevelopmentMcpErrorCodes.TestPlanScopeRequired, exception.ErrorCode);
     }

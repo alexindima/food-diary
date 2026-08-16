@@ -46,13 +46,19 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     $renames = @(Get-LlmWikiGitRenames -RepositoryRoot $repositoryRoot -BaseRef $BaseRef -HeadRef $HeadRef)
 }
 
-$changedPaths = @(
+$allChangedPaths = @(
     $ChangedPath |
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
         ForEach-Object { ConvertTo-RepositoryPath $_ } |
-        Where-Object { -not (Test-LlmWikiBookkeepingPath $_) } |
         Sort-Object -Unique
 )
+$derivedWikiPaths = @($allChangedPaths | Where-Object { $_ -match '^\.llm-wiki/generated/' })
+$reviewMetadataPaths = @($allChangedPaths | Where-Object {
+    $_ -match '^\.llm-wiki/reviews/' -or $_ -match '(?i)(review-receipt|source-impact-review)'
+})
+$changedPaths = @($allChangedPaths |
+    Where-Object { $_ -notin $derivedWikiPaths -and $_ -notin $reviewMetadataPaths } |
+    Sort-Object -Unique)
 $baselineExcludedPaths = @(
     $BaselineExcludedPath |
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
@@ -67,6 +73,9 @@ if (@($baselineExcludedPaths | Where-Object { $_ -match 'Infrastructure/.*(Persi
 if ($changedPaths.Count -eq 0) {
     $emptyResult = [ordered]@{
         changedPaths = @()
+        sourceChangedPaths = @()
+        derivedWikiPaths = $derivedWikiPaths
+        reviewMetadataPaths = $reviewMetadataPaths
         renames = @($renames)
         baselineExcludedPaths = $baselineExcludedPaths
         workspaceContextScopes = @($workspaceContextScopes | Sort-Object -Unique)
@@ -430,6 +439,9 @@ $uniqueChecks = @($recommendedChecks | Sort-Object -Unique)
 
 $result = [ordered]@{
     changedPaths = $changedPaths
+    sourceChangedPaths = $changedPaths
+    derivedWikiPaths = $derivedWikiPaths
+    reviewMetadataPaths = $reviewMetadataPaths
     renames = @($renames)
     baselineExcludedPaths = $baselineExcludedPaths
     workspaceContextScopes = @($workspaceContextScopes | Sort-Object -Unique)

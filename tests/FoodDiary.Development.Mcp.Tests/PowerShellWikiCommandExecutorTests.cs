@@ -5,7 +5,8 @@ public sealed class PowerShellWikiCommandExecutorTests {
     [Fact]
     public async Task ServerStatus_ReturnsWithoutRunningDeepVerification() {
         var runtimeIdentity = ServerRuntimeIdentity.Capture("startup-head");
-        ServerStatusService service = new(TimeProvider.System, runtimeIdentity);
+        using ChangeSetSnapshotService snapshots = new(TimeProvider.System);
+        ServerStatusService service = new(TimeProvider.System, runtimeIdentity, snapshots);
         using CancellationTokenSource timeout = new(TimeSpan.FromSeconds(10));
 
         ServerStatus result = await service.GetStatusAsync(timeout.Token);
@@ -17,6 +18,7 @@ public sealed class PowerShellWikiCommandExecutorTests {
         Assert.Equal(Environment.ProcessId, result.RuntimeIdentity.ProcessId);
         Assert.Equal("startup-head", result.RuntimeIdentity.RepositoryHeadAtStartup);
         Assert.False(result.RunningCodeMatchesRepositoryHead);
+        Assert.NotEmpty(result.WorktreeFingerprint);
     }
 
     [Fact]

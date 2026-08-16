@@ -1,4 +1,7 @@
 using System.Globalization;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Text;
 
 namespace FoodDiary.ArchitectureTests;
 
@@ -15,8 +18,8 @@ internal static class SourceScanner {
 
         return [.. Directory.GetFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line = StripLineComment(line) }))
+            .SelectMany(path => ReadCodeLines(path)
+                .Select((line, index) => new { path, index, line }))
             .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
             .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}"))
             .Order(StringComparer.Ordinal)];
@@ -44,9 +47,27 @@ internal static class SourceScanner {
             .SelectMany(SourceFiles)
             .Order(StringComparer.Ordinal);
 
-    private static string StripLineComment(string line) {
-        int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
-        return commentIndex < 0 ? line : line[..commentIndex];
+    internal static string[] ReadCodeLines(string path) {
+        string source = File.ReadAllText(path);
+        char[] code = source.ToCharArray();
+        SyntaxNode root = CSharpSyntaxTree.ParseText(source).GetRoot();
+        IEnumerable<TextSpan> ignoredSpans = root.DescendantTrivia(descendIntoTrivia: true)
+            .Where(trivia => trivia.IsKind(SyntaxKind.SingleLineCommentTrivia) ||
+                trivia.IsKind(SyntaxKind.MultiLineCommentTrivia) ||
+                trivia.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
+                trivia.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
+            .Select(trivia => trivia.Span)
+            .Concat(root.DescendantTokens().Where(token =>
+                token.IsKind(SyntaxKind.StringLiteralToken) ||
+                token.IsKind(SyntaxKind.Utf8StringLiteralToken) ||
+                token.IsKind(SyntaxKind.InterpolatedStringTextToken) ||
+                token.IsKind(SyntaxKind.CharacterLiteralToken)).Select(token => token.Span));
+        foreach (TextSpan span in ignoredSpans) {
+            for (int index = span.Start; index < span.End; index++) {
+                if (code[index] is not '\r' and not '\n') { code[index] = ' '; }
+            }
+        }
+        return new string(code).Split(["\r\n", "\n"], StringSplitOptions.None);
     }
 
 }

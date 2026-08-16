@@ -50,12 +50,13 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
         [Description("Optional change intent used to focus the test plan.")] string? intent = null,
         [Description("Optional planned repository paths used when no explicit or Git changes exist.")] string[]? plannedPaths = null,
         [Description("Optional explicit changed repository paths. These take precedence over the Git worktree.")] string[]? changedPaths = null,
+        [Description("Optional commands already executed successfully for this worktree. Matching plan items are request-scoped satisfied evidence and are not persisted.")] string[]? executedChecks = null,
         [Description("Include verbose raw Wiki output for diagnostics. Defaults to false.")] bool includeRawOutput = false,
         CancellationToken cancellationToken = default) =>
         ToolExecution.RunToolAsync(
             async () => {
                 WikiCommandResult result = await queries
-                    .GetTestPlanAsync(intent, plannedPaths, changedPaths, cancellationToken)
+                    .GetTestPlanAsync(intent, plannedPaths, changedPaths, executedChecks, cancellationToken)
                     .ConfigureAwait(false);
                 return includeRawOutput ? result : result.WithoutRawOutput();
             },

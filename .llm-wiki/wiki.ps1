@@ -86,6 +86,7 @@ param(
     [string[]]$RelationKind,
     [Alias('PlannedPath')]
     [string[]]$ProposedPath,
+    [string[]]$ExecutedCheck,
     [switch]$AffectedOnly,
     [switch]$ContractIndexesOnly,
     [ValidateSet('All', 'Backend', 'Frontend')]
@@ -818,6 +819,23 @@ switch ($Command) {
             $graphConsumers = [object[]]@($graphProbe.consumers)
             $graphNamespaceFilters = [object[]]@($graphProbe.namespaceFilters)
             $graphCandidates = [object[]]@($graphProbe.candidates)
+            if ($graphSymbols.Length -eq 0 -and $graphConsumers.Length -eq 0 -and $graphCandidates.Length -gt 0) {
+                $topCandidate = @($graphCandidates | Sort-Object @{ Expression = { [double]$_.score }; Descending = $true } | Select-Object -First 1)[0]
+                if ($null -ne $topCandidate -and [string]$topCandidate.confidence -eq 'high' -and -not [string]::IsNullOrWhiteSpace([string]$topCandidate.name)) {
+                    $expandedArguments = @{} + $graphArguments
+                    $expandedArguments.Query = [string]$topCandidate.name
+                    $graphProbe = & (Join-Path $toolsRoot 'Manage-LlmWikiCodeGraph.ps1') @expandedArguments | ConvertFrom-Json
+                    $graphSymbols = [object[]]@($graphProbe.symbols)
+                    $graphConsumers = [object[]]@($graphProbe.consumers)
+                    if ($graphSymbols.Length -gt 0 -or $graphConsumers.Length -gt 0) {
+                        Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
+                            Action = 'trace'; Query = [string]$topCandidate.name; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
+                            SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+                        }
+                        break
+                    }
+                }
+            }
             if ($graphSymbols.Length -gt 0 -or $graphConsumers.Length -gt 0 -or $graphNamespaceFilters.Length -gt 0 -or $graphCandidates.Length -gt 0) {
                 Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
                     Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
@@ -1114,6 +1132,7 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $testPlanArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $testPlanArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $testPlanArguments.ProposedPath = $ProposedPath }
+        if ($PSBoundParameters.ContainsKey('ExecutedCheck')) { $testPlanArguments.ExecutedCheck = $ExecutedCheck }
         if ($PSBoundParameters.ContainsKey('Objective')) { $testPlanArguments.Intent = $Objective }
         if ($Compact) { $testPlanArguments.Compact = $true }
         Invoke-WikiTool 'Get-LlmWikiTestPlan.ps1' $testPlanArguments

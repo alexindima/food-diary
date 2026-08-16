@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "838eb5d7e35875e924c736b56f441f948b0bb58a0c172cb4088336d164564725"
+          "sha256": "309bbf149c1c0ead26046d74302f6d4957e50048aef340103218cbad96f4e35d"
         }
       ],
-      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
+      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
-      "reviewedAtUtc": "2026-08-16T14:17:01.5745025Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:04:33.7903594Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -241,13 +241,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3770ae26eb133289dc90640d80b974872dfe3b9875fb77e65a78b0b1c625e13b"
+          "sha256": "cf5c69ce882d7cecc52664640beb0f532ffd6e98f2dcfa0eee25ffc47801cc37"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:27.6177759Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:04:34.2362369Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -582,13 +582,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "83658c592217197d7fb3c3a9870eb0687e5df5dde4f7782768af399c5beb431f"
+          "sha256": "cd76a21d46a49fc36f84cfa8d21d85e537236ea854ea776c084d838ddc2ccf79"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "cf5c69ce882d7cecc52664640beb0f532ffd6e98f2dcfa0eee25ffc47801cc37"
         }
       ],
-      "reason": "Reviewed test-plan precision changes: direct frontend tests remain within changed feature roots unless supported by consumer edges; compatible commands are grouped and every emitted command ID is deterministic and unique.",
+      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1859e5b5a1ebc81d0071787eb00a945fc7bd9f5b",
-      "reviewedAtUtc": "2026-08-16T13:45:26.7709623Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:04:35.2892821Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -766,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "7ef6ebd05066115e2df9ab41cfa699fcc1ad998b31032fed2c8e78248c486850"
+          "sha256": "4c5e4af0abdb27558e9920466da7da1d66d4297f19bd4a454f7ee128d66cbd67"
         }
       ],
-      "reason": "Generated frontend and quality indexes now reflect the additive prediction explanation fields, focused cycle tests, and rendered UI surface. Trace workflow sources reflect the expanded cross-layer trace scope from HEAD; the MCP layer classifier keeps the same Api result while avoiding a forbidden host namespace reference. Existing workflow guidance remains current.",
+      "reason": "Reviewed regenerated quality index after final MCP status freshness implementation; quality-risk guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7c54c7ab5cbe3e31f089c6df87ebd7a9834d34df",
-      "reviewedAtUtc": "2026-08-16T15:33:46.5730576Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:06:29.4066039Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -879,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "c84daf95bbd16df56172b5d1b6fd47d101a603ed7676da87d708cdfeb7206531"
+          "sha256": "6fa9acbcbba7979363961d56b5af972b7e9326ffa42aa65c41fcec359ef45c13"
         }
       ],
-      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
+      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
-      "reviewedAtUtc": "2026-08-16T12:10:34.6818920Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:04:36.7874387Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -909,13 +913,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3770ae26eb133289dc90640d80b974872dfe3b9875fb77e65a78b0b1c625e13b"
+          "sha256": "cf5c69ce882d7cecc52664640beb0f532ffd6e98f2dcfa0eee25ffc47801cc37"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:30.5718209Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:04:37.2173495Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -974,13 +978,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "83658c592217197d7fb3c3a9870eb0687e5df5dde4f7782768af399c5beb431f"
+          "sha256": "cd76a21d46a49fc36f84cfa8d21d85e537236ea854ea776c084d838ddc2ccf79"
         }
       ],
-      "reason": "Reviewed test-plan precision changes: direct frontend tests remain within changed feature roots unless supported by consumer edges; compatible commands are grouped and every emitted command ID is deterministic and unique.",
+      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "1859e5b5a1ebc81d0071787eb00a945fc7bd9f5b",
-      "reviewedAtUtc": "2026-08-16T13:45:27.1143661Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:04:37.6509015Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1065,13 +1069,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "c84daf95bbd16df56172b5d1b6fd47d101a603ed7676da87d708cdfeb7206531"
+          "sha256": "6fa9acbcbba7979363961d56b5af972b7e9326ffa42aa65c41fcec359ef45c13"
         }
       ],
-      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
+      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
-      "reviewedAtUtc": "2026-08-16T12:10:33.4280644Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:04:34.7741329Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1125,13 +1129,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "c84daf95bbd16df56172b5d1b6fd47d101a603ed7676da87d708cdfeb7206531"
+          "sha256": "6fa9acbcbba7979363961d56b5af972b7e9326ffa42aa65c41fcec359ef45c13"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "cf5c69ce882d7cecc52664640beb0f532ffd6e98f2dcfa0eee25ffc47801cc37"
         }
       ],
-      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
+      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
       "baseRef": "HEAD",
-      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
-      "reviewedAtUtc": "2026-08-16T12:10:34.4016243Z"
+      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
+      "reviewedAtUtc": "2026-08-16T16:04:36.3389337Z"
     }
   ]
 }

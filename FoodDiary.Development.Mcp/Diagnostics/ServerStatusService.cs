@@ -1,12 +1,14 @@
 using FoodDiary.Development.Mcp.Infrastructure;
 using FoodDiary.Development.Mcp.Protocol;
+using FoodDiary.Development.Mcp.ChangeSets;
 using System.Security.Cryptography;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
 public sealed class ServerStatusService(
     TimeProvider timeProvider,
-    ServerRuntimeIdentity runtimeIdentity) : IServerStatusService {
+    ServerRuntimeIdentity runtimeIdentity,
+    IChangeSetSnapshotService snapshots) : IServerStatusService {
     private static readonly string[] IndexPaths = [
         ".llm-wiki/generated/repository-catalog.json",
         ".llm-wiki/generated/csharp-symbol-index.json",
@@ -25,6 +27,11 @@ public sealed class ServerStatusService(
         }
 
         string gitHead = await ReadGitHeadAsync(repositoryRoot, cancellationToken).ConfigureAwait(false);
+        ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
+        string[] derivedWikiPaths = [.. snapshot.ChangedPaths.Where(IsDerivedWikiPath)];
+        string[] reviewMetadataPaths = [.. snapshot.ChangedPaths.Where(IsReviewMetadataPath)];
+        string[] sourceChangedPaths = [.. snapshot.ChangedPaths.Except(derivedWikiPaths, StringComparer.OrdinalIgnoreCase)
+            .Except(reviewMetadataPaths, StringComparer.OrdinalIgnoreCase)];
         WikiIndexStatus[] indexes = [.. IndexPaths.Select(path => {
             string absolutePath = Path.Combine(repositoryRoot, path.Replace('/', Path.DirectorySeparatorChar));
             FileInfo file = new(absolutePath);
@@ -34,6 +41,10 @@ public sealed class ServerStatusService(
                 file.Exists ? new DateTimeOffset(file.LastWriteTimeUtc) : null);
         })];
         bool indexFilesPresent = indexes.All(index => index.Exists);
+        bool indexesMatchWorktree = indexFilesPresent && AreIndexesCurrentForSources(
+            repositoryRoot,
+            indexes,
+            sourceChangedPaths);
         string? indexFingerprint = indexFilesPresent
             ? await ComputeIndexFingerprintAsync(repositoryRoot, cancellationToken).ConfigureAwait(false)
             : null;
@@ -47,6 +58,13 @@ public sealed class ServerStatusService(
             repositoryRoot,
             gitHead,
             string.Equals(runtimeIdentity.RepositoryHeadAtStartup, gitHead, StringComparison.Ordinal),
+            WorktreeDirty: snapshot.ChangedPaths.Count > 0,
+            WorktreeFingerprint: snapshot.Fingerprint,
+            IndexesMatchWorktree: indexesMatchWorktree,
+            RunningCodeIncludesWorktreeChanges: snapshot.ChangedPaths.Count == 0,
+            sourceChangedPaths,
+            derivedWikiPaths,
+            reviewMetadataPaths,
             WikiAvailable: true,
             indexFilesPresent,
             DeepFreshness: indexFilesPresent ? "fingerprinted" : "missing",
@@ -56,6 +74,32 @@ public sealed class ServerStatusService(
             indexCheckSummary,
             indexes,
             timeProvider.GetUtcNow());
+    }
+
+    private static bool IsDerivedWikiPath(string path) =>
+        path.StartsWith(".llm-wiki/generated/", StringComparison.OrdinalIgnoreCase) ||
+        path.StartsWith(".llm-wiki/.generated/", StringComparison.OrdinalIgnoreCase);
+
+    private static bool IsReviewMetadataPath(string path) =>
+        path.StartsWith(".llm-wiki/reviews/", StringComparison.OrdinalIgnoreCase) ||
+        path.Contains("review-receipt", StringComparison.OrdinalIgnoreCase) ||
+        path.Contains("source-impact-review", StringComparison.OrdinalIgnoreCase);
+
+    private static bool AreIndexesCurrentForSources(
+        string repositoryRoot,
+        IReadOnlyList<WikiIndexStatus> indexes,
+        IReadOnlyList<string> sourceChangedPaths) {
+        if (sourceChangedPaths.Count == 0) {
+            return true;
+        }
+
+        DateTimeOffset newestSourceWrite = sourceChangedPaths
+            .Select(path => Path.Combine(repositoryRoot, path.Replace('/', Path.DirectorySeparatorChar)))
+            .Where(File.Exists)
+            .Select(path => new DateTimeOffset(File.GetLastWriteTimeUtc(path)))
+            .DefaultIfEmpty(DateTimeOffset.MaxValue)
+            .Max();
+        return indexes.All(index => index.LastWriteTimeUtc >= newestSourceWrite);
     }
 
     private static async Task<string> ComputeIndexFingerprintAsync(

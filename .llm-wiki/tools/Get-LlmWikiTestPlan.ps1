@@ -4,6 +4,7 @@ param(
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string[]]$ProposedPath,
+    [string[]]$ExecutedCheck,
     [string]$Intent,
     [object]$DiffInput,
     [object]$PolicyInput,
@@ -32,7 +33,7 @@ if ($cacheEligible) {
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'test-plan' -Arguments @{
         BaseRef = $BaseRef; HeadRef = $HeadRef; ChangedPath = @($ChangedPath)
         ProposedPath = @($ProposedPath); Intent = $Intent; Compact = [bool]$Compact; Limit = $Limit
-        VerificationReceipts = $validReceiptFingerprint
+        VerificationReceipts = $validReceiptFingerprint; ExecutedCheck = @($ExecutedCheck)
     }
     $cachedTestPlan = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedTestPlan) { Write-Output $cachedTestPlan; exit 0 }
@@ -448,8 +449,26 @@ foreach ($receipt in @($verificationReceipts | Where-Object validForCurrentState
         $validReceiptsByCommand[[string]$receipt.normalizedCommand] = $receipt
     }
 }
+$executedChecksByCommand = @{}
+foreach ($executedCheck in @($ExecutedCheck | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
+    $executedChecksByCommand[(Normalize-LlmWikiVerificationCommand ([string]$executedCheck))] = $true
+}
 $commands = @($commands | ForEach-Object {
-    $receipt = $validReceiptsByCommand[(Normalize-LlmWikiVerificationCommand ([string]$_.command))]
+    $normalizedCommand = Normalize-LlmWikiVerificationCommand ([string]$_.command)
+    $receipt = $validReceiptsByCommand[$normalizedCommand]
+    $executedInRequest = $executedChecksByCommand.ContainsKey($normalizedCommand)
+    $receiptEvidence = $null
+    if ($executedInRequest) {
+        $receiptEvidence = [pscustomobject]@{ result = 'passed'; source = 'executedChecks'; fingerprint = $null }
+    } elseif ($null -ne $receipt) {
+        $receiptEvidence = [pscustomobject]@{
+            result = $receipt.result
+            durationSeconds = $receipt.durationSeconds
+            coverageScope = @($receipt.coverageScope)
+            recordedAtUtc = $receipt.recordedAtUtc
+            fingerprint = $receipt.fingerprint
+        }
+    }
     [pscustomobject][ordered]@{
         id = $_.id
         command = $_.command
@@ -457,21 +476,15 @@ $commands = @($commands | ForEach-Object {
         priority = $_.priority
         reason = $_.reason
         commandEvidence = $(if ($_.PSObject.Properties['commandEvidence']) { $_.commandEvidence } else { $null })
-        status = $(if ($null -eq $receipt) { 'pending' } else { 'satisfied' })
-        receipt = $(if ($null -eq $receipt) { $null } else { [pscustomobject]@{
-            result = $receipt.result
-            durationSeconds = $receipt.durationSeconds
-            coverageScope = @($receipt.coverageScope)
-            recordedAtUtc = $receipt.recordedAtUtc
-            fingerprint = $receipt.fingerprint
-        } })
+        status = $(if ($null -eq $receipt -and -not $executedInRequest) { 'pending' } else { 'satisfied' })
+        receipt = $receiptEvidence
     }
 })
 
 $result = [pscustomobject]@{
     scopes = $scopes
     intent = $Intent
-    proposedPaths = @($ProposedPath)
+    proposedPaths = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
     modules = @($diff.modules | ForEach-Object { if ($_.PSObject.Properties['name']) { $_.name } } | Where-Object { $_ })
     focusedTestFiles = @($selectedFocusedTests | ForEach-Object { if ($_.PSObject.Properties['path']) { $_.path } } | Where-Object { $_ })
     focusedTestDetails = $selectedFocusedTests

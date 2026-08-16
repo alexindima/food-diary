@@ -41,6 +41,7 @@ public sealed class WikiQueryService(
         string? intent,
         IReadOnlyList<string>? plannedPaths,
         IReadOnlyList<string>? changedPaths,
+        IReadOnlyList<string>? executedChecks,
         CancellationToken cancellationToken) {
         List<string> arguments = string.IsNullOrWhiteSpace(intent)
             ? ["-Format", "Json"]
@@ -51,6 +52,7 @@ public sealed class WikiQueryService(
             hasChangeScope = AddChangeSet(arguments, snapshot);
         }
         AddPaths(arguments, "-ProposedPath", plannedPaths);
+        AddPaths(arguments, "-ExecutedCheck", executedChecks);
 
         if (!HasScope(arguments)) {
             throw new DevelopmentMcpException(

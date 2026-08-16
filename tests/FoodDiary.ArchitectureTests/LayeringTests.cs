@@ -7,6 +7,21 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public class LayeringTests {
     [Fact]
+    public void SourceScanner_IgnoresNamespaceTextInsideStringLiterals() {
+        string path = Path.GetTempFileName();
+        try {
+            File.WriteAllText(path, "var route = \"FoodDiary.Web.Api/\";\nusingType = FoodDiary.Web.Api.Endpoint;");
+
+            string[] lines = SourceScanner.ReadCodeLines(path);
+
+            Assert.DoesNotContain("FoodDiary.Web.Api", lines[0], StringComparison.Ordinal);
+            Assert.Contains("FoodDiary.Web.Api", lines[1], StringComparison.Ordinal);
+        } finally {
+            File.Delete(path);
+        }
+    }
+
+    [Fact]
     public void DomainProject_DoesNotReference_OtherApplicationLayers() {
         HashSet<string> references = GetProjectReferences("FoodDiary.Domain/FoodDiary.Domain.csproj");
 
