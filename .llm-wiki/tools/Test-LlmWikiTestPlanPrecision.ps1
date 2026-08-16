@@ -29,4 +29,15 @@ if ($cycleTests.Count -eq 0) {
     throw 'Cycle test-plan precision regression found no cycle-focused tests.'
 }
 
+$coveredPlan = & (Join-Path $PSScriptRoot 'Get-LlmWikiTestPlan.ps1') `
+    -Intent 'Edit menstrual episode history' `
+    -ChangedPath $changedPaths `
+    -ExecutedCheck 'cd FoodDiary.Web.Client && npm run verify' `
+    -Format Json | ConvertFrom-Json
+$focusedFrontend = @($coveredPlan.commands | Where-Object id -eq 'focused-frontend')[0]
+if ($null -eq $focusedFrontend -or $focusedFrontend.status -ne 'satisfied' -or
+    $focusedFrontend.receipt.source -ne 'executedChecksCoverage') {
+    throw 'Full frontend verification did not satisfy the focused frontend test command.'
+}
+
 Write-Host "LLM Wiki test-plan precision passed: $($ids.Count) unique command IDs, $($cycleTests.Count) cycle-focused tests."

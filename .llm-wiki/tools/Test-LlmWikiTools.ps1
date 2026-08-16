@@ -346,6 +346,31 @@ Assert-Wiki ($endpointCompatibility.snapshotFormat -eq 'endpoint-contract') 'API
 Assert-Wiki ($endpointCompatibility.additiveCount -eq 1) 'API compatibility did not classify an added endpoint-contract path as additive.'
 Assert-Wiki (@($endpointCompatibility.changes.kind) -contains 'added-path') 'API compatibility did not report the added endpoint-contract path.'
 
+$baseEndpointSchemaContract = @{
+    OpenApi = '3.0.4'
+    Endpoints = @()
+    Schemas = @(
+        @{ Name = 'ExampleHttpRequest'; Properties = @(
+            @{ Name = 'stable'; Required = $true; Type = 'string'; Nullable = $false }
+        ) }
+    )
+} | ConvertTo-Json -Depth 10
+$currentEndpointSchemaContract = @{
+    OpenApi = '3.0.4'
+    Endpoints = @()
+    Schemas = @(
+        @{ Name = 'ExampleHttpRequest'; Properties = @(
+            @{ Name = 'stable'; Required = $true; Type = 'string'; Nullable = $false }
+            @{ Name = 'optionalAdded'; Required = $false; Type = 'boolean'; Nullable = $false }
+        ) }
+    )
+} | ConvertTo-Json -Depth 10
+$endpointSchemaCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') `
+    -BaseSnapshotContent $baseEndpointSchemaContract `
+    -CurrentSnapshotContent $currentEndpointSchemaContract `
+    -Format Json | ConvertFrom-Json
+Assert-Wiki (@($endpointSchemaCompatibility.changes.kind) -contains 'added-schema-property') 'API compatibility did not compare schemas embedded in endpoint-contract snapshots.'
+
 $baseQueryContract = @{
     OpenApi = '3.0.4'
     Endpoints = @(
@@ -443,6 +468,8 @@ $httpDtoCompatibility = & (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps
     -Format Json | ConvertFrom-Json
 Assert-Wiki (@($httpDtoCompatibility.changes.kind) -contains 'added-http-dto-property') 'API compatibility did not classify an optional HTTP DTO property as additive.'
 Assert-Wiki (@($httpDtoCompatibility.changes.kind) -contains 'added-required-http-dto-property') 'API compatibility did not classify a required HTTP DTO property as breaking.'
+$apiCompatibilityToolText = Get-Content -LiteralPath (Join-Path $toolsRoot 'Test-LlmWikiApiCompatibility.ps1') -Raw
+Assert-Wiki ($apiCompatibilityToolText -match 'Http\(\?:Model\|Request\|Response\)') 'API compatibility discovery does not include HTTP request and response DTO files.'
 
 $taskContractPath = '.artifacts/llm-wiki/tool-smoke-task-contract.json'
 $absoluteTaskContractPath = Join-Path (Split-Path -Parent $wikiRoot) $taskContractPath
@@ -648,6 +675,8 @@ Assert-Wiki ($indexPipelineText -match "cacheableTools = @\('Build-LlmWikiQualit
 Assert-Wiki ($wikiFacadeText.Contains('DeferPossiblyConcurrentStale = $true; ReuseUnchangedChecks = $true') -and
     $wikiFacadeText.Contains('$indexArguments = @{ Check = $true; AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }') -and
     $wikiFacadeText.Contains('$indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }')) 'Index cache reuse is not enabled consistently for fast, strict, and update workflows.'
+Assert-Wiki ($wikiFacadeText.Contains('Affected update scope frozen before generation') -and
+    $wikiFacadeText.Contains('$verifyArguments.ChangedPath = $updateChangedPaths')) 'Affected update-and-verify does not preserve one immutable changed-path scope across generation and verification.'
 Assert-Wiki ($wikiFacadeText.Contains("`$Command -in @('develop', 'start')") -and
     $wikiFacadeText.Contains("Manage-LlmWikiTaskBaseline.ps1') -Action Capture -SessionId `$TaskSessionId -Format Text") -and
     $wikiFacadeText.Contains("-not `$PSBoundParameters.ContainsKey('ChangedPath')") -and
@@ -798,7 +827,7 @@ Assert-Wiki ($backendContracts.summary.testConsumerEdges -gt 0) 'Backend contrac
 $contractJson = & (Join-Path $toolsRoot 'Find-LlmWikiBackendContract.ps1') -View consumers -Query StartFastingCommand -Format Json
 $contractQuery = $contractJson | ConvertFrom-Json
 Assert-Wiki (@($contractQuery.consumers | Where-Object contract -eq 'StartFastingCommand').Count -gt 0) 'Backend contract query did not resolve StartFastingCommand consumers.'
-$contractPath = 'FoodDiary.Application/Fasting/Commands/StartFasting/StartFastingCommand.cs'
+$contractPath = 'FoodDiary.Application.Fasting/Commands/StartFasting/StartFastingCommand.cs'
 $contractPacketJson = & (Join-Path $toolsRoot 'Get-LlmWikiChangePacket.ps1') -ChangedPath $contractPath -Objective 'Safely evolve the fasting command.' -Format Json
 $contractPacket = $contractPacketJson | ConvertFrom-Json
 $contractPlan = $contractPacket.testPlan

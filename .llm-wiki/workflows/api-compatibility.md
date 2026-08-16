@@ -10,6 +10,7 @@ tags:
   - compatibility
 sources:
   - tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json
+  - tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs
   - .llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1
 ---
 
@@ -22,7 +23,8 @@ After regenerating API contract snapshots, compare them with the intended base:
 ```
 
 The guard understands both a raw OpenAPI document and this repository's compact
-`Endpoints` contract snapshot. The compact snapshot records query-parameter
+`Endpoints` contract snapshot. The full compact snapshot records component
+schema properties used by request and response bodies in addition to query-parameter
 name, location, requiredness, type, format, and default. The guard classifies
 removed parameters, newly required parameters, requiredness increases, and
 shape changes as breaking; new optional parameters are additive. It also compares serialized key sets in
@@ -42,8 +44,9 @@ Raw OpenAPI schema comparison classifies optional properties as additive and
 removed properties, newly required properties, type/format/reference changes,
 array item changes, and nullability changes as breaking.
 
-When the compact snapshot omits component schemas, the guard also compares
-changed `*HttpModel.cs` primary-constructor properties. Nullable or defaulted
+For legacy compact snapshots without component schemas, the guard also compares
+changed `*HttpModel.cs`, `*HttpRequest.cs`, and `*HttpResponse.cs`
+primary-constructor properties. Nullable or defaulted
 additions are additive; required additions, removals, requiredness changes, and
 type changes are breaking. DTO findings include their source path as
 provenance and complement rather than replace runtime serialization snapshots.

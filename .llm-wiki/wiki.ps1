@@ -519,19 +519,33 @@ switch ($Command) {
         }
     }
     'update' {
+        $updateChangedPaths = @($ChangedPath)
+        if ($AffectedOnly -and -not $PSBoundParameters.ContainsKey('ChangedPath')) {
+            $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
+            $updateChangedPaths = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @(
+                'diff', '--name-only', '--diff-filter=ACMRD', $BaseRef, '--'
+            ) -FailureMessage "Unable to capture the affected update scope from '$BaseRef'.")
+            if ($BaseRef -eq 'HEAD') {
+                $updateChangedPaths += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @(
+                    'ls-files', '--others', '--exclude-standard'
+                ) -FailureMessage 'Unable to capture untracked paths for the affected update scope.')
+            }
+            $updateChangedPaths = @($updateChangedPaths | Where-Object { $_ } | Sort-Object -Unique)
+            Write-Host "Affected update scope frozen before generation: $($updateChangedPaths.Count) path(s)."
+        }
         $indexArguments = @{ AffectedOnly = $AffectedOnly; BaseRef = $BaseRef; ReuseUnchangedChecks = $true; RequiredOnly = $ContractIndexesOnly }
-        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $ChangedPath }
+        if ($AffectedOnly -or $PSBoundParameters.ContainsKey('ChangedPath')) { $indexArguments.ChangedPath = $updateChangedPaths }
         Invoke-WikiTool 'Invoke-LlmWikiIndexPipeline.ps1' $indexArguments
         if ($VerifyAfterUpdate) {
             if (-not [string]::IsNullOrWhiteSpace($ReviewReason)) {
                 Write-Host 'Update completed; recording the explicitly supplied rationale for the affected source-impact set.'
                 $impactArguments = @{ BaseRef = $BaseRef; Format = 'Json' }
-                if ($PSBoundParameters.ContainsKey('ChangedPath')) { $impactArguments.ChangedPath = @($ChangedPath) }
+                if ($AffectedOnly -or $PSBoundParameters.ContainsKey('ChangedPath')) { $impactArguments.ChangedPath = $updateChangedPaths }
                 $impact = & (Join-Path $toolsRoot 'Get-LlmWikiImpact.ps1') @impactArguments | ConvertFrom-Json
                 $pending = @($impact.impacts | Where-Object { -not $_.Reviewed -and [string]::IsNullOrWhiteSpace([string]$_.GeneratedBy) })
                 foreach ($item in $pending) {
                     $reviewArguments = @{ Id = [string]$item.Id; Reason = $ReviewReason; BaseRef = $BaseRef }
-                    if ($PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = @($ChangedPath) }
+                    if ($AffectedOnly -or $PSBoundParameters.ContainsKey('ChangedPath')) { $reviewArguments.ChangedPath = $updateChangedPaths }
                     Invoke-WikiTool 'Add-LlmWikiSourceReview.ps1' $reviewArguments
                 }
                 Write-Host "NeedsReview resolved explicitly: recorded=$($pending.Count)."
@@ -542,7 +556,7 @@ switch ($Command) {
                 AffectedOnly = [bool]$AffectedOnly
                 ContractIndexesOnly = [bool]$ContractIndexesOnly
             }
-            if ($PSBoundParameters.ContainsKey('ChangedPath')) { $verifyArguments.ChangedPath = @($ChangedPath) }
+            if ($AffectedOnly -or $PSBoundParameters.ContainsKey('ChangedPath')) { $verifyArguments.ChangedPath = $updateChangedPaths }
             & $PSCommandPath verify @verifyArguments
             if (-not $?) { exit 1 }
         }

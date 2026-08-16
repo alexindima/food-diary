@@ -81,9 +81,42 @@ function ConvertTo-ComparableOpenApi {
             $paths[[string]$endpoint.Path] = $operations
         }
 
+        $schemas = [ordered]@{}
+        $snapshotSchemas = if ($Snapshot.PSObject.Properties['Schemas']) { @($Snapshot.Schemas) } else { @() }
+        foreach ($schema in @($snapshotSchemas | Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_.Name) })) {
+            $properties = [ordered]@{}
+            $required = [System.Collections.Generic.List[string]]::new()
+            $schemaProperties = if ($schema.PSObject.Properties['Properties']) { @($schema.Properties) } else { @() }
+            foreach ($property in @($schemaProperties | Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_.Name) })) {
+                $shape = [ordered]@{}
+                $propertyType = Get-PropertyValue $property 'Type'
+                $propertyFormat = Get-PropertyValue $property 'Format'
+                $propertyReference = Get-PropertyValue $property 'Reference'
+                $propertyItemType = Get-PropertyValue $property 'ItemType'
+                $propertyItemReference = Get-PropertyValue $property 'ItemReference'
+                if (-not [string]::IsNullOrWhiteSpace([string]$propertyType)) { $shape['type'] = [string]$propertyType }
+                if (-not [string]::IsNullOrWhiteSpace([string]$propertyFormat)) { $shape['format'] = [string]$propertyFormat }
+                if (-not [string]::IsNullOrWhiteSpace([string]$propertyReference)) { $shape['$ref'] = [string]$propertyReference }
+                $shape['nullable'] = [bool](Get-PropertyValue $property 'Nullable')
+                if (-not [string]::IsNullOrWhiteSpace([string]$propertyItemType) -or
+                    -not [string]::IsNullOrWhiteSpace([string]$propertyItemReference)) {
+                    $shape['items'] = [ordered]@{}
+                    if (-not [string]::IsNullOrWhiteSpace([string]$propertyItemType)) { $shape['items']['type'] = [string]$propertyItemType }
+                    if (-not [string]::IsNullOrWhiteSpace([string]$propertyItemReference)) { $shape['items']['$ref'] = [string]$propertyItemReference }
+                }
+                $properties[[string]$property.Name] = $shape
+                if ([bool](Get-PropertyValue $property 'Required')) { $required.Add([string]$property.Name) }
+            }
+            $schemas[[string]$schema.Name] = [ordered]@{
+                type = 'object'
+                properties = $properties
+                required = @($required)
+            }
+        }
+
         return ([ordered]@{
             paths = $paths
-            components = [ordered]@{ schemas = [ordered]@{} }
+            components = [ordered]@{ schemas = $schemas }
         } | ConvertTo-Json -Depth 12 | ConvertFrom-Json)
     }
 
@@ -411,7 +444,7 @@ if ($compareHttpDtos) {
     } else {
         $changedDtoPaths = @(
             git -C $repositoryRoot diff --name-only --diff-filter=ACMRD $BaseRef -- 'FoodDiary.Presentation.Api/**/*.cs' |
-                Where-Object { $_ -match 'HttpModel\.cs$' } |
+                Where-Object { $_ -match 'Http(?:Model|Request|Response)\.cs$' } |
                 Sort-Object -Unique
         )
         if ($LASTEXITCODE -ne 0) { throw "Unable to collect changed HTTP DTO paths from '$BaseRef'." }

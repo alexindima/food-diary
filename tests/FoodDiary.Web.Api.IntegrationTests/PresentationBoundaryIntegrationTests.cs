@@ -713,7 +713,8 @@ public sealed class PresentationBoundaryIntegrationTests(
 
         var snapshot = new OpenApiFocusedSnapshot(
             root.GetProperty("openapi").GetString() ?? string.Empty,
-            endpoints);
+            endpoints,
+            CreateSchemaSnapshots(root));
 
         return JsonSerializer.Serialize(snapshot, IndentedJsonOptions);
     }
@@ -757,6 +758,57 @@ public sealed class PresentationBoundaryIntegrationTests(
             .ThenBy(parameter => parameter.Name, StringComparer.Ordinal)];
 
         return snapshots.Length == 0 ? null : snapshots;
+    }
+
+    private static IReadOnlyList<OpenApiSchemaSnapshot>? CreateSchemaSnapshots(JsonElement root) {
+        if (!root.TryGetProperty("components", out JsonElement components) ||
+            !components.TryGetProperty("schemas", out JsonElement schemas) ||
+            schemas.ValueKind != JsonValueKind.Object) {
+            return null;
+        }
+
+        OpenApiSchemaSnapshot[] snapshots = [.. schemas.EnumerateObject()
+            .Select(schema => {
+                HashSet<string> required = schema.Value.TryGetProperty("required", out JsonElement requiredNode)
+                    ? [.. requiredNode.EnumerateArray().Select(item => item.GetString() ?? string.Empty)]
+                    : [];
+                OpenApiSchemaPropertySnapshot[] properties = schema.Value.TryGetProperty(
+                    "properties",
+                    out JsonElement propertyNodes)
+                    ? [.. propertyNodes.EnumerateObject()
+                        .Select(property => CreateSchemaPropertySnapshot(
+                            property.Name,
+                            property.Value,
+                            required.Contains(property.Name)))
+                        .OrderBy(property => property.Name, StringComparer.Ordinal)]
+                    : [];
+                return new OpenApiSchemaSnapshot(schema.Name, properties);
+            })
+            .OrderBy(schema => schema.Name, StringComparer.Ordinal)];
+
+        return snapshots.Length == 0 ? null : snapshots;
+    }
+
+    private static OpenApiSchemaPropertySnapshot CreateSchemaPropertySnapshot(
+        string name,
+        JsonElement property,
+        bool required) {
+        JsonElement items = property.TryGetProperty("items", out JsonElement itemsNode)
+            ? itemsNode
+            : default;
+        return new OpenApiSchemaPropertySnapshot(
+            name,
+            required,
+            property.TryGetProperty("type", out JsonElement type) ? type.GetString() : null,
+            property.TryGetProperty("format", out JsonElement format) ? format.GetString() : null,
+            property.TryGetProperty("$ref", out JsonElement reference) ? reference.GetString() : null,
+            property.TryGetProperty("nullable", out JsonElement nullable) && nullable.GetBoolean(),
+            items.ValueKind == JsonValueKind.Object && items.TryGetProperty("type", out JsonElement itemType)
+                ? itemType.GetString()
+                : null,
+            items.ValueKind == JsonValueKind.Object && items.TryGetProperty("$ref", out JsonElement itemReference)
+                ? itemReference.GetString()
+                : null);
     }
 
     private static async Task AssertErrorContractSnapshotAsync(string scenario, ErrorPayload payload) {
@@ -806,7 +858,10 @@ public sealed class PresentationBoundaryIntegrationTests(
         DateTimeOffset StartedAtUtc);
 
     [ExcludeFromCodeCoverage]
-    private sealed record OpenApiFocusedSnapshot(string OpenApi, IReadOnlyList<EndpointSnapshot> Endpoints);
+    private sealed record OpenApiFocusedSnapshot(
+        string OpenApi,
+        IReadOnlyList<EndpointSnapshot> Endpoints,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] IReadOnlyList<OpenApiSchemaSnapshot>? Schemas = null);
 
     [ExcludeFromCodeCoverage]
     private sealed record EndpointSnapshot(string Path, IReadOnlyList<OperationSnapshot> Operations);
@@ -826,4 +881,20 @@ public sealed class PresentationBoundaryIntegrationTests(
         string Type,
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Format,
         [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Default);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record OpenApiSchemaSnapshot(
+        string Name,
+        IReadOnlyList<OpenApiSchemaPropertySnapshot> Properties);
+
+    [ExcludeFromCodeCoverage]
+    private sealed record OpenApiSchemaPropertySnapshot(
+        string Name,
+        bool Required,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Type,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Format,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? Reference,
+        bool Nullable,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemType,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] string? ItemReference);
 }

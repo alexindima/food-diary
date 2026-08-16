@@ -453,13 +453,31 @@ $executedChecksByCommand = @{}
 foreach ($executedCheck in @($ExecutedCheck | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) })) {
     $executedChecksByCommand[(Normalize-LlmWikiVerificationCommand ([string]$executedCheck))] = $true
 }
+$frontendVerifyCommand = Normalize-LlmWikiVerificationCommand 'cd FoodDiary.Web.Client && npm run verify'
+function Test-LlmWikiCommandCoverage([string]$CoveringCommand, [string]$RequiredCommand) {
+    if ($CoveringCommand -ceq $RequiredCommand) { return $true }
+    return $CoveringCommand -ceq $frontendVerifyCommand -and
+        $RequiredCommand -match '^cd FoodDiary\.Web\.Client && npm run test:ci:(?:app|ui-kit|tour|admin)(?:\s|$)'
+}
 $commands = @($commands | ForEach-Object {
     $normalizedCommand = Normalize-LlmWikiVerificationCommand ([string]$_.command)
     $receipt = $validReceiptsByCommand[$normalizedCommand]
-    $executedInRequest = $executedChecksByCommand.ContainsKey($normalizedCommand)
+    $coveringExecutedCommand = @($executedChecksByCommand.Keys | Where-Object {
+        Test-LlmWikiCommandCoverage $_ $normalizedCommand
+    } | Select-Object -First 1)
+    $coveringReceipt = @($validReceiptsByCommand.Keys | Where-Object {
+        Test-LlmWikiCommandCoverage $_ $normalizedCommand
+    } | ForEach-Object { $validReceiptsByCommand[$_] } | Select-Object -First 1)
+    $executedInRequest = $coveringExecutedCommand.Count -gt 0
+    if ($null -eq $receipt -and $coveringReceipt.Count -gt 0) { $receipt = $coveringReceipt[0] }
     $receiptEvidence = $null
     if ($executedInRequest) {
-        $receiptEvidence = [pscustomobject]@{ result = 'passed'; source = 'executedChecks'; fingerprint = $null }
+        $receiptEvidence = [pscustomobject]@{
+            result = 'passed'
+            source = $(if ($coveringExecutedCommand[0] -ceq $normalizedCommand) { 'executedChecks' } else { 'executedChecksCoverage' })
+            coveredBy = [string]$coveringExecutedCommand[0]
+            fingerprint = $null
+        }
     } elseif ($null -ne $receipt) {
         $receiptEvidence = [pscustomobject]@{
             result = $receipt.result
