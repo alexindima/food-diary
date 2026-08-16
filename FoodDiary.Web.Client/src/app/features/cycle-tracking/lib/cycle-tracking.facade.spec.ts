@@ -338,6 +338,42 @@ describe('CycleTrackingFacade day form editing', () => {
 });
 
 describe('CycleTrackingFacade symptom values', () => {
+    it('requests scoped symptom removal when an existing symptom is reset to zero', () => {
+        const date = '2026-04-02T00:00:00.000Z';
+        cyclesService.getCurrent.mockReturnValue(
+            of({
+                ...createCycleResponse(),
+                symptoms: [
+                    {
+                        id: 'symptom-1',
+                        cycleProfileId: 'cycle-1',
+                        date,
+                        category: 1,
+                        intensity: 5,
+                        tags: [],
+                    },
+                    {
+                        id: 'symptom-2',
+                        cycleProfileId: 'cycle-1',
+                        date,
+                        category: 2,
+                        intensity: 4,
+                        tags: [],
+                    },
+                ],
+            }),
+        );
+        facade.initialize();
+        facade.editDay(date);
+        facade.dayModel.update(value => ({ ...value, mood: 0 }));
+
+        facade.saveDay();
+
+        const payload = cyclesService.upsertDay.mock.calls[0][1];
+        expect(payload.clearSymptomCategories).toEqual([1]);
+        expect(payload.symptoms).toContainEqual(expect.objectContaining({ category: 2, intensity: 4 }));
+    });
+
     it('clamps symptom values before saving a day', () => {
         facade.initialize();
         facade.dayModel.set({
@@ -364,7 +400,8 @@ describe('CycleTrackingFacade symptom values', () => {
         const payload = cyclesService.upsertDay.mock.calls[0][1];
         expect(payload.bleeding?.painImpact).toBe(0);
         expect(payload.symptoms).toContainEqual({ category: 1, intensity: 10, tags: [], note: null, clearNote: false });
-        expect(payload.symptoms).toContainEqual({ category: 2, intensity: 0, tags: [], note: null, clearNote: false });
+        expect(payload.symptoms).not.toContainEqual(expect.objectContaining({ category: 2 }));
+        expect(payload.clearSymptomCategories).toEqual([]);
     });
 });
 

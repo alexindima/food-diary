@@ -3,9 +3,9 @@
   "summary": {
     "contracts": 1035,
     "ambiguousContracts": 3,
-    "consumerEdges": 7155,
+    "consumerEdges": 7158,
     "productionConsumerEdges": 4380,
-    "testConsumerEdges": 2775,
+    "testConsumerEdges": 2778,
     "consumedContracts": 1035,
     "unconsumedContracts": 0
   },
@@ -22892,6 +22892,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "CreateCycleHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Requests/CreateCycleHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -99395,6 +99408,19 @@
         "FoodDiary.Presentation.Api/Features/Auth/Requests/RegisterHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "RegisterHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Auth/Requests/RegisterHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/DietologistInvitationCurrentUserFlowTests.cs",
       "isTest": true,
       "referenceCount": 1
@@ -107132,7 +107158,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.DayCommands.cs",
       "isTest": true,
-      "referenceCount": 8
+      "referenceCount": 9
     },
     {
       "contract": "UpsertCycleDayCommand",
@@ -107145,7 +107171,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesValidatorTests.cs",
       "isTest": true,
-      "referenceCount": 15
+      "referenceCount": 16
     },
     {
       "contract": "UpsertCycleDayCommand",
@@ -107224,6 +107250,19 @@
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/CyclesControllerCoverageTests.cs",
       "isTest": true,
       "referenceCount": 1
+    },
+    {
+      "contract": "UpsertCycleDayHttpRequest",
+      "roles": [
+        "Request"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpsertCycleDayHttpRequest.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/CycleDaySymptomIntegrationTests.cs",
+      "isTest": true,
+      "referenceCount": 2
     },
     {
       "contract": "UpsertCycleFactorCommand",

@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7a939623edf17ded8c079735f2f6c2d5d165089d703ff93245ed5fff8edd0ff7"
+          "sha256": "5296534543549a206be1d4d807806abc7ef0ca77ccb32f90ac72cb98eb2bdf4e"
         }
       ],
-      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
+      "reason": "Reviewed additive symptom-category clearing contract, domain invariant, privacy lifecycle, focused coverage, full HTTP integration, and frontend verification.",
       "baseRef": "HEAD",
-      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
-      "reviewedAtUtc": "2026-08-16T16:34:50.7946452Z"
+      "gitHead": "446c78716b4b3d00d96ecdcaf1275400d2f6187b",
+      "reviewedAtUtc": "2026-08-16T18:01:04.5991635Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -446,13 +446,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "d2fbadaf885c6456edd4ce31041cd7ed4e5da83468f0d9fd72eb62a44d9a5b80"
+          "sha256": "2702417df12156e24a7acf3574abc0f08faf4dc943ba206edee1961243141ffb"
         }
       ],
-      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
+      "reason": "Reviewed additive symptom-category clearing contract, domain invariant, privacy lifecycle, focused coverage, full HTTP integration, and frontend verification.",
       "baseRef": "HEAD",
-      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
-      "reviewedAtUtc": "2026-08-16T14:17:01.8262398Z"
+      "gitHead": "446c78716b4b3d00d96ecdcaf1275400d2f6187b",
+      "reviewedAtUtc": "2026-08-16T18:01:04.8672748Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "f1f509fc21fea177ffa159b487ffb1d9c29883a02ccf27649d5aaffc95307ec5"
+          "sha256": "e8c223af3c735244c1ef0ef0be0e989a973ce9a9bb1bff339818e6a55ba48034"
         }
       ],
-      "reason": "Reviewed after adding authenticated additive cycle-settings API and localized settings form. Ownership remains enforced by user-scoped repository lookup; no new persistence, provider sharing, logs, exports, retention, or telemetry were introduced. OpenAPI full snapshot was refreshed, API compatibility reports one additive path and no breaking changes, focused backend/frontend tests and desktop/mobile browser QA pass.",
+      "reason": "Reviewed additive symptom-category clearing contract, domain invariant, privacy lifecycle, focused coverage, full HTTP integration, and frontend verification.",
       "baseRef": "HEAD",
-      "gitHead": "01bc11fe251d6e55af97f137452799fc2ddfbe10",
-      "reviewedAtUtc": "2026-08-16T16:34:52.2508089Z"
+      "gitHead": "446c78716b4b3d00d96ecdcaf1275400d2f6187b",
+      "reviewedAtUtc": "2026-08-16T18:01:05.2895553Z"
     },
     {
       "pageId": "workflow-release-readiness",

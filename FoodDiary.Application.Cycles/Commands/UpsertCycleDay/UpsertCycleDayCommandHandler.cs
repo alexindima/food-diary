@@ -81,6 +81,10 @@ public sealed class UpsertCycleDayCommandHandler(
     }
 
     private static void ApplySymptoms(CycleProfile profile, UpsertCycleDayCommand command) {
+        profile.ClearSymptomEntries(
+            command.Date,
+            (command.ClearSymptomCategories ?? []).Select(static category => (CycleSymptomCategory)category).ToHashSet());
+
         foreach (SymptomLogCommandModel symptom in command.Symptoms) {
             profile.UpsertSymptomEntry(
                 command.Date,

@@ -570,6 +570,22 @@ public class CycleProfileInvariantTests {
     }
 
     [Fact]
+    public void ClearSymptomEntries_RemovesOnlySelectedCategoriesForDate() {
+        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
+        profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
+        profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
+        profile.UpsertSymptomEntry(date, CycleSymptomCategory.Mood, 6, tags: [], note: null);
+
+        bool removed = profile.ClearSymptomEntries(date, [CycleSymptomCategory.Pain]);
+
+        Assert.True(removed);
+        Assert.Single(profile.BleedingEntries);
+        CycleSymptomEntry remaining = Assert.Single(profile.SymptomEntries);
+        Assert.Equal(CycleSymptomCategory.Mood, remaining.Category);
+    }
+
+    [Fact]
     public void UpsertBleedingEntry_GroupsOneUnknownDayIntoOneInferredEpisode() {
         DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         var profile = CycleProfile.Create(UserId.New(), start);

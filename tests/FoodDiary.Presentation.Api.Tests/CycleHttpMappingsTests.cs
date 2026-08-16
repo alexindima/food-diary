@@ -56,7 +56,8 @@ public sealed class CycleHttpMappingsTests {
             Bleeding: new BleedingLogHttpModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Medium, PainImpact: 2, Notes: null, ClearNotes: true),
             Symptoms: [new SymptomLogHttpModel((int)CycleSymptomCategory.Pain, 4, ["cramp"], Note: null, ClearNote: false)],
             FertilitySignal: new FertilitySignalHttpModel(36.7, (int)OvulationTestResult.Positive, "egg-white", HadSex: true, Notes: "peak", ClearNotes: false),
-            ClearBleeding: true);
+            ClearBleeding: true,
+            ClearSymptomCategories: [(int)CycleSymptomCategory.Mood]);
 
         UpsertCycleDayCommand command = request.ToCommand(userId, cycleProfileId);
 
@@ -67,6 +68,7 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(bleeding.Type, command.Bleeding!.Type);
         Assert.Equal(bleeding.ClearNotes, command.Bleeding.ClearNotes);
         Assert.True(command.ClearBleeding);
+        Assert.Equal([(int)CycleSymptomCategory.Mood], command.ClearSymptomCategories);
         Assert.Single(command.Symptoms);
         FertilitySignalHttpModel fertilitySignal = request.FertilitySignal!;
         Assert.Equal(fertilitySignal.BasalBodyTemperatureCelsius, command.FertilitySignal!.BasalBodyTemperatureCelsius);

@@ -390,6 +390,7 @@ export class CycleTrackingFacade {
 
         const entryDate = new Date(date);
         const symptoms = this.buildSymptomPayload(formValue);
+        const clearSymptomCategories = this.buildSymptomClearCategories(formValue);
 
         this.isSavingDay.set(true);
         const day = await firstValueFrom(
@@ -407,6 +408,7 @@ export class CycleTrackingFacade {
                         : null,
                     clearBleeding: this.shouldClearBleeding(formValue),
                     symptoms,
+                    clearSymptomCategories,
                     fertilitySignal: this.buildFertilitySignalPayload(formValue),
                 })
                 .pipe(
@@ -753,13 +755,32 @@ export class CycleTrackingFacade {
     }
 
     private buildSymptomPayload(formValue: CycleDayFormModel): SymptomLogPayload[] {
-        return CYCLE_SYMPTOM_FIELDS.map(field => ({
-            category: field.category,
-            intensity: clampCycleSymptom(formValue[field.key]),
-            tags: [],
-            note: null,
-            clearNote: false,
-        }));
+        return CYCLE_SYMPTOM_FIELDS.map(field => ({ field, intensity: clampCycleSymptom(formValue[field.key]) }))
+            .filter(item => item.intensity > MIN_SYMPTOM_VALUE)
+            .map(item => ({
+                category: item.field.category,
+                intensity: item.intensity,
+                tags: [],
+                note: null,
+                clearNote: false,
+            }));
+    }
+
+    private buildSymptomClearCategories(formValue: CycleDayFormModel): Array<CycleSymptomEntry['category']> {
+        const editingDate = this.editingDayDate();
+        if (editingDate === null) {
+            return [];
+        }
+
+        const existingCategories = new Set(
+            this.symptoms()
+                .filter(symptom => toCycleDateKey(symptom.date) === toCycleDateKey(editingDate))
+                .map(symptom => symptom.category),
+        );
+
+        return CYCLE_SYMPTOM_FIELDS.filter(
+            field => existingCategories.has(field.category) && clampCycleSymptom(formValue[field.key]) === MIN_SYMPTOM_VALUE,
+        ).map(field => field.category);
     }
 
     private buildFertilitySignalPayload(formValue: CycleDayFormModel): FertilitySignalPayload | null {

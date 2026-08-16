@@ -240,6 +240,7 @@ export type UpsertCycleDayPayload = {
     bleeding?: BleedingLogPayload | null;
     clearBleeding?: boolean;
     symptoms: SymptomLogPayload[];
+    clearSymptomCategories?: CycleSymptomCategory[];
     fertilitySignal?: FertilitySignalPayload | null;
 };
 

@@ -142,6 +142,14 @@ public class CyclesValidatorTests {
     }
 
     [Fact]
+    public async Task UpsertCycleDay_WithInvalidClearSymptomCategory_HasError() {
+        TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
+            CreateDayCommand(clearSymptomCategories: [999]));
+
+        result.ShouldHaveValidationErrorFor("ClearSymptomCategories[0]");
+    }
+
+    [Fact]
     public async Task UpsertCycleDay_WithValidData_Passes() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(CreateDayCommand());
 
@@ -261,14 +269,16 @@ public class CyclesValidatorTests {
         BleedingLogCommandModel? bleeding = null,
         bool useNullSymptoms = false,
         IReadOnlyList<SymptomLogCommandModel>? symptoms = null,
-        FertilitySignalCommandModel? fertilitySignal = null) =>
+        FertilitySignalCommandModel? fertilitySignal = null,
+        IReadOnlyCollection<int>? clearSymptomCategories = null) =>
         new(
             useNullUserId ? null : userId ?? Guid.NewGuid(),
             cycleProfileId ?? Guid.NewGuid(),
             DateTime.UtcNow,
             bleeding ?? new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: null, ClearNotes: false),
             useNullSymptoms ? null! : symptoms ?? [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], Note: null, ClearNote: false)],
-            fertilitySignal);
+            fertilitySignal,
+            ClearSymptomCategories: clearSymptomCategories);
 
     private static UpsertCycleFactorCommand CreateFactorCommand(
         DateTime? startDate = null,

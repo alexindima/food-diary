@@ -26,6 +26,9 @@ public sealed class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCyc
         RuleForEach(x => x.Symptoms)
             .SetValidator(new SymptomLogCommandModelValidator());
 
+        RuleForEach(x => x.ClearSymptomCategories)
+            .Must(static category => Enum.IsDefined((CycleSymptomCategory)category));
+
         RuleFor(x => x.Bleeding)
             .SetValidator(new BleedingLogCommandModelValidator()!)
             .When(x => x.Bleeding is not null);

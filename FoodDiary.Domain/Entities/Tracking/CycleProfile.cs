@@ -196,6 +196,18 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return true;
     }
 
+    public bool ClearSymptomEntries(DateTime date, IReadOnlyCollection<CycleSymptomCategory> categories) {
+        DateTime normalizedDate = NormalizeDate(date);
+        HashSet<CycleSymptomCategory> categorySet = [.. categories];
+        int removedCount = _symptomEntries.RemoveAll(entry => entry.Date == normalizedDate && categorySet.Contains(entry.Category));
+        if (removedCount == 0) {
+            return false;
+        }
+
+        SetModified();
+        return true;
+    }
+
     public bool ClearDay(DateTime date) {
         DateTime normalizedDate = NormalizeDate(date);
         int removedCount =
