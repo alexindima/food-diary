@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "contracts": 1032,
+    "contracts": 1033,
     "ambiguousContracts": 3,
-    "consumerEdges": 7133,
-    "productionConsumerEdges": 4360,
-    "testConsumerEdges": 2773,
-    "consumedContracts": 1032,
+    "consumerEdges": 7143,
+    "productionConsumerEdges": 4369,
+    "testConsumerEdges": 2774,
+    "consumedContracts": 1033,
     "unconsumedContracts": 0
   },
   "contracts": [
@@ -2551,6 +2551,22 @@
       ],
       "definitionPaths": [
         "FoodDiary.Application.Meals/Commands/DeleteMeal/DeleteMealCommand.cs"
+      ],
+      "ambiguous": false
+    },
+    {
+      "name": "DeleteMenstrualEpisodeCommand",
+      "roles": [
+        "Command"
+      ],
+      "kinds": [
+        "record"
+      ],
+      "areas": [
+        "FoodDiary"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs"
       ],
       "ambiguous": false
     },
@@ -21855,7 +21871,7 @@
         "FoodDiary.Presentation.Api/Features/Cycles/Requests/ConfirmPeriodStartHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -21868,7 +21884,7 @@
         "FoodDiary.Presentation.Api/Features/Cycles/Requests/ConfirmPeriodStartHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -25315,7 +25331,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs",
       "isTest": false,
-      "referenceCount": 5
+      "referenceCount": 3
     },
     {
       "contract": "CycleHttpResponse",
@@ -25329,6 +25345,19 @@
       "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
       "isTest": false,
       "referenceCount": 2
+    },
+    {
+      "contract": "CycleHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
+      "isTest": false,
+      "referenceCount": 3
     },
     {
       "contract": "CycleHttpResponse",
@@ -26588,6 +26617,58 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/MealHttpMappingsTests.cs",
+      "isTest": true,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeleteMenstrualEpisodeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 2
+    },
+    {
+      "contract": "DeleteMenstrualEpisodeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeleteMenstrualEpisodeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "DeleteMenstrualEpisodeCommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs",
       "isTest": true,
       "referenceCount": 1
     },
@@ -45853,6 +45934,19 @@
         "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommand",
+      "roles": [
+        "Command"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommand.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs",
       "isTest": false,
       "referenceCount": 1
@@ -47648,6 +47742,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICommandHandler",
+      "roles": [
+        "CommandHandler"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/ICommandHandler.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -49676,6 +49783,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICurrentUserAccessService",
+      "roles": [
+        "Service"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Users/Common/ICurrentUserAccessService.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -52679,6 +52799,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ICycleWriteRepository",
+      "roles": [
+        "WriteRepository"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Application.Abstractions/Cycles/Common/ICycleWriteRepository.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -80601,6 +80734,19 @@
         "Shared/FoodDiary.Mediator/ISender.cs"
       ],
       "consumerArea": "FoodDiary",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
+      "isTest": false,
+      "referenceCount": 1
+    },
+    {
+      "contract": "ISender",
+      "roles": [
+        "Other"
+      ],
+      "definitionPaths": [
+        "Shared/FoodDiary.Mediator/ISender.cs"
+      ],
+      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Dashboard/DashboardController.cs",
       "isTest": false,
       "referenceCount": 1
@@ -105082,7 +105228,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs",
       "isTest": true,
-      "referenceCount": 2
+      "referenceCount": 3
     },
     {
       "contract": "UpdateMenstrualEpisodeHttpRequest",
@@ -105093,7 +105239,7 @@
         "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateMenstrualEpisodeHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -105106,7 +105252,7 @@
         "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateMenstrualEpisodeHttpRequest.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
       "isTest": false,
       "referenceCount": 1
     },

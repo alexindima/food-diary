@@ -232,7 +232,11 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return episode;
     }
 
-    public MenstrualEpisode UpdateMenstrualEpisode(MenstrualEpisodeId episodeId, DateTime startDate, DateTime? endDate) {
+    public MenstrualEpisode UpdateMenstrualEpisode(
+        MenstrualEpisodeId episodeId,
+        DateTime startDate,
+        DateTime? endDate,
+        bool? excludedFromPredictions = null) {
         if (episodeId == MenstrualEpisodeId.Empty) {
             throw new ArgumentException("Menstrual episode id is required.", nameof(episodeId));
         }
@@ -252,9 +256,28 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         }
 
         episode.UpdateConfirmedRange(normalizedStart, normalizedEnd);
+        if (excludedFromPredictions.HasValue) {
+            episode.SetPredictionExclusion(excludedFromPredictions.Value);
+        }
         ReconcileMenstrualEpisodes();
         SetModified();
         return episode;
+    }
+
+    public void RemoveMenstrualEpisode(MenstrualEpisodeId episodeId) {
+        if (episodeId == MenstrualEpisodeId.Empty) {
+            throw new ArgumentException("Menstrual episode id is required.", nameof(episodeId));
+        }
+
+        MenstrualEpisode episode = _menstrualEpisodes.FirstOrDefault(item => item.Id == episodeId)
+            ?? throw new KeyNotFoundException($"Menstrual episode {episodeId.Value} was not found.");
+        if (episode.Status != MenstrualEpisodeStatus.Confirmed) {
+            throw new InvalidOperationException("Only confirmed menstrual episodes can be removed.");
+        }
+
+        _menstrualEpisodes.Remove(episode);
+        ReconcileMenstrualEpisodes();
+        SetModified();
     }
 
     public void ReconcileMenstrualEpisodes() {

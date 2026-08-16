@@ -205,6 +205,16 @@ describe('CyclesService menstrual episodes', () => {
         expect(req.request.body).toEqual(payload);
         req.flush(MOCK_CYCLE);
     });
+
+    it('should delete a confirmed menstrual episode', () => {
+        service.deleteMenstrualEpisode('c-1', 'episode-1').subscribe(cycle => {
+            expect(cycle).toEqual(MOCK_CYCLE);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/c-1/menstrual-episodes/episode-1`);
+        expect(req.request.method).toBe('DELETE');
+        req.flush(MOCK_CYCLE);
+    });
 });
 
 describe('CyclesService factor mutations', () => {

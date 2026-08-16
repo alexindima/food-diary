@@ -335,6 +335,18 @@
                                                     : ('CYCLE_TRACKING.EPISODE_OPEN_END' | translate)
                                             }}
                                         </span>
+                                        <span class="fd-ui-body-sm">
+                                            {{
+                                                episode.status === 1
+                                                    ? ('CYCLE_TRACKING.EPISODE_CONFIRMED' | translate)
+                                                    : ('CYCLE_TRACKING.EPISODE_INFERRED' | translate)
+                                            }}
+                                        </span>
+                                        @if (episode.excludedFromPredictions) {
+                                            <span class="fd-ui-body-sm">
+                                                {{ 'CYCLE_TRACKING.EPISODE_EXCLUDED' | translate }}
+                                            </span>
+                                        }
                                         @if (episode.status === 1) {
                                             <fd-ui-button
                                                 type="button"
@@ -343,6 +355,29 @@
                                                 (click)="editMenstrualEpisode(episode.id)"
                                             >
                                                 {{ 'CYCLE_TRACKING.EDIT_EPISODE' | translate }}
+                                            </fd-ui-button>
+                                            <fd-ui-button
+                                                type="button"
+                                                variant="secondary"
+                                                fill="text"
+                                                [loading]="excludingEpisodeId() === episode.id"
+                                                (click)="toggleMenstrualEpisodePrediction(episode.id)"
+                                            >
+                                                {{
+                                                    (episode.excludedFromPredictions
+                                                        ? 'CYCLE_TRACKING.INCLUDE_EPISODE'
+                                                        : 'CYCLE_TRACKING.EXCLUDE_EPISODE'
+                                                    ) | translate
+                                                }}
+                                            </fd-ui-button>
+                                            <fd-ui-button
+                                                type="button"
+                                                variant="danger"
+                                                fill="text"
+                                                [loading]="deletingEpisodeId() === episode.id"
+                                                (click)="deleteMenstrualEpisode(episode.id)"
+                                            >
+                                                {{ 'CYCLE_TRACKING.DELETE_EPISODE' | translate }}
                                             </fd-ui-button>
                                         }
                                     </div>

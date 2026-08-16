@@ -10,13 +10,13 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Results;
 
-namespace FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
+namespace FoodDiary.Application.Cycles.Commands.DeleteMenstrualEpisode;
 
-public sealed class UpdateMenstrualEpisodeCommandHandler(
+public sealed class DeleteMenstrualEpisodeCommandHandler(
     ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
-    : ICommandHandler<UpdateMenstrualEpisodeCommand, Result<CycleModel>> {
-    public async Task<Result<CycleModel>> Handle(UpdateMenstrualEpisodeCommand command, CancellationToken cancellationToken) {
+    : ICommandHandler<DeleteMenstrualEpisodeCommand, Result<CycleModel>> {
+    public async Task<Result<CycleModel>> Handle(DeleteMenstrualEpisodeCommand command, CancellationToken cancellationToken) {
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
             command.CycleProfileId,
             nameof(command.CycleProfileId),
@@ -60,13 +60,7 @@ public sealed class UpdateMenstrualEpisodeCommandHandler(
         }
 
         try {
-            profile.UpdateMenstrualEpisode(
-                episodeIdResult.Value,
-                command.StartDate,
-                command.EndDate,
-                command.ExcludedFromPredictions);
-        } catch (ArgumentException exception) {
-            return Result.Failure<CycleModel>(Errors.Validation.Invalid(nameof(command.StartDate), exception.Message));
+            profile.RemoveMenstrualEpisode(episodeIdResult.Value);
         } catch (InvalidOperationException exception) {
             return Result.Failure<CycleModel>(Errors.Validation.Invalid(nameof(command.MenstrualEpisodeId), exception.Message));
         }

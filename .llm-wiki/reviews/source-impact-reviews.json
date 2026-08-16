@@ -166,13 +166,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "ccb5ea02d1648184a17dfa85a95900c2ada9e422c669a3afae1062662113a68e"
+          "sha256": "b6ac5721c2454bf4fb26f0cc368e6ec531872fd16cc31e641deb941f3448fa9f"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:49.9383260Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:00.8605484Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -181,13 +181,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "dacaf14432197adb34ccc5396c8153075442d9df0603d716f07c200e0b2de8a2"
+          "sha256": "8f46a994071b475f99a3f9e172589432e86d3bb09ea1601c965b517e202cb9e4"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:50.1460321Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:01.0680395Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "85b08881cc1f428ce939349627747700e1b1bb42edd7228cb061d4ddc056ca27"
+          "sha256": "838eb5d7e35875e924c736b56f441f948b0bb58a0c172cb4088336d164564725"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:50.6283518Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:01.5745025Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -446,13 +446,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "4b15d1c4a1deafbf7f402e1a82e10c894a241049e63231af110870ca697db606"
+          "sha256": "d2fbadaf885c6456edd4ce31041cd7ed4e5da83468f0d9fd72eb62a44d9a5b80"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:50.9243743Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:01.8262398Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -721,13 +721,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c5e46104ad3622c40b46108ef361ef7f8b9ed1034bcff3b442bb95a9a5688694"
+          "sha256": "dede454b1d4f43b05300e295217717425224a851d86c16ebebd97cec962c7ec8"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:51.7278913Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:02.5339508Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -766,13 +766,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "340039ed52c103665b84d6bc33887bbceaefc7174b7421e513f74b38b98a3685"
+          "sha256": "475e1f89a5bc870668012893ca696f58a163690408e9e8aa378a973c31fa30aa"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:52.1619128Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:02.9394031Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -989,17 +989,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3593c499600c5c403ffa9d5926ae476158e55ad63fd34790e966246b70f91017"
+          "sha256": "3190fc5c571ec0e86269f94cf42073105924feb6642619cca6c82abc297db3ce"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "180eb9f6c322d9cd309ad33e07263b41b6ba93434f70f2f3c74dd93e8707a14f"
+          "sha256": "857fd0f596356916b8c813c5af53dab2b81b1f859c648e756afd40b15d08c19a"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:52.9118930Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:03.6486255Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1087,13 +1087,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "3593c499600c5c403ffa9d5926ae476158e55ad63fd34790e966246b70f91017"
+          "sha256": "3190fc5c571ec0e86269f94cf42073105924feb6642619cca6c82abc297db3ce"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:51.3691121Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:02.2140149Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1102,13 +1102,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "1cf249ed4717a38f34c2c4bd9ba1a87c315b7f1865039ffa2cc0d577c578bb94"
+          "sha256": "b06a01da64172d2030463e1f29db88472104a85e2c2daf1e12394bae3dbb3b40"
         }
       ],
-      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
+      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
       "baseRef": "HEAD",
-      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
-      "reviewedAtUtc": "2026-08-16T13:07:52.4326795Z"
+      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
+      "reviewedAtUtc": "2026-08-16T14:17:03.2130722Z"
     },
     {
       "pageId": "workflow.review-diff",

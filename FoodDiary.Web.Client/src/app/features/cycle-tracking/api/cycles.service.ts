@@ -63,6 +63,12 @@ export class CyclesService extends ApiService {
         );
     }
 
+    public deleteMenstrualEpisode(cycleProfileId: string, menstrualEpisodeId: string): Observable<CycleResponse> {
+        return this.delete<CycleResponse>(`${cycleProfileId}/menstrual-episodes/${menstrualEpisodeId}`).pipe(
+            catchError((error: unknown) => rethrowApiError('Menstrual episode delete error', error)),
+        );
+    }
+
     public upsertFactor(cycleProfileId: string, payload: UpsertCycleFactorPayload): Observable<CycleResponse> {
         return this.put<CycleResponse>(`${cycleProfileId}/factors`, payload).pipe(
             map(cycle => cycle),

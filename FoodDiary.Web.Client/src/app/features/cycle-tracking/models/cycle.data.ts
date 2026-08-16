@@ -242,4 +242,5 @@ export type UpsertCycleFactorPayload = {
 export type UpdateMenstrualEpisodePayload = {
     startDate: string;
     endDate?: string | null;
+    excludedFromPredictions?: boolean;
 };

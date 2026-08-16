@@ -8,9 +8,12 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
+import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
+import { filter } from 'rxjs';
 
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
@@ -93,6 +96,7 @@ export class CycleTrackingPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
+    private readonly dialogService = inject(FdUiDialogService);
     private readonly languageVersion = signal(0);
     protected readonly isDayEditorOpen = signal(false);
     protected readonly areAdvancedDayFieldsOpen = signal(false);
@@ -102,6 +106,8 @@ export class CycleTrackingPageComponent {
     protected readonly isSavingDay = this.facade.isSavingDay;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isSavingEpisode = this.facade.isSavingEpisode;
+    protected readonly excludingEpisodeId = this.facade.excludingEpisodeId;
+    protected readonly deletingEpisodeId = this.facade.deletingEpisodeId;
     protected readonly isExportingCycle = this.facade.isExportingCycle;
     protected readonly clearingDayDate = this.facade.clearingDayDate;
     protected readonly editingDayDate = this.facade.editingDayDate;
@@ -236,6 +242,31 @@ export class CycleTrackingPageComponent {
 
     protected cancelMenstrualEpisodeEdit(): void {
         this.facade.cancelMenstrualEpisodeEdit();
+    }
+
+    protected toggleMenstrualEpisodePrediction(episodeId: string): void {
+        void this.facade.toggleMenstrualEpisodePredictionAsync(episodeId);
+    }
+
+    protected deleteMenstrualEpisode(episodeId: string): void {
+        this.dialogService
+            .open(FdUiConfirmDialogComponent, {
+                size: 'sm',
+                data: {
+                    title: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE_TITLE'),
+                    message: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE_MESSAGE'),
+                    confirmLabel: this.translateService.instant('CYCLE_TRACKING.DELETE_EPISODE'),
+                    danger: true,
+                },
+            })
+            .afterClosed()
+            .pipe(
+                filter((confirmed): confirmed is true => confirmed === true),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                void this.facade.deleteMenstrualEpisodeAsync(episodeId);
+            });
     }
 
     protected editFactor(factorId: string): void {

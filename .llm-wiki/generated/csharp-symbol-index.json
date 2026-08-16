@@ -8,22 +8,22 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3246,
-    "symbols": 3255,
+    "sourceFiles": 3250,
+    "symbols": 3259,
     "interfaceImplementationLinks": 231,
     "dependencyInjectionRegistrations": 232,
     "kinds": {
-      "class": 1663,
+      "class": 1666,
       "enum": 50,
       "interface": 411,
-      "record": 1017,
+      "record": 1018,
       "record struct": 114
     },
     "roles": {
-      "Command": 155,
-      "CommandHandler": 151,
+      "Command": 156,
+      "CommandHandler": 152,
       "Configuration": 84,
-      "Controller": 88,
+      "Controller": 89,
       "Entity": 82,
       "Event": 19,
       "Factory": 8,
@@ -41,7 +41,7 @@
       "Request": 127,
       "Response": 172,
       "Service": 269,
-      "Validator": 184,
+      "Validator": 185,
       "ValueObject": 124,
       "WriteRepository": 46
     }
@@ -6199,6 +6199,27 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "DeleteMenstrualEpisodeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "DeleteMenstrualEpisodeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "DeleteMenstrualEpisodeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
+      "line": 4
     },
     {
       "name": "UpdateMenstrualEpisodeCommand",
@@ -18329,7 +18350,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "CycleHttpResponseMappings",
@@ -18337,6 +18358,13 @@
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpResponseMappings.cs",
       "line": 6
+    },
+    {
+      "name": "MenstrualEpisodesController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
+      "line": 14
     },
     {
       "name": "BleedingLogHttpModel",

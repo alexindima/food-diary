@@ -79,4 +79,17 @@ public sealed class MenstrualEpisode : Entity<MenstrualEpisodeId> {
         EndDate = normalizedEnd;
         SetModified();
     }
+
+    internal void SetPredictionExclusion(bool excludedFromPredictions) {
+        if (Status != MenstrualEpisodeStatus.Confirmed) {
+            throw new InvalidOperationException("Only confirmed menstrual episodes can be excluded from predictions.");
+        }
+
+        if (ExcludedFromPredictions == excludedFromPredictions) {
+            return;
+        }
+
+        ExcludedFromPredictions = excludedFromPredictions;
+        SetModified();
+    }
 }

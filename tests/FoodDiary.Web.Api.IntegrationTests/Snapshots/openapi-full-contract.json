@@ -1752,6 +1752,26 @@
       "Path": "/api/v{version}/cycles/{cycleprofileid}/menstrual-episodes/{menstrualepisodeid}",
       "Operations": [
         {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        },
+        {
           "Method": "put",
           "HasRequestBody": true,
           "ResponseCodes": [

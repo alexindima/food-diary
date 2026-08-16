@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 149,
     "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 20,
+    "criticalSymbolsWithoutTestReferences": 22,
     "explicitDebtMarkers": 3
   },
   "projectDependencyViolations": [],
@@ -5233,6 +5233,14 @@
       "testReferences": []
     },
     {
+      "name": "MenstrualEpisodesController",
+      "role": "Controller",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
+      "line": 14,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
       "name": "BillingWebhookEventValidator",
       "role": "Validator",
       "path": "FoodDiary.Application.Billing/Commands/ProcessBillingWebhook/BillingWebhookEventValidator.cs",
@@ -5244,6 +5252,14 @@
       "name": "ConfirmPeriodStartCommandValidator",
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/ConfirmPeriodStart/ConfirmPeriodStartCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "DeleteMenstrualEpisodeCommandValidator",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []

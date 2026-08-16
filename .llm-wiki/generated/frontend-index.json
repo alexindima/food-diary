@@ -2710,7 +2710,7 @@
       "role": "Component",
       "selector": "fd-cycle-tracking-page",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "line": 90
+      "line": 93
     },
     {
       "name": "DashboardService",
@@ -5936,8 +5936,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3304,
-      "russianProperties": 3304,
+      "englishProperties": 3312,
+      "russianProperties": 3312,
       "countsMatch": true
     },
     {

@@ -625,4 +625,34 @@ public class CycleProfileInvariantTests {
         Assert.Throws<ArgumentException>(() =>
             profile.UpdateMenstrualEpisode(second.Id, start.AddDays(3), start.AddDays(8)));
     }
+
+    [Fact]
+    public void UpdateMenstrualEpisode_CanExcludeAndRestoreConfirmedEpisodeFromPredictions() {
+        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), start);
+        MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
+
+        profile.UpdateMenstrualEpisode(episode.Id, start, start.AddDays(3), excludedFromPredictions: true);
+        Assert.True(episode.ExcludedFromPredictions);
+
+        profile.UpdateMenstrualEpisode(episode.Id, start, start.AddDays(3), excludedFromPredictions: false);
+        Assert.False(episode.ExcludedFromPredictions);
+    }
+
+    [Fact]
+    public void RemoveMenstrualEpisode_PreservesDailyFactsAndRebuildsInferredEpisode() {
+        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), start);
+        profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Medium, 2, "kept");
+        MenstrualEpisode confirmed = profile.ConfirmPeriodStart(start);
+
+        profile.RemoveMenstrualEpisode(confirmed.Id);
+
+        BleedingEntry bleeding = Assert.Single(profile.BleedingEntries);
+        MenstrualEpisode inferred = Assert.Single(profile.MenstrualEpisodes);
+        Assert.Multiple(
+            () => Assert.Equal("kept", bleeding.Notes),
+            () => Assert.Equal(start, inferred.StartDate),
+            () => Assert.Equal(MenstrualEpisodeStatus.Inferred, inferred.Status));
+    }
 }

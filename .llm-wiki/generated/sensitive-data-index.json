@@ -6,10 +6,10 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1444,
+    "candidateFields": 1445,
     "credential": 152,
     "identity": 153,
-    "health": 643,
+    "health": 644,
     "financial": 199,
     "privateContent": 297,
     "boundaryFiles": 183,
@@ -3670,6 +3670,13 @@
       "type": "int?",
       "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommand.cs",
       "line": 11
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
+      "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommand.cs",
+      "line": 9
     },
     {
       "category": "health",

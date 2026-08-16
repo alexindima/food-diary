@@ -39,10 +39,16 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
 - `GET /api/v{version:apiVersion}/cycles/current/nutrition-summary`
 - `POST /api/v{version:apiVersion}/cycles`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
-- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start`
-- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}`
 - `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors`
+
+### MenstrualEpisodesController
+
+Source: `FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs`
+
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}`
+- `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}`
 
 ## Boundary Health
 

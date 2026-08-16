@@ -1,3 +1,4 @@
+using FoodDiary.Application.Cycles.Commands.DeleteMenstrualEpisode;
 using FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.Entities.Tracking;
@@ -51,5 +52,49 @@ public partial class CyclesFeatureTests {
 
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.WasUpdated);
+    }
+
+    [Fact]
+    public async Task UpdateMenstrualEpisodeCommandHandler_WithPredictionExclusion_UpdatesPredictionEligibility() {
+        var user = User.Create("cycle-episode-exclusion@example.com", "hash");
+        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, start);
+        MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpdateMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpdateMenstrualEpisodeCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                episode.Id.Value,
+                start,
+                start.AddDays(3),
+                ExcludedFromPredictions: true),
+            CancellationToken.None);
+
+        CycleModel model = ResultAssert.Success(result);
+        Assert.True(Assert.Single(model.MenstrualEpisodes!).ExcludedFromPredictions);
+    }
+
+    [Fact]
+    public async Task DeleteMenstrualEpisodeCommandHandler_WithConfirmedEpisode_PreservesDailyFacts() {
+        var user = User.Create("cycle-episode-delete@example.com", "hash");
+        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, start);
+        profile.UpsertBleedingEntry(start, FoodDiary.Domain.Enums.BleedingType.Bleeding, FoodDiary.Domain.Enums.CycleFlowLevel.Light, 1, "kept");
+        MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new DeleteMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new DeleteMenstrualEpisodeCommand(user.Id.Value, profile.Id.Value, episode.Id.Value),
+            CancellationToken.None);
+
+        CycleModel model = ResultAssert.Success(result);
+        Assert.Multiple(
+            () => Assert.Single(model.BleedingEntries),
+            () => Assert.Equal(FoodDiary.Domain.Enums.MenstrualEpisodeStatus.Inferred, Assert.Single(model.MenstrualEpisodes!).Status),
+            () => Assert.True(repository.WasUpdated));
     }
 }

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.DeleteMenstrualEpisode;
 using FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
@@ -49,6 +50,9 @@ public static class CycleHttpMappings {
     extension(Guid cycleProfileId) {
         public ClearCycleDayCommand ToClearDayCommand(Guid userId, DateTime date) =>
                 new(userId, cycleProfileId, date);
+
+        public DeleteMenstrualEpisodeCommand ToDeleteMenstrualEpisodeCommand(Guid userId, Guid menstrualEpisodeId) =>
+            new(userId, cycleProfileId, menstrualEpisodeId);
     }
 
     extension(UpsertCycleFactorHttpRequest request) {
@@ -70,7 +74,13 @@ public static class CycleHttpMappings {
 
     extension(UpdateMenstrualEpisodeHttpRequest request) {
         public UpdateMenstrualEpisodeCommand ToCommand(Guid userId, Guid cycleProfileId, Guid menstrualEpisodeId) =>
-            new(userId, cycleProfileId, menstrualEpisodeId, request.StartDate, request.EndDate);
+            new(
+                userId,
+                cycleProfileId,
+                menstrualEpisodeId,
+                request.StartDate,
+                request.EndDate,
+                request.ExcludedFromPredictions);
     }
 
     extension(BleedingLogHttpModel model) {

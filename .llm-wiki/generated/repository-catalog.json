@@ -19,8 +19,8 @@
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
-    "controllers": 85,
-    "endpoints": 273,
+    "controllers": 86,
+    "endpoints": 274,
     "agentGuides": 74,
     "documentationPages": 46
   },
@@ -4081,24 +4081,36 @@
             "line": 35
           },
           {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start",
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
             "line": 42
           },
           {
             "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}",
-            "line": 52
-          },
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors",
+            "line": 49
+          }
+        ]
+      },
+      {
+        "name": "MenstrualEpisodesController",
+        "path": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
+        "routePrefix": "api/v{version:apiVersion}/cycles",
+        "endpoints": [
           {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
-            "line": 63
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start",
+            "line": 15
           },
           {
             "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors",
-            "line": 70
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}",
+            "line": 25
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}",
+            "line": 36
           }
         ]
       },

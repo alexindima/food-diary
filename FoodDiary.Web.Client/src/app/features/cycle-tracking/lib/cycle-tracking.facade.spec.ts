@@ -23,10 +23,12 @@ let facade: CycleTrackingFacade;
 let cyclesService: {
     clearDay: ReturnType<typeof vi.fn<CyclesService['clearDay']>>;
     create: ReturnType<typeof vi.fn<CyclesService['create']>>;
+    deleteMenstrualEpisode: ReturnType<typeof vi.fn<CyclesService['deleteMenstrualEpisode']>>;
     getCurrent: ReturnType<typeof vi.fn<CyclesService['getCurrent']>>;
     getNutritionSummary: ReturnType<typeof vi.fn<CyclesService['getNutritionSummary']>>;
     upsertDay: ReturnType<typeof vi.fn<CyclesService['upsertDay']>>;
     upsertFactor: ReturnType<typeof vi.fn<CyclesService['upsertFactor']>>;
+    updateMenstrualEpisode: ReturnType<typeof vi.fn<CyclesService['updateMenstrualEpisode']>>;
 };
 let exportService: { exportCycle: ReturnType<typeof vi.fn<ExportService['exportCycle']>> };
 
@@ -46,6 +48,9 @@ beforeEach(() => {
                 predictions: null,
             }),
         ),
+        deleteMenstrualEpisode: vi
+            .fn<CyclesService['deleteMenstrualEpisode']>()
+            .mockReturnValue(of({ ...createCycleResponse(), menstrualEpisodes: [] })),
         upsertDay: vi.fn<CyclesService['upsertDay']>().mockReturnValue(of(createCycleLogDay())),
         upsertFactor: vi.fn<CyclesService['upsertFactor']>().mockReturnValue(
             of({
@@ -58,6 +63,21 @@ beforeEach(() => {
                         startDate: '2026-04-01T00:00:00.000Z',
                         endDate: null,
                         notes: 'pill',
+                    },
+                ],
+            }),
+        ),
+        updateMenstrualEpisode: vi.fn<CyclesService['updateMenstrualEpisode']>().mockReturnValue(
+            of({
+                ...createCycleResponse(),
+                menstrualEpisodes: [
+                    {
+                        id: 'episode-1',
+                        cycleProfileId: 'cycle-1',
+                        startDate: '2026-04-01T00:00:00.000Z',
+                        endDate: '2026-04-05T00:00:00.000Z',
+                        status: 1,
+                        excludedFromPredictions: true,
                     },
                 ],
             }),
@@ -421,6 +441,30 @@ describe('CycleTrackingFacade factors', () => {
     });
 });
 
+describe('CycleTrackingFacade menstrual episodes', () => {
+    it('toggles prediction exclusion and applies the returned cycle', async () => {
+        facade.initialize();
+
+        await facade.toggleMenstrualEpisodePredictionAsync('episode-1');
+
+        expect(cyclesService.updateMenstrualEpisode).toHaveBeenCalledWith('cycle-1', 'episode-1', {
+            startDate: '2026-04-01T00:00:00.000Z',
+            endDate: '2026-04-05T00:00:00.000Z',
+            excludedFromPredictions: true,
+        });
+        expect(facade.menstrualEpisodes()[0]?.excludedFromPredictions).toBe(true);
+    });
+
+    it('deletes a confirmed episode and applies the returned cycle', async () => {
+        facade.initialize();
+
+        await facade.deleteMenstrualEpisodeAsync('episode-1');
+
+        expect(cyclesService.deleteMenstrualEpisode).toHaveBeenCalledWith('cycle-1', 'episode-1');
+        expect(facade.menstrualEpisodes()).toEqual([]);
+    });
+});
+
 describe('CycleTrackingFacade export', () => {
     it('exports the current cycle from tracking start to today', () => {
         facade.initialize();
@@ -491,6 +535,16 @@ function createCycleResponse(): CycleResponse {
             },
         ],
         fertilitySignals: [],
+        menstrualEpisodes: [
+            {
+                id: 'episode-1',
+                cycleProfileId: 'cycle-1',
+                startDate: '2026-04-01T00:00:00.000Z',
+                endDate: '2026-04-05T00:00:00.000Z',
+                status: 1,
+                excludedFromPredictions: false,
+            },
+        ],
         predictions: {
             nextPeriodStartFrom: '2026-04-29T00:00:00Z',
             nextPeriodStartTo: '2026-05-01T00:00:00Z',
