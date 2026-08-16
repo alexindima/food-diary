@@ -582,13 +582,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "e5967a30f23b37e3c8dbdd7a5087b0e73cce61540687d20729ef8d85964244f3"
+          "sha256": "83658c592217197d7fb3c3a9870eb0687e5df5dde4f7782768af399c5beb431f"
         }
       ],
-      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
+      "reason": "Reviewed test-plan precision changes: direct frontend tests remain within changed feature roots unless supported by consumer edges; compatible commands are grouped and every emitted command ID is deterministic and unique.",
       "baseRef": "HEAD",
-      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
-      "reviewedAtUtc": "2026-08-16T12:10:33.7381614Z"
+      "gitHead": "1859e5b5a1ebc81d0071787eb00a945fc7bd9f5b",
+      "reviewedAtUtc": "2026-08-16T13:45:26.7709623Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -974,13 +974,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "e5967a30f23b37e3c8dbdd7a5087b0e73cce61540687d20729ef8d85964244f3"
+          "sha256": "83658c592217197d7fb3c3a9870eb0687e5df5dde4f7782768af399c5beb431f"
         }
       ],
-      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
+      "reason": "Reviewed test-plan precision changes: direct frontend tests remain within changed feature roots unless supported by consumer edges; compatible commands are grouped and every emitted command ID is deterministic and unique.",
       "baseRef": "HEAD",
-      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
-      "reviewedAtUtc": "2026-08-16T12:10:35.0226938Z"
+      "gitHead": "1859e5b5a1ebc81d0071787eb00a945fc7bd9f5b",
+      "reviewedAtUtc": "2026-08-16T13:45:27.1143661Z"
     },
     {
       "pageId": "workflow-trace-feature",

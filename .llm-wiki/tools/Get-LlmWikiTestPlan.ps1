@@ -203,8 +203,25 @@ Add-RankedTests $changedTestFiles 100 'changed-test'
 Add-RankedTests @($plannedDirectoryTests | Sort-Object) 95 'planned-directory-spec'
 Add-RankedTests @($siblingTests | Sort-Object) 90 'direct-sibling-spec'
 Add-RankedTests @($consumerTests | Sort-Object) 80 'direct-component-consumer'
-Add-RankedTests @($directTests | Sort-Object) 90 'references-changed-symbol'
-Add-RankedTests @($diff.focusedTests) 40 'downstream-context'
+$changedFrontendFeatureRoots = @($effectivePaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/(?:src/app|projects/[^/]+/src/app)/features/[^/]+' } | ForEach-Object {
+    [regex]::Match(([string]$_).Replace('\', '/'), '^FoodDiary\.Web\.Client/(?:src/app|projects/[^/]+/src/app)/features/[^/]+').Value
+} | Sort-Object -Unique)
+$affineDirectTests = @($directTests | Where-Object {
+    $testPath = ([string]$_).Replace('\', '/')
+    $testPath -notmatch '^FoodDiary\.Web\.Client/' -or
+        $changedFrontendFeatureRoots.Count -eq 0 -or
+        @($changedFrontendFeatureRoots | Where-Object { $testPath.StartsWith("$_/", [StringComparison]::OrdinalIgnoreCase) }).Count -gt 0
+} | Sort-Object)
+Add-RankedTests $affineDirectTests 90 'references-changed-symbol-in-feature-boundary'
+$scopeAffinityTokens = @($effectivePaths | ForEach-Object {
+    [regex]::Matches(([string]$_).ToLowerInvariant(), '[a-z0-9]+') | ForEach-Object Value
+} | Where-Object { $_.Length -ge 5 -and $_ -notin @('fooddiary', 'application', 'client', 'features', 'tests', 'integration') } | Sort-Object -Unique)
+$affineDownstreamTests = @($diff.focusedTests | Where-Object {
+    $testPath = if ($_ -is [string]) { [string]$_ } elseif ($_.PSObject.Properties['path']) { [string]$_.path } else { '' }
+    $normalizedTestPath = $testPath.ToLowerInvariant()
+    $scopeAffinityTokens.Count -eq 0 -or @($scopeAffinityTokens | Where-Object { $normalizedTestPath.Contains($_) }).Count -gt 0
+} | ForEach-Object { if ($_ -is [string]) { [string]$_ } else { [string]$_.path } })
+Add-RankedTests $affineDownstreamTests 40 'downstream-context-with-path-affinity'
 $selectedFocusedTests = @($rankedFocusedTests | Select-Object -First $Limit)
 
 function Add-Scenario {
@@ -291,7 +308,7 @@ $commands = @(@(
         reason = "triggered-policy:$($_.sourceRule)"
     } }) +
     @($diff.recommendedChecks | ForEach-Object { [pscustomobject]@{
-        id = 'recommended'
+        id = "recommended-$((Get-LlmWikiSha256 ([string]$_)).Substring(0, 10))"
         command = $_
         source = 'context'
         priority = 'full-regression'
@@ -362,7 +379,7 @@ foreach ($focusedTest in @($selectedFocusedTests | Where-Object { $_.path -match
 }
 foreach ($focusedProject in $backendFocusedProjects.GetEnumerator()) {
     $commands += [pscustomobject]@{
-        id = 'focused-backend'
+        id = "focused-backend-$([IO.Path]::GetFileNameWithoutExtension($focusedProject.Key).ToLowerInvariant())"
         command = "dotnet test $($focusedProject.Key) --no-restore"
         source = 'focused-test'
         priority = [string]$focusedProject.Value.priority
@@ -417,6 +434,14 @@ if ($presentationBoundaryChange -or ($contractBoundaryChange -and @($effectivePa
 $commands = @($commands | Group-Object { ([string]$_.command) -replace '\s+--no-restore\s*$', '' } | ForEach-Object {
     @($_.Group | Sort-Object @{ Expression = { switch ($_.priority) { 'required' { 0 } 'recommended' { 1 } 'contextual' { 2 } default { 3 } } } }, command | Select-Object -First 1)
 } | Sort-Object command)
+$commandIdCounts = @{}
+$commands = @($commands | ForEach-Object {
+    $baseId = [string]$_.id
+    if (-not $commandIdCounts.ContainsKey($baseId)) { $commandIdCounts[$baseId] = 0 }
+    $commandIdCounts[$baseId]++
+    if ($commandIdCounts[$baseId] -gt 1) { $_.id = "$baseId-$($commandIdCounts[$baseId])" }
+    $_
+})
 $validReceiptsByCommand = @{}
 foreach ($receipt in @($verificationReceipts | Where-Object validForCurrentState)) {
     if (-not $validReceiptsByCommand.ContainsKey([string]$receipt.normalizedCommand)) {
