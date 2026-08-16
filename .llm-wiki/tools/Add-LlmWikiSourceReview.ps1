@@ -33,11 +33,12 @@ function Get-ContentHash([string]$RepositoryPath) {
 }
 
 if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
+    $workspaceHead = Test-LlmWikiWorkspaceHeadRef $HeadRef
     $gitArguments = @('diff', '--name-only', '--diff-filter=ACMRD', $BaseRef)
-    if (-not [string]::IsNullOrWhiteSpace($HeadRef)) { $gitArguments += $HeadRef }
+    if (-not $workspaceHead) { $gitArguments += $HeadRef }
     $gitArguments += '--'
     $ChangedPath = @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments $gitArguments -FailureMessage "git diff failed for base '$BaseRef'.")
-    if ([string]::IsNullOrWhiteSpace($HeadRef)) {
+    if ($workspaceHead) {
         $ChangedPath += @(Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('ls-files', '--others', '--exclude-standard') -FailureMessage 'git ls-files failed while collecting untracked paths.')
     }
 }

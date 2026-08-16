@@ -1,8 +1,14 @@
+import { afterEach } from 'vitest';
+
 installWebStorageMock('localStorage');
 installWebStorageMock('sessionStorage');
 installResizeObserverMock();
 installCssParseWarningFilter();
 installCssParseStderrFilter();
+
+afterEach(() => {
+    globalThis.localStorage.removeItem('fd_measurement_system');
+});
 
 function installWebStorageMock(storageName: 'localStorage' | 'sessionStorage'): void {
     const current = getOwnGlobalValue(storageName);

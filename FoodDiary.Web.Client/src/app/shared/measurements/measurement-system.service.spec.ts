@@ -1,11 +1,14 @@
+import { TestBed } from '@angular/core/testing';
 import { describe, expect, it } from 'vitest';
 
+import { BrowserStorageService } from '../platform/browser-storage.service';
 import {
     centimetersToImperialHeight,
     centimetersToInches,
     imperialHeightToCentimeters,
     inchesToCentimeters,
     kilogramsToPounds,
+    MeasurementSystemService,
     poundsToKilograms,
 } from './measurement-system.service';
 
@@ -34,5 +37,23 @@ describe('measurement conversions', () => {
     it('converts height between centimeters and feet with inches', () => {
         expect(centimetersToImperialHeight(HEIGHT_CM)).toEqual({ feet: HEIGHT_FT, inches: HEIGHT_IN });
         expect(imperialHeightToCentimeters(HEIGHT_FT, HEIGHT_IN)).toBe(ROUND_TRIP_HEIGHT_CM);
+    });
+});
+
+describe('MeasurementSystemService test isolation', () => {
+    it('persists an imperial preference for the current test', () => {
+        TestBed.configureTestingModule({ providers: [BrowserStorageService, MeasurementSystemService] });
+        const service = TestBed.inject(MeasurementSystemService);
+
+        service.setSystem('imperial');
+
+        expect(service.system()).toBe('imperial');
+        expect(localStorage.getItem('fd_measurement_system')).toBe('imperial');
+    });
+
+    it('starts the next test with the metric default', () => {
+        TestBed.configureTestingModule({ providers: [BrowserStorageService, MeasurementSystemService] });
+
+        expect(TestBed.inject(MeasurementSystemService).system()).toBe('metric');
     });
 });

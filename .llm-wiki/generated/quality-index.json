@@ -32864,11 +32864,11 @@
     },
     {
       "path": "FoodDiary.Web.Client/src/test-setup.ts",
-      "nonBlankLines": 149,
+      "nonBlankLines": 153,
       "decisionPoints": 24,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.98
+      "structuralRiskScore": 39.06
     },
     {
       "path": "FoodDiary.Web.Client/src/testing/async-testing.ts",

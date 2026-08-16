@@ -20,4 +20,22 @@ $failed = $false
 try { $null = Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('not-a-real-command') -FailureMessage 'Expected failure.' } catch { $failed = $_.Exception.Message -match 'Expected failure.*Exit code' }
 if (-not $failed) { throw 'Git path enumeration did not propagate a required Git failure.' }
 
-Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, and exit codes are safe.'
+$overlayFixtureName = "wiki-headref-overlay-$([guid]::NewGuid().ToString('N')).md"
+$overlayFixturePath = Join-Path $repositoryRoot $overlayFixtureName
+try {
+    [IO.File]::WriteAllText($overlayFixturePath, "workspace overlay`n", [Text.UTF8Encoding]::new($false))
+    $overlayDiff = & (Join-Path $PSScriptRoot 'Get-LlmWikiDiffContext.ps1') `
+        -BaseRef HEAD `
+        -HeadRef HEAD `
+        -Format Json | ConvertFrom-Json
+    if ($overlayFixtureName -notin @($overlayDiff.changedPaths)) { throw '-HeadRef HEAD omitted an untracked working-tree path.' }
+    $overlayPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
+        -BaseRef HEAD `
+        -HeadRef HEAD `
+        -Format Json | ConvertFrom-Json
+    if ($overlayFixtureName -notin @($overlayPolicy.changedPaths)) { throw 'Change policy omitted the working tree for -HeadRef HEAD.' }
+} finally {
+    if (Test-Path -LiteralPath $overlayFixturePath) { Remove-Item -LiteralPath $overlayFixturePath -Force }
+}
+
+Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, workspace HEAD overlays, and exit codes are safe.'

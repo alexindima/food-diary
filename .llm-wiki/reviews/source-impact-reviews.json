@@ -143,21 +143,17 @@
     {
       "pageId": "workflow-adaptive-development",
       "pagePath": ".llm-wiki/workflows/adaptive-development.md",
-      "pageSha256": "74974ca9c0a5893c16a5740b849367bb9ec3c0b0dd94217ab0b1e41dc22fe679",
+      "pageSha256": "623b527d5eca7164ab6562bb12a0c728d6a710315430d7fc64e56dfd603f464f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-          "sha256": "a76d408fe971cbbad68a3294c84d1ca6540517de7bfcc81c7e94bb2f2392e29b"
-        },
-        {
-          "path": ".llm-wiki/tools/Start-LlmWikiDevelopment.ps1",
-          "sha256": "9e219c153f25136214cbbf026b5041de05c14d4315e91b0232541d1a8d4413a6"
+          "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+          "sha256": "a7c608b3e8ff4ea74b038daad24107461f39bd244f0148d517175c45bce3fea6"
         }
       ],
-      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
-      "reviewedAtUtc": "2026-08-16T13:38:43.7210271Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:25.3596904Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -256,13 +252,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
+          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:27.8492158Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:26.3734860Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -367,13 +363,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
+          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:28.0836021Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:26.8732671Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -522,13 +518,13 @@
       "sources": [
         {
           "path": "FoodDiary.Web.Client/package.json",
-          "sha256": "a77e9fe175718daf1a83ac4a47bd4ca496ca1c4f5b54fc6239792e0b98e29c54"
+          "sha256": "54e522a1de5fc9a62334cc7823ba6efdb92d5c967c6f9cbae423372755bcf310"
         }
       ],
-      "reason": "CI now provisions TypeScript dependencies for cross-platform development MCP tests; Lighthouse collection keeps the existing five-route filesystem-report behavior while replacing vulnerable LHCI dependencies with current Lighthouse.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "2866636b16d0d4207e1b07ec0566bfe88edef01d",
-      "reviewedAtUtc": "2026-08-15T22:45:47.5682444Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:28.4940291Z"
     },
     {
       "pageId": "workflow-impact-simulation",
@@ -537,13 +533,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
+          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:28.3569051Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:29.0162094Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -567,13 +563,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
+          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:28.6510244Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:29.5177006Z"
     },
     {
       "pageId": "workflow-index-pipeline",
@@ -694,14 +690,18 @@
       "pageSha256": "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "cee057fcea7ba88b2c4ff8213a64da517e7bddcf59b141158dee3a464281c595"
+          "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+          "sha256": "a7c608b3e8ff4ea74b038daad24107461f39bd244f0148d517175c45bce3fea6"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
         }
       ],
-      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
-      "reviewedAtUtc": "2026-08-16T13:38:44.3578092Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:30.1286609Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -755,13 +755,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "0e965b1a3d11ee2fcb5d090dee3d43c937a7f74d33d26589c68fab1575d30514"
+          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:29.7343909Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:30.6745169Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "6803193a451f3be6d9afb4720e269602e48b3aec0829c35f5fffba94155146f2"
+          "sha256": "f2e55a30d9052e7db9e2f7747dbc163844793fa4fca3bc3c0f66f22598e3f909"
         }
       ],
-      "reason": "Reviewed the formatting-only facade change after Prettier, refreshed quality metrics, and reconfirmed that scoped fertility deletion behavior, tests, contracts, privacy boundaries, and risk conclusions are unchanged.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "247db76dfc46fd39ae6b6b24bff3e7397ea7ce78",
-      "reviewedAtUtc": "2026-08-16T21:34:06.3360472Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:31.3281748Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -799,14 +799,14 @@
       "pageSha256": "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiRequirementModel.ps1",
-          "sha256": "95cf0e03d2c30a405b4477c96d2ab2a0b7ebc2e2dcec9623d0f7f1f08efbbf12"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
         }
       ],
-      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
-      "reviewedAtUtc": "2026-08-16T13:38:45.4400351Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:31.8301026Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -883,13 +883,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "6fa9acbcbba7979363961d56b5af972b7e9326ffa42aa65c41fcec359ef45c13"
+          "sha256": "22b7caea468f7ba05ab63fe9d875d8ef7b509da821ed10ead53b5ed2c2229d39"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+          "sha256": "b76c083470ced2bad26a6dcfb7e757aac482d390e7a6e4219c500aa6fbb2e58f"
         }
       ],
-      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:04:36.7874387Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:32.8358246Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -946,30 +950,22 @@
       "pageSha256": "f87df1e5212521c9e920fd7bcea428c7ea79b68a5fd08213641a6862777077d6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-          "sha256": "a76d408fe971cbbad68a3294c84d1ca6540517de7bfcc81c7e94bb2f2392e29b"
+          "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
+          "sha256": "a7c608b3e8ff4ea74b038daad24107461f39bd244f0148d517175c45bce3fea6"
         },
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "cee057fcea7ba88b2c4ff8213a64da517e7bddcf59b141158dee3a464281c595"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskContract.ps1",
-          "sha256": "4cc3a9954e2157fc1607b41ed2c18b9b902fb8f566661d919ca22e4f28952459"
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
-          "sha256": "49ea4e917bf043ba17240c2124f5006ff7892a348329b2761bb96d2c36f97b30"
-        },
-        {
-          "path": ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
-          "sha256": "3dbce6eef3e5d1306d4489d55e96945db170242b1dcbab06d8772d3d94d7bac8"
+          "sha256": "9e42ad700754ea4b45d7799048116bcf27bc82aebcbf0a8c45fc10ef5e51722b"
         }
       ],
-      "reason": "Reviewed final governed delivery regression behavior, including independent verification-plan drift.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
-      "reviewedAtUtc": "2026-08-16T13:41:57.7498387Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:33.2792312Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1042,13 +1038,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
+          "sha256": "b76c083470ced2bad26a6dcfb7e757aac482d390e7a6e4219c500aa6fbb2e58f"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:47.7303451Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:25.8532395Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1057,13 +1053,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "6fa9acbcbba7979363961d56b5af972b7e9326ffa42aa65c41fcec359ef45c13"
+          "sha256": "22b7caea468f7ba05ab63fe9d875d8ef7b509da821ed10ead53b5ed2c2229d39"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+          "sha256": "b76c083470ced2bad26a6dcfb7e757aac482d390e7a6e4219c500aa6fbb2e58f"
         }
       ],
-      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:04:34.7741329Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:27.3914286Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1072,13 +1072,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "acf9ad27bc4ca38d173b7e361a5cb481afd109e378d69d9ca0a0ff87b9e37877"
+          "sha256": "b76c083470ced2bad26a6dcfb7e757aac482d390e7a6e4219c500aa6fbb2e58f"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:48.8332155Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:27.9475080Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1116,18 +1116,22 @@
       "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "6fa9acbcbba7979363961d56b5af972b7e9326ffa42aa65c41fcec359ef45c13"
+          "path": ".llm-wiki/tools/Add-LlmWikiSourceReview.ps1",
+          "sha256": "22abea8cfd088d8aae5195b9e9cdcd1f39d176efd3706eb03aa0efb6c4f70105"
         },
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "cf5c69ce882d7cecc52664640beb0f532ffd6e98f2dcfa0eee25ffc47801cc37"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "22b7caea468f7ba05ab63fe9d875d8ef7b509da821ed10ead53b5ed2c2229d39"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
+          "sha256": "c05230ab390e3a514d9054b7dbee8490ee6115e258e6b0d0e3b0a2692ab62e57"
         }
       ],
-      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
+      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:04:36.3389337Z"
+      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
+      "reviewedAtUtc": "2026-08-16T22:10:32.3244316Z"
     }
   ]
 }

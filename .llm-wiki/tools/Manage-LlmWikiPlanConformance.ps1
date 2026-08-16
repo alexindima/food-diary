@@ -187,21 +187,51 @@ if ($Action -eq 'replan') {
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
     if (-not (Test-Path -LiteralPath $taskContractPath -PathType Leaf)) { throw "Task contract is absent: $normalizedWorkspace/task-contract.json" }
     $taskContract = Get-Content -LiteralPath $taskContractPath -Raw | ConvertFrom-Json
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
-        -Path "$normalizedWorkspace/change-manifest.json" `
-        -Objective ([string]$manifest.objective) `
-        -BaseRef ([string]$manifest.git.base) `
-        -ChangedPath @($packet.diff.changedPaths) `
-        -AllowedPath @($taskContract.scope.allowedPathPatterns) `
-        -ExcludedPath @($taskContract.scope.excludedPathPatterns) | Out-Null
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') add `
-        -WorkspacePath $normalizedWorkspace `
-        -JournalType decision `
-        -Text 'Rebaselined the implementation plan against the current Git diff.' `
-        -Rationale $Reason | Out-Null
-    if (Test-Path -LiteralPath $receiptPath) { [IO.File]::Delete($receiptPath) }
-    $receipt = New-Receipt (Get-Assessment)
-    $result = [pscustomobject][ordered]@{ action = 'replan'; valid = $receipt.valid; conformance = $receipt; savedPath = $null; reason = $Reason }
+    $journalPath = Join-Path $workspaceAbsolute 'journal.json'
+    $mutablePaths = @($manifestPath, $journalPath, $receiptPath)
+    $originalFiles = @(
+        foreach ($mutablePath in $mutablePaths) {
+            [pscustomobject]@{
+                path = $mutablePath
+                existed = Test-Path -LiteralPath $mutablePath -PathType Leaf
+                content = if (Test-Path -LiteralPath $mutablePath -PathType Leaf) { Get-Content -LiteralPath $mutablePath -Raw } else { $null }
+            }
+        }
+    )
+    try {
+        & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeManifest.ps1') init `
+            -Path "$normalizedWorkspace/change-manifest.json" `
+            -Objective ([string]$manifest.objective) `
+            -BaseRef ([string]$manifest.git.base) `
+            -ChangedPath @($packet.diff.changedPaths) `
+            -AllowedPath @($taskContract.scope.allowedPathPatterns) `
+            -ExcludedPath @($taskContract.scope.excludedPathPatterns) | Out-Null
+        & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') add `
+            -WorkspacePath $normalizedWorkspace `
+            -JournalType decision `
+            -Text 'Rebaselined the implementation plan against the current Git diff.' `
+            -Rationale $Reason | Out-Null
+        if (Test-Path -LiteralPath $receiptPath) { [IO.File]::Delete($receiptPath) }
+        $receipt = New-Receipt (Get-Assessment)
+        $result = [pscustomobject][ordered]@{
+            action = 'replan'
+            valid = $receipt.valid
+            issues = @()
+            conformance = $receipt
+            savedPath = $null
+            reason = $Reason
+        }
+    } catch {
+        $replanFailure = $_
+        foreach ($originalFile in $originalFiles) {
+            if ($originalFile.existed) {
+                [IO.File]::WriteAllText($originalFile.path, [string]$originalFile.content, [Text.UTF8Encoding]::new($false))
+            } elseif (Test-Path -LiteralPath $originalFile.path) {
+                [IO.File]::Delete($originalFile.path)
+            }
+        }
+        throw $replanFailure
+    }
 } elseif ($Action -in @('assess', 'create')) {
     $receipt = New-Receipt (Get-Assessment)
     if ($Action -eq 'create') {
@@ -214,7 +244,7 @@ if ($Action -eq 'replan') {
             if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
         }
     }
-    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; conformance = $receipt; savedPath = $(if ($Action -eq 'create') { "$normalizedWorkspace/plan-conformance.json" } else { $null }) }
+    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; issues = @(); conformance = $receipt; savedPath = $(if ($Action -eq 'create') { "$normalizedWorkspace/plan-conformance.json" } else { $null }) }
 } else {
     if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw "Plan conformance receipt is absent: $normalizedWorkspace/plan-conformance.json" }
     $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json

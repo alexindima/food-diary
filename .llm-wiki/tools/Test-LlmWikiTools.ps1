@@ -4761,6 +4761,7 @@ try {
         -DryRun `
         -Format Json | ConvertFrom-Json
     Assert-Wiki (-not $refreshPreview.invalidation.applied -and $refreshPreview.invalidation.packetChanged) 'Task refresh dry run did not preview packet-driven invalidation.'
+    Assert-Wiki ($refreshPreview.assessmentsDeferred) 'Task refresh still ran the full task-status assessment pipeline.'
     Assert-Wiki ((Get-FileHash -LiteralPath (Join-Path $absoluteTaskWorkspacePath 'acceptance-matrix.json') -Algorithm SHA256).Hash -eq $acceptanceHashBeforeRefresh) 'Task refresh dry run modified acceptance decisions.'
     Assert-Wiki ((Get-FileHash -LiteralPath (Join-Path $absoluteTaskWorkspacePath 'evidence.json') -Algorithm SHA256).Hash -eq $evidenceHashBeforeRefresh) 'Task refresh dry run modified collected evidence.'
     $refreshedStatus = & (Join-Path $toolsRoot 'Manage-LlmWikiTaskWorkspace.ps1') refresh `
@@ -4769,6 +4770,7 @@ try {
     $refreshedDescriptor = Get-Content -LiteralPath (Join-Path $absoluteTaskWorkspacePath 'workspace.json') -Raw | ConvertFrom-Json
     Assert-Wiki (-not [string]::IsNullOrWhiteSpace([string]$refreshedDescriptor.lastRefreshedAtUtc)) 'Task refresh did not record refresh time.'
     Assert-Wiki (-not $refreshedStatus.refreshRequired) 'Completed task refresh still reported stale compiled context.'
+    Assert-Wiki ($refreshedStatus.assessmentsDeferred -and $refreshedStatus.refreshDurationSeconds -ge 0) 'Completed task refresh omitted deferred-assessment or timing metadata.'
     Assert-Wiki ($refreshedDescriptor.currentPacketFingerprint -eq $refreshedStatus.currentPacketFingerprint) 'Task refresh did not persist the current packet fingerprint.'
     Assert-Wiki ($refreshedStatus.invalidation.applied -and $refreshedStatus.invalidation.historyEntriesAdded -gt 0) 'Task refresh did not apply evidence invalidation.'
     Assert-Wiki ((Get-FileHash -LiteralPath (Join-Path $absoluteTaskWorkspacePath 'acceptance-matrix.json') -Algorithm SHA256).Hash -ne $acceptanceHashBeforeRefresh) 'Task refresh did not update acceptance dependencies.'

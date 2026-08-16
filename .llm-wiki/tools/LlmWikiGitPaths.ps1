@@ -1,5 +1,12 @@
 Set-StrictMode -Version Latest
 
+function Test-LlmWikiWorkspaceHeadRef {
+    param([AllowEmptyString()][string]$HeadRef)
+
+    return [string]::IsNullOrWhiteSpace($HeadRef) -or
+        [string]::Equals($HeadRef.Trim(), 'HEAD', [StringComparison]::OrdinalIgnoreCase)
+}
+
 function ConvertTo-LlmWikiRepositoryPath {
     param([AllowEmptyString()][string]$Path)
 

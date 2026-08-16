@@ -16,6 +16,13 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+$refreshStopwatch = if ($Action -eq 'refresh') { [Diagnostics.Stopwatch]::StartNew() } else { $null }
+
+function Write-RefreshProgress([int]$Step, [string]$Message) {
+    if ($Action -eq 'refresh' -and $Format -eq 'Text') {
+        Write-Host "Task refresh [$Step/4]: $Message"
+    }
+}
 
 if ([System.IO.Path]::IsPathRooted($WorkspacePath)) {
     throw 'WorkspacePath must be repository-relative.'
@@ -69,6 +76,7 @@ function Test-GovernanceGeneratedPath([string]$Value) {
 
 $storedHeadRef = if ($taskContract.git.PSObject.Properties['head']) { [string]$taskContract.git.head } else { '' }
 $requestedHeadRef = if ($PSBoundParameters.ContainsKey('HeadRef')) { $HeadRef } else { $storedHeadRef }
+$workspaceHead = [string]::IsNullOrWhiteSpace($requestedHeadRef) -or $requestedHeadRef -ieq 'HEAD'
 $resolvedHeadRef = ''
 if (-not [string]::IsNullOrWhiteSpace($requestedHeadRef)) {
     $resolvedHeadOutput = @(& git -C $repositoryRoot rev-parse --verify "$requestedHeadRef^{commit}" 2>$null)
@@ -79,6 +87,7 @@ if (-not [string]::IsNullOrWhiteSpace($requestedHeadRef)) {
     }
 }
 
+Write-RefreshProgress 1 'compiling the current change packet.'
 $packet = if ($null -ne $PacketInput) {
     $PacketInput
 } else {
@@ -87,7 +96,7 @@ $packet = if ($null -ne $PacketInput) {
         Objective = $descriptor.objective
         Format = 'Json'
     }
-    if (-not [string]::IsNullOrWhiteSpace($resolvedHeadRef)) { $packetArguments.HeadRef = $resolvedHeadRef }
+    if (-not $workspaceHead -and -not [string]::IsNullOrWhiteSpace($resolvedHeadRef)) { $packetArguments.HeadRef = $resolvedHeadRef }
     if ($PSBoundParameters.ContainsKey('ChangedPath')) { $packetArguments.ChangedPath = @($ChangedPath) }
     & (Join-Path $PSScriptRoot 'Get-LlmWikiChangePacket.ps1') @packetArguments | ConvertFrom-Json
 }
@@ -95,15 +104,28 @@ $packet = if ($null -ne $PacketInput) {
 $manifestRelative = "$normalizedWorkspacePath/$($artifactNames.manifest)"
 $acceptanceRelative = "$normalizedWorkspacePath/$($artifactNames.acceptance)"
 $evidenceRelative = "$normalizedWorkspacePath/$($artifactNames.evidence)"
-$readiness = & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') `
-    -PacketInput $packet `
-    -ManifestPath $manifestRelative `
-    -AcceptancePath $acceptanceRelative `
-    -EvidencePath $evidenceRelative `
-    -RequireManifest `
-    -RequireAcceptance `
-    -RequireEvidence `
-    -Format Json | ConvertFrom-Json
+$readiness = if ($Action -eq 'refresh') {
+    [pscustomobject]@{
+        verdict = 'assessment-deferred'
+        score = 0
+        risk = $packet.brief.risk
+        blockingDimensions = @()
+        unassessedDimensions = @('task-status')
+        engineeringReadiness = [pscustomobject]@{ verdict = 'assessment-deferred' }
+        governanceCompleteness = [pscustomobject]@{ verdict = 'assessment-deferred' }
+        dimensions = @()
+    }
+} else {
+    & (Join-Path $PSScriptRoot 'Get-LlmWikiReleaseReadiness.ps1') `
+        -PacketInput $packet `
+        -ManifestPath $manifestRelative `
+        -AcceptancePath $acceptanceRelative `
+        -EvidencePath $evidenceRelative `
+        -RequireManifest `
+        -RequireAcceptance `
+        -RequireEvidence `
+        -Format Json | ConvertFrom-Json
+}
 
 $productChangedPaths = @($packet.diff.changedPaths | Where-Object { -not (Test-GovernanceGeneratedPath ([string]$_)) })
 $governanceGeneratedPaths = @($packet.diff.changedPaths | Where-Object { Test-GovernanceGeneratedPath ([string]$_) })
@@ -127,42 +149,69 @@ $lastCompiledFingerprint = if ($descriptor.PSObject.Properties['currentPacketFin
     $initialFingerprint
 }
 $refreshRequired = $lastCompiledFingerprint -cne [string]$packet.fingerprint
-$planConformance = & (Join-Path $PSScriptRoot 'Manage-LlmWikiPlanConformance.ps1') assess `
+$planConformance = if ($Action -eq 'refresh') {
+    [pscustomobject]@{
+        valid = $true
+        deferred = $true
+        conformance = [pscustomobject]@{
+            classification = [pscustomobject]@{ unplannedAllowedPaths = @(); missingPlannedPaths = @() }
+        }
+    }
+} else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiPlanConformance.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
-$proofOfChange = & (Join-Path $PSScriptRoot 'Manage-LlmWikiProofOfChange.ps1') assess `
+}
+$proofOfChange = if ($Action -eq 'refresh') { [pscustomobject]@{ applicable = $false; valid = $true; deferred = $true; proof = [pscustomobject]@{ findings = @() } } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiProofOfChange.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
-$requirementModel = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') assess `
+}
+$requirementModel = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; model = [pscustomobject]@{ findings = @(); recommendations = @() } } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiRequirementModel.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
-$impactSimulation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') assess `
+}
+$impactSimulation = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; simulation = [pscustomobject]@{ findings = @() } } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
-$repairLoop = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') show `
+}
+$repairLoop = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; activeAttempts = @(); unresolvedAttempts = @() } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLoop.ps1') show `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
-$repairLearningCandidates = if (Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath 'repair-loop.json') -PathType Leaf) {
+}
+$repairLearningCandidates = if ($Action -eq 'refresh') {
+    [pscustomobject]@{ valid = $true; deferred = $true; eligibleCount = 0; candidates = @() }
+} elseif (Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath 'repair-loop.json') -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLearning.ps1') candidates `
         -WorkspacePath $normalizedWorkspacePath `
         -Format Json | ConvertFrom-Json
 } else {
     [pscustomobject]@{ valid = $true; eligibleCount = 0; candidates = @() }
 }
-$failurePrediction = & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') assess `
+$failurePrediction = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; calibration = [pscustomobject]@{ outcomes = @() } } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
-$verificationCost = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1') assess `
+}
+$verificationCost = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
-$verificationTelemetryValidation = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') verify -Format Json | ConvertFrom-Json
+}
+$verificationTelemetryValidation = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; registryHash = ''; issues = @() } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') verify -Format Json | ConvertFrom-Json
+}
 $verificationTelemetry = if ($verificationTelemetryValidation.valid) {
-    & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json
+    if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; registryHash = ''; metrics = @() } }
+    else { & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json }
 } else {
     [pscustomobject]@{ valid = $false; registryHash = $verificationTelemetryValidation.registryHash; metrics = @(); issues = @($verificationTelemetryValidation.issues) }
 }
 $contextSecurityPath = Join-Path $absoluteWorkspacePath 'context-security.json'
-$contextSecurity = if (Test-Path -LiteralPath $contextSecurityPath -PathType Leaf) {
+$contextSecurity = if ($Action -eq 'refresh') { $null } elseif (Test-Path -LiteralPath $contextSecurityPath -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextSecurity.ps1') verify -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json
 } else { $null }
 function Get-Ids([object[]]$Items) {
@@ -170,12 +219,16 @@ function Get-Ids([object[]]$Items) {
 }
 $evidenceCheckIds = @(Get-Ids @($evidence.checks))
 $relevantTelemetry = @($verificationTelemetry.metrics | Where-Object { $_.PSObject.Properties['checkId'] -and $_.checkId -in $evidenceCheckIds })
-$confidenceLedger = & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') assess `
+$confidenceLedger = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
-$changeCritique = & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') assess `
+}
+$changeCritique = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; critique = [pscustomobject]@{ verdict = 'assessment-deferred'; findings = @() } } } else {
+    & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
+}
 
 $nextActions = [System.Collections.Generic.List[string]]::new()
 if ($refreshRequired) {
@@ -314,6 +367,8 @@ $result = [pscustomobject][ordered]@{
     openJournalBlockers = $journalView.openBlockerCount
     nextActions = @($nextActions)
     invalidation = $null
+    assessmentsDeferred = $Action -eq 'refresh'
+    refreshDurationSeconds = $null
 }
 
 if ($Action -eq 'refresh') {
@@ -344,6 +399,7 @@ if ($Action -eq 'refresh') {
         }
     }
     try {
+        Write-RefreshProgress 2 'calculating evidence and acceptance invalidation.'
         $packet | ConvertTo-Json -Depth 15 | ForEach-Object {
             [System.IO.File]::WriteAllText($temporaryPacketAbsolute, $_ + [Environment]::NewLine, [System.Text.UTF8Encoding]::new($false))
         }
@@ -354,11 +410,14 @@ if ($Action -eq 'refresh') {
             -Format Json | ConvertFrom-Json
         $result.invalidation = $invalidation
         if ($DryRun) {
+            $refreshStopwatch.Stop()
+            $result.refreshDurationSeconds = [Math]::Round($refreshStopwatch.Elapsed.TotalSeconds, 2)
             if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 10 } else {
                 Write-Host "Task refresh preview: $(@($invalidation.invalidatedChecks).Count) checks, $(@($invalidation.invalidatedReviews).Count) reviews, $(@($invalidation.invalidatedCriteria).Count) criteria would be invalidated."
             }
             return
         }
+        Write-RefreshProgress 3 'regenerating the review report and committing refreshed artifacts.'
         & (Join-Path $PSScriptRoot 'Get-LlmWikiReviewReport.ps1') `
             -PacketInput $packet `
             -ManifestPath $manifestRelative `
@@ -381,10 +440,11 @@ if ($Action -eq 'refresh') {
             $descriptor.lastRefreshedAtUtc = [DateTime]::UtcNow.ToString('o')
         }
         if (-not [string]::IsNullOrWhiteSpace($resolvedHeadRef)) {
-            if ($descriptor.git.PSObject.Properties['head']) { $descriptor.git.head = $resolvedHeadRef }
-            else { $descriptor.git | Add-Member -NotePropertyName head -NotePropertyValue $resolvedHeadRef }
-            if ($taskContract.git.PSObject.Properties['head']) { $taskContract.git.head = $resolvedHeadRef }
-            else { $taskContract.git | Add-Member -NotePropertyName head -NotePropertyValue $resolvedHeadRef }
+            $persistedHeadRef = if ($workspaceHead) { 'HEAD' } else { $resolvedHeadRef }
+            if ($descriptor.git.PSObject.Properties['head']) { $descriptor.git.head = $persistedHeadRef }
+            else { $descriptor.git | Add-Member -NotePropertyName head -NotePropertyValue $persistedHeadRef }
+            if ($taskContract.git.PSObject.Properties['head']) { $taskContract.git.head = $persistedHeadRef }
+            else { $taskContract.git | Add-Member -NotePropertyName head -NotePropertyValue $persistedHeadRef }
             [System.IO.File]::WriteAllText(
                 $taskContractArtifactPath,
                 (($taskContract | ConvertTo-Json -Depth 20) + [Environment]::NewLine),
@@ -405,6 +465,10 @@ if ($Action -eq 'refresh') {
         $result.refreshRequired = $false
         $result.lastCompiledPacketFingerprint = [string]$packet.fingerprint
         $result.nextActions = @($result.nextActions | Where-Object { $_ -cne "./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath $normalizedWorkspacePath -DryRun" })
+        $result.nextActions += "./.llm-wiki/wiki.ps1 task-status -WorkspacePath $normalizedWorkspacePath"
+        $refreshStopwatch.Stop()
+        $result.refreshDurationSeconds = [Math]::Round($refreshStopwatch.Elapsed.TotalSeconds, 2)
+        Write-RefreshProgress 4 "completed in $($result.refreshDurationSeconds)s; run task-status for the deferred full assessment."
     } catch {
         [System.IO.File]::WriteAllText($packetArtifactPath, $originalPacket, [System.Text.UTF8Encoding]::new($false))
         [System.IO.File]::WriteAllText($reportArtifactPath, $originalReport, [System.Text.UTF8Encoding]::new($false))

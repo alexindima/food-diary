@@ -8,3 +8,13 @@ enabled = true
 required = false
 enabled_tools = ["get_change_context", "get_development_context", "trace_backend_flow", "get_test_plan", "get_server_status"]
 default_tools_approval_mode = "auto"
+
+[mcp_servers.angular_cli]
+command = "scripts\\Start-AngularMcp.cmd"
+args = ["--read-only"]
+cwd = "."
+startup_timeout_sec = 60
+tool_timeout_sec = 150
+enabled = true
+required = false
+default_tools_approval_mode = "auto"

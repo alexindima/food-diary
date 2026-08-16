@@ -49,9 +49,27 @@ try {
         @($packet.diff.changedPaths) -notcontains $generatedPath
     ) 'Generated Wiki output was neither isolated as governance provenance nor suppressed as bookkeeping.'
 
-    $after = & (Join-Path $toolsRoot 'Manage-LlmWikiPlanConformance.ps1') replan `
+    $manifestHashBeforeFailedReplan = (Get-FileHash -LiteralPath (Join-Path $absoluteWorkspace 'change-manifest.json') -Algorithm SHA256).Hash
+    Remove-Item -LiteralPath (Join-Path $absoluteWorkspace 'journal.json') -Force
+    $failedReplanRejected = $false
+    try {
+        & (Join-Path $toolsRoot 'Manage-LlmWikiPlanConformance.ps1') replan `
+            -WorkspacePath $workspace `
+            -Reason 'Exercise transactional rollback.' | Out-Null
+    } catch {
+        $failedReplanRejected = $_.Exception.Message -match 'journal does not exist'
+    }
+    Assert-Regression $failedReplanRejected 'Replan did not surface the journal write failure.'
+    Assert-Regression ((Get-FileHash -LiteralPath (Join-Path $absoluteWorkspace 'change-manifest.json') -Algorithm SHA256).Hash -eq $manifestHashBeforeFailedReplan) 'Failed replan left a partially updated manifest.'
+    & (Join-Path $toolsRoot 'Manage-LlmWikiTaskJournal.ps1') init -WorkspacePath $workspace | Out-Null
+
+    $replanText = & (Join-Path $toolsRoot 'Manage-LlmWikiPlanConformance.ps1') replan `
         -WorkspacePath $workspace `
         -Reason 'Synchronize the manifest with the declared task contract.' `
+        -Format Text 6>&1
+    Assert-Regression (($replanText -join "`n") -match 'Plan conformance: action=replan') 'Text replan failed while rendering a result without validation issues.'
+    $after = & (Join-Path $toolsRoot 'Manage-LlmWikiPlanConformance.ps1') assess `
+        -WorkspacePath $workspace `
         -Format Json | ConvertFrom-Json
     $nonVerificationFindings = @($after.conformance.policyFindings | Where-Object id -ne 'new-required-checks')
     Assert-Regression ($nonVerificationFindings.Count -eq 0) "Replan did not synchronize the manifest to the task-contract boundary: $($after.conformance.policyFindings | ConvertTo-Json -Compress)"

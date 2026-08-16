@@ -25,7 +25,7 @@ function Get-LlmWikiGitRenames {
     )
 
     $arguments = @('-c', 'core.quotepath=false', '-C', $RepositoryRoot, 'diff', '--name-status', '--find-renames', '--diff-filter=R', $BaseRef)
-    if (-not [string]::IsNullOrWhiteSpace($HeadRef)) { $arguments += $HeadRef }
+    if (-not [string]::IsNullOrWhiteSpace($HeadRef) -and $HeadRef -ine 'HEAD') { $arguments += $HeadRef }
     $arguments += '--'
     $lines = @(& git @arguments)
     if ($LASTEXITCODE -ne 0) { throw "git rename discovery failed for base '$BaseRef' and head '$HeadRef'." }
