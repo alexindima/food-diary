@@ -49,6 +49,17 @@ public sealed class CyclesController(ISender mediator) : AuthorizedController(me
         [FromBody] ConfirmPeriodStartHttpRequest request) =>
         HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
 
+    [HttpPut("{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}")]
+    [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpdateMenstrualEpisode(
+        [FromCurrentUser] Guid userId,
+        Guid cycleProfileId,
+        Guid menstrualEpisodeId,
+        [FromBody] UpdateMenstrualEpisodeHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, cycleProfileId, menstrualEpisodeId), static value => value.ToHttpResponse());
+
     [HttpDelete("{cycleProfileId:guid}/days")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

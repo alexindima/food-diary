@@ -597,4 +597,32 @@ public class CycleProfileInvariantTests {
         Assert.Equal(MenstrualEpisodeStatus.Confirmed, Assert.Single(profile.MenstrualEpisodes).Status);
         Assert.Equal(start.AddDays(1), first.EndDate);
     }
+
+    [Fact]
+    public void UpdateMenstrualEpisode_ChangesConfirmedRangeAndPreservesDailyObservations() {
+        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), start);
+        profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: "kept");
+        MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
+
+        MenstrualEpisode updated = profile.UpdateMenstrualEpisode(episode.Id, start.AddDays(-1), start.AddDays(3));
+
+        Assert.Multiple(
+            () => Assert.Same(episode, updated),
+            () => Assert.Equal(start.AddDays(-1), updated.StartDate),
+            () => Assert.Equal(start.AddDays(3), updated.EndDate),
+            () => Assert.Equal("kept", Assert.Single(profile.BleedingEntries).Notes));
+    }
+
+    [Fact]
+    public void UpdateMenstrualEpisode_WhenConfirmedRangesOverlap_Throws() {
+        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), start);
+        MenstrualEpisode first = profile.ConfirmPeriodStart(start);
+        profile.UpdateMenstrualEpisode(first.Id, start, start.AddDays(4));
+        MenstrualEpisode second = profile.ConfirmPeriodStart(start.AddDays(20));
+
+        Assert.Throws<ArgumentException>(() =>
+            profile.UpdateMenstrualEpisode(second.Id, start.AddDays(3), start.AddDays(8)));
+    }
 }

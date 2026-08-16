@@ -9,6 +9,7 @@ import type {
     CycleLogDay,
     CycleNutritionSummary,
     CycleResponse,
+    UpdateMenstrualEpisodePayload,
     UpsertCycleDayPayload,
     UpsertCycleFactorPayload,
 } from '../models/cycle.data';
@@ -49,6 +50,16 @@ export class CyclesService extends ApiService {
     public confirmPeriodStart(cycleProfileId: string, date: string): Observable<CycleResponse> {
         return this.put<CycleResponse>(`${cycleProfileId}/period-start`, { date }).pipe(
             catchError((error: unknown) => rethrowApiError('Period start confirmation error', error)),
+        );
+    }
+
+    public updateMenstrualEpisode(
+        cycleProfileId: string,
+        menstrualEpisodeId: string,
+        payload: UpdateMenstrualEpisodePayload,
+    ): Observable<CycleResponse> {
+        return this.put<CycleResponse>(`${cycleProfileId}/menstrual-episodes/${menstrualEpisodeId}`, payload).pipe(
+            catchError((error: unknown) => rethrowApiError('Menstrual episode update error', error)),
         );
     }
 

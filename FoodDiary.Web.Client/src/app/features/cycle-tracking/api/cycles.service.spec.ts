@@ -176,7 +176,9 @@ describe('CyclesService mutations', () => {
         expect(req.request.params.get('date')).toBe('2026-03-05T00:00:00.000Z');
         req.flush(null);
     });
+});
 
+describe('CyclesService menstrual episodes', () => {
     it('should confirm a period start', () => {
         service.confirmPeriodStart('c-1', '2026-03-05T00:00:00.000Z').subscribe(cycle => {
             expect(cycle).toEqual(MOCK_CYCLE);
@@ -188,6 +190,24 @@ describe('CyclesService mutations', () => {
         req.flush(MOCK_CYCLE);
     });
 
+    it('should update menstrual episode dates', () => {
+        const payload = {
+            startDate: '2026-03-04T00:00:00.000Z',
+            endDate: '2026-03-08T23:59:59.999Z',
+        };
+
+        service.updateMenstrualEpisode('c-1', 'episode-1', payload).subscribe(cycle => {
+            expect(cycle).toEqual(MOCK_CYCLE);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/c-1/menstrual-episodes/episode-1`);
+        expect(req.request.method).toBe('PUT');
+        expect(req.request.body).toEqual(payload);
+        req.flush(MOCK_CYCLE);
+    });
+});
+
+describe('CyclesService factor mutations', () => {
     it('should upsert cycle factor', () => {
         const payload: UpsertCycleFactorPayload = {
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,

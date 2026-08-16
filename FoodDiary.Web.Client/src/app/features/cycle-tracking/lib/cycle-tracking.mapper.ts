@@ -6,6 +6,14 @@ const DAY_END_SECONDS = 59;
 const DAY_END_MILLISECONDS = 999;
 const ISO_DATE_KEY_LENGTH = 10;
 
+export function cycleDateInputStartIso(value: string): string {
+    return `${value}T00:00:00.000Z`;
+}
+
+export function cycleDateInputEndIso(value: string): string {
+    return `${value}T23:59:59.999Z`;
+}
+
 export function clampCycleSymptom(value: number | null | undefined): number {
     if (value === null || value === undefined || Number.isNaN(value)) {
         return MIN_SYMPTOM_VALUE;

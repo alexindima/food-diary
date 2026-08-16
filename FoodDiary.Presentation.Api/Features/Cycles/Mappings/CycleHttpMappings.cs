@@ -3,6 +3,7 @@ using FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
+using FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
@@ -65,6 +66,11 @@ public static class CycleHttpMappings {
     extension(ConfirmPeriodStartHttpRequest request) {
         public ConfirmPeriodStartCommand ToCommand(Guid userId, Guid cycleProfileId) =>
             new(userId, cycleProfileId, request.Date);
+    }
+
+    extension(UpdateMenstrualEpisodeHttpRequest request) {
+        public UpdateMenstrualEpisodeCommand ToCommand(Guid userId, Guid cycleProfileId, Guid menstrualEpisodeId) =>
+            new(userId, cycleProfileId, menstrualEpisodeId, request.StartDate, request.EndDate);
     }
 
     extension(BleedingLogHttpModel model) {

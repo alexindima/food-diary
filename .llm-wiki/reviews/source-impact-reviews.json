@@ -169,14 +169,14 @@
       "pageSha256": "037cc1091ca997ebc790af65de373c685931315349afb4750800c31f49bd7245",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiApiCompatibility.ps1",
-          "sha256": "71dce0a8b832fda48be82a1b3aef32f1366cef9090786191957ddb70e87ff349"
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
+          "sha256": "ccb5ea02d1648184a17dfa85a95900c2ada9e422c669a3afae1062662113a68e"
         }
       ],
-      "reason": "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-      "reviewedAtUtc": "2026-08-13T12:40:32.7580873Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:49.9383260Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -185,13 +185,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "09d5a3642751c17e464b314a5b69728fc1853bb3b6f7bd9c9954e33523e9e216"
+          "sha256": "dacaf14432197adb34ccc5396c8153075442d9df0603d716f07c200e0b2de8a2"
         }
       ],
-      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
-      "reviewedAtUtc": "2026-08-16T11:39:32.3246277Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:50.1460321Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -200,13 +200,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "a26a152d0f11a2312586ef680694436bc70091967773416f6c1d0a7823c6bf15"
+          "sha256": "85b08881cc1f428ce939349627747700e1b1bb42edd7228cb061d4ddc056ca27"
         }
       ],
-      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
-      "reviewedAtUtc": "2026-08-16T11:39:32.8389476Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:50.6283518Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -450,13 +450,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "ce69b11d91df663d654d31bcd9ebe7bfac5f181f7721827f7693b619b0464c79"
+          "sha256": "4b15d1c4a1deafbf7f402e1a82e10c894a241049e63231af110870ca697db606"
         }
       ],
-      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
-      "reviewedAtUtc": "2026-08-16T11:39:33.1197033Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:50.9243743Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -725,13 +725,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "c3cc61115c63ea5b068ec9699020742d92c4692d048b6935fdce01baffce7210"
+          "sha256": "c5e46104ad3622c40b46108ef361ef7f8b9ed1034bcff3b442bb95a9a5688694"
         }
       ],
-      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
-      "reviewedAtUtc": "2026-08-16T11:39:33.8043362Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:51.7278913Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "08deec82ca710cba2e3b346f9b974b2b2a8e9ed7137846e778931b34334830e1"
+          "sha256": "340039ed52c103665b84d6bc33887bbceaefc7174b7421e513f74b38b98a3685"
         }
       ],
-      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
-      "reviewedAtUtc": "2026-08-16T12:10:34.1370269Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:52.1619128Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -976,14 +976,18 @@
       "pageSha256": "e1655efc476bf4c727322d870d5951e28a7f1165ff29555671079e5ffa61f874",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
-          "sha256": "089838de905b93e78542cb9b66cb2f3ed56ca8a2529d0537e376b04b0b51833c"
+          "path": ".llm-wiki/generated/frontend-contract-index.json",
+          "sha256": "3593c499600c5c403ffa9d5926ae476158e55ad63fd34790e966246b70f91017"
+        },
+        {
+          "path": ".llm-wiki/generated/frontend-index.json",
+          "sha256": "180eb9f6c322d9cd309ad33e07263b41b6ba93434f70f2f3c74dd93e8707a14f"
         }
       ],
-      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
-      "reviewedAtUtc": "2026-08-16T12:10:35.3005291Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:52.9118930Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1071,13 +1075,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "32ef34d3ed9b88240564046b6f7c99026d3f986311c8eb35e79c0fd37b92fb2a"
+          "sha256": "3593c499600c5c403ffa9d5926ae476158e55ad63fd34790e966246b70f91017"
         }
       ],
-      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
-      "reviewedAtUtc": "2026-08-16T11:39:33.4714652Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:51.3691121Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1086,13 +1090,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "f5ac08b7b6dd58868906a0cffcc47fcf7673c6ca7332f1557daad89d016dca20"
+          "sha256": "1cf249ed4717a38f34c2c4bd9ba1a87c315b7f1865039ffa2cc0d577c578bb94"
         }
       ],
-      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
+      "reason": "Reviewed the additive menstrual episode PUT contract and refreshed OpenAPI snapshot; no breaking API compatibility change or workflow guidance change is required.",
       "baseRef": "HEAD",
-      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
-      "reviewedAtUtc": "2026-08-16T11:39:34.5985653Z"
+      "gitHead": "62a6dc054dea22ae11b5914e7061b0b387fe1d7a",
+      "reviewedAtUtc": "2026-08-16T13:07:52.4326795Z"
     },
     {
       "pageId": "workflow.review-diff",

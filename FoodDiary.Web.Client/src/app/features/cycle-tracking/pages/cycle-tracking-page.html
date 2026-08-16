@@ -286,6 +286,73 @@
                 }
             </fd-ui-card>
 
+            <fd-ui-card
+                class="cycle-tracking__card"
+                data-tour-id="cycle-tracking-episode-history"
+                [title]="'CYCLE_TRACKING.EPISODE_HISTORY_TITLE' | translate"
+            >
+                @if (menstrualEpisodes().length === 0) {
+                    <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.EPISODE_HISTORY_EMPTY' | translate }}</p>
+                } @else {
+                    <div class="fd-stack fd-gap-card-header">
+                        @for (episode of menstrualEpisodes(); track episode.id) {
+                            <div class="cycle-tracking__section fd-stack fd-gap-card-header">
+                                @if (editingEpisodeId() === episode.id) {
+                                    <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="episodeForm">
+                                        <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
+                                            <fd-ui-date-input
+                                                class="cycle-tracking__form-control"
+                                                [label]="'CYCLE_TRACKING.EPISODE_START_DATE' | translate"
+                                                [formField]="episodeForm.startDate"
+                                            />
+                                            <fd-ui-date-input
+                                                class="cycle-tracking__form-control"
+                                                [label]="'CYCLE_TRACKING.EPISODE_END_DATE' | translate"
+                                                [formField]="episodeForm.endDate"
+                                            />
+                                        </div>
+                                        <div class="cycle-tracking__actions fd-ui-actions">
+                                            <fd-ui-button type="submit" [loading]="isSavingEpisode()">
+                                                {{ 'CYCLE_TRACKING.SAVE_EPISODE' | translate }}
+                                            </fd-ui-button>
+                                            <fd-ui-button
+                                                type="button"
+                                                variant="secondary"
+                                                fill="text"
+                                                (click)="cancelMenstrualEpisodeEdit()"
+                                            >
+                                                {{ 'COMMON.CANCEL' | translate }}
+                                            </fd-ui-button>
+                                        </div>
+                                    </form>
+                                } @else {
+                                    <div class="fd-ui-actions fd-align-center">
+                                        <span class="fd-ui-body-sm">
+                                            {{ formatEpisodeDate(episode.startDate) }} —
+                                            {{
+                                                episode.endDate
+                                                    ? formatEpisodeDate(episode.endDate)
+                                                    : ('CYCLE_TRACKING.EPISODE_OPEN_END' | translate)
+                                            }}
+                                        </span>
+                                        @if (episode.status === 1) {
+                                            <fd-ui-button
+                                                type="button"
+                                                variant="secondary"
+                                                fill="text"
+                                                (click)="editMenstrualEpisode(episode.id)"
+                                            >
+                                                {{ 'CYCLE_TRACKING.EDIT_EPISODE' | translate }}
+                                            </fd-ui-button>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </fd-ui-card>
+
             <fd-cycle-days-card
                 data-tour-id="cycle-tracking-history"
                 [isLoading]="isLoading()"

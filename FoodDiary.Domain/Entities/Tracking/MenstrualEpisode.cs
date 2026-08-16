@@ -63,4 +63,20 @@ public sealed class MenstrualEpisode : Entity<MenstrualEpisodeId> {
         EndDate = normalizedEnd;
         SetModified();
     }
+
+    internal void UpdateConfirmedRange(DateTime startDate, DateTime? endDate) {
+        if (Status != MenstrualEpisodeStatus.Confirmed) {
+            throw new InvalidOperationException("Only confirmed menstrual episodes can be edited.");
+        }
+
+        DateTime normalizedStart = CycleProfile.NormalizeDate(startDate);
+        DateTime? normalizedEnd = endDate.HasValue ? CycleProfile.NormalizeDate(endDate.Value) : null;
+        if (normalizedEnd < normalizedStart) {
+            throw new ArgumentOutOfRangeException(nameof(endDate), "Episode end date cannot precede its start date.");
+        }
+
+        StartDate = normalizedStart;
+        EndDate = normalizedEnd;
+        SetModified();
+    }
 }

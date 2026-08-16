@@ -238,3 +238,8 @@ export type UpsertCycleFactorPayload = {
     notes?: string | null;
     clearNotes: boolean;
 };
+
+export type UpdateMenstrualEpisodePayload = {
+    startDate: string;
+    endDate?: string | null;
+};

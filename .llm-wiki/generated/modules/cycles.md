@@ -40,6 +40,7 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
 - `POST /api/v{version:apiVersion}/cycles`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/period-start`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/menstrual-episodes/{menstrualEpisodeId:guid}`
 - `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors`
 
@@ -80,6 +81,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.CreateAndRead.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.DayCommands.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.EpisodeCommands.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.FactorCommands.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.MappingAndPrediction.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Cycles/CyclesFeatureTests.NutritionSummary.cs`

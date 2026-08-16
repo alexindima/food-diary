@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 149,
     "componentsWithoutDirectSpecs": 128,
-    "criticalSymbolsWithoutTestReferences": 19,
+    "criticalSymbolsWithoutTestReferences": 20,
     "explicitDebtMarkers": 3
   },
   "projectDependencyViolations": [],
@@ -5372,6 +5372,14 @@
       "name": "UpdateFavoriteProductCommandValidator",
       "role": "Validator",
       "path": "FoodDiary.Application.Favorites/FavoriteProducts/Commands/UpdateFavoriteProduct/UpdateFavoriteProductCommandValidator.cs",
+      "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "UpdateMenstrualEpisodeCommandValidator",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
       "line": 4,
       "testReferenceCount": 0,
       "testReferences": []

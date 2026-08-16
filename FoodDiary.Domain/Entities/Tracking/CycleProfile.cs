@@ -232,6 +232,31 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return episode;
     }
 
+    public MenstrualEpisode UpdateMenstrualEpisode(MenstrualEpisodeId episodeId, DateTime startDate, DateTime? endDate) {
+        if (episodeId == MenstrualEpisodeId.Empty) {
+            throw new ArgumentException("Menstrual episode id is required.", nameof(episodeId));
+        }
+
+        MenstrualEpisode episode = _menstrualEpisodes.FirstOrDefault(item => item.Id == episodeId)
+            ?? throw new KeyNotFoundException($"Menstrual episode {episodeId.Value} was not found.");
+        DateTime normalizedStart = NormalizeDate(startDate);
+        DateTime? normalizedEnd = endDate.HasValue ? NormalizeDate(endDate.Value) : null;
+        DateTime effectiveEnd = normalizedEnd ?? normalizedStart;
+        bool overlapsAnotherConfirmedEpisode = _menstrualEpisodes.Any(item =>
+            item.Id != episodeId &&
+            item.Status == MenstrualEpisodeStatus.Confirmed &&
+            normalizedStart <= (item.EndDate ?? item.StartDate) &&
+            effectiveEnd >= item.StartDate);
+        if (overlapsAnotherConfirmedEpisode) {
+            throw new ArgumentException("Confirmed menstrual episodes cannot overlap.", nameof(startDate));
+        }
+
+        episode.UpdateConfirmedRange(normalizedStart, normalizedEnd);
+        ReconcileMenstrualEpisodes();
+        SetModified();
+        return episode;
+    }
+
     public void ReconcileMenstrualEpisodes() {
         _menstrualEpisodes.RemoveAll(episode => episode.Status == MenstrualEpisodeStatus.Inferred);
         DateTime[] bleedingDates = [.. _bleedingEntries

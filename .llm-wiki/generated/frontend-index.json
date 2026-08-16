@@ -2640,14 +2640,14 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 17
+      "line": 18
     },
     {
       "name": "CycleTrackingFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "line": 94
+      "line": 102
     },
     {
       "name": "CycleCurrentCardComponent",
@@ -5936,8 +5936,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3297,
-      "russianProperties": 3297,
+      "englishProperties": 3304,
+      "russianProperties": 3304,
       "countsMatch": true
     },
     {

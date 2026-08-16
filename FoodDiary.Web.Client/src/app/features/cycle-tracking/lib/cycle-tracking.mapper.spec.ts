@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import {
     clampCycleSymptom,
+    cycleDateInputEndIso,
+    cycleDateInputStartIso,
     normalizeCycleEndOfDay,
     normalizeCycleStartOfDay,
     toCycleDateKey,
@@ -17,6 +19,11 @@ const DAY_END_PART = 59;
 const DAY_END_MILLISECONDS = 999;
 
 describe('cycle tracking mapper', () => {
+    it('preserves date input calendar days when serializing episode boundaries', () => {
+        expect(cycleDateInputStartIso('2026-08-16')).toBe('2026-08-16T00:00:00.000Z');
+        expect(cycleDateInputEndIso('2026-08-16')).toBe('2026-08-16T23:59:59.999Z');
+    });
+
     it('clamps symptom values and handles missing or invalid input', () => {
         expect(clampCycleSymptom(-1)).toBe(0);
         expect(clampCycleSymptom(MAX_SYMPTOM + 1)).toBe(MAX_SYMPTOM);

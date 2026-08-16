@@ -101,16 +101,19 @@ export class CycleTrackingPageComponent {
     protected readonly isSavingCycle = this.facade.isSavingCycle;
     protected readonly isSavingDay = this.facade.isSavingDay;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
+    protected readonly isSavingEpisode = this.facade.isSavingEpisode;
     protected readonly isExportingCycle = this.facade.isExportingCycle;
     protected readonly clearingDayDate = this.facade.clearingDayDate;
     protected readonly editingDayDate = this.facade.editingDayDate;
     protected readonly editingFactorId = this.facade.editingFactorId;
+    protected readonly editingEpisodeId = this.facade.editingEpisodeId;
     protected readonly isLoadingNutritionSummary = this.facade.isLoadingNutritionSummary;
     protected readonly cycle = this.facade.cycle;
     protected readonly nutritionSummary = this.facade.nutritionSummary;
     protected readonly startCycleForm = this.facade.startCycleForm;
     protected readonly dayForm = this.facade.dayForm;
     protected readonly factorForm = this.facade.factorForm;
+    protected readonly episodeForm = this.facade.episodeForm;
     protected readonly symptomFields = CYCLE_SYMPTOM_FIELDS;
 
     protected readonly predictions = this.facade.predictions;
@@ -118,6 +121,7 @@ export class CycleTrackingPageComponent {
     protected readonly symptoms = this.facade.symptoms;
     protected readonly factors = this.facade.factors;
     protected readonly fertilitySignals = this.facade.fertilitySignals;
+    protected readonly menstrualEpisodes = this.facade.menstrualEpisodes;
     protected readonly currentCycleView = computed(() => buildCycleCurrentView(this.cycle(), this.appLocale()));
     protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
     protected readonly nutritionSummaryView = computed(() => buildCycleNutritionSummaryView(this.nutritionSummary(), this.appLocale()));
@@ -226,6 +230,14 @@ export class CycleTrackingPageComponent {
         this.facade.confirmPeriodStart(date);
     }
 
+    protected editMenstrualEpisode(episodeId: string): void {
+        this.facade.editMenstrualEpisode(episodeId);
+    }
+
+    protected cancelMenstrualEpisodeEdit(): void {
+        this.facade.cancelMenstrualEpisodeEdit();
+    }
+
     protected editFactor(factorId: string): void {
         this.facade.editFactor(factorId);
     }
@@ -248,6 +260,14 @@ export class CycleTrackingPageComponent {
 
     protected symptomField(key: CycleSymptomField['key']): FieldTree<number> {
         return this.dayForm[key];
+    }
+
+    protected formatEpisodeDate(value: string): string {
+        return new Intl.DateTimeFormat(this.appLocale(), {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        }).format(new Date(value));
     }
 
     private appLocale(): string {

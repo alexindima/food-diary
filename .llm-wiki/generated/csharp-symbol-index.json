@@ -8,20 +8,20 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3242,
-    "symbols": 3251,
+    "sourceFiles": 3246,
+    "symbols": 3255,
     "interfaceImplementationLinks": 231,
     "dependencyInjectionRegistrations": 232,
     "kinds": {
-      "class": 1661,
+      "class": 1663,
       "enum": 50,
       "interface": 411,
-      "record": 1015,
+      "record": 1017,
       "record struct": 114
     },
     "roles": {
-      "Command": 154,
-      "CommandHandler": 150,
+      "Command": 155,
+      "CommandHandler": 151,
       "Configuration": 84,
       "Controller": 88,
       "Entity": 82,
@@ -38,10 +38,10 @@
       "ReadModelRepository": 29,
       "ReadRepository": 47,
       "Repository": 102,
-      "Request": 126,
+      "Request": 127,
       "Response": 172,
       "Service": 269,
-      "Validator": 183,
+      "Validator": 184,
       "ValueObject": 124,
       "WriteRepository": 46
     }
@@ -6199,6 +6199,27 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandValidator.cs",
       "line": 5
+    },
+    {
+      "name": "UpdateMenstrualEpisodeCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateMenstrualEpisodeCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandHandler.cs",
+      "line": 14
+    },
+    {
+      "name": "UpdateMenstrualEpisodeCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateMenstrualEpisode/UpdateMenstrualEpisodeCommandValidator.cs",
+      "line": 4
     },
     {
       "name": "BleedingLogCommandModel",
@@ -18308,7 +18329,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
-      "line": 11
+      "line": 12
     },
     {
       "name": "CycleHttpResponseMappings",
@@ -18350,6 +18371,13 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/SymptomLogHttpModel.cs",
+      "line": 2
+    },
+    {
+      "name": "UpdateMenstrualEpisodeHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateMenstrualEpisodeHttpRequest.cs",
       "line": 2
     },
     {

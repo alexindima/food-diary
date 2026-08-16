@@ -26,6 +26,7 @@ import {
     type CycleTrackingMode,
     type FertilitySignal,
     type FertilitySignalPayload,
+    type MenstrualEpisode,
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
     type SymptomLogPayload,
@@ -46,6 +47,8 @@ import {
 } from './cycle-tracking.config';
 import {
     clampCycleSymptom,
+    cycleDateInputEndIso,
+    cycleDateInputStartIso,
     normalizeCycleEndOfDay,
     normalizeCycleStartOfDay,
     toCycleDateKey,
@@ -90,6 +93,11 @@ type CycleFactorFormModel = {
     notes: string | null;
 };
 
+type MenstrualEpisodeFormModel = {
+    startDate: string | null;
+    endDate: string | null;
+};
+
 @Injectable()
 export class CycleTrackingFacade {
     private readonly cyclesService = inject(CyclesService);
@@ -100,10 +108,12 @@ export class CycleTrackingFacade {
     public readonly isSavingCycle = signal(false);
     public readonly isSavingDay = signal(false);
     public readonly isSavingFactor = signal(false);
+    public readonly isSavingEpisode = signal(false);
     public readonly isExportingCycle = signal(false);
     public readonly clearingDayDate = signal<string | null>(null);
     public readonly editingDayDate = signal<string | null>(null);
     public readonly editingFactorId = signal<string | null>(null);
+    public readonly editingEpisodeId = signal<string | null>(null);
     public readonly isLoadingNutritionSummary = signal(false);
     public readonly cycle = signal<CycleResponse | null>(null);
     public readonly nutritionSummary = signal<CycleNutritionSummary | null>(null);
@@ -195,11 +205,33 @@ export class CycleTrackingFacade {
         },
     );
 
+    public readonly episodeModel = signal<MenstrualEpisodeFormModel>({
+        startDate: null,
+        endDate: null,
+    });
+    private readonly submitEpisodeFormAsync = async (): Promise<void> => {
+        await this.saveMenstrualEpisodeAsync();
+    };
+    public readonly episodeForm = form(
+        this.episodeModel,
+        path => {
+            required(path.startDate);
+        },
+        {
+            submission: {
+                action: this.submitEpisodeFormAsync,
+            },
+        },
+    );
+
     public readonly predictions = computed<CyclePredictions | null>(() => this.cycle()?.predictions ?? null);
     public readonly bleedingEntries = computed<BleedingEntry[]>(() => [...(this.cycle()?.bleedingEntries ?? [])]);
     public readonly symptoms = computed<CycleSymptomEntry[]>(() => [...(this.cycle()?.symptoms ?? [])]);
     public readonly factors = computed<CycleFactor[]>(() => [...(this.cycle()?.factors ?? [])]);
     public readonly fertilitySignals = computed<FertilitySignal[]>(() => [...(this.cycle()?.fertilitySignals ?? [])]);
+    public readonly menstrualEpisodes = computed<MenstrualEpisode[]>(() =>
+        [...(this.cycle()?.menstrualEpisodes ?? [])].sort((left, right) => right.startDate.localeCompare(left.startDate)),
+    );
 
     public initialize(): void {
         this.loadCycle();
@@ -536,6 +568,55 @@ export class CycleTrackingFacade {
             .subscribe(cycle => {
                 this.cycle.set(cycle);
             });
+    }
+
+    public editMenstrualEpisode(episodeId: string): void {
+        const episode = this.menstrualEpisodes().find(item => item.id === episodeId);
+        if (episode === undefined) {
+            return;
+        }
+
+        this.episodeModel.set({
+            startDate: formatDateInputValue(new Date(episode.startDate)),
+            endDate: episode.endDate === undefined || episode.endDate === null ? null : formatDateInputValue(new Date(episode.endDate)),
+        });
+        this.editingEpisodeId.set(episodeId);
+    }
+
+    public cancelMenstrualEpisodeEdit(): void {
+        this.editingEpisodeId.set(null);
+        this.episodeModel.set({ startDate: null, endDate: null });
+    }
+
+    private async saveMenstrualEpisodeAsync(): Promise<void> {
+        const currentCycle = this.cycle();
+        const episodeId = this.editingEpisodeId();
+        const formValue = this.episodeModel();
+        if (
+            currentCycle === null ||
+            episodeId === null ||
+            formValue.startDate === null ||
+            formValue.startDate.length === 0 ||
+            this.episodeForm().invalid() ||
+            this.isSavingEpisode()
+        ) {
+            this.episodeForm().markAsTouched();
+            return;
+        }
+
+        this.isSavingEpisode.set(true);
+        try {
+            const cycle = await firstValueFrom(
+                this.cyclesService.updateMenstrualEpisode(currentCycle.id, episodeId, {
+                    startDate: cycleDateInputStartIso(formValue.startDate),
+                    endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : cycleDateInputEndIso(formValue.endDate),
+                }),
+            );
+            this.cycle.set(cycle);
+            this.cancelMenstrualEpisodeEdit();
+        } finally {
+            this.isSavingEpisode.set(false);
+        }
     }
 
     public exportCycle(): void {
