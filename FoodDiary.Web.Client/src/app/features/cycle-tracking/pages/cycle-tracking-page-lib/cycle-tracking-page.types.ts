@@ -43,6 +43,8 @@ export type CyclePredictionViewModel = {
     confidenceLabel: string;
     dataSufficiencyKey: string;
     completedCycleCount: number;
+    usedEpisodeCount: number;
+    excludedEpisodeCount: number;
     explanationKey: string;
     hasPredictionRanges: boolean;
     limitedReasonKey: string | null;

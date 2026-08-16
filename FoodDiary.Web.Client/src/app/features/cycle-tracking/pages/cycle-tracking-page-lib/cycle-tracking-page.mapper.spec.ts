@@ -170,6 +170,8 @@ describe('cycle tracking prediction mapper', () => {
             confidenceLabel: 'Moderate',
             dataSufficiencyKey: 'CYCLE_TRACKING.SUFFICIENCY_UNAVAILABLE',
             completedCycleCount: 0,
+            usedEpisodeCount: 0,
+            excludedEpisodeCount: 0,
             explanationKey: 'CYCLE_TRACKING.PREDICTION_EXPLANATION',
             hasPredictionRanges: true,
             limitedReasonKey: null,

@@ -218,6 +218,7 @@
       "completedCycleCount",
       "confidence",
       "dataSufficiency",
+      "excludedEpisodeCount",
       "nextPeriodStartFrom",
       "nextPeriodStartTo",
       "ovulationFrom",
@@ -226,7 +227,8 @@
       "pmsWindowEnd",
       "pmsWindowStart",
       "rationale",
-      "reasonCodes"
+      "reasonCodes",
+      "usedEpisodeCount"
     ]
   },
   "dashboard-snapshot": {

@@ -12,5 +12,7 @@ public sealed record CyclePredictionsHttpResponse(
     string DataSufficiency,
     string PatternConsistency,
     int CompletedCycleCount,
+    int UsedEpisodeCount,
+    int ExcludedEpisodeCount,
     IReadOnlyCollection<string> ReasonCodes,
     string AlgorithmVersion);

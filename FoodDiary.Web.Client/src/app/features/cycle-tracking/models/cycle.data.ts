@@ -137,6 +137,8 @@ export type CyclePredictions = {
     dataSufficiency?: string;
     patternConsistency?: string;
     completedCycleCount?: number;
+    usedEpisodeCount?: number;
+    excludedEpisodeCount?: number;
     reasonCodes?: string[];
     algorithmVersion?: string;
 };

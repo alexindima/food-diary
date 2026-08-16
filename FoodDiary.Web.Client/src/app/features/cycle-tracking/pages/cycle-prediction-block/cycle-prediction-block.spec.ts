@@ -32,6 +32,11 @@ describe('CyclePredictionBlockComponent', () => {
             ovulationRangeLabel: 'Apr 15 - Apr 16',
             pmsRangeLabel: 'Apr 23 - Apr 28',
             confidenceLabel: 'Moderate',
+            dataSufficiencyKey: 'CYCLE_TRACKING.SUFFICIENCY_LIMITED',
+            completedCycleCount: 3,
+            usedEpisodeCount: 4,
+            excludedEpisodeCount: 1,
+            explanationKey: 'CYCLE_TRACKING.PREDICTION_EXPLANATION',
             hasPredictionRanges: true,
             limitedReasonKey: null,
         });
@@ -41,6 +46,7 @@ describe('CyclePredictionBlockComponent', () => {
         expect(getText()).toContain('Apr 29 - May 1');
         expect(getText()).toContain('Apr 15 - Apr 16');
         expect(getText()).toContain('Apr 23 - Apr 28');
+        expect(getText()).toContain('CYCLE_TRACKING.PREDICTION_EPISODES_BODY');
     });
 
     it('renders limited state when ranges are unavailable', () => {
@@ -59,6 +65,11 @@ describe('CyclePredictionBlockComponent', () => {
             ovulationRangeLabel: '',
             pmsRangeLabel: '',
             confidenceLabel: 'Low',
+            dataSufficiencyKey: 'CYCLE_TRACKING.SUFFICIENCY_UNAVAILABLE',
+            completedCycleCount: 0,
+            usedEpisodeCount: 0,
+            excludedEpisodeCount: 0,
+            explanationKey: 'CYCLE_TRACKING.PREDICTION_EXPLANATION',
             hasPredictionRanges: false,
             limitedReasonKey: 'CYCLE_TRACKING.PREDICTIONS_LIMITED',
         });
@@ -66,6 +77,7 @@ describe('CyclePredictionBlockComponent', () => {
 
         expect(getText()).toContain('CYCLE_TRACKING.PREDICTIONS_LIMITED');
         expect(getText()).toContain('CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY');
+        expect(getText()).toContain('CYCLE_TRACKING.PREDICTION_EPISODES_BODY');
         expect(getText()).not.toContain('CYCLE_TRACKING.PRED_NEXT');
     });
 });

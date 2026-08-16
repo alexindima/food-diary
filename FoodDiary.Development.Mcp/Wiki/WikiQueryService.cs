@@ -186,7 +186,7 @@ public sealed class WikiQueryService(
             return "Frontend";
         }
         if (normalized.StartsWith("FoodDiary.Presentation.Api/", StringComparison.OrdinalIgnoreCase) ||
-            normalized.StartsWith("FoodDiary.Web.Api/", StringComparison.OrdinalIgnoreCase)) {
+            normalized.StartsWith("FoodDiary.Web.", StringComparison.OrdinalIgnoreCase)) {
             return "Api";
         }
         if (normalized.StartsWith("FoodDiary.Infrastructure/", StringComparison.OrdinalIgnoreCase)) {

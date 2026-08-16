@@ -26,7 +26,7 @@ public static class CyclePredictionService {
         return CalculatePredictions(
             profile.Confidence,
             profile.ShowFertilityEstimates,
-            ResolveEpisodeStarts(profile.BleedingEntries, profile.MenstrualEpisodes ?? []),
+            ResolvePredictionHistory(profile.BleedingEntries, profile.MenstrualEpisodes ?? []),
             currentDate ?? (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
     }
 
@@ -40,23 +40,25 @@ public static class CyclePredictionService {
         return CalculatePredictions(
             profile.Confidence,
             profile.ShowFertilityEstimates,
-            ResolveEpisodeStarts(profile),
+            ResolvePredictionHistory(profile),
             currentDate ?? (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
     }
 
     private static CyclePredictionsModel CalculatePredictions(
         CycleConfidence legacyConfidence,
         bool showFertilityEstimates,
-        IEnumerable<DateTime> bleedingDates,
+        PredictionHistory history,
         DateTime currentDate) {
-        DateTime[] starts = BuildInferredEpisodeStarts(bleedingDates);
+        DateTime[] starts = history.UsedEpisodeStarts;
         int[] cycleLengths = [.. starts.Zip(starts.Skip(1), static (from, to) => (to - from).Days)];
         if (cycleLengths.Any(static length => length < MinimumReliableCycleIntervalDays)) {
             return Limited(
                 legacyConfidence,
                 "ambiguous_episode_history",
                 "Bleeding episodes are too close together to infer reliable cycle starts.",
-                dataSufficiency: "Insufficient");
+                dataSufficiency: "Insufficient",
+                usedEpisodeCount: history.UsedEpisodeStarts.Length,
+                excludedEpisodeCount: history.ExcludedEpisodeCount);
         }
 
         if (cycleLengths.Length < MinimumCompletedCycles) {
@@ -65,7 +67,9 @@ public static class CyclePredictionService {
                 "insufficient_completed_cycles",
                 "At least three completed cycle intervals are needed.",
                 cycleLengths.Length,
-                "Insufficient");
+                "Insufficient",
+                history.UsedEpisodeStarts.Length,
+                history.ExcludedEpisodeCount);
         }
 
         int[] centerHistory = [.. cycleLengths.TakeLast(CenterHistoryLimit).Order()];
@@ -106,6 +110,8 @@ public static class CyclePredictionService {
             sufficiency,
             consistency,
             cycleLengths.Length,
+            history.UsedEpisodeStarts.Length,
+            history.ExcludedEpisodeCount,
             reasonCodes,
             AlgorithmVersion);
     }
@@ -126,24 +132,43 @@ public static class CyclePredictionService {
         return [.. starts];
     }
 
-    private static IEnumerable<DateTime> ResolveEpisodeStarts(
+    private static PredictionHistory ResolvePredictionHistory(
         IEnumerable<BleedingEntryReadModel> bleedingEntries,
         IEnumerable<MenstrualEpisodeReadModel> persistedEpisodes) {
-        DateTime[] confirmed = [.. persistedEpisodes
+        MenstrualEpisodeReadModel[] episodes = [.. persistedEpisodes];
+        DateTime[] confirmed = [.. episodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && !episode.ExcludedFromPredictions)
+            .Select(static episode => episode.StartDate)];
+        DateTime[] excluded = [.. episodes
+            .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && episode.ExcludedFromPredictions)
             .Select(static episode => episode.StartDate)];
         DateTime[] inferred = BuildInferredEpisodeStarts(
             bleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date));
-        return MergeEpisodeStarts(confirmed, inferred);
+        return CreatePredictionHistory(confirmed, excluded, inferred);
     }
 
-    private static IEnumerable<DateTime> ResolveEpisodeStarts(CycleProfile profile) {
+    private static PredictionHistory ResolvePredictionHistory(CycleProfile profile) {
         DateTime[] confirmed = [.. profile.MenstrualEpisodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && !episode.ExcludedFromPredictions)
             .Select(static episode => episode.StartDate)];
+        DateTime[] excluded = [.. profile.MenstrualEpisodes
+            .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && episode.ExcludedFromPredictions)
+            .Select(static episode => episode.StartDate)];
         DateTime[] inferred = BuildInferredEpisodeStarts(
             profile.BleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date));
-        return MergeEpisodeStarts(confirmed, inferred);
+        return CreatePredictionHistory(confirmed, excluded, inferred);
+    }
+
+    private static PredictionHistory CreatePredictionHistory(
+        IEnumerable<DateTime> confirmedStarts,
+        IEnumerable<DateTime> excludedStarts,
+        IEnumerable<DateTime> inferredStarts) {
+        DateTime[] excluded = [.. excludedStarts.Select(NormalizeDate).Distinct()];
+        DateTime[] eligibleInferred = [.. inferredStarts.Where(inferred =>
+            !excluded.Any(excludedStart => Math.Abs((excludedStart - NormalizeDate(inferred)).Days) <= 2))];
+        return new PredictionHistory(
+            MergeEpisodeStarts(confirmedStarts, eligibleInferred),
+            excluded.Length);
     }
 
     private static DateTime[] MergeEpisodeStarts(IEnumerable<DateTime> confirmedStarts, IEnumerable<DateTime> inferredStarts) {
@@ -174,7 +199,9 @@ public static class CyclePredictionService {
         string reasonCode,
         string rationale,
         int completedCycleCount = 0,
-        string dataSufficiency = "Unavailable") =>
+        string dataSufficiency = "Unavailable",
+        int usedEpisodeCount = 0,
+        int excludedEpisodeCount = 0) =>
         new(
             NextPeriodStartFrom: null,
             NextPeriodStartTo: null,
@@ -187,8 +214,12 @@ public static class CyclePredictionService {
             dataSufficiency,
             "Unavailable",
             completedCycleCount,
+            usedEpisodeCount,
+            excludedEpisodeCount,
             [reasonCode],
             AlgorithmVersion);
+
+    private sealed record PredictionHistory(DateTime[] UsedEpisodeStarts, int ExcludedEpisodeCount);
 
     private static DateTime NormalizeDate(DateTime date) =>
         DateTime.SpecifyKind(

@@ -4952,6 +4952,7 @@
         "PREDICTIONS_LEARNING_BODY": "Log at least four period starts so FoodDiary can estimate a range from three completed cycles.",
         "PREDICTION_EXPLANATION": "Estimated range, not an exact date",
         "PREDICTION_HISTORY_BODY": "Based on {{count}} completed cycles. Data sufficiency: {{sufficiency}}.",
+        "PREDICTION_EPISODES_BODY": "Period starts used: {{used}}. Confirmed starts excluded: {{excluded}}.",
         "SUFFICIENCY_ESTABLISHED": "established",
         "SUFFICIENCY_LIMITED": "limited",
         "SUFFICIENCY_INSUFFICIENT": "insufficient",

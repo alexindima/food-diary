@@ -7,7 +7,7 @@
     "outputs": 411,
     "apiCalls": 224,
     "templatesWithTranslations": 263,
-    "translationKeys": 1448,
+    "translationKeys": 1449,
     "consumerEdges": 959,
     "consumedComponents": 272,
     "unconsumedComponents": 149
@@ -15867,6 +15867,7 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-prediction-block/cycle-prediction-block.html",
       "keys": [
+        "CYCLE_TRACKING.PREDICTION_EPISODES_BODY",
         "CYCLE_TRACKING.PREDICTION_HISTORY_BODY",
         "CYCLE_TRACKING.PRED_NEXT",
         "CYCLE_TRACKING.PRED_OVULATION",

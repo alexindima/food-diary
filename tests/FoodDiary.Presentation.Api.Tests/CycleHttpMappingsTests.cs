@@ -168,6 +168,8 @@ public sealed class CycleHttpMappingsTests {
                 "Limited",
                 "Consistent",
                 3,
+                4,
+                1,
                 ["estimated_from_completed_cycles"],
                 "period-v2.0"));
 
@@ -186,6 +188,8 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(startDate.AddDays(28), response.Predictions!.NextPeriodStartFrom);
         Assert.Equal(startDate.AddDays(16), response.Predictions.OvulationTo);
         Assert.Equal("Medium", response.Predictions.Confidence);
+        Assert.Equal(4, response.Predictions.UsedEpisodeCount);
+        Assert.Equal(1, response.Predictions.ExcludedEpisodeCount);
     }
 
     [Fact]

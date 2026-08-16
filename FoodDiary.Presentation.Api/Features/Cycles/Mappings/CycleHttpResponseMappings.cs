@@ -40,6 +40,8 @@ public static class CycleHttpResponseMappings {
                         model.Predictions.DataSufficiency,
                         model.Predictions.PatternConsistency,
                         model.Predictions.CompletedCycleCount,
+                        model.Predictions.UsedEpisodeCount,
+                        model.Predictions.ExcludedEpisodeCount,
                         model.Predictions.ReasonCodes,
                         model.Predictions.AlgorithmVersion)
             );

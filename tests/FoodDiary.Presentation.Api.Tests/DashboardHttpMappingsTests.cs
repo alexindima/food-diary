@@ -158,6 +158,8 @@ public sealed class DashboardHttpMappingsTests {
                     "Limited",
                     "Consistent",
                     3,
+                    4,
+                    0,
                     ["estimated_from_completed_cycles"],
                     "period-v2.0")));
 

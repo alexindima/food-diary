@@ -52,6 +52,16 @@
                           }
             }}
         </span>
+        <span class="fd-ui-body-sm">
+            {{
+                'CYCLE_TRACKING.PREDICTION_EPISODES_BODY'
+                    | translate
+                        : {
+                              used: prediction().usedEpisodeCount,
+                              excluded: prediction().excludedEpisodeCount,
+                          }
+            }}
+        </span>
     </div>
 } @else if (prediction().limitedReasonKey) {
     <div class="cycle-tracking__prediction-limited fd-stack fd-gap-2xs">
@@ -62,6 +72,16 @@
                     ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY'
                     : 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY'
                 ) | translate: { confidence: prediction().confidenceLabel }
+            }}
+        </span>
+        <span class="fd-ui-body-sm">
+            {{
+                'CYCLE_TRACKING.PREDICTION_EPISODES_BODY'
+                    | translate
+                        : {
+                              used: prediction().usedEpisodeCount,
+                              excluded: prediction().excludedEpisodeCount,
+                          }
             }}
         </span>
     </div>

@@ -1630,6 +1630,7 @@
         "PREDICTIONS_LEARNING_BODY": "Отметьте как минимум четыре начала месячных, чтобы FoodDiary смог рассчитать диапазон по трём завершённым циклам.",
         "PREDICTION_EXPLANATION": "Оценочный диапазон, а не точная дата",
         "PREDICTION_HISTORY_BODY": "Основано на {{count}} завершённых циклах. Достаточность данных: {{sufficiency}}.",
+        "PREDICTION_EPISODES_BODY": "Начал месячных в расчёте: {{used}}. Подтверждённых начал исключено: {{excluded}}.",
         "SUFFICIENCY_ESTABLISHED": "достаточная",
         "SUFFICIENCY_LIMITED": "ограниченная",
         "SUFFICIENCY_INSUFFICIENT": "недостаточная",

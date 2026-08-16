@@ -100,6 +100,33 @@ public partial class CyclesFeatureTests {
         Assert.Equal(3, predictions.CompletedCycleCount);
         Assert.Equal("Limited", predictions.DataSufficiency);
         Assert.Equal("Consistent", predictions.PatternConsistency);
+        Assert.Equal(4, predictions.UsedEpisodeCount);
+        Assert.Equal(0, predictions.ExcludedEpisodeCount);
+    }
+
+    [Fact]
+    public void CyclePredictionService_CalculatePredictions_DoesNotReinferExcludedConfirmedEpisode() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+        DateTime[] starts = [
+            new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 1, 29, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 2, 26, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc),
+        ];
+        foreach (DateTime start in starts) {
+            AddBleedingEpisode(profile, start);
+        }
+
+        MenstrualEpisode excluded = profile.ConfirmPeriodStart(starts[1]);
+        profile.UpdateMenstrualEpisode(excluded.Id, starts[1], starts[1].AddDays(4), excludedFromPredictions: true);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, starts[^1]);
+
+        Assert.Null(predictions.NextPeriodStartFrom);
+        Assert.Equal(3, predictions.UsedEpisodeCount);
+        Assert.Equal(1, predictions.ExcludedEpisodeCount);
+        Assert.Equal(2, predictions.CompletedCycleCount);
+        Assert.Contains("insufficient_completed_cycles", predictions.ReasonCodes, StringComparer.Ordinal);
     }
 
     [Fact]

@@ -89,6 +89,8 @@ export function buildCyclePredictionView(prediction: CyclePredictions | null, lo
         confidenceLabel: prediction.dataSufficiency ?? prediction.confidence,
         dataSufficiencyKey: getDataSufficiencyKey(prediction.dataSufficiency),
         completedCycleCount: prediction.completedCycleCount ?? 0,
+        usedEpisodeCount: prediction.usedEpisodeCount ?? 0,
+        excludedEpisodeCount: prediction.excludedEpisodeCount ?? 0,
         explanationKey: 'CYCLE_TRACKING.PREDICTION_EXPLANATION',
         hasPredictionRanges,
         limitedReasonKey: hasPredictionRanges
