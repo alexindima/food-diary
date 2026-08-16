@@ -58,6 +58,19 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         }
     }
 
+    public async Task<ChangeSetSnapshot> RefreshAsync(CancellationToken cancellationToken) {
+        await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+        try {
+            long generation = Interlocked.Read(ref _generation);
+            ChangeSetSnapshot snapshot = await CreateAsync(cancellationToken).ConfigureAwait(false);
+            _cached = snapshot;
+            Interlocked.Exchange(ref _cachedGeneration, generation);
+            return snapshot;
+        } finally {
+            _gate.Release();
+        }
+    }
+
     public void Dispose() {
         _watcher.Dispose();
         _gate.Dispose();
@@ -148,7 +161,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         return output;
     }
 
-    private static string[] ParseChangedPaths(string porcelain) {
+    internal static string[] ParseChangedPaths(string porcelain) {
         string[] records = porcelain.Split('\0', StringSplitOptions.RemoveEmptyEntries);
         HashSet<string> paths = new(StringComparer.OrdinalIgnoreCase);
         for (int index = 0; index < records.Length; index++) {
@@ -160,7 +173,8 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             string status = record[..2];
             string path = record[3..].Replace('\\', '/');
             if ((status[0] is 'R' or 'C' || status[1] is 'R' or 'C') && index + 1 < records.Length) {
-                path = records[++index].Replace('\\', '/');
+                // In porcelain v1 -z output the destination path is first and the source path follows it.
+                index++;
             }
             paths.Add(path);
         }
