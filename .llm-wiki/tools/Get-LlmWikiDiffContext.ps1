@@ -104,15 +104,18 @@ $frontendIndex = if (Test-Path -LiteralPath $frontendIndexPath) {
     $null
 }
 $scopes = [ordered]@{
-    Backend = @($changedPaths | Where-Object { $_ -match '\.cs$|\.csproj$|Directory\.(Build|Packages)\.props$' }).Count -gt 0
+    Backend = @($changedPaths | Where-Object {
+        $_ -match '\.cs$|\.csproj$|Directory\.(Build|Packages)\.props$' -or
+        $_ -match '^(?:FoodDiary\.(?:Domain|Application(?:\.[^/]+)?|Infrastructure|Presentation\.Api|Web\.Api)|MailInbox/FoodDiary\.[^/]+|MailRelay/FoodDiary\.[^/]+)(?:/)?$'
+    }).Count -gt 0
     Api = @($changedPaths | Where-Object {
-        $_ -match 'Presentation|Web\.Api/.+\.cs$|Controller\.cs$|/Snapshots/'
+        $_ -match 'Presentation|Web\.Api(?:/|$)|Controller\.cs$|/Snapshots/'
     }).Count -gt 0
     Frontend = @($changedPaths | Where-Object {
         $_ -match '^FoodDiary\.Web\.Client/|^FoodDiary\.Mobile/'
     }).Count -gt 0
     Database = @($changedPaths | Where-Object {
-        $_ -match 'Infrastructure/.*(Persistence|Migration)|Migrations?/|ModelSnapshot\.cs$'
+        $_ -match '(?:^|/)FoodDiary\.Infrastructure(?:/|$)|Infrastructure/.*(Persistence|Migration)|Migrations?/|ModelSnapshot\.cs$'
     }).Count -gt 0
     Tests = @($changedPaths | Where-Object { $_ -match '(^|/)tests/' -or $_ -match '\.(spec\.ts|test\.mjs)$' }).Count -gt 0
     Documentation = @($changedPaths | Where-Object { $_ -match '(^|/)(AGENTS|README)\.md$|^docs/|^\.llm-wiki/' }).Count -gt 0
@@ -155,7 +158,7 @@ foreach ($module in $candidateModules) {
         $changedPaths | Where-Object {
             $_ -match "(^|/)$escapedName(/|\.|[A-Z])" -or
             $_ -match "/Features/$escapedName/" -or
-            ($module.origin -eq 'extracted-project' -and $_ -match "^FoodDiary\.Application\.$escapedName/")
+            ($module.origin -eq 'extracted-project' -and $_ -match "^FoodDiary\.Application\.$escapedName(?:/|$)")
         }
     )
     if ($matchingPaths.Count -eq 0) {

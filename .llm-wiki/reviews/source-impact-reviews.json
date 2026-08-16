@@ -585,14 +585,14 @@
       "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3770ae26eb133289dc90640d80b974872dfe3b9875fb77e65a78b0b1c625e13b"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "e5967a30f23b37e3c8dbdd7a5087b0e73cce61540687d20729ef8d85964244f3"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:28.9282723Z"
+      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
+      "reviewedAtUtc": "2026-08-16T12:10:33.7381614Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0270fdd5c431a5e334b5789821fde4a9fe36150b4a20b40276d7c69d4768e0a6"
+          "sha256": "08deec82ca710cba2e3b346f9b974b2b2a8e9ed7137846e778931b34334830e1"
         }
       ],
-      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
+      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
       "baseRef": "HEAD",
-      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
-      "reviewedAtUtc": "2026-08-16T11:39:34.2543727Z"
+      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
+      "reviewedAtUtc": "2026-08-16T12:10:34.1370269Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -883,13 +883,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "565645d453c8ff66b52706f0f6806d7d3e7ea6d14d72a132e3373fb0374962b5"
+          "sha256": "c84daf95bbd16df56172b5d1b6fd47d101a603ed7676da87d708cdfeb7206531"
         }
       ],
-      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
+      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
       "baseRef": "HEAD",
-      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
-      "reviewedAtUtc": "2026-08-16T01:07:14.2658582Z"
+      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
+      "reviewedAtUtc": "2026-08-16T12:10:34.6818920Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -962,13 +962,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "74a193c81fc59c8ecd57138c355e9dc04e78826275e57c166971206a170f459b"
+          "sha256": "e5967a30f23b37e3c8dbdd7a5087b0e73cce61540687d20729ef8d85964244f3"
         }
       ],
-      "reason": "Verified planned directory test expansion prioritizes in-scope frontend specs, preserves graph consumers, diagnoses overly broad scope, and remains compatible with Windows PowerShell; focused code-graph and MCP regressions pass.",
+      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
       "baseRef": "HEAD",
-      "gitHead": "d28b7954a31476d967461b0c026957f39f5e31da",
-      "reviewedAtUtc": "2026-08-15T12:43:37.2408604Z"
+      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
+      "reviewedAtUtc": "2026-08-16T12:10:35.0226938Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -976,18 +976,14 @@
       "pageSha256": "e1655efc476bf4c727322d870d5951e28a7f1165ff29555671079e5ffa61f874",
       "sources": [
         {
-          "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "32ef34d3ed9b88240564046b6f7c99026d3f986311c8eb35e79c0fd37b92fb2a"
-        },
-        {
-          "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "cf44ed31db2c16cc00b1a31f1e92548b8173bb46503cd0db024536599af60c88"
+          "path": ".llm-wiki/tools/Find-LlmWikiTrace.ps1",
+          "sha256": "089838de905b93e78542cb9b66cb2f3ed56ca8a2529d0537e376b04b0b51833c"
         }
       ],
-      "reason": "Reviewed menstrual episode domain, persistence, API, frontend, tests, migration, localization, privacy and rollout impacts; current workflow guidance remains accurate and generated indexes contain the required feature-specific updates.",
+      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
       "baseRef": "HEAD",
-      "gitHead": "91b362e5f2b2133508d4119b4792bf3400fdcfb7",
-      "reviewedAtUtc": "2026-08-16T11:39:35.1071966Z"
+      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
+      "reviewedAtUtc": "2026-08-16T12:10:35.3005291Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1045,13 +1041,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "565645d453c8ff66b52706f0f6806d7d3e7ea6d14d72a132e3373fb0374962b5"
+          "sha256": "c84daf95bbd16df56172b5d1b6fd47d101a603ed7676da87d708cdfeb7206531"
         }
       ],
-      "reason": "Durable index receipts, bookkeeping-scope exclusion, direct-versus-transitive test classification, and same-language token links preserve the documented Wiki workflows while reducing repeated work and false positives.",
+      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
       "baseRef": "HEAD",
-      "gitHead": "5c009153f50ed209425d6d35bd4de03181c6d230",
-      "reviewedAtUtc": "2026-08-16T01:07:11.2643999Z"
+      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
+      "reviewedAtUtc": "2026-08-16T12:10:33.4280644Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1104,14 +1100,14 @@
       "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
       "sources": [
         {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "3770ae26eb133289dc90640d80b974872dfe3b9875fb77e65a78b0b1c625e13b"
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "c84daf95bbd16df56172b5d1b6fd47d101a603ed7676da87d708cdfeb7206531"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Reviewed MCP planning changes: directory scopes map backend/API/database modules, planned and traced scope remain additive, trace impact is explicit, compatible focused tests are grouped, and server status exposes a read-only index fingerprint.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:30.2773006Z"
+      "gitHead": "b3e22464618b5485d23eb511477de1071eaa16f4",
+      "reviewedAtUtc": "2026-08-16T12:10:34.4016243Z"
     }
   ]
 }

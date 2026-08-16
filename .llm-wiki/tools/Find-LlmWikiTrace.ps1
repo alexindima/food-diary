@@ -188,6 +188,13 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
         }
     }
 
+    $impactPaths = @(
+        @($requestDefinition.path) + @($candidate.path) +
+        @($implementations | ForEach-Object path) +
+        @($presentation | ForEach-Object path) +
+        @($tests | ForEach-Object path) |
+            Where-Object { $_ } | Sort-Object -Unique
+    )
     $results.Add([pscustomobject]@{
         request = $candidate.request
         match = [pscustomobject]@{
@@ -205,6 +212,11 @@ foreach ($candidate in ($handlerCandidates | Sort-Object @{ Expression = 'score'
         implementations = @($implementations | Sort-Object contract, implementation, path -Unique)
         presentation = @($presentation | Sort-Object path -Unique)
         tests = @($tests | Sort-Object path -Unique)
+        impact = [pscustomobject]@{
+            paths = $impactPaths
+            symbols = @(@($candidate.request, $candidate.handler) + @($implementations | ForEach-Object implementation) | Where-Object { $_ } | Sort-Object -Unique)
+            consumers = @(@($presentation | ForEach-Object path) + @($tests | ForEach-Object path) | Where-Object { $_ } | Sort-Object -Unique)
+        }
     })
 }
 

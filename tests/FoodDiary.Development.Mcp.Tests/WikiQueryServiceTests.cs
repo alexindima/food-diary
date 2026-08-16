@@ -129,6 +129,8 @@ public sealed class WikiQueryServiceTests {
                 "Change a backend flow",
                 "-ChangedPath",
                 "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
+                "-ProposedPath",
+                "FoodDiary.Application.Users",
             })),
             CancellationToken.None);
     }

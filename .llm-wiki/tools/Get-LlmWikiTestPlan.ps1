@@ -304,7 +304,14 @@ $frontendFocusedTests = @(
         Where-Object { $_ -match '^FoodDiary\.Web\.Client/.+\.spec\.ts$' } |
         Select-Object -First 5
 )
-foreach ($testPath in $frontendFocusedTests) {
+foreach ($frontendProjectGroup in @($frontendFocusedTests | Group-Object {
+    if ($_ -match '^FoodDiary\.Web\.Client/projects/fooddiary-admin/') { 'admin' }
+    elseif ($_ -match '^FoodDiary\.Web\.Client/projects/fd-ui-kit/') { 'ui-kit' }
+    elseif ($_ -match '^FoodDiary\.Web\.Client/projects/fd-tour/') { 'tour' }
+    else { 'app' }
+})) {
+    $testPaths = @($frontendProjectGroup.Group)
+    $testPath = $testPaths[0]
     $workspacePath = $testPath.Substring('FoodDiary.Web.Client/'.Length)
     $scriptAndProject = if ($workspacePath -match '^projects/fooddiary-admin/') {
         @('test:ci:admin', 'fooddiary-admin')
@@ -321,21 +328,46 @@ foreach ($testPath in $frontendFocusedTests) {
     if (-not $scriptExists) { continue }
     $builder = $frontendWorkspace.projects.PSObject.Properties[$project].Value.architect.test.builder
     $supportsInclude = $builder -eq '@angular/build:unit-test'
+    $includeArguments = @($testPaths | ForEach-Object { "--include=$($_.Substring('FoodDiary.Web.Client/'.Length))" }) -join ' '
     $commands += [pscustomobject]@{
         id = 'focused-frontend'
         command = if ($supportsInclude) {
-            "cd FoodDiary.Web.Client && npm run $script -- --include=$workspacePath"
+            "cd FoodDiary.Web.Client && npm run $script -- $includeArguments"
         } else {
             "cd FoodDiary.Web.Client && npm run $script"
         }
         source = 'focused-test'
-        priority = [string](($selectedFocusedTests | Where-Object path -eq $testPath | Select-Object -First 1).priority)
-        reason = [string](($selectedFocusedTests | Where-Object path -eq $testPath | Select-Object -First 1).reason)
+        priority = [string](($selectedFocusedTests | Where-Object { $_.path -in $testPaths } | Sort-Object @{ Expression = { switch ($_.priority) { 'required' { 0 } 'recommended' { 1 } default { 2 } } } } | Select-Object -First 1).priority)
+        reason = "grouped-focused-tests:$($testPaths.Count)"
         commandEvidence = if ($supportsInclude) {
             "package.json:$script; angular.json:$project=$builder"
         } else {
             "package.json:$script; focused include unsupported by angular.json builder '$builder'"
         }
+    }
+}
+$backendFocusedProjects = [Collections.Generic.Dictionary[string, object]]::new([StringComparer]::OrdinalIgnoreCase)
+foreach ($focusedTest in @($selectedFocusedTests | Where-Object { $_.path -match '\.cs$' })) {
+    $directory = Split-Path -Parent (Join-Path $repositoryRoot ([string]$focusedTest.path))
+    while ($directory.StartsWith($repositoryRoot, [StringComparison]::OrdinalIgnoreCase)) {
+        $project = Get-ChildItem -LiteralPath $directory -Filter '*.csproj' -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($project) {
+            $projectPath = $project.FullName.Substring($repositoryRoot.Length + 1).Replace('\', '/')
+            if (-not $backendFocusedProjects.ContainsKey($projectPath)) { $backendFocusedProjects[$projectPath] = $focusedTest }
+            break
+        }
+        if ($directory -eq $repositoryRoot) { break }
+        $directory = Split-Path -Parent $directory
+    }
+}
+foreach ($focusedProject in $backendFocusedProjects.GetEnumerator()) {
+    $commands += [pscustomobject]@{
+        id = 'focused-backend'
+        command = "dotnet test $($focusedProject.Key) --no-restore"
+        source = 'focused-test'
+        priority = [string]$focusedProject.Value.priority
+        reason = 'grouped-focused-test-project'
+        commandEvidence = [string]$focusedProject.Value.path
     }
 }
 if ($directConsumerProjects.Count -gt 3) {

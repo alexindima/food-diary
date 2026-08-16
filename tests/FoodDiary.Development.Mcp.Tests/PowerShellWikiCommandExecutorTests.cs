@@ -11,7 +11,8 @@ public sealed class PowerShellWikiCommandExecutorTests {
         ServerStatus result = await service.GetStatusAsync(timeout.Token);
 
         Assert.True(result.WikiAvailable);
-        Assert.Equal("notChecked", result.DeepFreshness);
+        Assert.Equal("fingerprinted", result.DeepFreshness);
+        Assert.Matches("^[a-f0-9]{64}$", result.IndexFingerprint);
         Assert.Null(result.LastVerifiedCommit);
         Assert.Equal(Environment.ProcessId, result.RuntimeIdentity.ProcessId);
         Assert.Equal("startup-head", result.RuntimeIdentity.RepositoryHeadAtStartup);

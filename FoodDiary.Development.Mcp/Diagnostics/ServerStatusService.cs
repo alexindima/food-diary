@@ -1,5 +1,6 @@
 using FoodDiary.Development.Mcp.Infrastructure;
 using FoodDiary.Development.Mcp.Protocol;
+using System.Security.Cryptography;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
@@ -33,9 +34,12 @@ public sealed class ServerStatusService(
                 file.Exists ? new DateTimeOffset(file.LastWriteTimeUtc) : null);
         })];
         bool indexFilesPresent = indexes.All(index => index.Exists);
+        string? indexFingerprint = indexFilesPresent
+            ? await ComputeIndexFingerprintAsync(repositoryRoot, cancellationToken).ConfigureAwait(false)
+            : null;
         string indexCheckSummary = !indexFilesPresent
             ? "One or more required generated indexes are missing."
-            : "Required index files exist. Deep freshness was not checked by this endpoint.";
+            : $"Required index files exist; content fingerprint is {indexFingerprint}. Source-to-index freshness was not regenerated.";
 
         return new ServerStatus(
             typeof(ServerStatusService).Assembly.GetName().Version?.ToString() ?? "unknown",
@@ -45,12 +49,33 @@ public sealed class ServerStatusService(
             string.Equals(runtimeIdentity.RepositoryHeadAtStartup, gitHead, StringComparison.Ordinal),
             WikiAvailable: true,
             indexFilesPresent,
-            DeepFreshness: "notChecked",
+            DeepFreshness: indexFilesPresent ? "fingerprinted" : "missing",
             LastVerifiedCommit: null,
+            indexFingerprint,
             indexFilesPresent ? "present" : DevelopmentMcpErrorCodes.IndexStale,
             indexCheckSummary,
             indexes,
             timeProvider.GetUtcNow());
+    }
+
+    private static async Task<string> ComputeIndexFingerprintAsync(
+        string repositoryRoot,
+        CancellationToken cancellationToken) {
+        using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
+        foreach (string path in IndexPaths.Order(StringComparer.Ordinal)) {
+            hash.AppendData(System.Text.Encoding.UTF8.GetBytes(path));
+            FileStream stream = File.OpenRead(Path.Combine(
+                repositoryRoot,
+                path.Replace('/', Path.DirectorySeparatorChar)));
+            await using (stream.ConfigureAwait(false)) {
+                byte[] buffer = new byte[81920];
+                int read;
+                while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0) {
+                    hash.AppendData(buffer.AsSpan(0, read));
+                }
+            }
+        }
+        return Convert.ToHexString(hash.GetHashAndReset()).ToLowerInvariant();
     }
 
     public static async Task<string> ReadGitHeadAsync(

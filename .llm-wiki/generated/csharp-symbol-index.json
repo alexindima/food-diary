@@ -12862,7 +12862,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatusService.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "WikiIndexStatus",

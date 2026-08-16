@@ -10,6 +10,7 @@ public sealed record ServerStatus(
     bool IndexFilesPresent,
     string DeepFreshness,
     string? LastVerifiedCommit,
+    string? IndexFingerprint,
     string IndexStatusCode,
     string IndexCheckSummary,
     IReadOnlyList<WikiIndexStatus> Indexes,

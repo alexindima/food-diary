@@ -87,9 +87,8 @@ public sealed class WikiQueryService(
         AddChangeSet(briefArguments, snapshot);
 
         List<string> testArguments = ["-Format", "Json", "-Fast", "-Objective", intent];
-        if (!AddChangeSet(testArguments, snapshot)) {
-            AddPaths(testArguments, "-ProposedPath", expandedScopePaths);
-        }
+        AddChangeSet(testArguments, snapshot);
+        AddPaths(testArguments, "-ProposedPath", expandedScopePaths);
 
         Task<WikiCommandResult?> briefTask = ExecuteComponentAsync(
             "brief", briefArguments, errors, cancellationToken);
