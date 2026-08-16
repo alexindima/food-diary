@@ -709,6 +709,14 @@
       "structuralRiskScore": 45.04
     },
     {
+      "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
+      "nonBlankLines": 221,
+      "decisionPoints": 27,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 44.92
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/recipes/lib/recipe-list.facade.ts",
       "nonBlankLines": 285,
       "decisionPoints": 26,
@@ -803,14 +811,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 41.74
-    },
-    {
-      "path": "FoodDiary.Application.Dietologist/Queries/GetAttentionSignals/GetAttentionSignalsQueryHandler.cs",
-      "nonBlankLines": 215,
-      "decisionPoints": 23,
-      "criticalSymbols": 1,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.8
     }
   ],
   "files": [
@@ -24376,11 +24376,11 @@
     },
     {
       "path": "FoodDiary.Telegram.Bot/TelegramBotWorker.cs",
-      "nonBlankLines": 195,
-      "decisionPoints": 23,
+      "nonBlankLines": 221,
+      "decisionPoints": 27,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 38.4
+      "structuralRiskScore": 44.92
     },
     {
       "path": "FoodDiary.Web.Api/Build/ApiBuildInfo.cs",

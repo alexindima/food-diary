@@ -17,6 +17,8 @@ public sealed class TelegramBotWorker(
     IHttpClientFactory httpClientFactory,
     TimeProvider timeProvider)
     : BackgroundService {
+    private static readonly TimeSpan StartupErrorInitialRetryDelay = TimeSpan.FromSeconds(2);
+    private static readonly TimeSpan StartupErrorMaxRetryDelay = TimeSpan.FromSeconds(30);
     private static readonly TimeSpan PollingErrorRetryDelay = TimeSpan.FromSeconds(2);
     private readonly TelegramBotOptions _options = options.Value;
 
@@ -26,7 +28,7 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        User me = await botClient.GetMe(stoppingToken).ConfigureAwait(false);
+        User me = await GetMeWithRetryAsync(stoppingToken).ConfigureAwait(false);
         logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString(CultureInfo.InvariantCulture));
 
         var receiverOptions = new ReceiverOptions {
@@ -42,6 +44,32 @@ public sealed class TelegramBotWorker(
         await WaitForStopAsync(stoppingToken).ConfigureAwait(false);
         logger.LogInformation("Telegram bot stopping.");
     }
+
+    private async Task<User> GetMeWithRetryAsync(CancellationToken stoppingToken) {
+        TimeSpan retryDelay = StartupErrorInitialRetryDelay;
+        while (true) {
+            try {
+                return await botClient.GetMe(stoppingToken).ConfigureAwait(false);
+            } catch (RequestException exception) when (IsTransientStartupFailure(exception)) {
+                object failureCode = exception is ApiRequestException apiRequestException
+                    ? apiRequestException.ErrorCode
+                    : "transport";
+                logger.LogWarning(
+                    "Telegram bot startup request failed ({FailureCode}); retrying in {RetryDelaySeconds} seconds.",
+                    failureCode,
+                    retryDelay.TotalSeconds);
+                await Task.Delay(retryDelay, timeProvider, stoppingToken).ConfigureAwait(false);
+                retryDelay = TimeSpan.FromSeconds(Math.Min(
+                    retryDelay.TotalSeconds * 2,
+                    StartupErrorMaxRetryDelay.TotalSeconds));
+            }
+        }
+    }
+
+    private static bool IsTransientStartupFailure(RequestException exception) =>
+        exception is not ApiRequestException apiRequestException ||
+        apiRequestException.ErrorCode == 429 ||
+        apiRequestException.ErrorCode >= 500;
 
     private static async Task WaitForStopAsync(CancellationToken stoppingToken) {
         if (stoppingToken.IsCancellationRequested) {
