@@ -6,6 +6,7 @@ using System.Text.Json;
 namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
+[Collection("PowerShell Wiki process")]
 public sealed class McpServerTests {
     [Fact]
     public async Task ConfiguredServer_ListsAndCallsExpectedReadOnlyTools() {
@@ -30,7 +31,7 @@ public sealed class McpServerTests {
             configuration.EnabledTools.Order(StringComparer.Ordinal),
             StringComparer.Ordinal));
         Assert.True(configuration.Required);
-        Assert.Equal(["--build-if-missing"], configuration.Arguments);
+        Assert.Equal(["--build-if-stale"], configuration.Arguments);
         Assert.All(tools, tool => Assert.True(tool.ProtocolTool.Annotations?.ReadOnlyHint));
         Assert.Contains(
             "includeDetailedContext",
@@ -57,6 +58,12 @@ public sealed class McpServerTests {
             "repositoryHeadAtStartup",
             result.StructuredContent.Value.ToString(),
             StringComparison.OrdinalIgnoreCase);
+        JsonElement status = result.StructuredContent.Value.GetProperty("data");
+        Assert.True(status.GetProperty("runningCodeIncludesWorktreeChanges").GetBoolean());
+        Assert.Equal(
+            Path.GetFullPath(repositoryRoot),
+            Path.GetFullPath(status.GetProperty("repositoryRoot").GetString()!),
+            ignoreCase: true);
     }
 
     [Fact]

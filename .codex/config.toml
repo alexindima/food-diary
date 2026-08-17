@@ -1,9 +1,9 @@
 [mcp_servers.fooddiary_development]
 command = "scripts\\Start-FoodDiaryDevelopmentMcp.cmd"
-args = ["--build-if-missing"]
+args = ["--build-if-stale"]
 cwd = "."
 startup_timeout_sec = 120
-tool_timeout_sec = 150
+tool_timeout_sec = 210
 enabled = true
 required = true
 enabled_tools = ["get_change_context", "get_development_context", "trace_backend_flow", "get_test_plan", "get_server_status"]

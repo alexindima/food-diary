@@ -69,6 +69,8 @@ public sealed class WikiQueryServiceTests {
             Arg.Is<IReadOnlyList<string>>(arguments => arguments.SequenceEqual(new[] {
                 "-Format",
                 "Json",
+                "-BaseRef",
+                "abc123",
                 "-ChangedPath",
                 "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
             })),
@@ -93,6 +95,8 @@ public sealed class WikiQueryServiceTests {
                 "Json",
                 "-Objective",
                 "Change measurement presentation",
+                "-BaseRef",
+                "abc123",
                 "-ChangedPath",
                 "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
                 "-ProposedPath",
@@ -150,6 +154,8 @@ public sealed class WikiQueryServiceTests {
                 "-Fast",
                 "-Objective",
                 "Change a backend flow",
+                "-BaseRef",
+                "abc123",
                 "-ChangedPath",
                 "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
                 "-ProposedPath",
@@ -330,7 +336,58 @@ public sealed class WikiQueryServiceTests {
         Assert.Equal(DevelopmentMcpErrorCodes.TestPlanScopeRequired, exception.ErrorCode);
     }
 
-    private static WikiCommandResult CreateResult(string command, IReadOnlyList<string> referencedPaths) => new(
+    [Fact]
+    public async Task GetTestPlanAsync_ReportsUnavailableBaselineForCleanPlannedScope() {
+        ChangeSetSnapshot snapshot = new("abc123", "clean-snapshot", [], DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
+        WikiQueryService service = new(_executor, _snapshots);
+
+        await service.GetTestPlanAsync(
+            intent: "Inspect MCP",
+            plannedPaths: ["FoodDiary.Development.Mcp"],
+            changedPaths: null,
+            executedChecks: null,
+            cancellationToken: CancellationToken.None);
+
+        await _executor.Received(1).ExecuteAsync(
+            "test-plan",
+            Arg.Is<IReadOnlyList<string>>(arguments =>
+                arguments.Contains("-NoBaseline", StringComparer.Ordinal) &&
+                !arguments.Contains("-BaseRef", StringComparer.Ordinal)),
+            CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task GetDevelopmentContextAsync_UsesOnlyDirectTracePathsForScopeExpansion() {
+        ChangeSetSnapshot snapshot = new("abc123", "clean-snapshot", [], DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
+        _snapshots.RefreshAsync(Arg.Any<CancellationToken>()).Returns(snapshot);
+        _executor.ExecuteAsync("trace", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult(
+                "trace",
+                [
+                    "FoodDiary.Application.Users/Commands/UpdateUser.cs",
+                    "tests/FoodDiary.ArchitectureTests/TransitiveContext.cs",
+                ],
+                ["FoodDiary.Application.Users/Commands/UpdateUser.cs"]));
+        WikiQueryService service = new(_executor, _snapshots);
+
+        DevelopmentContext result = await service.GetDevelopmentContextAsync(
+            "Update user",
+            "UpdateUser",
+            "FoodDiary.Application.Users",
+            CancellationToken.None);
+
+        Assert.False(result.ScopeMismatch);
+        Assert.Contains("FoodDiary.Application.Users/Commands/UpdateUser.cs", result.ExpandedScopePaths, StringComparer.Ordinal);
+        Assert.DoesNotContain("tests/FoodDiary.ArchitectureTests/TransitiveContext.cs", result.ExpandedScopePaths, StringComparer.Ordinal);
+        Assert.False(result.BaselineAvailable);
+    }
+
+    private static WikiCommandResult CreateResult(
+        string command,
+        IReadOnlyList<string> referencedPaths,
+        IReadOnlyList<string>? scopePaths = null) => new(
         command,
         RawOutput: null,
         StructuredOutput: null,
@@ -339,5 +396,6 @@ public sealed class WikiQueryServiceTests {
         OutputLines: [],
         ReferencedPaths: referencedPaths,
         RequiredChecks: [],
-        Warnings: []);
+        Warnings: [],
+        ScopePaths: scopePaths);
 }

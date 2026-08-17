@@ -1,0 +1,25 @@
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)][ValidateSet('develop', 'research', 'verify')][string]$Operation,
+    [Parameter(Mandatory)][ValidateSet('passed', 'failed')][string]$Outcome,
+    [Parameter(Mandatory)][double]$DurationSeconds,
+    [int]$ScopePathCount = 0
+)
+
+$ErrorActionPreference = 'Stop'
+$repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$gitDirectory = (& git -C $repositoryRoot rev-parse --absolute-git-dir).Trim()
+if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Git directory for workflow metrics.' }
+$root = Join-Path $gitDirectory 'llm-wiki/workflow-metrics'
+$null = New-Item -ItemType Directory -Path $root -Force
+$metric = [ordered]@{
+    schemaVersion = 1
+    operation = $Operation
+    outcome = $Outcome
+    durationSeconds = [Math]::Round($DurationSeconds, 2)
+    scopePathCount = $ScopePathCount
+    recordedAtUtc = [DateTime]::UtcNow.ToString('o')
+}
+$path = Join-Path $root "$([DateTime]::UtcNow.ToString('yyyyMMddHHmmssfffffff'))-$PID-$([guid]::NewGuid().ToString('N')).json"
+[IO.File]::WriteAllText($path, (($metric | ConvertTo-Json) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+Get-ChildItem -LiteralPath $root -Filter '*.json' -File | Sort-Object LastWriteTimeUtc -Descending | Select-Object -Skip 500 | Remove-Item -Force

@@ -11,6 +11,7 @@ param(
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [switch]$Compact,
+    [switch]$NoBaseline,
     [ValidateRange(1, 30)]
     [int]$Limit = 12
 )
@@ -33,7 +34,7 @@ if ($cacheEligible) {
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'test-plan' -Arguments @{
         BaseRef = $BaseRef; HeadRef = $HeadRef; ChangedPath = @($ChangedPath)
         ProposedPath = @($ProposedPath); Intent = $Intent; Compact = [bool]$Compact; Limit = $Limit
-        VerificationReceipts = $validReceiptFingerprint; ExecutedCheck = @($ExecutedCheck)
+        VerificationReceipts = $validReceiptFingerprint; ExecutedCheck = @($ExecutedCheck); NoBaseline = [bool]$NoBaseline
     }
     $cachedTestPlan = Read-LlmWikiQueryCache -Entry $queryCacheEntry
     if ($null -ne $cachedTestPlan) { Write-Output $cachedTestPlan; exit 0 }
@@ -435,6 +436,9 @@ if ($presentationBoundaryChange -or ($contractBoundaryChange -and @($effectivePa
 $commands = @($commands | Group-Object { ([string]$_.command) -replace '\s+--no-restore\s*$', '' } | ForEach-Object {
     @($_.Group | Sort-Object @{ Expression = { switch ($_.priority) { 'required' { 0 } 'recommended' { 1 } 'contextual' { 2 } default { 3 } } } }, command | Select-Object -First 1)
 } | Sort-Object command)
+if ($NoBaseline) {
+    $commands = @($commands | Where-Object { [string]$_.command -notmatch '(?i)\bapi-compat\b' })
+}
 $commandIdCounts = @{}
 $commands = @($commands | ForEach-Object {
     $baseId = [string]$_.id
@@ -500,6 +504,12 @@ $commands = @($commands | ForEach-Object {
 })
 
 $result = [pscustomobject]@{
+    baseline = [pscustomobject][ordered]@{
+        available = -not [bool]$NoBaseline
+        baseRevision = $(if ($NoBaseline) { $null } else { $BaseRef })
+        headRevision = $(if ($PSBoundParameters.ContainsKey('HeadRef')) { $HeadRef } else { 'WORKTREE' })
+        note = $(if ($NoBaseline) { 'Compatibility baseline was not supplied; API compatibility checks are omitted until baseRevision is provided.' } else { $null })
+    }
     scopes = $scopes
     intent = $Intent
     proposedPaths = @($ProposedPath | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | Sort-Object -Unique)
@@ -515,17 +525,20 @@ $result = [pscustomobject]@{
     }
     scenarios = @($scenarios)
     reviewObligations = @($policy.reviewObligations)
+    warnings = @($(if ($NoBaseline) { 'API compatibility baseline unavailable; provide baseRevision to enable compatibility checks.' }))
 }
 
 $resultOutput = if ($Compact) {
     [pscustomobject]@{
         compact = $true
+        baseline = $result.baseline
         scopes = $result.scopes
         modules = $result.modules
         focusedTests = $result.focusedTestDetails
         commands = $result.commands
         scenarios = @($result.scenarios | Select-Object id, description)
         reviewObligationIds = @($result.reviewObligations | ForEach-Object { if ($_.PSObject.Properties['id']) { $_.id } } | Where-Object { $_ })
+        warnings = $result.warnings
     }
 } else {
     $result

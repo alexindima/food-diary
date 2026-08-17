@@ -1,6 +1,7 @@
 namespace FoodDiary.Development.Mcp.Tests;
 
 [ExcludeFromCodeCoverage]
+[Collection("PowerShell Wiki process")]
 public sealed class PowerShellWikiCommandExecutorTests {
     [Fact]
     public async Task ServerStatus_ReturnsWithoutRunningDeepVerification() {
@@ -12,9 +13,9 @@ public sealed class PowerShellWikiCommandExecutorTests {
         ServerStatus result = await service.GetStatusAsync(timeout.Token);
 
         Assert.True(result.WikiAvailable);
-        Assert.Equal("fingerprinted", result.DeepFreshness);
+        Assert.True(new[] { "verified", "unverified", "stale" }.Contains(result.DeepFreshness, StringComparer.Ordinal));
         Assert.Matches("^[a-f0-9]{64}$", result.IndexFingerprint);
-        Assert.Null(result.LastVerifiedCommit);
+        Assert.Equal(result.IndexesMatchWorktree, string.Equals(result.DeepFreshness, "verified", StringComparison.Ordinal));
         Assert.Equal(Environment.ProcessId, result.RuntimeIdentity.ProcessId);
         Assert.Equal("startup-head", result.RuntimeIdentity.RepositoryHeadAtStartup);
         Assert.False(result.RunningCodeMatchesRepositoryHead);

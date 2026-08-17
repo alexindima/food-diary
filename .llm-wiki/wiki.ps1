@@ -97,6 +97,7 @@ param(
     [switch]$Fast,
     [switch]$Detached,
     [switch]$Compact,
+    [switch]$NoBaseline,
     [switch]$SkipHistory,
     [switch]$FailOnUnreviewed,
     [switch]$Check,
@@ -692,6 +693,10 @@ switch ($Command) {
         foreach ($stageDefinition in $selectedStages) {
             Invoke-ObservedWikiStage $stageDefinition.Name $stageDefinition.Tool $stageDefinition.Arguments $stageDefinition.Timeout $stageDefinition.Standalone
         }
+        if (-not $Stage -and $selectedStages.Count -eq $script:verifyStageTotal) {
+            & (Join-Path $toolsRoot 'Write-LlmWikiIndexVerificationReceipt.ps1')
+            & (Join-Path $toolsRoot 'Write-LlmWikiWorkflowMetric.ps1') -Operation verify -Outcome passed -DurationSeconds $script:verifyRunStopwatch.Elapsed.TotalSeconds -ScopePathCount @($ChangedPath).Count
+        }
         $script:verifyRunStopwatch.Stop()
         Write-Host "Wiki verify completed: $($selectedStages.Count)/$script:verifyStageTotal selected stage(s) in $([Math]::Round($script:verifyRunStopwatch.Elapsed.TotalSeconds, 2))s."
     }
@@ -917,7 +922,15 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $workflowArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $workflowArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $workflowArguments.ProposedPath = $ProposedPath }
-        Invoke-WikiTool 'Get-LlmWikiAdaptiveWorkflow.ps1' $workflowArguments
+        $metricStopwatch = [Diagnostics.Stopwatch]::StartNew()
+        $metricOutcome = 'failed'
+        try {
+            Invoke-WikiTool 'Get-LlmWikiAdaptiveWorkflow.ps1' $workflowArguments
+            $metricOutcome = 'passed'
+        } finally {
+            $metricStopwatch.Stop()
+            & (Join-Path $toolsRoot 'Write-LlmWikiWorkflowMetric.ps1') -Operation develop -Outcome $metricOutcome -DurationSeconds $metricStopwatch.Elapsed.TotalSeconds -ScopePathCount @($ProposedPath).Count
+        }
     }
     { $_ -in @('graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage') } {
         $graphAction = @{
@@ -985,10 +998,13 @@ switch ($Command) {
     'research' {
         if ([string]::IsNullOrWhiteSpace($Objective) -and -not [string]::IsNullOrWhiteSpace($Query)) { $Objective = $Query }
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'research requires -Intent <task description> (compatible alias: -Query).' }
+        $metricStopwatch = [Diagnostics.Stopwatch]::StartNew()
         if ($Fast) {
             $fastResearchArguments = @{ Objective = $Objective; Module = $Module; Limit = [Math]::Min($Limit, 500); Format = $Format }
             if ($PSBoundParameters.ContainsKey('ProposedPath')) { $fastResearchArguments.ProposedPath = $ProposedPath }
             Invoke-WikiTool 'Get-LlmWikiGraphResearch.ps1' $fastResearchArguments
+            $metricStopwatch.Stop()
+            & (Join-Path $toolsRoot 'Write-LlmWikiWorkflowMetric.ps1') -Operation research -Outcome passed -DurationSeconds $metricStopwatch.Elapsed.TotalSeconds -ScopePathCount @($ProposedPath).Count
             break
         }
         $researchArguments = @{ Objective = $Objective; Purpose = $ResearchPurpose; BaseRef = $BaseRef; Format = $Format; Limit = $Limit; Compact = $Compact; SkipHistory = $SkipHistory }
@@ -1004,6 +1020,8 @@ switch ($Command) {
         if ($Format -eq 'Text' -and -not (Test-Path -LiteralPath (Join-Path (Resolve-Path (Join-Path $toolsRoot '../..')).Path $WorkspacePath))) {
             Write-Host 'Delivery note: this is an ordinary research run; delivery-* commands require wiki start/task-start to create governed state.'
         }
+        $metricStopwatch.Stop()
+        & (Join-Path $toolsRoot 'Write-LlmWikiWorkflowMetric.ps1') -Operation research -Outcome passed -DurationSeconds $metricStopwatch.Elapsed.TotalSeconds -ScopePathCount @($ProposedPath).Count
     }
     'integration-scan' {
         if ([string]::IsNullOrWhiteSpace($Objective)) { throw 'integration-scan requires -Intent <task description>.' }
@@ -1142,7 +1160,7 @@ switch ($Command) {
             Invoke-WikiTool 'Get-LlmWikiGraphTestPlan.ps1' $graphTestArguments
             break
         }
-        $testPlanArguments = @{ BaseRef = $BaseRef; Format = $Format; Limit = [Math]::Min($Limit, 30) }
+        $testPlanArguments = @{ BaseRef = $BaseRef; Format = $Format; Limit = [Math]::Min($Limit, 30); NoBaseline = $NoBaseline }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $testPlanArguments.HeadRef = $HeadRef }
         if ($PSBoundParameters.ContainsKey('ChangedPath')) { $testPlanArguments.ChangedPath = $ChangedPath }
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $testPlanArguments.ProposedPath = $ProposedPath }

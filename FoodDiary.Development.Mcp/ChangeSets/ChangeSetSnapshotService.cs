@@ -83,7 +83,6 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             ["status", "--porcelain=v1", "-z", "--untracked-files=all"],
             cancellationToken).ConfigureAwait(false);
         string[] changedPaths = ParseChangedPaths(status);
-
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         Append(hash, head);
         string indexPath = Path.Combine(_repositoryRoot, ".git", "index");
@@ -184,6 +183,13 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
 
     private static void Append(IncrementalHash hash, string value) =>
         hash.AppendData(Encoding.UTF8.GetBytes(value));
+
+    internal static bool IsSourcePath(string path) =>
+        !path.StartsWith(".llm-wiki/generated/", StringComparison.OrdinalIgnoreCase) &&
+        !path.StartsWith(".llm-wiki/reviews/", StringComparison.OrdinalIgnoreCase) &&
+        !path.StartsWith(".artifacts/", StringComparison.OrdinalIgnoreCase) &&
+        !path.Contains("review-receipt", StringComparison.OrdinalIgnoreCase) &&
+        !path.Contains("source-impact-review", StringComparison.OrdinalIgnoreCase);
 
     private void OnChanged(object sender, FileSystemEventArgs args) {
         string relativePath = Path.GetRelativePath(_repositoryRoot, args.FullPath)

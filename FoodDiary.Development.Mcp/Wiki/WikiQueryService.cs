@@ -6,6 +6,34 @@ namespace FoodDiary.Development.Mcp.Wiki;
 public sealed class WikiQueryService(
     IWikiCommandExecutor executor,
     IChangeSetSnapshotService snapshots) {
+    public Task<WikiCommandResult> GetTestPlanAsync(
+        string? intent,
+        IReadOnlyList<string>? plannedPaths,
+        IReadOnlyList<string>? changedPaths,
+        IReadOnlyList<string>? executedChecks,
+        CancellationToken cancellationToken) =>
+        GetTestPlanAsync(
+            intent,
+            plannedPaths,
+            changedPaths,
+            executedChecks,
+            baseRevision: null,
+            headRevision: null,
+            cancellationToken);
+
+    public Task<DevelopmentContext> GetDevelopmentContextAsync(
+        string intent,
+        string query,
+        string? plannedPath,
+        CancellationToken cancellationToken) =>
+        GetDevelopmentContextAsync(
+            intent,
+            query,
+            plannedPath,
+            baseRevision: null,
+            headRevision: null,
+            cancellationToken);
+
     public async Task<WikiCommandResult> GetChangeContextAsync(
         string intent,
         string? plannedPath,
@@ -42,11 +70,14 @@ public sealed class WikiQueryService(
         IReadOnlyList<string>? plannedPaths,
         IReadOnlyList<string>? changedPaths,
         IReadOnlyList<string>? executedChecks,
+        string? baseRevision,
+        string? headRevision,
         CancellationToken cancellationToken) {
         List<string> arguments = string.IsNullOrWhiteSpace(intent)
             ? ["-Format", "Json"]
             : ["-Format", "Json", "-Objective", intent];
         ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
+        AddRevisionRange(arguments, snapshot, baseRevision, headRevision);
         bool hasChangeScope = AddPaths(arguments, "-ChangedPath", changedPaths);
         if (!hasChangeScope) {
             hasChangeScope = AddChangeSet(arguments, snapshot);
@@ -67,6 +98,8 @@ public sealed class WikiQueryService(
         string intent,
         string query,
         string? plannedPath,
+        string? baseRevision,
+        string? headRevision,
         CancellationToken cancellationToken) {
         ArgumentException.ThrowIfNullOrWhiteSpace(intent);
         ArgumentException.ThrowIfNullOrWhiteSpace(query);
@@ -82,14 +115,16 @@ public sealed class WikiQueryService(
         string[] expandedScopePaths = [.. new[] { plannedPath }
             .Where(path => !string.IsNullOrWhiteSpace(path))
             .Cast<string>()
-            .Concat(trace?.ReferencedPaths ?? [])
+            .Concat(trace?.GetScopePaths() ?? [])
             .Distinct(StringComparer.OrdinalIgnoreCase)];
 
         List<string> briefArguments = ["-Format", "Json", "-Compact", "-Objective", intent];
+        AddRevisionRange(briefArguments, snapshot, baseRevision, headRevision);
         AddPaths(briefArguments, "-ProposedPath", expandedScopePaths);
         AddChangeSet(briefArguments, snapshot);
 
         List<string> testArguments = ["-Format", "Json", "-Fast", "-Objective", intent];
+        bool baselineAvailable = AddRevisionRange(testArguments, snapshot, baseRevision, headRevision);
         AddChangeSet(testArguments, snapshot);
         AddPaths(testArguments, "-ProposedPath", expandedScopePaths);
 
@@ -117,9 +152,12 @@ public sealed class WikiQueryService(
             PartialSuccess: errors.Count > 0,
             ComponentErrors: errors,
             ExpandedScopePaths: expandedScopePaths,
-            ScopeMismatch: HasScopeMismatch(plannedPath, trace?.ReferencedPaths),
+            ScopeMismatch: HasScopeMismatch(plannedPath, trace?.GetScopePaths()),
             EffectiveLayers: effectiveLayers,
-            CrossLayerScope: effectiveLayers.Length > 1);
+            CrossLayerScope: effectiveLayers.Length > 1,
+            BaseRevision: baselineAvailable ? baseRevision ?? snapshot.GitHead : null,
+            HeadRevision: headRevision ?? snapshot.GitHead,
+            BaselineAvailable: baselineAvailable);
     }
 
     private async Task EnsureSnapshotUnchangedAsync(
@@ -174,6 +212,32 @@ public sealed class WikiQueryService(
     private static bool HasScope(IReadOnlyList<string> arguments) =>
         arguments.Contains("-ChangedPath", StringComparer.Ordinal) ||
         arguments.Contains("-ProposedPath", StringComparer.Ordinal);
+
+    private static bool AddRevisionRange(
+        List<string> arguments,
+        ChangeSetSnapshot snapshot,
+        string? baseRevision,
+        string? headRevision) {
+        if (!string.IsNullOrWhiteSpace(baseRevision) &&
+            !string.IsNullOrWhiteSpace(headRevision) &&
+            string.Equals(baseRevision, headRevision, StringComparison.OrdinalIgnoreCase)) {
+            throw new DevelopmentMcpException(
+                DevelopmentMcpErrorCodes.InvalidRevisionRange,
+                "baseRevision and headRevision must identify different revisions.");
+        }
+        bool baselineAvailable = !string.IsNullOrWhiteSpace(baseRevision) || snapshot.ChangedPaths.Count > 0;
+        if (baselineAvailable) {
+            arguments.Add("-BaseRef");
+            arguments.Add(baseRevision ?? snapshot.GitHead);
+        } else {
+            arguments.Add("-NoBaseline");
+        }
+        if (!string.IsNullOrWhiteSpace(headRevision)) {
+            arguments.Add("-HeadRef");
+            arguments.Add(headRevision);
+        }
+        return baselineAvailable;
+    }
 
     private static bool HasScopeMismatch(string? plannedPath, IReadOnlyList<string>? tracedPaths) {
         if (string.IsNullOrWhiteSpace(plannedPath)) {

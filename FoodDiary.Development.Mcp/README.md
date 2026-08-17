@@ -8,16 +8,18 @@ analysis entrypoints without replacing repository source-of-truth checks.
 - `get_change_context` wraps `wiki.ps1 brief`.
 - `trace_backend_flow` wraps `wiki.ps1 trace`.
 - `get_test_plan` wraps `wiki.ps1 test-plan` and accepts explicit
-  `changedPaths` or fallback `plannedPaths` when the worktree is clean.
+  `changedPaths` or fallback `plannedPaths` when the worktree is clean. Optional
+  `baseRevision`/`headRevision` pin compatibility analysis; without a base on a
+  clean worktree the result explicitly reports that compatibility is unavailable.
 - `get_development_context` runs a SQLite-backed trace first, then a compact
   brief and fast test plan concurrently. It refreshes the Git/worktree
   fingerprint between phases and rejects the result if the snapshot changed.
 - `get_server_status` reports repository, Git HEAD, Wiki, index presence, and
-  runtime identity (PID, process start, startup HEAD, assembly MVID/hash, and
-  build timestamps). `runningCodeMatchesRepositoryHead` makes a process that
-  survived a commit visible. Index content is fingerprinted, while source-to-index
-  freshness remains a lightweight timestamp-based diagnostic rather than deep
-  regeneration and verification.
+  runtime identity (PID, process start, startup HEAD, build HEAD/source
+  fingerprint, assembly MVID/hash, and build timestamps).
+  `runningCodeIncludesWorktreeChanges` compares the running build with the
+  current MCP sources. Wiki index freshness is `verified` only when both source
+  and index fingerprints match the receipt from a successful full Wiki verify.
 
 The server does not expose governed task lifecycle, generation, delivery, or
 repair commands. Wiki output remains derived navigation: callers must verify
@@ -32,28 +34,30 @@ within interactive tool timeouts.
 
 Large and Unicode-rich intents/path lists are serialized to a temporary JSON
 request file instead of being placed on the Windows command line. Tool results
-use MCP `structuredContent`; verbose `rawOutput` and duplicate `outputLines` are
-omitted unless `includeRawOutput` is explicitly enabled.
+use MCP `structuredContent`; warnings, paths, and checks are read from the JSON
+structure instead of regex-scanning serialized JSON. Compact results are the
+default for trace, test-plan, brief, and aggregate tools. Use
+`includeDetailedContext` for complete structured data or `includeRawOutput` for
+raw diagnostics.
 
 ## Run
 
 From the repository root:
 
 ```powershell
-dotnet build FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj
-./scripts/Start-FoodDiaryDevelopmentMcp.cmd --build-if-missing
+./scripts/Start-FoodDiaryDevelopmentMcp.cmd --build-if-stale
 ```
 
-The client must launch the process from within the repository tree. When that is
-not possible, set `FOODDIARY_REPOSITORY_ROOT` to the absolute repository path.
-All protocol traffic uses stdout; host diagnostics use stderr.
+The launcher binds the process to the worktree containing the launcher and sets
+`FOODDIARY_REPOSITORY_ROOT` explicitly. A different validated worktree can be
+passed as the second argument. All protocol traffic uses stdout; host
+diagnostics use stderr.
 
-The registered client uses `--build-if-missing`. The common path stays build-free;
-after a clean or fresh checkout the launcher builds the missing output once. It
-then copies the output to a unique temporary directory before starting each
-session, so concurrent MCP clients do not lock the shared `bin` output. Build the
-project after changing or pulling an already-built MCP implementation, then
-restart Codex so it launches the updated binary. The repository registration marks this server as
+The registered client uses `--build-if-stale`. The launcher fingerprints the MCP
+project and shared build inputs, rebuilding only when the output is absent or no
+longer matches those inputs. It then copies the output to a unique temporary
+directory before starting each session, so MCP clients do not lock the shared
+`bin` output. The repository registration marks this server as
 required and allows 120 seconds for startup, so startup failures are reported
 instead of silently leaving the FoodDiary tools unavailable.
 

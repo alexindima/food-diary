@@ -33,6 +33,7 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
     [Description("Traces an existing FoodDiary backend command, query, route, or feature through source-linked wiki indexes.")]
     public Task<CallToolResult> TraceBackendFlowAsync(
         [Description("Command, query, route, handler, or feature to trace.")] string query,
+        [Description("Return the complete trace graph instead of the compact default summary.")] bool includeDetailedContext = false,
         [Description("Include verbose raw Wiki output for diagnostics. Defaults to false.")] bool includeRawOutput = false,
         CancellationToken cancellationToken = default) =>
         ToolExecution.RunToolAsync(
@@ -40,6 +41,9 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
                 WikiCommandResult result = await queries
                     .TraceBackendFlowAsync(query, cancellationToken)
                     .ConfigureAwait(false);
+                if (!includeDetailedContext) {
+                    result = result.ToCompactTrace(includeRawOutput: includeRawOutput);
+                }
                 return includeRawOutput ? result : result.WithoutRawOutput();
             },
             cancellationToken);
@@ -51,13 +55,19 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
         [Description("Optional planned repository paths used when no explicit or Git changes exist.")] string[]? plannedPaths = null,
         [Description("Optional explicit changed repository paths. These take precedence over the Git worktree.")] string[]? changedPaths = null,
         [Description("Optional commands already executed successfully for this worktree. Matching plan items are request-scoped satisfied evidence and are not persisted.")] string[]? executedChecks = null,
+        [Description("Optional immutable base revision for compatibility and diff analysis. Required for compatibility analysis on a clean worktree.")] string? baseRevision = null,
+        [Description("Optional head revision. Defaults to the current worktree HEAD.")] string? headRevision = null,
+        [Description("Return all focused paths, commands, and scenarios instead of the compact default summary.")] bool includeDetailedContext = false,
         [Description("Include verbose raw Wiki output for diagnostics. Defaults to false.")] bool includeRawOutput = false,
         CancellationToken cancellationToken = default) =>
         ToolExecution.RunToolAsync(
             async () => {
                 WikiCommandResult result = await queries
-                    .GetTestPlanAsync(intent, plannedPaths, changedPaths, executedChecks, cancellationToken)
+                    .GetTestPlanAsync(intent, plannedPaths, changedPaths, executedChecks, baseRevision, headRevision, cancellationToken)
                     .ConfigureAwait(false);
+                if (!includeDetailedContext) {
+                    result = result.ToCompactTestPlan(includeRawOutput: includeRawOutput);
+                }
                 return includeRawOutput ? result : result.WithoutRawOutput();
             },
             cancellationToken);
@@ -68,13 +78,19 @@ public sealed class WikiTools(WikiQueryService queries, IServerStatusService sta
         [Description("The intended code or architecture change.")] string intent,
         [Description("The backend command, query, route, handler, or feature to trace.")] string query,
         [Description("Optional likely repository path used to focus the result.")] string? plannedPath = null,
+        [Description("Optional immutable base revision for compatibility and diff analysis. Required for compatibility analysis on a clean worktree.")] string? baseRevision = null,
+        [Description("Optional head revision. Defaults to the current worktree HEAD.")] string? headRevision = null,
+        [Description("Return complete trace, brief, and test-plan payloads instead of compact summaries.")] bool includeDetailedContext = false,
         [Description("Include verbose raw Wiki output for diagnostics. Defaults to false.")] bool includeRawOutput = false,
         CancellationToken cancellationToken = default) =>
         ToolExecution.RunToolAsync(
             async () => {
                 DevelopmentContext result = await queries
-                    .GetDevelopmentContextAsync(intent, query, plannedPath, cancellationToken)
+                    .GetDevelopmentContextAsync(intent, query, plannedPath, baseRevision, headRevision, cancellationToken)
                     .ConfigureAwait(false);
+                if (!includeDetailedContext) {
+                    result = result.ToCompact(includeRawOutput);
+                }
                 return includeRawOutput ? result : result.WithoutRawOutput();
             },
             cancellationToken);

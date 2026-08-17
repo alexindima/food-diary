@@ -12,7 +12,9 @@ public sealed record ServerRuntimeIdentity(
     string ModuleVersionId,
     string AssemblySha256,
     DateTimeOffset? AssemblyLastWriteTimeUtc,
-    string RepositoryHeadAtStartup) {
+    string RepositoryHeadAtStartup,
+    string? BuiltFromGitHead,
+    string? BuildSourceFingerprint) {
     public static ServerRuntimeIdentity Capture(string repositoryHeadAtStartup) {
         Assembly assembly = typeof(ServerRuntimeIdentity).Assembly;
         string assemblyPath = assembly.Location;
@@ -29,6 +31,11 @@ public sealed record ServerRuntimeIdentity(
             assembly.ManifestModule.ModuleVersionId.ToString("D"),
             assemblySha256,
             assemblyFile.Exists ? new DateTimeOffset(assemblyFile.LastWriteTimeUtc) : null,
-            repositoryHeadAtStartup);
+            repositoryHeadAtStartup,
+            NullIfWhiteSpace(Environment.GetEnvironmentVariable("FOODDIARY_MCP_BUILD_GIT_HEAD")),
+            NullIfWhiteSpace(Environment.GetEnvironmentVariable("FOODDIARY_MCP_BUILD_SOURCE_FINGERPRINT")));
     }
+
+    private static string? NullIfWhiteSpace(string? value) =>
+        string.IsNullOrWhiteSpace(value) ? null : value;
 }

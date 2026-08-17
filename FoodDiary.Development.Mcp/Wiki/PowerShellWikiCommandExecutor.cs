@@ -8,7 +8,7 @@ using FoodDiary.Development.Mcp.Protocol;
 namespace FoodDiary.Development.Mcp.Wiki;
 
 public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
-    private static readonly TimeSpan CommandTimeout = TimeSpan.FromMinutes(2);
+    private static readonly TimeSpan CommandTimeout = TimeSpan.FromMinutes(3);
     private static readonly JsonSerializerOptions RequestJsonOptions =
         new(JsonSerializerDefaults.Web);
 

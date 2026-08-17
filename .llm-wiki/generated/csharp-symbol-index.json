@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3314,
-    "symbols": 3323,
+    "sourceFiles": 3317,
+    "symbols": 3326,
     "interfaceImplementationLinks": 232,
     "dependencyInjectionRegistrations": 233,
     "kinds": {
-      "class": 1702,
+      "class": 1704,
       "enum": 56,
       "interface": 412,
-      "record": 1037,
+      "record": 1038,
       "record struct": 116
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1236,
+      "Other": 1239,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -13075,11 +13075,32 @@
       "line": 2
     },
     {
+      "name": "WikiVerificationReceipt",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Diagnostics/WikiVerificationReceipt.cs",
+      "line": 4
+    },
+    {
+      "name": "DevelopmentMcpSourceFingerprint",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Infrastructure/DevelopmentMcpSourceFingerprint.cs",
+      "line": 5
+    },
+    {
       "name": "RepositoryRootResolver",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Infrastructure/RepositoryRootResolver.cs",
       "line": 4
+    },
+    {
+      "name": "RepositorySourceFingerprint",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Infrastructure/RepositorySourceFingerprint.cs",
+      "line": 8
     },
     {
       "name": "DevelopmentContext",

@@ -41,36 +41,67 @@ public sealed class ServerStatusService(
                 file.Exists ? new DateTimeOffset(file.LastWriteTimeUtc) : null);
         })];
         bool indexFilesPresent = indexes.All(index => index.Exists);
-        bool indexesMatchWorktree = indexFilesPresent && AreIndexesCurrentForSources(
-            repositoryRoot,
-            indexes,
-            sourceChangedPaths);
         string? indexFingerprint = indexFilesPresent
             ? await ComputeIndexFingerprintAsync(repositoryRoot, cancellationToken).ConfigureAwait(false)
             : null;
-        string indexCheckSummary = !indexFilesPresent
-            ? "One or more required generated indexes are missing."
-            : $"Required index files exist; content fingerprint is {indexFingerprint}. Source-to-index freshness was not regenerated.";
+        string sourceFingerprint = await RepositorySourceFingerprint
+            .ComputeAsync(repositoryRoot, cancellationToken)
+            .ConfigureAwait(false);
+        WikiVerificationReceipt? verificationReceipt = await WikiVerificationReceipt
+            .ReadAsync(repositoryRoot, cancellationToken)
+            .ConfigureAwait(false);
+        bool indexesMatchWorktree = indexFilesPresent && verificationReceipt is not null &&
+            string.Equals(verificationReceipt.SourceFingerprint, sourceFingerprint, StringComparison.Ordinal) &&
+            string.Equals(verificationReceipt.IndexFingerprint, indexFingerprint, StringComparison.Ordinal);
+        string currentMcpSourceFingerprint = await DevelopmentMcpSourceFingerprint
+            .ComputeAsync(repositoryRoot, cancellationToken)
+            .ConfigureAwait(false);
+        bool runningCodeIncludesWorktreeChanges = !string.IsNullOrWhiteSpace(runtimeIdentity.BuildSourceFingerprint) &&
+            string.Equals(
+                runtimeIdentity.BuildSourceFingerprint,
+                currentMcpSourceFingerprint,
+                StringComparison.Ordinal);
+        string indexCheckSummary;
+        if (!indexFilesPresent) {
+            indexCheckSummary = "One or more required generated indexes are missing.";
+        } else if (verificationReceipt is null) {
+            indexCheckSummary = $"Required index files exist, but no successful source-bound verification receipt is available. Content fingerprint is {indexFingerprint}.";
+        } else if (indexesMatchWorktree) {
+            indexCheckSummary = $"Required indexes match the verified source and index fingerprints from {verificationReceipt.VerifiedAtUtc:O}.";
+        } else {
+            indexCheckSummary = "Required indexes do not match the latest verified source/index fingerprint receipt.";
+        }
+        string deepFreshness;
+        if (!indexFilesPresent) {
+            deepFreshness = "missing";
+        } else if (indexesMatchWorktree) {
+            deepFreshness = "verified";
+        } else {
+            deepFreshness = verificationReceipt is null ? "unverified" : "stale";
+        }
 
         return new ServerStatus(
             typeof(ServerStatusService).Assembly.GetName().Version?.ToString() ?? "unknown",
             runtimeIdentity,
             repositoryRoot,
             gitHead,
-            string.Equals(runtimeIdentity.RepositoryHeadAtStartup, gitHead, StringComparison.Ordinal),
+            !string.IsNullOrWhiteSpace(runtimeIdentity.BuiltFromGitHead) &&
+                string.Equals(runtimeIdentity.BuiltFromGitHead, gitHead, StringComparison.Ordinal),
             WorktreeDirty: snapshot.ChangedPaths.Count > 0,
             WorktreeFingerprint: snapshot.Fingerprint,
+            SourceFingerprint: sourceFingerprint,
             IndexesMatchWorktree: indexesMatchWorktree,
-            RunningCodeIncludesWorktreeChanges: snapshot.ChangedPaths.Count == 0,
+            RunningCodeIncludesWorktreeChanges: runningCodeIncludesWorktreeChanges,
             sourceChangedPaths,
             derivedWikiPaths,
             reviewMetadataPaths,
             WikiAvailable: true,
             indexFilesPresent,
-            DeepFreshness: indexFilesPresent ? "fingerprinted" : "missing",
-            LastVerifiedCommit: null,
+            DeepFreshness: deepFreshness,
+            LastVerifiedCommit: verificationReceipt?.GitHead,
+            LastVerifiedAtUtc: verificationReceipt?.VerifiedAtUtc,
             indexFingerprint,
-            indexFilesPresent ? "present" : DevelopmentMcpErrorCodes.IndexStale,
+            indexesMatchWorktree ? "verified" : DevelopmentMcpErrorCodes.IndexStale,
             indexCheckSummary,
             indexes,
             timeProvider.GetUtcNow());
@@ -84,23 +115,6 @@ public sealed class ServerStatusService(
         path.StartsWith(".llm-wiki/reviews/", StringComparison.OrdinalIgnoreCase) ||
         path.Contains("review-receipt", StringComparison.OrdinalIgnoreCase) ||
         path.Contains("source-impact-review", StringComparison.OrdinalIgnoreCase);
-
-    private static bool AreIndexesCurrentForSources(
-        string repositoryRoot,
-        IReadOnlyList<WikiIndexStatus> indexes,
-        IReadOnlyList<string> sourceChangedPaths) {
-        if (sourceChangedPaths.Count == 0) {
-            return true;
-        }
-
-        DateTimeOffset newestSourceWrite = sourceChangedPaths
-            .Select(path => Path.Combine(repositoryRoot, path.Replace('/', Path.DirectorySeparatorChar)))
-            .Where(File.Exists)
-            .Select(path => new DateTimeOffset(File.GetLastWriteTimeUtc(path)))
-            .DefaultIfEmpty(DateTimeOffset.MaxValue)
-            .Max();
-        return indexes.All(index => index.LastWriteTimeUtc >= newestSourceWrite);
-    }
 
     private static async Task<string> ComputeIndexFingerprintAsync(
         string repositoryRoot,
@@ -172,6 +186,11 @@ public sealed class ServerStatusService(
 
         return Path.GetFullPath(marker[prefix.Length..], repositoryRoot);
     }
+
+    internal static Task<string> ResolveGitDirectoryForStatusAsync(
+        string repositoryRoot,
+        CancellationToken cancellationToken) =>
+        ResolveGitDirectoryAsync(repositoryRoot, cancellationToken);
 
     private static async Task<string> ResolveCommonGitDirectoryAsync(
         string gitDirectory,

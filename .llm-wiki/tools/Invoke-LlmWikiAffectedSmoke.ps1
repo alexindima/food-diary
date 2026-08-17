@@ -54,7 +54,7 @@ if ($smokeGroups.Count -eq 0) {
     foreach ($path in $paths) {
         if ($path -notmatch '^\.llm-wiki/') { continue }
         $wikiRelevantPathCount++
-        if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Test-LlmWikiAdaptiveWorkflow)|policies/experience-policies\.json|workflows/developer-experience\.md)') {
+        if ($path -match '^\.llm-wiki/(tools/(Get-LlmWikiAdaptiveWorkflow|Start-LlmWikiDevelopment|Get-LlmWikiSolutionComparison|Get-LlmWikiWorkflowMetrics|Write-LlmWikiWorkflowMetric|Test-LlmWikiAdaptiveWorkflow)|policies/experience-policies\.json|workflows/developer-experience\.md)') {
         $null = $smokeGroups.Add('adaptive-routing')
     } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAdaptiveVerification|Get-LlmWikiIntegrationScan|Test-LlmWikiIntegrationScan|Invoke-LlmWikiEvals)|evals/|workflows/(integration-scan|evals|learned-regression-evals)\.md)') {
         $null = $smokeGroups.Add('adaptive-evals')
@@ -90,7 +90,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('reporting')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Test-LlmWikiVerificationReceipts)\.ps1$') {
         $null = $smokeGroups.Add('verification-receipts')
-    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification|Write-LlmWikiIndexVerificationReceipt)\.ps1$') {
         $null = $smokeGroups.Add('verification-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         $null = $smokeGroups.Add('query-cache')

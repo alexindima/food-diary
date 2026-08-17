@@ -150,18 +150,14 @@
       "pageSha256": "623b527d5eca7164ab6562bb12a0c728d6a710315430d7fc64e56dfd603f464f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
-          "sha256": "34d3444f8f8ab3b86da69d69f205b421d598ad0495ab6286926ba5e74f66e026"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
-          "sha256": "43617000384e6d378d1ed31b7f97925057e04a1805493f250cd17315840e447e"
+          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "32b1eeade1c292acadc5c00b97d4fdaccdb0728bd306ad73d330aaf5544a8e9d"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:46.5436821Z"
+      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
+      "reviewedAtUtc": "2026-08-17T11:17:50.9725868Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -245,13 +241,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "63df52afd299609da887abf21b5c1b7dbca41ff6a06848acf9cfcc3ad0ee3976"
+          "sha256": "f17a6dcca75a3cdfe742cd490f82f85c8f6ebbc502df7bc09cde7738b39a8668"
         }
       ],
-      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
+      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:28:07.0175509Z"
+      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
+      "reviewedAtUtc": "2026-08-17T11:17:51.1037192Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -430,14 +426,14 @@
       "pageSha256": "e81fa2b3a04a1494e8f592d61f2407a135f90a5899cf6cf94a01515c984e07b3",
       "sources": [
         {
-          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
-          "sha256": "6064ea1d6997e26c1501804dfb492955adfe3d69133044acc622d8cb997b0566"
+          "path": ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
+          "sha256": "73b6eef258e0c0056a41adee4d629edc64b3a3079ac5f0c2533fab50c3b2962d"
         }
       ],
-      "reason": "Reviewed the immutable change-set cache, SQLite query layer, parallel MCP snapshot flow, and compatibility-preserving compiled-index migration boundary; authoritative sources remain unchanged and generated JSON is retained while consumers exist.",
+      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
       "baseRef": "HEAD",
-      "gitHead": "717c150fc3bbdd577f9ba225f05f8b1a16be0db3",
-      "reviewedAtUtc": "2026-08-14T14:24:55.8747641Z"
+      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
+      "reviewedAtUtc": "2026-08-17T11:17:51.2379498Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -577,22 +573,26 @@
       "pageSha256": "2ccdf34b5e311ea48f4cefab1e6d09c0286d06e830a152d7ae6d41a928db5d75",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "57ca461181d7b6f8d8c658aca8a4053d2e3e1c7a09d2abdcd4c38eb61d28ede0"
+          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
+          "sha256": "75fe1da3d8d02e5b6605520cd75f3dc6b9ed3b53f64f80e8976cc6b30c6942d9"
         },
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
-          "sha256": "34d3444f8f8ab3b86da69d69f205b421d598ad0495ab6286926ba5e74f66e026"
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "c389f7ed2b2f479c7570d877915769083ddc2a8ad18b80664f0b06748dd65498"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "0f9655fe6fe1ef868e2b5e7afc1a358b8d1efae392c12bcd619d7981e3775bfb"
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "63df52afd299609da887abf21b5c1b7dbca41ff6a06848acf9cfcc3ad0ee3976"
+          "sha256": "f17a6dcca75a3cdfe742cd490f82f85c8f6ebbc502df7bc09cde7738b39a8668"
         }
       ],
-      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
+      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:28:08.7495391Z"
+      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
+      "reviewedAtUtc": "2026-08-17T11:17:51.3960958Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -774,13 +774,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "105777a895644a6d275262613447dda6266b48b049f0c4b464570704ee915f96"
+          "sha256": "0a3e4aa1f6d569d6fc5cb49296f4d99ccd57a20e311c862636364cebcbb54ae0"
         }
       ],
-      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
+      "reason": "Reviewed final cleanup of the snapshot contract; content-based freshness remains covered by the completed MCP and Wiki regression suites.",
       "baseRef": "HEAD",
-      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
-      "reviewedAtUtc": "2026-08-17T09:59:55.9852509Z"
+      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
+      "reviewedAtUtc": "2026-08-17T11:27:02.5139947Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -917,13 +917,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "63df52afd299609da887abf21b5c1b7dbca41ff6a06848acf9cfcc3ad0ee3976"
+          "sha256": "f17a6dcca75a3cdfe742cd490f82f85c8f6ebbc502df7bc09cde7738b39a8668"
         }
       ],
-      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
+      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:28:10.8058931Z"
+      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
+      "reviewedAtUtc": "2026-08-17T11:17:51.8924049Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -990,13 +990,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "cd76a21d46a49fc36f84cfa8d21d85e537236ea854ea776c084d838ddc2ccf79"
+          "sha256": "75fe1da3d8d02e5b6605520cd75f3dc6b9ed3b53f64f80e8976cc6b30c6942d9"
         }
       ],
-      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
+      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:04:37.6509015Z"
+      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
+      "reviewedAtUtc": "2026-08-17T11:17:52.0971969Z"
     },
     {
       "pageId": "workflow-trace-feature",
@@ -1156,18 +1156,14 @@
       "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "cf167f32457f6c569f388e0e89f01784d61b856baeaece02a77d058ef4dd5a4d"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "63df52afd299609da887abf21b5c1b7dbca41ff6a06848acf9cfcc3ad0ee3976"
+          "sha256": "f17a6dcca75a3cdfe742cd490f82f85c8f6ebbc502df7bc09cde7738b39a8668"
         }
       ],
-      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
+      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:28:09.4944848Z"
+      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
+      "reviewedAtUtc": "2026-08-17T11:17:51.5754087Z"
     }
   ]
 }
