@@ -4,4 +4,5 @@ public sealed record IdempotencyReservation(
     IdempotencyReservationStatus Status,
     int? StatusCode = null,
     string? Body = null,
+    string? Location = null,
     string? OwnerToken = null);

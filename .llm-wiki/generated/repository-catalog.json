@@ -3931,12 +3931,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/admin-sso/start",
-            "line": 20
+            "line": 21
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/admin-sso/exchange",
-            "line": 26
+            "line": 27
           }
         ]
       },
@@ -3948,12 +3948,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/password-reset/request",
-            "line": 18
+            "line": 24
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/password-reset/confirm",
-            "line": 24
+            "line": 31
           }
         ]
       },
@@ -3965,42 +3965,42 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/register",
-            "line": 21
+            "line": 25
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/login",
-            "line": 30
+            "line": 35
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/google",
-            "line": 38
+            "line": 44
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/google/link",
-            "line": 49
+            "line": 55
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/refresh",
-            "line": 59
+            "line": 66
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/restore",
-            "line": 68
+            "line": 76
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/verify-email",
-            "line": 77
+            "line": 86
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/verify-email/resend",
-            "line": 89
+            "line": 98
           }
         ]
       },
@@ -4012,22 +4012,22 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/verify",
-            "line": 20
+            "line": 25
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/login-widget",
-            "line": 30
+            "line": 36
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/link",
-            "line": 41
+            "line": 47
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/bot/auth",
-            "line": 50
+            "line": 57
           }
         ]
       },
@@ -5298,12 +5298,12 @@
           {
             "verb": "GET",
             "route": "/api/version",
-            "line": 14
+            "line": 16
           },
           {
             "verb": "GET",
             "route": "/api/v1/version",
-            "line": 15
+            "line": 17
           }
         ]
       },

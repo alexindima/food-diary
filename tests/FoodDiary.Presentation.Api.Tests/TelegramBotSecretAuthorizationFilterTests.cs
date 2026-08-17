@@ -27,7 +27,8 @@ public sealed class TelegramBotSecretAuthorizationFilterTests {
         ApiErrorHttpResponse payload = Assert.IsType<ApiErrorHttpResponse>(result.Value);
         Assert.Equal(StatusCodes.Status500InternalServerError, result.StatusCode);
         Assert.Equal("Authentication.TelegramBotNotConfigured", payload.Error);
-        Assert.Equal("Telegram bot authentication is not configured.", payload.Message);
+        Assert.Equal("An unexpected error occurred.", payload.Message);
+        Assert.Null(payload.Errors);
     }
 
     [Fact]

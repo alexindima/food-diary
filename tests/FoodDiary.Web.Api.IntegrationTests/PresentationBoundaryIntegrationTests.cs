@@ -550,7 +550,7 @@ public sealed class PresentationBoundaryIntegrationTests(
     }
 
     [Fact]
-    public async Task SwaggerJson_ContainsBearerSecurityScheme() {
+    public async Task SwaggerJson_DeclaresBearerSecurityOnlyForAuthorizedOperations() {
         HttpClient client = apiFactory.CreateClient();
 
         HttpResponseMessage response = await client.GetAsync("/swagger/v1/swagger.json");
@@ -559,15 +559,25 @@ public sealed class PresentationBoundaryIntegrationTests(
             .GetProperty("components")
             .GetProperty("securitySchemes")
             .GetProperty("Bearer");
-        JsonElement securityRequirement = json.RootElement
+        JsonElement authorizedSecurityRequirement = json.RootElement
+            .GetProperty("paths")
+            .GetProperty("/api/v{version}/products")
+            .GetProperty("get")
             .GetProperty("security")[0]
             .GetProperty("Bearer");
+        JsonElement anonymousSecurity = json.RootElement
+            .GetProperty("paths")
+            .GetProperty("/api/v{version}/auth/login")
+            .GetProperty("post")
+            .GetProperty("security");
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("http", securitySchemes.GetProperty("type").GetString());
         Assert.Equal("bearer", securitySchemes.GetProperty("scheme").GetString());
         Assert.Equal("JWT", securitySchemes.GetProperty("bearerFormat").GetString());
-        Assert.Equal(JsonValueKind.Array, securityRequirement.ValueKind);
+        Assert.False(json.RootElement.TryGetProperty("security", out _));
+        Assert.Equal(JsonValueKind.Array, authorizedSecurityRequirement.ValueKind);
+        Assert.Equal(0, anonymousSecurity.GetArrayLength());
     }
 
     [Fact]

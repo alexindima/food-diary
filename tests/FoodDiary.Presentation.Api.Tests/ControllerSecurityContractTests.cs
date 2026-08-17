@@ -12,9 +12,12 @@ using FoodDiary.Presentation.Api.Features.Marketing;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Policies;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -77,6 +80,37 @@ public sealed class ControllerSecurityContractTests {
         MethodInfo method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange));
 
         Assert.NotNull(method.GetCustomAttribute<AllowAnonymousAttribute>());
+    }
+
+    [Fact]
+    public void PresentationActions_HaveExplicitAuthorizationClassification() {
+        string[] unclassifiedActions = [.. typeof(BaseApiController).Assembly
+            .GetTypes()
+            .Where(static type => !type.IsAbstract && typeof(ControllerBase).IsAssignableFrom(type))
+            .SelectMany(static type => type
+                .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                .Where(static method => method.GetCustomAttributes<HttpMethodAttribute>(inherit: true).Any())
+                .Select(method => (Controller: type, Action: method)))
+            .Where(static item =>
+                !item.Controller.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>().Any() &&
+                !item.Controller.GetCustomAttributes<AllowAnonymousAttribute>(inherit: true).Any() &&
+                !item.Action.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>().Any() &&
+                !item.Action.GetCustomAttributes<AllowAnonymousAttribute>(inherit: true).Any())
+            .Select(static item => $"{item.Controller.FullName}.{item.Action.Name}")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unclassifiedActions);
+    }
+
+    [Fact]
+    public void AuthenticationPayloadEndpoints_UseDedicatedRequestLimits() {
+        AssertControllerRequestLimits(typeof(AuthSessionController), AuthRequestLimits.MaxPayloadBytes);
+        AssertControllerRequestLimits(typeof(AuthPasswordController), AuthRequestLimits.MaxPayloadBytes);
+        AssertControllerRequestLimits(typeof(AuthTelegramController), AuthRequestLimits.MaxPayloadBytes);
+        AssertActionRequestLimits(
+            typeof(AdminSsoController),
+            nameof(AdminSsoController.AdminSsoExchange),
+            AuthRequestLimits.MaxPayloadBytes);
     }
 
     [Fact]
@@ -176,6 +210,29 @@ public sealed class ControllerSecurityContractTests {
         RejectOversizedRequestAttribute attribute = AssertSingleAttribute<RejectOversizedRequestAttribute>(method);
 
         Assert.Equal(expectedBytes, attribute.MaxBytes);
+    }
+
+    private static void AssertControllerRequestLimits(Type controllerType, long expectedBytes) {
+        AssertRequestLimits(controllerType, expectedBytes);
+    }
+
+    private static void AssertActionRequestLimits(Type controllerType, string actionName, long expectedBytes) {
+        AssertRequestLimits(GetAction(controllerType, actionName), expectedBytes);
+    }
+
+    private static void AssertRequestLimits(MemberInfo member, long expectedBytes) {
+        CustomAttributeData requestSizeLimit = Assert.Single(
+            member.CustomAttributes,
+            static attribute => attribute.AttributeType == typeof(RequestSizeLimitAttribute));
+        RejectOversizedRequestAttribute contentLengthLimit = AssertSingleAttribute<RejectOversizedRequestAttribute>(member);
+        ProducesApiErrorResponseAttribute payloadTooLarge = Assert.Single(
+            member.GetCustomAttributes<ProducesApiErrorResponseAttribute>(inherit: true),
+            static attribute => attribute.StatusCode == StatusCodes.Status413PayloadTooLarge);
+
+        Assert.Multiple(
+            () => Assert.Equal(expectedBytes, Assert.Single(requestSizeLimit.ConstructorArguments).Value),
+            () => Assert.Equal(expectedBytes, contentLengthLimit.MaxBytes),
+            () => Assert.Equal(StatusCodes.Status413PayloadTooLarge, payloadTooLarge.StatusCode));
     }
 
     private static void AssertHasFromCurrentUserParameter(Type controllerType, string actionName) {

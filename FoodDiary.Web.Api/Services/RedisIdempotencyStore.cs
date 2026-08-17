@@ -60,10 +60,11 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         string ownerToken,
         int statusCode,
         string? body,
+        string? location,
         TimeSpan responseTtl,
         CancellationToken cancellationToken = default) {
         IDatabase database = connectionMultiplexer.GetDatabase();
-        var entry = new CompletedEntry(requestHash, statusCode, body);
+        var entry = new CompletedEntry(requestHash, statusCode, body, location);
 
         cancellationToken.ThrowIfCancellationRequested();
         const string script = """
@@ -97,7 +98,11 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         if (entry is not null) {
             return !string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal)
                 ? new IdempotencyReservation(IdempotencyReservationStatus.Conflict)
-                : new IdempotencyReservation(IdempotencyReservationStatus.Replay, entry.StatusCode, entry.Body);
+                : new IdempotencyReservation(
+                    IdempotencyReservationStatus.Replay,
+                    entry.StatusCode,
+                    entry.Body,
+                    entry.Location);
         }
 
         await database.KeyDeleteAsync(responseKey).ConfigureAwait(false);
@@ -140,5 +145,5 @@ public sealed class RedisIdempotencyStore(IConnectionMultiplexer connectionMulti
         string.Equals(lockValue, requestHash, StringComparison.Ordinal) ||
         lockValue.StartsWith($"{requestHash}:", StringComparison.Ordinal);
 
-    private sealed record CompletedEntry(string RequestHash, int StatusCode, string? Body);
+    private sealed record CompletedEntry(string RequestHash, int StatusCode, string? Body, string? Location);
 }

@@ -2,11 +2,13 @@ using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Version.Responses;
 using FoodDiary.Presentation.Api.Telemetry;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FoodDiary.Presentation.Api.Features.Version;
 
 [ApiController]
+[AllowAnonymous]
 [Route("api")]
 [ApiExplorerSettings(IgnoreApi = true)]
 [SuppressRequestAccessLog]

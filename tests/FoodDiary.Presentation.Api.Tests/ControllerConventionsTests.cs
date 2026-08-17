@@ -170,9 +170,21 @@ public sealed class ControllerConventionsTests {
     public void AllowAnonymous_UsageMatchesReviewedAllowlist() {
         string[] expected = [
             "AdminSsoController.AdminSsoExchange",
+            "AuthPasswordController.ConfirmPasswordReset",
+            "AuthPasswordController.RequestPasswordReset",
+            "AuthSessionController.GoogleLogin",
+            "AuthSessionController.Login",
+            "AuthSessionController.Refresh",
+            "AuthSessionController.Register",
+            "AuthSessionController.RestoreAccount",
+            "AuthSessionController.VerifyEmail",
+            "AuthTelegramController.TelegramBotAuth",
+            "AuthTelegramController.TelegramLoginWidget",
+            "AuthTelegramController.TelegramVerify",
             "BillingWebhookController",
             "LogsController",
             "MarketingAttributionController.Create",
+            "VersionController",
         ];
         string[] actual = [.. GetControllerSyntaxTrees()
             .SelectMany(static tree => tree.GetRoot().DescendantNodes()

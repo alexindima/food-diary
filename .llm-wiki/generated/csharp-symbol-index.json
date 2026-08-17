@@ -8,12 +8,12 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3325,
-    "symbols": 3334,
+    "sourceFiles": 3326,
+    "symbols": 3335,
     "interfaceImplementationLinks": 233,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1708,
+      "class": 1709,
       "enum": 56,
       "interface": 413,
       "record": 1041,
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1245,
+      "Other": 1246,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -18490,28 +18490,35 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs",
-      "line": 18
+      "line": 19
     },
     {
       "name": "AuthPasswordController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthPasswordController.cs",
-      "line": 17
+      "line": 22
+    },
+    {
+      "name": "AuthRequestLimits",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Auth/AuthRequestLimits.cs",
+      "line": 2
     },
     {
       "name": "AuthSessionController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "line": 20
+      "line": 23
     },
     {
       "name": "AuthTelegramController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthTelegramController.cs",
-      "line": 19
+      "line": 23
     },
     {
       "name": "AuthHttpMappings",
@@ -20723,7 +20730,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-      "line": 13
+      "line": 15
     },
     {
       "name": "WaistEntryHttpMappings",
@@ -21024,7 +21031,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "line": 10
+      "line": 12
     },
     {
       "name": "IdempotencyRequestContext",
@@ -21073,7 +21080,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/TelemetryActionFilter.cs",
-      "line": 9
+      "line": 10
     },
     {
       "name": "EmailVerificationHub",

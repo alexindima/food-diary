@@ -24,7 +24,8 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
                     return Task.FromResult(new IdempotencyReservation(
                         IdempotencyReservationStatus.Replay,
                         entry.StatusCode,
-                        entry.Body));
+                        entry.Body,
+                        entry.Location));
                 }
 
                 return Task.FromResult(new IdempotencyReservation(IdempotencyReservationStatus.InProgress));
@@ -44,6 +45,7 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         string ownerToken,
         int statusCode,
         string? body,
+        string? location,
         TimeSpan responseTtl,
         CancellationToken cancellationToken = default) {
         DateTime nowUtc = timeProvider.GetUtcNow().UtcDateTime;
@@ -53,7 +55,12 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
                 !entry.Completed &&
                 string.Equals(entry.RequestHash, requestHash, StringComparison.Ordinal) &&
                 string.Equals(entry.OwnerToken, ownerToken, StringComparison.Ordinal)) {
-                _entries[key] = Entry.CompletedEntry(requestHash, statusCode, body, nowUtc.Add(responseTtl));
+                _entries[key] = Entry.CompletedEntry(
+                    requestHash,
+                    statusCode,
+                    body,
+                    location,
+                    nowUtc.Add(responseTtl));
             }
         }
 
@@ -76,11 +83,17 @@ public sealed class InMemoryIdempotencyStore(TimeProvider timeProvider) : IIdemp
         bool Completed,
         int? StatusCode,
         string? Body,
+        string? Location,
         DateTime ExpiresAtUtc) {
         public static Entry InProgress(string requestHash, string ownerToken, DateTime expiresAtUtc) =>
-            new(requestHash, ownerToken, Completed: false, StatusCode: null, Body: null, expiresAtUtc);
+            new(requestHash, ownerToken, Completed: false, StatusCode: null, Body: null, Location: null, expiresAtUtc);
 
-        public static Entry CompletedEntry(string requestHash, int statusCode, string? body, DateTime expiresAtUtc) =>
-            new(requestHash, OwnerToken: null, Completed: true, statusCode, body, expiresAtUtc);
+        public static Entry CompletedEntry(
+            string requestHash,
+            int statusCode,
+            string? body,
+            string? location,
+            DateTime expiresAtUtc) =>
+            new(requestHash, OwnerToken: null, Completed: true, statusCode, body, location, expiresAtUtc);
     }
 }

@@ -54,11 +54,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
     private static ObjectResult CreateErrorResult(
         AuthorizationFilterContext context,
         Error error) =>
-        new(new ApiErrorHttpResponse(
-            error.Code,
-            error.Message,
-            context.HttpContext.TraceIdentifier,
-            ApiErrorDetailsMapper.Normalize(error.Details))) {
+        new(PresentationErrorHttpMapper.MapResponse(error, context.HttpContext.TraceIdentifier)) {
             StatusCode = PresentationErrorHttpMapper.MapStatusCode(error),
         };
 

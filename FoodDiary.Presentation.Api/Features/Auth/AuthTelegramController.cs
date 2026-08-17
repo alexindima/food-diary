@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Controllers;
+using FoodDiary.Presentation.Api.Filters;
 using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
@@ -16,7 +17,11 @@ namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/auth/telegram")]
+[RequestSizeLimit(AuthRequestLimits.MaxPayloadBytes)]
+[RejectOversizedRequest(AuthRequestLimits.MaxPayloadBytes)]
+[ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
 public sealed class AuthTelegramController(ISender mediator) : BaseApiController(mediator) {
+    [AllowAnonymous]
     [HttpPost("verify")]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
@@ -27,6 +32,7 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
     public Task<IActionResult> TelegramVerify([FromBody] TelegramAuthHttpRequest request) =>
         HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
+    [AllowAnonymous]
     [HttpPost("login-widget")]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
@@ -47,6 +53,7 @@ public sealed class AuthTelegramController(ISender mediator) : BaseApiController
     public Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, [FromBody] TelegramAuthHttpRequest request) =>
         HandleOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse());
 
+    [AllowAnonymous]
     [HttpPost("bot/auth")]
     [RequireTelegramBotSecret]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]

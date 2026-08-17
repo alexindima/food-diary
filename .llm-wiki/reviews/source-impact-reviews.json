@@ -173,14 +173,18 @@
       "pageSha256": "e4d03f5ab9a2c80c857c2aa064ee82dfe7bc9fab9a91fee0fd1e3392e79a0e92",
       "sources": [
         {
+          "path": "tests/FoodDiary.Web.Api.IntegrationTests/PresentationBoundaryIntegrationTests.cs",
+          "sha256": "b8f31f1dc82ff9b891f759530e2fa2e10ab47b38102d7efcd9ff659bb11f2e00"
+        },
+        {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "8df44f3cbfa17f0acb41c45d8ba3a5265c7cbc9c8e1aa052fe663246bbf6e353"
+          "sha256": "ade28db2a07bb2cc7ad9863955a207e6628fa936f282dbcdd1e78b2e4b2a217d"
         }
       ],
-      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
+      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:01:37.9534137Z"
+      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
+      "reviewedAtUtc": "2026-08-17T23:37:33.4030864Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -208,13 +212,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "3fa13142589eab91c294ca5175a64ddbdb6b8741f7be6a1138cdc2a23cf23df0"
+          "sha256": "d71e89361f5e0a409ce534b2e3cfe9d4a7a28eca29c6185d08625cf026cd2421"
         }
       ],
-      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
+      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
       "baseRef": "HEAD",
-      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
-      "reviewedAtUtc": "2026-08-17T22:37:13.9201232Z"
+      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
+      "reviewedAtUtc": "2026-08-17T23:37:33.8492528Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -676,13 +680,13 @@
       "sources": [
         {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "84143bb0e888f5daca8b51bcd05985c999d91f948d7d928c705ec7d516fae7c7"
+          "sha256": "29e69c8d8d72e8f33655ad5fa27987647712aa696a8c17e5442073bb7347e5ee"
         }
       ],
-      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
+      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
       "baseRef": "HEAD",
-      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
-      "reviewedAtUtc": "2026-08-17T22:37:14.2754508Z"
+      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
+      "reviewedAtUtc": "2026-08-17T23:37:34.1510775Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -725,13 +729,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "a00f24c96f4018cb5adb3767c8a6e8e014848f0e648cd1cfc40720dc83be4f8f"
+          "sha256": "14e609ae8df77854a6e2197cadbb459840d4f79b65b570bdc7ad7a0b1dd490f4"
         }
       ],
-      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
+      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
       "baseRef": "HEAD",
-      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
-      "reviewedAtUtc": "2026-08-17T09:59:55.3020294Z"
+      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
+      "reviewedAtUtc": "2026-08-17T23:37:34.4553203Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -770,13 +774,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "154e840efd06ad18742e2dadd64144f81f36684a1c6b296e0db694197a4075d0"
+          "sha256": "408a50b4610a4b26c373853c0c2c4613409fc6758b52f0fab6d98ea13e93a855"
         }
       ],
-      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
+      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
       "baseRef": "HEAD",
-      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
-      "reviewedAtUtc": "2026-08-17T22:37:14.7345628Z"
+      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
+      "reviewedAtUtc": "2026-08-17T23:37:34.8762074Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1106,13 +1110,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "cdec1870452d8b83e53b66797839731caf6548a9be6b1241a6897d068845cef6"
+          "sha256": "53980e5bce3e576350e6f2608bc71d764b5f22930562c2ebdd92503305d22b04"
         }
       ],
-      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
+      "reason": "Reviewed additive auth 413/OpenAPI security changes and final-status presentation telemetry semantics against updated snapshots, integration tests, and observability documentation.",
       "baseRef": "HEAD",
-      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
-      "reviewedAtUtc": "2026-08-17T22:37:15.0988927Z"
+      "gitHead": "5984bab1518618b086a668cc201c1c8f6294a5ba",
+      "reviewedAtUtc": "2026-08-17T23:37:35.2333988Z"
     },
     {
       "pageId": "workflow.review-diff",

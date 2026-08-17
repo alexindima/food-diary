@@ -43,6 +43,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             staleOwner.OwnerToken!,
             StatusCodes.Status202Accepted,
             """{"owner":"stale"}""",
+            "/api/v1/items/stale",
             responseTtl).ConfigureAwait(false);
         IdempotencyReservation whileCurrentOwnerActive = await store.ReserveAsync(
             "concurrent-request",
@@ -59,6 +60,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
             currentOwner.OwnerToken!,
             StatusCodes.Status201Created,
             """{"owner":"current"}""",
+            "/api/v1/items/current",
             responseTtl).ConfigureAwait(false);
         IdempotencyReservation replay = await store.ReserveAsync(
             "concurrent-request",
@@ -69,6 +71,7 @@ public sealed class RedisIdempotencyConcurrencyIntegrationTests {
         Assert.Multiple(
             () => Assert.Equal(IdempotencyReservationStatus.Replay, replay.Status),
             () => Assert.Equal(StatusCodes.Status201Created, replay.StatusCode),
+            () => Assert.Equal("/api/v1/items/current", replay.Location),
             () => Assert.Contains("current", replay.Body, StringComparison.Ordinal),
             () => Assert.DoesNotContain("stale", replay.Body, StringComparison.Ordinal));
     }

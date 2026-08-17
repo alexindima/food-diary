@@ -101,8 +101,11 @@ Current outcome tags:
 
 ## Presentation request and security signals
 
-Every completed MVC action is observed once by the global presentation action
-filter. Controllers and authorization filters must not emit duplicate request
+Every completed MVC request is observed once by the global presentation filter.
+The resource-filter path reads the final response status after MVC result
+execution; the always-run result-filter path covers authorization short-circuits.
+The two paths share request state so a normally executed action is never counted
+twice. Controllers and authorization filters must not emit duplicate request
 operation measurements.
 
 Metrics:

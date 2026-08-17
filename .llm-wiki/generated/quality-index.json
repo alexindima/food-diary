@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4341,
+    "productionFiles": 4342,
     "criticalSymbols": 554,
     "criticalSymbolsWithTestReferences": 531,
     "criticalSymbolsWithoutTestReferences": 23,
@@ -677,6 +677,14 @@
       "structuralRiskScore": 48.84
     },
     {
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
+      "nonBlankLines": 244,
+      "decisionPoints": 29,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 48.38
+    },
+    {
       "path": "FoodDiary.Web.Client/src/app/features/meals/components/manage/meal-manual-item-dialog/meal-manual-item-dialog.ts",
       "nonBlankLines": 200,
       "decisionPoints": 29,
@@ -803,14 +811,6 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 43.32
-    },
-    {
-      "path": "FoodDiary.Domain/Entities/Tracking/Fasting/FastingOccurrence.cs",
-      "nonBlankLines": 267,
-      "decisionPoints": 25,
-      "criticalSymbols": 0,
-      "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.84
     }
   ],
   "files": [
@@ -21072,11 +21072,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/ResultExtensions.cs",
-      "nonBlankLines": 84,
+      "nonBlankLines": 80,
       "decisionPoints": 1,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.18
+      "structuralRiskScore": 3.1
     },
     {
       "path": "FoodDiary.Presentation.Api/Extensions/UserExtensions.cs",
@@ -21856,35 +21856,43 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs",
-      "nonBlankLines": 31,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.62
+      "structuralRiskScore": 2.7
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthPasswordController.cs",
-      "nonBlankLines": 28,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.56
+      "structuralRiskScore": 2.7
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Auth/AuthRequestLimits.cs",
+      "nonBlankLines": 4,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.08
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "nonBlankLines": 87,
+      "nonBlankLines": 96,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.74
+      "structuralRiskScore": 3.92
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthTelegramController.cs",
-      "nonBlankLines": 54,
+      "nonBlankLines": 61,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 3.08
+      "structuralRiskScore": 3.22
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Auth/Mappings/AuthHttpMappings.cs",
@@ -24408,11 +24416,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-      "nonBlankLines": 21,
+      "nonBlankLines": 23,
       "decisionPoints": 0,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 2.42
+      "structuralRiskScore": 2.46
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/WaistEntries/Mappings/WaistEntryHttpMappings.cs",
@@ -24752,19 +24760,19 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IIdempotencyStore.cs",
-      "nonBlankLines": 17,
+      "nonBlankLines": 18,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.34
+      "structuralRiskScore": 0.36
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyFilter.cs",
-      "nonBlankLines": 170,
-      "decisionPoints": 26,
+      "nonBlankLines": 244,
+      "decisionPoints": 29,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 42.4
+      "structuralRiskScore": 48.38
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyRequestContext.cs",
@@ -24776,11 +24784,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservation.cs",
-      "nonBlankLines": 6,
+      "nonBlankLines": 7,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.12
+      "structuralRiskScore": 0.14
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/IdempotencyReservationStatus.cs",
@@ -24792,11 +24800,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
-      "nonBlankLines": 72,
+      "nonBlankLines": 85,
       "decisionPoints": 8,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.44
+      "structuralRiskScore": 13.7
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/RejectOversizedRequestAttribute.cs",
@@ -24808,11 +24816,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Filters/TelemetryActionFilter.cs",
-      "nonBlankLines": 93,
-      "decisionPoints": 8,
+      "nonBlankLines": 182,
+      "decisionPoints": 14,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.86
+      "structuralRiskScore": 24.64
     },
     {
       "path": "FoodDiary.Presentation.Api/Hubs/EmailVerificationHub.cs",
@@ -24904,11 +24912,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Responses/PresentationErrorHttpMapper.cs",
-      "nonBlankLines": 26,
-      "decisionPoints": 3,
+      "nonBlankLines": 42,
+      "decisionPoints": 6,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 5.02
+      "structuralRiskScore": 9.84
     },
     {
       "path": "FoodDiary.Presentation.Api/Responses/ProducesApiErrorResponseAttribute.cs",
@@ -24944,11 +24952,11 @@
     },
     {
       "path": "FoodDiary.Presentation.Api/Security/TelegramBotSecretAuthorizationFilter.cs",
-      "nonBlankLines": 66,
+      "nonBlankLines": 62,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.32
+      "structuralRiskScore": 4.24
     },
     {
       "path": "FoodDiary.Presentation.Api/Services/EmailVerificationNotifier.cs",
@@ -25088,11 +25096,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiHostServiceCollectionExtensions.cs",
-      "nonBlankLines": 68,
+      "nonBlankLines": 65,
       "decisionPoints": 2,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 4.36
+      "structuralRiskScore": 4.3
     },
     {
       "path": "FoodDiary.Web.Api/Extensions/ApiOptionsServiceCollectionExtensions.cs",
@@ -25288,11 +25296,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Services/RedisIdempotencyStore.cs",
-      "nonBlankLines": 123,
+      "nonBlankLines": 128,
       "decisionPoints": 10,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 17.46
+      "structuralRiskScore": 17.56
     },
     {
       "path": "FoodDiary.Web.Api/Services/WearableTokenProtector.cs",
@@ -25304,11 +25312,11 @@
     },
     {
       "path": "FoodDiary.Web.Api/Swagger/StandardErrorResponsesOperationFilter.cs",
-      "nonBlankLines": 58,
-      "decisionPoints": 8,
+      "nonBlankLines": 62,
+      "decisionPoints": 9,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 13.16
+      "structuralRiskScore": 14.74
     },
     {
       "path": "FoodDiary.Web.Client/.storybook/main.ts",
@@ -37299,7 +37307,7 @@
       "name": "AdminSsoController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs",
-      "line": 18,
+      "line": 19,
       "testReferenceCount": 3,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AdminSsoControllerTests.cs",
@@ -37374,10 +37382,11 @@
       "name": "AuthPasswordController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthPasswordController.cs",
-      "line": 17,
-      "testReferenceCount": 2,
+      "line": 22,
+      "testReferenceCount": 3,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs"
       ]
     },
@@ -37385,7 +37394,7 @@
       "name": "AuthSessionController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "line": 20,
+      "line": 23,
       "testReferenceCount": 3,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AuthSessionControllerTests.cs",
@@ -37397,7 +37406,7 @@
       "name": "AuthTelegramController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthTelegramController.cs",
-      "line": 19,
+      "line": 23,
       "testReferenceCount": 3,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/AuthTelegramControllerTests.cs",
@@ -37431,13 +37440,14 @@
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Controllers/BaseApiController.cs",
       "line": 12,
-      "testReferenceCount": 5,
+      "testReferenceCount": 6,
       "testReferences": [
         "tests/FoodDiary.ArchitectureTests/LayeringTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerFeaturesRootNamespaceTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerNoNamespaceTests.cs",
         "tests/FoodDiary.Presentation.Api.Tests/BaseApiControllerTests.cs",
-        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs"
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",
+        "tests/FoodDiary.Presentation.Api.Tests/ControllerSecurityContractTests.cs"
       ]
     },
     {
@@ -38057,7 +38067,7 @@
       "name": "VersionController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Version/VersionController.cs",
-      "line": 13,
+      "line": 15,
       "testReferenceCount": 2,
       "testReferences": [
         "tests/FoodDiary.Presentation.Api.Tests/ControllerConventionsTests.cs",

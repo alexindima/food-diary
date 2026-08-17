@@ -7,6 +7,7 @@ using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
@@ -17,20 +18,18 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class TelemetryActionFilterTests {
     [Fact]
-    public async Task OnActionExecutionAsync_WithSuccessfulAction_RecordsOneCompletedOperation() {
+    public async Task OnResourceExecutionAsync_WithSuccessfulResult_RecordsFinalStatusOnce() {
         using var metrics = new PresentationMetricListener();
         using var activities = new PresentationActivityListener();
         var logger = new RecordingLogger<TelemetryActionFilter>();
         var filter = new TelemetryActionFilter(logger);
-        ActionExecutingContext context = CreateActionExecutingContext(
-            new TelemetryProbeController(),
-            actionName: "Get",
-            statusCode: StatusCodes.Status200OK);
+        ResourceExecutingContext context = CreateResourceExecutingContext("Get");
         bool nextCalled = false;
 
-        await filter.OnActionExecutionAsync(context, () => {
+        await filter.OnResourceExecutionAsync(context, () => {
             nextCalled = true;
-            return Task.FromResult(new ActionExecutedContext(context, [], context.Controller));
+            context.HttpContext.Response.StatusCode = StatusCodes.Status201Created;
+            return Task.FromResult(new ResourceExecutedContext(context, []));
         });
 
         MetricMeasurement operation = Assert.Single(metrics.Operations);
@@ -38,6 +37,7 @@ public sealed class TelemetryActionFilterTests {
         Activity activity = Assert.Single(activities.Completed);
         Assert.Multiple(
             () => Assert.True(nextCalled),
+            () => Assert.Equal(int.MinValue, filter.Order),
             () => Assert.Empty(metrics.Failures),
             () => Assert.Empty(logger.Entries),
             () => Assert.Equal(1, operation.Value),
@@ -46,22 +46,21 @@ public sealed class TelemetryActionFilterTests {
             () => Assert.Equal("success", operation.Tags["fooddiary.presentation.outcome"]),
             () => Assert.True(duration.Value >= 0),
             () => Assert.Equal("success", activity.GetTagItem("fooddiary.presentation.outcome")),
-            () => Assert.Equal(StatusCodes.Status200OK, activity.GetTagItem("http.response.status_code")));
+            () => Assert.Equal(StatusCodes.Status201Created, activity.GetTagItem("http.response.status_code")));
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WithClientFailure_RecordsFailureAndLogsInformation() {
+    public async Task OnResultExecutionAsync_WithAuthorizationShortCircuit_RecordsFinalFailure() {
         using var metrics = new PresentationMetricListener();
         using var activities = new PresentationActivityListener();
         var logger = new RecordingLogger<TelemetryActionFilter>();
         var filter = new TelemetryActionFilter(logger);
-        ActionExecutingContext context = CreateActionExecutingContext(
-            controller: new object(),
-            actionName: null,
-            statusCode: StatusCodes.Status400BadRequest);
+        ResultExecutingContext context = CreateResultExecutingContext("Get", new UnauthorizedResult());
 
-        await filter.OnActionExecutionAsync(context, () => Task.FromResult(
-            new ActionExecutedContext(context, [], context.Controller)));
+        await filter.OnResultExecutionAsync(context, () => {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Task.FromResult(new ResultExecutedContext(context, [], context.Result, context.Controller));
+        });
 
         MetricMeasurement operation = Assert.Single(metrics.Operations);
         MetricMeasurement failure = Assert.Single(metrics.Failures);
@@ -69,25 +68,24 @@ public sealed class TelemetryActionFilterTests {
         Activity activity = Assert.Single(activities.Completed);
         Assert.Multiple(
             () => Assert.Equal("failure", operation.Tags["fooddiary.presentation.outcome"]),
-            () => Assert.Equal("HttpStatus_400", failure.Tags["error.code"]),
+            () => Assert.Equal("HttpStatus_401", failure.Tags["error.code"]),
             () => Assert.Equal("Unknown", failure.Tags["fooddiary.presentation.feature"]),
             () => Assert.Equal(LogLevel.Information, log.Level),
             () => Assert.Equal(ActivityStatusCode.Unset, activity.Status));
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WithServerFailure_RecordsFailureAndMarksActivityAsError() {
+    public async Task OnResourceExecutionAsync_WithServerFailure_RecordsFailureAndMarksActivityAsError() {
         using var metrics = new PresentationMetricListener();
         using var activities = new PresentationActivityListener();
         var logger = new RecordingLogger<TelemetryActionFilter>();
         var filter = new TelemetryActionFilter(logger);
-        ActionExecutingContext context = CreateActionExecutingContext(
-            new TelemetryProbeController(),
-            actionName: "Post",
-            statusCode: StatusCodes.Status503ServiceUnavailable);
+        ResourceExecutingContext context = CreateResourceExecutingContext("Post");
 
-        await filter.OnActionExecutionAsync(context, () => Task.FromResult(
-            new ActionExecutedContext(context, [], context.Controller)));
+        await filter.OnResourceExecutionAsync(context, () => {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+            return Task.FromResult(new ResourceExecutedContext(context, []));
+        });
 
         MetricMeasurement failure = Assert.Single(metrics.Failures);
         Activity activity = Assert.Single(activities.Completed);
@@ -99,19 +97,16 @@ public sealed class TelemetryActionFilterTests {
     }
 
     [Fact]
-    public async Task OnActionExecutionAsync_WithActionException_RecordsUnhandledFailure() {
+    public async Task OnResourceExecutionAsync_WithUnhandledException_RecordsUnhandledFailure() {
         using var metrics = new PresentationMetricListener();
         using var activities = new PresentationActivityListener();
         var logger = new RecordingLogger<TelemetryActionFilter>();
         var filter = new TelemetryActionFilter(logger);
-        ActionExecutingContext context = CreateActionExecutingContext(
-            new TelemetryProbeController(),
-            actionName: "Post",
-            statusCode: StatusCodes.Status200OK);
+        ResourceExecutingContext context = CreateResourceExecutingContext("Post");
         var exception = new InvalidOperationException("boom");
 
-        await filter.OnActionExecutionAsync(context, () => Task.FromResult(
-            new ActionExecutedContext(context, [], context.Controller) {
+        await filter.OnResourceExecutionAsync(context, () => Task.FromResult(
+            new ResourceExecutedContext(context, []) {
                 Exception = exception,
             }));
 
@@ -123,6 +118,99 @@ public sealed class TelemetryActionFilterTests {
             () => Assert.Equal(ActivityStatusCode.Error, activity.Status),
             () => Assert.Equal(typeof(InvalidOperationException).FullName, activity.GetTagItem("error.type")),
             () => Assert.Equal(LogLevel.Warning, log.Level));
+    }
+
+    [Fact]
+    public async Task OnResourceExecutionAsync_WithHandledException_UsesFinalResponseStatus() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var filter = new TelemetryActionFilter(new RecordingLogger<TelemetryActionFilter>());
+        ResourceExecutingContext context = CreateResourceExecutingContext("Get");
+
+        await filter.OnResourceExecutionAsync(context, () => {
+            context.HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            return Task.FromResult(new ResourceExecutedContext(context, []) {
+                Exception = new InvalidOperationException("handled"),
+                ExceptionHandled = true,
+            });
+        });
+
+        MetricMeasurement failure = Assert.Single(metrics.Failures);
+        Activity activity = Assert.Single(activities.Completed);
+        Assert.Multiple(
+            () => Assert.Equal("HttpStatus_400", failure.Tags["error.code"]),
+            () => Assert.Null(activity.GetTagItem("error.type")),
+            () => Assert.Equal(StatusCodes.Status400BadRequest, activity.GetTagItem("http.response.status_code")));
+    }
+
+    [Fact]
+    public async Task OnResourceExecutionAsync_WhenDelegateThrows_RecordsFailureAndRethrows() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var filter = new TelemetryActionFilter(new RecordingLogger<TelemetryActionFilter>());
+        ResourceExecutingContext context = CreateResourceExecutingContext("Post");
+        var exception = new InvalidOperationException("boom");
+
+        InvalidOperationException thrown = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            filter.OnResourceExecutionAsync(
+                context,
+                () => Task.FromException<ResourceExecutedContext>(exception)));
+
+        Assert.Multiple(
+            () => Assert.Same(exception, thrown),
+            () => Assert.Single(metrics.Operations),
+            () => Assert.Equal("UnhandledException", Assert.Single(metrics.Failures).Tags["error.code"]),
+            () => Assert.False(context.HttpContext.Items.Any()),
+            () => Assert.Equal(ActivityStatusCode.Error, Assert.Single(activities.Completed).Status));
+    }
+
+    [Fact]
+    public async Task OnResultExecutionAsync_WhenDelegateThrows_RecordsFailureAndRethrows() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var filter = new TelemetryActionFilter(new RecordingLogger<TelemetryActionFilter>());
+        ResultExecutingContext context = CreateResultExecutingContext("Get", new OkResult());
+        var exception = new InvalidOperationException("boom");
+
+        InvalidOperationException thrown = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            filter.OnResultExecutionAsync(
+                context,
+                () => Task.FromException<ResultExecutedContext>(exception)));
+
+        Assert.Multiple(
+            () => Assert.Same(exception, thrown),
+            () => Assert.Single(metrics.Operations),
+            () => Assert.Equal("UnhandledException", Assert.Single(metrics.Failures).Tags["error.code"]),
+            () => Assert.Equal(ActivityStatusCode.Error, Assert.Single(activities.Completed).Status));
+    }
+
+    [Fact]
+    public async Task ResourceAndResultFilters_WhenBothRun_RecordOperationOnlyOnce() {
+        using var metrics = new PresentationMetricListener();
+        using var activities = new PresentationActivityListener();
+        var filter = new TelemetryActionFilter(new RecordingLogger<TelemetryActionFilter>());
+        ResourceExecutingContext resourceContext = CreateResourceExecutingContext("Get");
+
+        await filter.OnResourceExecutionAsync(resourceContext, async () => {
+            ResultExecutingContext resultContext = CreateResultExecutingContext(
+                resourceContext.ActionDescriptor,
+                resourceContext.HttpContext,
+                new OkResult());
+            await filter.OnResultExecutionAsync(resultContext, () => {
+                resourceContext.HttpContext.Response.StatusCode = StatusCodes.Status200OK;
+                return Task.FromResult(new ResultExecutedContext(
+                    resultContext,
+                    [],
+                    resultContext.Result,
+                    resultContext.Controller));
+            });
+            return new ResourceExecutedContext(resourceContext, []);
+        });
+
+        Assert.Multiple(
+            () => Assert.Single(metrics.Operations),
+            () => Assert.Single(metrics.Durations),
+            () => Assert.Single(activities.Completed));
     }
 
     [Fact]
@@ -149,31 +237,38 @@ public sealed class TelemetryActionFilterTests {
         return type.CreateType()!;
     }
 
-    private static ActionExecutingContext CreateActionExecutingContext(
-        object controller,
-        string? actionName,
-        int statusCode) {
+    private static ResourceExecutingContext CreateResourceExecutingContext(string actionName) {
         var httpContext = new DefaultHttpContext();
-        httpContext.Response.StatusCode = statusCode;
-
-        var routeValues = new Dictionary<string, string?>(StringComparer.Ordinal);
-        if (actionName is not null) {
-            routeValues["action"] = actionName;
-        }
-
-        var actionContext = new ActionContext(
-            httpContext,
-            new RouteData(),
-            new ActionDescriptor {
-                RouteValues = routeValues,
-            });
-
-        return new ActionExecutingContext(
-            actionContext,
-            [],
-            new Dictionary<string, object?>(StringComparer.Ordinal),
-            controller);
+        ControllerActionDescriptor descriptor = CreateActionDescriptor(actionName);
+        var actionContext = new ActionContext(httpContext, new RouteData(), descriptor);
+        return new ResourceExecutingContext(actionContext, [], []);
     }
+
+    private static ResultExecutingContext CreateResultExecutingContext(string actionName, IActionResult result) {
+        var httpContext = new DefaultHttpContext();
+        return CreateResultExecutingContext(CreateActionDescriptor(actionName), httpContext, result);
+    }
+
+    private static ResultExecutingContext CreateResultExecutingContext(
+        ActionDescriptor descriptor,
+        HttpContext httpContext,
+        IActionResult result) =>
+        new(
+            new ActionContext(httpContext, new RouteData(), descriptor),
+            [],
+            result,
+            new TelemetryProbeController());
+
+    private static ControllerActionDescriptor CreateActionDescriptor(string actionName) =>
+        new() {
+            ActionName = actionName,
+            ControllerName = "TelemetryProbe",
+            ControllerTypeInfo = typeof(TelemetryProbeController).GetTypeInfo(),
+            MethodInfo = typeof(object).GetMethod(nameof(ToString))!,
+            RouteValues = new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["action"] = actionName,
+            },
+        };
 
     [ExcludeFromCodeCoverage]
     private sealed record MetricMeasurement(long Value, IReadOnlyDictionary<string, object?> Tags);

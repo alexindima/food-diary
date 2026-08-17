@@ -90,11 +90,7 @@ public static class ResultExtensions {
         ErrorResult(error, PresentationErrorHttpMapper.MapStatusCode(error), traceId);
 
     private static IActionResult ErrorResult(Error error, int statusCode, string? traceId) =>
-        new ObjectResult(new ApiErrorHttpResponse(
-            error.Code,
-            error.Message,
-            traceId,
-            ApiErrorDetailsMapper.Normalize(error.Details))) {
+        new ObjectResult(PresentationErrorHttpMapper.MapResponse(error, traceId)) {
             StatusCode = statusCode,
         };
 }

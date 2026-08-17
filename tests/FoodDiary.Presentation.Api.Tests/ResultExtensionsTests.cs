@@ -191,6 +191,52 @@ public sealed class ResultExtensionsTests {
         Assert.Equal(["Invalid email format"], errors);
     }
 
+    [Theory]
+    [InlineData(ErrorKind.Internal, "An unexpected error occurred.", StatusCodes.Status500InternalServerError)]
+    [InlineData(ErrorKind.ExternalFailure, "A required dependency could not complete the request.", StatusCodes.Status502BadGateway)]
+    public void ToActionResult_DiagnosticFailure_DoesNotExposeMessageOrDetails(
+        ErrorKind kind,
+        string expectedMessage,
+        int expectedStatusCode) {
+        const string sensitiveDiagnostic = "provider-key=secret-value; upstream body";
+        var error = new Error(
+            "Diagnostic.Failure",
+            sensitiveDiagnostic,
+            Kind: kind,
+            Details: new Dictionary<string, string[]>(StringComparer.Ordinal) {
+                ["provider"] = [sensitiveDiagnostic],
+            });
+
+        IActionResult actionResult = Result.Failure(error).ToActionResult();
+
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.Multiple(
+            () => Assert.Equal(expectedStatusCode, objectResult.StatusCode),
+            () => Assert.Equal(expectedMessage, response.Message),
+            () => Assert.Null(response.Errors),
+            () => Assert.DoesNotContain("secret-value", response.ToString(), StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void ToActionResult_UnmappedFailure_DoesNotExposeMessageOrDetails() {
+        var error = new Error(
+            "Unknown.ProviderFailure",
+            "private upstream response",
+            Details: new Dictionary<string, string[]>(StringComparer.Ordinal) {
+                ["provider"] = ["private upstream response"],
+            });
+
+        IActionResult actionResult = Result.Failure(error).ToActionResult();
+
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode),
+            () => Assert.Equal("An unexpected error occurred.", response.Message),
+            () => Assert.Null(response.Errors));
+    }
+
     private static Error CreateError(string errorCode, string message) =>
         new(errorCode, message, Kind: ErrorKindResolver.Resolve(errorCode));
 

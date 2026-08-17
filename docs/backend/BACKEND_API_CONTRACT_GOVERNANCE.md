@@ -69,8 +69,15 @@ Expectations:
 
 - clients may send `Idempotency-Key` for these paths
 - the backend must keep returning the cached successful response for the same `(user, path, key)` tuple
+- replay must preserve the original status code, JSON body, and `Location` header for created or accepted resources; adding another replayed header requires an explicit allow-list review
 - idempotency is now opt-in at the presentation layer through `EnableIdempotencyAttribute`; it is no longer a blanket policy for every POST action
 - changes to global idempotency behavior should be reviewed like other contract changes, not treated as an invisible infrastructure detail
+
+Generated OpenAPI security is operation-scoped: actions classified with
+`[Authorize]` declare the Bearer requirement, while actions explicitly marked
+`[AllowAnonymous]` declare an empty security requirement. New controller actions
+must classify their access explicitly so the runtime and generated contract stay
+aligned.
 
 ## When To Update Snapshots
 

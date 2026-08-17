@@ -5,7 +5,7 @@ using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Filters;
 
-[AttributeUsage(AttributeTargets.Method)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class RejectOversizedRequestAttribute : Attribute, IResourceFilter, IOrderedFilter {
     public RejectOversizedRequestAttribute(long maxBytes) {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(maxBytes);
@@ -14,7 +14,7 @@ public sealed class RejectOversizedRequestAttribute : Attribute, IResourceFilter
 
     public long MaxBytes { get; }
 
-    public int Order => int.MinValue;
+    public int Order => int.MinValue + 100;
 
     public void OnResourceExecuting(ResourceExecutingContext context) {
         if (context.HttpContext.Request.ContentLength > MaxBytes) {

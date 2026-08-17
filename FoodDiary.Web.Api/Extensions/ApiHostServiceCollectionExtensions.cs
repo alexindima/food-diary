@@ -57,9 +57,6 @@ public static class ApiHostServiceCollectionExtensions {
                     In = ParameterLocation.Header,
                     Description = "JWT Authorization header using the Bearer scheme.",
                 });
-                options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
-                    [new OpenApiSecuritySchemeReference("Bearer", document, externalResource: null)] = [],
-                });
             });
 
             return services;

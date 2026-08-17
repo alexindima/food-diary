@@ -23,6 +23,8 @@ public sealed class SwaggerOperationFilterTests {
         Assert.True(operation.Responses.ContainsKey("500"));
         Assert.False(operation.Responses.ContainsKey("401"));
         Assert.False(operation.Responses.ContainsKey("403"));
+        Assert.NotNull(operation.Security);
+        Assert.Empty(operation.Security!);
     }
 
     [Fact]
@@ -38,6 +40,8 @@ public sealed class SwaggerOperationFilterTests {
         Assert.Equal("Unauthorized", operation.Responses["401"].Description);
         Assert.NotNull(operation.Responses["401"].Content);
         Assert.True(operation.Responses["401"].Content!.ContainsKey("application/json"));
+        OpenApiSecurityRequirement requirement = Assert.Single(operation.Security!);
+        Assert.IsType<OpenApiSecuritySchemeReference>(Assert.Single(requirement.Keys));
     }
 
     [Fact]
@@ -74,6 +78,19 @@ public sealed class SwaggerOperationFilterTests {
         Assert.True(operation.Responses.ContainsKey("500"));
         Assert.False(operation.Responses.ContainsKey("401"));
         Assert.False(operation.Responses.ContainsKey("403"));
+        Assert.Null(operation.Security);
+    }
+
+    [Fact]
+    public void Apply_ForActionWithoutAuthenticationMetadata_DeclaresNoSecurity() {
+        var filter = new StandardErrorResponsesOperationFilter();
+        var operation = new OpenApiOperation { Responses = [] };
+
+        filter.Apply(operation, CreateContext(nameof(TestController.Unclassified)));
+
+        Assert.NotNull(operation.Security);
+        Assert.Empty(operation.Security!);
+        Assert.False(operation.Responses.ContainsKey("401"));
     }
 
     [Fact]
@@ -147,5 +164,7 @@ public sealed class SwaggerOperationFilterTests {
 
         [Authorize(Policy = "OwnerOnly")]
         public OkResult PolicyOnly() => Ok();
+
+        public OkResult Unclassified() => Ok();
     }
 }

@@ -4,6 +4,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Filters;
@@ -82,6 +84,10 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
         }
 
         int statusCode = reservation.StatusCode ?? StatusCodes.Status200OK;
+        if (!string.IsNullOrWhiteSpace(reservation.Location)) {
+            context.HttpContext.Response.Headers.Location = reservation.Location;
+        }
+
         context.Result = reservation.Body is null
             ? new StatusCodeResult(statusCode)
             : new ContentResult {
@@ -98,7 +104,13 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
         string cacheKey,
         string requestHash,
         string ownerToken) {
-        if (executedContext.Exception is not null || !TrySerializeResult(executedContext.Result, out int statusCode, out string? body)) {
+        if (executedContext.Exception is not null ||
+            !TrySerializeResult(
+                context,
+                executedContext.Result,
+                out int statusCode,
+                out string? body,
+                out string? location)) {
             return;
         }
 
@@ -109,26 +121,93 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
             ownerToken,
             statusCode,
             body,
+            location,
             CacheDuration,
             completionTimeout.Token).ConfigureAwait(false);
     }
 
-    private static bool TrySerializeResult(IActionResult? result, out int statusCode, out string? body) {
+    private static bool TrySerializeResult(
+        ActionExecutingContext context,
+        IActionResult? result,
+        out int statusCode,
+        out string? body,
+        out string? location) {
         switch (result) {
             case ObjectResult objectResult:
                 statusCode = objectResult.StatusCode ?? StatusCodes.Status200OK;
                 body = JsonSerializer.Serialize(objectResult.Value, JsonOptions);
+                location = ResolveLocation(context, objectResult);
                 return true;
             case StatusCodeResult statusCodeResult:
                 statusCode = statusCodeResult.StatusCode;
                 body = null;
+                location = null;
                 return true;
             default:
                 statusCode = default;
                 body = null;
+                location = null;
                 return false;
         }
     }
+
+    private static string? ResolveLocation(ActionExecutingContext context, ObjectResult result) =>
+        result switch {
+            CreatedResult created => created.Location,
+            CreatedAtActionResult createdAtAction => ResolveActionLocation(
+                context,
+                createdAtAction.UrlHelper,
+                createdAtAction.ActionName,
+                createdAtAction.ControllerName,
+                createdAtAction.RouteValues),
+            CreatedAtRouteResult createdAtRoute => ResolveRouteLocation(
+                context,
+                createdAtRoute.UrlHelper,
+                createdAtRoute.RouteName,
+                createdAtRoute.RouteValues),
+            AcceptedResult accepted => accepted.Location,
+            AcceptedAtActionResult acceptedAtAction => ResolveActionLocation(
+                context,
+                acceptedAtAction.UrlHelper,
+                acceptedAtAction.ActionName,
+                acceptedAtAction.ControllerName,
+                acceptedAtAction.RouteValues),
+            AcceptedAtRouteResult acceptedAtRoute => ResolveRouteLocation(
+                context,
+                acceptedAtRoute.UrlHelper,
+                acceptedAtRoute.RouteName,
+                acceptedAtRoute.RouteValues),
+            _ => null,
+        };
+
+    private static string? ResolveActionLocation(
+        ActionExecutingContext context,
+        IUrlHelper? configuredUrlHelper,
+        string? actionName,
+        string? controllerName,
+        object? routeValues) =>
+        ResolveUrlHelper(context, configuredUrlHelper).Action(
+            actionName,
+            controllerName,
+            routeValues,
+            context.HttpContext.Request.Scheme,
+            context.HttpContext.Request.Host.Value);
+
+    private static string? ResolveRouteLocation(
+        ActionExecutingContext context,
+        IUrlHelper? configuredUrlHelper,
+        string? routeName,
+        object? routeValues) =>
+        ResolveUrlHelper(context, configuredUrlHelper).RouteUrl(
+            routeName,
+            routeValues,
+            context.HttpContext.Request.Scheme,
+            context.HttpContext.Request.Host.Value);
+
+    private static IUrlHelper ResolveUrlHelper(ActionExecutingContext context, IUrlHelper? configuredUrlHelper) =>
+        configuredUrlHelper ?? context.HttpContext.RequestServices
+            .GetRequiredService<IUrlHelperFactory>()
+            .GetUrlHelper(context);
 
     private static ObjectResult CreateIdempotencyConflict(ActionExecutingContext context) =>
         new(new ApiErrorHttpResponse(

@@ -17,7 +17,11 @@ namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/auth")]
+[RequestSizeLimit(AuthRequestLimits.MaxPayloadBytes)]
+[RejectOversizedRequest(AuthRequestLimits.MaxPayloadBytes)]
+[ProducesApiErrorResponse(StatusCodes.Status413PayloadTooLarge)]
 public sealed class AuthSessionController(ISender mediator) : BaseApiController(mediator) {
+    [AllowAnonymous]
     [HttpPost("register")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
@@ -27,6 +31,7 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     public Task<IActionResult> Register([FromBody] RegisterHttpRequest request) =>
         HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
+    [AllowAnonymous]
     [HttpPost("login")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
@@ -35,6 +40,7 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     public Task<IActionResult> Login([FromBody] LoginHttpRequest request) =>
         HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
+    [AllowAnonymous]
     [HttpPost("google")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
@@ -56,6 +62,7 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     public Task<IActionResult> LinkGoogle([FromCurrentUser] Guid userId, [FromBody] GoogleLoginHttpRequest request) =>
         HandleOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse());
 
+    [AllowAnonymous]
     [HttpPost("refresh")]
     [EnableIdempotency]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
@@ -65,6 +72,7 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     public Task<IActionResult> Refresh([FromBody] RefreshTokenHttpRequest request) =>
         HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
+    [AllowAnonymous]
     [HttpPost("restore")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
@@ -74,6 +82,7 @@ public sealed class AuthSessionController(ISender mediator) : BaseApiController(
     public Task<IActionResult> RestoreAccount([FromBody] RestoreAccountHttpRequest request) =>
         HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
+    [AllowAnonymous]
     [HttpPost("verify-email")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

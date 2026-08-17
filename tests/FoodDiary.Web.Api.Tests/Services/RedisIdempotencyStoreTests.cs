@@ -179,6 +179,7 @@ public sealed class RedisIdempotencyStoreTests {
             "owner-7",
             202,
             """{"queued":true}""",
+            "/api/v1/queued/7",
             ResponseTtl,
             CancellationToken.None);
 
@@ -189,7 +190,8 @@ public sealed class RedisIdempotencyStoreTests {
             Arg.Is<RedisValue[]>(values => values != null &&
                 values[0] == "hash-7:owner-7" &&
                 values[1].ToString().Contains("\"requestHash\":\"hash-7\"", StringComparison.Ordinal) &&
-                values[1].ToString().Contains("\"statusCode\":202", StringComparison.Ordinal)),
+                values[1].ToString().Contains("\"statusCode\":202", StringComparison.Ordinal) &&
+                values[1].ToString().Contains("\"location\":\"/api/v1/queued/7\"", StringComparison.Ordinal)),
             CommandFlags.None);
     }
 

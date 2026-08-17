@@ -47,7 +47,7 @@ public sealed class RejectOversizedRequestAttributeTests {
             () => Assert.Equal("The request payload is too large.", response.Message),
             () => Assert.Equal("trace-413", response.TraceId),
             () => Assert.Equal(100, attribute.MaxBytes),
-            () => Assert.Equal(int.MinValue, attribute.Order));
+            () => Assert.Equal(int.MinValue + 100, attribute.Order));
     }
 
     [Fact]

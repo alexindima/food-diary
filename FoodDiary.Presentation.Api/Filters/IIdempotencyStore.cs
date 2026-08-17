@@ -14,6 +14,7 @@ public interface IIdempotencyStore {
         string ownerToken,
         int statusCode,
         string? body,
+        string? location,
         TimeSpan responseTtl,
         CancellationToken cancellationToken = default);
 }

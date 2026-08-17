@@ -4,8 +4,8 @@
     "contracts": 1045,
     "ambiguousContracts": 3,
     "consumerEdges": 7233,
-    "productionConsumerEdges": 4425,
-    "testConsumerEdges": 2808,
+    "productionConsumerEdges": 4424,
+    "testConsumerEdges": 2809,
     "consumedContracts": 1045,
     "unconsumedContracts": 0
   },
@@ -19944,19 +19944,6 @@
         "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Extensions/ResultExtensions.cs",
-      "isTest": false,
-      "referenceCount": 1
-    },
-    {
-      "contract": "ApiErrorHttpResponse",
-      "roles": [
-        "Response"
-      ],
-      "definitionPaths": [
-        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
-      ],
-      "consumerArea": "FoodDiary",
       "consumerPath": "FoodDiary.Presentation.Api/Features/Logs/LogsController.cs",
       "isTest": false,
       "referenceCount": 3
@@ -20009,9 +19996,9 @@
         "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Responses/ProducesApiErrorResponseAttribute.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Responses/PresentationErrorHttpMapper.cs",
       "isTest": false,
-      "referenceCount": 1
+      "referenceCount": 2
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -20022,7 +20009,7 @@
         "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
       ],
       "consumerArea": "FoodDiary",
-      "consumerPath": "FoodDiary.Presentation.Api/Security/TelegramBotSecretAuthorizationFilter.cs",
+      "consumerPath": "FoodDiary.Presentation.Api/Responses/ProducesApiErrorResponseAttribute.cs",
       "isTest": false,
       "referenceCount": 1
     },
@@ -20154,7 +20141,7 @@
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ResultExtensionsTests.cs",
       "isTest": true,
-      "referenceCount": 14
+      "referenceCount": 18
     },
     {
       "contract": "ApiErrorHttpResponse",
@@ -20179,6 +20166,19 @@
       ],
       "consumerArea": "FoodDiary",
       "consumerPath": "tests/FoodDiary.Presentation.Api.Tests/ThinControllerFailureContractTests.cs",
+      "isTest": true,
+      "referenceCount": 2
+    },
+    {
+      "contract": "ApiErrorHttpResponse",
+      "roles": [
+        "Response"
+      ],
+      "definitionPaths": [
+        "FoodDiary.Presentation.Api/Responses/ApiErrorHttpResponse.cs"
+      ],
+      "consumerArea": "FoodDiary",
+      "consumerPath": "tests/FoodDiary.Web.Api.IntegrationTests/AuthAndProductsFlowTests.cs",
       "isTest": true,
       "referenceCount": 2
     },

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -37,6 +38,49 @@ public sealed class IdempotencyFilterTests {
         Assert.Equal(StatusCodes.Status201Created, result.StatusCode);
         Assert.Equal("application/json", result.ContentType);
         Assert.Contains("created", result.Content, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithCreatedLocation_ReplaysLocationHeader() {
+        var store = new InMemoryIdempotencyStore(TimeProvider.System);
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext firstHttpContext = CreateHttpContext("POST", "/api/v1/products", "key-location", "user-location");
+        ActionExecutingContext firstContext = CreateActionExecutingContext(firstHttpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(firstContext, () => Task.FromResult(new ActionExecutedContext(firstContext, [], new object()) {
+            Result = new CreatedResult("/api/v1/products/42", new { id = 42 }),
+        }));
+
+        DefaultHttpContext replayHttpContext = CreateHttpContext("POST", "/api/v1/products", "key-location", "user-location");
+        ActionExecutingContext replayContext = CreateActionExecutingContext(replayHttpContext, new EnableIdempotencyAttribute());
+        await filter.OnActionExecutionAsync(replayContext, () => throw new InvalidOperationException("Replay must skip the action."));
+
+        Assert.Multiple(
+            () => Assert.Equal("/api/v1/products/42", replayHttpContext.Response.Headers.Location),
+            () => Assert.Equal(StatusCodes.Status201Created, Assert.IsType<ContentResult>(replayContext.Result).StatusCode));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithLocationBearingObjectResults_CachesResolvedLocation() {
+        IUrlHelper urlHelper = Substitute.For<IUrlHelper>();
+        urlHelper.Action(Arg.Any<UrlActionContext>()).Returns("https://example.test/api/v1/items/action");
+        urlHelper.RouteUrl(Arg.Any<UrlRouteContext>()).Returns("https://example.test/api/v1/items/route");
+
+        await AssertCachedLocationAsync(
+            new CreatedAtActionResult("Get", "Items", new { id = 1 }, new { id = 1 }) { UrlHelper = urlHelper },
+            "https://example.test/api/v1/items/action");
+        await AssertCachedLocationAsync(
+            new CreatedAtRouteResult("items", new { id = 1 }, new { id = 1 }) { UrlHelper = urlHelper },
+            "https://example.test/api/v1/items/route");
+        await AssertCachedLocationAsync(
+            new AcceptedResult("/api/v1/jobs/1", new { id = 1 }),
+            "/api/v1/jobs/1");
+        await AssertCachedLocationAsync(
+            new AcceptedAtActionResult("Get", "Jobs", new { id = 1 }, new { id = 1 }) { UrlHelper = urlHelper },
+            "https://example.test/api/v1/items/action");
+        await AssertCachedLocationAsync(
+            new AcceptedAtRouteResult("jobs", new { id = 1 }, new { id = 1 }) { UrlHelper = urlHelper },
+            "https://example.test/api/v1/items/route");
     }
 
     [Fact]
@@ -190,6 +234,7 @@ public sealed class IdempotencyFilterTests {
             first.OwnerToken!,
             StatusCodes.Status201Created,
             "{\"id\":1}",
+            location: null,
             responseTtl: TimeSpan.FromMinutes(1));
         timeProvider.Advance(TimeSpan.FromMinutes(2));
 
@@ -378,6 +423,23 @@ public sealed class IdempotencyFilterTests {
         return httpContext;
     }
 
+    private static async Task AssertCachedLocationAsync(ObjectResult result, string expectedLocation) {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext(
+            "POST",
+            "/api/v1/items",
+            $"key-{Guid.NewGuid():N}",
+            "user-location-results");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+            Result = result,
+        }));
+
+        Assert.Equal(expectedLocation, store.LastLocation);
+    }
+
     private static ActionExecutingContext CreateActionExecutingContext(HttpContext httpContext, params IFilterMetadata[] filters) =>
         CreateActionExecutingContext(httpContext, new Dictionary<string, object?>(StringComparer.Ordinal), filters);
 
@@ -413,6 +475,7 @@ public sealed class IdempotencyFilterTests {
             string ownerToken,
             int statusCode,
             string? body,
+            string? location,
             TimeSpan responseTtl,
             CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
@@ -423,6 +486,7 @@ public sealed class IdempotencyFilterTests {
         public int ReserveCalls { get; private set; }
         public int CompleteCalls { get; private set; }
         public string? LastReservedKey { get; private set; }
+        public string? LastLocation { get; private set; }
         public bool CompletionTokenWasCanceled { get; private set; }
 
         public Task<IdempotencyReservation> ReserveAsync(
@@ -444,9 +508,11 @@ public sealed class IdempotencyFilterTests {
             string ownerToken,
             int statusCode,
             string? body,
+            string? location,
             TimeSpan responseTtl,
             CancellationToken cancellationToken = default) {
             CompleteCalls++;
+            LastLocation = location;
             CompletionTokenWasCanceled = cancellationToken.IsCancellationRequested;
             return Task.CompletedTask;
         }

@@ -1,11 +1,14 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
+using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Meals.Requests;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Requests;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using Xunit.Abstractions;
 
@@ -55,6 +58,24 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [Fact]
+    public async Task Login_WithPayloadAboveAuthenticationLimit_ReturnsPayloadTooLarge() {
+        HttpClient client = factory.CreateClient();
+        using var content = new StringContent(
+            new string('x', AuthRequestLimits.MaxPayloadBytes + 1),
+            Encoding.UTF8,
+            "application/json");
+
+        HttpResponseMessage response = await client.PostAsync("/api/v1/auth/login", content);
+        ApiErrorHttpResponse? error = await response.Content.ReadFromJsonAsync<ApiErrorHttpResponse>();
+
+        Assert.NotNull(error);
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.RequestEntityTooLarge, response.StatusCode),
+            () => Assert.Equal("Request.PayloadTooLarge", error.Error),
+            () => Assert.False(string.IsNullOrWhiteSpace(error.TraceId)));
+    }
+
+    [Fact]
     public async Task Products_RequiresAuth_AndReturnsOkWithBearerToken() {
         HttpClient client = factory.CreateClient();
         HttpResponseMessage anonymousResponse = await client.GetAsync("/api/v1/products");
@@ -99,38 +120,46 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
     }
 
     [Fact]
-    public async Task CreateProduct_ReturnsCreatedAndLocationHeader() {
+    public async Task CreateProduct_WithIdempotencyKey_ReplaysBodyStatusAndLocationHeader() {
         HttpClient client = await CreateAuthenticatedClientAsync();
+        client.DefaultRequestHeaders.Add("Idempotency-Key", $"product-{Guid.NewGuid():N}");
+        var request = new CreateProductHttpRequest(
+            Barcode: null,
+            "Created Product",
+            Brand: null,
+            "Unknown",
+            Category: null,
+            Description: null,
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: null,
+            "G",
+            100,
+            100,
+            120,
+            10,
+            5,
+            20,
+            3,
+            0,
+            "Private");
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/products",
-            new CreateProductHttpRequest(
-                Barcode: null,
-                "Created Product",
-                Brand: null,
-                "Unknown",
-                Category: null,
-                Description: null,
-                Comment: null,
-                ImageUrl: null,
-                ImageAssetId: null,
-                "G",
-                100,
-                100,
-                120,
-                10,
-                5,
-                20,
-                3,
-                0,
-                "Private"));
+            request);
+        HttpResponseMessage replayResponse = await client.PostAsJsonAsync("/api/v1/products", request);
 
         ProductPayload? payload = await response.Content.ReadFromJsonAsync<ProductPayload>(JsonOptions);
+        ProductPayload? replayPayload = await replayResponse.Content.ReadFromJsonAsync<ProductPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(payload);
         Assert.NotNull(response.Headers.Location);
-        Assert.EndsWith($"/api/v1/Products/{payload.Id}", response.Headers.Location.ToString(), StringComparison.OrdinalIgnoreCase);
+        Assert.Multiple(
+            () => Assert.EndsWith($"/api/v1/Products/{payload.Id}", response.Headers.Location.ToString(), StringComparison.OrdinalIgnoreCase),
+            () => Assert.Equal(HttpStatusCode.Created, replayResponse.StatusCode),
+            () => Assert.Equal(payload.Id, replayPayload?.Id),
+            () => Assert.Equal(response.Headers.Location, replayResponse.Headers.Location));
     }
 
     [Fact]

@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Http;
 namespace FoodDiary.Presentation.Api.Responses;
 
 public static class PresentationErrorHttpMapper {
+    private const string DependencyFailureMessage = "A required dependency could not complete the request.";
+    private const string UnexpectedFailureMessage = "An unexpected error occurred.";
+
     public static int MapStatusCode(Error error) {
         if (error.Kind is { } kind) {
             return MapStatusCode(kind);
@@ -15,6 +18,22 @@ public static class PresentationErrorHttpMapper {
         }
 
         return StatusCodes.Status500InternalServerError;
+    }
+
+    public static ApiErrorHttpResponse MapResponse(Error error, string? traceId) {
+        ErrorKind? kind = error.Kind ?? ErrorKindResolver.Resolve(error.Code);
+        bool isDiagnosticFailure = kind is ErrorKind.Internal or ErrorKind.ExternalFailure || kind is null;
+        string message = kind switch {
+            ErrorKind.ExternalFailure => DependencyFailureMessage,
+            ErrorKind.Internal or null => UnexpectedFailureMessage,
+            _ => error.Message,
+        };
+
+        return new ApiErrorHttpResponse(
+            error.Code,
+            message,
+            traceId,
+            isDiagnosticFailure ? null : ApiErrorDetailsMapper.Normalize(error.Details));
     }
 
     private static int MapStatusCode(ErrorKind kind) =>

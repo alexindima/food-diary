@@ -16,22 +16,27 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
         }
 
         object[] actionAttributes = controllerAction.MethodInfo.GetCustomAttributes(inherit: true);
-        if (actionAttributes.OfType<AllowAnonymousAttribute>().Any()) {
+        object[] controllerAttributes = controllerAction.ControllerTypeInfo.GetCustomAttributes(inherit: true);
+        if (actionAttributes.OfType<AllowAnonymousAttribute>().Any() ||
+            controllerAttributes.OfType<AllowAnonymousAttribute>().Any()) {
+            operation.Security = [];
             return;
         }
 
         IAuthorizeData[] authorizeAttributes =
         [
-            .. controllerAction.MethodInfo
-                        .GetCustomAttributes(inherit: true)
-                        .OfType<IAuthorizeData>()
-,
-            .. controllerAction.ControllerTypeInfo.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>(),
+            .. controllerAction.MethodInfo.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>(),
+            .. controllerAttributes.OfType<IAuthorizeData>(),
         ];
 
         if (authorizeAttributes.Length == 0) {
+            operation.Security = [];
             return;
         }
+
+        operation.Security = [new OpenApiSecurityRequirement {
+            [new OpenApiSecuritySchemeReference("Bearer", context.Document, externalResource: null)] = [],
+        }];
 
         AddApiErrorResponse(operation, context, StatusCodes.Status401Unauthorized);
 
