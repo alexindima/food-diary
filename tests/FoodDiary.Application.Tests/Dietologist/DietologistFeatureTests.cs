@@ -337,12 +337,14 @@ public partial class DietologistFeatureTests {
     private static GetDietologistClientDashboardQueryHandler CreateGetClientDashboardHandler(
         IDietologistInvitationReadModelRepository? invitationRepository = null,
         IDashboardSnapshotBuilder? snapshotBuilder = null,
-        InMemoryUserRepository? userRepository = null) =>
+        InMemoryUserRepository? userRepository = null,
+        IAuditEntryWriter? auditWriter = null,
+        IUnitOfWork? unitOfWork = null) =>
         new(
             new DietologistDashboardAccessService(invitationRepository ?? new InMemoryInvitationRepository()),
             snapshotBuilder ?? new ThrowingDashboardSnapshotBuilder(),
-            Substitute.For<IAuditEntryWriter>(),
-            Substitute.For<IUnitOfWork>(),
+            auditWriter ?? Substitute.For<IAuditEntryWriter>(),
+            unitOfWork ?? Substitute.For<IUnitOfWork>(),
             userRepository ?? new InMemoryUserRepository());
 
     private static GetClientGoalsQueryHandler CreateGetClientGoalsHandler(

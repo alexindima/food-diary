@@ -19,10 +19,22 @@ public static class MailInboxTelemetry {
     public static readonly Histogram<long> MessageSize = Meter.CreateHistogram<long>(
         "fooddiary.mailinbox.message.size_bytes");
 
+    public static readonly Counter<long> AdmissionCounter = Meter.CreateCounter<long>(
+        "fooddiary.mailinbox.admission.events");
+
+    public static readonly Counter<long> RetentionCounter = Meter.CreateCounter<long>(
+        "fooddiary.mailinbox.retention.events");
+
     public static void RecordIngestion(string outcome, TimeSpan duration, long messageSizeBytes) {
         KeyValuePair<string, object?> outcomeTag = new("fooddiary.mailinbox.outcome", outcome);
         IngestionCounter.Add(1, outcomeTag);
         IngestionDuration.Record(duration.TotalMilliseconds, outcomeTag);
         MessageSize.Record(messageSizeBytes, outcomeTag);
     }
+
+    public static void RecordAdmission(string outcome) =>
+        AdmissionCounter.Add(1, new KeyValuePair<string, object?>("fooddiary.mailinbox.outcome", outcome));
+
+    public static void RecordRetention(string outcome, int count) =>
+        RetentionCounter.Add(count, new KeyValuePair<string, object?>("fooddiary.mailinbox.outcome", outcome));
 }

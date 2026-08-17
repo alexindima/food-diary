@@ -32,7 +32,8 @@ public static class AdminMailInboxHttpResponseMappings {
                 model.Category,
                 model.Status,
                 model.ReadAtUtc,
-                model.ReceivedAtUtc);
+                model.ReceivedAtUtc,
+                model.ContentPurgedAtUtc);
         }
     }
 }

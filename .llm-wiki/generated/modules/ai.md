@@ -53,30 +53,35 @@ Source: `FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs`
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 20
+- Public contract files: 25
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 20
-- Interfaces: 10
-- DTO/read-model/projection types: 7
-- Enums: 0
-- Exported repository-shaped contracts: 7
+- Public contract types: 25
+- Interfaces: 11
+- DTO/read-model/projection types: 8
+- Enums: 1
+- Exported repository-shaped contracts: 8
 - Contracts referencing domain entities: 3
 - `class AiErrors`
+- `enum AiQuotaReservationStatus`
 - `interface IAiPromptProvider`
 - `interface IAiPromptTemplateReadModelRepository`
 - `interface IAiPromptTemplateReadRepository`
 - `interface IAiPromptTemplateRepository`
 - `interface IAiPromptTemplateWriteRepository`
+- `interface IAiQuotaRepository`
 - `interface IAiUsageReadRepository`
 - `interface IAiUsageRepository`
 - `interface IAiUsageWriteRepository`
 - `interface IOpenAiFoodClient`
 - `interface IOpenAiFoodService`
 - `record AiPromptTemplateReadModel`
+- `record AiProviderTokenBudget`
+- `record AiQuotaReservationRequest`
+- `record AiQuotaUsage`
 - `record AiUsageTotals`
 - `record FoodNutritionItemModel`
 - `record FoodNutritionModel`
@@ -97,6 +102,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [architecture-boundary] `tests/FoodDiary.ArchitectureTests/AiModuleExtractionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiPromptTemplateInvariantTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Domain.Tests/Domain/AiUsageInvariantTests.cs`
+- [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiQuotaRepositoryIntegrationTests.cs`
 - [integration] `tests/FoodDiary.Infrastructure.IntegrationTests/Integration/AiUsageRepositoryIntegrationTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Infrastructure.Tests/Services/AiPromptProviderTests.cs`
 - [presentation] `tests/FoodDiary.Presentation.Api.Tests/AiFoodControllerTests.cs`

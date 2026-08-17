@@ -136,25 +136,26 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
         return task.GetType().GetProperty(nameof(Task<>.Result))?.GetValue(task);
     }
 
-    private static Task PublishToHandlers<TNotification>(
+    private static async Task PublishToHandlers<TNotification>(
         IEnumerable<INotificationHandler<TNotification>> handlers,
         TNotification notification,
         CancellationToken cancellationToken)
         where TNotification : INotification {
-        return Task.WhenAll(handlers.Select(handler => handler.Handle(notification, cancellationToken)));
+        foreach (INotificationHandler<TNotification> handler in handlers) {
+            await handler.Handle(notification, cancellationToken).ConfigureAwait(false);
+        }
     }
 
-    private static Task PublishObjectToHandlers(
+    private static async Task PublishObjectToHandlers(
         IEnumerable<object?> handlers,
         object notification,
         CancellationToken cancellationToken) {
-        IEnumerable<Task> tasks = handlers
-            .OfType<object>()
-            .Select(handler => (Task)handler
+        foreach (object handler in handlers.OfType<object>()) {
+            var task = (Task)handler
                 .GetType()
                 .GetMethod(nameof(INotificationHandler<>.Handle))!
-                .Invoke(handler, [notification, cancellationToken])!);
-
-        return Task.WhenAll(tasks);
+                .Invoke(handler, [notification, cancellationToken])!;
+            await task.ConfigureAwait(false);
+        }
     }
 }

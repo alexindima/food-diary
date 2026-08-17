@@ -114,15 +114,13 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName);
         string feature = ResolveFeatureName();
         string controllerName = GetType().Name;
-        string? route = HttpContext.GetEndpoint()?.DisplayName;
+        string route = ControllerContext.ActionDescriptor?.AttributeRouteInfo?.Template ?? "unmatched";
 
         activity?.SetTag("fooddiary.presentation.feature", feature);
         activity?.SetTag("fooddiary.presentation.controller", controllerName);
         activity?.SetTag("fooddiary.presentation.operation", operationName);
         activity?.SetTag("http.route", route);
-        if (userId.HasValue) {
-            activity?.SetTag("enduser.id", userId.Value);
-        }
+        activity?.SetTag("fooddiary.presentation.has_user_context", userId.HasValue);
 
         return new PresentationOperationObservation(operationName, feature, controllerName, stopwatch, activity);
     }
@@ -165,11 +163,10 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         if (error is not null) {
             LogLevel failureLogLevel = ResolveFailureLogLevel(error);
             if (failureLogLevel >= LogLevel.Warning) {
-                observation.Activity?.SetStatus(ActivityStatusCode.Error, error.Message);
+                observation.Activity?.SetStatus(ActivityStatusCode.Error);
             }
 
             observation.Activity?.SetTag("error.type", error.Code);
-            observation.Activity?.SetTag("error.message", error.Message);
             PresentationApiTelemetry.OperationFailureCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.presentation.feature", observation.Feature),

@@ -1,4 +1,5 @@
 using FoodDiary.MailInbox.Application.Abstractions;
+using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -10,6 +11,7 @@ internal static class InitializerServiceCollectionExtensions {
         this IServiceCollection services,
         string connectionString) {
         services.AddSingleton(TimeProvider.System);
+        services.AddOptions<MailInboxStorageOptions>();
         services.AddSingleton(_ => new NpgsqlDataSourceBuilder(connectionString).Build());
         services.AddSingleton<DmarcReportParser>();
         services.AddSingleton<NpgsqlInboundMailStore>();

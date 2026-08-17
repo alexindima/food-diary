@@ -365,7 +365,7 @@ public sealed class AdminControllersCoverageTests {
         Assert.IsType<List<AdminMailInboxMessageSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(list).Value);
         Assert.Equal(25, Assert.IsType<GetAdminMailInboxMessagesQuery>(listSender.Request).Limit);
 
-        var details = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", ReadAtUtc: null, now);
+        var details = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", ReadAtUtc: null, now, ContentPurgedAtUtc: null);
         CapturedSender detailSender = SubstituteSender.Capture(Result.Success(details));
         AdminMailInboxController detailController = CreateController(new AdminMailInboxController(detailSender));
         IActionResult detail = await detailController.GetMessage(details.Id);

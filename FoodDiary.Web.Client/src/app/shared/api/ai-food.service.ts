@@ -20,19 +20,19 @@ export class AiFoodService {
 
     public analyzeFoodImage(request: FoodVisionRequest): Observable<FoodVisionResponse> {
         return this.http
-            .post<FoodVisionResponse>(`${this.baseUrl}/food/vision`, request)
+            .post<FoodVisionResponse>(`${this.baseUrl}/food/vision`, request, this.createIdempotencyOptions())
             .pipe(catchError((error: unknown) => rethrowApiError('Food image analysis error', error)));
     }
 
     public parseFoodText(request: FoodTextRequest): Observable<FoodVisionResponse> {
         return this.http
-            .post<FoodVisionResponse>(`${this.baseUrl}/food/text`, request)
+            .post<FoodVisionResponse>(`${this.baseUrl}/food/text`, request, this.createIdempotencyOptions())
             .pipe(catchError((error: unknown) => rethrowApiError('Food text parsing error', error)));
     }
 
     public calculateNutrition(request: FoodNutritionRequest): Observable<FoodNutritionResponse> {
         return this.http
-            .post<FoodNutritionResponse>(`${this.baseUrl}/food/nutrition`, request)
+            .post<FoodNutritionResponse>(`${this.baseUrl}/food/nutrition`, request, this.createIdempotencyOptions())
             .pipe(catchError((error: unknown) => rethrowApiError('Food nutrition calculation error', error)));
     }
 
@@ -40,5 +40,9 @@ export class AiFoodService {
         return this.http
             .get<UserAiUsageResponse>(`${this.baseUrl}/usage/me`)
             .pipe(catchError((error: unknown) => fallbackApiError('AI usage summary fetch error', error, null)));
+    }
+
+    private createIdempotencyOptions(): { headers: { 'Idempotency-Key': string } } {
+        return { headers: { 'Idempotency-Key': crypto.randomUUID() } };
     }
 }

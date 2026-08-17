@@ -5,6 +5,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
+using FoodDiary.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using FoodDiary.Application.Abstractions.Achievements.Common;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -74,7 +75,11 @@ public sealed class UserAchievementStoreIntegrationTests(PostgresDatabaseFixture
         IAchievementReconciliationHandler handler = Substitute.For<IAchievementReconciliationHandler>();
         await using FoodDiaryDbContext processContext = databaseFixture.CreateDbContext(connectionString);
         var processor = new AchievementEvaluationOutboxProcessor(
-            processContext, handler, timeProvider, NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
+            processContext,
+            handler,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
+            timeProvider,
+            NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
         int processed = await processor.ProcessDueAsync(batchSize: 10);
 

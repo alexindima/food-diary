@@ -54,6 +54,7 @@ describe('AdminMailInboxService', () => {
         service.getMessage('message-1').subscribe(result => {
             expect(result.id).toBe('message-1');
             expect(result.rawMime).toBe('raw');
+            expect(result.contentPurgedAtUtc).toBeNull();
         });
 
         const req = httpMock.expectOne(`${baseUrl}/message-1`);
@@ -68,6 +69,7 @@ describe('AdminMailInboxService', () => {
             readAtUtc: null,
             receivedAtUtc: '2026-04-25T21:37:55Z',
             rawMime: 'raw',
+            contentPurgedAtUtc: null,
         });
     });
 

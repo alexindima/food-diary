@@ -6,4 +6,5 @@ public sealed record EmailMessage(
     IReadOnlyList<string> ToAddresses,
     string Subject,
     string HtmlBody,
-    string? TextBody);
+    string? TextBody,
+    string? IdempotencyKey = null);

@@ -69,6 +69,18 @@ public sealed class FastingTelemetrySummaryServiceTests {
     }
 
     [Fact]
+    public async Task RecordAsync_IgnoresUnknownFastingTelemetry() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+
+        await RecordAsync(
+            repository,
+            CreateRequest("fasting.attacker-controlled", DateTime.UtcNow.ToString("O")),
+            CancellationToken.None);
+
+        Assert.Empty(repository.Events);
+    }
+
+    [Fact]
     public async Task RecordAsync_WithInvalidTimestamp_UsesCurrentUtcTimestamp() {
         var repository = new InMemoryFastingTelemetryEventRepository();
         DateTime fallbackNow = new(2026, 6, 30, 10, 15, 0, DateTimeKind.Utc);

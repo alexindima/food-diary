@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Results;
 using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
@@ -8,6 +9,7 @@ using FoodDiary.Presentation.Api.Features.Ai;
 using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Ai.Responses;
+using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -16,6 +18,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiFoodControllerTests {
+    private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
     [Fact]
     public async Task AnalyzeFood_SendsVisionCommandAndReturnsResponse() {
         FoodVisionModel model = new([new FoodVisionItemModel("egg", "egg", 2, "pcs", 0.9m)], "vision notes");
@@ -38,6 +42,7 @@ public sealed class AiFoodControllerTests {
         Assert.Equal(userId, command.UserId);
         Assert.Equal(imageAssetId, command.ImageAssetId);
         Assert.Equal("Dinner plate", command.Description);
+        Assert.Equal(RequestId, command.RequestId);
     }
 
     [Fact]
@@ -60,6 +65,7 @@ public sealed class AiFoodControllerTests {
         ParseFoodTextCommand command = Assert.IsType<ParseFoodTextCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("toast", command.Text);
+        Assert.Equal(RequestId, command.RequestId);
     }
 
     [Fact]
@@ -92,15 +98,23 @@ public sealed class AiFoodControllerTests {
 
         CalculateFoodNutritionCommand command = Assert.IsType<CalculateFoodNutritionCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
+        Assert.Equal(RequestId, command.RequestId);
         FoodVisionItemModel sentItem = Assert.Single(command.Items);
         Assert.Equal("egg", sentItem.NameEn);
     }
 
-    private static AiFoodController CreateController(ISender sender) =>
-        new(sender, NullLogger<AiFoodController>.Instance) {
+    private static AiFoodController CreateController(ISender sender) {
+        var httpContext = new DefaultHttpContext();
+        MethodInfo setRequestId = typeof(IdempotencyRequestContext).GetMethod(
+            "SetRequestId",
+            BindingFlags.Static | BindingFlags.NonPublic)
+            ?? throw new InvalidOperationException("Idempotency request context setter was not found.");
+        setRequestId.Invoke(null, [httpContext, RequestId]);
+        return new AiFoodController(sender, NullLogger<AiFoodController>.Instance) {
             ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext(),
+                HttpContext = httpContext,
             },
         };
+    }
 
 }

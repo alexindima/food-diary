@@ -47,6 +47,10 @@ public static class ApiOptionsServiceCollectionExtensions {
                     "RateLimiting:Ai requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .Validate(ApiRateLimitingOptions.HasValidWebhook,
                     "RateLimiting:Webhook requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidClientTelemetry,
+                    "RateLimiting:ClientTelemetry requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidMarketingAttribution,
+                    "RateLimiting:MarketingAttribution requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
                 .ValidateOnStart();
             services
                 .AddOptions<ApiOutputCacheOptions>()

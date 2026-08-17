@@ -4,5 +4,5 @@ using FoodDiary.Application.Abstractions.Ai.Models;
 
 namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 
-public sealed record AnalyzeFoodImageCommand(Guid UserId, Guid ImageAssetId, string? Description)
+public sealed record AnalyzeFoodImageCommand(Guid UserId, Guid ImageAssetId, string? Description, string RequestId)
     : ICommand<Result<FoodVisionModel>>;

@@ -268,6 +268,96 @@ public sealed class IdempotencyFilterTests {
         Assert.Equal(0, store.CompleteCalls);
     }
 
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenClientDisconnectsAfterAction_CompletesWithServerOwnedToken() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        using var requestCancellation = new CancellationTokenSource();
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-disconnect", userId: "user-disconnect");
+        httpContext.RequestAborted = requestCancellation.Token;
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, async () => {
+            await requestCancellation.CancelAsync();
+            return new ActionExecutedContext(context, [], new object()) {
+                Result = new ObjectResult(new { id = "committed" }) {
+                    StatusCode = StatusCodes.Status201Created,
+                },
+            };
+        });
+
+        Assert.Multiple(
+            () => Assert.Equal(1, store.CompleteCalls),
+            () => Assert.False(store.CompletionTokenWasCanceled));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithValidExternalKey_StoresOnlyHashedKey() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        const string externalKey = "client-visible-key-123";
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", externalKey, userId: "user-hash");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+            Result = new StatusCodeResult(StatusCodes.Status202Accepted),
+        }));
+
+        Assert.Multiple(
+            () => Assert.NotNull(store.LastReservedKey),
+            () => Assert.DoesNotContain(externalKey, store.LastReservedKey!, StringComparison.Ordinal),
+            () => Assert.Equal(64, store.LastReservedKey!.Length));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenKeyIsRequiredAndMissing_RejectsBeforeAction() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/ai/food/text", idempotencyKey: null, userId: "user-required");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute(requireKey: true));
+
+        await filter.OnActionExecutionAsync(context, () => throw new InvalidOperationException("Missing key must not execute the action."));
+
+        ObjectResult result = Assert.IsType<ObjectResult>(context.Result);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode),
+            () => Assert.Equal(0, store.ReserveCalls));
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithMultipleExternalKeys_RejectsBeforeReservation() {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", idempotencyKey: null, userId: "user-multiple-keys");
+        httpContext.Request.Headers["Idempotency-Key"] = new Microsoft.Extensions.Primitives.StringValues(["first", "second"]);
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, () => throw new InvalidOperationException("Multiple keys must not execute the action."));
+
+        ObjectResult result = Assert.IsType<ObjectResult>(context.Result);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode),
+            () => Assert.Equal(0, store.ReserveCalls));
+    }
+
+    [Theory]
+    [InlineData("contains space")]
+    [InlineData("contains/slash")]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")]
+    public async Task OnActionExecutionAsync_WithInvalidExternalKey_RejectsBeforeReservation(string externalKey) {
+        var store = new RecordingIdempotencyStore();
+        var filter = new IdempotencyFilter(store);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", externalKey, userId: "user-invalid-key");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, () => throw new InvalidOperationException("Invalid key must not execute the action."));
+
+        ObjectResult result = Assert.IsType<ObjectResult>(context.Result);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status400BadRequest, result.StatusCode),
+            () => Assert.Equal(0, store.ReserveCalls));
+    }
+
     private static DefaultHttpContext CreateHttpContext(string method, string? path, string? idempotencyKey, string? userId) {
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = method;
@@ -332,6 +422,8 @@ public sealed class IdempotencyFilterTests {
     private sealed class RecordingIdempotencyStore : IIdempotencyStore {
         public int ReserveCalls { get; private set; }
         public int CompleteCalls { get; private set; }
+        public string? LastReservedKey { get; private set; }
+        public bool CompletionTokenWasCanceled { get; private set; }
 
         public Task<IdempotencyReservation> ReserveAsync(
             string key,
@@ -340,6 +432,7 @@ public sealed class IdempotencyFilterTests {
             TimeSpan processingTtl,
             CancellationToken cancellationToken = default) {
             ReserveCalls++;
+            LastReservedKey = key;
             return Task.FromResult(new IdempotencyReservation(
                 IdempotencyReservationStatus.Acquired,
                 OwnerToken: "owner-token"));
@@ -354,6 +447,7 @@ public sealed class IdempotencyFilterTests {
             TimeSpan responseTtl,
             CancellationToken cancellationToken = default) {
             CompleteCalls++;
+            CompletionTokenWasCanceled = cancellationToken.IsCancellationRequested;
             return Task.CompletedTask;
         }
     }

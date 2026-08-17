@@ -2,6 +2,29 @@ namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ContainerSupplyChainGuardrailTests {
+    private static readonly string[] ExpectedProductionProjects = [
+        "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj",
+        "FoodDiary.JobManager/FoodDiary.JobManager.csproj",
+        "FoodDiary.Initializer/FoodDiary.Initializer.csproj",
+        "FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj",
+        "MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj",
+        "MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj",
+        "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj",
+        "MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj",
+    ];
+
+    private static readonly string[] ExpectedDockerfiles = [
+        "FoodDiary.Initializer/Dockerfile",
+        "FoodDiary.JobManager/Dockerfile",
+        "FoodDiary.Telegram.Bot/Dockerfile",
+        "FoodDiary.Web.Api/Dockerfile",
+        "FoodDiary.Web.Client/Dockerfile",
+        "MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile",
+        "MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile",
+        "MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile",
+        "MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile",
+    ];
+
     private static readonly string[] ExpectedBuildIds = [
         "build_api",
         "build_telegram_bot",
@@ -78,6 +101,127 @@ public sealed class ContainerSupplyChainGuardrailTests {
         Assert.Contains("cosign verify", script, StringComparison.Ordinal);
         Assert.Contains("--certificate-identity", script, StringComparison.Ordinal);
         Assert.Contains("--certificate-oidc-issuer", script, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void NuGetRestore_UsesRepositorySourceAllowlistAndCommittedLockFiles() {
+        string configPath = ArchitectureTestPaths.FromRoot("NuGet.config");
+        var config = System.Xml.Linq.XDocument.Load(configPath);
+        System.Xml.Linq.XElement root = Assert.IsType<System.Xml.Linq.XElement>(config.Root);
+        System.Xml.Linq.XElement packageSources = Assert.Single(root.Elements("packageSources"));
+        System.Xml.Linq.XElement auditSources = Assert.Single(root.Elements("auditSources"));
+        System.Xml.Linq.XElement sourceMapping = Assert.Single(root.Elements("packageSourceMapping"));
+
+        Assert.Single(packageSources.Elements("clear"));
+        System.Xml.Linq.XElement packageSource = Assert.Single(packageSources.Elements("add"));
+        Assert.Equal("nuget.org", packageSource.Attribute("key")?.Value);
+        Assert.Equal("https://api.nuget.org/v3/index.json", packageSource.Attribute("value")?.Value);
+
+        Assert.Single(auditSources.Elements("clear"));
+        System.Xml.Linq.XElement auditSource = Assert.Single(auditSources.Elements("add"));
+        Assert.Equal("nuget.org", auditSource.Attribute("key")?.Value);
+        Assert.Equal("https://api.nuget.org/v3/index.json", auditSource.Attribute("value")?.Value);
+
+        Assert.Single(sourceMapping.Elements("clear"));
+        System.Xml.Linq.XElement mapping = Assert.Single(sourceMapping.Elements("packageSource"));
+        Assert.Equal("nuget.org", mapping.Attribute("key")?.Value);
+        Assert.Equal("*", Assert.Single(mapping.Elements("package")).Attribute("pattern")?.Value);
+
+        string buildProps = File.ReadAllText(ArchitectureTestPaths.FromRoot("Directory.Build.props"));
+        Assert.Contains("<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>", buildProps, StringComparison.Ordinal);
+        Assert.Contains(".nuget\\lockfiles\\$(MSBuildProjectName).packages.lock.json", buildProps, StringComparison.Ordinal);
+
+        string lockDirectory = ArchitectureTestPaths.FromRoot(".nuget", "lockfiles");
+        var solution = System.Xml.Linq.XDocument.Load(ArchitectureTestPaths.FromRoot("FoodDiary.slnx"));
+        string[] projectNames = [
+            .. solution
+                .Descendants("Project")
+                .Select(project => project.Attribute("Path")?.Value)
+                .Where(path => !string.IsNullOrWhiteSpace(path))
+                .Select(path => Path.GetFileNameWithoutExtension(path!)!)
+                .Order(StringComparer.Ordinal),
+        ];
+        string[] lockNames = [
+            .. Directory
+                .EnumerateFiles(lockDirectory, "*.packages.lock.json", SearchOption.TopDirectoryOnly)
+                .Select(path => Path.GetFileName(path)[..^".packages.lock.json".Length])
+                .Order(StringComparer.Ordinal),
+        ];
+
+        Assert.Equal(projectNames, lockNames);
+    }
+
+    [Fact]
+    public void Ci_RestoresLockedGraphsAndAuditsEveryProductionHost() {
+        string workflow = File.ReadAllText(ArchitectureTestPaths.FromRoot(".github", "workflows", "ci-tests.yml"));
+        string[] restoreCommands = [
+            .. workflow
+                .Split('\n')
+                .Select(line => line.Trim())
+                .Where(line => line.StartsWith("dotnet restore FoodDiary.slnx", StringComparison.Ordinal)),
+        ];
+
+        Assert.Equal(3, restoreCommands.Length);
+        Assert.All(restoreCommands, command => Assert.Contains("--locked-mode", command, StringComparison.Ordinal));
+
+        foreach (string project in ExpectedProductionProjects) {
+            Assert.Contains($"\"{project}\"", workflow, StringComparison.Ordinal);
+        }
+    }
+
+    [Fact]
+    public void ContainerDefinitions_PinExternalImagesAndLockedRestoreInputs() {
+        string[] dockerfiles = [
+            .. ExpectedDockerfiles.Select(path => ArchitectureTestPaths.FromRoot(path.Split('/'))),
+        ];
+
+        Assert.Equal(9, dockerfiles.Length);
+        foreach (string dockerfile in dockerfiles) {
+            string contents = File.ReadAllText(dockerfile);
+            string[] fromLines = [
+                .. contents
+                    .Split('\n')
+                    .Select(line => line.Trim())
+                    .Where(line => line.StartsWith("FROM ", StringComparison.Ordinal)),
+            ];
+
+            Assert.NotEmpty(fromLines);
+            Assert.All(fromLines, line => Assert.Matches(@"^FROM [^\s]+@sha256:[0-9a-f]{64}(?: AS \w+)?\r?$", line));
+
+            if (dockerfile.EndsWith("FoodDiary.Web.Client\\Dockerfile", StringComparison.OrdinalIgnoreCase) ||
+                dockerfile.EndsWith("FoodDiary.Web.Client/Dockerfile", StringComparison.OrdinalIgnoreCase)) {
+                continue;
+            }
+
+            Assert.Contains("NuGet.config", contents, StringComparison.Ordinal);
+            Assert.Contains("COPY .nuget/lockfiles/ .nuget/lockfiles/", contents, StringComparison.Ordinal);
+            Assert.Contains("COPY FoodDiary.Analyzers/*.csproj FoodDiary.Analyzers/", contents, StringComparison.Ordinal);
+            Assert.Contains("COPY FoodDiary.Analyzers/ FoodDiary.Analyzers/", contents, StringComparison.Ordinal);
+            Assert.Contains("dotnet restore", contents, StringComparison.Ordinal);
+            Assert.Contains("--locked-mode", contents, StringComparison.Ordinal);
+        }
+
+        string compose = File.ReadAllText(ArchitectureTestPaths.FromRoot("docker-compose.yml"));
+        Assert.DoesNotContain(":-latest", compose, StringComparison.Ordinal);
+        Assert.Contains("postgres:17-alpine@sha256:", compose, StringComparison.Ordinal);
+        Assert.Contains("rabbitmq:4-management@sha256:", compose, StringComparison.Ordinal);
+        Assert.Contains("redis:7-alpine@sha256:", compose, StringComparison.Ordinal);
+        Assert.Contains("nginx:alpine@sha256:", compose, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void DeployWorkflow_DeploysTheSignedBuildOutputDigests() {
+        string workflow = ReadDeployWorkflow();
+
+        Assert.Contains("SOURCE_COMMIT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain(":sha-${{ github.sha }}", workflow, StringComparison.Ordinal);
+
+        foreach (string buildId in ExpectedBuildIds) {
+            Assert.Contains($"@${{{{ steps.{buildId}.outputs.digest }}}}", workflow, StringComparison.Ordinal);
+        }
+
+        Assert.Contains("docker create \"$CLIENT_IMAGE_REF\"", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("docker create ghcr.io/alexindima/food-diary/client:${DEPLOY_IMAGE_TAG}", workflow, StringComparison.Ordinal);
     }
 
     private static string ReadDeployWorkflow() {

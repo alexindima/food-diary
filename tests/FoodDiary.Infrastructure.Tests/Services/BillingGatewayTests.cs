@@ -687,6 +687,29 @@ public sealed class BillingGatewayTests {
     }
 
     [Fact]
+    public async Task PaddleCreatePortalSession_WhenResponseBodyExceedsLimit_FailsClosed() {
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new ByteArrayContent(new byte[(1024 * 1024) + 1]),
+        });
+        var gateway = new PaddleBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(new PaddleOptions {
+                ApiKey = "paddle-api-key",
+                ApiBaseUrl = "https://api.paddle.test",
+            }));
+
+        Result<BillingPortalSessionModel> result = await gateway.CreatePortalSessionAsync(
+            new BillingPortalSessionRequestModel("ctm_123"),
+            CancellationToken.None);
+
+        Assert.Multiple(() => {
+            Assert.True(result.IsFailure);
+            Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+            Assert.Contains("oversized", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        });
+    }
+
+    [Fact]
     public async Task PaddleWebhook_WhenPayloadOrSignatureMissing_ReturnsRequiredFailure() {
         PaddleBillingGateway gateway = CreateConfiguredPaddleWebhookGateway();
 
@@ -1064,6 +1087,50 @@ public sealed class BillingGatewayTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
         Assert.Contains("400 Bad Request", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task YooKassaCreateCheckoutSession_WhenErrorBodyIsLong_NormalizesAndBoundsSummary() {
+        string providerBody = new string('x', 400) + "\r\nsecret-tail";
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.BadRequest) {
+            ReasonPhrase = "Bad Request",
+            Content = new StringContent(providerBody, Encoding.UTF8, "text/plain"),
+        });
+        var gateway = new YooKassaBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(ValidYooKassaOptions()));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", ExistingCustomerId: null),
+            CancellationToken.None);
+
+        Assert.Multiple(() => {
+            Assert.True(result.IsFailure);
+            Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+            Assert.DoesNotContain("secret-tail", result.Error.Message, StringComparison.Ordinal);
+            Assert.DoesNotContain('\n', result.Error.Message);
+            Assert.InRange(result.Error.Message.Length, 0, 280);
+        });
+    }
+
+    [Fact]
+    public async Task YooKassaCreateCheckoutSession_WhenResponseBodyExceedsLimit_FailsClosed() {
+        var handler = new RecordingHttpMessageHandler(new HttpResponseMessage(HttpStatusCode.OK) {
+            Content = new ByteArrayContent(new byte[(1024 * 1024) + 1]),
+        });
+        var gateway = new YooKassaBillingGateway(
+            new HttpClient(handler),
+            MsOptions.Create(ValidYooKassaOptions()));
+
+        Result<BillingCheckoutSessionModel> result = await gateway.CreateCheckoutSessionAsync(
+            new BillingCheckoutSessionRequestModel(Guid.NewGuid(), "buyer@example.com", "monthly", ExistingCustomerId: null),
+            CancellationToken.None);
+
+        Assert.Multiple(() => {
+            Assert.True(result.IsFailure);
+            Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
+            Assert.Contains("oversized", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        });
     }
 
     [Fact]

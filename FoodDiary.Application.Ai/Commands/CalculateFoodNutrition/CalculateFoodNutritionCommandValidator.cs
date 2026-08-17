@@ -12,6 +12,11 @@ public sealed class CalculateFoodNutritionCommandValidator : AbstractValidator<C
             .NotEmpty()
             .WithErrorCode("Validation.Required");
 
+        RuleFor(x => x.RequestId)
+            .NotEmpty()
+            .Length(64)
+            .Matches("^[0-9A-F]{64}$");
+
         RuleForEach(x => x.Items).ChildRules(item => {
             item.RuleFor(x => x.NameEn)
                 .NotEmpty()

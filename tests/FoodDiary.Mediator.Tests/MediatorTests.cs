@@ -174,6 +174,45 @@ public sealed class MediatorTests {
     }
 
     [Fact]
+    public async Task Publish_WithTypedNotification_ExecutesHandlersSequentiallyInRegistrationOrder() {
+        await using ServiceProvider provider = CreateSequentialNotificationProvider();
+        IPublisher publisher = provider.GetRequiredService<IPublisher>();
+        NotificationExecutionProbe probe = provider.GetRequiredService<NotificationExecutionProbe>();
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        await publisher.Publish(new SequentialNotification(), cancellationTokenSource.Token);
+
+        Assert.Equal(1, probe.MaxConcurrency);
+        Assert.Equal(["first:start", "first:end", "second:start", "second:end"], probe.Entries);
+        Assert.All(probe.CapturedTokens, token => Assert.Equal(cancellationTokenSource.Token, token));
+    }
+
+    [Fact]
+    public async Task Publish_WithObjectNotification_ExecutesHandlersSequentiallyInRegistrationOrder() {
+        await using ServiceProvider provider = CreateSequentialNotificationProvider();
+        IPublisher publisher = provider.GetRequiredService<IPublisher>();
+        NotificationExecutionProbe probe = provider.GetRequiredService<NotificationExecutionProbe>();
+
+        await publisher.Publish((object)new SequentialNotification());
+
+        Assert.Equal(1, probe.MaxConcurrency);
+        Assert.Equal(["first:start", "first:end", "second:start", "second:end"], probe.Entries);
+    }
+
+    [Fact]
+    public async Task Publish_WhenHandlerFails_PropagatesAndDoesNotStartLaterHandlers() {
+        await using ServiceProvider provider = CreateFailingNotificationProvider();
+        IPublisher publisher = provider.GetRequiredService<IPublisher>();
+        NotificationFailureProbe probe = provider.GetRequiredService<NotificationFailureProbe>();
+
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => publisher.Publish(new FailingNotification()));
+
+        Assert.Equal("notification failed", exception.Message);
+        Assert.Equal(["first", "failing"], probe.Entries);
+    }
+
+    [Fact]
     public async Task Publish_WhenNoHandlersRegistered_Completes() {
         await using ServiceProvider provider = CreateProvider(static _ => { });
         IPublisher publisher = provider.GetRequiredService<IPublisher>();
@@ -254,6 +293,25 @@ public sealed class MediatorTests {
     private static ServiceProvider CreateProvider(Action<MediatorServiceConfiguration> configure) {
         var services = new ServiceCollection();
         services.AddFoodDiaryMediator(configure);
+        return services.BuildServiceProvider();
+    }
+
+    private static ServiceProvider CreateSequentialNotificationProvider() {
+        var services = new ServiceCollection();
+        services.AddFoodDiaryMediator(static _ => { });
+        services.AddScoped<NotificationExecutionProbe>();
+        services.AddTransient<INotificationHandler<SequentialNotification>, SequentialFirstNotificationHandler>();
+        services.AddTransient<INotificationHandler<SequentialNotification>, SequentialSecondNotificationHandler>();
+        return services.BuildServiceProvider();
+    }
+
+    private static ServiceProvider CreateFailingNotificationProvider() {
+        var services = new ServiceCollection();
+        services.AddFoodDiaryMediator(static _ => { });
+        services.AddScoped<NotificationFailureProbe>();
+        services.AddTransient<INotificationHandler<FailingNotification>, SuccessfulNotificationHandler>();
+        services.AddTransient<INotificationHandler<FailingNotification>, FailingNotificationHandler>();
+        services.AddTransient<INotificationHandler<FailingNotification>, NeverStartedNotificationHandler>();
         return services.BuildServiceProvider();
     }
 
@@ -395,6 +453,88 @@ public sealed class MediatorTests {
             NotificationLog.Entries.Add($"second:{notification.Value}");
             return Task.CompletedTask;
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record SequentialNotification : INotification;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SequentialFirstNotificationHandler(NotificationExecutionProbe probe)
+        : INotificationHandler<SequentialNotification> {
+        public Task Handle(SequentialNotification notification, CancellationToken cancellationToken) =>
+            probe.ExecuteAsync("first", cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SequentialSecondNotificationHandler(NotificationExecutionProbe probe)
+        : INotificationHandler<SequentialNotification> {
+        public Task Handle(SequentialNotification notification, CancellationToken cancellationToken) =>
+            probe.ExecuteAsync("second", cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NotificationExecutionProbe {
+        private readonly Lock _sync = new();
+        private int _activeHandlers;
+
+        public List<string> Entries { get; } = [];
+
+        public List<CancellationToken> CapturedTokens { get; } = [];
+
+        public int MaxConcurrency { get; private set; }
+
+        public async Task ExecuteAsync(string handlerName, CancellationToken cancellationToken) {
+            lock (_sync) {
+                _activeHandlers++;
+                MaxConcurrency = Math.Max(MaxConcurrency, _activeHandlers);
+                Entries.Add($"{handlerName}:start");
+                CapturedTokens.Add(cancellationToken);
+            }
+
+            try {
+                await Task.Delay(TimeSpan.FromMilliseconds(20), cancellationToken);
+            } finally {
+                lock (_sync) {
+                    Entries.Add($"{handlerName}:end");
+                    _activeHandlers--;
+                }
+            }
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record FailingNotification : INotification;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class SuccessfulNotificationHandler(NotificationFailureProbe probe)
+        : INotificationHandler<FailingNotification> {
+        public Task Handle(FailingNotification notification, CancellationToken cancellationToken) {
+            probe.Entries.Add("first");
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailingNotificationHandler(NotificationFailureProbe probe)
+        : INotificationHandler<FailingNotification> {
+        public Task Handle(FailingNotification notification, CancellationToken cancellationToken) {
+            probe.Entries.Add("failing");
+            return Task.FromException(new InvalidOperationException("notification failed"));
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NeverStartedNotificationHandler(NotificationFailureProbe probe)
+        : INotificationHandler<FailingNotification> {
+        public Task Handle(FailingNotification notification, CancellationToken cancellationToken) {
+            probe.Entries.Add("unexpected");
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NotificationFailureProbe {
+        public List<string> Entries { get; } = [];
     }
 
     [ExcludeFromCodeCoverage]

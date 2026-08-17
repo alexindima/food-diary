@@ -1,14 +1,14 @@
+using System.Diagnostics;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using FoodDiary.MailInbox.Application.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Npgsql;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace FoodDiary.MailInbox.Infrastructure.Extensions;
 
@@ -26,6 +26,11 @@ public static class MailInboxServiceCollectionExtensions {
             .Validate(OpenTelemetryOptions.HasValidOtlpEndpoint, "OpenTelemetry OTLP endpoint must be an absolute URI when configured.")
             .ValidateOnStart();
 
+        services.AddOptions<MailInboxStorageOptions>()
+            .Bind(configuration.GetSection(MailInboxStorageOptions.SectionName))
+            .Validate(MailInboxStorageOptions.HasValidConfiguration, "MailInboxStorage configuration is invalid.")
+            .ValidateOnStart();
+
         services.AddSingleton(static sp => {
             string connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is not configured.");
@@ -39,28 +44,57 @@ public static class MailInboxServiceCollectionExtensions {
         services.AddSingleton<IMailInboxSchemaInitializer>(static sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
         services.AddSingleton<IMailInboxReadinessChecker, NpgsqlMailInboxReadinessChecker>();
         services.AddSingleton<SmtpInboundMessageStore>();
+        services.AddSingleton<MailInboxFixedWindowRateLimiter>();
         services.AddSingleton<MailInboxMailboxFilter>();
+        services.AddSingleton<MailInboxEndpointListenerFactory>();
         services.AddHostedService<MailInboxSchemaInitializerHostedService>();
+        services.AddHostedService<MailInboxRetentionHostedService>();
         services.AddHostedService<MailInboxSmtpHostedService>();
 
         return services;
     }
 
-    public static IServiceCollection AddMailInboxTelemetry(this IServiceCollection services) {
-        services.AddSingleton<MeterProvider>(static serviceProvider => {
-            OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
-            MeterProviderBuilder builder = Sdk.CreateMeterProviderBuilder()
-                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.MailInbox"))
-                .AddMeter(MailInboxTelemetry.MeterName);
+    public static IServiceCollection AddMailInboxTelemetry(
+        this IServiceCollection services,
+        IConfiguration configuration) {
+        Uri? endpointUri = ResolveOtlpEndpoint(configuration);
+        if (endpointUri is null) {
+            return services;
+        }
 
-            if (!string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
-                var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
-                builder.AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri);
-            }
+        Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+        Activity.ForceDefaultIdFormat = true;
 
-            return builder.Build();
-        });
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource.AddService("FoodDiary.MailInbox"))
+            .WithTracing(tracing => tracing
+                .AddSource(MailInboxTelemetry.MeterName)
+                .AddAspNetCoreInstrumentation(options => {
+                    options.Filter = MailInboxTelemetryPrivacyProcessor.ShouldCollectRequest;
+                    options.RecordException = false;
+                    options.EnrichWithHttpResponse = MailInboxTelemetryPrivacyProcessor.EnrichServerActivity;
+                })
+                .AddNpgsql()
+                .AddProcessor(new MailInboxTelemetryPrivacyProcessor())
+                .AddOtlpExporter(exporter => exporter.Endpoint = endpointUri))
+            .WithMetrics(metrics => metrics
+                .AddMeter(MailInboxTelemetry.MeterName)
+                .AddOtlpExporter(exporter => exporter.Endpoint = endpointUri));
 
         return services;
+    }
+
+    private static Uri? ResolveOtlpEndpoint(IConfiguration configuration) {
+        string? endpoint = configuration["OpenTelemetry:Otlp:Endpoint"];
+        if (string.IsNullOrWhiteSpace(endpoint)) {
+            return null;
+        }
+
+        if (!Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? endpointUri)) {
+            throw new InvalidOperationException(
+                "OpenTelemetry:Otlp:Endpoint must be a valid absolute URI when provided.");
+        }
+
+        return endpointUri;
     }
 }

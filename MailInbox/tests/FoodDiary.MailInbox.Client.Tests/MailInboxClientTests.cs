@@ -117,7 +117,8 @@ public sealed class MailInboxClientTests {
             "general",
             "Received",
             ReadAtUtc: null,
-            DateTimeOffset.UtcNow);
+            DateTimeOffset.UtcNow,
+            ContentPurgedAtUtc: null);
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(expected),
         });

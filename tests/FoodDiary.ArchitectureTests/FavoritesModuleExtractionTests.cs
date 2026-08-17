@@ -37,7 +37,6 @@ public sealed class FavoritesModuleExtractionTests {
 
     [Theory]
     [InlineData("FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs")]
-    [InlineData("FoodDiary.JobManager/Program.cs")]
     [InlineData("FoodDiary.Initializer/Program.cs")]
     public void ExecutableCompositionRoots_RegisterFavoritesModule(string relativePath) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(relativePath.Split('/')));

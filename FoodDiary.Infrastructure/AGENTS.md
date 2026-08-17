@@ -17,6 +17,7 @@ Rules for `FoodDiary.Infrastructure/`.
 - Keep dependency direction inward (Infrastructure depends on Application/Domain, not vice versa).
 - `FoodDiary.Infrastructure` may reference `FoodDiary.Application.Abstractions`, `FoodDiary.Domain`, and `Shared/FoodDiary.Mediator`; do not reference `FoodDiary.Application`, presentation projects, host projects, or resources.
 - Keep external provider adapters that are not persistence concerns in `FoodDiary.Integrations`.
+- Keep repository-owned `SaveChangesAsync` and manual transactions inside the architecture-test allowlist. `AiQuotaRepository` is an explicit exception: its short PostgreSQL transactions atomically reserve or reconcile quota independently of the request transaction, and must never contain an external provider call.
 - Do not reintroduce direct SMTP delivery configuration into the primary API/infrastructure path; MailRelay owns mail delivery runtime configuration.
 - Keep retries/logging policies consistent with API composition.
 

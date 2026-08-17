@@ -32,7 +32,8 @@ public static class InboundMailHttpMappings {
             message.DmarcReport?.ToHttpResponse(),
             message.Status,
             message.ReadAtUtc,
-            message.ReceivedAtUtc);
+            message.ReceivedAtUtc,
+            message.ContentPurgedAtUtc);
 
     public static IReadOnlyList<InboundMailMessageSummaryHttpResponse> ToHttpResponse(
         this IReadOnlyList<InboundMailMessageSummary> messages) =>

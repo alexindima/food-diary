@@ -9,6 +9,8 @@ using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -134,6 +136,8 @@ public sealed class BaseApiControllerTests {
         Assert.Equal("TestController", activity.GetTagItem("fooddiary.presentation.controller"));
         Assert.Equal("Unknown", activity.GetTagItem("fooddiary.presentation.feature"));
         Assert.Equal("success", activity.GetTagItem("fooddiary.presentation.outcome"));
+        Assert.Equal(true, activity.GetTagItem("fooddiary.presentation.has_user_context"));
+        Assert.Null(activity.GetTagItem("enduser.id"));
     }
 
     [Fact]
@@ -143,7 +147,6 @@ public sealed class BaseApiControllerTests {
             request,
             Result.Success(new CreatedModel(Guid.Parse("22222222-2222-2222-2222-222222222222"))));
         TestController controller = CreateController(mediator);
-        controller.HttpContext.SetEndpoint(new Endpoint(_ => Task.CompletedTask, EndpointMetadataCollection.Empty, "GET /test/{id}"));
         using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
 
         IActionResult result = await controller.HandleObservedCreatedPublic(
@@ -160,7 +163,7 @@ public sealed class BaseApiControllerTests {
         Assert.Equal(Guid.Parse("22222222-2222-2222-2222-222222222222"), created.RouteValues!["id"]);
         Activity activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => string.Equals(item.OperationName, "test.created", StringComparison.Ordinal));
         Assert.Equal("success", activity.GetTagItem("fooddiary.presentation.outcome"));
-        Assert.Equal("GET /test/{id}", activity.GetTagItem("http.route"));
+        Assert.Equal("api/test/{id}", activity.GetTagItem("http.route"));
     }
 
     [Fact]
@@ -183,6 +186,7 @@ public sealed class BaseApiControllerTests {
         Assert.Equal("failure", activity.GetTagItem("fooddiary.presentation.outcome"));
         Assert.Equal(ActivityStatusCode.Unset, activity.Status);
         Assert.Equal("Validation.Invalid", activity.GetTagItem("error.type"));
+        Assert.Null(activity.GetTagItem("error.message"));
         Assert.Equal(LogLevel.Information, logger.LastLogLevel);
     }
 
@@ -202,6 +206,8 @@ public sealed class BaseApiControllerTests {
         Assert.Equal(StatusCodes.Status502BadGateway, objectResult.StatusCode);
         Activity activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => string.Equals(item.OperationName, "test.external-failure", StringComparison.Ordinal));
         Assert.Equal(ActivityStatusCode.Error, activity.Status);
+        Assert.Null(activity.StatusDescription);
+        Assert.Null(activity.GetTagItem("error.message"));
         Assert.Equal(LogLevel.Warning, logger.LastLogLevel);
     }
 
@@ -235,6 +241,11 @@ public sealed class BaseApiControllerTests {
         var controller = new TestController(mediator) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),
+                ActionDescriptor = new ControllerActionDescriptor {
+                    AttributeRouteInfo = new AttributeRouteInfo {
+                        Template = "api/test/{id}",
+                    },
+                },
             },
         };
         controller.ControllerContext.HttpContext.TraceIdentifier = "trace-base-controller";

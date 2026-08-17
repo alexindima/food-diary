@@ -1,6 +1,7 @@
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Domain.Messages;
 using FoodDiary.MailInbox.Infrastructure.Services;
+using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.IntegrationTests.TestInfrastructure;
 using Npgsql;
 
@@ -14,7 +15,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
 
-        Assert.Equal(2, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
+        Assert.Equal(3, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
         Assert.Equal(
             "read_at_utc",
             await GetScalarAsync<string>(
@@ -26,6 +27,17 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
                   and table_name = 'mailinbox_messages'
                   and column_name = 'read_at_utc'
                 """));
+        Assert.Equal(
+            "bytea",
+            await GetScalarAsync<string>(
+                dataSource,
+                """
+                select data_type
+                from information_schema.columns
+                where table_schema = 'public'
+                  and table_name = 'mailinbox_messages'
+                  and column_name = 'raw_mime'
+                """));
     }
 
     [RequiresDockerFact]
@@ -36,7 +48,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
 
         await store.EnsureSchemaAsync(CancellationToken.None);
 
-        Assert.Equal(2, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
+        Assert.Equal(3, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_schema_migrations"));
     }
 
     [RequiresDockerFact]
@@ -55,7 +67,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
             "raw mime",
             receivedAt);
 
-        Guid id = await store.SaveAsync(message, CancellationToken.None);
+        Guid id = (await store.SaveAsync(message, CancellationToken.None)).Id;
         IReadOnlyList<InboundMailMessageSummary> summaries = await store.GetMessagesAsync(10, CancellationToken.None);
         InboundMailMessageDetails? details = await store.GetMessageDetailsAsync(id, CancellationToken.None);
 
@@ -92,7 +104,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
             "raw mime",
             new DateTimeOffset(2026, 6, 14, 9, 0, 0, TimeSpan.Zero));
 
-        Guid id = await store.SaveAsync(message, CancellationToken.None);
+        Guid id = (await store.SaveAsync(message, CancellationToken.None)).Id;
 
         long matchingRows = await GetScalarAsync<long>(
             dataSource,
@@ -105,7 +117,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
               and subject is null
               and text_body is null
               and html_body is null
-              and raw_mime = 'raw mime'
+              and raw_mime = convert_to('raw mime', 'UTF8')
               and status = 'received'
               and read_at_utc is null
             """,
@@ -151,6 +163,74 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     }
 
     [RequiresDockerFact]
+    public async Task SaveAsync_WhenSmtpDeliveryIsRetried_ReturnsExistingMessageWithoutConsumingQuotaTwice() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(dataSource, new MailInboxStorageOptions { MaxMessagesPerDay = 1 });
+        var receivedAt = new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero);
+        InboundMailMessage first = CreateMessage("same", receivedAt);
+        InboundMailMessage retry = CreateMessage("same", receivedAt.AddMinutes(5));
+
+        InboundMailSaveResult firstResult = await store.SaveAsync(first, CancellationToken.None);
+        InboundMailSaveResult retryResult = await store.SaveAsync(retry, CancellationToken.None);
+
+        Assert.False(firstResult.WasDuplicate);
+        Assert.True(retryResult.WasDuplicate);
+        Assert.Equal(firstResult.Id, retryResult.Id);
+        Assert.Equal(1, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
+        Assert.Equal(1, await GetScalarAsync<long>(dataSource, "select message_count from mailinbox_daily_ingestion_usage"));
+    }
+
+    [RequiresDockerFact]
+    public async Task SaveAsync_WhenDailyQuotaIsExhausted_RollsBackNewMessage() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(dataSource, new MailInboxStorageOptions { MaxMessagesPerDay = 1 });
+        var receivedAt = new DateTimeOffset(2026, 6, 18, 9, 0, 0, TimeSpan.Zero);
+        await store.SaveAsync(CreateMessage("first", receivedAt), CancellationToken.None);
+
+        Exception exception = await Assert.ThrowsAnyAsync<Exception>(
+            () => store.SaveAsync(CreateMessage("second", receivedAt), CancellationToken.None));
+
+        Assert.Equal("InboundMailStorageQuotaExceededException", exception.GetType().Name);
+        Assert.Equal(1, await GetScalarAsync<long>(dataSource, "select count(*) from mailinbox_messages"));
+    }
+
+    [RequiresDockerFact]
+    public async Task PurgeExpiredAsync_RemovesContentBeforeDeletingOlderMetadata() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        NpgsqlInboundMailStore store = CreateStore(dataSource);
+        InboundMailSaveResult metadataExpired = await store.SaveAsync(
+            CreateMessage("metadata-expired", new DateTimeOffset(2025, 1, 1, 0, 0, 0, TimeSpan.Zero)),
+            CancellationToken.None);
+        InboundMailSaveResult contentExpired = await store.SaveAsync(
+            CreateMessage("content-expired", new DateTimeOffset(2026, 5, 1, 0, 0, 0, TimeSpan.Zero)),
+            CancellationToken.None);
+        InboundMailSaveResult current = await store.SaveAsync(
+            CreateMessage("current", new DateTimeOffset(2026, 6, 17, 0, 0, 0, TimeSpan.Zero)),
+            CancellationToken.None);
+
+        InboundMailRetentionResult result = await store.PurgeExpiredAsync(
+            new DateTimeOffset(2026, 5, 19, 0, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2025, 6, 18, 0, 0, 0, TimeSpan.Zero),
+            batchSize: 10,
+            CancellationToken.None);
+
+        Assert.Equal(1, result.ContentPurgedCount);
+        Assert.Equal(1, result.MetadataDeletedCount);
+        Assert.Null(await store.GetMessageDetailsAsync(metadataExpired.Id, CancellationToken.None));
+        InboundMailMessageDetails? purgedDetails = await store.GetMessageDetailsAsync(contentExpired.Id, CancellationToken.None);
+        Assert.NotNull(purgedDetails);
+        Assert.Null(purgedDetails.RawMime);
+        Assert.Null(purgedDetails.TextBody);
+        Assert.Equal(FixedTime.GetUtcNow(), purgedDetails.ContentPurgedAtUtc);
+        InboundMailMessageDetails? currentDetails = await store.GetMessageDetailsAsync(current.Id, CancellationToken.None);
+        Assert.NotNull(currentDetails);
+        Assert.NotNull(currentDetails.RawMime);
+    }
+
+    [RequiresDockerFact]
     public async Task ReadinessChecker_WhenSchemaIsReady_Completes() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -180,8 +260,14 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
         return dataSource;
     }
 
-    private static NpgsqlInboundMailStore CreateStore(NpgsqlDataSource dataSource) =>
-        new(dataSource, new DmarcReportParser(), FixedTime);
+    private static NpgsqlInboundMailStore CreateStore(
+        NpgsqlDataSource dataSource,
+        MailInboxStorageOptions? options = null) =>
+        new(
+            dataSource,
+            new DmarcReportParser(),
+            Microsoft.Extensions.Options.Options.Create(options ?? new MailInboxStorageOptions()),
+            FixedTime);
 
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
@@ -198,7 +284,7 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
             subject,
             textBody: null,
             htmlBody: null,
-            "raw mime",
+            $"raw mime {subject}",
             receivedAtUtc);
 
     private static Task<T> GetScalarAsync<T>(NpgsqlDataSource dataSource, string sql) =>

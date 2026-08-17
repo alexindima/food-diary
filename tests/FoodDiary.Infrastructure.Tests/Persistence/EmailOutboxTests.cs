@@ -6,8 +6,11 @@ using FoodDiary.Infrastructure.Persistence.Outbox;
 using FoodDiary.Infrastructure.Persistence.Images;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using FoodDiary.Infrastructure.Persistence.Achievements;
+using FoodDiary.Infrastructure.Options;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
 
@@ -37,6 +40,7 @@ public sealed class EmailOutboxTests {
         var processor = new EmailOutboxProcessor(
             context,
             new RecordingEmailTransport(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 
@@ -48,12 +52,14 @@ public sealed class EmailOutboxTests {
     [Fact]
     public async Task ProcessDueAsync_WhenSendSucceeds_MarksMessageProcessed() {
         await using FoodDiaryDbContext context = CreateContext();
-        context.EmailOutbox.Add(EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1)));
+        var queuedMessage = EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1));
+        context.EmailOutbox.Add(queuedMessage);
         await context.SaveChangesAsync();
         var transport = new RecordingEmailTransport();
         var processor = new EmailOutboxProcessor(
             context,
             transport,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 
@@ -63,10 +69,100 @@ public sealed class EmailOutboxTests {
         Assert.Multiple(
             () => Assert.Equal(1, processed),
             () => Assert.Equal("Hello", Assert.Single(transport.Messages).Subject),
+            () => Assert.Equal($"fooddiary-email-outbox:{queuedMessage.Id:N}", transport.Messages[0].IdempotencyKey),
             () => Assert.NotNull(message.ProcessedOnUtc),
             () => Assert.Null(message.LockedUntilUtc),
             () => Assert.Null(message.LockedBy),
             () => Assert.Null(message.LastError));
+    }
+
+    [Fact]
+    public async Task ProcessDueAsync_WhenCallerCancelsDuringDispatch_RethrowsWithoutRecordingFailure() {
+        await using FoodDiaryDbContext context = CreateContext();
+        context.EmailOutbox.Add(EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1)));
+        await context.SaveChangesAsync();
+        using var cancellation = new CancellationTokenSource();
+        EmailOutboxProcessor processor = CreateProcessor(context, new CancelingEmailTransport(cancellation));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            processor.ProcessDueAsync(batchSize: 1, cancellation.Token));
+
+        context.ChangeTracker.Clear();
+        EmailOutboxMessage stored = Assert.Single(context.EmailOutbox);
+        Assert.Multiple(
+            () => Assert.Equal(0, stored.AttemptCount),
+            () => Assert.Null(stored.ProcessedOnUtc),
+            () => Assert.Null(stored.LastError));
+    }
+
+    [Fact]
+    public async Task ProcessDueAsync_WhenCallerCancelsAfterDispatch_FinalizesWithServerOwnedToken() {
+        await using FoodDiaryDbContext context = CreateContext();
+        context.EmailOutbox.Add(EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1)));
+        await context.SaveChangesAsync();
+        using var cancellation = new CancellationTokenSource();
+        EmailOutboxProcessor processor = CreateProcessor(context, new CancelingSuccessfulEmailTransport(cancellation));
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            processor.ProcessDueAsync(batchSize: 1, cancellation.Token));
+
+        context.ChangeTracker.Clear();
+        EmailOutboxMessage stored = Assert.Single(context.EmailOutbox);
+        Assert.NotNull(stored.ProcessedOnUtc);
+    }
+
+    [Fact]
+    public async Task ProcessDueAsync_WhenDispatchExceedsBudget_SchedulesSafeTimeoutRetry() {
+        await using FoodDiaryDbContext context = CreateContext();
+        context.EmailOutbox.Add(EmailOutboxMessage.Create(CreateEmailMessage(), Now.AddMinutes(-1)));
+        await context.SaveChangesAsync();
+        var options = new OutboxProcessingOptions {
+            LeaseDuration = TimeSpan.FromSeconds(17),
+            DispatchTimeout = TimeSpan.FromMilliseconds(20),
+            FinalizationTimeout = TimeSpan.FromSeconds(1),
+        };
+        EmailOutboxProcessor processor = CreateProcessor(context, new WaitingEmailTransport(), options);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 1, CancellationToken.None);
+
+        EmailOutboxMessage stored = Assert.Single(context.EmailOutbox);
+        Assert.Multiple(
+            () => Assert.Equal(0, processed),
+            () => Assert.Equal(1, stored.AttemptCount),
+            () => Assert.Equal("Outbox dispatch failed (TimeoutException).", stored.LastError));
+    }
+
+    [Fact]
+    public async Task ProcessDueAsync_WhenSecondFinalizationFails_PreservesFirstMessageProgress() {
+        var databaseRoot = new InMemoryDatabaseRoot();
+        string databaseName = Guid.NewGuid().ToString("N");
+        await using (FoodDiaryDbContext setupContext = CreateContext(databaseName, databaseRoot)) {
+            setupContext.EmailOutbox.AddRange(
+                EmailOutboxMessage.Create(CreateEmailMessage(subject: "First"), Now.AddMinutes(-2)),
+                EmailOutboxMessage.Create(CreateEmailMessage(subject: "Second"), Now.AddMinutes(-1)));
+            await setupContext.SaveChangesAsync();
+        }
+
+        var transport = new RecordingEmailTransport();
+        await using (FoodDiaryDbContext processingContext = CreateContext(
+                         databaseName,
+                         databaseRoot,
+                         new FailOnSaveNumberInterceptor(failureNumber: 2))) {
+            EmailOutboxProcessor processor = CreateProcessor(processingContext, transport);
+
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                processor.ProcessDueAsync(batchSize: 2, CancellationToken.None));
+        }
+
+        await using FoodDiaryDbContext verificationContext = CreateContext(databaseName, databaseRoot);
+        List<EmailOutboxMessage> stored = await verificationContext.EmailOutbox
+            .AsNoTracking()
+            .OrderBy(static message => message.CreatedOnUtc)
+            .ToListAsync();
+        Assert.Multiple(
+            () => Assert.Equal(["First", "Second"], transport.Messages.Select(static message => message.Subject), StringComparer.Ordinal),
+            () => Assert.NotNull(stored[0].ProcessedOnUtc),
+            () => Assert.Null(stored[1].ProcessedOnUtc));
     }
 
     [Fact]
@@ -77,6 +173,7 @@ public sealed class EmailOutboxTests {
         var processor = new EmailOutboxProcessor(
             context,
             new ThrowingEmailTransport(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 
@@ -89,7 +186,7 @@ public sealed class EmailOutboxTests {
             () => Assert.Null(message.DeadLetteredOnUtc),
             () => Assert.Equal(1, message.AttemptCount),
             () => Assert.True(message.NextAttemptOnUtc > Now),
-            () => Assert.Contains("Simulated", message.LastError, StringComparison.Ordinal));
+            () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", message.LastError));
     }
 
     [Fact]
@@ -105,6 +202,7 @@ public sealed class EmailOutboxTests {
         var processor = new EmailOutboxProcessor(
             context,
             new ThrowingEmailTransport(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             new FixedDateTimeProvider(Now),
             NullLogger<EmailOutboxProcessor>.Instance);
 
@@ -117,7 +215,7 @@ public sealed class EmailOutboxTests {
             () => Assert.NotNull(stored.DeadLetteredOnUtc),
             () => Assert.Null(stored.LockedUntilUtc),
             () => Assert.Null(stored.LockedBy),
-            () => Assert.Contains("Simulated", stored.LastError, StringComparison.Ordinal));
+            () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", stored.LastError));
     }
 
     [Fact]
@@ -385,18 +483,21 @@ public sealed class EmailOutboxTests {
         context.EmailOutbox.AddRange(locked, expiredLock, processed, future, secondDue, firstDue);
         await context.SaveChangesAsync();
 
-        List<EmailOutboxMessage> claimed = await OutboxMessageClaimer.ClaimDueAsync(
+        OutboxClaimBatch<EmailOutboxMessage> claim = await OutboxMessageClaimer.ClaimDueAsync(
             context,
             context.EmailOutbox,
             "\"EmailOutbox\"",
             batchSize: 2,
             Now,
+            TimeSpan.FromMinutes(2),
             cancellationToken: CancellationToken.None);
 
-        Assert.Equal(["Expired lock", "First due"], claimed.Select(static message => message.Subject), StringComparer.Ordinal);
-        EmailOutboxMessage claimedMessage = claimed[0];
+        Assert.Equal(["Expired lock", "First due"], claim.Messages.Select(static message => message.Subject), StringComparer.Ordinal);
+        EmailOutboxMessage claimedMessage = claim.Messages[0];
         Assert.Multiple(
+            () => Assert.Equal(1, claim.ReclaimedCount),
             () => Assert.NotNull(claimedMessage.LockedUntilUtc),
+            () => Assert.Equal(Now.AddMinutes(2), claimedMessage.LockedUntilUtc),
             () => Assert.NotNull(claimedMessage.LockedBy),
             () => Assert.True(claimedMessage.LockedBy?.Length <= 128));
     }
@@ -422,6 +523,30 @@ public sealed class EmailOutboxTests {
         return new FoodDiaryDbContext(options);
     }
 
+    private static FoodDiaryDbContext CreateContext(
+        string databaseName,
+        InMemoryDatabaseRoot databaseRoot,
+        SaveChangesInterceptor? interceptor = null) {
+        DbContextOptionsBuilder<FoodDiaryDbContext> optionsBuilder = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseInMemoryDatabase(databaseName, databaseRoot);
+        if (interceptor is not null) {
+            optionsBuilder.AddInterceptors(interceptor);
+        }
+
+        return new FoodDiaryDbContext(optionsBuilder.Options);
+    }
+
+    private static EmailOutboxProcessor CreateProcessor(
+        FoodDiaryDbContext context,
+        IEmailTransport transport,
+        OutboxProcessingOptions? options = null) =>
+        new(
+            context,
+            transport,
+            Microsoft.Extensions.Options.Options.Create(options ?? new OutboxProcessingOptions()),
+            new FixedDateTimeProvider(Now),
+            NullLogger<EmailOutboxProcessor>.Instance);
+
     [ExcludeFromCodeCoverage]
     private sealed class FixedDateTimeProvider(DateTime utcNow) : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(utcNow);
@@ -444,11 +569,51 @@ public sealed class EmailOutboxTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class CancelingEmailTransport(CancellationTokenSource cancellation) : IEmailTransport {
+        public async Task SendAsync(EmailMessage message, CancellationToken cancellationToken) {
+            await cancellation.CancelAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CancelingSuccessfulEmailTransport(CancellationTokenSource cancellation) : IEmailTransport {
+        public async Task SendAsync(EmailMessage message, CancellationToken cancellationToken) {
+            await cancellation.CancelAsync();
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class WaitingEmailTransport : IEmailTransport {
+        public Task SendAsync(EmailMessage message, CancellationToken cancellationToken) =>
+            Task.Delay(Timeout.InfiniteTimeSpan, cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailOnSaveNumberInterceptor(int failureNumber) : SaveChangesInterceptor {
+        private int _saveCount;
+
+        public override ValueTask<InterceptionResult<int>> SavingChangesAsync(
+            DbContextEventData eventData,
+            InterceptionResult<int> result,
+            CancellationToken cancellationToken = default) {
+            if (Interlocked.Increment(ref _saveCount) == failureNumber) {
+                throw new InvalidOperationException("Simulated finalization failure.");
+            }
+
+            return ValueTask.FromResult(result);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class UnsupportedOutboxMessage : IOutboxMessage {
+        public Guid Id => Guid.Empty;
         public DateTime CreatedOnUtc => Now;
         public int AttemptCount => 1;
         public DateTime? ProcessedOnUtc => null;
         public DateTime? DeadLetteredOnUtc => Now;
+        public DateTime? LockedUntilUtc => null;
+        public string? LockedBy => null;
 
         public void MarkClaimed(DateTime lockedUntilUtc, string lockedBy) { }
         public void MarkProcessed(DateTime processedOnUtc) { }

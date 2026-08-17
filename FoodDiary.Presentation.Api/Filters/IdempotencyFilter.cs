@@ -10,24 +10,44 @@ namespace FoodDiary.Presentation.Api.Filters;
 
 public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsyncActionFilter {
     private const string IdempotencyKeyHeader = "Idempotency-Key";
+    private const int MaximumIdempotencyKeyLength = 128;
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24);
     private static readonly TimeSpan ProcessingDuration = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan CompletionTimeout = TimeSpan.FromSeconds(5);
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
-        if (!HttpMethods.IsPost(context.HttpContext.Request.Method) || !context.Filters.OfType<EnableIdempotencyAttribute>().Any()) {
+        EnableIdempotencyAttribute? attribute = context.Filters.OfType<EnableIdempotencyAttribute>().FirstOrDefault();
+        if (!HttpMethods.IsPost(context.HttpContext.Request.Method) || attribute is null) {
             await next();
             return;
         }
 
-        string? idempotencyKey = context.HttpContext.Request.Headers[IdempotencyKeyHeader].FirstOrDefault();
+        Microsoft.Extensions.Primitives.StringValues headerValues = context.HttpContext.Request.Headers[IdempotencyKeyHeader];
+        if (headerValues.Count > 1) {
+            context.Result = CreateInvalidIdempotencyKey(context);
+            return;
+        }
+
+        string? idempotencyKey = headerValues.Count == 1 ? headerValues[0] : null;
 
         if (string.IsNullOrWhiteSpace(idempotencyKey)) {
+            if (attribute.RequireKey) {
+                context.Result = CreateIdempotencyRequired(context);
+                return;
+            }
+
             await next();
             return;
         }
 
-        string cacheKey = BuildCacheKey(context, idempotencyKey);
+        if (!IsValidIdempotencyKey(idempotencyKey)) {
+            context.Result = CreateInvalidIdempotencyKey(context);
+            return;
+        }
+
+        string cacheKey = ComputeCacheKey(context, idempotencyKey);
+        IdempotencyRequestContext.SetRequestId(context.HttpContext, cacheKey);
         string requestHash = ComputeRequestHash(context);
         IdempotencyReservation reservation = await idempotencyStore
             .ReserveAsync(cacheKey, requestHash, CacheDuration, ProcessingDuration, context.HttpContext.RequestAborted)
@@ -82,6 +102,7 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
             return;
         }
 
+        using var completionTimeout = new CancellationTokenSource(CompletionTimeout);
         await idempotencyStore.CompleteAsync(
             cacheKey,
             requestHash,
@@ -89,7 +110,7 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
             statusCode,
             body,
             CacheDuration,
-            context.HttpContext.RequestAborted).ConfigureAwait(false);
+            completionTimeout.Token).ConfigureAwait(false);
     }
 
     private static bool TrySerializeResult(IActionResult? result, out int statusCode, out string? body) {
@@ -125,10 +146,41 @@ public sealed class IdempotencyFilter(IIdempotencyStore idempotencyStore) : IAsy
             StatusCode = StatusCodes.Status409Conflict,
         };
 
-    private static string BuildCacheKey(ActionExecutingContext context, string idempotencyKey) {
+    private static ObjectResult CreateIdempotencyRequired(ActionExecutingContext context) =>
+        new(new ApiErrorHttpResponse(
+            "Idempotency.Required",
+            "The Idempotency-Key header is required for this operation.",
+            context.HttpContext.TraceIdentifier)) {
+            StatusCode = StatusCodes.Status400BadRequest,
+        };
+
+    private static ObjectResult CreateInvalidIdempotencyKey(ActionExecutingContext context) =>
+        new(new ApiErrorHttpResponse(
+            "Idempotency.InvalidKey",
+            "The Idempotency-Key header must be 1 to 128 characters using letters, digits, period, underscore, colon, or hyphen.",
+            context.HttpContext.TraceIdentifier)) {
+            StatusCode = StatusCodes.Status400BadRequest,
+        };
+
+    private static bool IsValidIdempotencyKey(string value) {
+        if (value.Length > MaximumIdempotencyKeyLength) {
+            return false;
+        }
+
+        foreach (char character in value) {
+            if (!char.IsAsciiLetterOrDigit(character) && character is not ('.' or '_' or ':' or '-')) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static string ComputeCacheKey(ActionExecutingContext context, string idempotencyKey) {
         string userId = context.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "anonymous";
         string path = context.HttpContext.Request.Path.Value ?? "";
-        return $"idempotency:{userId}:{path}:{idempotencyKey}";
+        byte[] hash = SHA256.HashData(Encoding.UTF8.GetBytes($"{userId}\n{path}\n{idempotencyKey}"));
+        return Convert.ToHexString(hash);
     }
 
     private static string ComputeRequestHash(ActionExecutingContext context) {

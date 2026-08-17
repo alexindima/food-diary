@@ -26,9 +26,7 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
         bool isSuccess = executedContext.Exception is null && statusCode < 400;
         string outcome = isSuccess ? "success" : "failure";
 
-        activity?.SetTag("fooddiary.presentation.outcome", outcome);
-        activity?.SetTag("fooddiary.presentation.duration_ms", stopwatch.Elapsed.TotalMilliseconds);
-        activity?.SetTag("http.response.status_code", statusCode);
+        CompleteActivity(activity, outcome, stopwatch.Elapsed.TotalMilliseconds, statusCode);
 
         PresentationApiTelemetry.OperationCounter.Add(
             1,
@@ -44,7 +42,8 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
             new KeyValuePair<string, object?>("fooddiary.presentation.outcome", outcome));
 
         if (executedContext.Exception is not null) {
-            activity?.SetStatus(ActivityStatusCode.Error, executedContext.Exception.Message);
+            activity?.SetStatus(ActivityStatusCode.Error);
+            activity?.SetTag("error.type", executedContext.Exception.GetType().FullName);
             PresentationApiTelemetry.OperationFailureCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.presentation.feature", feature),
@@ -67,6 +66,12 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
                 "Action {Operation} in {Feature}/{Controller} returned {StatusCode} in {ElapsedMs:F1}ms",
                 operationName, feature, controllerName, statusCode, stopwatch.Elapsed.TotalMilliseconds);
         }
+    }
+
+    private static void CompleteActivity(Activity? activity, string outcome, double durationMs, int statusCode) {
+        activity?.SetTag("fooddiary.presentation.outcome", outcome);
+        activity?.SetTag("fooddiary.presentation.duration_ms", durationMs);
+        activity?.SetTag("http.response.status_code", statusCode);
     }
 
     private static string ResolveFeature(Type controllerType) {

@@ -4,6 +4,7 @@ using FoodDiary.MailRelay.Application.Emails.Services;
 using FoodDiary.MailRelay.Application.Queue.Models;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.MailRelay.Application.Tests;
@@ -16,7 +17,8 @@ public sealed class MailRelayMessageProcessorTests {
             SuppressedRecipients = ["user@example.com"],
         };
         var transport = new RecordingTransport();
-        MailRelayMessageProcessor processor = CreateProcessor(store, transport);
+        var logger = new RecordingLogger();
+        MailRelayMessageProcessor processor = CreateProcessor(store, transport, logger);
 
         MailRelayProcessResult result = await processor.ProcessAsync(CreateMessage(), CancellationToken.None);
 
@@ -24,6 +26,7 @@ public sealed class MailRelayMessageProcessorTests {
         Assert.True(result.IsTerminalFailure);
         Assert.Equal(QueuedEmailStatus.Suppressed, store.Status);
         Assert.False(transport.SendCalled);
+        Assert.DoesNotContain("user@example.com", string.Join(Environment.NewLine, logger.Messages), StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -38,6 +41,21 @@ public sealed class MailRelayMessageProcessorTests {
         Assert.False(result.IsTerminalFailure);
         Assert.Equal(QueuedEmailStatus.Sent, store.Status);
         Assert.True(transport.SendCalled);
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WhenSameQueuedEmailIsRetried_ReusesTransportMessageId() {
+        var store = new RecordingQueueStore();
+        var transport = new RecordingTransport();
+        MailRelayMessageProcessor processor = CreateProcessor(store, transport);
+        var messageId = Guid.NewGuid();
+
+        await processor.ProcessAsync(CreateMessage(messageId, attemptCount: 1), CancellationToken.None);
+        await processor.ProcessAsync(CreateMessage(messageId, attemptCount: 2), CancellationToken.None);
+
+        Assert.Equal(2, transport.Requests.Count);
+        Assert.All(transport.Requests, request =>
+            Assert.Equal($"{messageId:N}@mailrelay.invalid", request.MessageId));
     }
 
     [Theory]
@@ -60,6 +78,7 @@ public sealed class MailRelayMessageProcessorTests {
         Assert.Equal(expectedTerminalFailure, result.IsTerminalFailure);
         Assert.Equal(expectedStatus, store.FailureDecision?.Status);
         Assert.Equal(attemptCount, store.FailureDecision?.AttemptCount);
+        Assert.Equal("Delivery failed (InvalidOperationException).", store.FailureDecision?.Error);
     }
 
     [Fact]
@@ -78,15 +97,38 @@ public sealed class MailRelayMessageProcessorTests {
         Assert.Null(store.FailureDecision);
     }
 
-    private static MailRelayMessageProcessor CreateProcessor(RecordingQueueStore store, RecordingTransport transport) =>
+    [Fact]
+    public async Task ProcessAsync_WhenTransportExceptionContainsRecipient_DoesNotLogExceptionPayload() {
+        var store = new RecordingQueueStore();
+        var transport = new RecordingTransport {
+            Exception = new InvalidOperationException("SMTP rejected user@example.com"),
+        };
+        var logger = new RecordingLogger();
+        MailRelayMessageProcessor processor = CreateProcessor(store, transport, logger);
+
+        await processor.ProcessAsync(CreateMessage(), CancellationToken.None);
+
+        Assert.DoesNotContain("user@example.com", string.Join(Environment.NewLine, logger.Messages), StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("correlation", string.Join(Environment.NewLine, logger.Messages), StringComparison.OrdinalIgnoreCase);
+        Assert.All(logger.Exceptions, Assert.Null);
+        Assert.Equal("Delivery failed (InvalidOperationException).", store.FailureDecision?.Error);
+    }
+
+    private static MailRelayMessageProcessor CreateProcessor(
+        RecordingQueueStore store,
+        RecordingTransport transport,
+        ILogger<MailRelayMessageProcessor>? logger = null) =>
         new(
             store,
             new SmtpSubmissionService(transport),
-            NullLogger<MailRelayMessageProcessor>.Instance);
+            logger ?? NullLogger<MailRelayMessageProcessor>.Instance);
 
     private static QueuedEmailMessage CreateMessage(int attemptCount = 1, int maxAttempts = 3) =>
+        CreateMessage(Guid.NewGuid(), attemptCount, maxAttempts);
+
+    private static QueuedEmailMessage CreateMessage(Guid id, int attemptCount = 1, int maxAttempts = 3) =>
         new(
-            Guid.NewGuid(),
+            id,
             "relay@example.com",
             "FoodDiary",
             ["user@example.com"],
@@ -101,9 +143,11 @@ public sealed class MailRelayMessageProcessorTests {
     private sealed class RecordingTransport : IRelayDeliveryTransport {
         public bool SendCalled { get; private set; }
         public Exception? Exception { get; init; }
+        public List<RelayEmailMessageRequest> Requests { get; } = [];
 
         public Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
             SendCalled = true;
+            Requests.Add(request);
             return Exception is null ? Task.CompletedTask : Task.FromException(Exception);
         }
     }
@@ -192,6 +236,25 @@ public sealed class MailRelayMessageProcessorTests {
             FailureDecision = decision;
             Status = decision.Status;
             return Task.FromResult<DateTimeOffset?>(decision.IsTerminalFailure ? null : DateTimeOffset.UtcNow.AddSeconds(1));
+        }
+    }
+
+    private sealed class RecordingLogger : ILogger<MailRelayMessageProcessor> {
+        public List<string> Messages { get; } = [];
+        public List<Exception?> Exceptions { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) {
+            Messages.Add(formatter(state, exception));
+            Exceptions.Add(exception);
         }
     }
 }

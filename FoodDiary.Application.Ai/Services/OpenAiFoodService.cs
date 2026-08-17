@@ -3,31 +3,49 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Services;
 
 public sealed class OpenAiFoodService(
     IOpenAiFoodClient openAiFoodClient,
-    IAiUsageWriteRepository aiUsageRepository,
+    IAiQuotaRepository aiQuotaRepository,
     IAiUserContextService aiUserContextService,
     TimeProvider dateTimeProvider,
     IAiPromptProvider aiPromptProvider)
     : IOpenAiFoodService {
+    private static readonly TimeSpan ReservationLifetime = TimeSpan.FromMinutes(15);
+    private static readonly TimeSpan PersistenceTimeout = TimeSpan.FromSeconds(5);
+
     public async Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
         string imageUrl,
         string? userLanguage,
         UserId userId,
         string? description,
+        string requestId,
         CancellationToken cancellationToken) {
         const string operation = "vision";
-        Result quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
-        if (quotaCheck.IsFailure) {
-            return Result.Failure<FoodVisionModel>(quotaCheck.Error);
+        Result<AiUserContext> contextResult = await GetUserContextAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (contextResult.IsFailure) {
+            return Result.Failure<FoodVisionModel>(contextResult.Error);
         }
 
         string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
+        Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetAnalyzeFoodImageTokenBudgetAsync(
+            imageUrl,
+            userLanguage,
+            description,
+            promptTemplate,
+            cancellationToken).ConfigureAwait(false);
+        if (budgetResult.IsFailure) {
+            return Result.Failure<FoodVisionModel>(budgetResult.Error);
+        }
+
+        Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, cancellationToken).ConfigureAwait(false);
+        if (reservation.IsFailure) {
+            return Result.Failure<FoodVisionModel>(reservation.Error);
+        }
+
         Result<OpenAiFoodClientResponse<FoodVisionModel>> response = await openAiFoodClient.AnalyzeFoodImageAsync(
             imageUrl,
             userLanguage,
@@ -35,10 +53,11 @@ public sealed class OpenAiFoodService(
             promptTemplate,
             cancellationToken).ConfigureAwait(false);
         if (response.IsFailure) {
+            // A transport/provider failure does not prove the request was not processed; expiry charges the reservation conservatively.
             return Result.Failure<FoodVisionModel>(response.Error);
         }
 
-        await SaveUsageAsync(response.Value, userId, cancellationToken).ConfigureAwait(false);
+        await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
         return Result.Success(response.Value.Value);
     }
 
@@ -46,84 +65,134 @@ public sealed class OpenAiFoodService(
         string text,
         string? userLanguage,
         UserId userId,
+        string requestId,
         CancellationToken cancellationToken) {
         const string operation = "text-parse";
-        Result quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
-        if (quotaCheck.IsFailure) {
-            return Result.Failure<FoodVisionModel>(quotaCheck.Error);
+        Result<AiUserContext> contextResult = await GetUserContextAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (contextResult.IsFailure) {
+            return Result.Failure<FoodVisionModel>(contextResult.Error);
         }
 
         string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
+        Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetParseFoodTextTokenBudgetAsync(
+            text,
+            userLanguage,
+            promptTemplate,
+            cancellationToken).ConfigureAwait(false);
+        if (budgetResult.IsFailure) {
+            return Result.Failure<FoodVisionModel>(budgetResult.Error);
+        }
+
+        Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, cancellationToken).ConfigureAwait(false);
+        if (reservation.IsFailure) {
+            return Result.Failure<FoodVisionModel>(reservation.Error);
+        }
+
         Result<OpenAiFoodClientResponse<FoodVisionModel>> response = await openAiFoodClient.ParseFoodTextAsync(
             text,
             userLanguage,
             promptTemplate,
             cancellationToken).ConfigureAwait(false);
         if (response.IsFailure) {
+            // A transport/provider failure does not prove the request was not processed; expiry charges the reservation conservatively.
             return Result.Failure<FoodVisionModel>(response.Error);
         }
 
-        await SaveUsageAsync(response.Value, userId, cancellationToken).ConfigureAwait(false);
+        await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
         return Result.Success(response.Value.Value);
     }
 
     public async Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
         IReadOnlyList<FoodVisionItemModel> items,
         UserId userId,
+        string requestId,
         CancellationToken cancellationToken) {
         const string operation = "nutrition";
-        Result quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
-        if (quotaCheck.IsFailure) {
-            return Result.Failure<FoodNutritionModel>(quotaCheck.Error);
+        Result<AiUserContext> contextResult = await GetUserContextAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (contextResult.IsFailure) {
+            return Result.Failure<FoodNutritionModel>(contextResult.Error);
         }
 
         string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
-        Result<OpenAiFoodClientResponse<FoodNutritionModel>> response = await openAiFoodClient.CalculateNutritionAsync(items, promptTemplate, cancellationToken).ConfigureAwait(false);
+        Result<AiProviderTokenBudget> budgetResult = await openAiFoodClient.GetCalculateNutritionTokenBudgetAsync(
+            items,
+            promptTemplate,
+            cancellationToken).ConfigureAwait(false);
+        if (budgetResult.IsFailure) {
+            return Result.Failure<FoodNutritionModel>(budgetResult.Error);
+        }
+
+        Result reservation = await ReserveAsync(requestId, userId, operation, contextResult.Value, budgetResult.Value, cancellationToken).ConfigureAwait(false);
+        if (reservation.IsFailure) {
+            return Result.Failure<FoodNutritionModel>(reservation.Error);
+        }
+
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> response = await openAiFoodClient.CalculateNutritionAsync(
+            items,
+            promptTemplate,
+            cancellationToken).ConfigureAwait(false);
         if (response.IsFailure) {
+            // A transport/provider failure does not prove the request was not processed; expiry charges the reservation conservatively.
             return Result.Failure<FoodNutritionModel>(response.Error);
         }
 
-        await SaveUsageAsync(response.Value, userId, cancellationToken).ConfigureAwait(false);
+        await ReconcileAsync(requestId, response.Value, budgetResult.Value).ConfigureAwait(false);
         return Result.Success(response.Value.Value);
     }
 
-    private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, string operation, CancellationToken cancellationToken) {
-        Result<AiUserContext> contextResult = await aiUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (contextResult.IsFailure) {
-            return Result.Failure(contextResult.Error);
-        }
+    private Task<Result<AiUserContext>> GetUserContextAsync(UserId userId, CancellationToken cancellationToken) =>
+        aiUserContextService.GetAsync(userId, cancellationToken);
 
-        AiUserContext context = contextResult.Value;
+    private async Task<Result> ReserveAsync(
+        string requestId,
+        UserId userId,
+        string operation,
+        AiUserContext context,
+        AiProviderTokenBudget budget,
+        CancellationToken cancellationToken) {
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         var monthStartUtc = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        DateTime monthEndUtc = monthStartUtc.AddMonths(1);
-        AiUsageTotals totals = await aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken).ConfigureAwait(false);
+        AiQuotaReservationStatus status = await aiQuotaRepository.ReserveAsync(
+            new AiQuotaReservationRequest(
+                requestId,
+                userId,
+                monthStartUtc,
+                operation,
+                budget.InputTokens,
+                budget.MaximumOutputTokens,
+                context.InputTokenLimit,
+                context.OutputTokenLimit,
+                nowUtc.Add(ReservationLifetime)),
+            cancellationToken).ConfigureAwait(false);
+        ApplicationAiTelemetry.RecordQuotaReservation(operation, status);
 
-        if (totals.InputTokens < context.InputTokenLimit && totals.OutputTokens < context.OutputTokenLimit) {
+        if (status == AiQuotaReservationStatus.Acquired) {
             return Result.Success();
         }
 
         ApplicationAiTelemetry.RecordQuotaRejection(operation);
         return Result.Failure(Errors.Ai.QuotaExceeded());
-
     }
 
-    private async Task SaveUsageAsync<T>(
+    private async Task ReconcileAsync<T>(
+        string requestId,
         OpenAiFoodClientResponse<T> response,
-        UserId userId,
-        CancellationToken cancellationToken) {
-        if (response.Usage is null) {
-            return;
-        }
-
-        var entity = AiUsage.Create(
-            userId,
-            response.Operation,
-            response.Model,
-            response.Usage.Value.InputTokens,
-            response.Usage.Value.OutputTokens,
-            response.Usage.Value.TotalTokens);
-
-        await aiUsageRepository.AddAsync(entity, cancellationToken).ConfigureAwait(false);
+        AiProviderTokenBudget budget) {
+        AiUsageTokens usage = response.Usage ?? new AiUsageTokens(
+            checked((int)budget.InputTokens),
+            checked((int)budget.MaximumOutputTokens),
+            checked((int)(budget.InputTokens + budget.MaximumOutputTokens)));
+        using var timeout = new CancellationTokenSource(PersistenceTimeout);
+        await aiQuotaRepository.ReconcileAsync(
+            requestId,
+            new AiQuotaUsage(
+                response.Operation,
+                response.Model,
+                usage.InputTokens,
+                usage.OutputTokens,
+                usage.TotalTokens),
+            timeout.Token).ConfigureAwait(false);
+        ApplicationAiTelemetry.RecordQuotaReconciliation(response.Operation, response.Usage is null ? "estimated" : "actual");
     }
+
 }

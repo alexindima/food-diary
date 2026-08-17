@@ -5,6 +5,31 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class JobManagerGuardrailTests {
     [Fact]
+    public void JobManager_RegistersOnlyApplicationModulesRequiredByScheduledJobs() {
+        string program = File.ReadAllText(ArchitectureTestPaths.FromRoot("FoodDiary.JobManager", "Program.cs"));
+        string[] expectedRegistrations = [
+            "AddApplicationRuntime",
+            "AddBillingModule",
+            "AddDietologistModule",
+            "AddFastingModule",
+            "AddIdentityModule",
+            "AddImagesModule",
+            "AddMarketingModule",
+            "AddNotificationsModule",
+            "AddUsersModule",
+            "AddWeeklyGoalsModule",
+        ];
+        string[] actualRegistrations = [.. program.Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(static line => line.Trim())
+            .Where(static line => line.StartsWith("builder.Services.Add", StringComparison.Ordinal))
+            .Select(static line => line[(line.IndexOf(".Add", StringComparison.Ordinal) + 1)..line.IndexOf('(', StringComparison.Ordinal)])
+            .Where(static method => method is "AddApplicationRuntime" || method.EndsWith("Module", StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Equal(expectedRegistrations.Order(StringComparer.Ordinal), actualRegistrations, StringComparer.Ordinal);
+    }
+
+    [Fact]
     public void JobManagerJobs_InvokeApplicationCapabilities_NotRepositories() {
         string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
         string[] violations = [.. SourceScanner.SourceFiles(jobManagerRoot)
@@ -69,8 +94,10 @@ public sealed class JobManagerGuardrailTests {
             "Microsoft.EntityFrameworkCore.Relational",
             "Microsoft.Extensions.Hosting",
             "Newtonsoft.Json",
+            "Npgsql.OpenTelemetry",
             "OpenTelemetry.Exporter.OpenTelemetryProtocol",
             "OpenTelemetry.Extensions.Hosting",
+            "OpenTelemetry.Instrumentation.Http",
             "OpenTelemetry.Instrumentation.Runtime",
         ];
 

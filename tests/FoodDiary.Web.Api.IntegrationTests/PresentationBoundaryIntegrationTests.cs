@@ -5,6 +5,7 @@ using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
+using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
@@ -436,6 +437,7 @@ public sealed class PresentationBoundaryIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Premium);
+        client.DefaultRequestHeaders.Add("Idempotency-Key", Guid.NewGuid().ToString());
 
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/ai/food/nutrition",
@@ -447,6 +449,25 @@ public sealed class PresentationBoundaryIntegrationTests(
         Assert.Equal("Validation.Required", payload.Error);
         Assert.NotNull(payload.Errors);
         Assert.Contains(payload.Errors.Keys, key => string.Equals(key, "items", StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task AiNutrition_WithoutIdempotencyKey_ReturnsRequiredContract() {
+        HttpClient client = testAuthFactory.CreateClient();
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
+        client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Premium);
+
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/ai/food/nutrition",
+            new FoodNutritionHttpRequest([
+                new FoodVisionItemHttpModel("egg", "egg", 2, "pcs", 0.9m),
+            ]));
+        ErrorPayload? payload = await response.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal("Idempotency.Required", payload.Error);
     }
 
     [Fact]

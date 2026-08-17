@@ -19,6 +19,8 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Users.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Abstractions.Audit.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
@@ -486,6 +488,78 @@ public partial class DietologistFeatureTests {
         Assert.False(request.Sections.IncludeStatistics);
         Assert.False(request.Sections.IncludeWeight);
         Assert.Equal(dateTo, request.DateTo?.Date);
+    }
+
+    [Fact]
+    public async Task GetClientDashboard_WhenAuthorized_PersistsRequiredSensitiveReadAudit() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var invitationRepository = new InMemoryInvitationRepository();
+        invitationRepository.Seed(CreateAcceptedInvitation(clientId, dietologistId));
+        var userRepository = new InMemoryUserRepository();
+        userRepository.Seed(CreateUser(dietologistId, "diet@example.com"));
+        IAuditEntryWriter auditWriter = Substitute.For<IAuditEntryWriter>();
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(
+            invitationRepository,
+            new RecordingDashboardSnapshotBuilder(CreateDashboardSnapshot()),
+            userRepository,
+            auditWriter,
+            unitOfWork);
+
+        Result<DashboardSnapshotModel> result = await handler.Handle(
+            new GetDietologistClientDashboardQuery(
+                dietologistId.Value,
+                clientId.Value,
+                DateTime.UtcNow,
+                DateTo: null,
+                1,
+                10,
+                "en",
+                7),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        await auditWriter.Received(1).AddAsync(
+            dietologistId,
+            clientId.Value,
+            "dietologist.dashboard.accessed",
+            "ClientDashboard",
+            clientId.Value.ToString(),
+            metadata: null,
+            Arg.Any<CancellationToken>());
+        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task GetClientDashboard_WhenRequiredAuditCommitFails_DoesNotReturnSensitiveDashboard() {
+        var dietologistId = UserId.New();
+        var clientId = UserId.New();
+        var invitationRepository = new InMemoryInvitationRepository();
+        invitationRepository.Seed(CreateAcceptedInvitation(clientId, dietologistId));
+        var userRepository = new InMemoryUserRepository();
+        userRepository.Seed(CreateUser(dietologistId, "diet@example.com"));
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(new InvalidOperationException("audit persistence failed")));
+        GetDietologistClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(
+            invitationRepository,
+            new RecordingDashboardSnapshotBuilder(CreateDashboardSnapshot()),
+            userRepository,
+            Substitute.For<IAuditEntryWriter>(),
+            unitOfWork);
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() => handler.Handle(
+            new GetDietologistClientDashboardQuery(
+                dietologistId.Value,
+                clientId.Value,
+                DateTime.UtcNow,
+                DateTo: null,
+                1,
+                10,
+                "en",
+                7),
+            CancellationToken.None));
     }
 
     [Fact]

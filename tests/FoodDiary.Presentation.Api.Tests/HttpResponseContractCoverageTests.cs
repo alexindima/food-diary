@@ -92,7 +92,7 @@ public sealed class HttpResponseContractCoverageTests {
         DateTime now = DateTime.UtcNow;
         DateTimeOffset receivedAt = DateTimeOffset.UtcNow;
         var mailDetails = new AdminMailInboxMessageDetailsHttpResponse(
-            Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", receivedAt, receivedAt);
+            Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", receivedAt, receivedAt, ContentPurgedAtUtc: receivedAt.AddDays(30));
         var login = new AdminUserLoginEventHttpResponse(
             Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", "127.0.0.1", "agent", "Chrome", "1", "Windows", "Desktop", now);
         var report = new AdminContentReportHttpResponse(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", AdminNote: "note", now, ReviewedAtUtc: now);
@@ -116,6 +116,7 @@ public sealed class HttpResponseContractCoverageTests {
             () => Assert.Equal("received", mailDetails.Status),
             () => Assert.Equal(receivedAt, mailDetails.ReadAtUtc),
             () => Assert.Equal(receivedAt, mailDetails.ReceivedAtUtc),
+            () => Assert.Equal(receivedAt.AddDays(30), mailDetails.ContentPurgedAtUtc),
             () => Assert.Equal("user@example.com", login.UserEmail),
             () => Assert.Equal("password", login.AuthProvider),
             () => Assert.Equal("127.0.0.1", login.MaskedIpAddress),

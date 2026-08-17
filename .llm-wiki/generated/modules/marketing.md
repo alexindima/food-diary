@@ -36,6 +36,7 @@ sources:
 Source: `FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionController.cs`
 
 - `POST /api/v{version:apiVersion}/marketing/attribution-events`
+- `POST /api/v{version:apiVersion}/marketing/attribution-events/signup`
 
 ## Boundary Health
 

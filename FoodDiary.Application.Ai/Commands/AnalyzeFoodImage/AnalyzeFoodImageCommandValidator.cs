@@ -15,5 +15,10 @@ public sealed class AnalyzeFoodImageCommandValidator : AbstractValidator<Analyze
         RuleFor(x => x.Description)
             .MaximumLength(2048)
             .When(x => !string.IsNullOrWhiteSpace(x.Description));
+
+        RuleFor(x => x.RequestId)
+            .NotEmpty()
+            .Length(64)
+            .Matches("^[0-9A-F]{64}$");
     }
 }

@@ -6,6 +6,7 @@ using System.Text.Json.Serialization;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Integrations.Http;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,10 @@ internal sealed class GoogleFitClient(
     IOptions<GoogleFitOptions> options,
     TimeProvider timeProvider,
     ILogger<GoogleFitClient> logger) : IWearableClient {
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
+        MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
+    };
+
     public WearableProvider Provider => WearableProvider.GoogleFit;
 
     public string GetAuthorizationUrl(string state) {
@@ -34,28 +39,44 @@ internal sealed class GoogleFitClient(
         }
 
         try {
-            HttpResponseMessage response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
-                new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
+            using var tokenRequest = new HttpRequestMessage(HttpMethod.Post, "https://oauth2.googleapis.com/token") {
+                Content = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "authorization_code",
                     ["code"] = code,
                     ["client_id"] = config.ClientId,
                     ["client_secret"] = config.ClientSecret,
                     ["redirect_uri"] = config.RedirectUri,
-                }), cancellationToken).ConfigureAwait(false);
+                }),
+            };
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                tokenRequest,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            GoogleTokenResponse? token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            GoogleTokenResponse? token = await BoundedHttpContentReader.ReadFromJsonAsync<GoogleTokenResponse>(
+                response.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
 
             using var userInfoRequest = new HttpRequestMessage(HttpMethod.Get, "https://www.googleapis.com/oauth2/v1/userinfo");
             userInfoRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token.AccessToken);
-            using HttpResponseMessage userInfoResponse = await httpClient.SendAsync(userInfoRequest, cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage userInfoResponse = await httpClient.SendAsync(
+                userInfoRequest,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
             userInfoResponse.EnsureSuccessStatusCode();
-            JsonElement userInfo = await userInfoResponse.Content
-                .ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken)
-                .ConfigureAwait(false);
+            JsonElement userInfo = await BoundedHttpContentReader.ReadFromJsonAsync<JsonElement>(
+                userInfoResponse.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false);
             string userId = userInfo.TryGetProperty("id", out JsonElement id) ? id.GetString() ?? "unknown" : "unknown";
 
             return new WearableTokenResult(
@@ -63,7 +84,7 @@ internal sealed class GoogleFitClient(
                 token.RefreshToken,
                 userId,
                 timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Google Fit token exchange failed");
             return null;
         }
@@ -72,16 +93,26 @@ internal sealed class GoogleFitClient(
     public async Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) {
         GoogleFitOptions config = options.Value;
         try {
-            HttpResponseMessage response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
-                new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
+            using var tokenRequest = new HttpRequestMessage(HttpMethod.Post, "https://oauth2.googleapis.com/token") {
+                Content = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "refresh_token",
                     ["refresh_token"] = refreshToken,
                     ["client_id"] = config.ClientId,
                     ["client_secret"] = config.ClientSecret,
-                }), cancellationToken).ConfigureAwait(false);
+                }),
+            };
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                tokenRequest,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            GoogleTokenResponse? token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            GoogleTokenResponse? token = await BoundedHttpContentReader.ReadFromJsonAsync<GoogleTokenResponse>(
+                response.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
@@ -91,7 +122,7 @@ internal sealed class GoogleFitClient(
                 token.RefreshToken ?? refreshToken,
                 string.Empty,
                 timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Google Fit token refresh failed");
             return null;
         }
@@ -104,8 +135,6 @@ internal sealed class GoogleFitClient(
         long endTimeMillis = new DateTimeOffset(date.Date.AddDays(1), TimeSpan.Zero).ToUnixTimeMilliseconds();
 
         try {
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
             var aggregateRequest = new {
                 aggregateBy = new[] {
                     new { dataTypeName = "com.google.step_count.delta" },
@@ -118,14 +147,26 @@ internal sealed class GoogleFitClient(
                 endTimeMillis,
             };
 
-            HttpResponseMessage response = await httpClient.PostAsJsonAsync(
-                "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate",
-                aggregateRequest, cancellationToken).ConfigureAwait(false);
+            using var request = new HttpRequestMessage(
+                HttpMethod.Post,
+                "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate") {
+                Content = JsonContent.Create(aggregateRequest, options: JsonOptions),
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            JsonElement data = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            JsonElement data = await BoundedHttpContentReader.ReadFromJsonAsync<JsonElement>(
+                response.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false);
             results.AddRange(ParseDailyData(data));
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Google Fit data fetch failed for {Date}", date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
         }
 

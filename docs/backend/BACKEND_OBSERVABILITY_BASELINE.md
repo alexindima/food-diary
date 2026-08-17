@@ -17,6 +17,60 @@ The backend already had:
 - presentation operation counters and durations
 - OpenTelemetry export wiring
 
+## Distributed trace baseline
+
+When `OpenTelemetry:Otlp:Endpoint` is configured, the primary API emits one
+W3C trace across the incoming ASP.NET Core request, presentation/application
+activities, Npgsql database calls, and outbound `HttpClient` calls. The same
+trace propagation and Npgsql instrumentation apply to JobManager. MailRelay
+and MailInbox emit ASP.NET Core server spans and Npgsql client spans; MailRelay
+also propagates outbound HTTP context. With no OTLP endpoint, providers and
+automatic instrumentation are not registered.
+
+Health-check traffic under `/health` is excluded from automatic server spans.
+Matched HTTP traffic is grouped by route template. Unmatched traffic uses the
+single `unmatched` label; concrete IDs and attacker-controlled paths must not
+be used as metric dimensions or span names.
+
+## Trace privacy and data governance
+
+Trace export is diagnostic processing, not a secondary analytics store. The
+runtime privacy processors enforce the following deny-by-default boundary:
+
+- URL query values and fragments are removed; outbound URLs retain only scheme,
+  authority, and path;
+- raw user IDs, email addresses, client IP addresses, user-agent values, and
+  captured HTTP headers are removed;
+- request bodies, response bodies, provider payloads, AI input/output content,
+  database parameters, and database query text are removed;
+- error type or stable application error code may be retained, but exception and
+  application error messages, stack traces, and status descriptions are removed;
+- email addresses, subjects, raw MIME, message bodies, credentials, tokens, and
+  provider webhook bodies are never added to traces.
+
+The production trace backend must enforce a maximum retention period of
+**14 days**. A shorter environment-specific period is allowed; indefinite
+retention is not. Changing the maximum requires a privacy and security review,
+an updated data inventory, and documented deletion verification in the target
+backend.
+
+Trace read access is restricted to named production operators performing
+incident response or reliability investigation. Shared accounts and anonymous
+Grafana access are prohibited. Access must use the production identity control
+with MFA where supported, be least-privilege and time-bounded where practical,
+and be reviewed at least quarterly. Trace-backend administrative access remains
+separate from ordinary read access. The operator must retain auditable access
+records for at least 90 days and verify both access policy and the 14-day data
+expiry before enabling production trace ingestion.
+
+Operational evidence for a release that enables or changes tracing consists of:
+
+- collector/backend configuration showing the active retention limit;
+- an access-policy or role export showing the permitted named principals;
+- a query proving that spans older than the configured limit are unavailable;
+- a privacy smoke test showing that query tokens, user IDs, payload markers, and
+  exception messages do not appear in exported spans.
+
 ## First Added Business-Flow Signals
 
 The first observability expansion adds a dedicated counter for high-value business routes at the HTTP host boundary.

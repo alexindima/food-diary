@@ -30,18 +30,7 @@ public sealed class MailInboxHostedServiceTests {
 
     [Fact]
     public async Task SmtpHostedService_WhenDisabled_CompletesWithoutStartingListener() {
-        var messageStore = new SmtpInboundMessageStore(
-            new ThrowingInboundMailStore(),
-            TimeProvider.System,
-            NullLogger<SmtpInboundMessageStore>.Instance);
-        var mailboxFilter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions()));
-        var service = new MailInboxSmtpHostedService(
-            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
-                Enabled = false,
-            }),
-            messageStore,
-            mailboxFilter,
-            NullLogger<MailInboxSmtpHostedService>.Instance);
+        MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions { Enabled = false });
 
         await service.StartAsync(CancellationToken.None);
         await service.StopAsync(CancellationToken.None);
@@ -49,18 +38,7 @@ public sealed class MailInboxHostedServiceTests {
 
     [Fact]
     public async Task SmtpHostedService_ExecuteAsync_WhenDisabled_ReturnsWithoutStartingListener() {
-        var messageStore = new SmtpInboundMessageStore(
-            new ThrowingInboundMailStore(),
-            TimeProvider.System,
-            NullLogger<SmtpInboundMessageStore>.Instance);
-        var mailboxFilter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions()));
-        var service = new MailInboxSmtpHostedService(
-            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
-                Enabled = false,
-            }),
-            messageStore,
-            mailboxFilter,
-            NullLogger<MailInboxSmtpHostedService>.Instance);
+        MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions { Enabled = false });
 
         await InvokeExecuteAsync(service, CancellationToken.None);
     }
@@ -68,21 +46,12 @@ public sealed class MailInboxHostedServiceTests {
     [Fact]
     public async Task SmtpHostedService_WhenEnabled_StartsListenerUntilStopped() {
         int port = GetFreeTcpPort();
-        var messageStore = new SmtpInboundMessageStore(
-            new ThrowingInboundMailStore(),
-            TimeProvider.System,
-            NullLogger<SmtpInboundMessageStore>.Instance);
-        var mailboxFilter = new MailInboxMailboxFilter(Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions()));
-        var service = new MailInboxSmtpHostedService(
-            Microsoft.Extensions.Options.Options.Create(new MailInboxSmtpOptions {
-                Enabled = true,
-                ServerName = "localhost",
-                Port = port,
-                MaxMessageSizeBytes = 1024,
-            }),
-            messageStore,
-            mailboxFilter,
-            NullLogger<MailInboxSmtpHostedService>.Instance);
+        MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
+            Enabled = true,
+            ServerName = "localhost",
+            Port = port,
+            MaxMessageSizeBytes = 1024,
+        });
 
         await service.StartAsync(CancellationToken.None);
         try {
@@ -90,6 +59,127 @@ public sealed class MailInboxHostedServiceTests {
         } finally {
             await service.StopAsync(CancellationToken.None);
         }
+    }
+
+    [Fact]
+    public async Task SmtpHostedService_WhenGlobalConnectionLimitIsReached_DelaysNextSessionUntilRelease() {
+        int port = GetFreeTcpPort();
+        MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
+            Enabled = true,
+            ServerName = "localhost",
+            Port = port,
+            MaxMessageSizeBytes = 1024,
+            MaxConcurrentConnections = 1,
+            MaxConcurrentConnectionsPerIp = 1,
+        });
+
+        await service.StartAsync(CancellationToken.None);
+        try {
+            await WaitForPortAsync(port, CancellationToken.None);
+            using var firstClient = new TcpClient();
+            await firstClient.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            using var firstReader = new StreamReader(firstClient.GetStream());
+            string? firstBanner = await firstReader.ReadLineAsync(CancellationToken.None);
+            Assert.StartsWith("220", firstBanner, StringComparison.Ordinal);
+
+            using var secondClient = new TcpClient();
+            await secondClient.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            using var secondReader = new StreamReader(secondClient.GetStream());
+            Task<string?> secondBannerTask = secondReader.ReadLineAsync(CancellationToken.None).AsTask();
+
+            await Assert.ThrowsAsync<TimeoutException>(
+                () => secondBannerTask.WaitAsync(TimeSpan.FromMilliseconds(250), TimeProvider.System));
+
+            firstClient.Dispose();
+            string? secondBanner = await secondBannerTask.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
+            Assert.StartsWith("220", secondBanner, StringComparison.Ordinal);
+        } finally {
+            await service.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    public async Task SmtpHostedService_WhenPerIpConnectionLimitIsReached_ClosesExcessSession() {
+        int port = GetFreeTcpPort();
+        MailInboxSmtpHostedService service = CreateSmtpHostedService(new MailInboxSmtpOptions {
+            Enabled = true,
+            ServerName = "localhost",
+            Port = port,
+            MaxMessageSizeBytes = 1024,
+            MaxConcurrentConnections = 2,
+            MaxConcurrentConnectionsPerIp = 1,
+        });
+
+        await service.StartAsync(CancellationToken.None);
+        try {
+            await WaitForPortAsync(port, CancellationToken.None);
+            using var firstClient = new TcpClient();
+            await firstClient.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            using var firstReader = new StreamReader(firstClient.GetStream());
+            Assert.StartsWith(
+                "220",
+                await firstReader.ReadLineAsync(CancellationToken.None),
+                StringComparison.Ordinal);
+
+            using var excessClient = new TcpClient();
+            await excessClient.ConnectAsync(System.Net.IPAddress.Loopback, port, CancellationToken.None);
+            using var excessReader = new StreamReader(excessClient.GetStream());
+            string? excessBanner = await excessReader.ReadLineAsync(CancellationToken.None)
+                .AsTask()
+                .WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
+
+            Assert.Null(excessBanner);
+        } finally {
+            await service.StopAsync(CancellationToken.None);
+        }
+    }
+
+    [Fact]
+    public async Task RetentionHostedService_WhenStarted_UsesConfiguredCutoffsAndBatchSize() {
+        var store = new RecordingRetentionStore(expectedCallCount: 1, failuresBeforeSuccess: 0);
+        var options = new MailInboxStorageOptions {
+            ContentRetention = TimeSpan.FromDays(14),
+            MetadataRetention = TimeSpan.FromDays(90),
+            CleanupInterval = TimeSpan.FromHours(1),
+            CleanupBatchSize = 25,
+        };
+        var service = new MailInboxRetentionHostedService(
+            store,
+            Microsoft.Extensions.Options.Options.Create(options),
+            FixedTime,
+            NullLogger<MailInboxRetentionHostedService>.Instance);
+
+        await service.StartAsync(CancellationToken.None);
+        try {
+            await store.ExpectedCallReached.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
+        } finally {
+            await service.StopAsync(CancellationToken.None);
+        }
+
+        Assert.Equal(FixedNow - options.ContentRetention, store.ContentCutoffUtc);
+        Assert.Equal(FixedNow - options.MetadataRetention, store.MetadataCutoffUtc);
+        Assert.Equal(options.CleanupBatchSize, store.BatchSize);
+    }
+
+    [Fact]
+    public async Task RetentionHostedService_WhenPurgeFails_RetriesAfterConfiguredInterval() {
+        var store = new RecordingRetentionStore(expectedCallCount: 2, failuresBeforeSuccess: 1);
+        var service = new MailInboxRetentionHostedService(
+            store,
+            Microsoft.Extensions.Options.Options.Create(new MailInboxStorageOptions {
+                CleanupInterval = TimeSpan.FromMilliseconds(10),
+            }),
+            FixedTime,
+            NullLogger<MailInboxRetentionHostedService>.Instance);
+
+        await service.StartAsync(CancellationToken.None);
+        try {
+            await store.ExpectedCallReached.WaitAsync(TimeSpan.FromSeconds(5), TimeProvider.System);
+        } finally {
+            await service.StopAsync(CancellationToken.None);
+        }
+
+        Assert.True(store.CallCount >= 2);
     }
 
     private static int GetFreeTcpPort() {
@@ -102,6 +192,28 @@ public sealed class MailInboxHostedServiceTests {
         }
     }
 
+    private static readonly DateTimeOffset FixedNow = new(2026, 8, 17, 6, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    private static MailInboxSmtpHostedService CreateSmtpHostedService(MailInboxSmtpOptions options) {
+        Microsoft.Extensions.Options.IOptions<MailInboxSmtpOptions> optionsWrapper =
+            Microsoft.Extensions.Options.Options.Create(options);
+        var messageStore = new SmtpInboundMessageStore(
+            new ThrowingInboundMailStore(),
+            optionsWrapper,
+            TimeProvider.System,
+            NullLogger<SmtpInboundMessageStore>.Instance);
+        var mailboxFilter = new MailInboxMailboxFilter(
+            optionsWrapper,
+            new MailInboxFixedWindowRateLimiter(optionsWrapper, TimeProvider.System));
+        return new MailInboxSmtpHostedService(
+            optionsWrapper,
+            messageStore,
+            mailboxFilter,
+            new MailInboxEndpointListenerFactory(optionsWrapper),
+            NullLogger<MailInboxSmtpHostedService>.Instance);
+    }
+
     private static async Task WaitForPortAsync(int port, CancellationToken cancellationToken) {
         var stopwatch = Stopwatch.StartNew();
 
@@ -111,7 +223,7 @@ public sealed class MailInboxHostedServiceTests {
                 await client.ConnectAsync(System.Net.IPAddress.Loopback, port, cancellationToken).ConfigureAwait(false);
                 return;
             } catch (SocketException) {
-                await Task.Delay(TimeSpan.FromMilliseconds(25), cancellationToken).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromMilliseconds(25), TimeProvider.System, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -138,8 +250,72 @@ public sealed class MailInboxHostedServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingRetentionStore(
+        int expectedCallCount,
+        int failuresBeforeSuccess) : IInboundMailStore {
+        private readonly TaskCompletionSource _expectedCallReached =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
+        private int _callCount;
+
+        public Task ExpectedCallReached => _expectedCallReached.Task;
+
+        public int CallCount => Volatile.Read(ref _callCount);
+
+        public DateTimeOffset ContentCutoffUtc { get; private set; }
+
+        public DateTimeOffset MetadataCutoffUtc { get; private set; }
+
+        public int BatchSize { get; private set; }
+
+        public Task<InboundMailRetentionResult> PurgeExpiredAsync(
+            DateTimeOffset contentCutoffUtc,
+            DateTimeOffset metadataCutoffUtc,
+            int batchSize,
+            CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ContentCutoffUtc = contentCutoffUtc;
+            MetadataCutoffUtc = metadataCutoffUtc;
+            BatchSize = batchSize;
+            int callCount = Interlocked.Increment(ref _callCount);
+            if (callCount >= expectedCallCount) {
+                _expectedCallReached.TrySetResult();
+            }
+
+            return callCount <= failuresBeforeSuccess
+                ? Task.FromException<InboundMailRetentionResult>(new InvalidOperationException("transient"))
+                : Task.FromResult(new InboundMailRetentionResult(ContentPurgedCount: 1, MetadataDeletedCount: 1));
+        }
+
+        public Task<InboundMailSaveResult> SaveAsync(
+            InboundMailMessage message,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(
+            int limit,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<InboundMailMessageDetails?> GetMessageDetailsAsync(
+            Guid id,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<bool> MarkAsReadAsync(
+            Guid id,
+            DateTimeOffset readAtUtc,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class ThrowingInboundMailStore : IInboundMailStore {
-        public Task<Guid> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) =>
+        public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
 
         public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(
@@ -151,6 +327,13 @@ public sealed class MailInboxHostedServiceTests {
             throw new NotSupportedException();
 
         public Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<InboundMailRetentionResult> PurgeExpiredAsync(
+            DateTimeOffset contentCutoffUtc,
+            DateTimeOffset metadataCutoffUtc,
+            int batchSize,
+            CancellationToken cancellationToken) =>
             throw new NotSupportedException();
     }
 }

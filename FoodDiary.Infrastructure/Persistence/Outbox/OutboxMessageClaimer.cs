@@ -6,21 +6,22 @@ using Npgsql;
 namespace FoodDiary.Infrastructure.Persistence.Outbox;
 
 internal static class OutboxMessageClaimer {
-    private static readonly TimeSpan LeaseDuration = TimeSpan.FromMinutes(5);
-
-    public static async Task<List<TMessage>> ClaimDueAsync<TMessage>(
+    public static async Task<OutboxClaimBatch<TMessage>> ClaimDueAsync<TMessage>(
         FoodDiaryDbContext context,
         DbSet<TMessage> messages,
         string tableName,
         int batchSize,
         DateTime nowUtc,
+        TimeSpan leaseDuration,
         IQueryable<TMessage>? claimedQuery = null,
         CancellationToken cancellationToken = default)
         where TMessage : class, IOutboxMessage {
+        ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(leaseDuration, TimeSpan.Zero);
+
         string workerId = TruncateWorkerId(string.Create(
             CultureInfo.InvariantCulture,
             $"{Environment.MachineName}:{Environment.ProcessId}:{Guid.NewGuid():N}"));
-        DateTime lockedUntilUtc = nowUtc.Add(LeaseDuration);
+        DateTime lockedUntilUtc = nowUtc.Add(leaseDuration);
 
         if (!context.Database.IsRelational()) {
             return await ClaimDueWithTrackedEntitiesAsync(
@@ -44,7 +45,7 @@ internal static class OutboxMessageClaimer {
             cancellationToken).ConfigureAwait(false);
     }
 
-    private static async Task<List<TMessage>> ClaimDueWithRelationalDatabaseAsync<TMessage>(
+    private static async Task<OutboxClaimBatch<TMessage>> ClaimDueWithRelationalDatabaseAsync<TMessage>(
         FoodDiaryDbContext context,
         DbSet<TMessage> messages,
         string tableName,
@@ -56,7 +57,7 @@ internal static class OutboxMessageClaimer {
         CancellationToken cancellationToken)
         where TMessage : class, IOutboxMessage {
         IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
-        bool claimedAny = await strategy.ExecuteAsync(() => ExecuteClaimTransactionAsync(
+        int reclaimedCount = await strategy.ExecuteAsync(() => ExecuteClaimTransactionAsync(
             context,
             tableName,
             batchSize,
@@ -65,19 +66,20 @@ internal static class OutboxMessageClaimer {
             workerId,
             cancellationToken)).ConfigureAwait(false);
 
-        if (!claimedAny) {
-            return [];
+        if (reclaimedCount < 0) {
+            return new OutboxClaimBatch<TMessage>([], ReclaimedCount: 0);
         }
 
         IQueryable<TMessage> query = claimedQuery ?? messages;
-        return await query
+        List<TMessage> claimed = await query
             .Where(message => EF.Property<string?>(message, "LockedBy") == workerId)
             .OrderBy(message => EF.Property<DateTime>(message, "CreatedOnUtc"))
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
+        return new OutboxClaimBatch<TMessage>(claimed, reclaimedCount);
     }
 
-    private static async Task<bool> ExecuteClaimTransactionAsync(
+    private static async Task<int> ExecuteClaimTransactionAsync(
         FoodDiaryDbContext context,
         string tableName,
         int batchSize,
@@ -111,8 +113,14 @@ internal static class OutboxMessageClaimer {
 
             if (ids.Count == 0) {
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-                return false;
+                return -1;
             }
+
+            int reclaimedCount = await CountReclaimedAsync(
+                context,
+                tableName,
+                ids,
+                cancellationToken).ConfigureAwait(false);
 
 #pragma warning disable EF1002
             await context.Database
@@ -132,8 +140,28 @@ internal static class OutboxMessageClaimer {
 #pragma warning restore EF1002
 
             await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
-            return true;
+            return reclaimedCount;
         }
+    }
+
+    private static async Task<int> CountReclaimedAsync(
+        FoodDiaryDbContext context,
+        string tableName,
+        IReadOnlyCollection<Guid> ids,
+        CancellationToken cancellationToken) {
+#pragma warning disable EF1002
+        return await context.Database
+            .SqlQueryRaw<int>(
+                $"""
+                SELECT COUNT(*)::int AS "Value"
+                FROM {tableName}
+                WHERE "Id" = ANY(@ids)
+                  AND "LockedUntilUtc" IS NOT NULL
+                """,
+                new NpgsqlParameter<Guid[]>("ids", [.. ids]))
+            .SingleAsync(cancellationToken)
+            .ConfigureAwait(false);
+#pragma warning restore EF1002
     }
 
     private static string ValidateTableName(string tableName) =>
@@ -148,7 +176,7 @@ internal static class OutboxMessageClaimer {
     private static string TruncateWorkerId(string workerId) =>
         workerId.Length <= 128 ? workerId : workerId[..128];
 
-    private static async Task<List<TMessage>> ClaimDueWithTrackedEntitiesAsync<TMessage>(
+    private static async Task<OutboxClaimBatch<TMessage>> ClaimDueWithTrackedEntitiesAsync<TMessage>(
         DbSet<TMessage> messages,
         int batchSize,
         DateTime nowUtc,
@@ -168,10 +196,15 @@ internal static class OutboxMessageClaimer {
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
 
+        int reclaimedCount = 0;
         foreach (TMessage message in claimed) {
+            if (message.LockedUntilUtc is not null) {
+                reclaimedCount++;
+            }
+
             message.MarkClaimed(lockedUntilUtc, workerId);
         }
 
-        return claimed;
+        return new OutboxClaimBatch<TMessage>(claimed, reclaimedCount);
     }
 }

@@ -14,25 +14,27 @@ public static class AiHttpMappings {
     }
 
     extension(FoodVisionHttpRequest request) {
-        public AnalyzeFoodImageCommand ToCommand(Guid userId) {
+        public AnalyzeFoodImageCommand ToCommand(Guid userId, string requestId) {
             return new AnalyzeFoodImageCommand(
                 UserId: userId,
                 ImageAssetId: request.ImageAssetId,
-                Description: request.Description);
+                Description: request.Description,
+                RequestId: requestId);
         }
     }
 
     extension(FoodTextHttpRequest request) {
-        public ParseFoodTextCommand ToCommand(Guid userId) {
-            return new ParseFoodTextCommand(UserId: userId, Text: request.Text);
+        public ParseFoodTextCommand ToCommand(Guid userId, string requestId) {
+            return new ParseFoodTextCommand(UserId: userId, Text: request.Text, RequestId: requestId);
         }
     }
 
     extension(FoodNutritionHttpRequest request) {
-        public CalculateFoodNutritionCommand ToCommand(Guid userId) {
+        public CalculateFoodNutritionCommand ToCommand(Guid userId, string requestId) {
             return new CalculateFoodNutritionCommand(
                 UserId: userId,
-                Items: request.Items.Select(ToModel).ToList());
+                Items: request.Items.Select(ToModel).ToList(),
+                RequestId: requestId);
         }
     }
 

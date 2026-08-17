@@ -7,11 +7,14 @@ using FoodDiary.Presentation.Api.Features.Ai;
 using FoodDiary.Presentation.Api.Features.Meals;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Images;
+using FoodDiary.Presentation.Api.Features.Logs;
+using FoodDiary.Presentation.Api.Features.Marketing;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Recipes;
 using FoodDiary.Presentation.Api.Policies;
 using FoodDiary.Presentation.Api.Security;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -31,7 +34,15 @@ public sealed class ControllerSecurityContractTests {
     [Fact]
     public void AiFoodController_Actions_RequireCurrentUserBinding() {
         AssertHasFromCurrentUserParameter(typeof(AiFoodController), nameof(AiFoodController.AnalyzeFood));
+        AssertHasFromCurrentUserParameter(typeof(AiFoodController), nameof(AiFoodController.ParseFoodText));
         AssertHasFromCurrentUserParameter(typeof(AiFoodController), nameof(AiFoodController.CalculateNutrition));
+    }
+
+    [Fact]
+    public void AiFoodController_WriteActions_RequireIdempotencyKey() {
+        AssertRequiresIdempotencyKey(nameof(AiFoodController.AnalyzeFood));
+        AssertRequiresIdempotencyKey(nameof(AiFoodController.ParseFoodText));
+        AssertRequiresIdempotencyKey(nameof(AiFoodController.CalculateNutrition));
     }
 
     [Fact]
@@ -80,6 +91,38 @@ public sealed class ControllerSecurityContractTests {
     }
 
     [Fact]
+    public void AnonymousIngestionControllers_UseDedicatedRateLimitsAndRequestSizeLimits() {
+        AssertControllerRateLimit(typeof(LogsController), PresentationPolicyNames.ClientTelemetryRateLimitPolicyName);
+        AssertControllerRateLimit(typeof(MarketingAttributionController), PresentationPolicyNames.MarketingAttributionRateLimitPolicyName);
+        AssertActionRequestSizeLimit(typeof(LogsController), nameof(LogsController.Create), LogsController.MaxPayloadBytes);
+        AssertActionContentLengthLimit(typeof(LogsController), nameof(LogsController.Create), LogsController.MaxPayloadBytes);
+        AssertActionRequestSizeLimit(
+            typeof(MarketingAttributionController),
+            nameof(MarketingAttributionController.Create),
+            MarketingAttributionController.MaxPayloadBytes);
+        AssertActionContentLengthLimit(
+            typeof(MarketingAttributionController),
+            nameof(MarketingAttributionController.Create),
+            MarketingAttributionController.MaxPayloadBytes);
+        AssertActionRequestSizeLimit(
+            typeof(MarketingAttributionController),
+            nameof(MarketingAttributionController.CreateSignup),
+            MarketingAttributionController.MaxPayloadBytes);
+        AssertActionContentLengthLimit(
+            typeof(MarketingAttributionController),
+            nameof(MarketingAttributionController.CreateSignup),
+            MarketingAttributionController.MaxPayloadBytes);
+    }
+
+    [Fact]
+    public void MarketingSignupAttribution_RequiresAuthorizationAndCurrentUserBinding() {
+        MethodInfo method = GetAction(typeof(MarketingAttributionController), nameof(MarketingAttributionController.CreateSignup));
+
+        Assert.NotNull(method.GetCustomAttribute<AuthorizeAttribute>());
+        AssertHasFromCurrentUserParameter(typeof(MarketingAttributionController), nameof(MarketingAttributionController.CreateSignup));
+    }
+
+    [Fact]
     public void AdminLessonsController_RequiresAdminRole() {
         AuthorizeAttribute[] authorizeAttributes = [.. typeof(AdminLessonsController).GetCustomAttributes<AuthorizeAttribute>(inherit: true)];
 
@@ -103,6 +146,36 @@ public sealed class ControllerSecurityContractTests {
         EnableRateLimitingAttribute attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(method);
 
         Assert.Equal(expectedPolicyName, attribute.PolicyName);
+    }
+
+    private static void AssertRequiresIdempotencyKey(string actionName) {
+        MethodInfo method = GetAction(typeof(AiFoodController), actionName);
+        EnableIdempotencyAttribute attribute = AssertSingleAttribute<EnableIdempotencyAttribute>(method);
+
+        Assert.True(attribute.RequireKey);
+    }
+
+    private static void AssertControllerRateLimit(Type controllerType, string expectedPolicyName) {
+        EnableRateLimitingAttribute attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(controllerType);
+
+        Assert.Equal(expectedPolicyName, attribute.PolicyName);
+    }
+
+    private static void AssertActionRequestSizeLimit(Type controllerType, string actionName, long expectedBytes) {
+        MethodInfo method = GetAction(controllerType, actionName);
+        CustomAttributeData attribute = Assert.Single(
+            method.CustomAttributes,
+            static attribute => attribute.AttributeType == typeof(RequestSizeLimitAttribute));
+        CustomAttributeTypedArgument bytes = Assert.Single(attribute.ConstructorArguments);
+
+        Assert.Equal(expectedBytes, bytes.Value);
+    }
+
+    private static void AssertActionContentLengthLimit(Type controllerType, string actionName, long expectedBytes) {
+        MethodInfo method = GetAction(controllerType, actionName);
+        RejectOversizedRequestAttribute attribute = AssertSingleAttribute<RejectOversizedRequestAttribute>(method);
+
+        Assert.Equal(expectedBytes, attribute.MaxBytes);
     }
 
     private static void AssertHasFromCurrentUserParameter(Type controllerType, string actionName) {

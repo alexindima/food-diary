@@ -1,5 +1,7 @@
 using FoodDiary.MailInbox.Application.Abstractions;
+using FoodDiary.MailInbox.Infrastructure.Options;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace FoodDiary.MailInbox.Initializer.Tests;
@@ -59,6 +61,8 @@ public sealed class MailInboxInitializerCommandTests {
         using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.NotNull(provider.GetRequiredService<IMailInboxSchemaInitializer>());
+        Assert.True(MailInboxStorageOptions.HasValidConfiguration(
+            provider.GetRequiredService<IOptions<MailInboxStorageOptions>>().Value));
     }
 
     private static object? Parse(params string[] args) {

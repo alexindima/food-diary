@@ -19,7 +19,7 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             ApiTelemetry.RateLimitRejectionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("http.request.method", httpContext.Request.Method),
-                new KeyValuePair<string, object?>("url.path", httpContext.Request.Path.Value));
+                new KeyValuePair<string, object?>("url.path", TelemetryPrivacyProcessor.ResolveRouteLabel(httpContext)));
 
             await httpContext.Response.WriteAsJsonAsync(new ApiErrorHttpResponse(
                 "RateLimit.Exceeded",
@@ -33,6 +33,10 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
             CreatePartition(settings.Ai, $"ai:{GetPartitionKey(context)}"));
         options.AddPolicy<string>(PresentationPolicyNames.WebhookRateLimitPolicyName, context =>
             CreatePartition(settings.Webhook, $"webhook:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.ClientTelemetryRateLimitPolicyName, context =>
+            CreatePartition(settings.ClientTelemetry, $"client-telemetry:{GetPartitionKey(context)}"));
+        options.AddPolicy<string>(PresentationPolicyNames.MarketingAttributionRateLimitPolicyName, context =>
+            CreatePartition(settings.MarketingAttribution, $"marketing-attribution:{GetPartitionKey(context)}"));
     }
 
     private static RateLimitPartition<string> CreatePartition(

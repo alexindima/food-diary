@@ -45,6 +45,28 @@ public sealed class BackendModuleManifestTests {
         Assert.Empty(invalidEntries);
     }
 
+    [Fact]
+    public void BoundaryManifest_AssignsEveryApplicationAbstractionAreaToOneOwner() {
+        BackendModuleManifest manifest = LoadManifest();
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string[] actualAreas = [.. Directory.GetDirectories(abstractionsRoot)
+            .Select(static path => Path.GetFileName(path) ?? throw new InvalidOperationException("Application abstraction area has no folder name."))
+            .Where(static name => name is not ("bin" or "obj"))
+            .Order(StringComparer.Ordinal)];
+        string[] declaredAreas = [.. manifest.ApplicationAbstractionOwnership.Keys.Order(StringComparer.Ordinal)];
+        var validOwners = new HashSet<string>(manifest.Modules.Keys, StringComparer.Ordinal) {
+            "Application.Runtime",
+            "Shared",
+        };
+        string[] invalidOwners = [.. manifest.ApplicationAbstractionOwnership
+            .Where(pair => string.IsNullOrWhiteSpace(pair.Value) || !validOwners.Contains(pair.Value))
+            .Select(pair => $"{pair.Key}: {pair.Value}")
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Equal(actualAreas, declaredAreas, StringComparer.Ordinal);
+        Assert.Empty(invalidOwners);
+    }
+
     private static BackendModuleManifest LoadManifest() {
         string path = ArchitectureTestPaths.FromRoot("docs", "architecture", "backend-modules.json");
         return JsonSerializer.Deserialize<BackendModuleManifest>(File.ReadAllText(path), SerializerOptions) ??
@@ -55,6 +77,7 @@ public sealed class BackendModuleManifestTests {
     private sealed record BackendModuleManifest(
         int SchemaVersion,
         ModuleInventory Inventory,
+        Dictionary<string, string> ApplicationAbstractionOwnership,
         Dictionary<string, ModuleBoundary> Modules);
 
     [ExcludeFromCodeCoverage]

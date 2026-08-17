@@ -20,7 +20,7 @@ public sealed class ReceiveInboundMailCommandHandler(IInboundMailStore store)
             mailRequest.RawMime,
             mailRequest.ReceivedAtUtc);
 
-        Guid id = await store.SaveAsync(message, cancellationToken).ConfigureAwait(false);
-        return Result.Success(id);
+        InboundMailSaveResult saveResult = await store.SaveAsync(message, cancellationToken).ConfigureAwait(false);
+        return Result.Success(saveResult.Id);
     }
 }

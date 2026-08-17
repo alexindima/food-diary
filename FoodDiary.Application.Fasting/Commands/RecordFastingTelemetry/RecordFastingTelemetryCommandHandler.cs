@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
+using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 
@@ -10,8 +11,8 @@ public sealed class RecordFastingTelemetryCommandHandler(
     TimeProvider timeProvider)
     : ICommandHandler<RecordFastingTelemetryCommand, Result> {
     public async Task<Result> Handle(RecordFastingTelemetryCommand command, CancellationToken cancellationToken) {
-        if (!string.Equals(command.Category, "user_action", StringComparison.OrdinalIgnoreCase) ||
-            !command.Name.StartsWith("fasting.", StringComparison.OrdinalIgnoreCase)) {
+        if (!string.Equals(command.Category, "user_action", StringComparison.Ordinal) ||
+            !FastingTelemetryEventNames.IsSupported(command.Name)) {
             return Result.Success();
         }
 

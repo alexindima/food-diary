@@ -58,7 +58,7 @@ public static class ApiServiceCollectionExtensions {
                 .AddApiDataProtection(configuration)
                 .AddSingleton<IWearableTokenProtector, WearableTokenProtector>()
                 .AddApiSwagger()
-                .AddConfiguredOpenTelemetry()
+                .AddConfiguredOpenTelemetry(configuration)
                 .AddApiHealthChecks();
         }
         private IServiceCollection AddApplicationModules(IConfiguration configuration, IHostEnvironment? environment) {

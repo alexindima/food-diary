@@ -15327,7 +15327,7 @@
       "responseType": "void",
       "urlExpression": "this.baseUrl",
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
-      "line": 54,
+      "line": 55,
       "publicMethod": "initialize",
       "transport": "HttpClient",
       "baseUrlExpression": "`${environment.apiUrls.marketing}/attribution-events`",
@@ -15337,13 +15337,13 @@
       "feature": "shell",
       "method": "POST",
       "responseType": "void",
-      "urlExpression": "this.baseUrl",
+      "urlExpression": "`${this.baseUrl}/signup`",
       "path": "FoodDiary.Web.Client/src/app/shared/marketing/marketing-attribution.service.ts",
-      "line": 105,
-      "publicMethod": "recordConversion",
+      "line": 74,
+      "publicMethod": "recordSignupCompleted",
       "transport": "HttpClient",
       "baseUrlExpression": "`${environment.apiUrls.marketing}/attribution-events`",
-      "resolvedUrlExpression": "this.baseUrl"
+      "resolvedUrlExpression": "`${this.baseUrl}/signup`"
     },
     {
       "feature": "shell",

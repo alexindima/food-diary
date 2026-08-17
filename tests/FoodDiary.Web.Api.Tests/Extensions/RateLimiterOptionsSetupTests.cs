@@ -68,6 +68,22 @@ public sealed class RateLimiterOptionsSetupTests {
         Assert.NotNull(partition);
     }
 
+    [Theory]
+    [InlineData(PresentationPolicyNames.ClientTelemetryRateLimitPolicyName)]
+    [InlineData(PresentationPolicyNames.MarketingAttributionRateLimitPolicyName)]
+    public void Configure_AnonymousIngestionPolicyFactory_CreatesPartition(string policyName) {
+        var options = new RateLimiterOptions();
+        new RateLimiterOptionsSetup(Microsoft.Extensions.Options.Options.Create(new ApiRateLimitingOptions())).Configure(options);
+        object policy = FindPolicy(options, policyName);
+        Delegate factory = Assert.Single(GetDelegates(policy));
+        var httpContext = new DefaultHttpContext();
+        httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Parse("198.51.100.25");
+
+        object? partition = factory.DynamicInvoke(httpContext);
+
+        Assert.NotNull(partition);
+    }
+
     private static string InvokeGetPartitionKey(HttpContext httpContext) {
         MethodInfo? method = typeof(RateLimiterOptionsSetup).GetMethod(
             "GetPartitionKey",

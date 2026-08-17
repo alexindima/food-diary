@@ -1,8 +1,8 @@
 using System.Globalization;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using FoodDiary.Integrations.Http;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Options;
 
@@ -13,7 +13,9 @@ public sealed class PaddleNotificationRecoveryService(
     IOptions<PaddleOptions> options,
     TimeProvider? timeProvider = null) {
     private const int MaximumPages = 100;
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
+        MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
+    };
     private readonly PaddleOptions _options = options.Value;
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
 
@@ -32,11 +34,18 @@ public sealed class PaddleNotificationRecoveryService(
         int replayed = 0;
 
         for (int page = 0; page < MaximumPages && !string.IsNullOrWhiteSpace(next); page++) {
-            using HttpResponseMessage response = await httpClient.GetAsync(next, cancellationToken).ConfigureAwait(false);
+            using var listRequest = new HttpRequestMessage(HttpMethod.Get, next);
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                listRequest,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
-            ListNotificationsResponse payload = await response.Content
-                .ReadFromJsonAsync<ListNotificationsResponse>(JsonOptions, cancellationToken)
-                .ConfigureAwait(false) ?? throw new JsonException("Paddle notifications response was empty.");
+            ListNotificationsResponse payload = await BoundedHttpContentReader.ReadFromJsonAsync<ListNotificationsResponse>(
+                response.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false) ?? throw new JsonException("Paddle notifications response was empty.");
 
             foreach (NotificationResponse notification in payload.Data) {
                 inspected++;
@@ -45,12 +54,13 @@ public sealed class PaddleNotificationRecoveryService(
                     continue;
                 }
 
-                using HttpResponseMessage replayResponse = await httpClient
-                    .PostAsync(
-                        $"notifications/{Uri.EscapeDataString(notification.Id)}/replay",
-                        content: null,
-                        cancellationToken)
-                    .ConfigureAwait(false);
+                using var replayRequest = new HttpRequestMessage(
+                    HttpMethod.Post,
+                    $"notifications/{Uri.EscapeDataString(notification.Id)}/replay");
+                using HttpResponseMessage replayResponse = await httpClient.SendAsync(
+                    replayRequest,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken).ConfigureAwait(false);
                 replayResponse.EnsureSuccessStatusCode();
                 replayed++;
             }

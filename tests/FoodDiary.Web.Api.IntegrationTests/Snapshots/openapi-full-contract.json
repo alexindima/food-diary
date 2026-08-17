@@ -8820,6 +8820,13 @@
           "Nullable": true
         },
         {
+          "Name": "contentPurgedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
           "Name": "fromAddress",
           "Required": false,
           "Type": "string",

@@ -67,7 +67,8 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
             Subject,
             HtmlBody,
             TextBody,
-            CorrelationId);
+            CorrelationId,
+            MessageId: CreateMessageId());
 
     public void MarkSent() {
         Status = QueuedEmailStatus.Sent;
@@ -93,4 +94,6 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
             isTerminalFailure,
             error);
     }
+
+    private string CreateMessageId() => $"{Id.Value:N}@mailrelay.invalid";
 }

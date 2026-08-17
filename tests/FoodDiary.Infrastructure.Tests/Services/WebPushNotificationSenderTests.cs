@@ -196,6 +196,7 @@ public sealed class WebPushNotificationSenderTests {
 
         Assert.Contains("Comment", payload, StringComparison.Ordinal);
         Assert.Contains("New comment", payload, StringComparison.Ordinal);
+        Assert.Contains($"\"tag\":\"{notification.Id.Value:N}\"", payload, StringComparison.Ordinal);
         Assert.Contains("https://example.com", payload, StringComparison.Ordinal);
         Assert.Contains(NotificationTypes.NewRecommendation, payload, StringComparison.Ordinal);
         Assert.Contains("11111111-1111-1111-1111-111111111111", payload, StringComparison.Ordinal);

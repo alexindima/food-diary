@@ -13,7 +13,8 @@ export type AdminMailInboxMessageDetails = AdminMailInboxMessageSummary & {
     messageId?: string | null;
     textBody?: string | null;
     htmlBody?: string | null;
-    rawMime: string;
+    rawMime?: string | null;
+    contentPurgedAtUtc?: string | null;
     dmarcReport?: AdminMailInboxDmarcReport | null;
 };
 

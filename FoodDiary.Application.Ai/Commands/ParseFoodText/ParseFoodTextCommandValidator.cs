@@ -11,5 +11,10 @@ public sealed class ParseFoodTextCommandValidator : AbstractValidator<ParseFoodT
             .MaximumLength(2048)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Food description text must not exceed 2048 characters.");
+
+        RuleFor(x => x.RequestId)
+            .NotEmpty()
+            .Length(64)
+            .Matches("^[0-9A-F]{64}$");
     }
 }

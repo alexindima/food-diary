@@ -9,9 +9,7 @@ import { BrowserStorageService } from '../platform/browser-storage.service';
 import { BrowserWindowService } from '../platform/browser-window.service';
 
 type MarketingAttributionPayload = {
-    eventType: 'page_landing' | 'signup_completed' | 'premium_started';
     timestamp: string;
-    userId?: string;
     anonymousId: string;
     sessionId: string;
     landingPath: string;
@@ -23,6 +21,8 @@ type MarketingAttributionPayload = {
     utmTerm?: string;
     buildVersion?: string;
 };
+
+type MarketingSignupAttributionPayload = MarketingAttributionPayload;
 
 const ANONYMOUS_ID_STORAGE_KEY = 'fd_marketing_anonymous_id';
 const FIRST_TOUCH_STORAGE_KEY = 'fd_marketing_first_touch';
@@ -38,6 +38,7 @@ export class MarketingAttributionService {
     private readonly telemetrySession = inject(ClientTelemetrySessionService);
     private readonly baseUrl = `${environment.apiUrls.marketing}/attribution-events`;
     private readonly telemetryContext = new HttpContext().set(SKIP_AUTH, true).set(SKIP_OBSERVABILITY, true);
+    private readonly authenticatedTelemetryContext = new HttpContext().set(SKIP_OBSERVABILITY, true);
 
     public initialize(): void {
         if (!this.browserWindow.isAvailable()) {
@@ -51,19 +52,35 @@ export class MarketingAttributionService {
 
         this.persistFirstTouch(payload);
         this.markCapturedInSession(payload);
-        this.http.post<void>(this.baseUrl, payload, { context: this.telemetryContext }).subscribe({
-            error: () => {
-                // Attribution failures should never affect app flow.
-            },
-        });
+        this.http
+            .post<void>(this.baseUrl, payload, {
+                context: this.telemetryContext,
+                headers: { 'Idempotency-Key': crypto.randomUUID() },
+            })
+            .subscribe({
+                error: () => {
+                    // Attribution failures should never affect app flow.
+                },
+            });
     }
 
-    public recordSignupCompleted(userId: string): void {
-        this.recordConversion('signup_completed', userId);
-    }
+    public recordSignupCompleted(): void {
+        if (!this.browserWindow.isAvailable()) {
+            return;
+        }
 
-    public recordPremiumStarted(userId: string): void {
-        this.recordConversion('premium_started', userId);
+        const source = this.readFirstTouch() ?? this.createOrganicPayload();
+        const payload = this.createSignupPayload(source);
+        this.http
+            .post<void>(`${this.baseUrl}/signup`, payload, {
+                context: this.authenticatedTelemetryContext,
+                headers: { 'Idempotency-Key': crypto.randomUUID() },
+            })
+            .subscribe({
+                error: () => {
+                    // Attribution failures should never affect app flow.
+                },
+            });
     }
 
     private createPayload(): MarketingAttributionPayload | null {
@@ -71,7 +88,6 @@ export class MarketingAttributionService {
         const params = new URLSearchParams(this.browserWindow.getSearch() ?? '');
         const referrerHost = this.getExternalReferrerHost();
         const payload: MarketingAttributionPayload = {
-            eventType: 'page_landing',
             timestamp: new Date().toISOString(),
             anonymousId: this.getAnonymousId(),
             sessionId: this.telemetrySession.getSessionId(),
@@ -88,30 +104,24 @@ export class MarketingAttributionService {
         return null;
     }
 
-    private recordConversion(eventType: MarketingAttributionPayload['eventType'], userId: string): void {
-        if (!this.browserWindow.isAvailable() || userId.length === 0) {
-            return;
-        }
-
-        const firstTouch = this.readFirstTouch();
-        const payload: MarketingAttributionPayload = {
-            ...(firstTouch ?? this.createOrganicPayload()),
-            eventType,
+    private createSignupPayload(source: MarketingAttributionPayload): MarketingSignupAttributionPayload {
+        return {
             timestamp: new Date().toISOString(),
-            userId,
+            anonymousId: source.anonymousId,
             sessionId: this.telemetrySession.getSessionId(),
+            landingPath: source.landingPath,
+            ...(source.referrerHost !== undefined ? { referrerHost: source.referrerHost } : {}),
+            ...(source.utmSource !== undefined ? { utmSource: source.utmSource } : {}),
+            ...(source.utmMedium !== undefined ? { utmMedium: source.utmMedium } : {}),
+            ...(source.utmCampaign !== undefined ? { utmCampaign: source.utmCampaign } : {}),
+            ...(source.utmContent !== undefined ? { utmContent: source.utmContent } : {}),
+            ...(source.utmTerm !== undefined ? { utmTerm: source.utmTerm } : {}),
+            ...(source.buildVersion !== undefined ? { buildVersion: source.buildVersion } : {}),
         };
-
-        this.http.post<void>(this.baseUrl, payload, { context: this.telemetryContext }).subscribe({
-            error: () => {
-                // Attribution failures should never affect app flow.
-            },
-        });
     }
 
     private createOrganicPayload(): MarketingAttributionPayload {
         return {
-            eventType: 'page_landing',
             timestamp: new Date().toISOString(),
             anonymousId: this.getAnonymousId(),
             sessionId: this.telemetrySession.getSessionId(),

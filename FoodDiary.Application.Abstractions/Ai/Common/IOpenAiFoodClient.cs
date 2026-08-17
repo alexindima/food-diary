@@ -4,6 +4,13 @@ using FoodDiary.Results;
 namespace FoodDiary.Application.Abstractions.Ai.Common;
 
 public interface IOpenAiFoodClient {
+    Task<Result<AiProviderTokenBudget>> GetAnalyzeFoodImageTokenBudgetAsync(
+        string imageUrl,
+        string? userLanguage,
+        string? description,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+
     Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> AnalyzeFoodImageAsync(
         string imageUrl,
         string? userLanguage,
@@ -11,9 +18,20 @@ public interface IOpenAiFoodClient {
         string promptTemplate,
         CancellationToken cancellationToken);
 
+    Task<Result<AiProviderTokenBudget>> GetParseFoodTextTokenBudgetAsync(
+        string text,
+        string? userLanguage,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+
     Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> ParseFoodTextAsync(
         string text,
         string? userLanguage,
+        string promptTemplate,
+        CancellationToken cancellationToken);
+
+    Task<Result<AiProviderTokenBudget>> GetCalculateNutritionTokenBudgetAsync(
+        IReadOnlyList<FoodVisionItemModel> items,
         string promptTemplate,
         CancellationToken cancellationToken);
 

@@ -15,7 +15,7 @@ builder.Services
     .AddMailInboxApplication()
     .AddMailInboxPresentation(builder.Configuration)
     .AddMailInboxInfrastructure(builder.Configuration)
-    .AddMailInboxTelemetry();
+    .AddMailInboxTelemetry(builder.Configuration);
 
 WebApplication app = builder.Build();
 

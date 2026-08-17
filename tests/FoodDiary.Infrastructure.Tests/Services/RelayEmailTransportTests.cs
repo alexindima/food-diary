@@ -21,7 +21,8 @@ public sealed class RelayEmailTransportTests {
             ["to@example.com"],
             "Subject",
             "<p>Hello</p>",
-            "Hello");
+            "Hello",
+            IdempotencyKey: "fooddiary-email-outbox:123");
 
         await transport.SendAsync(message, CancellationToken.None);
 
@@ -32,7 +33,8 @@ public sealed class RelayEmailTransportTests {
         Assert.Equal("Subject", request.Subject);
         Assert.Equal("<p>Hello</p>", request.HtmlBody);
         Assert.Equal("Hello", request.TextBody);
-        Assert.False(string.IsNullOrWhiteSpace(request.CorrelationId));
+        Assert.Equal("fooddiary-email-outbox:123", request.CorrelationId);
+        Assert.Equal("fooddiary-email-outbox:123", request.IdempotencyKey);
     }
 
     [Fact]

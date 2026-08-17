@@ -13,4 +13,5 @@ public sealed record MarketingAttributionEventRecord(
     string? UtmCampaign,
     string? UtmContent,
     string? UtmTerm,
-    string? BuildVersion);
+    string? BuildVersion,
+    Guid? EventId = null);

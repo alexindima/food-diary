@@ -1,9 +1,56 @@
 using System.Globalization;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
 public sealed class SideEffectReliabilityGuardrailTests {
+    [Fact]
+    public void MediatorNotificationDispatch_IsSequentialForSharedTransactionalScopes() {
+        string mediatorPath = ArchitectureTestPaths.FromRoot(
+            "Shared",
+            "FoodDiary.Mediator",
+            "DefaultMediator.cs");
+        CompilationUnitSyntax root = CSharpSyntaxTree
+            .ParseText(File.ReadAllText(mediatorPath))
+            .GetCompilationUnitRoot();
+        MethodDeclarationSyntax[] dispatchMethods = [.. root
+            .DescendantNodes()
+            .OfType<MethodDeclarationSyntax>()
+            .Where(static method => method.Identifier.ValueText is "PublishToHandlers" or "PublishObjectToHandlers")];
+
+        Assert.Equal(2, dispatchMethods.Length);
+        Assert.All(dispatchMethods, static method => {
+            Assert.DoesNotContain(
+                method.DescendantNodes().OfType<InvocationExpressionSyntax>(),
+                static invocation => invocation.Expression.ToString().EndsWith("Task.WhenAll", StringComparison.Ordinal));
+            Assert.Single(method.DescendantNodes().OfType<ForEachStatementSyntax>());
+            Assert.NotEmpty(method.DescendantNodes().OfType<AwaitExpressionSyntax>());
+        });
+    }
+
+    [Fact]
+    public void ApplicationRuntimeTelemetry_IsExportedByRequestAndJobHosts() {
+        string apiTelemetryPath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.Web.Api",
+            "Extensions",
+            "ApiTelemetryServiceCollectionExtensions.cs");
+        string jobTelemetryPath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.JobManager",
+            "Services",
+            "JobManagerTelemetryServiceCollectionExtensions.cs");
+
+        Assert.Contains(
+            ".AddMeter(\"FoodDiary.Application.Runtime\")",
+            File.ReadAllText(apiTelemetryPath),
+            StringComparison.Ordinal);
+        Assert.Contains(
+            ".AddMeter(\"FoodDiary.Application.Runtime\")",
+            File.ReadAllText(jobTelemetryPath),
+            StringComparison.Ordinal);
+    }
+
     [Fact]
     public void PostCommitQueueContract_DocumentsBestEffortSemantics() {
         string contractPath = ArchitectureTestPaths.FromRoot(
@@ -176,6 +223,8 @@ public sealed class SideEffectReliabilityGuardrailTests {
             "RecordOutboxMessages(outboxName, \"processed\"",
             "RecordOutboxMessages(outboxName, \"retried\"",
             "RecordOutboxMessages(outboxName, \"dead_lettered\"",
+            "RecordOutboxMessages(outboxName, \"reclaimed\"",
+            "RecordOutboxMessages(outboxName, \"dispatch_timeout\"",
             "RecordOutboxProcessingDuration(outboxName",
         ];
 

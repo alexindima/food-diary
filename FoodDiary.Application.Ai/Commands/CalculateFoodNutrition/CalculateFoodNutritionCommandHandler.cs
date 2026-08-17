@@ -33,6 +33,6 @@ public sealed class CalculateFoodNutritionCommandHandler(
             return Result.Failure<FoodNutritionModel>(contextResult.Error);
         }
 
-        return await openAiFoodService.CalculateNutritionAsync(query.Items, userId, cancellationToken).ConfigureAwait(false);
+        return await openAiFoodService.CalculateNutritionAsync(query.Items, userId, query.RequestId, cancellationToken).ConfigureAwait(false);
     }
 }

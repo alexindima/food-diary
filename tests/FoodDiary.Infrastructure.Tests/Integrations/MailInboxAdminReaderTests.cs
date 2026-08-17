@@ -47,6 +47,7 @@ public sealed class MailInboxAdminReaderTests {
     public async Task GetMessageAsync_WhenClientReturnsDetails_MapsDetails() {
         var id = Guid.NewGuid();
         DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
+        DateTimeOffset contentPurgedAtUtc = receivedAtUtc.AddDays(30);
         InboundMailMessageDetailsResponse details = new(
             id,
             "message-id",
@@ -59,7 +60,8 @@ public sealed class MailInboxAdminReaderTests {
             "general",
             "received",
             ReadAtUtc: null,
-            receivedAtUtc);
+            receivedAtUtc,
+            contentPurgedAtUtc);
         IMailInboxClient client = Substitute.For<IMailInboxClient>();
         Guid lastMessageId = Guid.Empty;
         client
@@ -75,6 +77,7 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal("<p>html</p>", result.HtmlBody);
         Assert.Equal("raw", result.RawMime);
         Assert.Equal("general", result.Category);
+        Assert.Equal(contentPurgedAtUtc, result.ContentPurgedAtUtc);
         Assert.Equal(id, lastMessageId);
     }
 

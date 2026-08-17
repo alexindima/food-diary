@@ -33,6 +33,10 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["RateLimiting:Auth:WindowSeconds"] = "90",
                 ["RateLimiting:Ai:PermitLimit"] = "11",
                 ["RateLimiting:Ai:WindowSeconds"] = "120",
+                ["RateLimiting:ClientTelemetry:PermitLimit"] = "61",
+                ["RateLimiting:ClientTelemetry:WindowSeconds"] = "121",
+                ["RateLimiting:MarketingAttribution:PermitLimit"] = "31",
+                ["RateLimiting:MarketingAttribution:WindowSeconds"] = "91",
                 ["OutputCache:AdminAiUsage:ExpirationSeconds"] = "30",
             })
             .Build();
@@ -58,6 +62,10 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(90, rateLimiting.Auth.WindowSeconds);
         Assert.Equal(11, rateLimiting.Ai.PermitLimit);
         Assert.Equal(120, rateLimiting.Ai.WindowSeconds);
+        Assert.Equal(61, rateLimiting.ClientTelemetry.PermitLimit);
+        Assert.Equal(121, rateLimiting.ClientTelemetry.WindowSeconds);
+        Assert.Equal(31, rateLimiting.MarketingAttribution.PermitLimit);
+        Assert.Equal(91, rateLimiting.MarketingAttribution.WindowSeconds);
         Assert.Equal(30, outputCache.AdminAiUsage.ExpirationSeconds);
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
         Assert.True(forwardedHeadersOptions.ForwardedHeaders.HasFlag(ForwardedHeaders.XForwardedHost));

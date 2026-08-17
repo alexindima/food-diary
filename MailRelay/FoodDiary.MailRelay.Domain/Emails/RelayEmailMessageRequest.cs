@@ -8,4 +8,5 @@ public sealed record RelayEmailMessageRequest(
     string HtmlBody,
     string? TextBody,
     string? CorrelationId = null,
-    string? IdempotencyKey = null);
+    string? IdempotencyKey = null,
+    string? MessageId = null);

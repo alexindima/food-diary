@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using System.Globalization;
+using System.Text;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Common.Behaviors;
 using FoodDiary.Results;
@@ -43,7 +44,7 @@ public sealed class MailInboxApplicationTests {
         Assert.Equal("sender@example.com", store.LastSaved.FromAddress);
         Assert.Equal(["admin@fooddiary.club"], store.LastSaved.ToRecipients);
         Assert.Equal("Hello", store.LastSaved.Subject);
-        Assert.Equal("raw mime", store.LastSaved.RawMime);
+        Assert.True(store.LastSaved.RawMimeBytes.Span.SequenceEqual(Encoding.UTF8.GetBytes("raw mime")));
         Assert.Equal(receivedAt, store.LastSaved.ReceivedAtUtc);
     }
 
@@ -341,9 +342,9 @@ public sealed class MailInboxApplicationTests {
         public DateTimeOffset LastReadAtUtc { get; private set; }
         public CancellationToken LastMessagesCancellationToken { get; private set; }
 
-        public Task<Guid> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) {
+        public Task<InboundMailSaveResult> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) {
             LastSaved = message;
-            return Task.FromResult(SavedId);
+            return Task.FromResult(new InboundMailSaveResult(SavedId, WasDuplicate: false));
         }
 
         public Task<IReadOnlyList<InboundMailMessageSummary>> GetMessagesAsync(int limit, CancellationToken cancellationToken) {
@@ -361,6 +362,13 @@ public sealed class MailInboxApplicationTests {
             LastMessagesCancellationToken = cancellationToken;
             return Task.FromResult(Details is not null && Details.Id == id);
         }
+
+        public Task<InboundMailRetentionResult> PurgeExpiredAsync(
+            DateTimeOffset contentCutoffUtc,
+            DateTimeOffset metadataCutoffUtc,
+            int batchSize,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]
@@ -389,7 +397,8 @@ public sealed class MailInboxApplicationTests {
             DmarcReport: null,
             InboundMailMessageStatus.Received.ToString(),
             ReadAtUtc: null,
-            DateTimeOffset.UtcNow);
+            DateTimeOffset.UtcNow,
+            ContentPurgedAtUtc: null);
 
     [ExcludeFromCodeCoverage]
     private sealed record TestCommand : IRequest<Result>;

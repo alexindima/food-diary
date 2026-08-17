@@ -1,245 +1,148 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Services;
-using FoodDiary.Results;
-using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Results;
 
 namespace FoodDiary.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
 public sealed class OpenAiFoodServiceTests {
+    private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
     [Fact]
-    public async Task CalculateNutritionAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingClient() {
+    public async Task CalculateNutritionAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingProvider() {
         var client = new RecordingOpenAiFoodClient();
-        var service = new OpenAiFoodService(
-            client,
-            new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
+        var quotaRepository = new RecordingAiQuotaRepository {
+            ReserveStatus = AiQuotaReservationStatus.QuotaExceeded,
+        };
+        OpenAiFoodService service = CreateService(client, quotaRepository);
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            CreateItems(),
             UserId.New(),
+            RequestId,
             CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
+        Assert.Equal(1, client.CalculateNutritionBudgetCalls);
         Assert.Equal(0, client.CalculateNutritionCalls);
+        Assert.Single(quotaRepository.Reservations);
     }
 
     [Fact]
-    public async Task CalculateNutritionAsync_WhenUserInactive_ReturnsAccessErrorWithoutCallingClient() {
+    public async Task CalculateNutritionAsync_WhenUserInactive_DoesNotCountOrReserveTokens() {
         var user = User.Create("inactive-ai-service@example.com", "hash");
         user.Deactivate();
         var client = new RecordingOpenAiFoodClient();
-        var service = new OpenAiFoodService(
-            client,
-            new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            CreateAiUserContextService(user),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
+        var quotaRepository = new RecordingAiQuotaRepository();
+        OpenAiFoodService service = CreateService(client, quotaRepository, user);
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            CreateItems(),
             user.Id,
+            RequestId,
             CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-        Assert.Equal(0, client.CalculateNutritionCalls);
+        Assert.Equal(0, client.CalculateNutritionBudgetCalls);
+        Assert.Empty(quotaRepository.Reservations);
     }
 
     [Fact]
-    public async Task CalculateNutritionAsync_WhenUserMissing_ReturnsNotFoundWithoutCallingClient() {
-        var client = new RecordingOpenAiFoodClient();
-        var userId = UserId.New();
-        var service = new OpenAiFoodService(
-            client,
-            new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            CreateAiUserContextService(returnNull: true),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
+    public async Task CalculateNutritionAsync_WhenTokenCountFails_DoesNotReserveOrGenerate() {
+        var client = new RecordingOpenAiFoodClient {
+            CalculateNutritionBudgetResult = Result.Failure<AiProviderTokenBudget>(Errors.Ai.InvalidResponse("count failed")),
+        };
+        var quotaRepository = new RecordingAiQuotaRepository();
+        OpenAiFoodService service = CreateService(client, quotaRepository);
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
-            userId,
+            CreateItems(),
+            UserId.New(),
+            RequestId,
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("User.NotFound", result.Error.Code);
         Assert.Equal(0, client.CalculateNutritionCalls);
+        Assert.Empty(quotaRepository.Reservations);
     }
 
     [Fact]
-    public async Task CalculateNutritionAsync_WhenClientSucceeds_ReturnsNutritionAndStoresUsage() {
-        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
-        var client = new RecordingOpenAiFoodClient();
-        var service = new OpenAiFoodService(
-            client,
-            usageRepository,
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
+    public async Task CalculateNutritionAsync_WhenClientSucceeds_ReservesBeforeGenerationAndReconcilesActualUsage() {
+        var quotaRepository = new RecordingAiQuotaRepository();
+        var client = new RecordingOpenAiFoodClient {
+            BeforeCalculateNutrition = () => Assert.Single(quotaRepository.Reservations),
+        };
+        OpenAiFoodService service = CreateService(client, quotaRepository);
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            CreateItems(),
             UserId.New(),
+            RequestId,
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(52m, result.Value.Calories);
-        Assert.Equal(1, client.CalculateNutritionCalls);
-        Assert.Single(usageRepository.Items);
+        AiQuotaReservationRequest reservation = Assert.Single(quotaRepository.Reservations);
+        Assert.Multiple(
+            () => Assert.Equal(RequestId, reservation.RequestId),
+            () => Assert.Equal("nutrition", reservation.Operation),
+            () => Assert.Equal(11, reservation.InputTokens),
+            () => Assert.Equal(4_096, reservation.OutputTokens));
+        AiQuotaUsage reconciliation = Assert.Single(quotaRepository.Reconciliations);
+        Assert.Equal(new AiQuotaUsage("nutrition", "test-model", 11, 7, 18), reconciliation);
+        Assert.Empty(quotaRepository.Releases);
     }
 
     [Fact]
-    public async Task CalculateNutritionAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
-        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+    public async Task CalculateNutritionAsync_WhenClientFailureCostIsUnknown_KeepsReservationPending() {
+        var quotaRepository = new RecordingAiQuotaRepository();
         var client = new RecordingOpenAiFoodClient {
             CalculateNutritionResult = Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(Errors.Ai.EmptyItems()),
         };
-        var service = new OpenAiFoodService(
-            client,
-            usageRepository,
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
+        OpenAiFoodService service = CreateService(client, quotaRepository);
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
+            CreateItems(),
             UserId.New(),
+            RequestId,
             CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Ai.EmptyItems", result.Error.Code);
-        Assert.Empty(usageRepository.Items);
+        Assert.Empty(quotaRepository.Releases);
+        Assert.Empty(quotaRepository.Reconciliations);
     }
 
     [Fact]
-    public async Task AnalyzeFoodImageAsync_WhenClientSucceeds_StoresUsage() {
-        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
-        var service = new OpenAiFoodService(
-            new RecordingOpenAiFoodClient(),
-            usageRepository,
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
+    public async Task CalculateNutritionAsync_WhenClientDisconnectsAfterProviderResponse_ReconcilesWithServerOwnedToken() {
+        using var requestCancellation = new CancellationTokenSource();
+        var quotaRepository = new RecordingAiQuotaRepository();
+        var client = new RecordingOpenAiFoodClient {
+            BeforeCalculateNutrition = requestCancellation.Cancel,
+        };
+        OpenAiFoodService service = CreateService(client, quotaRepository);
 
-        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
-            "https://cdn.example.com/meal.webp",
-            "en",
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
+            CreateItems(),
             UserId.New(),
-            description: null,
-            CancellationToken.None);
+            RequestId,
+            requestCancellation.Token);
 
         ResultAssert.Success(result);
-        AiUsage usage = Assert.Single(usageRepository.Items);
-        Assert.Equal("vision", usage.Operation);
-        Assert.Equal("test-model", usage.Model);
-        Assert.Equal(18, usage.TotalTokens);
+        Assert.Single(quotaRepository.Reconciliations);
+        Assert.False(quotaRepository.ReconcileTokenWasCanceled);
     }
 
     [Fact]
-    public async Task AnalyzeFoodImageAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingClient() {
-        var client = new RecordingOpenAiFoodClient();
-        var service = new OpenAiFoodService(
-            client,
-            new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
-
-        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
-            "https://cdn.example.com/meal.webp",
-            "en",
-            UserId.New(),
-            description: null,
-            CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
-        Assert.Equal(0, client.AnalyzeFoodImageCalls);
-    }
-
-    [Fact]
-    public async Task AnalyzeFoodImageAsync_WhenUserMissing_ReturnsNotFoundWithoutCallingClient() {
-        var client = new RecordingOpenAiFoodClient();
-        var userId = UserId.New();
-        var service = new OpenAiFoodService(
-            client,
-            new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            CreateAiUserContextService(returnNull: true),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
-
-        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
-            "https://cdn.example.com/meal.webp",
-            "en",
-            userId,
-            description: null,
-            CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("User.NotFound", result.Error.Code);
-        Assert.Equal(0, client.AnalyzeFoodImageCalls);
-    }
-
-    [Fact]
-    public async Task AnalyzeFoodImageAsync_WhenOutputQuotaExceeded_ReturnsQuotaErrorWithoutCallingClient() {
-        var client = new RecordingOpenAiFoodClient();
-        var service = new OpenAiFoodService(
-            client,
-            new RecordingAiUsageRepository(new AiUsageTotals(0, 1_000_000)),
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
-
-        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
-            "https://cdn.example.com/meal.webp",
-            "en",
-            UserId.New(),
-            description: null,
-            CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
-        Assert.Equal(0, client.AnalyzeFoodImageCalls);
-    }
-
-    [Fact]
-    public async Task AnalyzeFoodImageAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
-        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
-        var client = new RecordingOpenAiFoodClient {
-            AnalyzeFoodImageResult = Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.Forbidden()),
-        };
-        var service = new OpenAiFoodService(
-            client,
-            usageRepository,
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
-
-        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
-            "https://cdn.example.com/meal.webp",
-            "en",
-            UserId.New(),
-            description: null,
-            CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("Ai.Forbidden", result.Error.Code);
-        Assert.Empty(usageRepository.Items);
-    }
-
-    [Fact]
-    public async Task AnalyzeFoodImageAsync_WhenResponseHasNoUsage_DoesNotStoreUsage() {
-        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+    public async Task AnalyzeFoodImageAsync_WhenResponseHasNoUsage_ChargesReservedBudgetConservatively() {
+        var quotaRepository = new RecordingAiQuotaRepository();
         var client = new RecordingOpenAiFoodClient {
             AnalyzeFoodImageResult = Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
                 CreateVisionModel(),
@@ -247,128 +150,113 @@ public sealed class OpenAiFoodServiceTests {
                 "test-model",
                 Usage: null)),
         };
-        var service = new OpenAiFoodService(
-            client,
-            usageRepository,
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
+        OpenAiFoodService service = CreateService(client, quotaRepository);
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
             description: null,
+            RequestId,
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Empty(usageRepository.Items);
+        AiQuotaUsage usage = Assert.Single(quotaRepository.Reconciliations);
+        Assert.Equal(new AiQuotaUsage("vision", "test-model", 11, 4_096, 4_107), usage);
     }
 
     [Fact]
-    public async Task ParseFoodTextAsync_WhenClientSucceeds_ReturnsVisionAndStoresUsage() {
-        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
+    public async Task ParseFoodTextAsync_WhenClientSucceeds_UsesStableRequestIdAndReconciles() {
+        var quotaRepository = new RecordingAiQuotaRepository();
         var client = new RecordingOpenAiFoodClient();
-        var service = new OpenAiFoodService(
-            client,
-            usageRepository,
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
+        OpenAiFoodService service = CreateService(client, quotaRepository);
 
-        Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
+        Result<FoodVisionModel> result = await service.ParseFoodTextAsync(
+            "apple 100g",
+            "en",
+            UserId.New(),
+            RequestId,
+            CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Single(result.Value.Items);
-        Assert.Equal(1, client.ParseFoodTextCalls);
-        Assert.Single(usageRepository.Items);
+        Assert.Equal(RequestId, Assert.Single(quotaRepository.Reservations).RequestId);
+        Assert.Equal("text-parse", Assert.Single(quotaRepository.Reconciliations).Operation);
     }
 
-    [Fact]
-    public async Task ParseFoodTextAsync_WhenQuotaExceeded_ReturnsQuotaErrorWithoutCallingClient() {
-        var client = new RecordingOpenAiFoodClient();
-        var service = new OpenAiFoodService(
+    private static OpenAiFoodService CreateService(
+        RecordingOpenAiFoodClient client,
+        RecordingAiQuotaRepository quotaRepository,
+        User? user = null,
+        bool returnNull = false) =>
+        new(
             client,
-            new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            CreateAiUserContextService(),
+            quotaRepository,
+            CreateAiUserContextService(user, returnNull),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
-        Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
-        Assert.Equal(0, client.ParseFoodTextCalls);
-    }
-
-    [Fact]
-    public async Task ParseFoodTextAsync_WhenClientFails_ReturnsFailureWithoutUsage() {
-        var usageRepository = new RecordingAiUsageRepository(new AiUsageTotals(0, 0));
-        var client = new RecordingOpenAiFoodClient {
-            ParseFoodTextResult = Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.EmptyItems()),
-        };
-        var service = new OpenAiFoodService(
-            client,
-            usageRepository,
-            CreateAiUserContextService(),
-            new StubDateTimeProvider(),
-            CreateAiPromptProvider());
-
-        Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
-
-        ResultAssert.Failure(result);
-        Assert.Equal("Ai.EmptyItems", result.Error.Code);
-        Assert.Empty(usageRepository.Items);
-    }
+    private static IReadOnlyList<FoodVisionItemModel> CreateItems() =>
+        [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)];
 
     private static FoodVisionModel CreateVisionModel() =>
-        new([
-            new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m),
-        ]);
+        new([new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)]);
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingOpenAiFoodClient : IOpenAiFoodClient {
-        public Result<OpenAiFoodClientResponse<FoodVisionModel>>? AnalyzeFoodImageResult { get; init; }
-        public Result<OpenAiFoodClientResponse<FoodVisionModel>>? ParseFoodTextResult { get; init; }
-        public Result<OpenAiFoodClientResponse<FoodNutritionModel>>? CalculateNutritionResult { get; init; }
+        private static readonly AiProviderTokenBudget DefaultBudget = new(11, 4_096);
 
-        public int AnalyzeFoodImageCalls { get; private set; }
-        public int ParseFoodTextCalls { get; private set; }
+        public Result<AiProviderTokenBudget>? CalculateNutritionBudgetResult { get; init; }
+        public Result<OpenAiFoodClientResponse<FoodVisionModel>>? AnalyzeFoodImageResult { get; init; }
+        public Result<OpenAiFoodClientResponse<FoodNutritionModel>>? CalculateNutritionResult { get; init; }
+        public Action? BeforeCalculateNutrition { get; init; }
+
+        public int CalculateNutritionBudgetCalls { get; private set; }
         public int CalculateNutritionCalls { get; private set; }
+
+        public Task<Result<AiProviderTokenBudget>> GetAnalyzeFoodImageTokenBudgetAsync(
+            string imageUrl,
+            string? userLanguage,
+            string? description,
+            string promptTemplate,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(Result.Success(DefaultBudget));
 
         public Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> AnalyzeFoodImageAsync(
             string imageUrl,
             string? userLanguage,
             string? description,
             string promptTemplate,
-            CancellationToken cancellationToken) {
-            AnalyzeFoodImageCalls++;
-            if (AnalyzeFoodImageResult is not null) {
-                return Task.FromResult(AnalyzeFoodImageResult);
-            }
-
-            return Task.FromResult(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
+            CancellationToken cancellationToken) =>
+            Task.FromResult(AnalyzeFoodImageResult ?? Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
                 CreateVisionModel(),
                 "vision",
                 "test-model",
                 new AiUsageTokens(11, 7, 18))));
-        }
+
+        public Task<Result<AiProviderTokenBudget>> GetParseFoodTextTokenBudgetAsync(
+            string text,
+            string? userLanguage,
+            string promptTemplate,
+            CancellationToken cancellationToken) =>
+            Task.FromResult(Result.Success(DefaultBudget));
 
         public Task<Result<OpenAiFoodClientResponse<FoodVisionModel>>> ParseFoodTextAsync(
             string text,
             string? userLanguage,
             string promptTemplate,
-            CancellationToken cancellationToken) {
-            ParseFoodTextCalls++;
-            if (ParseFoodTextResult is not null) {
-                return Task.FromResult(ParseFoodTextResult);
-            }
-
-            return Task.FromResult(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
+            CancellationToken cancellationToken) =>
+            Task.FromResult(Result.Success(new OpenAiFoodClientResponse<FoodVisionModel>(
                 CreateVisionModel(),
                 "text-parse",
                 "test-model",
                 new AiUsageTokens(11, 7, 18))));
+
+        public Task<Result<AiProviderTokenBudget>> GetCalculateNutritionTokenBudgetAsync(
+            IReadOnlyList<FoodVisionItemModel> items,
+            string promptTemplate,
+            CancellationToken cancellationToken) {
+            CalculateNutritionBudgetCalls++;
+            return Task.FromResult(CalculateNutritionBudgetResult ?? Result.Success(DefaultBudget));
         }
 
         public Task<Result<OpenAiFoodClientResponse<FoodNutritionModel>>> CalculateNutritionAsync(
@@ -376,11 +264,8 @@ public sealed class OpenAiFoodServiceTests {
             string promptTemplate,
             CancellationToken cancellationToken) {
             CalculateNutritionCalls++;
-            if (CalculateNutritionResult is not null) {
-                return Task.FromResult(CalculateNutritionResult);
-            }
-
-            return Task.FromResult(Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(
+            BeforeCalculateNutrition?.Invoke();
+            return Task.FromResult(CalculateNutritionResult ?? Result.Success(new OpenAiFoodClientResponse<FoodNutritionModel>(
                 new FoodNutritionModel(52m, 0.3m, 0.2m, 14m, 2.4m, 0m, []),
                 "nutrition",
                 "test-model",
@@ -389,19 +274,33 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingAiUsageRepository(AiUsageTotals totals) : IAiUsageRepository {
-        public List<AiUsage> Items { get; } = [];
+    private sealed class RecordingAiQuotaRepository : IAiQuotaRepository {
+        public AiQuotaReservationStatus ReserveStatus { get; init; } = AiQuotaReservationStatus.Acquired;
+        public List<AiQuotaReservationRequest> Reservations { get; } = [];
+        public List<AiQuotaUsage> Reconciliations { get; } = [];
+        public List<string> Releases { get; } = [];
+        public bool ReconcileTokenWasCanceled { get; private set; }
 
-        public Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default) {
-            Items.Add(usage);
+        public Task<AiQuotaReservationStatus> ReserveAsync(
+            AiQuotaReservationRequest request,
+            CancellationToken cancellationToken = default) {
+            Reservations.Add(request);
+            return Task.FromResult(ReserveStatus);
+        }
+
+        public Task ReconcileAsync(
+            string requestId,
+            AiQuotaUsage usage,
+            CancellationToken cancellationToken = default) {
+            ReconcileTokenWasCanceled = cancellationToken.IsCancellationRequested;
+            Reconciliations.Add(usage);
             return Task.CompletedTask;
         }
 
-        public Task<AiUsageSummary> GetSummaryAsync(DateTime fromUtc, DateTime toUtc, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new AiUsageSummary(0, 0, 0, [], [], [], []));
-
-        public Task<AiUsageTotals> GetUserTotalsAsync(UserId userId, DateTime fromUtc, DateTime toUtc, CancellationToken cancellationToken = default) =>
-            Task.FromResult(totals);
+        public Task ReleaseAsync(string requestId, CancellationToken cancellationToken = default) {
+            Releases.Add(requestId);
+            return Task.CompletedTask;
+        }
     }
 
     private static IAiUserContextService CreateAiUserContextService(User? user = null, bool returnNull = false) {
@@ -430,7 +329,8 @@ public sealed class OpenAiFoodServiceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : TimeProvider {
-        public override DateTimeOffset GetUtcNow() => new(new(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc));
+        public override DateTimeOffset GetUtcNow() =>
+            new(new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc));
     }
 
     private static IAiPromptProvider CreateAiPromptProvider() {

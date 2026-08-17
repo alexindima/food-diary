@@ -91,11 +91,11 @@ public sealed class MailInboxArchitectureTests {
             ["MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"] = [],
             ["MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"] = [
                 "MailKit",
-                "Microsoft.Extensions.Hosting",
-                "Microsoft.Extensions.Options.ConfigurationExtensions",
                 "Npgsql",
+                "Npgsql.OpenTelemetry",
                 "OpenTelemetry.Exporter.OpenTelemetryProtocol",
                 "OpenTelemetry.Extensions.Hosting",
+                "OpenTelemetry.Instrumentation.AspNetCore",
                 "SmtpServer",
             ],
             ["MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"] = [
@@ -316,6 +316,7 @@ public sealed class MailInboxArchitectureTests {
         var allowedOptionFiles = new HashSet<string>(StringComparer.Ordinal) {
             Path.Combine("MailInbox", "FoodDiary.MailInbox.Client", "Options", "MailInboxClientOptions.cs"),
             Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxSmtpOptions.cs"),
+            Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxStorageOptions.cs"),
             Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "OpenTelemetryOptions.cs"),
             Path.Combine("MailInbox", "FoodDiary.MailInbox.Presentation", "Options", "MailInboxHttpOptions.cs"),
         };

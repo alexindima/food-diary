@@ -6,15 +6,15 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1465,
-    "credential": 153,
+    "candidateFields": 1466,
+    "credential": 154,
     "identity": 153,
     "health": 663,
     "financial": 199,
     "privateContent": 297,
     "boundaryFiles": 186,
     "potentialLoggingLeads": 1,
-    "externalTransferLeads": 1
+    "externalTransferLeads": 2
   },
   "fields": [
     {
@@ -589,7 +589,14 @@
       "name": "CancellationToken",
       "type": "Func<TMessage,",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 16
+      "line": 18
+    },
+    {
+      "category": "credential",
+      "name": "CancellationToken",
+      "type": "Func<TMessage,",
+      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
+      "line": 89
     },
     {
       "category": "credential",
@@ -708,28 +715,28 @@
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 157
+      "line": 191
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/FitbitClient.cs",
-      "line": 160
+      "line": 194
     },
     {
       "category": "credential",
       "name": "AccessToken",
       "type": "string",
       "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
-      "line": 195
+      "line": 236
     },
     {
       "category": "credential",
       "name": "RefreshToken",
       "type": "string?",
       "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
-      "line": 198
+      "line": 239
     },
     {
       "category": "credential",
@@ -2024,77 +2031,77 @@
       "name": "CustomerId",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 663
+      "line": 618
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutRequest",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 666
+      "line": 621
     },
     {
       "category": "financial",
       "name": "Checkout",
       "type": "TransactionCheckoutResponse?",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 677
+      "line": 632
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountRequest",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 322
+      "line": 271
     },
     {
       "category": "financial",
       "name": "SavePaymentMethod",
       "type": "bool",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 325
+      "line": 274
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountRequest",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 330
+      "line": 279
     },
     {
       "category": "financial",
       "name": "PaymentMethodId",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 332
+      "line": 281
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 338
+      "line": 287
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "AmountResponse?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 352
+      "line": 301
     },
     {
       "category": "financial",
       "name": "PaymentMethod",
       "type": "PaymentMethodResponse?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 354
+      "line": 303
     },
     {
       "category": "financial",
       "name": "Currency",
       "type": "string?",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 361
+      "line": 310
     },
     {
       "category": "financial",
@@ -2136,14 +2143,14 @@
       "name": "Amount",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 168
+      "line": 187
     },
     {
       "category": "financial",
       "name": "Amount",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 190
+      "line": 209
     },
     {
       "category": "financial",
@@ -5972,7 +5979,7 @@
       "name": "GramWeight",
       "type": "double?",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 193
+      "line": 212
     },
     {
       "category": "health",
@@ -7841,7 +7848,7 @@
       "name": "Email",
       "type": "string",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 653
+      "line": 608
     },
     {
       "category": "identity",
@@ -9745,14 +9752,14 @@
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 217
+      "line": 235
     },
     {
       "category": "privateContent",
       "name": "ImageUrl",
       "type": "string?",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 234
+      "line": 252
     },
     {
       "category": "privateContent",
@@ -11642,7 +11649,24 @@
   "externalTransfers": [
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 136,
+      "line": 196,
+      "providerHost": "api.openai.com",
+      "dataNames": [
+        "description",
+        "errorMessage",
+        "errorText",
+        "imageUrl",
+        "promptTemplate",
+        "text"
+      ],
+      "categories": [
+        "privateContent"
+      ],
+      "evidence": "External HttpClient destination and sensitive method parameters occur in the same integration client. Verify the runtime data flow in source."
+    },
+    {
+      "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
+      "line": 317,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

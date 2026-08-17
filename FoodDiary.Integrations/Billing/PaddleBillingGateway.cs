@@ -1,7 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -22,6 +20,7 @@ public sealed class PaddleBillingGateway(
     : IBillingProviderGateway {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private readonly PaddleOptions _options = options.Value;
+    private readonly PaddleApiClient _apiClient = new(httpClient, options.Value);
     private readonly TimeProvider _timeProvider = timeProvider ?? TimeProvider.System;
 
     public string Provider => BillingProviderNames.Paddle;
@@ -32,8 +31,6 @@ public sealed class PaddleBillingGateway(
         if (!IsConfiguredForCheckout()) {
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
-
-        ConfigureClient();
 
         string? customerId = request.ExistingCustomerId;
         if (string.IsNullOrWhiteSpace(customerId)) {
@@ -88,7 +85,7 @@ public sealed class PaddleBillingGateway(
             transactionResponse = Result.Success(recoveredTransaction);
         } else {
             try {
-                transactionResponse = await SendAsync<CreateTransactionResponse>(
+                transactionResponse = await _apiClient.SendAsync<CreateTransactionResponse>(
                     HttpMethod.Post,
                     "transactions",
                     new CreateTransactionRequest(
@@ -127,9 +124,7 @@ public sealed class PaddleBillingGateway(
             return Result.Failure<BillingPortalSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
-        ConfigureClient();
-
-        Result<CreateCustomerPortalSessionResponse> sessionResponse = await SendAsync<CreateCustomerPortalSessionResponse>(
+        Result<CreateCustomerPortalSessionResponse> sessionResponse = await _apiClient.SendAsync<CreateCustomerPortalSessionResponse>(
             HttpMethod.Post,
             $"customers/{request.CustomerId}/portal-sessions",
             new { },
@@ -350,7 +345,7 @@ public sealed class PaddleBillingGateway(
     private async Task<Result<string>> CreateCustomerAsync(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken) {
-        Result<CreateCustomerResponse> customerResponse = await SendAsync<CreateCustomerResponse>(
+        Result<CreateCustomerResponse> customerResponse = await _apiClient.SendAsync<CreateCustomerResponse>(
             HttpMethod.Post,
             "customers",
             new CreateCustomerRequest(
@@ -368,7 +363,7 @@ public sealed class PaddleBillingGateway(
         CancellationToken cancellationToken) {
         try {
             string path = $"customers?email={Uri.EscapeDataString(request.Email)}&per_page=30";
-            Result<IReadOnlyList<CreateCustomerResponse>> result = await SendAsync<IReadOnlyList<CreateCustomerResponse>>(
+            Result<IReadOnlyList<CreateCustomerResponse>> result = await _apiClient.SendAsync<IReadOnlyList<CreateCustomerResponse>>(
                 HttpMethod.Get,
                 path,
                 body: null,
@@ -393,7 +388,7 @@ public sealed class PaddleBillingGateway(
         CancellationToken cancellationToken) {
         try {
             string path = $"transactions?customer_id={Uri.EscapeDataString(customerId)}&origin=api&per_page=30";
-            Result<IReadOnlyList<CreateTransactionResponse>> result = await SendAsync<IReadOnlyList<CreateTransactionResponse>>(
+            Result<IReadOnlyList<CreateTransactionResponse>> result = await _apiClient.SendAsync<IReadOnlyList<CreateTransactionResponse>>(
                 HttpMethod.Get,
                 path,
                 body: null,
@@ -423,43 +418,6 @@ $"{request.UserId:N}:{request.Plan.Trim().ToLowerInvariant()}";
     private static bool IsAmbiguousNetworkFailure(Exception exception, CancellationToken cancellationToken) =>
         exception is HttpRequestException ||
         (exception is TaskCanceledException && !cancellationToken.IsCancellationRequested);
-
-    private async Task<Result<TResponse>> SendAsync<TResponse>(
-        HttpMethod method,
-        string path,
-        object? body,
-        CancellationToken cancellationToken)
-        where TResponse : class {
-        using var request = new HttpRequestMessage(method, path);
-        if (body is not null) {
-            request.Content = JsonContent.Create(body, options: JsonOptions);
-        }
-
-        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        if (!response.IsSuccessStatusCode) {
-            string error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
-                Provider,
-                string.Create(CultureInfo.InvariantCulture, $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}").Trim()));
-        }
-
-        PaddleEnvelope<TResponse>? envelope = await response.Content.ReadFromJsonAsync<PaddleEnvelope<TResponse>>(JsonOptions, cancellationToken).ConfigureAwait(false);
-        if (envelope?.Data is null) {
-            return Result.Failure<TResponse>(
-                Errors.Billing.ProviderOperationFailed(Provider, "Paddle returned an empty response."));
-        }
-
-        return Result.Success(envelope.Data);
-    }
-
-    private void ConfigureClient() {
-        httpClient.BaseAddress = new Uri(_options.ApiBaseUrl.TrimEnd('/') + "/", UriKind.Absolute);
-        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
-        httpClient.DefaultRequestHeaders.Accept.Clear();
-        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        httpClient.DefaultRequestHeaders.Remove("Paddle-Version");
-        httpClient.DefaultRequestHeaders.Add("Paddle-Version", "1");
-    }
 
     private bool TryVerifySignature(string payload, string signatureHeader, out string error) {
         error = string.Empty;
@@ -645,9 +603,6 @@ $"{request.UserId:N}:{request.Plan.Trim().ToLowerInvariant()}";
 
         return quantity > 0 ? quantity : null;
     }
-
-    private sealed record PaddleEnvelope<T>(
-        [property: JsonPropertyName("data")] T? Data);
 
     private sealed record CreateCustomerRequest(
         [property: JsonPropertyName("email")] string Email,

@@ -152,7 +152,11 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
         BasicDeliverEventArgs eventArgs,
         Exception exception,
         CancellationToken cancellationToken) {
-        logger.LogError(exception, "RabbitMQ relay consumer failed to process a delivery.");
+        logger.LogError(
+            "RabbitMQ relay consumer failed to process delivery {DeliveryTag}. ErrorType={ErrorType}. " +
+            "The PostgreSQL polling fallback remains the durable recovery path.",
+            eventArgs.DeliveryTag,
+            exception.GetType().Name);
         if (channel.IsOpen) {
             await channel.BasicAckAsync(eventArgs.DeliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
         }

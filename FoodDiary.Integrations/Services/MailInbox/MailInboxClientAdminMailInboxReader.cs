@@ -53,6 +53,7 @@ file static class MailInboxClientAdminMailInboxMappings {
             response.Category,
             response.Status,
             response.ReadAtUtc,
-            response.ReceivedAtUtc);
+            response.ReceivedAtUtc,
+            response.ContentPurgedAtUtc);
     }
 }

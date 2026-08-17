@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
+using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
@@ -30,5 +32,40 @@ public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFacto
                 BuildVersion: "test-build"));
 
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task LogsEndpoint_WithUnknownEventName_ReturnsBadRequest() {
+        HttpClient client = apiFactory.CreateClient();
+
+        HttpResponseMessage response = await client.PostAsJsonAsync(
+            "/api/v1/logs",
+            new ClientTelemetryLogHttpRequest(
+                Category: "user_action",
+                Name: "fasting.attacker-controlled",
+                Level: "info",
+                Timestamp: DateTime.UtcNow.ToString("O")));
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task LogsEndpoint_WithPayloadAboveLimit_ReturnsPayloadTooLarge() {
+        HttpClient client = apiFactory.CreateClient();
+        string payload = $$"""
+            {
+              "category": "client_error",
+              "name": "global-error",
+              "level": "error",
+              "timestamp": "{{DateTime.UtcNow:O}}",
+              "stack": "{{new string('x', LogsController.MaxPayloadBytes)}}"
+            }
+            """;
+
+        HttpResponseMessage response = await client.PostAsync(
+            "/api/v1/logs",
+            new StringContent(payload, Encoding.UTF8, "application/json"));
+
+        Assert.Equal(HttpStatusCode.RequestEntityTooLarge, response.StatusCode);
     }
 }

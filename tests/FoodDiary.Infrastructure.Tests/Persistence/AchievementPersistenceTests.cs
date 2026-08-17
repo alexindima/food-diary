@@ -5,6 +5,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Achievements;
+using FoodDiary.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -58,6 +59,7 @@ public sealed class AchievementPersistenceTests {
         var processor = new AchievementEvaluationOutboxProcessor(
             context,
             handler,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
@@ -80,6 +82,7 @@ public sealed class AchievementPersistenceTests {
         var processor = new AchievementEvaluationOutboxProcessor(
             context,
             handler,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<AchievementEvaluationOutboxProcessor>.Instance);
 
@@ -88,7 +91,7 @@ public sealed class AchievementPersistenceTests {
         Assert.Multiple(
             () => Assert.Equal(0, processed),
             () => Assert.Equal(1, message.AttemptCount),
-            () => Assert.Contains("Simulated reconciliation failure", message.LastError, StringComparison.Ordinal));
+            () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", message.LastError));
     }
 
     [Fact]

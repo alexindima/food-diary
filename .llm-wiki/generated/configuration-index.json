@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "optionTypes": 52,
+    "optionTypes": 54,
     "configurationFiles": 7,
-    "configurationKeys": 185,
-    "environmentVariables": 148
+    "configurationKeys": 214,
+    "environmentVariables": 171
   },
   "optionTypes": [
     {
@@ -79,7 +79,9 @@
       "properties": [
         "Ai",
         "Auth",
+        "ClientTelemetry",
         "FixedWindowPolicyOptions",
+        "MarketingAttribution",
         "PermitLimit",
         "QueueLimit",
         "Webhook",
@@ -255,11 +257,37 @@
       "properties": [
         "AllowedRecipients",
         "Enabled",
+        "MaxConcurrentConnections",
+        "MaxConcurrentConnectionsPerIp",
+        "MaxConcurrentMessageProcessing",
+        "MaxExtractedBodyCharacters",
         "MaxMessageSizeBytes",
+        "MaxMessagesPerIpPerHour",
+        "MaxMessagesPerSenderPerHour",
+        "MaxMessagesPerSession",
+        "MaxMimeParts",
+        "MaxRecipientsPerMessage",
+        "MaxTrackedRateLimitKeys",
         "Port",
-        "ServerName"
+        "ProcessingQueueTimeout",
+        "ServerName",
+        "SessionTimeout"
       ],
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs"
+    },
+    {
+      "type": "MailInboxStorageOptions",
+      "section": "MailInboxStorage",
+      "properties": [
+        "CleanupBatchSize",
+        "CleanupInterval",
+        "ContentRetention",
+        "DeduplicationWindow",
+        "MaxMessagesPerDay",
+        "MaxRawBytesPerDay",
+        "MetadataRetention"
+      ],
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs"
     },
     {
       "type": "MailRelayBrokerOptions",
@@ -394,6 +422,7 @@
       "section": "OpenAi",
       "properties": [
         "ApiKey",
+        "MaxOutputTokens",
         "TextModel",
         "VisionFallbackModel",
         "VisionModel"
@@ -438,6 +467,16 @@
         "OtlpOptions"
       ],
       "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Options/OpenTelemetryOptions.cs"
+    },
+    {
+      "type": "OutboxProcessingOptions",
+      "section": "OutboxProcessing",
+      "properties": [
+        "DispatchTimeout",
+        "FinalizationTimeout",
+        "LeaseDuration"
+      ],
+      "path": "FoodDiary.Infrastructure/Options/OutboxProcessingOptions.cs"
     },
     {
       "type": "PaddleOptions",
@@ -617,6 +656,9 @@
         "NotificationWebPushOutbox:BatchSize",
         "NotificationWebPushOutbox:Cron",
         "NotificationWebPushOutbox:Enabled",
+        "OutboxProcessing:DispatchTimeout",
+        "OutboxProcessing:FinalizationTimeout",
+        "OutboxProcessing:LeaseDuration",
         "S3:AccessKeyId",
         "S3:Bucket",
         "S3:MaxUploadSizeBytes",
@@ -692,6 +734,7 @@
         "MailRelayClient:ApiKey",
         "MailRelayClient:BaseUrl",
         "OpenAi:ApiKey",
+        "OpenAi:MaxOutputTokens",
         "OpenAi:TextModel",
         "OpenAi:VisionFallbackModel",
         "OpenAi:VisionModel",
@@ -714,6 +757,12 @@
         "RateLimiting:Auth:PermitLimit",
         "RateLimiting:Auth:QueueLimit",
         "RateLimiting:Auth:WindowSeconds",
+        "RateLimiting:ClientTelemetry:PermitLimit",
+        "RateLimiting:ClientTelemetry:QueueLimit",
+        "RateLimiting:ClientTelemetry:WindowSeconds",
+        "RateLimiting:MarketingAttribution:PermitLimit",
+        "RateLimiting:MarketingAttribution:QueueLimit",
+        "RateLimiting:MarketingAttribution:WindowSeconds",
         "RateLimiting:Webhook:PermitLimit",
         "RateLimiting:Webhook:QueueLimit",
         "RateLimiting:Webhook:WindowSeconds",
@@ -768,9 +817,28 @@
         "MailInboxHttp:RequireApiKey",
         "MailInboxSmtp:AllowedRecipients",
         "MailInboxSmtp:Enabled",
+        "MailInboxSmtp:MaxConcurrentConnections",
+        "MailInboxSmtp:MaxConcurrentConnectionsPerIp",
+        "MailInboxSmtp:MaxConcurrentMessageProcessing",
+        "MailInboxSmtp:MaxExtractedBodyCharacters",
         "MailInboxSmtp:MaxMessageSizeBytes",
+        "MailInboxSmtp:MaxMessagesPerIpPerHour",
+        "MailInboxSmtp:MaxMessagesPerSenderPerHour",
+        "MailInboxSmtp:MaxMessagesPerSession",
+        "MailInboxSmtp:MaxMimeParts",
+        "MailInboxSmtp:MaxRecipientsPerMessage",
+        "MailInboxSmtp:MaxTrackedRateLimitKeys",
         "MailInboxSmtp:Port",
+        "MailInboxSmtp:ProcessingQueueTimeout",
         "MailInboxSmtp:ServerName",
+        "MailInboxSmtp:SessionTimeout",
+        "MailInboxStorage:CleanupBatchSize",
+        "MailInboxStorage:CleanupInterval",
+        "MailInboxStorage:ContentRetention",
+        "MailInboxStorage:DeduplicationWindow",
+        "MailInboxStorage:MaxMessagesPerDay",
+        "MailInboxStorage:MaxRawBytesPerDay",
+        "MailInboxStorage:MetadataRetention",
         "OpenTelemetry:Otlp:Endpoint"
       ]
     },
@@ -930,8 +998,28 @@
         "MailInboxSmtp__AllowedRecipients__2",
         "MailInboxSmtp__AllowedRecipients__3",
         "MailInboxSmtp__Enabled",
+        "MailInboxSmtp__MaxConcurrentConnections",
+        "MailInboxSmtp__MaxConcurrentConnectionsPerIp",
+        "MailInboxSmtp__MaxConcurrentMessageProcessing",
+        "MailInboxSmtp__MaxExtractedBodyCharacters",
+        "MailInboxSmtp__MaxMessageSizeBytes",
+        "MailInboxSmtp__MaxMessagesPerIpPerHour",
+        "MailInboxSmtp__MaxMessagesPerSenderPerHour",
+        "MailInboxSmtp__MaxMessagesPerSession",
+        "MailInboxSmtp__MaxMimeParts",
+        "MailInboxSmtp__MaxRecipientsPerMessage",
+        "MailInboxSmtp__MaxTrackedRateLimitKeys",
         "MailInboxSmtp__Port",
+        "MailInboxSmtp__ProcessingQueueTimeout",
         "MailInboxSmtp__ServerName",
+        "MailInboxSmtp__SessionTimeout",
+        "MailInboxStorage__CleanupBatchSize",
+        "MailInboxStorage__CleanupInterval",
+        "MailInboxStorage__ContentRetention",
+        "MailInboxStorage__DeduplicationWindow",
+        "MailInboxStorage__MaxMessagesPerDay",
+        "MailInboxStorage__MaxRawBytesPerDay",
+        "MailInboxStorage__MetadataRetention",
         "MailRelayBroker__Backend",
         "MailRelayBroker__DeadLetterExchangeName",
         "MailRelayBroker__DeadLetterQueueName",
@@ -969,6 +1057,9 @@
         "MailRelay__RequireMailgunWebhookSignature",
         "OpenAi__ApiKey",
         "OpenTelemetry__Otlp__Endpoint",
+        "OutboxProcessing__DispatchTimeout",
+        "OutboxProcessing__FinalizationTimeout",
+        "OutboxProcessing__LeaseDuration",
         "POSTGRES_DB",
         "POSTGRES_HOST_BIND",
         "POSTGRES_PASSWORD",

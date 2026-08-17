@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using FoodDiary.MailRelay.Application.Telemetry;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
@@ -9,8 +8,7 @@ namespace FoodDiary.MailRelay.Presentation.Filters;
 public sealed class MailRelayTelemetryActionFilter(ILogger<MailRelayTelemetryActionFilter> logger) : IAsyncActionFilter {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         var stopwatch = Stopwatch.StartNew();
-        Endpoint? endpoint = context.HttpContext.GetEndpoint();
-        string route = endpoint?.DisplayName ?? context.ActionDescriptor.AttributeRouteInfo?.Template ?? "unknown";
+        string route = context.ActionDescriptor.AttributeRouteInfo?.Template ?? "unmatched";
         string controllerName = context.Controller.GetType().Name;
         string feature = ResolveFeatureName(context.Controller.GetType());
         using Activity? activity = MailRelayTelemetry.ActivitySource.StartActivity("MailRelay.Presentation");
@@ -27,7 +25,7 @@ public sealed class MailRelayTelemetryActionFilter(ILogger<MailRelayTelemetryAct
         activity?.SetTag("fooddiary.mailrelay.presentation.duration_ms", stopwatch.Elapsed.TotalMilliseconds);
 
         if (executedContext.Exception is not null) {
-            activity?.SetStatus(ActivityStatusCode.Error, executedContext.Exception.Message);
+            activity?.SetStatus(ActivityStatusCode.Error);
             activity?.SetTag("error.type", executedContext.Exception.GetType().Name);
             logger.LogWarning(
                 executedContext.Exception,

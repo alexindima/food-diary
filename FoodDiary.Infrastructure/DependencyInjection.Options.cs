@@ -45,5 +45,11 @@ public static partial class DependencyInjection {
             .ValidateOnStart();
         services.AddSingleton(static sp => sp.GetRequiredService<IOptions<EmailOptions>>().Value);
 
+        services.AddOptions<OutboxProcessingOptions>()
+            .Bind(configuration.GetSection(OutboxProcessingOptions.SectionName))
+            .Validate(OutboxProcessingOptions.HasValidConfiguration,
+                "OutboxProcessing requires positive durations and LeaseDuration must cover DispatchTimeout, FinalizationTimeout, and the safety margin.")
+            .ValidateOnStart();
+
     }
 }

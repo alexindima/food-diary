@@ -1,8 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using System.Globalization;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Application.Abstractions.Billing.Common;
@@ -18,8 +15,11 @@ public sealed class YooKassaBillingGateway(
     HttpClient httpClient,
     IOptions<YooKassaOptions> options)
     : IBillingProviderGateway, IBillingRecurringProviderGateway {
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
+        MaxDepth = Http.BoundedHttpContentReader.DefaultJsonMaxDepth,
+    };
     private readonly YooKassaOptions _options = options.Value;
+    private readonly YooKassaApiClient _apiClient = new(httpClient, options.Value);
 
     public string Provider => BillingProviderNames.YooKassa;
 
@@ -30,10 +30,8 @@ public sealed class YooKassaBillingGateway(
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.ProviderNotConfigured(Provider));
         }
 
-        ConfigureClient();
-
         string amount = ResolveAmount(request.Plan);
-        Result<YooKassaPayment> paymentResponse = await SendAsync<YooKassaPayment>(
+        Result<YooKassaPayment> paymentResponse = await _apiClient.SendAsync<YooKassaPayment>(
             HttpMethod.Post,
             "payments",
             new CreatePaymentRequest(
@@ -83,10 +81,8 @@ public sealed class YooKassaBillingGateway(
             return Result.Failure<BillingRecurringPaymentModel>(Errors.Validation.Required(nameof(request.PaymentMethodId)));
         }
 
-        ConfigureClient();
-
         string amount = ResolveAmount(request.Plan);
-        Result<YooKassaPayment> paymentResponse = await SendAsync<YooKassaPayment>(
+        Result<YooKassaPayment> paymentResponse = await _apiClient.SendAsync<YooKassaPayment>(
             HttpMethod.Post,
             "payments",
             new CreateRecurringPaymentRequest(
@@ -200,49 +196,7 @@ public sealed class YooKassaBillingGateway(
     }
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {
-        ConfigureClient();
-        return await SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", body: null, idempotenceKey: null, cancellationToken).ConfigureAwait(false);
-    }
-
-    private async Task<Result<TResponse>> SendAsync<TResponse>(
-        HttpMethod method,
-        string path,
-        object? body,
-        string? idempotenceKey,
-        CancellationToken cancellationToken)
-        where TResponse : class {
-        using var request = new HttpRequestMessage(method, path);
-        if (method != HttpMethod.Get) {
-            request.Headers.Add("Idempotence-Key", ResolveIdempotenceKey(idempotenceKey));
-        }
-        if (body is not null) {
-            request.Content = JsonContent.Create(body, options: JsonOptions);
-        }
-
-        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        if (!response.IsSuccessStatusCode) {
-            string error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
-                Provider,
-                string.Create(CultureInfo.InvariantCulture, $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}").Trim()));
-        }
-
-        TResponse? result = await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
-        if (result is null) {
-            return Result.Failure<TResponse>(
-                Errors.Billing.ProviderOperationFailed(Provider, "YooKassa returned an empty response."));
-        }
-
-        return Result.Success(result);
-    }
-
-    private void ConfigureClient() {
-        httpClient.BaseAddress = new Uri(_options.ApiBaseUrl.TrimEnd('/') + "/", UriKind.Absolute);
-        byte[] authBytes = Encoding.UTF8.GetBytes($"{_options.ShopId}:{_options.SecretKey}");
-        httpClient.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authBytes));
-        httpClient.DefaultRequestHeaders.Accept.Clear();
-        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        return await _apiClient.SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", body: null, idempotenceKey: null, cancellationToken).ConfigureAwait(false);
     }
 
     private bool IsConfiguredForCheckout() =>
@@ -312,11 +266,6 @@ public sealed class YooKassaBillingGateway(
 
     private static string NormalizeAmount(string value) =>
         decimal.Parse(value, NumberStyles.Number, CultureInfo.InvariantCulture).ToString("0.00", CultureInfo.InvariantCulture);
-
-    private static string ResolveIdempotenceKey(string? idempotenceKey) =>
-        string.IsNullOrWhiteSpace(idempotenceKey)
-            ? Guid.NewGuid().ToString("N")
-            : idempotenceKey.Trim();
 
     private sealed record CreatePaymentRequest(
         [property: JsonPropertyName("amount")] AmountRequest Amount,

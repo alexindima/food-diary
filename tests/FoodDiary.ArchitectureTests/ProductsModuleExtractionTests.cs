@@ -26,7 +26,6 @@ public sealed class ProductsModuleExtractionTests {
 
     [Theory]
     [InlineData("FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs")]
-    [InlineData("FoodDiary.JobManager/Program.cs")]
     [InlineData("FoodDiary.Initializer/Program.cs")]
     public void ExecutableCompositionRoots_RegisterProductsModule(string relativePath) {
         string source = File.ReadAllText(ArchitectureTestPaths.FromRoot(relativePath.Split('/')));

@@ -9,6 +9,30 @@ namespace FoodDiary.Infrastructure.IntegrationTests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionEventRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
+    public async Task AddAsync_UsesProvidedEventIdAsDurableDeduplicationKey() {
+        var eventId = Guid.NewGuid();
+        var occurredAtUtc = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
+        MarketingAttributionEventRecord record = CreateRecord(
+            "page_landing",
+            occurredAtUtc,
+            "session-dedup") with { EventId = eventId, };
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+
+        await using (FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString)) {
+            await firstContext.Database.MigrateAsync();
+            var firstRepository = new MarketingAttributionEventRepository(firstContext);
+            await firstRepository.AddAsync(record);
+            await firstContext.SaveChangesAsync();
+        }
+
+        await using FoodDiaryDbContext duplicateContext = databaseFixture.CreateDbContext(connectionString);
+        var duplicateRepository = new MarketingAttributionEventRepository(duplicateContext);
+        await duplicateRepository.AddAsync(record);
+
+        await Assert.ThrowsAsync<DbUpdateException>(() => duplicateContext.SaveChangesAsync());
+    }
+
+    [RequiresDockerFact]
     public async Task DeleteOlderThanAsync_DeletesOnlyExpiredEventsWithinBatch() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var cutoffUtc = new DateTime(2030, 7, 9, 12, 0, 0, DateTimeKind.Utc);
@@ -54,6 +78,7 @@ public sealed class MarketingAttributionEventRepositoryIntegrationTests(Postgres
             () => Assert.NotNull(latest),
             () => Assert.Equal("premium_started", latest?.EventType),
             () => Assert.Equal("session-new", latest?.SessionId),
+            () => Assert.NotNull(latest?.EventId),
             () => Assert.True(premiumExists),
             () => Assert.False(trialExists),
             () => Assert.Null(missing));

@@ -69,16 +69,26 @@ public sealed class GetDietologistClientDashboardQueryHandler(
             return dashboardResult;
         }
 
-        await auditWriter.AddAsync(
+        await RecordRequiredAccessAuditAsync(
             dietologistResult.Value,
             query.ClientUserId,
+            cancellationToken).ConfigureAwait(false);
+        return Result.Success(ApplyPermissions(dashboardResult.Value, permissions));
+    }
+
+    private async Task RecordRequiredAccessAuditAsync(
+        UserId dietologistUserId,
+        Guid clientUserId,
+        CancellationToken cancellationToken) {
+        await auditWriter.AddAsync(
+            dietologistUserId,
+            clientUserId,
             "dietologist.dashboard.accessed",
             "ClientDashboard",
-            query.ClientUserId.ToString(),
+            clientUserId.ToString(),
             metadata: null,
             cancellationToken).ConfigureAwait(false);
         await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return Result.Success(ApplyPermissions(dashboardResult.Value, permissions));
     }
 
     private static DashboardSnapshotModel ApplyPermissions(

@@ -103,6 +103,7 @@ public sealed class MailRelayDomainTests {
         Assert.Equal(message.HtmlBody, request.HtmlBody);
         Assert.Equal(message.TextBody, request.TextBody);
         Assert.Equal(message.CorrelationId, request.CorrelationId);
+        Assert.Equal($"{message.Id:N}@mailrelay.invalid", request.MessageId);
     }
 
     [Fact]

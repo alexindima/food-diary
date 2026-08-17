@@ -17,4 +17,5 @@ public sealed record RecordMarketingAttributionCommand(
     string? UtmCampaign,
     string? UtmContent,
     string? UtmTerm,
-    string? BuildVersion) : IRequest<Result>, ITransactionalCommand;
+    string? BuildVersion,
+    Guid? EventId = null) : IRequest<Result>, ITransactionalCommand;

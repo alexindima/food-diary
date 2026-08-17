@@ -32,13 +32,15 @@ public sealed class SmtpRelayDeliveryTransportTests {
             ["recipient@example.com"],
             "Subject",
             "<p>Hello <strong>world</strong></p>",
-            TextBody: null), CancellationToken.None);
+            TextBody: null,
+            MessageId: "queued-message@example.com"), CancellationToken.None);
 
         string data = await server.WaitForMessageDataAsync();
         Assert.True(server.Authenticated);
         Assert.Contains("From: Sender <sender@example.com>", data, StringComparison.Ordinal);
         Assert.Contains("To: recipient@example.com", data, StringComparison.Ordinal);
         Assert.Contains("Subject: Subject", data, StringComparison.Ordinal);
+        Assert.Contains("Message-Id: <queued-message@example.com>", data, StringComparison.OrdinalIgnoreCase);
         Assert.Contains("Date: Wed, 01 Jul 2026", data, StringComparison.Ordinal);
         Assert.Contains("Hello", data, StringComparison.Ordinal);
         Assert.Contains("world", data, StringComparison.Ordinal);

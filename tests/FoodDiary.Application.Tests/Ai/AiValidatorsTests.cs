@@ -21,10 +21,12 @@ namespace FoodDiary.Application.Tests.Ai;
 
 [ExcludeFromCodeCoverage]
 public class AiValidatorsTests {
+    private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithEmptyIds_Fails() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(Guid.Empty, Guid.Empty, Description: null);
+        var command = new AnalyzeFoodImageCommand(Guid.Empty, Guid.Empty, Description: null, RequestId);
 
         ValidationResult result = await validator.ValidateAsync(command);
 
@@ -34,7 +36,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithTooLongDescription_Fails() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 2049));
+        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 2049), RequestId);
 
         ValidationResult result = await validator.ValidateAsync(command);
 
@@ -44,11 +46,21 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithValidData_Passes() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), "some context");
+        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), "some context", RequestId);
 
         ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task AnalyzeFoodImageValidator_WithNonHexRequestId_Fails() {
+        var validator = new AnalyzeFoodImageCommandValidator();
+        var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), Description: null, new string('G', 64));
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
     }
 
     [Fact]
@@ -60,7 +72,7 @@ public class AiValidatorsTests {
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, Description: null),
+            new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, Description: null, RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -76,7 +88,7 @@ public class AiValidatorsTests {
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), Description: null),
+            new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), Description: null, RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -93,7 +105,7 @@ public class AiValidatorsTests {
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), Description: null),
+            new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), Description: null, RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -111,7 +123,7 @@ public class AiValidatorsTests {
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, Description: null),
+            new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, Description: null, RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -130,7 +142,7 @@ public class AiValidatorsTests {
             CreateOpenAiFoodService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, Description: null),
+            new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, Description: null, RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -149,7 +161,7 @@ public class AiValidatorsTests {
             openAiFoodService);
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(userId.Value, asset.Id.Value, "notes"),
+            new AnalyzeFoodImageCommand(userId.Value, asset.Id.Value, "notes", RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -169,7 +181,7 @@ public class AiValidatorsTests {
             openAiFoodService);
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, "dinner"),
+            new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, "dinner", RequestId),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -182,7 +194,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task CalculateFoodNutritionValidator_WithEmptyItems_Fails() {
         var validator = new CalculateFoodNutritionCommandValidator();
-        var command = new CalculateFoodNutritionCommand(Guid.NewGuid(), Array.Empty<FoodVisionItemModel>());
+        var command = new CalculateFoodNutritionCommand(Guid.NewGuid(), Array.Empty<FoodVisionItemModel>(), RequestId);
 
         ValidationResult result = await validator.ValidateAsync(command);
 
@@ -194,7 +206,8 @@ public class AiValidatorsTests {
         var validator = new CalculateFoodNutritionCommandValidator();
         var command = new CalculateFoodNutritionCommand(
             Guid.NewGuid(),
-            [new FoodVisionItemModel("", NameLocal: null, 0, "", -1)]);
+            [new FoodVisionItemModel("", NameLocal: null, 0, "", -1)],
+            RequestId);
 
         ValidationResult result = await validator.ValidateAsync(command);
 
@@ -206,11 +219,25 @@ public class AiValidatorsTests {
         var validator = new CalculateFoodNutritionCommandValidator();
         var command = new CalculateFoodNutritionCommand(
             Guid.NewGuid(),
-            [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]);
+            [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+            RequestId);
 
         ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task CalculateFoodNutritionValidator_WithEmptyRequestId_Fails() {
+        var validator = new CalculateFoodNutritionCommandValidator();
+        var command = new CalculateFoodNutritionCommand(
+            Guid.NewGuid(),
+            [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+            RequestId: string.Empty);
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
     }
 
     [Fact]
@@ -270,7 +297,8 @@ public class AiValidatorsTests {
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
                 Guid.Empty,
-                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
+                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+                RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -285,7 +313,7 @@ public class AiValidatorsTests {
             CreateAiUserContextService(User.Create("ai-empty-items@example.com", "hash")));
 
         Result<FoodNutritionModel> result = await handler.Handle(
-            new CalculateFoodNutritionCommand(Guid.NewGuid(), []),
+            new CalculateFoodNutritionCommand(Guid.NewGuid(), [], RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -302,7 +330,8 @@ public class AiValidatorsTests {
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
                 user.Id.Value,
-                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
+                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+                RequestId),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -319,7 +348,8 @@ public class AiValidatorsTests {
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
                 user.Id.Value,
-                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
+                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+                RequestId),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -333,7 +363,7 @@ public class AiValidatorsTests {
             CreateAiUserContextService(User.Create("ai-empty-text-user@example.com", "hash")),
             CreateCurrentUserAccessService(User.Create("ai-empty-text-user@example.com", "hash")));
 
-        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple"), CancellationToken.None);
+        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple", RequestId), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -347,7 +377,7 @@ public class AiValidatorsTests {
             CreateAiUserContextService(user: null),
             CreateCurrentUserAccessService(user: null));
 
-        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple"), CancellationToken.None);
+        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple", RequestId), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -363,7 +393,7 @@ public class AiValidatorsTests {
             CreateAiUserContextService(user: null),
             CreateCurrentUserAccessService(user));
 
-        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple"), CancellationToken.None);
+        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple", RequestId), CancellationToken.None);
 
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -377,7 +407,7 @@ public class AiValidatorsTests {
         IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateAiUserContextService(user), CreateCurrentUserAccessService(user));
 
-        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g"), CancellationToken.None);
+        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g", RequestId), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.True(openAiCalls.WasParseFoodTextCalled);
@@ -484,6 +514,7 @@ public class AiValidatorsTests {
                 Arg.Any<string?>(),
                 Arg.Any<UserId>(),
                 Arg.Any<string?>(),
+                Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(call => {
                 capturedCalls.WasAnalyzeFoodImageCalled = true;
@@ -499,6 +530,7 @@ public class AiValidatorsTests {
                 Arg.Any<string>(),
                 Arg.Any<string?>(),
                 Arg.Any<UserId>(),
+                Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(call => {
                 capturedCalls.WasParseFoodTextCalled = true;
@@ -512,6 +544,7 @@ public class AiValidatorsTests {
             .CalculateNutritionAsync(
                 Arg.Any<IReadOnlyList<FoodVisionItemModel>>(),
                 Arg.Any<UserId>(),
+                Arg.Any<string>(),
                 Arg.Any<CancellationToken>())
             .Returns(_ => {
                 capturedCalls.WasCalculateNutritionCalled = true;

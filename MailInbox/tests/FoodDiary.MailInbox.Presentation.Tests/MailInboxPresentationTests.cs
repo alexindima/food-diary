@@ -75,7 +75,8 @@ public sealed class MailInboxPresentationTests {
                 ]),
             "Received",
             ReadAtUtc: null,
-            DateTimeOffset.UtcNow);
+            DateTimeOffset.UtcNow,
+            ContentPurgedAtUtc: null);
 
         InboundMailMessageDetailsHttpResponse response = details.ToHttpResponse();
 
@@ -182,7 +183,8 @@ public sealed class MailInboxPresentationTests {
             report,
             "received",
             ReadAtUtc: null,
-            receivedAtUtc);
+            receivedAtUtc,
+            ContentPurgedAtUtc: null);
 
         Assert.Multiple(
             () => Assert.Equal(id, summary.Id),
@@ -482,7 +484,8 @@ public sealed class MailInboxPresentationTests {
             DmarcReport: null,
             "received",
             ReadAtUtc: null,
-            DateTimeOffset.UtcNow);
+            DateTimeOffset.UtcNow,
+            ContentPurgedAtUtc: null);
         StubSender sender = new StubSender()
             .Register(new GetInboundMailMessageDetailsQuery(id), Result.Success(details));
         MailInboxMessagesController controller = CreateMessagesController(sender);

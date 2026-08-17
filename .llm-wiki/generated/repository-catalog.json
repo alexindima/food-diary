@@ -20,9 +20,9 @@
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
     "controllers": 87,
-    "endpoints": 278,
+    "endpoints": 279,
     "agentGuides": 74,
-    "documentationPages": 47
+    "documentationPages": 48
   },
   "dotnet": {
     "projects": [
@@ -1423,11 +1423,19 @@
             "version": null
           },
           {
+            "name": "Npgsql.OpenTelemetry",
+            "version": null
+          },
+          {
             "name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
             "version": null
           },
           {
             "name": "OpenTelemetry.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.Http",
             "version": null
           },
           {
@@ -1625,11 +1633,23 @@
             "version": null
           },
           {
+            "name": "Npgsql.OpenTelemetry",
+            "version": null
+          },
+          {
             "name": "OpenTelemetry.Exporter.OpenTelemetryProtocol",
             "version": null
           },
           {
             "name": "OpenTelemetry.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.AspNetCore",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.Http",
             "version": null
           },
           {
@@ -1732,15 +1752,11 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.Hosting",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "version": null
-          },
-          {
             "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "Npgsql.OpenTelemetry",
             "version": null
           },
           {
@@ -1749,6 +1765,10 @@
           },
           {
             "name": "OpenTelemetry.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.AspNetCore",
             "version": null
           },
           {
@@ -2160,15 +2180,11 @@
             "version": null
           },
           {
-            "name": "Microsoft.Extensions.Hosting",
-            "version": null
-          },
-          {
-            "name": "Microsoft.Extensions.Options.ConfigurationExtensions",
-            "version": null
-          },
-          {
             "name": "Npgsql",
+            "version": null
+          },
+          {
+            "name": "Npgsql.OpenTelemetry",
             "version": null
           },
           {
@@ -2177,6 +2193,14 @@
           },
           {
             "name": "OpenTelemetry.Extensions.Hosting",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.AspNetCore",
+            "version": null
+          },
+          {
+            "name": "OpenTelemetry.Instrumentation.Http",
             "version": null
           },
           {
@@ -3870,17 +3894,17 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/vision",
-            "line": 22
+            "line": 23
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/text",
-            "line": 30
+            "line": 32
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/nutrition",
-            "line": 38
+            "line": 41
           }
         ]
       },
@@ -4710,7 +4734,7 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/logs",
-            "line": 18
+            "line": 25
           }
         ]
       },
@@ -4722,7 +4746,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/marketing/attribution-events",
-            "line": 18
+            "line": 25
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/marketing/attribution-events/signup",
+            "line": 39
           }
         ]
       },
@@ -5679,6 +5708,7 @@
       "docs/backend/BACKEND_RUNBOOKS.md",
       "docs/backend/BACKEND_SECURITY_HARDENING.md",
       "docs/backend/BACKEND_TIME_POLICY.md",
+      "docs/backend/MAILINBOX_DATA_LIFECYCLE.md",
       "docs/backend/MARKETING_ATTRIBUTION_RUNBOOK.md",
       "docs/backend/MODULE_EXTRACTION_READINESS.md",
       "docs/backend/PADDLE_PRODUCTION_RUNBOOK.md",

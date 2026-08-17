@@ -19,7 +19,8 @@ MailRelay and MailInbox are separate bounded contexts. The primary core talks to
 
 The backend now has first-pass guardrails for the reliability split:
 
-- post-commit actions are named and documented as best-effort only,
+- post-commit actions are named, documented as best-effort only, bounded by queue depth and a total execution budget, and expose bounded outcome telemetry,
+- mediator notification handlers execute sequentially in registration order so transactional handlers never share one scoped `DbContext` concurrently,
 - infrastructure outbox processors share one processing engine for claim/lease, retry/dead-letter policy, persistence, and telemetry,
 - outbox claiming uses an explicit `IOutboxMessage` contract instead of reflection,
 - event taxonomy is documented with `IIntegrationEvent` for committed cross-process facts,
@@ -40,10 +41,13 @@ The backend also has structural guardrails for the main ownership boundaries:
 - Dietologist attention signals use a dedicated multi-client projection instead of rebuilding dashboard snapshots per client.
 - Dietologist client-task, recommendation-template, comment and bulk-dispatch workflows expose narrow read/write/read-model ports to Application code.
 - Domain event declarations are immutable, transport-agnostic, and verified to be raised by domain code; integration-event naming and placement are guarded separately.
-- Domain events remain attached until persistence succeeds, and post-commit actions have a bounded per-action timeout.
+- Domain events remain attached until persistence succeeds, and post-commit actions have bounded per-action and total flush timeouts.
 - Dead-letter replay is operator-driven, requires actor/reason metadata, and writes a durable audit record.
 - HTTP idempotency uses owner fencing; Redis response completion is an atomic compare-and-set so stale requests cannot overwrite a newer owner.
 - Personal-data export, retention, and purge guarantees are captured in `PERSONAL_DATA_LIFECYCLE.md`.
+- Distributed traces cover HTTP, outbound providers, and PostgreSQL while route cardinality, sensitive attributes, 14-day retention, and operator access are governed by `BACKEND_OBSERVABILITY_BASELINE.md`.
+- MailInbox bounds SMTP connections, sessions, senders, recipients, MIME complexity, parsing concurrency, and daily storage; raw MIME is byte-preserving, SMTP retries are durably deduplicated, and content/metadata retention is enforced by a bounded worker as documented in `MAILINBOX_DATA_LIFECYCLE.md`.
+- NuGet restore clears inherited machine feeds, maps packages to the repository allowlist, and enforces committed dependency graphs in CI and container builds; external container inputs and production application references are immutable digests with automated update coverage.
 
 ## Priority 1: Durable Side Effects
 
@@ -72,11 +76,13 @@ Domain event handlers may create transactional state and outbox records. They mu
 
 Existing outbox processors should converge on one shared policy:
 
-- lease/claim with bounded batch sizes,
+- configurable per-message lease/claim and bounded dispatch/finalization deadlines,
+- immediate per-message progress persistence rather than one batch-final commit,
 - retry with explicit backoff,
 - terminal failure state or poison-message handling,
-- structured logs with message ids and provider names,
-- metrics for claimed, processed, failed, retried, and dead-lettered messages.
+- structured privacy-safe logs with message ids and provider names,
+- explicit replay/idempotency semantics for every external consumer,
+- metrics for claimed, reclaimed, processed, timed out, retried, and dead-lettered messages.
 
 Avoid adding one-off processor behavior unless the provider truly requires it.
 

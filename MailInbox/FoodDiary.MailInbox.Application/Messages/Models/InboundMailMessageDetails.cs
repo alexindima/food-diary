@@ -8,9 +8,10 @@ public sealed record InboundMailMessageDetails(
     string? Subject,
     string? TextBody,
     string? HtmlBody,
-    string RawMime,
+    string? RawMime,
     string Category,
     DmarcReportPreview? DmarcReport,
     string Status,
     DateTimeOffset? ReadAtUtc,
-    DateTimeOffset ReceivedAtUtc);
+    DateTimeOffset ReceivedAtUtc,
+    DateTimeOffset? ContentPurgedAtUtc);

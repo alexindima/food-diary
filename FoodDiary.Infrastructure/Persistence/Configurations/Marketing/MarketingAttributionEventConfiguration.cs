@@ -54,6 +54,7 @@ internal sealed class MarketingAttributionEventConfiguration : IEntityTypeConfig
             .HasColumnType("timestamp with time zone");
 
         builder.HasIndex(e => e.OccurredAtUtc);
+        builder.HasIndex(e => new { e.UserId, e.OccurredAtUtc });
         builder.HasIndex(e => new { e.AnonymousId, e.OccurredAtUtc });
         builder.HasIndex(e => new { e.SessionId, e.OccurredAtUtc });
         builder.HasIndex(e => new { e.UtmSource, e.UtmMedium, e.UtmCampaign, e.OccurredAtUtc });

@@ -106,7 +106,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/ci-test-logs/restore.log"
           set +e
-          dotnet restore FoodDiary.slnx 2>&1 | tee "$log_file"
+          dotnet restore FoodDiary.slnx --locked-mode 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
@@ -238,7 +238,7 @@ jobs:
             echo
             echo "| Area | Check | Status | Details |"
             echo "| --- | --- | --- | --- |"
-            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx |"
+            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx --locked-mode |"
             echo "| Quality | Formatting | $(status_for_log "${logs_dir}/dotnet-format.log") | dotnet format --verify-no-changes |"
             echo "| Build | Solution build | $(status_for_log "${logs_dir}/build.log") | dotnet build Release |"
 
@@ -311,7 +311,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/postgres-critical-flow-logs/restore.log"
           set +e
-          dotnet restore FoodDiary.slnx 2>&1 | tee "$log_file"
+          dotnet restore FoodDiary.slnx --locked-mode 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
@@ -416,7 +416,7 @@ jobs:
             echo "| Area | Check | Status | Details |"
             echo "| --- | --- | --- | --- |"
             echo "| Setup | Docker availability | $(status_for_log "${logs_dir}/docker-version.log") | docker version |"
-            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx |"
+            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx --locked-mode |"
             echo "| Tests | API critical flows | $(status_for_log "${logs_dir}/web-api-critical-flows.log") | $(test_details_for_log "${logs_dir}/web-api-critical-flows.log") |"
             echo "| Tests | Infrastructure critical flows | $(status_for_log "${logs_dir}/infrastructure-critical-flows.log") | $(test_details_for_log "${logs_dir}/infrastructure-critical-flows.log") |"
           } >> "$GITHUB_STEP_SUMMARY"
@@ -454,7 +454,7 @@ jobs:
           set -euo pipefail
           log_file="${RUNNER_TEMP}/dependency-audit-logs/restore.log"
           set +e
-          dotnet restore FoodDiary.slnx 2>&1 | tee "$log_file"
+          dotnet restore FoodDiary.slnx --locked-mode 2>&1 | tee "$log_file"
           status=${PIPESTATUS[0]}
           set -e
           if [ "$status" -ne 0 ]; then
@@ -472,8 +472,15 @@ jobs:
           set -euo pipefail
           projects=(
             "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj"
+            "FoodDiary.JobManager/FoodDiary.JobManager.csproj"
+            "FoodDiary.Initializer/FoodDiary.Initializer.csproj"
+            "FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj"
             "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
             "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj"
+            "MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"
+            "MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"
+            "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"
+            "MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"
           )
 
           for project in "${projects[@]}"; do
@@ -552,8 +559,15 @@ jobs:
 
           projects=(
             "FoodDiary.Web.Api/FoodDiary.Web.Api.csproj"
+            "FoodDiary.JobManager/FoodDiary.JobManager.csproj"
+            "FoodDiary.Initializer/FoodDiary.Initializer.csproj"
+            "FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj"
             "FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj"
             "FoodDiary.Application.Runtime/FoodDiary.Application.Runtime.csproj"
+            "MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"
+            "MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"
+            "MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"
+            "MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"
           )
 
           {
@@ -561,7 +575,7 @@ jobs:
             echo
             echo "| Area | Check | Status | Details |"
             echo "| --- | --- | --- | --- |"
-            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx |"
+            echo "| Setup | Restore solution | $(status_for_log "${logs_dir}/restore.log") | dotnet restore FoodDiary.slnx --locked-mode |"
             for project in "${projects[@]}"; do
               safe_name="${project//\//_}"
               safe_name="${safe_name//\\/_}"

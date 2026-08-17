@@ -1,12 +1,12 @@
 using System.Globalization;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Integrations.Http;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,6 +20,7 @@ internal sealed class FitbitClient(
     ILogger<FitbitClient> logger) : IWearableClient {
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
 
     public WearableProvider Provider => WearableProvider.Fitbit;
@@ -38,7 +39,7 @@ internal sealed class FitbitClient(
         }
 
         try {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.fitbit.com/oauth2/token") {
+            using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.fitbit.com/oauth2/token") {
                 Content = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "authorization_code",
                     ["code"] = code,
@@ -48,10 +49,18 @@ internal sealed class FitbitClient(
             request.Headers.Authorization = new AuthenticationHeaderValue(
                 "Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{config.ClientId}:{config.ClientSecret}")));
 
-            HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            FitbitTokenResponse? token = await response.Content.ReadFromJsonAsync<FitbitTokenResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
+            FitbitTokenResponse? token = await BoundedHttpContentReader.ReadFromJsonAsync<FitbitTokenResponse>(
+                response.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
@@ -61,7 +70,7 @@ internal sealed class FitbitClient(
                 token.RefreshToken,
                 token.UserId,
                 timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Fitbit token exchange failed");
             return null;
         }
@@ -70,7 +79,7 @@ internal sealed class FitbitClient(
     public async Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) {
         FitbitOptions config = options.Value;
         try {
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.fitbit.com/oauth2/token") {
+            using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.fitbit.com/oauth2/token") {
                 Content = new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "refresh_token",
                     ["refresh_token"] = refreshToken,
@@ -79,10 +88,18 @@ internal sealed class FitbitClient(
             request.Headers.Authorization = new AuthenticationHeaderValue(
                 "Basic", Convert.ToBase64String(Encoding.UTF8.GetBytes($"{config.ClientId}:{config.ClientSecret}")));
 
-            HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            FitbitTokenResponse? token = await response.Content.ReadFromJsonAsync<FitbitTokenResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
+            FitbitTokenResponse? token = await BoundedHttpContentReader.ReadFromJsonAsync<FitbitTokenResponse>(
+                response.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
@@ -92,7 +109,7 @@ internal sealed class FitbitClient(
                 token.RefreshToken,
                 token.UserId,
                 timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Fitbit token refresh failed");
             return null;
         }
@@ -104,11 +121,9 @@ internal sealed class FitbitClient(
         var results = new List<WearableDataPoint>();
 
         try {
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
             // Fetch activity summary (steps, calories, active minutes)
             string activityUrl = $"https://api.fitbit.com/1/user/-/activities/date/{dateStr}.json";
-            JsonElement activityResponse = await httpClient.GetFromJsonAsync<JsonElement>(activityUrl, cancellationToken).ConfigureAwait(false);
+            JsonElement activityResponse = await GetJsonAsync(activityUrl, accessToken, cancellationToken).ConfigureAwait(false);
 
             if (activityResponse.TryGetProperty("summary", out JsonElement summary)) {
                 if (summary.TryGetProperty("steps", out JsonElement steps)) {
@@ -126,7 +141,7 @@ internal sealed class FitbitClient(
 
             // Fetch resting heart rate
             string heartUrl = $"https://api.fitbit.com/1/user/-/activities/heart/date/{dateStr}/1d.json";
-            JsonElement heartResponse = await httpClient.GetFromJsonAsync<JsonElement>(heartUrl, cancellationToken).ConfigureAwait(false);
+            JsonElement heartResponse = await GetJsonAsync(heartUrl, accessToken, cancellationToken).ConfigureAwait(false);
 
             if (heartResponse.TryGetProperty("activities-heart", out JsonElement heartArray) &&
                 heartArray.GetArrayLength() > 0) {
@@ -139,17 +154,36 @@ internal sealed class FitbitClient(
 
             // Fetch sleep
             string sleepUrl = $"https://api.fitbit.com/1.2/user/-/sleep/date/{dateStr}.json";
-            JsonElement sleepResponse = await httpClient.GetFromJsonAsync<JsonElement>(sleepUrl, cancellationToken).ConfigureAwait(false);
+            JsonElement sleepResponse = await GetJsonAsync(sleepUrl, accessToken, cancellationToken).ConfigureAwait(false);
 
             if (sleepResponse.TryGetProperty("summary", out JsonElement sleepSummary) &&
                 sleepSummary.TryGetProperty("totalMinutesAsleep", out JsonElement sleepMinutes)) {
                 results.Add(new WearableDataPoint(WearableDataType.SleepMinutes, sleepMinutes.GetDouble()));
             }
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "Fitbit data fetch failed for {Date}", dateStr);
         }
 
         return results;
+    }
+
+    private async Task<JsonElement> GetJsonAsync(
+        string url,
+        string accessToken,
+        CancellationToken cancellationToken) {
+        using var request = new HttpRequestMessage(HttpMethod.Get, url);
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        using HttpResponseMessage response = await httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+        return await BoundedHttpContentReader.ReadFromJsonAsync<JsonElement>(
+            response.Content,
+            JsonOptions,
+            BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+            BoundedHttpContentReader.DefaultReadTimeout,
+            cancellationToken).ConfigureAwait(false);
     }
 
     private sealed class FitbitTokenResponse {

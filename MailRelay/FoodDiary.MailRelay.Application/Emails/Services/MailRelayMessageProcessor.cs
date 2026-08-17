@@ -15,10 +15,9 @@ public sealed class MailRelayMessageProcessor(
                 queuedEmail.MarkSuppressed();
                 await queueStore.MarkSuppressedAsync(queuedEmail.Id, suppressedRecipients, cancellationToken).ConfigureAwait(false);
                 logger.LogInformation(
-                    "Relay email {QueuedEmailId} suppressed because recipient(s) are on suppression list: {Recipients}. CorrelationId={CorrelationId}",
+                    "Relay email {QueuedEmailId} suppressed because {SuppressedRecipientCount} recipient(s) are on the suppression list.",
                     queuedEmail.Id,
-                    string.Join(", ", suppressedRecipients),
-                    queuedEmail.CorrelationId);
+                    suppressedRecipients.Count);
                 MailRelayTelemetry.RecordDeliveryEvent("suppressed");
                 return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: true);
             }
@@ -27,26 +26,25 @@ public sealed class MailRelayMessageProcessor(
             queuedEmail.MarkSent();
             await queueStore.MarkSentAsync(queuedEmail.Id, cancellationToken).ConfigureAwait(false);
             logger.LogInformation(
-                "Relay email {QueuedEmailId} sent successfully on attempt {AttemptCount}. CorrelationId={CorrelationId}",
+                "Relay email {QueuedEmailId} sent successfully on attempt {AttemptCount}.",
                 queuedEmail.Id,
-                queuedEmail.AttemptCount,
-                queuedEmail.CorrelationId);
+                queuedEmail.AttemptCount);
             MailRelayTelemetry.RecordDeliveryEvent("success");
             return new MailRelayProcessResult(Succeeded: true, IsTerminalFailure: false);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) {
-            QueuedEmailFailureDecision failureDecision = queuedEmail.MarkFailedAttempt(ex.ToString());
+            string errorType = ex.GetType().Name;
+            QueuedEmailFailureDecision failureDecision = queuedEmail.MarkFailedAttempt($"Delivery failed ({errorType}).");
             DateTimeOffset? retryAvailableAtUtc = await queueStore.MarkFailedAttemptAsync(failureDecision, cancellationToken).ConfigureAwait(false);
 
             logger.LogWarning(
-                ex,
-                "Relay email {QueuedEmailId} failed on attempt {AttemptCount}/{MaxAttempts}. CorrelationId={CorrelationId}",
+                "Relay email {QueuedEmailId} failed on attempt {AttemptCount}/{MaxAttempts}. ErrorType={ErrorType}",
                 queuedEmail.Id,
                 queuedEmail.AttemptCount,
                 queuedEmail.MaxAttempts,
-                queuedEmail.CorrelationId);
-            MailRelayTelemetry.RecordDeliveryEvent("failure", ex.GetType().Name);
+                errorType);
+            MailRelayTelemetry.RecordDeliveryEvent("failure", errorType);
             return new MailRelayProcessResult(Succeeded: false, failureDecision.IsTerminalFailure, retryAvailableAtUtc);
         }
     }

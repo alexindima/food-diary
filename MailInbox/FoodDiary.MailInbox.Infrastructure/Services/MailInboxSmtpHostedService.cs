@@ -12,6 +12,7 @@ public sealed class MailInboxSmtpHostedService(
     IOptions<MailInboxSmtpOptions> options,
     SmtpInboundMessageStore messageStore,
     MailInboxMailboxFilter mailboxFilter,
+    MailInboxEndpointListenerFactory endpointListenerFactory,
     ILogger<MailInboxSmtpHostedService> logger) : BackgroundService {
     private readonly MailInboxSmtpOptions _options = options.Value;
 
@@ -23,13 +24,16 @@ public sealed class MailInboxSmtpHostedService(
 
         ISmtpServerOptions serverOptions = new SmtpServerOptionsBuilder()
             .ServerName(_options.ServerName)
-            .Endpoint(endpoint => endpoint.Port(_options.Port))
+            .Endpoint(endpoint => endpoint
+                .Port(_options.Port)
+                .SessionTimeout(_options.SessionTimeout))
             .MaxMessageSize(_options.MaxMessageSizeBytes, MaxMessageSizeHandling.Strict)
             .Build();
 
         var serviceProvider = new ServiceProvider();
         serviceProvider.Add(new DelegatingMessageStoreFactory(_ => messageStore));
         serviceProvider.Add(new DelegatingMailboxFilterFactory(_ => mailboxFilter));
+        serviceProvider.Add(endpointListenerFactory);
 
         var server = new SmtpServer.SmtpServer(serverOptions, serviceProvider);
         logger.LogInformation(

@@ -21,8 +21,8 @@ describe('MarketingAttributionService', () => {
         expect(req.request.method).toBe('POST');
         expect(req.request.context.get(SKIP_AUTH)).toBe(true);
         expect(req.request.context.get(SKIP_OBSERVABILITY)).toBe(true);
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         expect(req.request.body).toMatchObject({
-            eventType: 'page_landing',
             sessionId: 'fd-session-test',
             landingPath: '/food-diary?utm_source=telegram&utm_medium=social&utm_campaign=launch',
             referrerHost: 't.me',
@@ -31,6 +31,8 @@ describe('MarketingAttributionService', () => {
             utmCampaign: 'launch',
             buildVersion: environment.buildVersion,
         });
+        expect(req.request.body).not.toHaveProperty('eventType');
+        expect(req.request.body).not.toHaveProperty('userId');
         expect(JSON.stringify(req.request.body)).toContain('fd-anon-');
         req.flush(null);
 
@@ -58,7 +60,6 @@ describe('MarketingAttributionService', () => {
     it('records signup conversion with first-touch attribution', () => {
         const { service, httpMock, storage } = setup();
         storage.setJson('local', 'fd_marketing_first_touch', {
-            eventType: 'page_landing',
             timestamp: '2026-07-09T10:00:00.000Z',
             anonymousId: 'fd-anon-existing',
             sessionId: 'fd-session-first',
@@ -68,12 +69,13 @@ describe('MarketingAttributionService', () => {
             utmCampaign: 'launch',
         });
 
-        service.recordSignupCompleted('user-1');
+        service.recordSignupCompleted();
 
-        const req = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events`);
+        const req = httpMock.expectOne(`${environment.apiUrls.marketing}/attribution-events/signup`);
+        expect(req.request.context.get(SKIP_AUTH)).toBe(false);
+        expect(req.request.context.get(SKIP_OBSERVABILITY)).toBe(true);
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         expect(req.request.body).toMatchObject({
-            eventType: 'signup_completed',
-            userId: 'user-1',
             anonymousId: 'fd-anon-existing',
             sessionId: 'fd-session-test',
             landingPath: '/food-diary?utm_source=telegram',
@@ -81,6 +83,8 @@ describe('MarketingAttributionService', () => {
             utmMedium: 'social',
             utmCampaign: 'launch',
         });
+        expect(req.request.body).not.toHaveProperty('eventType');
+        expect(req.request.body).not.toHaveProperty('userId');
         req.flush(null);
         httpMock.verify();
     });

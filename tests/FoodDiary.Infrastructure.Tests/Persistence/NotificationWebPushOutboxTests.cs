@@ -4,6 +4,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Notifications;
+using FoodDiary.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -40,6 +41,7 @@ public sealed class NotificationWebPushOutboxTests {
         var processor = new NotificationWebPushOutboxProcessor(
             context,
             sender,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<NotificationWebPushOutboxProcessor>.Instance);
 
@@ -61,6 +63,7 @@ public sealed class NotificationWebPushOutboxTests {
         var processor = new NotificationWebPushOutboxProcessor(
             context,
             new ThrowingWebPushNotificationSender(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<NotificationWebPushOutboxProcessor>.Instance);
 
@@ -71,7 +74,7 @@ public sealed class NotificationWebPushOutboxTests {
         Assert.Null(message.ProcessedOnUtc);
         Assert.Equal(1, message.AttemptCount);
         Assert.True(message.NextAttemptOnUtc > DateTime.UtcNow);
-        Assert.Contains("Simulated", message.LastError, StringComparison.Ordinal);
+        Assert.Equal("Outbox dispatch failed (InvalidOperationException).", message.LastError);
     }
 
     [Fact]
@@ -88,6 +91,7 @@ public sealed class NotificationWebPushOutboxTests {
         var processor = new NotificationWebPushOutboxProcessor(
             context,
             new ThrowingWebPushNotificationSender(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<NotificationWebPushOutboxProcessor>.Instance);
 
@@ -100,7 +104,7 @@ public sealed class NotificationWebPushOutboxTests {
             () => Assert.NotNull(stored.DeadLetteredOnUtc),
             () => Assert.Null(stored.LockedUntilUtc),
             () => Assert.Null(stored.LockedBy),
-            () => Assert.Contains("Simulated", stored.LastError, StringComparison.Ordinal));
+            () => Assert.Equal("Outbox dispatch failed (InvalidOperationException).", stored.LastError));
     }
 
     [Fact]
@@ -109,6 +113,7 @@ public sealed class NotificationWebPushOutboxTests {
         var processor = new NotificationWebPushOutboxProcessor(
             context,
             new RecordingWebPushNotificationSender(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<NotificationWebPushOutboxProcessor>.Instance);
 

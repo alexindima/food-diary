@@ -418,7 +418,8 @@ public partial class AdminFeatureTests {
             "general",
             "Received",
             ReadAtUtc: null,
-            DateTimeOffset.UtcNow);
+            DateTimeOffset.UtcNow,
+            ContentPurgedAtUtc: null);
         var reader = new RecordingAdminMailInboxReader { Message = message };
         var handler = new GetAdminMailInboxMessageDetailsQueryHandler(reader);
 

@@ -94,11 +94,12 @@ public sealed class MailRelayArchitectureTests {
             ["MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj"] = [
                 "DnsClient",
                 "MailKit",
-                "Microsoft.Extensions.Hosting",
-                "Microsoft.Extensions.Options.ConfigurationExtensions",
                 "Npgsql",
+                "Npgsql.OpenTelemetry",
                 "OpenTelemetry.Exporter.OpenTelemetryProtocol",
                 "OpenTelemetry.Extensions.Hosting",
+                "OpenTelemetry.Instrumentation.AspNetCore",
+                "OpenTelemetry.Instrumentation.Http",
                 "RabbitMQ.Client",
             ],
             ["MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"] = [

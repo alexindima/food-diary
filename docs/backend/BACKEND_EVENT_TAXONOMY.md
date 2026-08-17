@@ -29,6 +29,19 @@ A post-commit action is an in-memory best-effort callback after a successful com
 - Image object deletion is written through `IImageObjectDeletionOutbox`, including orphan cleanup.
 - Domain event handlers currently only create transactional notification state and best-effort live refresh hints.
 
+## Outbox Delivery Semantics
+
+The shared infrastructure outbox is deliberately **at least once**. A worker claims and finalizes one message at a time. The configured lease must cover the per-message dispatch deadline, the server-owned database-finalization deadline, and the validation safety margin. Caller cancellation during dispatch leaves the claim for lease recovery without incrementing delivery attempts; once dispatch succeeds, finalization no longer depends on the caller token.
+
+A process or database failure after an external side effect but before finalization can still cause a replay. Each current consumer therefore owns an explicit replay strategy:
+
+- Email passes `fooddiary-email-outbox:{outbox-id}` to MailRelay as its idempotency key. MailRelay deduplicates enqueue and gives the queued delivery a deterministic `Message-Id`.
+- Web push uses the durable notification ID as the browser notification `tag`, so a replay replaces the same visible notification instead of creating another one.
+- Image object deletion relies on the idempotent S3 delete operation: deleting an already absent key remains successful.
+- Achievement evaluation recalculates current state and grants through the unique `(UserId, AchievementKey)` boundary with `ON CONFLICT DO NOTHING`.
+
+The worker records claimed, reclaimed, processed, retried, dead-lettered, and dispatch-timeout outcomes. Error persistence and ordinary logs keep only stable exception classification; provider messages and payload contents are not copied into outbox diagnostics.
+
 ## Executable Governance
 
 - Every concrete domain event lives in `FoodDiary.Domain/Events`, is a sealed immutable `*DomainEvent`, exposes `OccurredOnUtc`, and must be raised by domain source code. Declared-but-never-raised events fail architecture tests.

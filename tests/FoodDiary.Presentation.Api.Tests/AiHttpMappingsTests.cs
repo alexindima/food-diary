@@ -12,6 +12,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class AiHttpMappingsTests {
+    private const string RequestId = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
+
     [Fact]
     public void UserId_ToUsageQuery_MapsUserId() {
         var userId = Guid.NewGuid();
@@ -27,12 +29,13 @@ public sealed class AiHttpMappingsTests {
         var imageAssetId = Guid.NewGuid();
         var request = new FoodVisionHttpRequest(imageAssetId, "Dinner plate");
 
-        AnalyzeFoodImageCommand command = request.ToCommand(userId);
+        AnalyzeFoodImageCommand command = request.ToCommand(userId, RequestId);
 
         Assert.Multiple(
             () => Assert.Equal(userId, command.UserId),
             () => Assert.Equal(imageAssetId, command.ImageAssetId),
-            () => Assert.Equal("Dinner plate", command.Description));
+            () => Assert.Equal("Dinner plate", command.Description),
+            () => Assert.Equal(RequestId, command.RequestId));
     }
 
     [Fact]
@@ -40,10 +43,11 @@ public sealed class AiHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new FoodTextHttpRequest("two eggs and toast");
 
-        ParseFoodTextCommand command = request.ToCommand(userId);
+        ParseFoodTextCommand command = request.ToCommand(userId, RequestId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.Text, command.Text);
+        Assert.Equal(RequestId, command.RequestId);
     }
 
     [Fact]
@@ -53,9 +57,10 @@ public sealed class AiHttpMappingsTests {
             new FoodVisionItemHttpModel("egg", "ÑÐ¹Ñ†Ð¾", 2, "pcs", 0.95m),
         ]);
 
-        CalculateFoodNutritionCommand command = request.ToCommand(userId);
+        CalculateFoodNutritionCommand command = request.ToCommand(userId, RequestId);
 
         Assert.Equal(userId, command.UserId);
+        Assert.Equal(RequestId, command.RequestId);
         FoodVisionItemModel item = Assert.Single(command.Items);
         Assert.Multiple(
             () => Assert.Equal("egg", item.NameEn),

@@ -26,9 +26,7 @@ public sealed class MarketingAttributionTests {
             },
         };
         var request = new MarketingAttributionHttpRequest(
-            EventType: "page_landing",
             Timestamp: DateTime.UtcNow.ToString("O"),
-            UserId: null,
             AnonymousId: "fd-anon-test",
             SessionId: "fd-session-test",
             LandingPath: "/?utm_source=telegram",
@@ -38,13 +36,52 @@ public sealed class MarketingAttributionTests {
             UtmCampaign: "launch",
             BuildVersion: "test");
 
-        IActionResult result = await controller.Create(request);
+        var eventId = Guid.NewGuid();
+        IActionResult result = await controller.Create(eventId, request);
 
         Assert.IsType<NoContentResult>(result);
         RecordMarketingAttributionCommand command = Assert.IsType<RecordMarketingAttributionCommand>(sentRequest);
         Assert.Equal("fd-anon-test", command.AnonymousId);
+        Assert.Null(command.UserId);
+        Assert.Equal("page_landing", command.EventType);
         Assert.Equal("telegram", command.UtmSource);
         Assert.Equal("launch", command.UtmCampaign);
+        Assert.Equal(eventId, command.EventId);
+    }
+
+    [Fact]
+    public async Task CreateSignup_UsesOnlyCurrentUserIdentity() {
+        IRequest<Result>? sentRequest = null;
+        var controller = new MarketingAttributionController(SubstituteSender.Create(Result.Success(), request => sentRequest = request)) {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext(),
+            },
+        };
+        var userId = Guid.NewGuid();
+        var request = new MarketingSignupAttributionHttpRequest(
+            Timestamp: DateTime.UtcNow.ToString("O"),
+            AnonymousId: "fd-anon-test",
+            SessionId: "fd-session-test",
+            LandingPath: "/?utm_source=telegram",
+            UtmSource: "telegram");
+
+        var eventId = Guid.NewGuid();
+        IActionResult result = await controller.CreateSignup(userId, eventId, request);
+
+        Assert.IsType<NoContentResult>(result);
+        RecordMarketingAttributionCommand command = Assert.IsType<RecordMarketingAttributionCommand>(sentRequest);
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal("signup_completed", command.EventType);
+        Assert.Equal(eventId, command.EventId);
+    }
+
+    [Fact]
+    public void AnonymousRequestContract_DoesNotExposeIdentityOrEventType() {
+        string[] forbiddenProperties = ["UserId", "EventType"];
+
+        Assert.DoesNotContain(
+            typeof(MarketingAttributionHttpRequest).GetProperties(),
+            property => forbiddenProperties.Contains(property.Name, StringComparer.Ordinal));
     }
 
     [Fact]
@@ -225,7 +262,7 @@ public sealed class MarketingAttributionTests {
 
         await handler.Handle(
             new RecordMarketingAttributionCommand(
-                longValue,
+                "page_landing",
                 DateTime.UtcNow.ToString("O"),
                 UserId: null,
                 longValue,
@@ -237,16 +274,88 @@ public sealed class MarketingAttributionTests {
                 longValue,
                 longValue,
                 longValue,
-                longValue),
+                longValue,
+                Guid.NewGuid()),
             CancellationToken.None);
 
         MarketingAttributionEventRecord record = Assert.Single(repository.Events);
-        Assert.Equal(32, record.EventType.Length);
+        Assert.Equal("page_landing", record.EventType);
         Assert.Equal(96, record.AnonymousId.Length);
         Assert.Equal(96, record.SessionId.Length);
         Assert.Equal(160, record.UtmSource?.Length);
         Assert.Equal(64, record.BuildVersion?.Length);
     }
+
+    [Fact]
+    public async Task RecordAsync_RejectsUnsupportedEventType() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System);
+
+        Result result = await handler.Handle(
+            CreateRecordCommand("premium_started", userId: Guid.NewGuid()),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Empty(repository.Events);
+    }
+
+    [Fact]
+    public async Task RecordAsync_RejectsMissingEventId() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System);
+
+        Result result = await handler.Handle(
+            CreateRecordCommand("page_landing", userId: null) with { EventId = null },
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Empty(repository.Events);
+    }
+
+    [Fact]
+    public async Task RecordAsync_RejectsSignupWithoutAuthenticatedUser() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        var handler = new RecordMarketingAttributionCommandHandler(repository, TimeProvider.System);
+
+        Result result = await handler.Handle(
+            CreateRecordCommand("signup_completed", userId: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Empty(repository.Events);
+    }
+
+    [Fact]
+    public async Task RecordAsync_RejectsTimestampOutsideIngestionWindow() {
+        var repository = new InMemoryMarketingAttributionEventRepository();
+        DateTime now = new(2026, 8, 17, 12, 0, 0, DateTimeKind.Utc);
+        var handler = new RecordMarketingAttributionCommandHandler(repository, new FixedTimeProvider(now));
+        RecordMarketingAttributionCommand command = CreateRecordCommand("page_landing", userId: null) with {
+            Timestamp = now.AddDays(-2).ToString("O"),
+        };
+
+        Result result = await handler.Handle(command, CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Empty(repository.Events);
+    }
+
+    private static RecordMarketingAttributionCommand CreateRecordCommand(string eventType, Guid? userId) =>
+        new(
+            eventType,
+            DateTime.UtcNow.ToString("O"),
+            userId,
+            "anon-1",
+            "session-1",
+            "/",
+            ReferrerHost: null,
+            UtmSource: null,
+            UtmMedium: null,
+            UtmCampaign: null,
+            UtmContent: null,
+            UtmTerm: null,
+            BuildVersion: null,
+            EventId: Guid.NewGuid());
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {

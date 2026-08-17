@@ -73,7 +73,7 @@ export class AdminMailInboxComponent {
         }
 
         if (this.selectedBodyMode() === 'raw') {
-            return message.rawMime;
+            return message.rawMime ?? '';
         }
 
         return message.textBody ?? '';

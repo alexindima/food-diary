@@ -26,7 +26,7 @@ public sealed class SmtpRelayDeliveryTransport(
 
         message.Body = CreateBody(request);
         message.Date = timeProvider.GetUtcNow();
-        message.MessageId = MimeUtils.GenerateMessageId();
+        message.MessageId = request.MessageId ?? MimeUtils.GenerateMessageId();
 
         if (dkimSigningService.IsEnabled) {
             dkimSigningService.Sign(message);

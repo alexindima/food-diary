@@ -2,6 +2,7 @@ using System.Globalization;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Images;
+using FoodDiary.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -32,6 +33,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         var processor = new ImageObjectDeletionOutboxProcessor(
             context,
             storage,
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
 
@@ -52,6 +54,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         var processor = new ImageObjectDeletionOutboxProcessor(
             context,
             new ThrowingImageStorageService(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
 
@@ -62,7 +65,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         Assert.Null(message.ProcessedOnUtc);
         Assert.Equal(1, message.AttemptCount);
         Assert.True(message.NextAttemptOnUtc > DateTime.UtcNow);
-        Assert.Contains("Simulated", message.LastError, StringComparison.Ordinal);
+        Assert.Equal("Outbox dispatch failed (InvalidOperationException).", message.LastError);
     }
 
     [Fact]
@@ -78,6 +81,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         var processor = new ImageObjectDeletionOutboxProcessor(
             context,
             new ThrowingImageStorageService(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
 
@@ -89,7 +93,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         Assert.NotNull(saved.DeadLetteredOnUtc);
         Assert.Null(saved.LockedUntilUtc);
         Assert.Null(saved.LockedBy);
-        Assert.Contains("Simulated", saved.LastError, StringComparison.Ordinal);
+        Assert.Equal("Outbox dispatch failed (InvalidOperationException).", saved.LastError);
     }
 
     [Fact]
@@ -98,6 +102,7 @@ public sealed class ImageObjectDeletionOutboxTests {
         var processor = new ImageObjectDeletionOutboxProcessor(
             context,
             new RecordingImageStorageService(),
+            Microsoft.Extensions.Options.Options.Create(new OutboxProcessingOptions()),
             TimeProvider.System,
             NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
 

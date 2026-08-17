@@ -6,4 +6,5 @@ namespace FoodDiary.Application.Ai.Commands.ParseFoodText;
 
 public record ParseFoodTextCommand(
     Guid? UserId,
-    string Text) : ICommand<Result<FoodVisionModel>>, IUserRequest;
+    string Text,
+    string RequestId) : ICommand<Result<FoodVisionModel>>, IUserRequest;

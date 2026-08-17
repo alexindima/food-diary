@@ -46,6 +46,10 @@ public sealed class MailRelayInfrastructureOptionsTests {
         Assert.False(MailRelayBrokerOptions.HasValidConfiguration(new MailRelayBrokerOptions {
             QueueName = "",
         }));
+        Assert.False(MailRelayBrokerOptions.HasValidConfiguration(new MailRelayBrokerOptions {
+            Backend = MailRelayBrokerOptions.RabbitMqBackend,
+            EnablePollingFallback = false,
+        }));
     }
 
     [Fact]
@@ -252,32 +256,33 @@ public sealed class MailRelayInfrastructureOptionsTests {
     }
 
     [Fact]
-    public void AddMailRelayTelemetry_WhenOtlpEndpointIsEmpty_RegistersMeterProvider() {
+    public void AddMailRelayTelemetry_WhenOtlpEndpointIsEmpty_DoesNotRegisterProviders() {
         var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder().Build();
 
-        services.AddSingleton<IOptions<OpenTelemetryOptions>>(Microsoft.Extensions.Options.Options.Create(new OpenTelemetryOptions {
-            Otlp = new OpenTelemetryOptions.OtlpOptions {
-                Endpoint = "",
-            },
-        }));
-        services.AddMailRelayTelemetry();
+        services.AddMailRelayTelemetry(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Metrics.MeterProvider>());
+        Assert.Multiple(
+            () => Assert.Null(provider.GetService<OpenTelemetry.Metrics.MeterProvider>()),
+            () => Assert.Null(provider.GetService<OpenTelemetry.Trace.TracerProvider>()));
     }
 
     [Fact]
-    public void AddMailRelayTelemetry_WhenOtlpEndpointIsConfigured_RegistersMeterProvider() {
+    public void AddMailRelayTelemetry_WhenOtlpEndpointIsConfigured_RegistersProviders() {
         var services = new ServiceCollection();
+        IConfiguration configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["OpenTelemetry:Otlp:Endpoint"] = "http://localhost:4317",
+            })
+            .Build();
 
-        services.AddSingleton<IOptions<OpenTelemetryOptions>>(Microsoft.Extensions.Options.Options.Create(new OpenTelemetryOptions {
-            Otlp = new OpenTelemetryOptions.OtlpOptions {
-                Endpoint = "http://localhost:4317",
-            },
-        }));
-        services.AddMailRelayTelemetry();
+        services.AddLogging();
+        services.AddMailRelayTelemetry(configuration);
         using ServiceProvider provider = services.BuildServiceProvider();
 
-        Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Metrics.MeterProvider>());
+        Assert.Multiple(
+            () => Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Metrics.MeterProvider>()),
+            () => Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Trace.TracerProvider>()));
     }
 }

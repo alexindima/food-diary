@@ -1,0 +1,427 @@
+{
+  "version": 2,
+  "dependencies": {
+    "net10.0": {
+      "Asp.Versioning.Mvc": {
+        "type": "Direct",
+        "requested": "[10.2.1, )",
+        "resolved": "10.2.1",
+        "contentHash": "fMzUraYZOAobKQn2PffrgPsULbCWFeWroYRYndPasxPsiQl1+i8x5qYRuMYZAbzDrBnymPUMBxT2gZG2PwbkcQ==",
+        "dependencies": {
+          "Asp.Versioning.Http": "10.2.1"
+        }
+      },
+      "Meziantou.Analyzer": {
+        "type": "Direct",
+        "requested": "[3.0.141, )",
+        "resolved": "3.0.141",
+        "contentHash": "p0mtUYG/36FEnU6P5GovB82mVH4DoWGdHYjePkLnIeTNI0LQfmvjGj2twQEBTosw6/YTTnk8Fknu2VvaFybECA=="
+      },
+      "Roslynator.Analyzers": {
+        "type": "Direct",
+        "requested": "[4.15.0, )",
+        "resolved": "4.15.0",
+        "contentHash": "E8fu71Y+vzhniJKy1K13Rzwm8Vjcj7CDFBpflqncKUZfc3SzuF0kMBiyMmgXNPkjWTdE3Z+30HlGgYjHONZY/Q=="
+      },
+      "Asp.Versioning.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.2.1",
+        "contentHash": "jMBztsVim+rYVrkNY23dMuOjTGXGQ9+je1xb3i17KgUof7OcBZtMMDduEWoCQ52SpTlYqKsuzgJyUMCMOFCBfg=="
+      },
+      "Asp.Versioning.Http": {
+        "type": "Transitive",
+        "resolved": "10.2.1",
+        "contentHash": "XaVOKS4AV6a6JdFsiuyLkNwU0ilWhUK2U71mBEXJsgi5AGpo24UkfZ4KUhpRGpuMmQNrugS7yxCIscGcnujdFA==",
+        "dependencies": {
+          "Asp.Versioning.Abstractions": "10.2.1"
+        }
+      },
+      "fooddiary.application.abstractions": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Domain.Primitives": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.admin": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Ai": "[1.0.0, )",
+          "FoodDiary.Application.ContentReports": "[1.0.0, )",
+          "FoodDiary.Application.Gamification": "[1.0.0, )",
+          "FoodDiary.Application.Lessons": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.ai": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.billing": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.bodymetrics": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.contentreports": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.cycles": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.dailyadvices": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.dashboard": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Cycles": "[1.0.0, )",
+          "FoodDiary.Application.DailyAdvices": "[1.0.0, )",
+          "FoodDiary.Application.Exercises": "[1.0.0, )",
+          "FoodDiary.Application.Hydration": "[1.0.0, )",
+          "FoodDiary.Application.Meals": "[1.0.0, )",
+          "FoodDiary.Application.Statistics": "[1.0.0, )",
+          "FoodDiary.Application.Tdee": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.dietologist": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.exercises": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.export": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Cycles": "[1.0.0, )",
+          "FoodDiary.Application.Meals": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.fasting": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.favorites": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.gamification": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Meals": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.hydration": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.identity": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.images": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.lessons": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.marketing": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.mealplanning": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.meals": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Images": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.notifications": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.openfoodfacts": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.products": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Images": "[1.0.0, )",
+          "FoodDiary.Application.OpenFoodFacts": "[1.0.0, )",
+          "FoodDiary.Application.Usda": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.recipecommunity": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.recipes": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Images": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.statistics": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.tdee": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Exercises": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.usda": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Meals": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.users": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.wearables": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.weeklycheckin": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Hydration": "[1.0.0, )",
+          "FoodDiary.Application.Meals": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.application.weeklygoals": {
+        "type": "Project",
+        "dependencies": {
+          "FluentValidation": "[12.1.1, )",
+          "FluentValidation.DependencyInjectionExtensions": "[12.1.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
+          "FoodDiary.Application.Meals": "[1.0.0, )",
+          "FoodDiary.Domain": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )"
+        }
+      },
+      "fooddiary.domain": {
+        "type": "Project",
+        "dependencies": {
+          "FoodDiary.Domain.Primitives": "[1.0.0, )"
+        }
+      },
+      "fooddiary.domain.primitives": {
+        "type": "Project"
+      },
+      "fooddiary.mediator": {
+        "type": "Project"
+      },
+      "fooddiary.results": {
+        "type": "Project"
+      },
+      "FluentValidation": {
+        "type": "CentralTransitive",
+        "requested": "[12.1.1, )",
+        "resolved": "12.1.1",
+        "contentHash": "EPpkIe1yh1a0OXyC100oOA8WMbZvqUu5plwhvYcb7oSELfyUZzfxV48BLhvs3kKo4NwG7MGLNgy1RJiYtT8Dpw=="
+      },
+      "FluentValidation.DependencyInjectionExtensions": {
+        "type": "CentralTransitive",
+        "requested": "[12.1.1, )",
+        "resolved": "12.1.1",
+        "contentHash": "D0VXh4dtjjX2aQizuaa0g6R8X3U1JaVqJPfGCvLwZX9t/O2h7tkpbitbadQMfwcgSPdDbI2vDxuwRMv/Uf9dHA==",
+        "dependencies": {
+          "FluentValidation": "12.1.1"
+        }
+      }
+    }
+  }
+}

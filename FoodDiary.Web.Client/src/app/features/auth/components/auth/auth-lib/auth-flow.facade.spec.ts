@@ -96,7 +96,7 @@ describe('AuthFlowFacade register', () => {
 
         await expect(firstValueFrom(facade.register({ email: 'new@example.com', password: 'password' }))).resolves.toBe('success');
 
-        expect(marketingAttributionMock.recordSignupCompleted).toHaveBeenCalledWith('user-id');
+        expect(marketingAttributionMock.recordSignupCompleted).toHaveBeenCalledWith();
     });
 });
 

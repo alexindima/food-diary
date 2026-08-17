@@ -1,10 +1,11 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
-using System.Net.Http.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Integrations.Http;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -22,6 +23,9 @@ internal sealed class OpenFoodFactsService(
     private static readonly TimeSpan SearchCacheTtl = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan StaleSearchCacheTtl = TimeSpan.FromHours(6);
     private static readonly ConcurrentDictionary<string, CachedSearchResult> SearchCache = new(StringComparer.Ordinal);
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web) {
+        MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
+    };
 
     public async Task<OpenFoodFactsProductModel?> GetByBarcodeAsync(
         string barcode,
@@ -36,10 +40,16 @@ internal sealed class OpenFoodFactsService(
 
             HttpResponseMessage response = await httpClient.SendAsync(
                 new HttpRequestMessage(HttpMethod.Get, url),
+                HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            OffApiResponse? result = await response.Content.ReadFromJsonAsync<OffApiResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            OffApiResponse? result = await BoundedHttpContentReader.ReadFromJsonAsync<OffApiResponse>(
+                response.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false);
             if (result?.Status != 1 || result.Product is null) {
                 outcome = "not_found";
                 return null;
@@ -64,7 +74,7 @@ internal sealed class OpenFoodFactsService(
             outcome = "empty";
             return null;
 
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
             errorType = ex.GetType().Name;
             logger.LogWarning(ex, "Open Food Facts lookup failed for barcode '{Barcode}'", barcode);
@@ -100,10 +110,16 @@ internal sealed class OpenFoodFactsService(
 
             HttpResponseMessage response = await httpClient.SendAsync(
                 new HttpRequestMessage(HttpMethod.Get, url),
+                HttpCompletionOption.ResponseHeadersRead,
                 cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            OffSearchResponse? result = await response.Content.ReadFromJsonAsync<OffSearchResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            OffSearchResponse? result = await BoundedHttpContentReader.ReadFromJsonAsync<OffSearchResponse>(
+                response.Content,
+                JsonOptions,
+                BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+                BoundedHttpContentReader.DefaultReadTimeout,
+                cancellationToken).ConfigureAwait(false);
             if (result?.Products is null) {
                 outcome = "empty";
                 return [];
@@ -116,7 +132,7 @@ internal sealed class OpenFoodFactsService(
 
             SearchCache[cacheKey] = new CachedSearchResult(timeProvider.GetUtcNow(), products);
             return products;
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
             errorType = ex.GetType().Name;
             if (TryGetCachedSearch(cacheKey, StaleSearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel> staleProducts)) {
@@ -141,7 +157,9 @@ internal sealed class OpenFoodFactsService(
     private static string ResolveFailureOutcome(Exception exception, CancellationToken cancellationToken) =>
         exception switch {
             TaskCanceledException => cancellationToken.IsCancellationRequested ? "canceled" : "timeout",
-            System.Text.Json.JsonException => "json_error",
+            JsonException => "json_error",
+            InvalidDataException => "oversized_response",
+            TimeoutException => "response_body_timeout",
             HttpRequestException httpException when httpException.StatusCode is not null => "http_error",
             HttpRequestException => "transport_error",
             _ => "failure",

@@ -1,5 +1,7 @@
 using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Assets;
+using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Entities.Recipes;
@@ -23,6 +25,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     public async Task CleanupDeletedUsersAsync_WithoutReassign_RemovesUserAndOwnedData() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var deletedUser = User.Create("deleted@example.com", "hash");
+        var survivingUser = User.Create("survivor@example.com", "hash");
         deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
 
         var imageAsset = ImageAsset.Create(deletedUser.Id, "users/deleted/image-1.webp", "https://cdn.example.com/image-1.webp");
@@ -55,8 +58,26 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var hydration = HydrationEntry.Create(deletedUser.Id, recordedAt, 250);
         var weight = WeightEntry.Create(deletedUser.Id, recordedAt, 72.5);
         var waist = WaistEntry.Create(deletedUser.Id, recordedAt, 84);
+        var targetedSession = AdminImpersonationSession.Start(
+            survivingUser.Id,
+            deletedUser.Id,
+            "Investigate account support request",
+            actorIpAddress: null,
+            actorUserAgent: null,
+            recordedAt);
+        var actorSession = AdminImpersonationSession.Start(
+            deletedUser.Id,
+            survivingUser.Id,
+            "Investigate account support request",
+            actorIpAddress: null,
+            actorUserAgent: null,
+            recordedAt);
+        var assignedTask = ClientTask.Create(survivingUser.Id, deletedUser.Id, "Review plan", details: null, dueAtUtc: null);
+        var authoredTask = ClientTask.Create(deletedUser.Id, survivingUser.Id, "Review plan", details: null, dueAtUtc: null);
 
-        context.Users.Add(deletedUser);
+        context.Users.AddRange(deletedUser, survivingUser);
+        context.AdminImpersonationSessions.AddRange(targetedSession, actorSession);
+        context.ClientTasks.AddRange(assignedTask, authoredTask);
         context.ImageAssets.Add(imageAsset);
         context.Products.Add(product);
         context.Recipes.Add(recipe);
@@ -90,6 +111,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         Assert.False(await verificationContext.HydrationEntries.AnyAsync());
         Assert.False(await verificationContext.WeightEntries.AnyAsync());
         Assert.False(await verificationContext.WaistEntries.AnyAsync());
+        Assert.False(await verificationContext.AdminImpersonationSessions.AnyAsync());
+        Assert.False(await verificationContext.ClientTasks.AnyAsync());
+        Assert.True(await verificationContext.Users.AnyAsync(user => user.Id == survivingUser.Id));
         Assert.Equal(["users/deleted/image-1.webp"], imageObjectDeletionOutbox.ObjectKeys);
     }
 

@@ -38,6 +38,28 @@ updates:
           - "Npgsql.*"
           - "Microsoft.EntityFrameworkCore*"
 
+  - package-ecosystem: "docker"
+    directories:
+      - "/"
+      - "/FoodDiary.Initializer"
+      - "/FoodDiary.JobManager"
+      - "/FoodDiary.Telegram.Bot"
+      - "/FoodDiary.Web.Api"
+      - "/FoodDiary.Web.Client"
+      - "/MailInbox/FoodDiary.MailInbox.Initializer"
+      - "/MailInbox/FoodDiary.MailInbox.WebApi"
+      - "/MailRelay/FoodDiary.MailRelay.Initializer"
+      - "/MailRelay/FoodDiary.MailRelay.WebApi"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    groups:
+      container-images:
+        patterns:
+          - "*"
+        group-by: "dependency-name"
+
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:

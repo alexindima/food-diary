@@ -223,7 +223,9 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     [Fact]
     public void CreateMessage_WhenTextBodyIsMissing_CreatesMultipartAlternativeWithTextFallback() {
         DirectMxRelayDeliveryTransport transport = CreateTransport(CreateDkimSigningService());
-        RelayEmailMessageRequest request = CreateRequest(textBody: null);
+        RelayEmailMessageRequest request = CreateRequest(textBody: null) with {
+            MessageId = "queued-message@example.com",
+        };
 
         MimeMessage message = InvokeCreateMessage(transport, request);
 
@@ -233,7 +235,17 @@ public sealed class DirectMxRelayDeliveryTransportTests {
         Assert.Contains("Hello & welcome", message.TextBody, StringComparison.Ordinal);
         Assert.Equal("<p>Hello &amp; welcome</p>", message.HtmlBody);
         Assert.Equal(FixedNow, message.Date);
+        Assert.Equal("queued-message@example.com", message.MessageId);
         Assert.False(message.Headers.Contains("DKIM-Signature"));
+    }
+
+    [Fact]
+    public void CreateMessage_WhenMessageIdIsMissing_GeneratesMessageId() {
+        DirectMxRelayDeliveryTransport transport = CreateTransport(CreateDkimSigningService());
+
+        MimeMessage message = InvokeCreateMessage(transport, CreateRequest(textBody: "Hello"));
+
+        Assert.False(string.IsNullOrWhiteSpace(message.MessageId));
     }
 
     [Fact]

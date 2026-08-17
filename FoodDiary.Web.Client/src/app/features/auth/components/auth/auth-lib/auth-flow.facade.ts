@@ -43,7 +43,7 @@ export class AuthFlowFacade {
             )
             .pipe(
                 map(response => {
-                    this.marketingAttribution.recordSignupCompleted(response.user.id);
+                    this.marketingAttribution.recordSignupCompleted();
                     return response;
                 }),
                 map(() => 'success' as const),

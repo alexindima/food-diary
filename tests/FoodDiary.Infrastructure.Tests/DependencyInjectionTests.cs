@@ -603,6 +603,30 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public void AddInfrastructure_WhenOutboxLeaseDoesNotCoverProcessingBudgets_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+            ["OutboxProcessing:LeaseDuration"] = "00:01:00",
+            ["OutboxProcessing:DispatchTimeout"] = "00:00:50",
+            ["OutboxProcessing:FinalizationTimeout"] = "00:00:10",
+        });
+
+        services.AddInfrastructure(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        OptionsValidationException exception = Assert.Throws<OptionsValidationException>(() =>
+            provider.GetRequiredService<IOptions<OutboxProcessingOptions>>().Value);
+        Assert.Contains("LeaseDuration", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void AddInfrastructure_WithRetriesEnabled_ConfiguresRetryingExecutionStrategy() {
         var services = new ServiceCollection();
         IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {

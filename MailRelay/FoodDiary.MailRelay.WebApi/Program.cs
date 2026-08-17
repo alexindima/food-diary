@@ -16,7 +16,7 @@ builder.Services
     .AddMailRelayApplication()
     .AddMailRelayPresentation()
     .AddMailRelayServices(builder.Configuration)
-    .AddMailRelayTelemetry();
+    .AddMailRelayTelemetry(builder.Configuration);
 
 WebApplication app = builder.Build();
 

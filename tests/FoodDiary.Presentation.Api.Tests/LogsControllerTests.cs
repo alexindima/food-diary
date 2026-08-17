@@ -6,6 +6,7 @@ using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -13,10 +14,9 @@ namespace FoodDiary.Presentation.Api.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class LogsControllerTests {
     [Theory]
-    [InlineData("error", LogLevel.Error)]
+    [InlineData("error", LogLevel.Warning)]
     [InlineData("warning", LogLevel.Warning)]
     [InlineData("info", LogLevel.Information)]
-    [InlineData("debug", LogLevel.Information)]
     public async Task Create_MapsClientLogLevelAndRecordsTelemetry(string level, LogLevel expectedLogLevel) {
         var logger = new RecordingLogger();
         IRequest<Result>? sentRequest = null;
@@ -40,7 +40,7 @@ public sealed class LogsControllerTests {
     }
 
     [Fact]
-    public async Task Create_WithDetails_LogsRawDetails() {
+    public async Task Create_WithSensitivePayload_DoesNotLogRawValues() {
         var logger = new RecordingLogger();
         LogsController controller = CreateController(logger, SubstituteSender.Create(Result.Success()));
         JsonElement details = JsonSerializer.Deserialize<JsonElement>("""
@@ -51,12 +51,55 @@ public sealed class LogsControllerTests {
             Name: "fasting.session.started",
             Level: "info",
             Timestamp: DateTime.UtcNow.ToString("O"),
+            Message: "secret-message",
+            Location: "https://example.test/?token=secret-location",
+            Route: "/route?token=secret-route",
+            SessionId: "secret-session",
+            Stack: "secret-stack",
             Details: details);
 
         IActionResult result = await controller.Create(request);
 
         Assert.IsType<NoContentResult>(result);
-        Assert.Contains("\"source\":\"test\"", logger.Message, StringComparison.Ordinal);
+        Assert.Multiple(
+            () => Assert.DoesNotContain("secret-message", logger.Message, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("secret-location", logger.Message, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("secret-route", logger.Message, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("secret-session", logger.Message, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("secret-stack", logger.Message, StringComparison.Ordinal),
+            () => Assert.DoesNotContain("\"source\":\"test\"", logger.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public void Request_WithUnknownEventName_IsInvalid() {
+        var request = new ClientTelemetryLogHttpRequest(
+            Category: "user_action",
+            Name: "fasting.attacker-controlled",
+            Level: "info",
+            Timestamp: DateTime.UtcNow.ToString("O"));
+        List<ValidationResult> validationResults = [];
+
+        bool valid = Validator.TryValidateObject(request, new ValidationContext(request), validationResults, validateAllProperties: true);
+
+        Assert.False(valid);
+        Assert.Contains(validationResults, result => result.MemberNames.Contains(nameof(request.Name), StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public void Request_WithOversizedDetails_IsInvalid() {
+        JsonElement details = JsonSerializer.SerializeToElement(new { value = new string('x', 5000) });
+        var request = new ClientTelemetryLogHttpRequest(
+            Category: "user_action",
+            Name: "fasting.session.started",
+            Level: "info",
+            Timestamp: DateTime.UtcNow.ToString("O"),
+            Details: details);
+        List<ValidationResult> validationResults = [];
+
+        bool valid = Validator.TryValidateObject(request, new ValidationContext(request), validationResults, validateAllProperties: true);
+
+        Assert.False(valid);
+        Assert.Contains(validationResults, result => result.MemberNames.Contains(nameof(request.Details), StringComparer.Ordinal));
     }
 
     [Fact]

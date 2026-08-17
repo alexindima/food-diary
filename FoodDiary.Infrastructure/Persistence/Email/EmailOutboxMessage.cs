@@ -63,7 +63,8 @@ public sealed class EmailOutboxMessage : IOutboxMessage {
             JsonSerializer.Deserialize<string[]>(ToAddressesJson, JsonOptions) ?? [],
             Subject,
             HtmlBody,
-            TextBody);
+            TextBody,
+            IdempotencyKey: $"fooddiary-email-outbox:{Id:N}");
 
     public void MarkClaimed(DateTime lockedUntilUtc, string lockedBy) {
         LockedUntilUtc = NormalizeUtc(lockedUntilUtc);

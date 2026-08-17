@@ -58,6 +58,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
             contextResult.Value.Language,
             userId,
             query.Description,
+            query.RequestId,
             cancellationToken).ConfigureAwait(false);
     }
 }

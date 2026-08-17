@@ -34,6 +34,7 @@ public sealed class ParseFoodTextCommandHandler(
             command.Text,
             contextResult.Value.Language,
             userId,
+            command.RequestId,
             cancellationToken).ConfigureAwait(false);
     }
 }

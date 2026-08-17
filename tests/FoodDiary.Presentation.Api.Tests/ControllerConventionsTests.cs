@@ -172,7 +172,7 @@ public sealed class ControllerConventionsTests {
             "AdminSsoController.AdminSsoExchange",
             "BillingWebhookController",
             "LogsController",
-            "MarketingAttributionController",
+            "MarketingAttributionController.Create",
         ];
         string[] actual = [.. GetControllerSyntaxTrees()
             .SelectMany(static tree => tree.GetRoot().DescendantNodes()

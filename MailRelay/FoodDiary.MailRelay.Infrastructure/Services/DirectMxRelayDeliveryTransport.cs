@@ -50,10 +50,10 @@ public sealed class DirectMxRelayDeliveryTransport(
             } catch (Exception ex) when (ex is not OperationCanceledException) {
                 lastError = ex;
                 logger.LogWarning(
-                    ex,
-                    "Direct MX delivery to {Domain} via {MxHost} failed.",
+                    "Direct MX delivery to {Domain} via {MxHost} failed. ErrorType={ErrorType}",
                     domain,
-                    mxRecord.Host);
+                    mxRecord.Host,
+                    ex.GetType().Name);
             }
         }
 
@@ -90,7 +90,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         message.To.AddRange(recipients);
         message.Body = CreateBody(request);
         message.Date = timeProvider.GetUtcNow();
-        message.MessageId = MimeUtils.GenerateMessageId();
+        message.MessageId = request.MessageId ?? MimeUtils.GenerateMessageId();
 
         if (dkimSigningService.IsEnabled) {
             dkimSigningService.Sign(message);

@@ -164,6 +164,7 @@ public class LayeringTests {
         string[] allowedDirectories = [
             "Authentication",
             "Billing",
+            "Http",
             "Options",
             "Properties",
             "Services",

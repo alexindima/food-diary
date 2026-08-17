@@ -185,13 +185,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "040eb49a64ea9714e9ccdb5b34e66dd453c84e2735e5f439b9be58eb0c7966d9"
+          "sha256": "601ef43653819eeadc068c61de1ed207ed6f23fec46661a7aefd8cfb2f9749af"
         }
       ],
-      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
+      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:01:38.2506155Z"
+      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
+      "reviewedAtUtc": "2026-08-17T09:59:53.4842688Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -200,13 +200,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "2677acfea4e85481c03a4c1e73a5b559d40748cb7088dd03b5a1878b913244cc"
+          "sha256": "7d70ee66eb85a31c17c4d658e7dd112f9a316291a93e6e7c3f5a4497d68dbd38"
         }
       ],
-      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
+      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:01:38.6975498Z"
+      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
+      "reviewedAtUtc": "2026-08-17T09:59:54.2315085Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -446,13 +446,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "705d778cf9255ff633a99fc0b4c9615375e384a73f6ad9f7cb4ad6201b32c83b"
+          "sha256": "5bda0a85aeb86cfaeb0545eaa221a1de79aea9674835451006c3da3c81e504e5"
         }
       ],
-      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
+      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:01:39.2949896Z"
+      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
+      "reviewedAtUtc": "2026-08-17T09:59:54.7328347Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -729,13 +729,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "28c6a8c40708b2258bd106b8c4be988411a4b826b3c6a29513cdd67bdc2978c4"
+          "sha256": "a00f24c96f4018cb5adb3767c8a6e8e014848f0e648cd1cfc40720dc83be4f8f"
         }
       ],
-      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
+      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:01:40.0286384Z"
+      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
+      "reviewedAtUtc": "2026-08-17T09:59:55.3020294Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -774,13 +774,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "ea885d1bea4267040752f27e0ea92ff17e4083906465f9c727edb2ed142a366a"
+          "sha256": "105777a895644a6d275262613447dda6266b48b049f0c4b464570704ee915f96"
         }
       ],
-      "reason": "Reviewed the regenerated frontend contract, frontend navigation, and quality indexes after the Prettier-only source normalization; selectors, routes, contracts, and quality conclusions remain unchanged.",
+      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:08:31.6437571Z"
+      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
+      "reviewedAtUtc": "2026-08-17T09:59:55.9852509Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1142,13 +1142,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "bed10260581240c9e8944fb1051ba7b402331d18a4d2ddd318929189f0aa6ad3"
+          "sha256": "ea6c2966181cc6da9a13b98aa86144509ce47eade7931e67aaa2e8db2942eb7a"
         }
       ],
-      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
+      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
       "baseRef": "HEAD",
-      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
-      "reviewedAtUtc": "2026-08-17T04:01:40.8365210Z"
+      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
+      "reviewedAtUtc": "2026-08-17T09:59:56.6158089Z"
     },
     {
       "pageId": "workflow.review-diff",

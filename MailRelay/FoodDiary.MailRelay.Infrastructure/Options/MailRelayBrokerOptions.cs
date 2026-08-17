@@ -41,7 +41,8 @@ public sealed class MailRelayBrokerOptions {
             return true;
         }
 
-        return !string.IsNullOrWhiteSpace(options.HostName) &&
+        return options.EnablePollingFallback &&
+               !string.IsNullOrWhiteSpace(options.HostName) &&
                !string.IsNullOrWhiteSpace(options.UserName) &&
                !string.IsNullOrWhiteSpace(options.QueueName) &&
                !string.IsNullOrWhiteSpace(options.OutboundExchangeName) &&

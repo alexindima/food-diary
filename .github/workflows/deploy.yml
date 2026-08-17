@@ -13,6 +13,7 @@ on:
 env:
   SERVER_IP: 193.109.69.58
   IMAGE_PREFIX: ghcr.io/alexindima/food-diary
+  SOURCE_COMMIT_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
 
 concurrency:
   group: fooddiary-production-deploy
@@ -109,7 +110,7 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/api:latest
-            ${{ env.IMAGE_PREFIX }}/api:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/api:sha-${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_api.outcome == 'failure'
@@ -131,7 +132,7 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/telegram-bot:latest
-            ${{ env.IMAGE_PREFIX }}/telegram-bot:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/telegram-bot:sha-${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_telegram_bot.outcome == 'failure'
@@ -153,7 +154,7 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/initializer:latest
-            ${{ env.IMAGE_PREFIX }}/initializer:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/initializer:sha-${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_initializer.outcome == 'failure'
@@ -175,7 +176,7 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/job-manager:latest
-            ${{ env.IMAGE_PREFIX }}/job-manager:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/job-manager:sha-${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_job_manager.outcome == 'failure'
@@ -197,7 +198,7 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/mail-relay:latest
-            ${{ env.IMAGE_PREFIX }}/mail-relay:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/mail-relay:sha-${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_mail_relay.outcome == 'failure'
@@ -219,7 +220,7 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/mailrelay-initializer:latest
-            ${{ env.IMAGE_PREFIX }}/mailrelay-initializer:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/mailrelay-initializer:sha-${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_mailrelay_initializer.outcome == 'failure'
@@ -241,7 +242,7 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/mail-inbox:latest
-            ${{ env.IMAGE_PREFIX }}/mail-inbox:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/mail-inbox:sha-${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_mail_inbox.outcome == 'failure'
@@ -263,7 +264,7 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/mailinbox-initializer:latest
-            ${{ env.IMAGE_PREFIX }}/mailinbox-initializer:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/mailinbox-initializer:sha-${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_mailinbox_initializer.outcome == 'failure'
@@ -285,9 +286,9 @@ jobs:
           sbom: true
           tags: |
             ${{ env.IMAGE_PREFIX }}/client:latest
-            ${{ env.IMAGE_PREFIX }}/client:sha-${{ github.sha }}
+            ${{ env.IMAGE_PREFIX }}/client:sha-${{ env.SOURCE_COMMIT_SHA }}
           build-args: |
-            BUILD_VERSION=${{ github.sha }}
+            BUILD_VERSION=${{ env.SOURCE_COMMIT_SHA }}
 
       - name: Record failure step
         if: always() && steps.build_client.outcome == 'failure'
@@ -356,7 +357,16 @@ jobs:
       - name: Deploy to server
         id: deploy_server
         run: |
-          DEPLOY_IMAGE_TAG="sha-${{ github.sha }}"
+          DEPLOY_IMAGE_TAG="sha-${{ env.SOURCE_COMMIT_SHA }}"
+          API_IMAGE_REF="${{ env.IMAGE_PREFIX }}/api@${{ steps.build_api.outputs.digest }}"
+          TELEGRAM_BOT_IMAGE_REF="${{ env.IMAGE_PREFIX }}/telegram-bot@${{ steps.build_telegram_bot.outputs.digest }}"
+          INITIALIZER_IMAGE_REF="${{ env.IMAGE_PREFIX }}/initializer@${{ steps.build_initializer.outputs.digest }}"
+          JOB_MANAGER_IMAGE_REF="${{ env.IMAGE_PREFIX }}/job-manager@${{ steps.build_job_manager.outputs.digest }}"
+          MAIL_RELAY_IMAGE_REF="${{ env.IMAGE_PREFIX }}/mail-relay@${{ steps.build_mail_relay.outputs.digest }}"
+          MAIL_RELAY_INITIALIZER_IMAGE_REF="${{ env.IMAGE_PREFIX }}/mailrelay-initializer@${{ steps.build_mailrelay_initializer.outputs.digest }}"
+          MAIL_INBOX_IMAGE_REF="${{ env.IMAGE_PREFIX }}/mail-inbox@${{ steps.build_mail_inbox.outputs.digest }}"
+          MAIL_INBOX_INITIALIZER_IMAGE_REF="${{ env.IMAGE_PREFIX }}/mailinbox-initializer@${{ steps.build_mailinbox_initializer.outputs.digest }}"
+          CLIENT_IMAGE_REF="${{ env.IMAGE_PREFIX }}/client@${{ steps.build_client.outputs.digest }}"
           SSH_CMD="ssh -T -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 root@${{ env.SERVER_IP }}"
           SCP_CMD="scp -i ~/.ssh/id_rsa -o BatchMode=yes -o StrictHostKeyChecking=no -o ConnectTimeout=30"
 
@@ -368,7 +378,7 @@ jobs:
           $SCP_CMD nginx/sites-enabled/grafana.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/grafana.fooddiary.club
           $SCP_CMD nginx/sites-enabled/storybook.fooddiary.club root@${{ env.SERVER_IP }}:/opt/fooddiary/nginx/sites-enabled/storybook.fooddiary.club
 
-          DEPLOY_COMMIT_SHA="${{ github.sha }}"
+          DEPLOY_COMMIT_SHA="${{ env.SOURCE_COMMIT_SHA }}"
 
           cat > "${RUNNER_TEMP}/deploy.sh" << 'SCRIPT_EOF'
           #!/bin/bash
@@ -383,27 +393,20 @@ jobs:
           cd /opt/fooddiary
 
           cp /etc/fooddiary/fooddiary.env .env
-          printf '\nAPI_IMAGE_TAG=%s\nINITIALIZER_IMAGE_TAG=%s\nTELEGRAM_BOT_IMAGE_TAG=%s\nJOB_MANAGER_IMAGE_TAG=%s\nMAIL_RELAY_IMAGE_TAG=%s\nMAIL_RELAY_INITIALIZER_IMAGE_TAG=%s\nMAIL_INBOX_IMAGE_TAG=%s\nMAIL_INBOX_INITIALIZER_IMAGE_TAG=%s\nCLIENT_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
-            "$DEPLOY_IMAGE_TAG" \
-            "$DEPLOY_IMAGE_TAG" \
-            "$DEPLOY_IMAGE_TAG" \
-            "$DEPLOY_IMAGE_TAG" \
-            "$DEPLOY_IMAGE_TAG" \
-            "$DEPLOY_IMAGE_TAG" \
-            "$DEPLOY_IMAGE_TAG" \
-            "$DEPLOY_IMAGE_TAG" \
+          printf '\nAPI_IMAGE_REF=%s\nINITIALIZER_IMAGE_REF=%s\nTELEGRAM_BOT_IMAGE_REF=%s\nJOB_MANAGER_IMAGE_REF=%s\nMAIL_RELAY_IMAGE_REF=%s\nMAIL_RELAY_INITIALIZER_IMAGE_REF=%s\nMAIL_INBOX_IMAGE_REF=%s\nMAIL_INBOX_INITIALIZER_IMAGE_REF=%s\nCLIENT_IMAGE_REF=%s\nAPI_IMAGE_TAG=%s\nDEPLOY_COMMIT_SHA=%s\n' \
+            "$API_IMAGE_REF" \
+            "$INITIALIZER_IMAGE_REF" \
+            "$TELEGRAM_BOT_IMAGE_REF" \
+            "$JOB_MANAGER_IMAGE_REF" \
+            "$MAIL_RELAY_IMAGE_REF" \
+            "$MAIL_RELAY_INITIALIZER_IMAGE_REF" \
+            "$MAIL_INBOX_IMAGE_REF" \
+            "$MAIL_INBOX_INITIALIZER_IMAGE_REF" \
+            "$CLIENT_IMAGE_REF" \
             "$DEPLOY_IMAGE_TAG" \
             "$DEPLOY_COMMIT_SHA" >> .env
 
           export API_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export TELEGRAM_BOT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export JOB_MANAGER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export MAIL_RELAY_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export MAIL_RELAY_INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export MAIL_INBOX_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export MAIL_INBOX_INITIALIZER_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
-          export CLIENT_IMAGE_TAG="$DEPLOY_IMAGE_TAG"
           export COMPOSE_PARALLEL_LIMIT="${COMPOSE_PARALLEL_LIMIT:-2}"
 
           docker compose --profile backend --profile full --profile mail-inbox pull
@@ -444,7 +447,7 @@ jobs:
           echo "$version_json" | grep -F "\"commitSha\":\"$DEPLOY_COMMIT_SHA\""
           echo "$version_json" | grep -F "\"imageTag\":\"${DEPLOY_IMAGE_TAG}\""
 
-          id=$(docker create ghcr.io/alexindima/food-diary/client:${DEPLOY_IMAGE_TAG})
+          id=$(docker create "$CLIENT_IMAGE_REF")
           rm -rf /var/www/fooddiary.club/*
           docker cp $id:/usr/share/nginx/html/. /var/www/fooddiary.club/
           rm -rf /var/www/admin.fooddiary.club/*
@@ -462,7 +465,7 @@ jobs:
           SCRIPT_EOF
 
           $SCP_CMD "${RUNNER_TEMP}/deploy.sh" root@${{ env.SERVER_IP }}:/tmp/deploy.sh
-          $SSH_CMD "DEPLOY_IMAGE_TAG='${DEPLOY_IMAGE_TAG}' DEPLOY_COMMIT_SHA='${DEPLOY_COMMIT_SHA}' bash /tmp/deploy.sh"
+          $SSH_CMD "API_IMAGE_REF='${API_IMAGE_REF}' INITIALIZER_IMAGE_REF='${INITIALIZER_IMAGE_REF}' TELEGRAM_BOT_IMAGE_REF='${TELEGRAM_BOT_IMAGE_REF}' JOB_MANAGER_IMAGE_REF='${JOB_MANAGER_IMAGE_REF}' MAIL_RELAY_IMAGE_REF='${MAIL_RELAY_IMAGE_REF}' MAIL_RELAY_INITIALIZER_IMAGE_REF='${MAIL_RELAY_INITIALIZER_IMAGE_REF}' MAIL_INBOX_IMAGE_REF='${MAIL_INBOX_IMAGE_REF}' MAIL_INBOX_INITIALIZER_IMAGE_REF='${MAIL_INBOX_INITIALIZER_IMAGE_REF}' CLIENT_IMAGE_REF='${CLIENT_IMAGE_REF}' DEPLOY_IMAGE_TAG='${DEPLOY_IMAGE_TAG}' DEPLOY_COMMIT_SHA='${DEPLOY_COMMIT_SHA}' bash /tmp/deploy.sh"
 
       - name: Record failure step
         if: always() && steps.deploy_server.outcome == 'failure'

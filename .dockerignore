@@ -8,6 +8,8 @@
 **/.idea/
 **/TestResults/
 **/coverage/
+**/.env
+**/.env.*
 
 .git
 .github

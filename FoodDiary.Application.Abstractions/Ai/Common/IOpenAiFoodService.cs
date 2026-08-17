@@ -10,16 +10,19 @@ public interface IOpenAiFoodService {
         string? userLanguage,
         UserId userId,
         string? description,
+        string requestId,
         CancellationToken cancellationToken);
 
     Task<Result<FoodVisionModel>> ParseFoodTextAsync(
         string text,
         string? userLanguage,
         UserId userId,
+        string requestId,
         CancellationToken cancellationToken);
 
     Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
         IReadOnlyList<FoodVisionItemModel> items,
         UserId userId,
+        string requestId,
         CancellationToken cancellationToken);
 }

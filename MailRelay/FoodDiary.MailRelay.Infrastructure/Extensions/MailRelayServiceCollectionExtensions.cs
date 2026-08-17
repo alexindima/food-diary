@@ -1,8 +1,8 @@
-using Microsoft.Extensions.Options;
+using System.Diagnostics;
 using Npgsql;
-using OpenTelemetry;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace FoodDiary.MailRelay.Infrastructure.Extensions;
 
@@ -44,7 +44,7 @@ public static class MailRelayServiceCollectionExtensions {
                 .Validate(MailRelayBrokerOptions.HasSupportedBackend,
                     "MailRelayBroker:Backend must be either PostgresPolling or RabbitMq.")
                 .Validate(MailRelayBrokerOptions.HasValidConfiguration,
-                    "MailRelayBroker configuration is invalid.")
+                    "MailRelayBroker configuration is invalid. RabbitMq requires EnablePollingFallback=true so PostgreSQL remains a durable recovery path.")
                 .ValidateOnStart();
             services.AddOptions<OpenTelemetryOptions>()
                 .Bind(configuration.GetSection(OpenTelemetryOptions.SectionName))
@@ -82,22 +82,51 @@ public static class MailRelayServiceCollectionExtensions {
 
             return services;
         }
-        public IServiceCollection AddMailRelayTelemetry() {
-            services.AddSingleton<MeterProvider>(static serviceProvider => {
-                OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
-                MeterProviderBuilder builder = Sdk.CreateMeterProviderBuilder()
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.MailRelay"))
-                    .AddMeter(MailRelayTelemetry.MeterName);
+        public IServiceCollection AddMailRelayTelemetry(IConfiguration configuration) {
+            Uri? endpointUri = ResolveOtlpEndpoint(configuration);
+            if (endpointUri is null) {
+                return services;
+            }
 
-                if (!string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
-                    var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
-                    builder.AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri);
-                }
+            Activity.DefaultIdFormat = ActivityIdFormat.W3C;
+            Activity.ForceDefaultIdFormat = true;
 
-                return builder.Build();
-            });
+            services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService("FoodDiary.MailRelay"))
+                .WithTracing(tracing => tracing
+                    .AddSource(MailRelayTelemetry.MeterName)
+                    .AddAspNetCoreInstrumentation(options => {
+                        options.Filter = MailRelayTelemetryPrivacyProcessor.ShouldCollectRequest;
+                        options.RecordException = false;
+                        options.EnrichWithHttpResponse = MailRelayTelemetryPrivacyProcessor.EnrichServerActivity;
+                    })
+                    .AddHttpClientInstrumentation(options => {
+                        options.RecordException = false;
+                        options.EnrichWithHttpRequestMessage = MailRelayTelemetryPrivacyProcessor.EnrichClientActivity;
+                        options.EnrichWithHttpResponseMessage = MailRelayTelemetryPrivacyProcessor.EnrichClientActivity;
+                    })
+                    .AddNpgsql()
+                    .AddProcessor(new MailRelayTelemetryPrivacyProcessor())
+                    .AddOtlpExporter(exporter => exporter.Endpoint = endpointUri))
+                .WithMetrics(metrics => metrics
+                    .AddMeter(MailRelayTelemetry.MeterName)
+                    .AddOtlpExporter(exporter => exporter.Endpoint = endpointUri));
 
             return services;
         }
+    }
+
+    private static Uri? ResolveOtlpEndpoint(IConfiguration configuration) {
+        string? endpoint = configuration["OpenTelemetry:Otlp:Endpoint"];
+        if (string.IsNullOrWhiteSpace(endpoint)) {
+            return null;
+        }
+
+        if (!Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? endpointUri)) {
+            throw new InvalidOperationException(
+                "OpenTelemetry:Otlp:Endpoint must be a valid absolute URI when provided.");
+        }
+
+        return endpointUri;
     }
 }

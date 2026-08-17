@@ -312,6 +312,26 @@ public sealed class MailRelayHostedServiceTests {
     }
 
     [Fact]
+    public async Task RabbitMqConsumer_WhenUnexpectedFailureOccurs_AcksForDurablePollingRecovery() {
+        var store = new RecordingQueueStore {
+            MessageClaimException = new InvalidOperationException("claim failed"),
+        };
+        MailRelayBrokerOptions options = CreateRabbitOptions();
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Microsoft.Extensions.Options.Options.Create(options),
+            CreateBroker(options),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance);
+        var channelProxy = RabbitMqChannelProxy.Create();
+
+        await InvokeHandleDeliveryAsync(service, channelProxy.Channel, CreateDelivery(Guid.NewGuid()), CancellationToken.None);
+
+        Assert.True(channelProxy.Acked);
+        Assert.False(channelProxy.Nacked);
+    }
+
+    [Fact]
     public async Task RabbitMqConsumer_WhenPayloadIsInvalid_AcksDelivery() {
         var store = new RecordingQueueStore();
         var service = new RabbitMqMailRelayConsumerHostedService(
@@ -540,6 +560,7 @@ public sealed class MailRelayHostedServiceTests {
 
         public Exception? ClaimQueueException { get; init; }
         public Exception? ClaimOutboxException { get; init; }
+        public Exception? MessageClaimException { get; init; }
         public bool ThrowCancellationOnQueueClaim { get; init; }
         public bool ThrowCancellationOnOutboxClaim { get; init; }
         public bool ThrowCancellationOnMessageClaim { get; init; }
@@ -579,9 +600,13 @@ public sealed class MailRelayHostedServiceTests {
         public Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(Guid id, CancellationToken cancellationToken) {
             MessageClaimed = true;
             ClaimedMessageId = id;
-            return ThrowCancellationOnMessageClaim
-                ? Task.FromException<QueuedEmailMessage?>(new OperationCanceledException(cancellationToken))
-                : Task.FromResult(ClaimedMessage);
+            if (ThrowCancellationOnMessageClaim) {
+                return Task.FromException<QueuedEmailMessage?>(new OperationCanceledException(cancellationToken));
+            }
+
+            return MessageClaimException is null
+                ? Task.FromResult(ClaimedMessage)
+                : Task.FromException<QueuedEmailMessage?>(MessageClaimException);
         }
 
         public Task<IReadOnlyList<MailRelayOutboxMessage>> ClaimOutboxBatchAsync(CancellationToken cancellationToken) {

@@ -224,28 +224,31 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.EmailOutbox.AddRange(secondDue, future, firstDue);
         await context.SaveChangesAsync();
 
-        List<EmailOutboxMessage> firstClaim = await OutboxMessageClaimer.ClaimDueAsync(
+        OutboxClaimBatch<EmailOutboxMessage> firstClaim = await OutboxMessageClaimer.ClaimDueAsync(
             context,
             context.EmailOutbox,
             "\"EmailOutbox\"",
             batchSize: 1,
             FixedNow,
+            TimeSpan.FromMinutes(5),
             claimedQuery: context.EmailOutbox.AsNoTracking(),
             cancellationToken: CancellationToken.None);
-        List<EmailOutboxMessage> secondClaim = await OutboxMessageClaimer.ClaimDueAsync(
+        OutboxClaimBatch<EmailOutboxMessage> secondClaim = await OutboxMessageClaimer.ClaimDueAsync(
             context,
             context.EmailOutbox,
             "\"EmailOutbox\"",
             batchSize: 10,
             FixedNow,
+            TimeSpan.FromMinutes(5),
             claimedQuery: context.EmailOutbox.AsNoTracking(),
             cancellationToken: CancellationToken.None);
-        List<EmailOutboxMessage> emptyClaim = await OutboxMessageClaimer.ClaimDueAsync(
+        OutboxClaimBatch<EmailOutboxMessage> emptyClaim = await OutboxMessageClaimer.ClaimDueAsync(
             context,
             context.EmailOutbox,
             "\"EmailOutbox\"",
             batchSize: 10,
             FixedNow,
+            TimeSpan.FromMinutes(5),
             claimedQuery: context.EmailOutbox.AsNoTracking(),
             cancellationToken: CancellationToken.None);
         var user = User.Create($"outbox-{Guid.NewGuid():N}@example.com", "hash");
@@ -255,33 +258,35 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.ImageObjectDeletionOutbox.Add(ImageObjectDeletionOutboxMessage.Create("users/test/outbox.webp", FixedNow.AddMinutes(-1)));
         context.NotificationWebPushOutbox.Add(NotificationWebPushOutboxMessage.Create(notification.Id, FixedNow.AddMinutes(-1)));
         await context.SaveChangesAsync();
-        List<ImageObjectDeletionOutboxMessage> imageClaim = await OutboxMessageClaimer.ClaimDueAsync(
+        OutboxClaimBatch<ImageObjectDeletionOutboxMessage> imageClaim = await OutboxMessageClaimer.ClaimDueAsync(
             context,
             context.ImageObjectDeletionOutbox,
             "\"ImageObjectDeletionOutbox\"",
             batchSize: 10,
             FixedNow,
+            TimeSpan.FromMinutes(5),
             claimedQuery: context.ImageObjectDeletionOutbox.AsNoTracking(),
             cancellationToken: CancellationToken.None);
-        List<NotificationWebPushOutboxMessage> notificationClaim = await OutboxMessageClaimer.ClaimDueAsync(
+        OutboxClaimBatch<NotificationWebPushOutboxMessage> notificationClaim = await OutboxMessageClaimer.ClaimDueAsync(
             context,
             context.NotificationWebPushOutbox,
             "\"NotificationWebPushOutbox\"",
             batchSize: 10,
             FixedNow,
+            TimeSpan.FromMinutes(5),
             claimedQuery: context.NotificationWebPushOutbox.AsNoTracking(),
             cancellationToken: CancellationToken.None);
 
-        EmailOutboxMessage firstClaimed = Assert.Single(firstClaim);
-        EmailOutboxMessage secondClaimed = Assert.Single(secondClaim);
+        EmailOutboxMessage firstClaimed = Assert.Single(firstClaim.Messages);
+        EmailOutboxMessage secondClaimed = Assert.Single(secondClaim.Messages);
         Assert.Multiple(
             () => Assert.Equal("First", firstClaimed.Subject),
             () => Assert.Equal("Second", secondClaimed.Subject),
             () => Assert.NotNull(firstClaimed.LockedBy),
             () => Assert.NotNull(secondClaimed.LockedBy),
-            () => Assert.Empty(emptyClaim),
-            () => Assert.Single(imageClaim),
-            () => Assert.Single(notificationClaim),
+            () => Assert.Empty(emptyClaim.Messages),
+            () => Assert.Single(imageClaim.Messages),
+            () => Assert.Single(notificationClaim.Messages),
             () => Assert.True(firstClaimed.LockedUntilUtc > FixedNow),
             () => Assert.True(secondClaimed.LockedUntilUtc > FixedNow));
 
@@ -292,6 +297,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
                 "\"UnsupportedOutbox\"",
                 batchSize: 1,
                 FixedNow,
+                TimeSpan.FromMinutes(5),
                 cancellationToken: CancellationToken.None));
     }
 
@@ -309,27 +315,29 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await using FoodDiaryDbContext firstContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
         await using FoodDiaryDbContext secondContext = databaseFixture.CreateDbContext(connectionString, enableRetries: true);
 
-        Task<List<EmailOutboxMessage>> firstWorker = OutboxMessageClaimer.ClaimDueAsync(
+        Task<OutboxClaimBatch<EmailOutboxMessage>> firstWorker = OutboxMessageClaimer.ClaimDueAsync(
             firstContext,
             firstContext.EmailOutbox,
             "\"EmailOutbox\"",
             batchSize: 1,
             FixedNow,
+            TimeSpan.FromMinutes(5),
             claimedQuery: firstContext.EmailOutbox.AsNoTracking(),
             cancellationToken: CancellationToken.None);
-        Task<List<EmailOutboxMessage>> secondWorker = OutboxMessageClaimer.ClaimDueAsync(
+        Task<OutboxClaimBatch<EmailOutboxMessage>> secondWorker = OutboxMessageClaimer.ClaimDueAsync(
             secondContext,
             secondContext.EmailOutbox,
             "\"EmailOutbox\"",
             batchSize: 1,
             FixedNow,
+            TimeSpan.FromMinutes(5),
             claimedQuery: secondContext.EmailOutbox.AsNoTracking(),
             cancellationToken: CancellationToken.None);
 
-        List<EmailOutboxMessage>[] claims = await Task.WhenAll(firstWorker, secondWorker);
+        OutboxClaimBatch<EmailOutboxMessage>[] claims = await Task.WhenAll(firstWorker, secondWorker);
 
-        Assert.Equal(1, claims.Sum(static messages => messages.Count));
-        Assert.Single(claims.SelectMany(static messages => messages).Select(static message => message.Id).Distinct());
+        Assert.Equal(1, claims.Sum(static claim => claim.Messages.Count));
+        Assert.Single(claims.SelectMany(static claim => claim.Messages).Select(static message => message.Id).Distinct());
     }
 
     [RequiresDockerFact]

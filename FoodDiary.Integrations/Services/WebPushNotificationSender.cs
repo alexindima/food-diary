@@ -109,6 +109,7 @@ public sealed class WebPushNotificationSender(
             notification = new {
                 title = text.Title,
                 body = text.Body,
+                tag = notification.Id.Value.ToString("N"),
                 icon = "/assets/pwa/icon-192x192.png",
                 badge = "/assets/pwa/icon-96x96.png",
                 data = new {

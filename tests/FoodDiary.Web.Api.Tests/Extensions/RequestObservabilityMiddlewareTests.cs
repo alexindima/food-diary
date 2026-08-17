@@ -5,6 +5,8 @@ using FoodDiary.Presentation.Api.Telemetry;
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -21,7 +23,7 @@ public sealed class RequestObservabilityMiddlewareTests {
             Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
             SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
             ActivityStopped = activity => {
-                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), "/telemetry/activity", StringComparison.Ordinal)) {
+                if (string.Equals(activity.OperationName, "fooddiary.http.request", StringComparison.Ordinal)) {
                     capturedActivity = activity;
                 }
             },
@@ -37,13 +39,14 @@ public sealed class RequestObservabilityMiddlewareTests {
 
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = HttpMethods.Get;
-        httpContext.Request.Path = "/telemetry/activity";
+        httpContext.Request.Path = "/telemetry/42";
+        httpContext.SetEndpoint(CreateRouteEndpoint("/telemetry/{id:int}"));
 
         await middleware.InvokeAsync(httpContext);
 
         Assert.NotNull(capturedActivity);
         Assert.Equal("fooddiary.http.request", capturedActivity!.OperationName);
-        Assert.Equal("/telemetry/activity", capturedActivity.GetTagItem("url.path"));
+        Assert.Equal("/telemetry/{id:int}", capturedActivity.GetTagItem("url.path"));
         Assert.Equal(StatusCodes.Status204NoContent, capturedActivity.GetTagItem("http.response.status_code"));
     }
 
@@ -163,7 +166,7 @@ string.Equals(instrument.Name, "fooddiary.api.request.duration", StringCompariso
     }
 
     [Fact]
-    public async Task Middleware_UsesAnonymousUserTelemetry_ForStandardRouteWithoutUserIdClaim() {
+    public async Task Middleware_UsesFixedFallback_ForUnmatchedStandardRoute() {
         Activity? capturedActivity = null;
 
         using var listener = new ActivityListener {
@@ -171,7 +174,7 @@ string.Equals(instrument.Name, "fooddiary.api.request.duration", StringCompariso
             Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
             SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
             ActivityStopped = activity => {
-                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), "/api/v1/dashboard", StringComparison.Ordinal)) {
+                if (string.Equals(activity.OperationName, "fooddiary.http.request", StringComparison.Ordinal)) {
                     capturedActivity = activity;
                 }
             },
@@ -193,7 +196,8 @@ string.Equals(instrument.Name, "fooddiary.api.request.duration", StringCompariso
 
         Assert.NotNull(capturedActivity);
         Assert.Equal("standard", capturedActivity!.GetTagItem("fooddiary.request.sensitivity"));
-        Assert.Equal("anonymous", capturedActivity.GetTagItem("enduser.id"));
+        Assert.Equal(TelemetryPrivacyProcessor.UnmatchedRouteLabel, capturedActivity.GetTagItem("url.path"));
+        Assert.Null(capturedActivity.GetTagItem("enduser.id"));
     }
 
     [Fact]
@@ -426,10 +430,9 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = HttpMethods.Post;
         httpContext.Request.Path = "/api/v1/logs";
-        httpContext.SetEndpoint(new Endpoint(
-            static _ => Task.CompletedTask,
-            new EndpointMetadataCollection(new SuppressRequestAccessLogAttribute()),
-            "logs"));
+        httpContext.SetEndpoint(CreateRouteEndpoint(
+            "/api/v1/logs",
+            new SuppressRequestAccessLogAttribute()));
 
         await middleware.InvokeAsync(httpContext);
 
@@ -449,10 +452,9 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = HttpMethods.Post;
         httpContext.Request.Path = "/api/v1/logs";
-        httpContext.SetEndpoint(new Endpoint(
-            static _ => Task.CompletedTask,
-            new EndpointMetadataCollection(new SuppressRequestAccessLogAttribute()),
-            "logs"));
+        httpContext.SetEndpoint(CreateRouteEndpoint(
+            "/api/v1/logs",
+            new SuppressRequestAccessLogAttribute()));
 
         await middleware.InvokeAsync(httpContext);
 
@@ -505,8 +507,17 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         Assert.Equal("/api/v1/auth/*", exceptionPath);
         Assert.NotNull(capturedActivity);
         Assert.Equal(ActivityStatusCode.Error, capturedActivity!.Status);
+        Assert.Null(capturedActivity.StatusDescription);
         Assert.Equal(typeof(InvalidOperationException).FullName, capturedActivity.GetTagItem("error.type"));
     }
+
+    private static RouteEndpoint CreateRouteEndpoint(string pattern, params object[] metadata) =>
+        new(
+            static _ => Task.CompletedTask,
+            RoutePatternFactory.Parse(pattern),
+            order: 0,
+            new EndpointMetadataCollection(metadata),
+            pattern);
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
         foreach (KeyValuePair<string, object?> tag in tags) {

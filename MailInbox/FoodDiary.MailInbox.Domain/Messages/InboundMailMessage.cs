@@ -1,6 +1,7 @@
 using FoodDiary.Domain.Primitives;
 using FoodDiary.MailInbox.Domain.Events;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace FoodDiary.MailInbox.Domain.Messages;
 
@@ -26,7 +27,7 @@ public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
 
     public string? HtmlBody { get; private set; }
 
-    public string RawMime { get; private set; } = string.Empty;
+    public ReadOnlyMemory<byte> RawMimeBytes { get; private set; }
 
     public InboundMailMessageStatus Status { get; private set; }
 
@@ -43,12 +44,36 @@ public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
         string? htmlBody,
         string rawMime,
         DateTimeOffset receivedAtUtc) {
+        if (string.IsNullOrWhiteSpace(rawMime)) {
+            throw new ArgumentException("Raw MIME content is required.", nameof(rawMime));
+        }
+
+        return Receive(
+            messageId,
+            fromAddress,
+            toRecipients,
+            subject,
+            textBody,
+            htmlBody,
+            Encoding.UTF8.GetBytes(rawMime),
+            receivedAtUtc);
+    }
+
+    public static InboundMailMessage Receive(
+        string? messageId,
+        string? fromAddress,
+        IReadOnlyList<string> toRecipients,
+        string? subject,
+        string? textBody,
+        string? htmlBody,
+        byte[] rawMimeBytes,
+        DateTimeOffset receivedAtUtc) {
         if (toRecipients.Count == 0) {
             throw new ArgumentException("At least one recipient is required.", nameof(toRecipients));
         }
 
-        if (string.IsNullOrWhiteSpace(rawMime)) {
-            throw new ArgumentException("Raw MIME content is required.", nameof(rawMime));
+        if (rawMimeBytes.Length == 0) {
+            throw new ArgumentException("Raw MIME content is required.", nameof(rawMimeBytes));
         }
 
         DateTimeOffset normalizedReceivedAtUtc = receivedAtUtc.ToUniversalTime();
@@ -58,7 +83,7 @@ public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
             Subject = NullIfWhiteSpace(subject),
             TextBody = textBody,
             HtmlBody = htmlBody,
-            RawMime = rawMime,
+            RawMimeBytes = rawMimeBytes,
             Status = InboundMailMessageStatus.Received,
             ReceivedAtUtc = normalizedReceivedAtUtc,
         };

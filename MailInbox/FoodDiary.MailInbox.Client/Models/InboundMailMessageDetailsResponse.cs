@@ -8,8 +8,9 @@ public sealed record InboundMailMessageDetailsResponse(
     string? Subject,
     string? TextBody,
     string? HtmlBody,
-    string RawMime,
+    string? RawMime,
     string Category,
     string Status,
     DateTimeOffset? ReadAtUtc,
-    DateTimeOffset ReceivedAtUtc);
+    DateTimeOffset ReceivedAtUtc,
+    DateTimeOffset? ContentPurgedAtUtc);

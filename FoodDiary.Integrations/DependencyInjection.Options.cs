@@ -24,6 +24,8 @@ public static partial class DependencyInjection {
                 "OpenAi:TextModel is required when ApiKey is configured.")
             .Validate(OpenAiOptions.HasVisionModelWhenApiKeyConfigured,
                 "OpenAi:VisionModel is required when ApiKey is configured.")
+            .Validate(OpenAiOptions.HasValidMaxOutputTokens,
+                "OpenAi:MaxOutputTokens must be between 1 and 32768.")
             .ValidateOnStart();
         services.AddOptions<GoogleAuthOptions>()
             .Bind(configuration.GetSection(GoogleAuthOptions.SectionName))

@@ -145,6 +145,12 @@ public sealed class UserCleanupService(
     }
 
     private async Task DeleteDependentRowsAsync(UserId userId, CancellationToken cancellationToken) {
+        await dbContext.AdminImpersonationSessions
+            .Where(session => session.ActorUserId == userId || session.TargetUserId == userId)
+            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await dbContext.ClientTasks
+            .Where(task => task.ClientUserId == userId || task.DietologistUserId == userId)
+            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         await dbContext.MealItems.Where(item => item.Meal.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         await dbContext.Meals.Where(meal => meal.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         await dbContext.ShoppingLists.Where(list => list.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);

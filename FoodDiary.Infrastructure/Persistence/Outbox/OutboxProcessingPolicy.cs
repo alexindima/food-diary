@@ -15,4 +15,7 @@ internal static class OutboxProcessingPolicy {
 
     public static string TruncateError(string error) =>
         error.Length <= MaxErrorLength ? error : error[..MaxErrorLength];
+
+    public static string FormatSafeError(Exception exception) =>
+        TruncateError($"Outbox dispatch failed ({exception.GetType().Name}).");
 }

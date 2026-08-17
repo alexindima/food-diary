@@ -4,10 +4,10 @@
     "domainTypes": 259,
     "entities": 78,
     "valueObjects": 112,
-    "invariants": 397,
-    "persistenceMappings": 84,
-    "indexes": 149,
-    "relationships": 98
+    "invariants": 398,
+    "persistenceMappings": 86,
+    "indexes": 151,
+    "relationships": 100
   },
   "domainTypes": [
     {
@@ -1737,7 +1737,7 @@
       "name": "InboundMailMessage",
       "role": "domain-type",
       "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
-      "line": 6
+      "line": 7
     },
     {
       "area": "MailInbox",
@@ -3741,21 +3741,21 @@
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Value is required.\", paramName)",
       "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 70
+      "line": 73
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $\"Value must be at most {maxLength} characters.\")) : normalized",
       "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 79
+      "line": 82
     },
     {
       "area": "FoodDiary",
       "type": "ArgumentOutOfRangeException",
       "message": "throw new ArgumentOutOfRangeException(paramName, \"UTC timestamp kind must be specified.\") : value.ToUniversalTime()",
       "path": "FoodDiary.Domain/Entities/Tracking/MarketingAttributionEvent.cs",
-      "line": 83
+      "line": 86
     },
     {
       "area": "FoodDiary",
@@ -4572,23 +4572,30 @@
     {
       "area": "MailInbox",
       "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"At least one recipient is required.\", nameof(toRecipients))",
+      "message": "throw new ArgumentException(\"Raw MIME content is required.\", nameof(rawMime))",
       "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
-      "line": 47
+      "line": 48
     },
     {
       "area": "MailInbox",
       "type": "ArgumentException",
-      "message": "throw new ArgumentException(\"Raw MIME content is required.\", nameof(rawMime))",
+      "message": "throw new ArgumentException(\"At least one recipient is required.\", nameof(toRecipients))",
       "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
-      "line": 51
+      "line": 72
+    },
+    {
+      "area": "MailInbox",
+      "type": "ArgumentException",
+      "message": "throw new ArgumentException(\"Raw MIME content is required.\", nameof(rawMimeBytes))",
+      "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
+      "line": 76
     },
     {
       "area": "MailInbox",
       "type": "ArgumentException",
       "message": "throw new ArgumentException(\"Recipient cannot be empty.\", nameof(recipient))",
       "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
-      "line": 92
+      "line": 117
     },
     {
       "area": "MailInbox",
@@ -4602,7 +4609,7 @@
       "type": "ArgumentException.ThrowIfNullOrWhiteSpace",
       "message": "ArgumentException.ThrowIfNullOrWhiteSpace(error)",
       "path": "MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs",
-      "line": 83
+      "line": 84
     }
   ],
   "persistenceMappings": [
@@ -4661,6 +4668,36 @@
       ],
       "relationships": [],
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Ai/AiPromptTemplateConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "AiQuotaPeriod",
+      "table": null,
+      "indexes": [],
+      "relationships": [
+        {
+          "kind": "HasOne",
+          "target": "global::FoodDiary.Domain.Entities.Users.User",
+          "expression": ")"
+        }
+      ],
+      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Ai/AiQuotaPeriodConfiguration.cs"
+    },
+    {
+      "area": "FoodDiary",
+      "entity": "AiQuotaReservation",
+      "table": null,
+      "indexes": [
+        "x => new { x.UserId, x.PeriodStartUtc, x.State, x.ExpiresOnUtc })"
+      ],
+      "relationships": [
+        {
+          "kind": "HasOne",
+          "target": "AiQuotaPeriod",
+          "expression": ")"
+        }
+      ],
+      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Ai/AiQuotaReservationConfiguration.cs"
     },
     {
       "area": "FoodDiary",
@@ -5188,6 +5225,7 @@
         "e => e.OccurredAtUtc)",
         "e => new { e.AnonymousId, e.OccurredAtUtc })",
         "e => new { e.SessionId, e.OccurredAtUtc })",
+        "e => new { e.UserId, e.OccurredAtUtc })",
         "e => new { e.UtmSource, e.UtmMedium, e.UtmCampaign, e.OccurredAtUtc })"
       ],
       "relationships": [],

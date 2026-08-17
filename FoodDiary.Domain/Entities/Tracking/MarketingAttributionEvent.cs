@@ -43,9 +43,12 @@ public sealed class MarketingAttributionEvent : Entity<MarketingAttributionEvent
         string? utmCampaign = null,
         string? utmContent = null,
         string? utmTerm = null,
-        string? buildVersion = null) {
+        string? buildVersion = null,
+        Guid? eventId = null) {
         var entity = new MarketingAttributionEvent {
-            Id = MarketingAttributionEventId.New(),
+            Id = eventId is { } eventGuid && eventGuid != Guid.Empty
+                ? new MarketingAttributionEventId(eventGuid)
+                : MarketingAttributionEventId.New(),
             OccurredAtUtc = NormalizeUtc(occurredAtUtc, nameof(occurredAtUtc)),
             UserId = userId is { } value && value != Guid.Empty ? value : null,
             EventType = NormalizeRequired(eventType, EventTypeMaxLength, nameof(eventType)),

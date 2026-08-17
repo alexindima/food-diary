@@ -9,8 +9,6 @@ public sealed class MarketingConversionRecorder(
     IMarketingAttributionEventWriteRepository marketingAttributionEventWriteRepository,
     TimeProvider dateTimeProvider)
     : IMarketingConversionRecorder, IBillingMarketingConversionRecorder {
-    private const string PremiumStartedEventType = "premium_started";
-
     public async Task RecordPremiumStartedAsync(Guid userId, CancellationToken cancellationToken = default) {
         if (userId == Guid.Empty) {
             return;
@@ -18,7 +16,7 @@ public sealed class MarketingConversionRecorder(
 
         bool premiumStartedAlreadyRecorded = await marketingAttributionEventReadRepository.ExistsForUserAsync(
             userId,
-            PremiumStartedEventType,
+            MarketingAttributionEventTypes.PremiumStarted,
             cancellationToken).ConfigureAwait(false);
         if (premiumStartedAlreadyRecorded) {
             return;
@@ -33,9 +31,10 @@ public sealed class MarketingConversionRecorder(
 
         await marketingAttributionEventWriteRepository.AddAsync(
             sourceEvent with {
-                EventType = PremiumStartedEventType,
+                EventType = MarketingAttributionEventTypes.PremiumStarted,
                 OccurredAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime,
                 UserId = userId,
+                EventId = null,
             },
             cancellationToken).ConfigureAwait(false);
     }

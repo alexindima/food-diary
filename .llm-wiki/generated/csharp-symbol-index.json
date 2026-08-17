@@ -8,39 +8,39 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3280,
-    "symbols": 3289,
-    "interfaceImplementationLinks": 231,
-    "dependencyInjectionRegistrations": 232,
+    "sourceFiles": 3314,
+    "symbols": 3323,
+    "interfaceImplementationLinks": 232,
+    "dependencyInjectionRegistrations": 233,
     "kinds": {
-      "class": 1678,
-      "enum": 54,
-      "interface": 411,
-      "record": 1030,
+      "class": 1702,
+      "enum": 56,
+      "interface": 412,
+      "record": 1037,
       "record struct": 116
     },
     "roles": {
       "Command": 159,
       "CommandHandler": 155,
-      "Configuration": 86,
+      "Configuration": 88,
       "Controller": 90,
       "Entity": 84,
       "Event": 19,
-      "Factory": 8,
+      "Factory": 9,
       "Handler": 6,
       "LookupRepository": 3,
       "Mapper": 8,
       "Mapping": 4,
-      "Options": 59,
-      "Other": 1212,
+      "Options": 61,
+      "Other": 1236,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
       "ReadRepository": 47,
-      "Repository": 102,
-      "Request": 130,
+      "Repository": 104,
+      "Request": 132,
       "Response": 174,
-      "Service": 270,
+      "Service": 271,
       "Validator": 188,
       "ValueObject": 126,
       "WriteRepository": 46
@@ -370,6 +370,34 @@
       "line": 4
     },
     {
+      "name": "AiProviderTokenBudget",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Ai/Common/AiProviderTokenBudget.cs",
+      "line": 2
+    },
+    {
+      "name": "AiQuotaReservationRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationRequest.cs",
+      "line": 4
+    },
+    {
+      "name": "AiQuotaReservationStatus",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaReservationStatus.cs",
+      "line": 2
+    },
+    {
+      "name": "AiQuotaUsage",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Ai/Common/AiQuotaUsage.cs",
+      "line": 2
+    },
+    {
       "name": "AiUsageTokens",
       "kind": "record struct",
       "role": "Other",
@@ -417,6 +445,13 @@
       "role": "WriteRepository",
       "path": "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateWriteRepository.cs",
       "line": 5
+    },
+    {
+      "name": "IAiQuotaRepository",
+      "kind": "interface",
+      "role": "Repository",
+      "path": "FoodDiary.Application.Abstractions/Ai/Common/IAiQuotaRepository.cs",
+      "line": 2
     },
     {
       "name": "IAiUsageReadRepository",
@@ -1053,7 +1088,7 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Common/Abstractions/Persistence/IPostCommitActionQueue.cs",
-      "line": 10
+      "line": 11
     },
     {
       "name": "IUnitOfWork",
@@ -5477,14 +5512,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Ai/Services/ApplicationAiTelemetry.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "OpenAiFoodService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Application.Ai/Services/OpenAiFoodService.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "UserAiUsageSummaryReadService",
@@ -7955,7 +7990,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Fasting/Commands/RecordFastingTelemetry/RecordFastingTelemetryCommandHandler.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "ReduceActiveFastingTargetCommand",
@@ -8068,6 +8103,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.Fasting/Common/FastingCurrentUserResolver.cs",
       "line": 8
+    },
+    {
+      "name": "FastingTelemetryEventNames",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Fasting/Common/FastingTelemetryEventNames.cs",
+      "line": 2
     },
     {
       "name": "DependencyInjection",
@@ -9649,7 +9691,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Marketing/Commands/RecordMarketingAttribution/RecordMarketingAttributionCommandHandler.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "IMarketingAttributionCleanupService",
@@ -9670,6 +9712,13 @@
       "kind": "interface",
       "role": "Other",
       "path": "FoodDiary.Application.Marketing/Common/IMarketingConversionRecorder.cs",
+      "line": 2
+    },
+    {
+      "name": "MarketingAttributionEventTypes",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Marketing/Common/MarketingAttributionEventTypes.cs",
       "line": 2
     },
     {
@@ -11925,6 +11974,13 @@
       "role": "Other",
       "path": "FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs",
       "line": 9
+    },
+    {
+      "name": "ApplicationRuntimeTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Application.Runtime/Common/Services/ApplicationRuntimeTelemetry.cs",
+      "line": 4
     },
     {
       "name": "PostCommitActionQueue",
@@ -15168,6 +15224,13 @@
       "line": 4
     },
     {
+      "name": "OutboxProcessingOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "FoodDiary.Infrastructure/Options/OutboxProcessingOptions.cs",
+      "line": 2
+    },
+    {
       "name": "AchievementDefinitionStore",
       "kind": "class",
       "role": "Other",
@@ -15193,7 +15256,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Achievements/AchievementEvaluationOutboxProcessor.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "AchievementMetricReader",
@@ -15250,6 +15313,34 @@
       "role": "Repository",
       "path": "FoodDiary.Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs",
       "line": 8
+    },
+    {
+      "name": "AiQuotaPeriod",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaPeriod.cs",
+      "line": 4
+    },
+    {
+      "name": "AiQuotaRepository",
+      "kind": "class",
+      "role": "Repository",
+      "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
+      "line": 9
+    },
+    {
+      "name": "AiQuotaReservation",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaReservation.cs",
+      "line": 5
+    },
+    {
+      "name": "AiQuotaReservationState",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaReservationState.cs",
+      "line": 2
     },
     {
       "name": "AiUsageRepository",
@@ -15354,6 +15445,20 @@
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Ai/AiPromptTemplateConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "AiQuotaPeriodConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Ai/AiQuotaPeriodConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "AiQuotaReservationConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Ai/AiQuotaReservationConfiguration.cs",
       "line": 7
     },
     {
@@ -16138,7 +16243,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Email/EmailOutboxProcessor.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "EmailTemplateProvider",
@@ -16180,7 +16285,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/FoodDiaryDbContext.Ai.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "FoodDiaryDbContext",
@@ -16292,7 +16397,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Images/ImageObjectDeletionOutboxProcessor.cs",
-      "line": 6
+      "line": 8
     },
     {
       "name": "CollaborationAuditInterceptor",
@@ -16355,7 +16460,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Notifications/NotificationWebPushOutboxProcessor.cs",
-      "line": 7
+      "line": 9
     },
     {
       "name": "WebPushSubscriptionRepository",
@@ -16379,6 +16484,13 @@
       "line": 2
     },
     {
+      "name": "OutboxClaimBatch",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxClaimBatch.cs",
+      "line": 2
+    },
+    {
       "name": "OutboxDeadLetterReplayService",
       "kind": "class",
       "role": "Service",
@@ -16397,7 +16509,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Infrastructure/Persistence/Outbox/OutboxProcessingEngine.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "OutboxProcessingPolicy",
@@ -16918,11 +17030,18 @@
       "line": 7
     },
     {
+      "name": "PaddleApiClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Integrations/Billing/PaddleApiClient.cs",
+      "line": 13
+    },
+    {
       "name": "PaddleBillingGateway",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Billing/PaddleBillingGateway.cs",
-      "line": 17
+      "line": 15
     },
     {
       "name": "PaddleNotificationRecoveryResult",
@@ -16946,11 +17065,18 @@
       "line": 17
     },
     {
+      "name": "YooKassaApiClient",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Integrations/Billing/YooKassaApiClient.cs",
+      "line": 13
+    },
+    {
       "name": "YooKassaBillingGateway",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Billing/YooKassaBillingGateway.cs",
-      "line": 16
+      "line": 13
     },
     {
       "name": "DependencyInjection",
@@ -17020,6 +17146,13 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/DependencyInjection.Wearables.cs",
+      "line": 6
+    },
+    {
+      "name": "BoundedHttpContentReader",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Integrations/Http/BoundedHttpContentReader.cs",
       "line": 6
     },
     {
@@ -17146,14 +17279,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 16
+      "line": 17
     },
     {
       "name": "OpenFoodFactsService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "RelayEmailTransport",
@@ -17188,7 +17321,7 @@
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Integrations/Services/UsdaFoodSearchService.cs",
-      "line": 12
+      "line": 13
     },
     {
       "name": "WebPushClientAdapter",
@@ -17216,14 +17349,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Integrations/Wearables/GoogleFitClient.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "Program",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 102
+      "line": 54
     },
     {
       "name": "AchievementEvaluationOutboxJob",
@@ -17391,7 +17524,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.JobManager/Services/JobManagerTelemetryServiceCollectionExtensions.cs",
-      "line": 5
+      "line": 8
     },
     {
       "name": "MarketingAttributionCleanupJob",
@@ -17476,6 +17609,13 @@
       "role": "Service",
       "path": "FoodDiary.JobManager/Services/RecurringJobsHostedService.cs",
       "line": 7
+    },
+    {
+      "name": "TelemetryPrivacyProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.JobManager/Services/TelemetryPrivacyProcessor.cs",
+      "line": 5
     },
     {
       "name": "UserCleanupJob",
@@ -18189,7 +18329,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Ai/AiFoodController.cs",
-      "line": 21
+      "line": 22
     },
     {
       "name": "AiUsageController",
@@ -19533,7 +19673,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Logs/LogsController.cs",
-      "line": 17
+      "line": 22
     },
     {
       "name": "LogsHttpMappings",
@@ -19547,28 +19687,42 @@
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Logs/Requests/ClientTelemetryLogHttpRequest.cs",
-      "line": 4
+      "line": 7
     },
     {
       "name": "MarketingAttributionHttpMappings",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Marketing/Mappings/MarketingAttributionHttpMappings.cs",
-      "line": 5
+      "line": 6
     },
     {
       "name": "MarketingAttributionController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Marketing/MarketingAttributionController.cs",
-      "line": 17
+      "line": 21
     },
     {
       "name": "MarketingAttributionHttpRequest",
       "kind": "record",
       "role": "Request",
       "path": "FoodDiary.Presentation.Api/Features/Marketing/Requests/MarketingAttributionHttpRequest.cs",
-      "line": 2
+      "line": 7
+    },
+    {
+      "name": "MarketingAttributionHttpRequestValidation",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Features/Marketing/Requests/MarketingAttributionHttpRequestValidation.cs",
+      "line": 5
+    },
+    {
+      "name": "MarketingSignupAttributionHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Presentation.Api/Features/Marketing/Requests/MarketingSignupAttributionHttpRequest.cs",
+      "line": 7
     },
     {
       "name": "MealPlanHttpMappings",
@@ -20796,6 +20950,13 @@
       "line": 10
     },
     {
+      "name": "IdempotencyRequestContext",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Filters/IdempotencyRequestContext.cs",
+      "line": 4
+    },
+    {
       "name": "IdempotencyReservation",
       "kind": "record",
       "role": "Other",
@@ -20822,6 +20983,13 @@
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/InMemoryIdempotencyStore.cs",
       "line": 2
+    },
+    {
+      "name": "RejectOversizedRequestAttribute",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Presentation.Api/Filters/RejectOversizedRequestAttribute.cs",
+      "line": 8
     },
     {
       "name": "TelemetryActionFilter",
@@ -21094,7 +21262,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/ApiTelemetryServiceCollectionExtensions.cs",
-      "line": 10
+      "line": 9
     },
     {
       "name": "ImpersonationAccessGuardMiddleware",
@@ -21108,7 +21276,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/RequestObservabilityMiddleware.cs",
-      "line": 7
+      "line": 6
     },
     {
       "name": "SecurityHeadersMiddleware",
@@ -21116,6 +21284,13 @@
       "role": "Other",
       "path": "FoodDiary.Web.Api/Extensions/SecurityHeadersMiddleware.cs",
       "line": 3
+    },
+    {
+      "name": "TelemetryPrivacyProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Web.Api/Extensions/TelemetryPrivacyProcessor.cs",
+      "line": 5
     },
     {
       "name": "DistributedCacheHealthCheck",
@@ -21199,7 +21374,7 @@
       "kind": "class",
       "role": "Options",
       "path": "FoodDiary.Web.Api/Options/ApiRateLimitingOptions.cs",
-      "line": 26
+      "line": 40
     },
     {
       "name": "CorsOptionsSetup",
@@ -21419,6 +21594,20 @@
       "line": 2
     },
     {
+      "name": "InboundMailRetentionResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailRetentionResult.cs",
+      "line": 2
+    },
+    {
+      "name": "InboundMailSaveResult",
+      "kind": "record",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Application/Messages/Models/InboundMailSaveResult.cs",
+      "line": 2
+    },
+    {
       "name": "ReceiveInboundMailRequest",
       "kind": "record",
       "role": "Request",
@@ -21521,7 +21710,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Domain/Messages/InboundMailMessage.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "InboundMailMessageId",
@@ -21545,10 +21734,24 @@
       "line": 14
     },
     {
+      "name": "MailInboxTelemetryPrivacyProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxTelemetryPrivacyProcessor.cs",
+      "line": 7
+    },
+    {
       "name": "MailInboxSmtpOptions",
       "kind": "class",
       "role": "Options",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxSmtpOptions.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxStorageOptions",
+      "kind": "class",
+      "role": "Options",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Options/MailInboxStorageOptions.cs",
       "line": 2
     },
     {
@@ -21573,11 +21776,39 @@
       "line": 10
     },
     {
+      "name": "InboundMailStorageQuotaExceededException",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/InboundMailStorageQuotaExceededException.cs",
+      "line": 2
+    },
+    {
+      "name": "MailInboxEndpointListenerFactory",
+      "kind": "class",
+      "role": "Factory",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxEndpointListenerFactory.cs",
+      "line": 13
+    },
+    {
+      "name": "MailInboxFixedWindowRateLimiter",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxFixedWindowRateLimiter.cs",
+      "line": 7
+    },
+    {
       "name": "MailInboxMailboxFilter",
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxMailboxFilter.cs",
-      "line": 8
+      "line": 11
+    },
+    {
+      "name": "MailInboxRetentionHostedService",
+      "kind": "class",
+      "role": "Service",
+      "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/MailInboxRetentionHostedService.cs",
+      "line": 10
     },
     {
       "name": "MailInboxSchemaInitializerHostedService",
@@ -21605,7 +21836,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs",
-      "line": 8
+      "line": 13
     },
     {
       "name": "NpgsqlMailInboxReadinessChecker",
@@ -21619,7 +21850,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/SmtpInboundMessageStore.cs",
-      "line": 14
+      "line": 16
     },
     {
       "name": "InitializerCommand",
@@ -21633,7 +21864,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailInbox/FoodDiary.MailInbox.Initializer/InitializerServiceCollectionExtensions.cs",
-      "line": 7
+      "line": 8
     },
     {
       "name": "Program",
@@ -22280,6 +22511,13 @@
       "line": 8
     },
     {
+      "name": "MailRelayTelemetryPrivacyProcessor",
+      "kind": "class",
+      "role": "Other",
+      "path": "MailRelay/FoodDiary.MailRelay.Infrastructure/Extensions/MailRelayTelemetryPrivacyProcessor.cs",
+      "line": 7
+    },
+    {
       "name": "DirectMxOptions",
       "kind": "class",
       "role": "Options",
@@ -22837,7 +23075,7 @@
       "kind": "class",
       "role": "Other",
       "path": "MailRelay/FoodDiary.MailRelay.Presentation/Filters/MailRelayTelemetryActionFilter.cs",
-      "line": 8
+      "line": 7
     },
     {
       "name": "RelayApiKeyAuthorizationFilter",
@@ -23224,6 +23462,13 @@
       "interfacePath": "FoodDiary.Application.Abstractions/Ai/Common/IAiPromptTemplateRepository.cs",
       "implementation": "AiPromptTemplateRepository",
       "implementationPath": "FoodDiary.Infrastructure/Persistence/Ai/AiPromptTemplateRepository.cs",
+      "confidence": "naming-convention"
+    },
+    {
+      "interface": "IAiQuotaRepository",
+      "interfacePath": "FoodDiary.Application.Abstractions/Ai/Common/IAiQuotaRepository.cs",
+      "implementation": "AiQuotaRepository",
+      "implementationPath": "FoodDiary.Infrastructure/Persistence/Ai/AiQuotaRepository.cs",
       "confidence": "naming-convention"
     },
     {
@@ -25518,11 +25763,18 @@
       "line": 9
     },
     {
+      "service": "IAiQuotaRepository",
+      "implementation": "AiQuotaRepository",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
+      "line": 12
+    },
+    {
       "service": "IAiPromptTemplateRepository",
       "implementation": "AiPromptTemplateRepository",
       "lifetime": "Scoped",
       "path": "FoodDiary.Infrastructure/DependencyInjection.Ai.cs",
-      "line": 12
+      "line": 13
     },
     {
       "service": "IJwtTokenGenerator",
@@ -26173,7 +26425,7 @@
       "implementation": "HangfireRecurringJobRegistrationVerifier",
       "lifetime": "Singleton",
       "path": "FoodDiary.JobManager/Program.cs",
-      "line": 94
+      "line": 46
     },
     {
       "service": "INotificationPusher",
@@ -26264,7 +26516,7 @@
       "implementation": "NpgsqlMailInboxReadinessChecker",
       "lifetime": "Singleton",
       "path": "MailInbox/FoodDiary.MailInbox.Infrastructure/Extensions/MailInboxServiceCollectionExtensions.cs",
-      "line": 40
+      "line": 45
     },
     {
       "service": "IMailRelayDeliveryPolicy",

@@ -7,6 +7,7 @@ using FoodDiary.MailRelay.Application.Telemetry;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.IntegrationTests.TestInfrastructure;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailRelay.IntegrationTests;
 
@@ -85,31 +86,14 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
     }
 
     [RequiresDockerFact]
-    public async Task SendEndpoint_WhenRabbitMqRetryIsRequiredWithoutPollingFallback_RetriesThroughRabbitMq() {
+    public async Task Startup_WhenRabbitMqPollingFallbackIsDisabled_RejectsUnsafeConfiguration() {
         fixture.EnsureAvailable();
-        var transport = new RecordingRelayDeliveryTransport(remainingFailures: 1);
+        var transport = new RecordingRelayDeliveryTransport();
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport, enablePollingFallback: false);
-        using HttpClient client = factory.CreateClient();
-        AddRelayApiKey(client);
 
-        HttpResponseMessage response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
-            "noreply@example.com",
-            "FoodDiary",
-            ["user@example.com"],
-            "Verify email",
-            "<p>Hello</p>",
-            "Hello"));
+        OptionsValidationException exception = Assert.Throws<OptionsValidationException>(() => factory.CreateClient());
 
-        response.EnsureSuccessStatusCode();
-        QueuedResponse? payload = await response.Content.ReadFromJsonAsync<QueuedResponse>();
-        Assert.NotNull(payload);
-
-        await WaitForAsync(async () => {
-            MessageDetails? message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
-            return string.Equals(message?.Status, "sent", StringComparison.Ordinal);
-        }, timeout: TimeSpan.FromSeconds(20));
-
-        Assert.Equal(2, transport.AttemptCount);
+        Assert.Contains("EnablePollingFallback=true", exception.Message, StringComparison.Ordinal);
     }
 
     [RequiresDockerFact]

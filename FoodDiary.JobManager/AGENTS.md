@@ -14,6 +14,7 @@ Rules for `FoodDiary.JobManager/`.
 - Keep this project free of HTTP presentation concerns; do not reference `FoodDiary.Web.Api` or `FoodDiary.Presentation.Api`.
 - Put scheduler/worker plumbing here and use application/infrastructure services for actual work.
 - Keep recurring job registration auditable and covered by tests when schedules or options change.
+- Register application modules only when a scheduled job or its application service requires them; keep the approved list enforced by `JobManagerGuardrailTests`.
 
 ## Dependencies
 - Reuse Application abstractions/handlers instead of duplicating logic.

@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Integrations.Http;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,7 @@ internal sealed class UsdaFoodSearchService(
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+        MaxDepth = BoundedHttpContentReader.DefaultJsonMaxDepth,
     };
 
     public async Task<IReadOnlyList<UsdaFoodModel>> SearchBrandedAsync(
@@ -39,17 +41,20 @@ internal sealed class UsdaFoodSearchService(
                 Content = JsonContent.Create(requestBody, options: JsonOptions),
             };
 
-            HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            HttpResponseMessage response = await httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            UsdaSearchResponse? result = await response.Content.ReadFromJsonAsync<UsdaSearchResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
+            UsdaSearchResponse? result = await ReadJsonAsync<UsdaSearchResponse>(response.Content, cancellationToken).ConfigureAwait(false);
             if (result?.Foods is null) {
                 return [];
             }
 
             return result.Foods
                 .ConvertAll(f => new UsdaFoodModel(f.FdcId, f.Description, f.BrandName ?? f.FoodCategory));
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "USDA branded food search failed for query '{Query}'", query);
             return [];
         }
@@ -65,14 +70,20 @@ internal sealed class UsdaFoodSearchService(
         }
 
         try {
-            HttpResponseMessage response = await httpClient.GetAsync(string.Create(CultureInfo.InvariantCulture, $"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}"), cancellationToken).ConfigureAwait(false);
+            using var request = new HttpRequestMessage(
+                HttpMethod.Get,
+                string.Create(CultureInfo.InvariantCulture, $"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}"));
+            HttpResponseMessage response = await httpClient.SendAsync(
+                request,
+                HttpCompletionOption.ResponseHeadersRead,
+                cancellationToken).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) {
                 return null;
             }
 
             response.EnsureSuccessStatusCode();
 
-            UsdaFoodDetailResponse? food = await response.Content.ReadFromJsonAsync<UsdaFoodDetailResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
+            UsdaFoodDetailResponse? food = await ReadJsonAsync<UsdaFoodDetailResponse>(response.Content, cancellationToken).ConfigureAwait(false);
             if (food is null) {
                 return null;
             }
@@ -105,11 +116,19 @@ internal sealed class UsdaFoodSearchService(
                 nutrients,
                 portions,
                 HealthScores: null);
-        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
+        } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException or InvalidDataException or TimeoutException) {
             logger.LogWarning(ex, "USDA food detail lookup failed for FDC ID {FdcId}", fdcId);
             return null;
         }
     }
+
+    private static Task<T?> ReadJsonAsync<T>(HttpContent content, CancellationToken cancellationToken) =>
+        BoundedHttpContentReader.ReadFromJsonAsync<T>(
+            content,
+            JsonOptions,
+            BoundedHttpContentReader.DefaultMaxResponseBodyBytes,
+            BoundedHttpContentReader.DefaultReadTimeout,
+            cancellationToken);
 
     private sealed record UsdaSearchRequest(
         [property: JsonPropertyName("query")] string Query,

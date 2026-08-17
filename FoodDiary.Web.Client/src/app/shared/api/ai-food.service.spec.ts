@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../environments/environment';
-import type { FoodNutritionRequest, FoodVisionRequest } from '../models/ai.data';
+import type { FoodNutritionRequest, FoodTextRequest, FoodVisionRequest } from '../models/ai.data';
 import { AiFoodService } from './ai-food.service';
 
 const BASE_URL = environment.apiUrls.ai;
@@ -63,6 +63,7 @@ describe('AiFoodService analysis', () => {
         const req = httpMock.expectOne(`${BASE_URL}/food/vision`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(request);
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         req.flush(response);
     });
 
@@ -81,6 +82,25 @@ describe('AiFoodService analysis', () => {
         const req = httpMock.expectOne(`${BASE_URL}/food/nutrition`);
         expect(req.request.method).toBe('POST');
         expect(req.request.body).toEqual(request);
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
+        req.flush(response);
+    });
+
+    it('should parse food text with an idempotency key (POST /api/v1/ai/food/text)', () => {
+        const request: FoodTextRequest = { text: 'apple 100g' };
+        const response = {
+            items: [{ nameEn: 'Apple', amount: 100, unit: 'g', confidence: 0.95 }],
+            notes: null,
+        };
+
+        service.parseFoodText(request).subscribe(result => {
+            expect(result.items[0].nameEn).toBe('Apple');
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/food/text`);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body).toEqual(request);
+        expect(req.request.headers.get('Idempotency-Key')).toMatch(/^[0-9a-f-]{36}$/u);
         req.flush(response);
     });
 });

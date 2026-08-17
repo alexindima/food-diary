@@ -5,7 +5,8 @@ namespace FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 /// </summary>
 /// <remarks>
 /// This queue is in-memory and is not a durable delivery mechanism. Critical side effects must be persisted through
-/// a transactional outbox instead.
+/// a transactional outbox instead. Implementations bound accepted action count and total cooperative execution time;
+/// callbacks must observe the supplied cancellation token.
 /// </remarks>
 public interface IPostCommitActionQueue {
     bool HasActions { get; }

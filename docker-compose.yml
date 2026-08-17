@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:17-alpine
+    image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-fooddiary}
@@ -17,7 +17,7 @@ services:
       retries: 5
 
   db-init:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/initializer:${INITIALIZER_IMAGE_TAG:-latest}
+    image: ${INITIALIZER_IMAGE_REF:-ghcr.io/alexindima/food-diary/initializer:local}
     build:
       context: .
       dockerfile: FoodDiary.Initializer/Dockerfile
@@ -38,7 +38,7 @@ services:
       - backend
 
   mailrelay-postgres:
-    image: postgres:17-alpine
+    image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay}
@@ -58,7 +58,7 @@ services:
       - backend
 
   mailrelay-db-init:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailrelay-initializer:${MAIL_RELAY_INITIALIZER_IMAGE_TAG:-latest}
+    image: ${MAIL_RELAY_INITIALIZER_IMAGE_REF:-ghcr.io/alexindima/food-diary/mailrelay-initializer:local}
     build:
       context: .
       dockerfile: MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
@@ -75,7 +75,7 @@ services:
       - backend
 
   mailinbox-postgres:
-    image: postgres:17-alpine
+    image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${MAIL_INBOX_POSTGRES_DB:-fooddiary_mailinbox}
@@ -94,7 +94,7 @@ services:
       - mail-inbox
 
   mailinbox-db-init:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailinbox-initializer:${MAIL_INBOX_INITIALIZER_IMAGE_TAG:-latest}
+    image: ${MAIL_INBOX_INITIALIZER_IMAGE_REF:-ghcr.io/alexindima/food-diary/mailinbox-initializer:local}
     build:
       context: .
       dockerfile: MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
@@ -110,7 +110,7 @@ services:
       - mail-inbox
 
   rabbitmq:
-    image: rabbitmq:4-management
+    image: rabbitmq:4-management@sha256:eb5295d083325da5929a5ade766684d4019ffd2bce8bc7e43d6f9a05cafc8646
     restart: unless-stopped
     ports:
       - "${RABBITMQ_HOST_BIND:-127.0.0.1}:${RABBITMQ_PORT:-5672}:5672"
@@ -130,7 +130,7 @@ services:
       - backend
 
   redis:
-    image: redis:7-alpine
+    image: redis:7-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2
     restart: unless-stopped
     ports:
       - "${REDIS_HOST_BIND:-127.0.0.1}:${REDIS_PORT:-6379}:6379"
@@ -144,7 +144,7 @@ services:
       - backend
 
   api:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/api:${API_IMAGE_TAG:-latest}
+    image: ${API_IMAGE_REF:-ghcr.io/alexindima/food-diary/api:local}
     build:
       context: .
       dockerfile: FoodDiary.Web.Api/Dockerfile
@@ -188,7 +188,7 @@ services:
       - backend
 
   mail-relay:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-relay:${MAIL_RELAY_IMAGE_TAG:-latest}
+    image: ${MAIL_RELAY_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-relay:local}
     build:
       context: .
       dockerfile: MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
@@ -223,7 +223,7 @@ services:
       - backend
 
   mail-inbox:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-inbox:${MAIL_INBOX_IMAGE_TAG:-latest}
+    image: ${MAIL_INBOX_IMAGE_REF:-ghcr.io/alexindima/food-diary/mail-inbox:local}
     build:
       context: .
       dockerfile: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
@@ -250,7 +250,7 @@ services:
       - mail-inbox
 
   telegram-bot:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/telegram-bot:${TELEGRAM_BOT_IMAGE_TAG:-latest}
+    image: ${TELEGRAM_BOT_IMAGE_REF:-ghcr.io/alexindima/food-diary/telegram-bot:local}
     build:
       context: .
       dockerfile: FoodDiary.Telegram.Bot/Dockerfile
@@ -264,7 +264,7 @@ services:
       - full
 
   job-manager:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/job-manager:${JOB_MANAGER_IMAGE_TAG:-latest}
+    image: ${JOB_MANAGER_IMAGE_REF:-ghcr.io/alexindima/food-diary/job-manager:local}
     build:
       context: .
       dockerfile: FoodDiary.JobManager/Dockerfile
@@ -287,7 +287,7 @@ services:
       - jobs
 
   client:
-    image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/client:${CLIENT_IMAGE_TAG:-latest}
+    image: ${CLIENT_IMAGE_REF:-ghcr.io/alexindima/food-diary/client:local}
     build:
       context: FoodDiary.Web.Client
       dockerfile: Dockerfile
@@ -301,7 +301,7 @@ services:
       - full
 
   nginx:
-    image: nginx:alpine
+    image: nginx:alpine@sha256:4a73073bd557c65b759505da037898b61f1be6cbcc3c2c3aeac22d2a470c1752
     restart: unless-stopped
     network_mode: host
     volumes:

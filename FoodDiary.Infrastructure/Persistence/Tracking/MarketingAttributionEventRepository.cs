@@ -20,7 +20,8 @@ public sealed class MarketingAttributionEventRepository(FoodDiaryDbContext conte
             record.UtmCampaign,
             record.UtmContent,
             record.UtmTerm,
-            record.BuildVersion);
+            record.BuildVersion,
+            record.EventId);
 
         context.MarketingAttributionEvents.Add(entity);
         return Task.CompletedTask;
@@ -65,7 +66,8 @@ public sealed class MarketingAttributionEventRepository(FoodDiaryDbContext conte
                 x.UtmCampaign,
                 x.UtmContent,
                 x.UtmTerm,
-                x.BuildVersion))
+                x.BuildVersion,
+                x.Id.Value))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -87,7 +89,8 @@ public sealed class MarketingAttributionEventRepository(FoodDiaryDbContext conte
                 x.UtmCampaign,
                 x.UtmContent,
                 x.UtmTerm,
-                x.BuildVersion))
+                x.BuildVersion,
+                x.Id.Value))
             .FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 

@@ -18,11 +18,25 @@ public sealed class ApiRateLimitingOptions {
         WindowSeconds = 60,
     };
 
+    public FixedWindowPolicyOptions ClientTelemetry { get; init; } = new() {
+        PermitLimit = 60,
+        WindowSeconds = 60,
+    };
+
+    public FixedWindowPolicyOptions MarketingAttribution { get; init; } = new() {
+        PermitLimit = 30,
+        WindowSeconds = 60,
+    };
+
     public static bool HasValidAuth(ApiRateLimitingOptions options) => options.Auth.IsValid();
 
     public static bool HasValidAi(ApiRateLimitingOptions options) => options.Ai.IsValid();
 
     public static bool HasValidWebhook(ApiRateLimitingOptions options) => options.Webhook.IsValid();
+
+    public static bool HasValidClientTelemetry(ApiRateLimitingOptions options) => options.ClientTelemetry.IsValid();
+
+    public static bool HasValidMarketingAttribution(ApiRateLimitingOptions options) => options.MarketingAttribution.IsValid();
 
     public sealed class FixedWindowPolicyOptions {
         public int PermitLimit { get; init; }
