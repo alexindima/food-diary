@@ -21,6 +21,7 @@ public sealed class CorsOptionsSetupTests {
         Assert.Contains("GET", policy.Methods, StringComparer.Ordinal);
         Assert.Contains("PATCH", policy.Methods, StringComparer.Ordinal);
         Assert.Contains("Authorization", policy.Headers, StringComparer.Ordinal);
+        Assert.DoesNotContain("X-Api-Version", policy.Headers, StringComparer.OrdinalIgnoreCase);
         Assert.Contains("X-Correlation-Id", policy.ExposedHeaders, StringComparer.Ordinal);
     }
 

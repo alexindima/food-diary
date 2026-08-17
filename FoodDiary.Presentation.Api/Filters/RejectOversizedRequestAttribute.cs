@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using FoodDiary.Presentation.Api.Responses;
 
 namespace FoodDiary.Presentation.Api.Filters;
 
@@ -17,7 +18,12 @@ public sealed class RejectOversizedRequestAttribute : Attribute, IResourceFilter
 
     public void OnResourceExecuting(ResourceExecutingContext context) {
         if (context.HttpContext.Request.ContentLength > MaxBytes) {
-            context.Result = new StatusCodeResult(StatusCodes.Status413PayloadTooLarge);
+            context.Result = new ObjectResult(new ApiErrorHttpResponse(
+                "Request.PayloadTooLarge",
+                "The request payload is too large.",
+                context.HttpContext.TraceIdentifier)) {
+                StatusCode = StatusCodes.Status413PayloadTooLarge,
+            };
         }
     }
 

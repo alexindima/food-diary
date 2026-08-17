@@ -11,13 +11,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/auth/telegram")]
-public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegramController> logger) : BaseApiController(mediator) {
+public sealed class AuthTelegramController(ISender mediator) : BaseApiController(mediator) {
     [HttpPost("verify")]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
@@ -26,7 +25,7 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> TelegramVerify([FromBody] TelegramAuthHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.telegram.verify");
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
     [HttpPost("login-widget")]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
@@ -36,7 +35,7 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     public Task<IActionResult> TelegramLoginWidget([FromBody] TelegramLoginWidgetHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.telegram.login-widget");
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
     [Authorize]
     [HttpPost("link")]
@@ -46,7 +45,7 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [BlockImpersonatedAccess]
     public Task<IActionResult> LinkTelegram([FromCurrentUser] Guid userId, [FromBody] TelegramAuthHttpRequest request) =>
-        HandleObservedOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse(), logger, "auth.telegram.link", userId);
+        HandleOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse());
 
     [HttpPost("bot/auth")]
     [RequireTelegramBotSecret]
@@ -56,5 +55,5 @@ public sealed class AuthTelegramController(ISender mediator, ILogger<AuthTelegra
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     public Task<IActionResult> TelegramBotAuth([FromBody] TelegramBotAuthHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.telegram.bot-auth");
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 }

@@ -36,12 +36,10 @@ public sealed class TelegramBotSecretAuthorizationFilter(
         string providedSecret = context.HttpContext.Request.Headers[SecretHeaderName].ToString();
         if (SecretComparison.FixedTimeEquals(_telegramBotOptions.ApiSecret, providedSecret)) {
             activity?.SetStatus(ActivityStatusCode.Ok);
-            PresentationApiTelemetry.OperationCounter.Add(
+            PresentationApiTelemetry.SecurityDecisionCounter.Add(
                 1,
-                new KeyValuePair<string, object?>("fooddiary.presentation.feature", "Auth"),
-                new KeyValuePair<string, object?>("fooddiary.presentation.controller", "AuthTelegramController"),
-                new KeyValuePair<string, object?>("fooddiary.presentation.operation", "auth.telegram.bot-secret"),
-                new KeyValuePair<string, object?>("fooddiary.presentation.outcome", "success"));
+                new KeyValuePair<string, object?>("fooddiary.presentation.security.operation", "auth.telegram.bot-secret"),
+                new KeyValuePair<string, object?>("fooddiary.presentation.security.outcome", "success"));
             logger.LogInformation("Telegram bot secret authorization succeeded");
             return Task.CompletedTask;
         }
@@ -67,17 +65,10 @@ public sealed class TelegramBotSecretAuthorizationFilter(
     private void TrackFailure(Activity? activity, string errorCode) {
         activity?.SetStatus(ActivityStatusCode.Error, errorCode);
         activity?.SetTag("error.type", errorCode);
-        PresentationApiTelemetry.OperationCounter.Add(
+        PresentationApiTelemetry.SecurityDecisionCounter.Add(
             1,
-            new KeyValuePair<string, object?>("fooddiary.presentation.feature", "Auth"),
-            new KeyValuePair<string, object?>("fooddiary.presentation.controller", "AuthTelegramController"),
-            new KeyValuePair<string, object?>("fooddiary.presentation.operation", "auth.telegram.bot-secret"),
-            new KeyValuePair<string, object?>("fooddiary.presentation.outcome", "failure"));
-        PresentationApiTelemetry.OperationFailureCounter.Add(
-            1,
-            new KeyValuePair<string, object?>("fooddiary.presentation.feature", "Auth"),
-            new KeyValuePair<string, object?>("fooddiary.presentation.controller", "AuthTelegramController"),
-            new KeyValuePair<string, object?>("fooddiary.presentation.operation", "auth.telegram.bot-secret"),
+            new KeyValuePair<string, object?>("fooddiary.presentation.security.operation", "auth.telegram.bot-secret"),
+            new KeyValuePair<string, object?>("fooddiary.presentation.security.outcome", "failure"),
             new KeyValuePair<string, object?>("error.code", errorCode));
         logger.LogWarning("Telegram bot secret authorization failed with {ErrorCode}", errorCode);
     }

@@ -128,6 +128,28 @@ public class PresentationConventionsTests {
     }
 
     [Fact]
+    public void PresentationRequestTelemetry_HasOneOperationMetricWriter() {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string[] expectedWriterFiles = [
+            Path.Combine("FoodDiary.Presentation.Api", "Filters", "TelemetryActionFilter.cs"),
+        ];
+
+        string[] operationCounterWriters = FindFilesContaining(
+            root,
+            presentationRoot,
+            "PresentationApiTelemetry.OperationCounter.Add");
+        string[] operationDurationWriters = FindFilesContaining(
+            root,
+            presentationRoot,
+            "PresentationApiTelemetry.OperationDuration.Record");
+
+        Assert.Multiple(
+            () => Assert.Equal(expectedWriterFiles, operationCounterWriters),
+            () => Assert.Equal(expectedWriterFiles, operationDurationWriters));
+    }
+
+    [Fact]
     public void PresentationControllers_InjectOnlyPresentationSafeDependencies() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
@@ -243,4 +265,10 @@ public class PresentationConventionsTests {
                parameterType.EndsWith("HttpProcessor", StringComparison.Ordinal) ||
                parameterType.StartsWith("ILogger<", StringComparison.Ordinal);
     }
+
+    private static string[] FindFilesContaining(string root, string scopedPath, string pattern) =>
+        [.. SourceScanner.SourceFiles(scopedPath)
+            .Where(path => File.ReadAllText(path).Contains(pattern, StringComparison.Ordinal))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
 }

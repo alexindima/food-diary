@@ -9,7 +9,6 @@ using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
 using System.Net;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -53,7 +52,7 @@ public sealed class AdminSsoControllerTests {
     }
 
     private static AdminSsoController CreateController(ISender sender) =>
-        new(sender, NullLogger<AdminSsoController>.Instance) {
+        new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = CreateHttpContext(),
             },

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "productionProjectEdges": 303,
+    "productionProjectEdges": 306,
     "dependencyViolations": 0,
     "unusedAllowances": 0,
     "untrackedProductionProjects": 0,
@@ -12,7 +12,7 @@
     "unconsumedBackendContracts": 0,
     "selectorUnreferencedComponents": 151,
     "componentsWithoutDirectSpecs": 130,
-    "criticalSymbolsWithoutTestReferences": 24,
+    "criticalSymbolsWithoutTestReferences": 23,
     "explicitDebtMarkers": 4
   },
   "projectDependencyViolations": [],
@@ -5313,14 +5313,6 @@
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
       "line": 15,
-      "testReferenceCount": 0,
-      "testReferences": []
-    },
-    {
-      "name": "MenstrualEpisodesController",
-      "role": "Controller",
-      "path": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
-      "line": 14,
       "testReferenceCount": 0,
       "testReferences": []
     },

@@ -958,6 +958,7 @@
         "type": "Project",
         "dependencies": {
           "Asp.Versioning.Mvc": "[10.2.1, )",
+          "FoodDiary.Application.Abstractions": "[1.0.0, )",
           "FoodDiary.Application.Admin": "[1.0.0, )",
           "FoodDiary.Application.Ai": "[1.0.0, )",
           "FoodDiary.Application.Billing": "[1.0.0, )",
@@ -990,7 +991,9 @@
           "FoodDiary.Application.Users": "[1.0.0, )",
           "FoodDiary.Application.Wearables": "[1.0.0, )",
           "FoodDiary.Application.WeeklyCheckIn": "[1.0.0, )",
-          "FoodDiary.Application.WeeklyGoals": "[1.0.0, )"
+          "FoodDiary.Application.WeeklyGoals": "[1.0.0, )",
+          "FoodDiary.Mediator": "[1.0.0, )",
+          "FoodDiary.Results": "[1.0.0, )"
         }
       },
       "fooddiary.resources": {

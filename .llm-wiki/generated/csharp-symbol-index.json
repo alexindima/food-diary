@@ -17755,7 +17755,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Controllers/BaseApiController.cs",
-      "line": 15
+      "line": 12
     },
     {
       "name": "CurrentUserIdModelBinder",
@@ -18406,14 +18406,14 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Ai/AiFoodController.cs",
-      "line": 22
+      "line": 21
     },
     {
       "name": "AiUsageController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Ai/AiUsageController.cs",
-      "line": 15
+      "line": 14
     },
     {
       "name": "AiHttpMappings",
@@ -18490,28 +18490,28 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AdminSsoController.cs",
-      "line": 19
+      "line": 18
     },
     {
       "name": "AuthPasswordController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthPasswordController.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "AuthSessionController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthSessionController.cs",
-      "line": 21
+      "line": 20
     },
     {
       "name": "AuthTelegramController",
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Auth/AuthTelegramController.cs",
-      "line": 20
+      "line": 19
     },
     {
       "name": "AuthHttpMappings",
@@ -19666,7 +19666,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Images/ImagesController.cs",
-      "line": 18
+      "line": 17
     },
     {
       "name": "ImageHttpMappings",
@@ -21066,14 +21066,14 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/RejectOversizedRequestAttribute.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "TelemetryActionFilter",
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Filters/TelemetryActionFilter.cs",
-      "line": 8
+      "line": 9
     },
     {
       "name": "EmailVerificationHub",
@@ -26551,21 +26551,21 @@
       "implementation": "UserIdProvider",
       "lifetime": "Singleton",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 61
+      "line": 59
     },
     {
       "service": "IEmailVerificationNotifier",
       "implementation": "EmailVerificationNotifier",
       "lifetime": "Scoped",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 62
+      "line": 60
     },
     {
       "service": "INotificationPusher",
       "implementation": "NotificationPusher",
       "lifetime": "Scoped",
       "path": "FoodDiary.Presentation.Api/Extensions/PresentationServiceCollectionExtensions.cs",
-      "line": 63
+      "line": 61
     },
     {
       "service": "IWearableTokenProtector",

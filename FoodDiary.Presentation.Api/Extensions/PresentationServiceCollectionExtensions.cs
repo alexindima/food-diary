@@ -27,9 +27,7 @@ public static class PresentationServiceCollectionExtensions {
                 options.DefaultApiVersion = new ApiVersion(1, 0);
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.ReportApiVersions = true;
-                options.ApiVersionReader = ApiVersionReader.Combine(
-                    new UrlSegmentApiVersionReader(),
-                    new HeaderApiVersionReader("X-Api-Version"));
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
             }).AddMvc();
             services
                 .AddControllers(options => {
@@ -39,7 +37,7 @@ public static class PresentationServiceCollectionExtensions {
                 .ConfigureApiBehaviorOptions(options => {
                     options.InvalidModelStateResponseFactory = context => {
                         var errors = context.ModelState
-                            .Where(static entry => entry.Value?.Errors.Count > 0)
+                            .Where(static entry => entry.Value!.Errors.Count > 0)
                             .ToDictionary(
                                 static entry => ApiErrorDetailsMapper.ToCamelCasePath(string.IsNullOrWhiteSpace(entry.Key) ? "request" : entry.Key),
                                 static entry => entry.Value!.Errors

@@ -10,18 +10,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/auth/admin-sso")]
-public sealed class AdminSsoController(ISender mediator, ILogger<AdminSsoController> logger) : BaseApiController(mediator) {
+public sealed class AdminSsoController(ISender mediator) : BaseApiController(mediator) {
     [Authorize(Roles = PresentationRoleNames.Admin)]
     [HttpPost("start")]
     [ProducesResponseType<AdminSsoStartHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> AdminSsoStart([FromCurrentUser] Guid userId) =>
-        HandleObservedOk(userId.ToAdminSsoStartCommand(), static value => value.ToHttpResponse(), logger, "auth.admin-sso.start", userId);
+        HandleOk(userId.ToAdminSsoStartCommand(), static value => value.ToHttpResponse());
 
     [AllowAnonymous]
     [HttpPost("exchange")]
@@ -31,5 +30,5 @@ public sealed class AdminSsoController(ISender mediator, ILogger<AdminSsoControl
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> AdminSsoExchange([FromBody] AdminSsoExchangeHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.admin-sso.exchange");
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 }

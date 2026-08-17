@@ -16,7 +16,6 @@ using FoodDiary.Presentation.Api.Features.Auth.Responses;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
 using System.Net;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -182,7 +181,7 @@ public sealed class AuthSessionControllerTests {
     }
 
     private static AuthSessionController CreateController(ISender sender) =>
-        new(sender, NullLogger<AuthSessionController>.Instance) {
+        new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = CreateHttpContext(),
             },

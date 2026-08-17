@@ -52,14 +52,14 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "docs/ARCHITECTURE.md",
-          "sha256": "69225674a5df973e539a590f3bc883891881a98688291a49edd510521a701e98"
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "615afbc2ec056d131bc9afeee66843dd8ade8cdf47696b83af1c4ef83ae987d0"
         }
       ],
-      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
+      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
       "baseRef": "HEAD",
-      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
-      "reviewedAtUtc": "2026-08-17T15:56:42.7588319Z"
+      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
+      "reviewedAtUtc": "2026-08-17T22:37:13.1066872Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -189,13 +189,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "601ef43653819eeadc068c61de1ed207ed6f23fec46661a7aefd8cfb2f9749af"
+          "sha256": "1ba13882ef0de492aa757f2203f11d7cf6033daed36a8bf879bc4f448050fa67"
+        },
+        {
+          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
+          "sha256": "615afbc2ec056d131bc9afeee66843dd8ade8cdf47696b83af1c4ef83ae987d0"
         }
       ],
-      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
+      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
       "baseRef": "HEAD",
-      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
-      "reviewedAtUtc": "2026-08-17T09:59:53.4842688Z"
+      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
+      "reviewedAtUtc": "2026-08-17T22:37:13.3388335Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -204,13 +208,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "1da46b249f09b44d79bb05210c8aa7906c873903ace00a6ce967a9f0fc22081d"
+          "sha256": "3fa13142589eab91c294ca5175a64ddbdb6b8741f7be6a1138cdc2a23cf23df0"
         }
       ],
-      "reason": "CI remediation keeps extraction readiness aligned with current JobManager module registration policy and records the narrow Users credential verification boundary without changing Wiki workflow semantics.",
+      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
       "baseRef": "HEAD",
-      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
-      "reviewedAtUtc": "2026-08-17T12:15:01.7137706Z"
+      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
+      "reviewedAtUtc": "2026-08-17T22:37:13.9201232Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -672,17 +676,13 @@
       "sources": [
         {
           "path": "docs/backend/BACKEND_OBSERVABILITY_BASELINE.md",
-          "sha256": "87e3f1ec09488ecf6ae4e319293cd3a43b5b71cbff19186f09c5f1c52d1eccc3"
-        },
-        {
-          "path": "docs/backend/BACKEND_PERFORMANCE_REVIEW.md",
-          "sha256": "43990323011d5bd842a47067e25433af6bd1d10f393f6c787e287905ab87d6f8"
+          "sha256": "84143bb0e888f5daca8b51bcd05985c999d91f948d7d928c705ec7d516fae7c7"
         }
       ],
-      "reason": "Hard-cut rename from Consumptions to Meals across backend and frontend, extraction into FoodDiary.Application.Meals, and intentional public route migration to /api/v1/meals.",
+      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
       "baseRef": "HEAD",
-      "gitHead": "61ee44936866dd3c7fbfef3f73b0ab2d571a42ea",
-      "reviewedAtUtc": "2026-08-13T12:13:01.3256421Z"
+      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
+      "reviewedAtUtc": "2026-08-17T22:37:14.2754508Z"
     },
     {
       "pageId": "workflow-plan-diff-conformance",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b6c8d2443d80976ad32425419f0f937309af80bdce6487a41a2fcbbb2d9eb8c3"
+          "sha256": "154e840efd06ad18742e2dadd64144f81f36684a1c6b296e0db694197a4075d0"
         }
       ],
-      "reason": "Compiled backend-contract extraction preserves the exact compatibility-regex counts and canonical 1045-contract/7218-edge output, retains an exercised PowerShell fallback, and keeps internal Wiki helper projects outside production quality and architecture evidence.",
+      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T21:35:27.1866371Z"
+      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
+      "reviewedAtUtc": "2026-08-17T22:37:14.7345628Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -1106,13 +1106,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "ea6c2966181cc6da9a13b98aa86144509ce47eade7931e67aaa2e8db2942eb7a"
+          "sha256": "cdec1870452d8b83e53b66797839731caf6548a9be6b1241a6897d068845cef6"
         }
       ],
-      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
+      "reason": "Reviewed against current sources: explicit Presentation references only make existing compile-time dependencies on Application.Abstractions, FoodDiary.Mediator, and FoodDiary.Results visible and preserve the inward dependency rule; the single global action filter owns bounded low-cardinality request telemetry, security decisions remain separate, and focused unit/integration/architecture tests cover the change.",
       "baseRef": "HEAD",
-      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
-      "reviewedAtUtc": "2026-08-17T09:59:56.6158089Z"
+      "gitHead": "1750267ba36c6a20435f2d9480466e74fc87ad2f",
+      "reviewedAtUtc": "2026-08-17T22:37:15.0988927Z"
     },
     {
       "pageId": "workflow.review-diff",

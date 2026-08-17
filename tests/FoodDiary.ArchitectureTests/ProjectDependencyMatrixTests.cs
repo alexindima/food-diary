@@ -345,6 +345,7 @@ public sealed class ProjectDependencyMatrixTests {
             ],
             ["FoodDiary.Mediator"] = [],
             ["FoodDiary.Presentation.Api"] = [
+                "FoodDiary.Application.Abstractions",
                 "FoodDiary.Application.Admin",
                 "FoodDiary.Application.Ai",
                 "FoodDiary.Application.Billing",
@@ -378,6 +379,8 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application.Tdee",
                 "FoodDiary.Application.Users",
                 "FoodDiary.Application.Wearables",
+                "FoodDiary.Mediator",
+                "FoodDiary.Results",
             ],
             ["FoodDiary.Domain.Primitives"] = [],
             ["FoodDiary.Resources"] = [

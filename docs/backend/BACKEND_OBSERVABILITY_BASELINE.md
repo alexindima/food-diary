@@ -99,6 +99,26 @@ Current outcome tags:
 - `client_error`
 - `server_error`
 
+## Presentation request and security signals
+
+Every completed MVC action is observed once by the global presentation action
+filter. Controllers and authorization filters must not emit duplicate request
+operation measurements.
+
+Metrics:
+
+- `fooddiary.presentation.operations`
+- `fooddiary.presentation.operation.duration`
+- `fooddiary.presentation.operation.failures`
+- `fooddiary.presentation.security.decisions`
+
+Request metrics use the bounded feature, controller, operation, and outcome
+dimensions. Client failures are logged at information level; server failures
+and unhandled exceptions are logged at warning level and mark the presentation
+activity as failed. Security decisions are kept separate from completed request
+operations and use only stable operation and outcome tags. Secrets, request
+values, user identifiers, and exception messages must never be metric tags.
+
 ## Added Background Job Signals
 
 The observability baseline now also includes stable metrics for recurring cleanup jobs in `FoodDiary.JobManager`.

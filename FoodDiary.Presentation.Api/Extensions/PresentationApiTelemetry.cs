@@ -20,4 +20,8 @@ public static class PresentationApiTelemetry {
         "fooddiary.presentation.operation.failures",
         unit: "{failure}",
         description: "Total number of failed presentation operations.");
+    public static readonly Counter<long> SecurityDecisionCounter = Meter.CreateCounter<long>(
+        "fooddiary.presentation.security.decisions",
+        unit: "{decision}",
+        description: "Total number of presentation security decisions by operation and outcome.");
 }

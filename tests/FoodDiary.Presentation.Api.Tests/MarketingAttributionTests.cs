@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using FoodDiary.Application.Abstractions.Marketing.Common;
 using FoodDiary.Application.Marketing.Commands.RecordMarketingAttribution;
 using FoodDiary.Application.Marketing.Models;
@@ -17,6 +18,72 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MarketingAttributionTests {
+    [Fact]
+    public void AnonymousRequestValidation_AcceptsValuesAtEveryBoundary() {
+        var request = new MarketingAttributionHttpRequest(
+            Timestamp: new string('t', 64),
+            AnonymousId: new string('a', 96),
+            SessionId: new string('s', 96),
+            LandingPath: new string('p', 512),
+            ReferrerHost: new string('r', 128),
+            UtmSource: new string('u', 160),
+            UtmMedium: new string('m', 160),
+            UtmCampaign: new string('c', 160),
+            UtmContent: new string('o', 160),
+            UtmTerm: new string('e', 160),
+            BuildVersion: new string('b', 64));
+
+        IReadOnlyList<ValidationResult> errors = Validate(request);
+
+        Assert.Empty(errors);
+    }
+
+    [Fact]
+    public void AnonymousRequestValidation_RejectsMissingOversizedAndControlCharacterValues() {
+        var request = new MarketingAttributionHttpRequest(
+            Timestamp: " ",
+            AnonymousId: new string('a', 97),
+            SessionId: "session\n",
+            LandingPath: null!,
+            ReferrerHost: new string('r', 129),
+            UtmSource: "source\t",
+            UtmMedium: null,
+            UtmCampaign: new string('c', 161) + "\n",
+            UtmContent: new string('o', 160),
+            UtmTerm: string.Empty,
+            BuildVersion: new string('b', 65));
+
+        IReadOnlyList<ValidationResult> errors = Validate(request);
+
+        Assert.Multiple(
+            () => AssertValidationError(errors, "Timestamp", "Value is required."),
+            () => AssertValidationError(errors, "AnonymousId", "Value must be at most 96 characters."),
+            () => AssertValidationError(errors, "SessionId", "Control characters are not supported."),
+            () => AssertValidationError(errors, "LandingPath", "Value is required."),
+            () => AssertValidationError(errors, "ReferrerHost", "Value must be at most 128 characters."),
+            () => AssertValidationError(errors, "UtmSource", "Control characters are not supported."),
+            () => AssertValidationError(errors, "UtmCampaign", "Value must be at most 160 characters."),
+            () => AssertValidationError(errors, "UtmCampaign", "Control characters are not supported."),
+            () => AssertValidationError(errors, "BuildVersion", "Value must be at most 64 characters."));
+    }
+
+    [Fact]
+    public void SignupRequestValidation_UsesTheSamePublicInputContract() {
+        var request = new MarketingSignupAttributionHttpRequest(
+            Timestamp: "2026-08-18T12:00:00Z",
+            AnonymousId: "anonymous",
+            SessionId: "session",
+            LandingPath: "/",
+            BuildVersion: "build\r");
+
+        IReadOnlyList<ValidationResult> errors = Validate(request);
+
+        ValidationResult error = Assert.Single(errors);
+        Assert.Multiple(
+            () => Assert.Equal("Control characters are not supported.", error.ErrorMessage),
+            () => Assert.Equal(["BuildVersion"], error.MemberNames, StringComparer.Ordinal));
+    }
+
     [Fact]
     public async Task Create_MapsMarketingAttributionRequestToCommand() {
         IRequest<Result>? sentRequest = null;
@@ -356,6 +423,21 @@ public sealed class MarketingAttributionTests {
             UtmTerm: null,
             BuildVersion: null,
             EventId: Guid.NewGuid());
+
+    private static IReadOnlyList<ValidationResult> Validate(object instance) {
+        List<ValidationResult> results = [];
+        Validator.TryValidateObject(instance, new ValidationContext(instance), results, validateAllProperties: true);
+        return results;
+    }
+
+    private static void AssertValidationError(
+        IEnumerable<ValidationResult> errors,
+        string memberName,
+        string message) {
+        Assert.Contains(errors, error =>
+            string.Equals(error.ErrorMessage, message, StringComparison.Ordinal) &&
+            error.MemberNames.Contains(memberName, StringComparer.Ordinal));
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {

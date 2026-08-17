@@ -12,13 +12,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Auth;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/auth")]
-public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionController> logger) : BaseApiController(mediator) {
+public sealed class AuthSessionController(ISender mediator) : BaseApiController(mediator) {
     [HttpPost("register")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
@@ -26,7 +25,7 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> Register([FromBody] RegisterHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.register");
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
     [HttpPost("login")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
@@ -34,7 +33,7 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> Login([FromBody] LoginHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.login");
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
     [HttpPost("google")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
@@ -44,7 +43,7 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> GoogleLogin([FromBody] GoogleLoginHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.google-login");
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
     [Authorize]
     [HttpPost("google/link")]
@@ -55,7 +54,7 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> LinkGoogle([FromCurrentUser] Guid userId, [FromBody] GoogleLoginHttpRequest request) =>
-        HandleObservedOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse(), logger, "auth.google-link", userId);
+        HandleOk(request.ToLinkCommand(userId), static value => value.ToHttpResponse());
 
     [HttpPost("refresh")]
     [EnableIdempotency]
@@ -64,7 +63,7 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> Refresh([FromBody] RefreshTokenHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), logger, "auth.refresh");
+        HandleOk(request.ToCommand(), static value => value.ToHttpResponse());
 
     [HttpPost("restore")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
@@ -73,7 +72,7 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> RestoreAccount([FromBody] RestoreAccountHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse(), logger, "auth.restore-account");
+        HandleOk(request.ToCommand(HttpContext), static value => value.ToHttpResponse());
 
     [HttpPost("verify-email")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -84,7 +83,7 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> VerifyEmail([FromBody] VerifyEmailHttpRequest request) =>
-        HandleObservedNoContent(request.ToCommand(), logger, "auth.verify-email");
+        HandleNoContent(request.ToCommand());
 
     [Authorize]
     [HttpPost("verify-email/resend")]
@@ -93,5 +92,5 @@ public sealed class AuthSessionController(ISender mediator, ILogger<AuthSessionC
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> ResendVerifyEmail([FromCurrentUser] Guid userId, [FromBody] ResendEmailVerificationHttpRequest? request = null) =>
-        HandleObservedNoContent(userId.ToResendVerificationCommand(request?.ClientOrigin), logger, "auth.verify-email.resend", userId);
+        HandleNoContent(userId.ToResendVerificationCommand(request?.ClientOrigin));
 }

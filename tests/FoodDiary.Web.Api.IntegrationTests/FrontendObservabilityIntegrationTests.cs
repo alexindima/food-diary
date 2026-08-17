@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text;
 using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
@@ -66,6 +67,12 @@ public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFacto
             "/api/v1/logs",
             new StringContent(payload, Encoding.UTF8, "application/json"));
 
-        Assert.Equal(HttpStatusCode.RequestEntityTooLarge, response.StatusCode);
+        ApiErrorHttpResponse? error = await response.Content.ReadFromJsonAsync<ApiErrorHttpResponse>();
+        Assert.NotNull(error);
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.RequestEntityTooLarge, response.StatusCode),
+            () => Assert.Equal("Request.PayloadTooLarge", error.Error),
+            () => Assert.Equal("The request payload is too large.", error.Message),
+            () => Assert.False(string.IsNullOrWhiteSpace(error.TraceId)));
     }
 }

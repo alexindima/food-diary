@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Ai;
 
@@ -19,7 +18,7 @@ namespace FoodDiary.Presentation.Api.Features.Ai;
 [Route("api/v{version:apiVersion}/ai/food")]
 [Authorize(Roles = PresentationRoleNames.Premium)]
 [EnableRateLimiting(PresentationPolicyNames.AiRateLimitPolicyName)]
-public sealed class AiFoodController(ISender mediator, ILogger<AiFoodController> logger) : AuthorizedController(mediator) {
+public sealed class AiFoodController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("vision")]
     [EnableIdempotency(requireKey: true)]
     [ProducesResponseType<FoodVisionHttpResponse>(StatusCodes.Status200OK)]
@@ -27,7 +26,7 @@ public sealed class AiFoodController(ISender mediator, ILogger<AiFoodController>
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> AnalyzeFood([FromCurrentUser] Guid userId, [FromBody] FoodVisionHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse(), logger, "ai.food.vision", userId);
+        HandleOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse());
 
     [HttpPost("text")]
     [EnableIdempotency(requireKey: true)]
@@ -36,7 +35,7 @@ public sealed class AiFoodController(ISender mediator, ILogger<AiFoodController>
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> ParseFoodText([FromCurrentUser] Guid userId, [FromBody] FoodTextHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse(), logger, "ai.food.text", userId);
+        HandleOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse());
 
     [HttpPost("nutrition")]
     [EnableIdempotency(requireKey: true)]
@@ -45,7 +44,7 @@ public sealed class AiFoodController(ISender mediator, ILogger<AiFoodController>
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> CalculateNutrition([FromCurrentUser] Guid userId, [FromBody] FoodNutritionHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse(), logger, "ai.food.nutrition", userId);
+        HandleOk(request.ToCommand(userId, GetRequestId()), static value => value.ToHttpResponse());
 
     private string GetRequestId() =>
         IdempotencyRequestContext.GetRequestId(HttpContext) ?? throw new InvalidOperationException("Required idempotency context is unavailable.");

@@ -1,64 +1,25 @@
-using System.Diagnostics;
-using System.Collections.Concurrent;
-using FoodDiary.Results;
-using FoodDiary.Mediator;
-using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Extensions;
-using Microsoft.AspNetCore.Http;
+using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
-[Collection(FoodDiary.Presentation.Api.Tests.PresentationTelemetryCollection.Name)]
 public sealed class BaseApiControllerFeaturesRootNamespaceTests {
     [Fact]
-    public async Task HandleObservedOk_WhenFeaturesSegmentIsLast_UsesUnknownFeatureName() {
-        var request = new TestRequest();
-        ISender mediator = Substitute.For<ISender>();
-        mediator.Send(request, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(Result.Success("value")));
-        var controller = new FeaturesRootController(mediator) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext(),
-            },
-        };
-        using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
+    public void AddPresentationApi_RegistersOneGlobalTelemetryFilter() {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddPresentationApi();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        _ = await controller.HandleObservedOkPublic(request);
+        MvcOptions options = provider.GetRequiredService<IOptions<MvcOptions>>().Value;
+        ServiceFilterAttribute telemetryFilter = Assert.Single(
+            options.Filters.OfType<ServiceFilterAttribute>(),
+            filter => filter.ServiceType == typeof(TelemetryActionFilter));
 
-        Activity activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => string.Equals(item.OperationName, "test.features-root", StringComparison.Ordinal));
-        Assert.Equal("Unknown", activity.GetTagItem("fooddiary.presentation.feature"));
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class FeaturesRootController(ISender mediator) : BaseApiController(mediator) {
-        public Task<IActionResult> HandleObservedOkPublic(IRequest<Result<string>> request) =>
-            HandleObservedOk(request, static value => value, NullLogger.Instance, "test.features-root");
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed record TestRequest : IRequest<Result<string>>;
-
-    [ExcludeFromCodeCoverage]
-    private sealed class TestActivityListener : IDisposable {
-        private readonly ActivityListener _listener;
-        private readonly ConcurrentQueue<Activity> _completedActivities = new();
-
-        public TestActivityListener(string sourceName) {
-            _listener = new ActivityListener {
-                ShouldListenTo = source => string.Equals(source.Name, sourceName, StringComparison.Ordinal),
-                Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllDataAndRecorded,
-                ActivityStopped = activity => _completedActivities.Enqueue(activity),
-            };
-            ActivitySource.AddActivityListener(_listener);
-        }
-
-        public Activity[] CompletedActivitiesSnapshot => [.. _completedActivities];
-
-        public void Dispose() {
-            _listener.Dispose();
-        }
+        Assert.Equal(typeof(TelemetryActionFilter), telemetryFilter.ServiceType);
     }
 }

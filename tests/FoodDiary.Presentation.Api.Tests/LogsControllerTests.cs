@@ -118,6 +118,45 @@ public sealed class LogsControllerTests {
         Assert.Equal(LogLevel.Information, logger.LogLevel);
     }
 
+    [Fact]
+    public async Task Create_NormalizesBoundedLogDimensions() {
+        var logger = new RecordingLogger();
+        LogsController controller = CreateController(logger, SubstituteSender.Create(Result.Success()));
+        var request = new ClientTelemetryLogHttpRequest(
+            Category: "http_request",
+            Name: "api.request",
+            Level: "info",
+            Timestamp: DateTime.UtcNow.ToString("O"),
+            PageRoute: "/" + new string('p', 300),
+            HttpMethod: "GET\n",
+            Outcome: " success\t",
+            Unit: " ms\r",
+            BuildVersion: " build\n");
+
+        IActionResult result = await controller.Create(request);
+
+        Assert.IsType<NoContentResult>(result);
+        Assert.Multiple(
+            () => Assert.DoesNotContain('\n', logger.Message),
+            () => Assert.DoesNotContain('\r', logger.Message),
+            () => Assert.DoesNotContain('\t', logger.Message),
+            () => Assert.DoesNotContain(new string('p', 257), logger.Message, StringComparison.Ordinal),
+            () => Assert.Contains("success", logger.Message, StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task Processor_WithCanceledRequest_DoesNotAwaitApplicationResult() {
+        var logger = new RecordingLogger();
+        var processor = new ClientTelemetryHttpProcessor(logger);
+        ClientTelemetryLogHttpRequest request = new(
+            "http_request", "api.request", "info", DateTime.UtcNow.ToString("O"));
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            processor.ProcessAsync(request, Task.FromResult(Result.Success()), cts.Token));
+    }
+
     private static LogsController CreateController(RecordingLogger logger, ISender sender) =>
         new(sender, new ClientTelemetryHttpProcessor(logger)) {
             ControllerContext = new ControllerContext {

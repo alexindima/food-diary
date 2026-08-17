@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using FoodDiary.Presentation.Api.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
@@ -28,44 +29,66 @@ public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger)
 
         CompleteActivity(activity, outcome, stopwatch.Elapsed.TotalMilliseconds, statusCode);
 
-        PresentationApiTelemetry.OperationCounter.Add(
-            1,
-            new KeyValuePair<string, object?>("fooddiary.presentation.feature", feature),
-            new KeyValuePair<string, object?>("fooddiary.presentation.controller", controllerName),
-            new KeyValuePair<string, object?>("fooddiary.presentation.operation", operationName),
-            new KeyValuePair<string, object?>("fooddiary.presentation.outcome", outcome));
-        PresentationApiTelemetry.OperationDuration.Record(
-            stopwatch.Elapsed.TotalMilliseconds,
-            new KeyValuePair<string, object?>("fooddiary.presentation.feature", feature),
-            new KeyValuePair<string, object?>("fooddiary.presentation.controller", controllerName),
-            new KeyValuePair<string, object?>("fooddiary.presentation.operation", operationName),
-            new KeyValuePair<string, object?>("fooddiary.presentation.outcome", outcome));
+        RecordOperationMetrics(feature, controllerName, operationName, outcome, stopwatch.Elapsed.TotalMilliseconds);
 
         if (executedContext.Exception is not null) {
             activity?.SetStatus(ActivityStatusCode.Error);
             activity?.SetTag("error.type", executedContext.Exception.GetType().FullName);
-            PresentationApiTelemetry.OperationFailureCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.presentation.feature", feature),
-                new KeyValuePair<string, object?>("fooddiary.presentation.controller", controllerName),
-                new KeyValuePair<string, object?>("fooddiary.presentation.operation", operationName),
-                new KeyValuePair<string, object?>("error.code", "UnhandledException"));
+            RecordFailureMetric(feature, controllerName, operationName, "UnhandledException");
         } else if (!isSuccess) {
-            PresentationApiTelemetry.OperationFailureCounter.Add(
-                1,
-                new KeyValuePair<string, object?>("fooddiary.presentation.feature", feature),
-                new KeyValuePair<string, object?>("fooddiary.presentation.controller", controllerName),
-                new KeyValuePair<string, object?>("fooddiary.presentation.operation", operationName),
-                new KeyValuePair<string, object?>("error.code", string.Create(CultureInfo.InvariantCulture, $"HttpStatus_{statusCode}")));
+            if (statusCode >= StatusCodes.Status500InternalServerError) {
+                activity?.SetStatus(ActivityStatusCode.Error);
+            }
+
+            RecordFailureMetric(
+                feature,
+                controllerName,
+                operationName,
+                string.Create(CultureInfo.InvariantCulture, $"HttpStatus_{statusCode}"));
         }
 
         activity?.Dispose();
 
         if (!isSuccess) {
-            logger.LogWarning(
+            logger.Log(
+                ResolveFailureLogLevel(statusCode, executedContext.Exception),
                 "Action {Operation} in {Feature}/{Controller} returned {StatusCode} in {ElapsedMs:F1}ms",
                 operationName, feature, controllerName, statusCode, stopwatch.Elapsed.TotalMilliseconds);
         }
+    }
+
+    private static LogLevel ResolveFailureLogLevel(int statusCode, Exception? exception) =>
+        exception is not null || statusCode >= StatusCodes.Status500InternalServerError
+            ? LogLevel.Warning
+            : LogLevel.Information;
+
+    private static void RecordOperationMetrics(
+        string feature,
+        string controllerName,
+        string operationName,
+        string outcome,
+        double durationMs) {
+        KeyValuePair<string, object?>[] tags = [
+            new("fooddiary.presentation.feature", feature),
+            new("fooddiary.presentation.controller", controllerName),
+            new("fooddiary.presentation.operation", operationName),
+            new("fooddiary.presentation.outcome", outcome),
+        ];
+        PresentationApiTelemetry.OperationCounter.Add(1, tags);
+        PresentationApiTelemetry.OperationDuration.Record(durationMs, tags);
+    }
+
+    private static void RecordFailureMetric(
+        string feature,
+        string controllerName,
+        string operationName,
+        string errorCode) {
+        PresentationApiTelemetry.OperationFailureCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.presentation.feature", feature),
+            new KeyValuePair<string, object?>("fooddiary.presentation.controller", controllerName),
+            new KeyValuePair<string, object?>("fooddiary.presentation.operation", operationName),
+            new KeyValuePair<string, object?>("error.code", errorCode));
     }
 
     private static void CompleteActivity(Activity? activity, string outcome, double durationMs, int statusCode) {

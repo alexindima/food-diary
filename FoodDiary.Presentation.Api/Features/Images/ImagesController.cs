@@ -9,13 +9,12 @@ using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Features.Images;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/images")]
-public sealed class ImagesController(ISender mediator, ILogger<ImagesController> logger) : AuthorizedController(mediator) {
+public sealed class ImagesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("upload-url")]
     [EnableIdempotency]
     [ProducesResponseType<GetImageUploadUrlHttpResponse>(StatusCodes.Status200OK)]
@@ -24,7 +23,7 @@ public sealed class ImagesController(ISender mediator, ILogger<ImagesController>
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(userId), static value => value.ToHttpResponse(), logger, "images.upload-url", userId);
+        HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
     [HttpDelete("{assetId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -32,5 +31,5 @@ public sealed class ImagesController(ISender mediator, ILogger<ImagesController>
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> Delete(Guid assetId, [FromCurrentUser] Guid userId) =>
-        HandleObservedNoContent(assetId.ToDeleteCommand(userId), logger, "images.delete", userId);
+        HandleNoContent(assetId.ToDeleteCommand(userId));
 }

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -30,6 +32,23 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         Assert.IsType<EmailVerificationNotifier>(emailVerificationNotifier);
         Assert.IsType<UserIdProvider>(userIdProvider);
         Assert.Contains(services, descriptor => descriptor.ServiceType == typeof(IActionDescriptorCollectionProvider));
+    }
+
+    [Fact]
+    public void AddPresentationApi_UsesUrlSegmentAsTheOnlyApiVersionReader() {
+        var services = new ServiceCollection();
+
+        services.AddLogging();
+        services.AddPresentationApi();
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        ApiVersioningOptions options = provider.GetRequiredService<IOptions<ApiVersioningOptions>>().Value;
+
+        Assert.Multiple(
+            () => Assert.IsType<UrlSegmentApiVersionReader>(options.ApiVersionReader),
+            () => Assert.True(options.AssumeDefaultVersionWhenUnspecified),
+            () => Assert.True(options.ReportApiVersions),
+            () => Assert.Equal(new ApiVersion(1, 0), options.DefaultApiVersion));
     }
 
     [Fact]
@@ -62,6 +81,46 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         Assert.NotNull(response.Errors);
         Assert.True(response.Errors.TryGetValue("email", out string[]? errors));
         Assert.Equal(["Email is required."], errors);
+    }
+
+    [Fact]
+    public void AddPresentationApi_InvalidModelStateFactory_NormalizesEmptyKeysAndMessages() {
+        ApiBehaviorOptions options = ResolveApiBehaviorOptions(out ServiceProvider provider);
+        using (provider) {
+            var actionContext = new ActionContext {
+                HttpContext = new DefaultHttpContext {
+                    RequestServices = provider,
+                    TraceIdentifier = "trace-empty-key",
+                },
+            };
+            actionContext.ModelState.AddModelError(string.Empty, string.Empty);
+
+            IActionResult result = options.InvalidModelStateResponseFactory(actionContext);
+
+            BadRequestObjectResult badRequest = Assert.IsType<BadRequestObjectResult>(result);
+            ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(badRequest.Value);
+            Assert.NotNull(response.Errors);
+            Assert.Equal(["The value is invalid."], response.Errors["request"]);
+        }
+    }
+
+    [Fact]
+    public void AddPresentationApi_InvalidModelStateFactory_WithNoErrors_OmitsErrorDetails() {
+        ApiBehaviorOptions options = ResolveApiBehaviorOptions(out ServiceProvider provider);
+        using (provider) {
+            var actionContext = new ActionContext {
+                HttpContext = new DefaultHttpContext {
+                    RequestServices = provider,
+                    TraceIdentifier = "trace-no-errors",
+                },
+            };
+
+            IActionResult result = options.InvalidModelStateResponseFactory(actionContext);
+
+            BadRequestObjectResult badRequest = Assert.IsType<BadRequestObjectResult>(result);
+            ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(badRequest.Value);
+            Assert.Null(response.Errors);
+        }
     }
 
     [Fact]
@@ -107,5 +166,13 @@ public sealed class PresentationServiceCollectionExtensionsTests {
     [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc));
+    }
+
+    private static ApiBehaviorOptions ResolveApiBehaviorOptions(out ServiceProvider provider) {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddPresentationApi();
+        provider = services.BuildServiceProvider();
+        return provider.GetRequiredService<IOptions<ApiBehaviorOptions>>().Value;
     }
 }

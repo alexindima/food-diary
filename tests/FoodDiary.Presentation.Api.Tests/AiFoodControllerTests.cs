@@ -12,7 +12,6 @@ using FoodDiary.Presentation.Api.Features.Ai.Responses;
 using FoodDiary.Presentation.Api.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -110,7 +109,7 @@ public sealed class AiFoodControllerTests {
             BindingFlags.Static | BindingFlags.NonPublic)
             ?? throw new InvalidOperationException("Idempotency request context setter was not found.");
         setRequestId.Invoke(null, [httpContext, RequestId]);
-        return new AiFoodController(sender, NullLogger<AiFoodController>.Instance) {
+        return new AiFoodController(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = httpContext,
             },

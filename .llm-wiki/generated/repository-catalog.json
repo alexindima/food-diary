@@ -1455,6 +1455,7 @@
         ],
         "isTestProject": false,
         "projectReferences": [
+          "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj",
           "FoodDiary.Application.Admin/FoodDiary.Application.Admin.csproj",
           "FoodDiary.Application.Ai/FoodDiary.Application.Ai.csproj",
           "FoodDiary.Application.Billing/FoodDiary.Application.Billing.csproj",
@@ -1487,7 +1488,9 @@
           "FoodDiary.Application.Users/FoodDiary.Application.Users.csproj",
           "FoodDiary.Application.Wearables/FoodDiary.Application.Wearables.csproj",
           "FoodDiary.Application.WeeklyCheckIn/FoodDiary.Application.WeeklyCheckIn.csproj",
-          "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj"
+          "FoodDiary.Application.WeeklyGoals/FoodDiary.Application.WeeklyGoals.csproj",
+          "Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj",
+          "Shared/FoodDiary.Results/FoodDiary.Results.csproj"
         ],
         "packageReferences": [
           {
@@ -3894,17 +3897,17 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/vision",
-            "line": 23
+            "line": 22
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/text",
-            "line": 32
+            "line": 31
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/ai/food/nutrition",
-            "line": 41
+            "line": 40
           }
         ]
       },
@@ -3916,7 +3919,7 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/ai/usage/me",
-            "line": 16
+            "line": 15
           }
         ]
       },
@@ -3928,12 +3931,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/admin-sso/start",
-            "line": 21
+            "line": 20
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/admin-sso/exchange",
-            "line": 27
+            "line": 26
           }
         ]
       },
@@ -3945,12 +3948,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/password-reset/request",
-            "line": 19
+            "line": 18
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/password-reset/confirm",
-            "line": 25
+            "line": 24
           }
         ]
       },
@@ -3962,42 +3965,42 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/register",
-            "line": 22
+            "line": 21
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/login",
-            "line": 31
+            "line": 30
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/google",
-            "line": 39
+            "line": 38
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/google/link",
-            "line": 50
+            "line": 49
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/refresh",
-            "line": 60
+            "line": 59
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/restore",
-            "line": 69
+            "line": 68
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/verify-email",
-            "line": 78
+            "line": 77
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/verify-email/resend",
-            "line": 90
+            "line": 89
           }
         ]
       },
@@ -4009,22 +4012,22 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/verify",
-            "line": 21
+            "line": 20
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/login-widget",
-            "line": 31
+            "line": 30
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/link",
-            "line": 42
+            "line": 41
           },
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/auth/telegram/bot/auth",
-            "line": 51
+            "line": 50
           }
         ]
       },
@@ -4695,12 +4698,12 @@
           {
             "verb": "POST",
             "route": "/api/v{version:apiVersion}/images/upload-url",
-            "line": 19
+            "line": 18
           },
           {
             "verb": "DELETE",
             "route": "/api/v{version:apiVersion}/images/{assetId:guid}",
-            "line": 29
+            "line": 28
           }
         ]
       },

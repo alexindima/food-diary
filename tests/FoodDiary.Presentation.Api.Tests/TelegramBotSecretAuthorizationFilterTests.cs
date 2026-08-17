@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Options;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Security;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
+[Collection(PresentationTelemetryCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class TelegramBotSecretAuthorizationFilterTests {
     [Fact]
@@ -53,6 +56,26 @@ public sealed class TelegramBotSecretAuthorizationFilterTests {
         Assert.Null(context.Result);
     }
 
+    [Fact]
+    public async Task OnAuthorizationAsync_WithActivityListener_RecordsSuccessAndFailureActivities() {
+        using var listener = new TelegramAuthorizationActivityListener();
+        TelegramBotSecretAuthorizationFilter filter = CreateFilter("expected-secret");
+        AuthorizationFilterContext successContext = CreateContext();
+        successContext.HttpContext.Request.Headers[TelegramBotSecretAuthorizationFilter.SecretHeaderName] = "expected-secret";
+        AuthorizationFilterContext failureContext = CreateContext();
+        failureContext.HttpContext.Request.Headers[TelegramBotSecretAuthorizationFilter.SecretHeaderName] = "wrong-secret";
+
+        await filter.OnAuthorizationAsync(successContext);
+        await filter.OnAuthorizationAsync(failureContext);
+
+        Assert.Collection(
+            listener.Completed,
+            activity => Assert.Equal(ActivityStatusCode.Ok, activity.Status),
+            activity => Assert.Multiple(
+                () => Assert.Equal(ActivityStatusCode.Error, activity.Status),
+                () => Assert.Equal("Authentication.TelegramBotInvalidSecret", activity.GetTagItem("error.type"))));
+    }
+
     private static TelegramBotSecretAuthorizationFilter CreateFilter(string apiSecret) {
         IOptions<TelegramBotAuthOptions> options = Microsoft.Extensions.Options.Options.Create(new TelegramBotAuthOptions {
             ApiSecret = apiSecret,
@@ -67,5 +90,27 @@ public sealed class TelegramBotSecretAuthorizationFilterTests {
         };
         var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
         return new AuthorizationFilterContext(actionContext, []);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TelegramAuthorizationActivityListener : IDisposable {
+        private readonly ActivityListener _listener;
+
+        public TelegramAuthorizationActivityListener() {
+            _listener = new ActivityListener {
+                ShouldListenTo = source => string.Equals(source.Name, PresentationApiTelemetry.TelemetryName, StringComparison.Ordinal),
+                Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
+                ActivityStopped = activity => {
+                    if (string.Equals(activity.OperationName, "auth.telegram.bot-secret", StringComparison.Ordinal)) {
+                        Completed.Add(activity);
+                    }
+                },
+            };
+            ActivitySource.AddActivityListener(_listener);
+        }
+
+        public List<Activity> Completed { get; } = [];
+
+        public void Dispose() => _listener.Dispose();
     }
 }

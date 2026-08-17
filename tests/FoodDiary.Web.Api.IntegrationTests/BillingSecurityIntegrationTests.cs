@@ -1,5 +1,7 @@
 using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
@@ -16,6 +18,12 @@ public sealed class BillingSecurityIntegrationTests(ApiWebApplicationFactory fac
             "/api/v1/billing/webhooks/stripe",
             content);
 
-        Assert.Equal(HttpStatusCode.RequestEntityTooLarge, response.StatusCode);
+        ApiErrorHttpResponse? error = await response.Content.ReadFromJsonAsync<ApiErrorHttpResponse>();
+        Assert.NotNull(error);
+        Assert.Multiple(
+            () => Assert.Equal(HttpStatusCode.RequestEntityTooLarge, response.StatusCode),
+            () => Assert.Equal("Request.PayloadTooLarge", error.Error),
+            () => Assert.Equal("The request payload is too large.", error.Message),
+            () => Assert.False(string.IsNullOrWhiteSpace(error.TraceId)));
     }
 }

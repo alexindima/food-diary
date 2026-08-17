@@ -1,6 +1,10 @@
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.DeleteCycleProfile;
+using FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
+using FoodDiary.Application.Cycles.Commands.UpdateCycleConsent;
+using FoodDiary.Application.Cycles.Commands.UpdateCycleSettings;
+using FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Models;
@@ -137,6 +141,54 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(userId, query.UserId);
         Assert.Equal(DateOnly.FromDateTime(dateFrom), query.DateFrom);
         Assert.Equal(DateOnly.FromDateTime(dateTo), query.DateTo);
+    }
+
+    [Fact]
+    public void CycleMaintenanceRequests_MapEveryCommandField() {
+        var userId = Guid.NewGuid();
+        var profileId = Guid.NewGuid();
+        var episodeId = Guid.NewGuid();
+        DateTime startDate = new(2026, 8, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime endDate = startDate.AddDays(5);
+        var settingsRequest = new UpdateCycleSettingsHttpRequest(
+            Mode: 2,
+            AverageCycleLength: 30,
+            AveragePeriodLength: 6,
+            LutealLength: 13,
+            IsRegular: true,
+            ShowFertilityEstimates: true,
+            DiscreetNotifications: false,
+            Goal: 3,
+            ReproductiveState: 4,
+            HideFromDashboard: true);
+
+        UpdateCycleSettingsCommand settings = settingsRequest.ToCommand(userId, profileId);
+        UpdateCycleConsentCommand consent = new UpdateCycleConsentHttpRequest(Granted: true).ToCommand(userId, profileId, purpose: 2);
+        ConfirmPeriodStartCommand confirm = new ConfirmPeriodStartHttpRequest(startDate).ToCommand(userId, profileId);
+        UpdateMenstrualEpisodeCommand update = new UpdateMenstrualEpisodeHttpRequest(startDate, endDate, ExcludedFromPredictions: true)
+            .ToCommand(userId, profileId, episodeId);
+        var delete = profileId.ToDeleteMenstrualEpisodeCommand(userId, episodeId);
+
+        Assert.Multiple(
+            () => Assert.Equal(userId, settings.UserId),
+            () => Assert.Equal(profileId, settings.CycleProfileId),
+            () => Assert.Equal(settingsRequest.Mode, settings.Mode),
+            () => Assert.Equal(settingsRequest.AverageCycleLength, settings.AverageCycleLength),
+            () => Assert.Equal(settingsRequest.AveragePeriodLength, settings.AveragePeriodLength),
+            () => Assert.Equal(settingsRequest.LutealLength, settings.LutealLength),
+            () => Assert.Equal(settingsRequest.IsRegular, settings.IsRegular),
+            () => Assert.Equal(settingsRequest.ShowFertilityEstimates, settings.ShowFertilityEstimates),
+            () => Assert.Equal(settingsRequest.DiscreetNotifications, settings.DiscreetNotifications),
+            () => Assert.Equal(settingsRequest.Goal, settings.Goal),
+            () => Assert.Equal(settingsRequest.ReproductiveState, settings.ReproductiveState),
+            () => Assert.Equal(settingsRequest.HideFromDashboard, settings.HideFromDashboard),
+            () => Assert.True(consent.Granted),
+            () => Assert.Equal(2, consent.Purpose),
+            () => Assert.Equal(DateOnly.FromDateTime(startDate), confirm.Date),
+            () => Assert.Equal(DateOnly.FromDateTime(startDate), update.StartDate),
+            () => Assert.Equal(DateOnly.FromDateTime(endDate), update.EndDate),
+            () => Assert.True(update.ExcludedFromPredictions),
+            () => Assert.Equal(episodeId, delete.MenstrualEpisodeId));
     }
 
     [Fact]
