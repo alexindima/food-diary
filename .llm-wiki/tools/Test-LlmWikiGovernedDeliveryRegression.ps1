@@ -48,6 +48,15 @@ try {
         @($before.conformance.classification.governanceGeneratedPaths) -contains $generatedPath -or
         @($packet.diff.changedPaths) -notcontains $generatedPath
     ) 'Generated Wiki output was neither isolated as governance provenance nor suppressed as bookkeeping.'
+    $derivedPolicy = & (Join-Path $toolsRoot 'Test-LlmWikiChangePolicy.ps1') `
+        -ChangedPath @($generatedPath, '.llm-wiki/reviews/source-impact-reviews.json', '.llm-wiki/knowledge/verification-telemetry.json') `
+        -Format Json | ConvertFrom-Json
+    Assert-Regression (
+        @($derivedPolicy.productPaths).Count -eq 0 -and
+        @($derivedPolicy.derivedWikiPaths).Count -eq 2 -and
+        @($derivedPolicy.operationalArtifacts).Count -eq 1 -and
+        @($derivedPolicy.requiredChecks).Count -eq 0
+    ) 'Derived Wiki and operational artifacts changed the product verification requirements.'
 
     $manifestHashBeforeFailedReplan = (Get-FileHash -LiteralPath (Join-Path $absoluteWorkspace 'change-manifest.json') -Algorithm SHA256).Hash
     Remove-Item -LiteralPath (Join-Path $absoluteWorkspace 'journal.json') -Force

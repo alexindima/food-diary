@@ -9,6 +9,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
 
 function Invoke-Git([string[]]$Arguments) {
     $output = @(& git -C $RepositoryRoot @Arguments)
@@ -33,7 +34,8 @@ function Get-FileSha256([string]$Path) {
 function ConvertTo-RepositoryPath([string]$Path) { return $Path.Trim().Replace('\', '/') }
 
 $head = (Invoke-Git @('rev-parse', 'HEAD') | Select-Object -First 1)
-$resolvedBase = (Invoke-Git @('rev-parse', $BaseRef) | Select-Object -First 1)
+$requestedBaseRef = $BaseRef
+$resolvedBase = Resolve-LlmWikiCommitRef -RepositoryRoot $RepositoryRoot -Ref $BaseRef
 $workspacePaths = @(
     Invoke-Git @('diff', '--name-only', '--diff-filter=ACMRD', 'HEAD', '--')
     Invoke-Git @('ls-files', '--others', '--exclude-standard')
@@ -45,9 +47,8 @@ $workspaceEntries = @($workspacePaths | ForEach-Object {
 $scope = @($ChangedPath | Where-Object { $_ } | ForEach-Object { ConvertTo-RepositoryPath $_ } | Sort-Object -Unique)
 $environment = "pwsh=$($PSVersionTable.PSVersion);os=$([Runtime.InteropServices.RuntimeInformation]::OSDescription);arch=$([Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture)"
 $fingerprint = Get-Sha256 (@(
-    'schema=2'
+    'schema=3'
     "head=$head"
-    "baseRef=$BaseRef"
     "resolvedBase=$resolvedBase"
     "mode=$Mode"
     "environment=$environment"
@@ -64,8 +65,8 @@ $incrementalPaths = @()
 if (Test-Path -LiteralPath $receiptPath -PathType Leaf) {
     try {
         $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
-        $hit = [int]$receipt.schemaVersion -eq 2 -and [string]$receipt.fingerprint -ceq $fingerprint
-        $compatibleReceipt = [int]$receipt.schemaVersion -eq 2 -and
+        $hit = [int]$receipt.schemaVersion -eq 3 -and [string]$receipt.fingerprint -ceq $fingerprint
+        $compatibleReceipt = [int]$receipt.schemaVersion -eq 3 -and
             [string]$receipt.head -ceq $head -and
             [string]$receipt.resolvedBase -ceq $resolvedBase -and
             [string]$receipt.mode -ceq $Mode -and
@@ -90,11 +91,11 @@ if (Test-Path -LiteralPath $receiptPath -PathType Leaf) {
 if ($Action -eq 'Record') {
     $null = New-Item -ItemType Directory -Path (Split-Path -Parent $receiptPath) -Force
     $receipt = [ordered]@{
-        schemaVersion = 2
+        schemaVersion = 3
         fingerprint = $fingerprint
         recordedAtUtc = [DateTime]::UtcNow.ToString('o')
         head = $head
-        baseRef = $BaseRef
+        requestedBaseRef = $requestedBaseRef
         resolvedBase = $resolvedBase
         mode = $Mode
         environment = $environment

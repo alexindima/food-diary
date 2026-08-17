@@ -42,6 +42,7 @@ $absoluteEvidencePath = Join-Path $repositoryRoot $normalizedEvidencePath
 if (-not (Test-Path -LiteralPath $absoluteEvidencePath -PathType Leaf)) { throw "Evidence is absent: $normalizedEvidencePath" }
 $evidence = Get-Content -LiteralPath $absoluteEvidencePath -Raw | ConvertFrom-Json
 $policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
+    -BaseRef ([string]$evidence.git.base) `
     -ChangedPath @($evidence.change.changedPaths) `
     -Format Json | ConvertFrom-Json
 $policyHash = (Get-FileHash -LiteralPath (Join-Path $wikiRoot 'policies/change-policies.json') -Algorithm SHA256).Hash.ToLowerInvariant()

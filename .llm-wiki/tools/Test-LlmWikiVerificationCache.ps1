@@ -32,6 +32,10 @@ try {
     $record = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Record @arguments
     $hit = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check @arguments
     Assert-Cache ($record.hit -and $hit.hit) 'Verification cache did not reuse an identical successful state.'
+    $headSha = (& git -C $fixtureRoot rev-parse HEAD).Trim()
+    $shaHit = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check `
+        -RepositoryRoot $fixtureRoot -BaseRef $headSha -ChangedPath 'source.txt' -Mode default
+    Assert-Cache ($shaHit.hit -and $shaHit.fingerprint -ceq $hit.fingerprint) 'Equivalent HEAD and resolved SHA refs produced different cache identities.'
 
     [IO.File]::WriteAllText((Join-Path $fixtureRoot 'source.txt'), 'changed')
     $contentMiss = & (Join-Path $toolsRoot 'Manage-LlmWikiVerificationCache.ps1') -Action Check @arguments
@@ -62,4 +66,4 @@ try {
     if (Test-Path -LiteralPath $fixtureRoot) { Remove-Item -LiteralPath $fixtureRoot -Recurse -Force }
 }
 
-Write-Host 'LLM Wiki verification-cache smoke passed: identical state reuses success; visual style deltas reuse scoped evidence; other changes invalidate it.'
+Write-Host 'LLM Wiki verification-cache smoke passed: aliases resolve to one SHA identity; identical state reuses success; visual style deltas reuse scoped evidence; other changes invalidate it.'

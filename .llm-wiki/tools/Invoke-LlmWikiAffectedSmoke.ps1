@@ -103,7 +103,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('knowledge-isolation')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiMemory|Test-LlmWikiMemoryIsolation)\.ps1$') {
         $null = $smokeGroups.Add('memory')
-    } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiContext|Manage-LlmWikiContextBundle|Test-LlmWikiContextCache)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiContext|Manage-LlmWikiContextBundle|Manage-LlmWikiContextSecurity|Manage-LlmWikiVerificationPlan|Test-LlmWikiContextCache|Test-LlmWikiWorkflowRecovery)\.ps1$') {
         $null = $smokeGroups.Add('context-bundle')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiContextFeedback|Test-LlmWikiContextFeedbackMetrics)\.ps1$') {
         $null = $smokeGroups.Add('context-feedback')
@@ -280,6 +280,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         'verification-cache' {
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1')
             if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiOperationalTelemetry.ps1')
+            if (-not $?) { exit 1 }
         }
         'verification-receipts' {
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationReceipts.ps1')
@@ -313,6 +315,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
         }
         'context-bundle' {
             & (Join-Path $toolsRoot 'Test-LlmWikiContextCache.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiWorkflowRecovery.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Find-LlmWikiContext.ps1') -Module Users -Format Json | Out-Null
             if (-not $?) { exit 1 }

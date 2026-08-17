@@ -8,7 +8,8 @@ internal sealed record CodexMcpTestConfiguration(
     string Command,
     string[] Arguments,
     string WorkingDirectory,
-    string[] EnabledTools) {
+    string[] EnabledTools,
+    bool Required) {
     public static CodexMcpTestConfiguration Load(string repositoryRoot) {
         string configPath = Path.Combine(repositoryRoot, ".codex", "config.toml");
         string[] lines = File.ReadAllLines(configPath);
@@ -42,6 +43,7 @@ internal sealed record CodexMcpTestConfiguration(
                                             ?? throw new InvalidOperationException("MCP cwd is missing.");
         string[] enabledTools = JsonSerializer.Deserialize<string[]>(values["enabled_tools"])
                                 ?? throw new InvalidOperationException("MCP enabled_tools are missing.");
+        bool required = bool.Parse(values["required"]);
 
         if (!OperatingSystem.IsWindows() && command.EndsWith(".cmd", StringComparison.OrdinalIgnoreCase)) {
             string configuration = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Name ?? "Debug";
@@ -60,7 +62,8 @@ internal sealed record CodexMcpTestConfiguration(
             command,
             arguments,
             Path.GetFullPath(Path.Combine(repositoryRoot, configuredWorkingDirectory)),
-            enabledTools);
+            enabledTools,
+            required);
     }
 
     public StdioClientTransportOptions CreateTransportOptions(string name) => new() {

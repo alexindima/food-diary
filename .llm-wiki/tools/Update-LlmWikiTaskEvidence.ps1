@@ -49,6 +49,7 @@ function Get-RulePaths([object]$Packet, [string]$RuleId) {
 function Test-GovernanceArtifactPath([string]$Path) {
     $normalized = $Path.Replace('\', '/')
     return $normalized -match '^\.llm-wiki/(generated|reviews)/' -or
+        $normalized -eq '.llm-wiki/knowledge/verification-telemetry.json' -or
         $normalized -match '^\.artifacts/llm-wiki/'
 }
 function Get-PathAffinity([string]$Left, [string]$Right) {
@@ -288,6 +289,8 @@ $evidence.checks = @($newChecks)
 $evidence.reviews = @($newReviews)
 $evidence.structuralViolations = @($newPacket.policy.violations)
 $evidence.git.head = [string]$newPacket.inputs.gitHead
+$evidence.git.base = [string]$newPacket.inputs.baseRef
+$evidence.git | Add-Member -NotePropertyName requestedBase -NotePropertyValue ([string]$newPacket.requestedBaseRef) -Force
 $evidence.git.comparedHead = $newPacket.inputs.headRef
 $evidence.change.changedPaths = @($newPacket.diff.changedPaths)
 $evidence.change.scopes = @($newPacket.diff.scopes)

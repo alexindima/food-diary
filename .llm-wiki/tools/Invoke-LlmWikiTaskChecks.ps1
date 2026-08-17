@@ -27,6 +27,7 @@ if (-not (Test-Path -LiteralPath $evidenceAbsolutePath -PathType Leaf)) {
 
 $evidence = Get-Content -LiteralPath $evidenceAbsolutePath -Raw | ConvertFrom-Json
 $policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
+    -BaseRef ([string]$evidence.git.base) `
     -ChangedPath @($evidence.change.changedPaths) `
     -Format Json | ConvertFrom-Json
 $canonicalChecks = @{}

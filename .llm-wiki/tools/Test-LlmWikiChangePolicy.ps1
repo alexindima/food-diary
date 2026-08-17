@@ -6,6 +6,7 @@ param(
     [string]$EvidencePath,
     [switch]$RequireEvidence,
     [switch]$FailOnViolation,
+    [switch]$Detailed,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
 )
@@ -15,6 +16,8 @@ $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $policyPath = Join-Path $wikiRoot 'policies/change-policies.json'
 . (Join-Path $PSScriptRoot 'LlmWikiGitPaths.ps1')
+$requestedBaseRef = $BaseRef
+$BaseRef = Resolve-LlmWikiCommitRef -RepositoryRoot $repositoryRoot -Ref $BaseRef
 
 function ConvertTo-RepositoryPath {
     param([string]$Path)
@@ -35,13 +38,21 @@ if (-not $PSBoundParameters.ContainsKey('ChangedPath')) {
     }
 }
 
-$changedPaths = @(
+$allChangedPaths = @(
     $ChangedPath |
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
         ForEach-Object { ConvertTo-RepositoryPath $_ } |
         Sort-Object -Unique
 )
-$primaryChangedPaths = @($changedPaths | Where-Object { $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' })
+$derivedWikiPaths = @($allChangedPaths | Where-Object { $_ -match '^\.llm-wiki/(?:generated|reviews)/' })
+$operationalArtifacts = @($allChangedPaths | Where-Object {
+    $_ -eq '.llm-wiki/knowledge/verification-telemetry.json' -or
+    $_ -match '^\.artifacts/llm-wiki/'
+})
+$changedPaths = @($allChangedPaths | Where-Object {
+    $_ -notin $derivedWikiPaths -and $_ -notin $operationalArtifacts
+})
+$primaryChangedPaths = $changedPaths
 $testOnlyChange = $primaryChangedPaths.Count -gt 0 -and @($primaryChangedPaths | Where-Object {
     $_ -notmatch '(?i)(^|/)(tests?|__tests__)/' -and
     $_ -notmatch '(?i)\.Tests?/' -and
@@ -201,6 +212,12 @@ if ($null -ne $evidence) {
 
 $result = [ordered]@{
     schemaVersion = 1
+    requestedBaseRef = $requestedBaseRef
+    baseRef = $BaseRef
+    allChangedPaths = $allChangedPaths
+    productPaths = $changedPaths
+    derivedWikiPaths = $derivedWikiPaths
+    operationalArtifacts = $operationalArtifacts
     changedPaths = $changedPaths
     matchedRules = @($matchedRules)
     requiredChecks = @($requiredChecksById.Values)
@@ -213,24 +230,30 @@ if ($Format -eq 'Json') {
     $result | ConvertTo-Json -Depth 10
 } else {
     Write-Host "Change policy: $($changedPaths.Count) path(s), $($matchedRules.Count) rule(s), $($violations.Count) violation(s)"
-    foreach ($matchedRule in $matchedRules) {
-        Write-Host " - $($matchedRule.id): $($matchedRule.matchedPaths.Count) matching path(s)"
+    if ($Detailed) {
+        foreach ($matchedRule in $matchedRules) {
+            Write-Host " - $($matchedRule.id): $($matchedRule.matchedPaths.Count) matching path(s)"
+        }
     }
-    if ($requiredChecksById.Count -gt 0) {
+    if ($Detailed -and $requiredChecksById.Count -gt 0) {
         Write-Host ''
         Write-Host 'Required checks:'
         foreach ($check in $requiredChecksById.Values) {
             Write-Host " - $($check.id): $($check.command)"
         }
     }
-    if ($reviewObligationsById.Count -gt 0) {
+    if ($Detailed -and $reviewObligationsById.Count -gt 0) {
         Write-Host ''
         Write-Host 'Review obligations:'
         foreach ($obligation in $reviewObligationsById.Values) {
             Write-Host " - $($obligation.id): $($obligation.description)"
         }
     }
-    if ($violations.Count -gt 0) {
+    if ($violations.Count -gt 0 -and -not $Detailed) {
+        $firstViolation = $violations[0]
+        Write-Host "BLOCKED: [$($firstViolation.rule)] $($firstViolation.message)"
+        Write-Host 'Diagnostic: ./.llm-wiki/wiki.ps1 policy -Detailed'
+    } elseif ($violations.Count -gt 0) {
         Write-Host ''
         Write-Host 'Violations:'
         foreach ($violation in $violations) {

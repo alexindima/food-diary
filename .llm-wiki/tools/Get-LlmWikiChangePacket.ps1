@@ -15,6 +15,9 @@ $ErrorActionPreference = 'Stop'
 $toolsRoot = $PSScriptRoot
 $wikiRoot = Split-Path -Parent $toolsRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
+. (Join-Path $toolsRoot 'LlmWikiGitPaths.ps1')
+$requestedBaseRef = $BaseRef
+$BaseRef = Resolve-LlmWikiCommitRef -RepositoryRoot $repositoryRoot -Ref $BaseRef
 $common = @{ BaseRef = $BaseRef; Format = 'Json' }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $common.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $common.ChangedPath = $ChangedPath }
@@ -59,6 +62,7 @@ $packet = [pscustomobject][ordered]@{
     schemaVersion = 1
     fingerprint = $fingerprint
     inputs = $fingerprintInput
+    requestedBaseRef = $requestedBaseRef
     diff = $diff
     policy = $policy
     ownership = $ownership

@@ -9,6 +9,7 @@ param(
     [switch]$DryRun,
     [switch]$FailOnInvalid,
     [switch]$FailOnFailure,
+    [switch]$Detailed,
     [DateTime]$AsOfUtc = [DateTime]::UtcNow,
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text'
@@ -61,7 +62,7 @@ function Get-PlanPayload([object]$Plan) {
 }
 function Get-Current {
     $evidence = Get-Content -LiteralPath $evidencePath -Raw | ConvertFrom-Json
-    $policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -ChangedPath @($evidence.change.changedPaths) -Format Json | ConvertFrom-Json
+    $policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -BaseRef ([string]$evidence.git.base) -ChangedPath @($evidence.change.changedPaths) -Format Json | ConvertFrom-Json
     $risk = & (Join-Path $PSScriptRoot 'Manage-LlmWikiRiskCalibration.ps1') verify -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json
     $prediction = & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') verify -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json
     $cost = & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1') verify -WorkspacePath $normalizedWorkspace -Format Json | ConvertFrom-Json
@@ -323,15 +324,24 @@ if ($Action -eq 'create') {
             if ($runFailed -and -not $ContinueOnFailure) { break }
         }
         if (-not $DryRun) { & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') refresh -WorkspacePath $normalizedWorkspace | Out-Null }
-        $result = [pscustomobject][ordered]@{ action = 'run'; valid = $failed -eq 0; dryRun = [bool]$DryRun; executionCount = $runs.Count; failureCount = $failed; runs = @($runs); planHash = $plan.planHash }
+        $result = [pscustomobject][ordered]@{ action = 'run'; valid = $failed -eq 0; dryRun = [bool]$DryRun; executionCount = $runs.Count; failureCount = $failed; runs = @($runs); planHash = $plan.planHash; plan = $plan; issues = @() }
     } else {
         $result = [pscustomobject][ordered]@{ action = 'show'; valid = $validation.valid; issues = @($validation.issues); plan = $plan }
     }
 }
 
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
-    Write-Host "Verification plan: action=$($result.action), valid=$($result.valid)"
-    if ($null -ne $result.plan) {
+    $firstFailedRun = if ($Action -eq 'run') { @($result.runs | Where-Object { [int]$_.result.failureCount -gt 0 } | Select-Object -First 1) } else { @() }
+    if (-not $result.valid -and $firstFailedRun.Count -gt 0) {
+        Write-Host "BLOCKED: verification '$($firstFailedRun[0].primaryCheckId)' failed."
+        Write-Host "Repair: fix the reported failure, then ./.llm-wiki/wiki.ps1 task-verification-run -WorkspacePath $normalizedWorkspace"
+    } elseif (-not $result.valid) {
+        Write-Host "BLOCKED: verification plan is invalid."
+        Write-Host "Repair: ./.llm-wiki/wiki.ps1 task-verification-plan -WorkspacePath $normalizedWorkspace"
+    } else {
+        Write-Host "Verification plan: action=$($result.action), valid=$($result.valid)"
+    }
+    if ($result.PSObject.Properties['plan'] -and $null -ne $result.plan -and ($Detailed -or $Action -eq 'create')) {
         Write-Host "Checks=$(@($result.plan.requiredCheckIds).Count), executions=$(@($result.plan.executions).Count), savings=$($result.plan.selectionSummary.totalSavingsSeconds)s ($($result.plan.selectionSummary.totalSavingsPercent)%), hash=$($result.plan.planHash)"
         foreach ($execution in @($result.plan.executions)) { Write-Host " - [$($execution.priority)] $($execution.primaryCheckId) covers $(@($execution.coversCheckIds) -join ', ')" }
         foreach ($decision in @($result.plan.decisions)) { Write-Host "   $($decision.checkId): $($decision.disposition) - $($decision.rationale)" }

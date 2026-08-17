@@ -35,7 +35,8 @@ function Get-FileSha([string]$Value) {
     (Get-FileHash -LiteralPath $Value -Algorithm SHA256).Hash.ToLowerInvariant()
 }
 function Get-Trust([string]$RelativePath) {
-    foreach ($zone in @($securityPolicy.trustZones)) {
+    $trustZones = if ($null -ne $securityPolicy -and $securityPolicy.PSObject.Properties['trustZones']) { @($securityPolicy.trustZones) } else { @() }
+    foreach ($zone in @($trustZones | Where-Object { $null -ne $_ })) {
         if ($RelativePath -match [string]$zone.pattern) {
             return [pscustomobject]@{ zone = [string]$zone.id; trust = [string]$zone.trust; instructionAuthority = [bool]$zone.instructionAuthority }
         }
@@ -47,6 +48,7 @@ function Get-LineNumber([string]$Text, [int]$Index) {
     ([regex]::Matches($Text.Substring(0, $Index), "`n")).Count + 1
 }
 function Get-ScanEntry([string]$RelativePath) {
+    if ([string]::IsNullOrWhiteSpace($RelativePath)) { return $null }
     $normalized = $RelativePath.Replace('\', '/')
     while ($normalized.StartsWith('./', [StringComparison]::Ordinal)) { $normalized = $normalized.Substring(2) }
     if ([IO.Path]::IsPathRooted($normalized) -or $normalized -match '(^|/)\.\.(/|$)') { throw "Context security path escapes the repository: $RelativePath" }
@@ -97,13 +99,20 @@ function Get-Payload([object]$Receipt) {
     }
 }
 function Get-Summary([object[]]$Sources) {
+    $validSources = @($Sources | Where-Object { $null -ne $_ })
+    $findingMeasure = $validSources | ForEach-Object {
+        if ($_.PSObject.Properties['findingCount']) { [int]$_.findingCount }
+    } | Measure-Object -Sum
+    $quarantineMeasure = $validSources | ForEach-Object {
+        if ($_.PSObject.Properties['quarantineCount']) { [int]$_.quarantineCount }
+    } | Measure-Object -Sum
     [pscustomobject][ordered]@{
-        sourceCount = $Sources.Count
-        findingCount = [int](($Sources.findingCount | Measure-Object -Sum).Sum)
-        quarantineCount = [int](($Sources.quarantineCount | Measure-Object -Sum).Sum)
-        truncatedSourceCount = @($Sources | Where-Object truncated).Count
-        trustedInstructionCount = @($Sources | Where-Object instructionAuthority).Count
-        untrustedSourceCount = @($Sources | Where-Object trust -eq 'untrusted-data').Count
+        sourceCount = $validSources.Count
+        findingCount = [int]$findingMeasure.Sum
+        quarantineCount = [int]$quarantineMeasure.Sum
+        truncatedSourceCount = @($validSources | Where-Object { $_.PSObject.Properties['truncated'] -and [bool]$_.truncated }).Count
+        trustedInstructionCount = @($validSources | Where-Object { $_.PSObject.Properties['instructionAuthority'] -and [bool]$_.instructionAuthority }).Count
+        untrustedSourceCount = @($validSources | Where-Object { $_.PSObject.Properties['trust'] -and [string]$_.trust -eq 'untrusted-data' }).Count
     }
 }
 function New-Assessment([string[]]$RequestedPaths) {
@@ -112,7 +121,7 @@ function New-Assessment([string[]]$RequestedPaths) {
     if ($paths.Count -eq 0) {
         $paths = @(@($packet.brief.instructions) + @($packet.brief.contextPages) + @($packet.diff.changedPaths) | Sort-Object -Unique)
     }
-    $sources = @($paths | ForEach-Object { Get-ScanEntry $_ })
+    $sources = @($paths | ForEach-Object { Get-ScanEntry $_ } | Where-Object { $null -ne $_ })
     $summary = Get-Summary $sources
     $receipt = [pscustomobject][ordered]@{
         schemaVersion = 1; workspace = $workspace; createdAtUtc = $AsOfUtc.ToUniversalTime().ToString('o')
@@ -131,8 +140,9 @@ function Test-Assessment([object]$Receipt) {
     if ([string]$Receipt.packetFingerprint -cne [string]$packet.fingerprint) { $issues.Add('Task packet drifted.') }
     if ([string]$Receipt.policyFingerprint -cne (Get-FileSha $policyPath)) { $issues.Add('Context security policy drifted.') }
     if ([string]$Receipt.scannerFingerprint -cne (Get-FileSha $PSCommandPath)) { $issues.Add('Context security scanner changed.') }
-    $currentSources = @($Receipt.sources | ForEach-Object { Get-ScanEntry ([string]$_.path) })
-    foreach ($source in @($Receipt.sources)) {
+    $receiptSources = if ($null -ne $Receipt -and $Receipt.PSObject.Properties['sources']) { @($Receipt.sources | Where-Object { $null -ne $_ }) } else { @() }
+    $currentSources = @($receiptSources | ForEach-Object { Get-ScanEntry ([string]$_.path) } | Where-Object { $null -ne $_ })
+    foreach ($source in $receiptSources) {
         $current = Get-ScanEntry ([string]$source.path)
         if ((Get-Hash $source) -cne (Get-Hash $current)) { $issues.Add("Context security source assessment drifted: $($source.path).") }
     }

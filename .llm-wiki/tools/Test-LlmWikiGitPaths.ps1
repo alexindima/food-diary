@@ -19,6 +19,14 @@ if ('.llm-wiki/wiki.ps1' -notin $tracked) { throw 'NUL-safe Git path enumeration
 $failed = $false
 try { $null = Invoke-LlmWikiGitPathList -RepositoryRoot $repositoryRoot -Arguments @('not-a-real-command') -FailureMessage 'Expected failure.' } catch { $failed = $_.Exception.Message -match 'Expected failure.*Exit code' }
 if (-not $failed) { throw 'Git path enumeration did not propagate a required Git failure.' }
+$headSha = (& git -C $repositoryRoot rev-parse HEAD).Trim()
+if ((Resolve-LlmWikiCommitRef -RepositoryRoot $repositoryRoot -Ref HEAD) -cne $headSha) { throw 'Git ref canonicalization did not resolve HEAD to its immutable SHA.' }
+$aliasPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -BaseRef HEAD -ChangedPath 'FoodDiary.Presentation.Api/Controllers/CyclesController.cs' -Format Json | ConvertFrom-Json
+$shaPolicy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') -BaseRef $headSha -ChangedPath 'FoodDiary.Presentation.Api/Controllers/CyclesController.cs' -Format Json | ConvertFrom-Json
+if ([string]$aliasPolicy.baseRef -cne $headSha -or
+    (@($aliasPolicy.requiredChecks.command) -join '|') -cne (@($shaPolicy.requiredChecks.command) -join '|')) {
+    throw 'Equivalent HEAD and SHA refs produced different canonical policy definitions.'
+}
 
 $overlayFixtureName = "wiki-headref-overlay-$([guid]::NewGuid().ToString('N')).md"
 $overlayFixturePath = Join-Path $repositoryRoot $overlayFixtureName
@@ -38,4 +46,4 @@ try {
     if (Test-Path -LiteralPath $overlayFixturePath) { Remove-Item -LiteralPath $overlayFixturePath -Force }
 }
 
-Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, workspace HEAD overlays, and exit codes are safe.'
+Write-Host 'LLM Wiki Git path regression passed: BOM, spaces, Unicode, NUL parsing, immutable refs, workspace HEAD overlays, and exit codes are safe.'

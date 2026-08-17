@@ -145,7 +145,8 @@ switch ($Action) {
             generatedBy = '.llm-wiki/tools/Manage-LlmWikiEvidence.ps1'
             git = [ordered]@{
                 head = [string]$head
-                base = $BaseRef
+                base = [string]$policy.baseRef
+                requestedBase = $BaseRef
                 comparedHead = $HeadRef
             }
             change = [ordered]@{
@@ -199,6 +200,7 @@ switch ($Action) {
             throw "Check '$Id' has no command."
         }
         $policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
+            -BaseRef ([string]$evidence.git.base) `
             -ChangedPath @($evidence.change.changedPaths) `
             -Format Json | ConvertFrom-Json
         $canonicalCheck = @($policy.requiredChecks | Where-Object id -eq $Id | Select-Object -First 1)
@@ -394,8 +396,10 @@ switch ($Action) {
         }
     }
     'validate' {
+        $currentEvidence = Read-EvidenceFile
         & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
-            -ChangedPath @((Read-EvidenceFile).change.changedPaths) `
+            -BaseRef ([string]$currentEvidence.git.base) `
+            -ChangedPath @($currentEvidence.change.changedPaths) `
             -EvidencePath $Path `
             -RequireEvidence `
             -FailOnViolation

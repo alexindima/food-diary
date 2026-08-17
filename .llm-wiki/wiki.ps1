@@ -1415,6 +1415,7 @@ switch ($Command) {
             DryRun = $DryRun
             FailOnInvalid = $FailOnInvalid
             FailOnFailure = $FailOnFailure
+            Detailed = $Detailed
             AsOfUtc = $AsOfUtc
             Format = $Format
         }
@@ -2315,6 +2316,7 @@ switch ($Command) {
             EvidencePath = $EvidencePath
             RequireEvidence = $RequireEvidence
             FailOnViolation = $true
+            Detailed = $Detailed
             Format = $Format
         }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $policyArguments.HeadRef = $HeadRef }

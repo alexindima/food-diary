@@ -22,6 +22,8 @@ $canonicalMemoryRegistryHash = (Get-FileHash -LiteralPath $canonicalMemoryRegist
 $memoryRegistryPath = Join-Path $repositoryRoot '.artifacts/llm-wiki/tool-smoke-memory-registry.json'
 $previousTestMemoryRegistryPath = $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH
 $previousTestKnowledgeRoot = $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT
+$previousVerificationTelemetryPath = $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH
+$verificationTelemetryPath = Join-Path $repositoryRoot ".artifacts/llm-wiki/tool-smoke-verification-telemetry-$([guid]::NewGuid().ToString('N')).json"
 $testKnowledgeRoot = Join-Path $repositoryRoot ".artifacts/llm-wiki/tool-smoke-knowledge-$([guid]::NewGuid().ToString('N'))"
 New-Item -ItemType Directory -Path (Split-Path -Parent $memoryRegistryPath) -Force | Out-Null
 New-Item -ItemType Directory -Path $testKnowledgeRoot -Force | Out-Null
@@ -34,6 +36,8 @@ foreach ($registryName in @('learning-promotions.json', 'learning-experiments.js
     [Text.UTF8Encoding]::new($false))
 $env:LLM_WIKI_TEST_MEMORY_REGISTRY_PATH = $memoryRegistryPath
 $env:LLM_WIKI_TEST_KNOWLEDGE_ROOT = $testKnowledgeRoot
+$env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH = $verificationTelemetryPath
+& (Join-Path $toolsRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | Out-Null
 $schedulerMemoryId = "smoke-scheduler-context-$([guid]::NewGuid().ToString('N'))"
 $totalStopwatch = [Diagnostics.Stopwatch]::StartNew()
 Write-Host "LLM Wiki monolithic audit profile: $Profile. Use the default Focused profile for daily verification."
@@ -2067,7 +2071,6 @@ try {
         if (Test-Path -LiteralPath $repairRegistryPath) { [IO.File]::Delete($repairRegistryPath) }
         if (Test-Path -LiteralPath $verificationCostPath) { [IO.File]::Delete($verificationCostPath) }
     }
-    $verificationTelemetryPath = Join-Path $wikiRoot 'knowledge/verification-telemetry.json'
     $verificationTelemetryRaw = Get-Content -LiteralPath $verificationTelemetryPath -Raw
     foreach ($sample in @(
         [pscustomobject]@{ status = 'failed'; duration = 10; at = [DateTime]'2026-01-01T00:10:00Z' }
@@ -2203,6 +2206,11 @@ try {
         -DryRun `
         -Format Json | ConvertFrom-Json
     Assert-Wiki ($verificationPlanDryRun.valid -and $verificationPlanDryRun.failureCount -eq 0) 'Verification plan dry-run failed.'
+    $verificationPlanText = @(& (Join-Path $toolsRoot 'Manage-LlmWikiVerificationPlan.ps1') run `
+        -WorkspacePath $taskWorkspacePath `
+        -DryRun `
+        -Format Text 6>&1 | ForEach-Object { $_.ToString() }) -join "`n"
+    Assert-Wiki ($verificationPlanText -match 'Verification plan: action=run, valid=True') 'Verification plan runner lost its plan while rendering resumable output.'
     $verificationPlanPath = Join-Path $absoluteTaskWorkspacePath 'verification-plan.json'
     $verificationPlanRaw = Get-Content -LiteralPath $verificationPlanPath -Raw
     $tamperedVerificationPlan = $verificationPlanRaw | ConvertFrom-Json
@@ -2260,6 +2268,14 @@ try {
             @($tamperedContextSecurityCheck.issues) -match 'source assessment drifted' -and
             @($tamperedContextSecurityCheck.issues) -contains 'Context security assessment hash is invalid.'
         ) 'Context security accepted a tampered source assessment.'
+        [IO.File]::WriteAllText($contextSecurityPath, $contextSecurityRaw, [Text.UTF8Encoding]::new($false))
+        $nullSourceSecurity = $contextSecurityRaw | ConvertFrom-Json
+        $nullSourceSecurity.sources = $null
+        [IO.File]::WriteAllText($contextSecurityPath, (($nullSourceSecurity | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        $nullSourceCheck = & (Join-Path $toolsRoot 'Manage-LlmWikiContextSecurity.ps1') verify `
+            -WorkspacePath $taskWorkspacePath `
+            -Format Json | ConvertFrom-Json
+        Assert-Wiki (-not $nullSourceCheck.valid) 'Context security treated a null source collection as valid instead of returning diagnostics.'
     } finally {
         [IO.File]::WriteAllText($contractAbsolutePath, $contractSourceRaw, [Text.UTF8Encoding]::new($false))
         if (Test-Path -LiteralPath $contextBundlePath) { [IO.File]::Delete($contextBundlePath) }
@@ -4921,6 +4937,7 @@ try {
         -Path $evidencePath `
         -ChangedPath 'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.ts' | Out-Null
     $evidence = Get-Content -LiteralPath $absoluteEvidencePath -Raw | ConvertFrom-Json
+    Assert-Wiki ([string]$evidence.git.base -match '^[a-f0-9]{40}$') 'Standalone evidence retained a symbolic Git base.'
     [System.IO.File]::WriteAllBytes($absoluteVisualArtifactPath, [byte[]](137, 80, 78, 71, 13, 10, 26, 10))
     & (Join-Path $toolsRoot 'Manage-LlmWikiEvidence.ps1') artifact `
         -Path $evidencePath `
@@ -4990,6 +5007,14 @@ if ([string]::IsNullOrWhiteSpace($previousTestKnowledgeRoot)) {
 }
 if (Test-Path -LiteralPath $testKnowledgeRoot) {
     Remove-Item -LiteralPath $testKnowledgeRoot -Recurse -Force -ErrorAction SilentlyContinue
+}
+if ([string]::IsNullOrWhiteSpace($previousVerificationTelemetryPath)) {
+    Remove-Item Env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH -ErrorAction SilentlyContinue
+} else {
+    $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH = $previousVerificationTelemetryPath
+}
+if (Test-Path -LiteralPath $verificationTelemetryPath) {
+    Remove-Item -LiteralPath $verificationTelemetryPath -Force
 }
 
 if ($errors.Count -gt 0) {

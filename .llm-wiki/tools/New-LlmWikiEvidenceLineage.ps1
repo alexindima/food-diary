@@ -23,6 +23,7 @@ $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $absoluteEvidencePath = if ([System.IO.Path]::IsPathRooted($EvidencePath)) { $EvidencePath } else { Join-Path $repositoryRoot $EvidencePath }
 $evidence = Get-Content -LiteralPath $absoluteEvidencePath -Raw | ConvertFrom-Json
 $policy = & (Join-Path $PSScriptRoot 'Test-LlmWikiChangePolicy.ps1') `
+    -BaseRef ([string]$evidence.git.base) `
     -ChangedPath @($evidence.change.changedPaths) `
     -Format Json | ConvertFrom-Json
 $requirement = if ($Kind -eq 'review-attestation') {
@@ -35,6 +36,7 @@ $isProductDependency = {
     param([string]$Path)
     $normalized = $Path.Replace('\', '/')
     return $normalized -notmatch '^\.llm-wiki/(generated|reviews)/' -and
+        $normalized -ne '.llm-wiki/knowledge/verification-telemetry.json' -and
         $normalized -notmatch '^\.artifacts/llm-wiki/'
 }
 $dependencyPaths = if ($sourceRule -eq 'manual') {

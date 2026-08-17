@@ -57,8 +57,12 @@ $derivedWikiPaths = @($allChangedPaths | Where-Object { $_ -match '^\.llm-wiki/g
 $reviewMetadataPaths = @($allChangedPaths | Where-Object {
     $_ -match '^\.llm-wiki/reviews/' -or $_ -match '(?i)(review-receipt|source-impact-review)'
 })
+$operationalArtifacts = @($allChangedPaths | Where-Object {
+    $_ -eq '.llm-wiki/knowledge/verification-telemetry.json' -or
+    $_ -match '^\.artifacts/llm-wiki/'
+})
 $changedPaths = @($allChangedPaths |
-    Where-Object { $_ -notin $derivedWikiPaths -and $_ -notin $reviewMetadataPaths } |
+    Where-Object { $_ -notin $derivedWikiPaths -and $_ -notin $reviewMetadataPaths -and $_ -notin $operationalArtifacts } |
     Sort-Object -Unique)
 $baselineExcludedPaths = @(
     $BaselineExcludedPath |
@@ -74,9 +78,12 @@ if (@($baselineExcludedPaths | Where-Object { $_ -match 'Infrastructure/.*(Persi
 if ($changedPaths.Count -eq 0) {
     $emptyResult = [ordered]@{
         changedPaths = @()
+        allChangedPaths = $allChangedPaths
+        productPaths = @()
         sourceChangedPaths = @()
         derivedWikiPaths = $derivedWikiPaths
         reviewMetadataPaths = $reviewMetadataPaths
+        operationalArtifacts = $operationalArtifacts
         renames = @($renames)
         baselineExcludedPaths = $baselineExcludedPaths
         workspaceContextScopes = @($workspaceContextScopes | Sort-Object -Unique)
@@ -440,9 +447,12 @@ $uniqueChecks = @($recommendedChecks | Sort-Object -Unique)
 
 $result = [ordered]@{
     changedPaths = $changedPaths
+    allChangedPaths = $allChangedPaths
+    productPaths = $changedPaths
     sourceChangedPaths = $changedPaths
     derivedWikiPaths = $derivedWikiPaths
     reviewMetadataPaths = $reviewMetadataPaths
+    operationalArtifacts = $operationalArtifacts
     renames = @($renames)
     baselineExcludedPaths = $baselineExcludedPaths
     workspaceContextScopes = @($workspaceContextScopes | Sort-Object -Unique)

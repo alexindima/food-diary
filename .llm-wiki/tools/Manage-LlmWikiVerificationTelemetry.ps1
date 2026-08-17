@@ -9,6 +9,7 @@ param(
     [string]$Status,
     [double]$DurationSeconds,
     [string]$Command,
+    [string]$RegistryPath,
     [DateTime]$AsOfUtc = [DateTime]::UtcNow,
     [switch]$FailOnInvalid,
     [ValidateSet('Text', 'Json')]
@@ -18,7 +19,16 @@ param(
 $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
-$registryPath = Join-Path $wikiRoot 'knowledge/verification-telemetry.json'
+$configuredRegistryPath = if (-not [string]::IsNullOrWhiteSpace($RegistryPath)) {
+    $RegistryPath
+} elseif (-not [string]::IsNullOrWhiteSpace($env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH)) {
+    $env:LLM_WIKI_VERIFICATION_TELEMETRY_PATH
+} else {
+    $gitDirectory = @(& git -C $repositoryRoot rev-parse --absolute-git-dir)
+    if ($LASTEXITCODE -ne 0 -or $gitDirectory.Count -ne 1) { throw 'Unable to resolve the Git directory for verification telemetry.' }
+    Join-Path ([string]$gitDirectory[0]) 'llm-wiki/verification-telemetry.json'
+}
+$registryPath = if ([IO.Path]::IsPathRooted($configuredRegistryPath)) { $configuredRegistryPath } else { Join-Path $repositoryRoot $configuredRegistryPath }
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 $telemetryPolicy = (Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json).scheduler.verificationPlanner.failurePrediction.costModel.telemetry
 
@@ -48,12 +58,23 @@ function Get-RegistryPayload([object]$Registry) {
     }
 }
 function Read-Registry {
-    if (-not (Test-Path -LiteralPath $registryPath -PathType Leaf)) { throw 'Verification telemetry registry is absent.' }
+    if (-not (Test-Path -LiteralPath $registryPath -PathType Leaf)) {
+        $empty = [pscustomobject][ordered]@{ schemaVersion = 1; events = @(); registryHash = '' }
+        Write-Registry $empty
+    }
     Get-Content -LiteralPath $registryPath -Raw | ConvertFrom-Json
 }
 function Write-Registry([object]$Registry) {
     $Registry.registryHash = Get-Hash (Get-RegistryPayload $Registry)
-    [IO.File]::WriteAllText($registryPath, (($Registry | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+    $parent = Split-Path -Parent $registryPath
+    $null = New-Item -ItemType Directory -Path $parent -Force
+    $temporaryPath = Join-Path $parent ('.verification-telemetry-' + [guid]::NewGuid().ToString('N') + '.tmp')
+    try {
+        [IO.File]::WriteAllText($temporaryPath, (($Registry | ConvertTo-Json -Depth 30) + [Environment]::NewLine), [Text.UTF8Encoding]::new($false))
+        Move-Item -LiteralPath $temporaryPath -Destination $registryPath -Force
+    } finally {
+        if (Test-Path -LiteralPath $temporaryPath) { Remove-Item -LiteralPath $temporaryPath -Force }
+    }
 }
 function Test-Registry([object]$Registry) {
     $issues = [Collections.Generic.List[string]]::new()
@@ -145,6 +166,7 @@ if ($Action -eq 'verify') {
     }
 }
 
+$result | Add-Member -NotePropertyName registryPath -NotePropertyValue $registryPath
 if ($Format -eq 'Json') { $result | ConvertTo-Json -Depth 30 } else {
     if ($Action -eq 'record') {
         Write-Host "Verification telemetry recorded: $($result.event.checkId)=$($result.event.status), duration=$($result.event.durationSeconds)s"

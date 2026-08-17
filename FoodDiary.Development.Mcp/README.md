@@ -41,18 +41,21 @@ From the repository root:
 
 ```powershell
 dotnet build FoodDiary.Development.Mcp/FoodDiary.Development.Mcp.csproj
-./scripts/Start-FoodDiaryDevelopmentMcp.cmd --no-build
+./scripts/Start-FoodDiaryDevelopmentMcp.cmd --build-if-missing
 ```
 
 The client must launch the process from within the repository tree. When that is
 not possible, set `FOODDIARY_REPOSITORY_ROOT` to the absolute repository path.
 All protocol traffic uses stdout; host diagnostics use stderr.
 
-The registered client uses `--no-build`. Its launcher copies the built output to
-a unique temporary directory before starting each session, so concurrent MCP
-clients neither build concurrently nor lock the shared `bin` output. Build the
-project after changing or pulling the MCP implementation, then restart Codex so
-it launches the updated binary.
+The registered client uses `--build-if-missing`. The common path stays build-free;
+after a clean or fresh checkout the launcher builds the missing output once. It
+then copies the output to a unique temporary directory before starting each
+session, so concurrent MCP clients do not lock the shared `bin` output. Build the
+project after changing or pulling an already-built MCP implementation, then
+restart Codex so it launches the updated binary. The repository registration marks this server as
+required and allows 120 seconds for startup, so startup failures are reported
+instead of silently leaving the FoodDiary tools unavailable.
 
 The trusted-project `.codex/config.toml` registers this server for Codex. Restart
 the desktop app or extension after pulling/building the project.

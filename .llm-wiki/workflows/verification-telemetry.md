@@ -6,21 +6,23 @@ title: Learn from verification outcomes
 summary: Preserve integrity-protected check outcomes and durations, detect flaky checks, and improve future failure and cost forecasts.
 sources:
   - .llm-wiki/tools/Manage-LlmWikiVerificationTelemetry.ps1
+  - .llm-wiki/tools/Test-LlmWikiOperationalTelemetry.ps1
   - .llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1
   - .llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1
   - .llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1
-  - .llm-wiki/knowledge/verification-telemetry.json
   - .llm-wiki/policies/workspace-policies.json
 ---
 
 # Learn from verification outcomes
 
 Every real task-check execution except `wiki-verify` appends its outcome and
-elapsed time to `verification-telemetry.json`. Events bind the task packet, check
+elapsed time to the worktree-local `.git/llm-wiki/verification-telemetry.json` registry. Events bind the task packet, check
 id, command, workspace policy, and previous event hash. Dry runs never create
 telemetry. The self-verification exception prevents the tracked registry from
 changing after it has just been verified; the task evidence and hashed log still
-record the complete `wiki-verify` execution.
+record the complete `wiki-verify` execution. The registry is operational state:
+it is initialized on demand and never appears in the repository diff. Tests may
+isolate it with `LLM_WIKI_VERIFICATION_TELEMETRY_PATH`.
 
 ```powershell
 ./.llm-wiki/wiki.ps1 verification-telemetry-metrics

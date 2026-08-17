@@ -128,17 +128,21 @@
     {
       "pageId": "workflow-acceptance-evidence-matrix",
       "pagePath": ".llm-wiki/workflows/acceptance-evidence-matrix.md",
-      "pageSha256": "1fb64e039c1be137c7079e70291d79e82936c78d7a053d0eae894d941cd03858",
+      "pageSha256": "f4691a43e74d56c26c124777bce5410057a2b88ff04d9449eab0ce93e58e8acf",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "d502b4970c2ba59d884214b23a514498cf249e3dafb9cb14940adcc3452b81ad"
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
         }
       ],
-      "reason": "Reviewed unified criterion atomicity across acceptance, requirements, and proof; extraction-aware physical boundary discovery and atomic outcomes; actionable design resolution commands; explicit delivery finding identifiers; and strict-mode-safe QA/metrics output.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "1abccf78c96b875ed9a5ec0f234151145da191c9",
-      "reviewedAtUtc": "2026-08-13T18:24:59.2509365Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:46.1009416Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -146,14 +150,18 @@
       "pageSha256": "623b527d5eca7164ab6562bb12a0c728d6a710315430d7fc64e56dfd603f464f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-          "sha256": "a7c608b3e8ff4ea74b038daad24107461f39bd244f0148d517175c45bce3fea6"
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
+          "sha256": "34d3444f8f8ab3b86da69d69f205b421d598ad0495ab6286926ba5e74f66e026"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiVerificationCache.ps1",
+          "sha256": "43617000384e6d378d1ed31b7f97925057e04a1805493f250cd17315840e447e"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:25.3596904Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:46.5436821Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -206,14 +214,14 @@
       "pageSha256": "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "cee057fcea7ba88b2c4ff8213a64da517e7bddcf59b141158dee3a464281c595"
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
         }
       ],
-      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
-      "reviewedAtUtc": "2026-08-16T13:38:44.0008304Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:46.9653090Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -221,14 +229,14 @@
       "pageSha256": "49eab42e51f76e49c1ba23bb8ab93f7358270e92bed0b0e4547ba7b713fa4642",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "ff06c22247db1935adab98dcce349c6500cefe74e74266ff052c6ef359234edd"
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
         }
       ],
-      "reason": "Reviewed the governed lifecycle fixes plus null-safe empty-collection handling exposed by adaptive smoke; no additional contract changes are required beyond the updated workflow pages.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "7cd1bdc3bdf8d56f692b3f038ec93f333eddf6db",
-      "reviewedAtUtc": "2026-08-12T21:30:33.4987707Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:47.4165552Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -237,13 +245,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "cf5c69ce882d7cecc52664640beb0f532ffd6e98f2dcfa0eee25ffc47801cc37"
+          "sha256": "63df52afd299609da887abf21b5c1b7dbca41ff6a06848acf9cfcc3ad0ee3976"
         }
       ],
-      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
+      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:04:34.2362369Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:28:07.0175509Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -308,14 +316,14 @@
       "pageSha256": "b1772ca6e2b1bc91074242feec33660475b32799725366e180a3238cbd6a081c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+          "path": ".llm-wiki/tools/Manage-LlmWikiContextSecurity.ps1",
+          "sha256": "ab70485ef9ba6669de54c8bd73f3f9c5189de65b6271992b3846fa86cd8851b9"
         }
       ],
-      "reason": "Reviewed strict-mode-safe context memory identity tracking; bundle selection, budgets, security, learning, and scheduling contracts are unchanged.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "11ad75c4c7b137342ee1af037f718414c8be6578",
-      "reviewedAtUtc": "2026-08-12T14:07:35.8298746Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:48.8289852Z"
     },
     {
       "pageId": "workflow-controlled-learning-promotion",
@@ -377,18 +385,14 @@
       "pageSha256": "89bba606d2635692a16e530538c4ccc5a89b7d983e5a9465a605a1aefdd34e7c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-          "sha256": "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:14.7368462Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:49.2978299Z"
     },
     {
       "pageId": "workflow-decision-context",
@@ -495,21 +499,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
-          "sha256": "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
-          "sha256": "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
+          "sha256": "27205d9206f9f87df89e34a7ae524dc1c7c0c0f6326221ee6304dd679b754765"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:15.5471170Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:50.7590132Z"
     },
     {
       "pageId": "workflow-frontend-visual-evidence",
@@ -532,14 +532,14 @@
       "pageSha256": "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:29.0162094Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:51.1794640Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -574,21 +574,25 @@
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "850cfc23f17fc864f33a7fa2598a5bfbf5127b5bc4ca17d018d69705c6363792",
+      "pageSha256": "2ccdf34b5e311ea48f4cefab1e6d09c0286d06e830a152d7ae6d41a928db5d75",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "cd76a21d46a49fc36f84cfa8d21d85e537236ea854ea776c084d838ddc2ccf79"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "57ca461181d7b6f8d8c658aca8a4053d2e3e1c7a09d2abdcd4c38eb61d28ede0"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCache.ps1",
+          "sha256": "34d3444f8f8ab3b86da69d69f205b421d598ad0495ab6286926ba5e74f66e026"
         },
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "cf5c69ce882d7cecc52664640beb0f532ffd6e98f2dcfa0eee25ffc47801cc37"
+          "sha256": "63df52afd299609da887abf21b5c1b7dbca41ff6a06848acf9cfcc3ad0ee3976"
         }
       ],
-      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
+      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:04:35.2892821Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:28:08.7495391Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -642,13 +646,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
         }
       ],
-      "reason": "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "684dcb79797815b9e9bf8af888375688ac34fefa",
-      "reviewedAtUtc": "2026-08-12T09:51:51.9454992Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:52.0643097Z"
     },
     {
       "pageId": "workflow-ownership-impact",
@@ -784,14 +788,18 @@
       "pageSha256": "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
-          "sha256": "cee057fcea7ba88b2c4ff8213a64da517e7bddcf59b141158dee3a464281c595"
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
         }
       ],
-      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
-      "reviewedAtUtc": "2026-08-16T13:38:45.0363017Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:52.4964317Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -814,14 +822,14 @@
       "pageSha256": "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "dbcf35e7857f45555c71dd47abcf6dbbec48b355b0350ca91eb45210a3c69ba6"
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
         }
       ],
-      "reason": "CI now provisions TypeScript dependencies for cross-platform development MCP tests; Lighthouse collection keeps the existing five-route filesystem-report behavior while replacing vulnerable LHCI dependencies with current Lighthouse.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "2866636b16d0d4207e1b07ec0566bfe88edef01d",
-      "reviewedAtUtc": "2026-08-15T22:45:48.6613080Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:53.3332916Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -829,18 +837,14 @@
       "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiRiskCalibration.ps1",
-          "sha256": "fa89f3a30ec410b9cb98f2a917fa787ab93b459f8b19f4bee6540f423787eccf"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:18.9821407Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:53.7559503Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -863,18 +867,14 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImplementationPlan.ps1",
-          "sha256": "5574efda6a666037e232d154e87c9da4e5357ee01c5359633a8ac8b9a9c7a04f"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:19.2784372Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:54.1786204Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -883,17 +883,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "22b7caea468f7ba05ab63fe9d875d8ef7b509da821ed10ead53b5ed2c2229d39"
+          "sha256": "cf167f32457f6c569f388e0e89f01784d61b856baeaece02a77d058ef4dd5a4d"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "b76c083470ced2bad26a6dcfb7e757aac482d390e7a6e4219c500aa6fbb2e58f"
+          "sha256": "8e1506bb3d8b69676876cd74e6047611d495972724b6790a6623a995f2ac925c"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:32.8358246Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:28:10.1496043Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -917,13 +917,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "cf5c69ce882d7cecc52664640beb0f532ffd6e98f2dcfa0eee25ffc47801cc37"
+          "sha256": "63df52afd299609da887abf21b5c1b7dbca41ff6a06848acf9cfcc3ad0ee3976"
         }
       ],
-      "reason": "Reviewed MCP trace expansion, request-scoped executed-check evidence, worktree diagnostics, source/derived/review scope partitioning, and Roslyn literal suppression; affected workflow guidance remains accurate.",
+      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "535011bb33193c42c9bce72b5307c1e29888d628",
-      "reviewedAtUtc": "2026-08-16T16:04:37.2173495Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:28:10.8058931Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -950,22 +950,38 @@
       "pageSha256": "f87df1e5212521c9e920fd7bcea428c7ea79b68a5fd08213641a6862777077d6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-          "sha256": "a7c608b3e8ff4ea74b038daad24107461f39bd244f0148d517175c45bce3fea6"
+          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
+          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
         },
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
+          "sha256": "64b18b8d4a02d29efd31eaa011d32174257de0fbc017186b37ca0ced3daa1737"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
+          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+          "sha256": "4dc07f2d9cbd2f6bca55059706089901e991a66357497453c93ee6372dfe6ac5"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
-          "sha256": "9e42ad700754ea4b45d7799048116bcf27bc82aebcbf0a8c45fc10ef5e51722b"
+          "sha256": "2f1807c980ca76006f55bba45f4f11f9a62e4deeb36857c899b014219d5aa97e"
+        },
+        {
+          "path": ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
+          "sha256": "31031ba28352dd32ea5e75c59b511dd99c30f30fed6137365e89f2da12af94f4"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:33.2792312Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:55.4025984Z"
     },
     {
       "pageId": "workflow-test-plan",
@@ -1007,14 +1023,18 @@
       "pageSha256": "368dfe1e9684ead7a5e3207edd05e55477d432ae1f9627814d62bfeb9559fb84",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
+          "sha256": "64b18b8d4a02d29efd31eaa011d32174257de0fbc017186b37ca0ced3daa1737"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "e61893aa8beb30741a00a25e58fa1f7e066ef65315cd106db80d5698263f7242"
+          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
         }
       ],
-      "reason": "Reviewed successful verification-plan formatting and null-safe dependency manifest parsing; workflow guidance remains accurate.",
+      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
       "baseRef": "HEAD",
-      "gitHead": "684dcb79797815b9e9bf8af888375688ac34fefa",
-      "reviewedAtUtc": "2026-08-12T09:51:56.3337732Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:23:55.8317660Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
@@ -1042,13 +1062,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "b76c083470ced2bad26a6dcfb7e757aac482d390e7a6e4219c500aa6fbb2e58f"
+          "sha256": "8e1506bb3d8b69676876cd74e6047611d495972724b6790a6623a995f2ac925c"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:25.8532395Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:28:06.5461479Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1057,17 +1077,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "22b7caea468f7ba05ab63fe9d875d8ef7b509da821ed10ead53b5ed2c2229d39"
+          "sha256": "cf167f32457f6c569f388e0e89f01784d61b856baeaece02a77d058ef4dd5a4d"
         },
         {
           "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "b76c083470ced2bad26a6dcfb7e757aac482d390e7a6e4219c500aa6fbb2e58f"
+          "sha256": "8e1506bb3d8b69676876cd74e6047611d495972724b6790a6623a995f2ac925c"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:27.3914286Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:28:07.5374117Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1075,14 +1095,30 @@
       "pageSha256": "dfce522394cc3d66d2a43c52d67969355bb1cbbc65b0dd94e694a38d20a610fa",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
+          "sha256": "64b18b8d4a02d29efd31eaa011d32174257de0fbc017186b37ca0ced3daa1737"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
+        },
+        {
+          "path": ".llm-wiki/tools/New-LlmWikiEvidenceLineage.ps1",
+          "sha256": "f5d0a71a1099e6a3993532cc82685079b20292467733f0cf36b7a19eed1eb1a1"
+        },
+        {
           "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "b76c083470ced2bad26a6dcfb7e757aac482d390e7a6e4219c500aa6fbb2e58f"
+          "sha256": "8e1506bb3d8b69676876cd74e6047611d495972724b6790a6623a995f2ac925c"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
+          "sha256": "4dc07f2d9cbd2f6bca55059706089901e991a66357497453c93ee6372dfe6ac5"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:27.9475080Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:28:08.1201329Z"
     },
     {
       "pageId": "workflow.frontend-contract-review",
@@ -1120,22 +1156,18 @@
       "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Add-LlmWikiSourceReview.ps1",
-          "sha256": "22abea8cfd088d8aae5195b9e9cdcd1f39d176efd3706eb03aa0efb6c4f70105"
-        },
-        {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "22b7caea468f7ba05ab63fe9d875d8ef7b509da821ed10ead53b5ed2c2229d39"
+          "sha256": "cf167f32457f6c569f388e0e89f01784d61b856baeaece02a77d058ef4dd5a4d"
         },
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiImpact.ps1",
-          "sha256": "c05230ab390e3a514d9054b7dbee8490ee6115e258e6b0d0e3b0a2692ab62e57"
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "63df52afd299609da887abf21b5c1b7dbca41ff6a06848acf9cfcc3ad0ee3976"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:32.3244316Z"
+      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
+      "reviewedAtUtc": "2026-08-17T09:28:09.4944848Z"
     }
   ]
 }

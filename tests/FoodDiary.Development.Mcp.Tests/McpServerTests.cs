@@ -29,6 +29,8 @@ public sealed class McpServerTests {
         Assert.True(expected.SequenceEqual(
             configuration.EnabledTools.Order(StringComparer.Ordinal),
             StringComparer.Ordinal));
+        Assert.True(configuration.Required);
+        Assert.Equal(["--build-if-missing"], configuration.Arguments);
         Assert.All(tools, tool => Assert.True(tool.ProtocolTool.Annotations?.ReadOnlyHint));
         Assert.Contains(
             "includeDetailedContext",

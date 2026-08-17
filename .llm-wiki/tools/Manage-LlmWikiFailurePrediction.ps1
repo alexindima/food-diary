@@ -25,8 +25,7 @@ $riskPath = Join-Path $workspaceAbsolute 'risk-calibration.json'
 $receiptPath = Join-Path $workspaceAbsolute 'failure-prediction.json'
 $policyPath = Join-Path $wikiRoot 'policies/workspace-policies.json'
 $learningPath = Join-Path $wikiRoot 'knowledge/repair-learnings.json'
-$telemetryPath = Join-Path $wikiRoot 'knowledge/verification-telemetry.json'
-foreach ($path in @($packetPath, $evidencePath, $policyPath, $learningPath, $telemetryPath)) {
+foreach ($path in @($packetPath, $evidencePath, $policyPath, $learningPath)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) { throw "Failure prediction input is absent: $path" }
 }
 $policy = Get-Content -LiteralPath $policyPath -Raw | ConvertFrom-Json

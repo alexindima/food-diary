@@ -7,6 +7,19 @@ function Test-LlmWikiWorkspaceHeadRef {
         [string]::Equals($HeadRef.Trim(), 'HEAD', [StringComparison]::OrdinalIgnoreCase)
 }
 
+function Resolve-LlmWikiCommitRef {
+    param(
+        [Parameter(Mandatory)][string]$RepositoryRoot,
+        [Parameter(Mandatory)][string]$Ref
+    )
+
+    $resolved = @(& git -C $RepositoryRoot rev-parse --verify "$Ref^{commit}" 2>$null)
+    if ($LASTEXITCODE -ne 0 -or $resolved.Count -ne 1 -or [string]$resolved[0] -notmatch '^[a-f0-9]{40}$') {
+        throw "Unable to resolve Git ref '$Ref' to a commit."
+    }
+    return ([string]$resolved[0]).ToLowerInvariant()
+}
+
 function ConvertTo-LlmWikiRepositoryPath {
     param([AllowEmptyString()][string]$Path)
 

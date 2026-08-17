@@ -6,6 +6,7 @@ title: Protect agent context from instruction injection
 summary: Classify source trust, detect prompt-injection patterns, quarantine untrusted instructions, and bind the assessment to context bundles.
 sources:
   - .llm-wiki/tools/Manage-LlmWikiContextSecurity.ps1
+  - .llm-wiki/tools/Test-LlmWikiWorkflowRecovery.ps1
   - .llm-wiki/tools/Manage-LlmWikiContextBundle.ps1
   - .llm-wiki/policies/workspace-policies.json
 ---

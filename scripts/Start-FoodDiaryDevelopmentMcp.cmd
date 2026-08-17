@@ -1,8 +1,8 @@
 @echo off
 setlocal
 
-if not "%~1"=="--no-build" (
-    echo The FoodDiary Development MCP launcher requires --no-build. 1>&2
+if not "%~1"=="--no-build" if not "%~1"=="--build-if-missing" (
+    echo The FoodDiary Development MCP launcher requires --no-build or --build-if-missing. 1>&2
     exit /b 2
 )
 
@@ -10,8 +10,17 @@ set "REPOSITORY_ROOT=%~dp0.."
 set "SOURCE_DIRECTORY=%REPOSITORY_ROOT%\FoodDiary.Development.Mcp\bin\Debug\net10.0"
 set "SOURCE_ASSEMBLY=%SOURCE_DIRECTORY%\FoodDiary.Development.Mcp.dll"
 if not exist "%SOURCE_ASSEMBLY%" (
-    echo FoodDiary Development MCP is not built at "%SOURCE_ASSEMBLY%". 1>&2
-    exit /b 3
+    if "%~1"=="--no-build" (
+        echo FoodDiary Development MCP is not built at "%SOURCE_ASSEMBLY%". 1>&2
+        exit /b 3
+    )
+    echo FoodDiary Development MCP output is absent; building it once before startup. 1>&2
+    dotnet build "%REPOSITORY_ROOT%\FoodDiary.Development.Mcp\FoodDiary.Development.Mcp.csproj" --nologo --verbosity quiet 1>&2
+    if errorlevel 1 exit /b 3
+    if not exist "%SOURCE_ASSEMBLY%" (
+        echo FoodDiary Development MCP build completed without producing "%SOURCE_ASSEMBLY%". 1>&2
+        exit /b 3
+    )
 )
 
 set "SESSION_ROOT=%TEMP%\fooddiary-development-mcp"
