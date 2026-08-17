@@ -399,6 +399,7 @@ public class CycleProfileInvariantTests {
     [Fact]
     public void UpsertFertilitySignal_ValidatesTemperature() {
         var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UnixEpoch);
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             profile.UpsertFertilitySignal(
@@ -413,6 +414,7 @@ public class CycleProfileInvariantTests {
     [Fact]
     public void UpsertFertilitySignal_WithExistingSignal_UpdatesAndReturnsExisting() {
         var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UnixEpoch);
         DateOnly date = new(2026, 4, 3);
         FertilitySignal first = profile.UpsertFertilitySignal(
             date,
@@ -551,6 +553,7 @@ public class CycleProfileInvariantTests {
     public void ClearBleedingEntries_RemovesOnlyBleedingDataForDate() {
         DateOnly date = new(2026, 4, 2);
         var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UnixEpoch);
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
         profile.UpsertFertilitySignal(
@@ -589,6 +592,7 @@ public class CycleProfileInvariantTests {
     public void ClearFertilitySignal_RemovesOnlyFertilityDataForDate() {
         DateOnly date = new(2026, 4, 2);
         var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UnixEpoch);
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
         profile.UpsertFertilitySignal(date, 36.6, OvulationTestResult.Negative, cervicalFluid: null, hadSex: null, notes: null);
