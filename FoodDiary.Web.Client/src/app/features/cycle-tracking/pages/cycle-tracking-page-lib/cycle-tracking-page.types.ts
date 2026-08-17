@@ -14,6 +14,27 @@ export type CycleViewModel = {
     activeFactorItems: CycleActiveFactorViewModel[];
 };
 
+export type CycleOverviewViewModel = {
+    todayDateKey: string;
+    todayDateLabel: string;
+    monthLabel: string;
+    cycleDayNumber: number | null;
+    hasTodayEntry: boolean;
+    days: CycleOverviewDayViewModel[];
+};
+
+export type CycleOverviewDayViewModel = {
+    dateKey: string;
+    weekdayLabel: string;
+    dayLabel: string;
+    cycleDayNumber: number | null;
+    isToday: boolean;
+    isFuture: boolean;
+    isBleeding: boolean;
+    isPredictedPeriod: boolean;
+    isTracked: boolean;
+};
+
 export type CycleSummaryItemViewModel = {
     labelKey: string;
     valueKey: string;

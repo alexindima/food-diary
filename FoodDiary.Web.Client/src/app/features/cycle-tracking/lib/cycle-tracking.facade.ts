@@ -68,7 +68,7 @@ type StartCycleFormModel = {
     discreetNotifications: boolean;
 };
 
-type CycleSettingsFormModel = Omit<StartCycleFormModel, 'trackingStartDate'>;
+export type CycleSettingsFormModel = Omit<StartCycleFormModel, 'trackingStartDate'>;
 
 export type CycleDayFormModel = {
     date: string | null;

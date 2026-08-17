@@ -1,470 +1,410 @@
 <div class="cycle-tracking" fdPageContainer>
-    <fd-page-header [title]="'CYCLE_TRACKING.TITLE' | translate" [subtitle]="'CYCLE_TRACKING.SUBTITLE' | translate">
-        <fd-ui-button
-            data-tour-id="cycle-tracking-tour-help"
-            appearance="toolbar"
-            variant="secondary"
-            fill="outline"
-            icon="help_outline"
-            [fdUiHint]="'CYCLE_TRACKING.TOUR.START_TOUR' | translate"
-            [ariaLabel]="'CYCLE_TRACKING.TOUR.START_TOUR' | translate"
-            (click)="startCycleTrackingTour()"
-        />
+    <fd-page-header [title]="'CYCLE_TRACKING.TITLE' | translate" [subtitle]="'CYCLE_TRACKING.SUBTITLE_V2' | translate">
+        <div class="cycle-tracking__header-actions fd-ui-actions">
+            <fd-ui-button
+                data-tour-id="cycle-tracking-tour-help"
+                appearance="toolbar"
+                variant="secondary"
+                fill="outline"
+                icon="help_outline"
+                [fdUiHint]="'CYCLE_TRACKING.TOUR.START_TOUR' | translate"
+                [ariaLabel]="'CYCLE_TRACKING.TOUR.START_TOUR' | translate"
+                (click)="startCycleTrackingTour()"
+            />
+            <fd-ui-button
+                appearance="toolbar"
+                variant="secondary"
+                fill="outline"
+                icon="settings"
+                [disabled]="!cycle()"
+                [fdUiHint]="'CYCLE_TRACKING.SETTINGS_TITLE' | translate"
+                [ariaLabel]="'CYCLE_TRACKING.SETTINGS_TITLE' | translate"
+                (click)="openSettings()"
+            />
+            <fd-ui-button
+                appearance="toolbar"
+                variant="secondary"
+                fill="outline"
+                icon="download"
+                [disabled]="!cycle()"
+                [loading]="isExportingCycle()"
+                [fdUiHint]="'CYCLE_TRACKING.EXPORT_CYCLE' | translate"
+                [ariaLabel]="'CYCLE_TRACKING.EXPORT_CYCLE' | translate"
+                (click)="exportCycle()"
+            />
+        </div>
     </fd-page-header>
 
     <fd-page-body>
-        <div class="cycle-tracking__page-actions fd-ui-actions">
-            <fd-ui-button type="button" [hidden]="!cycle()" (click)="openDayEditor()">
-                {{ 'CYCLE_TRACKING.LOG_TODAY' | translate }}
-            </fd-ui-button>
-            <fd-ui-button
-                type="button"
-                variant="secondary"
-                fill="outline"
-                [disabled]="!cycle()"
-                [disabledReason]="!cycle() ? ('DISABLED_HINTS.NO_CYCLE' | translate) : null"
-                [loading]="isExportingCycle()"
-                (click)="exportCycle()"
-            >
-                {{ 'CYCLE_TRACKING.EXPORT_CYCLE' | translate }}
-            </fd-ui-button>
-        </div>
-
-        <div class="cycle-tracking__grid fd-grid fd-gap-card-content">
-            @if (!cycle()) {
-                <fd-ui-card
-                    class="cycle-tracking__card"
-                    data-tour-id="cycle-tracking-setup"
-                    [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate"
-                >
-                    <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="startCycleForm">
-                        <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
-                            <fd-ui-date-input
-                                class="cycle-tracking__form-control"
-                                [label]="'CYCLE_TRACKING.TRACKING_START_DATE' | translate"
-                                [formField]="startCycleForm.trackingStartDate"
-                            />
-                            <fd-ui-select
-                                class="cycle-tracking__form-control"
-                                [label]="'CYCLE_TRACKING.MODE' | translate"
-                                [options]="modeOptions()"
-                                [formField]="startCycleForm.mode"
-                            />
-                            <fd-ui-input
-                                class="cycle-tracking__form-control"
-                                type="number"
-                                [label]="'CYCLE_TRACKING.AVG_LENGTH' | translate"
-                                [formField]="startCycleForm.averageCycleLength"
-                            />
-                            <fd-ui-input
-                                class="cycle-tracking__form-control"
-                                type="number"
-                                [label]="'CYCLE_TRACKING.PERIOD_LENGTH' | translate"
-                                [formField]="startCycleForm.averagePeriodLength"
-                            />
-                            <fd-ui-input
-                                class="cycle-tracking__form-control"
-                                type="number"
-                                [label]="'CYCLE_TRACKING.LUTEAL_LENGTH' | translate"
-                                [formField]="startCycleForm.lutealLength"
-                            />
-                        </div>
-                        <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
-                            <fd-ui-checkbox
-                                class="cycle-tracking__form-control cycle-tracking__checkbox"
-                                [formField]="startCycleForm.isRegular"
-                            >
-                                {{ 'CYCLE_TRACKING.IS_REGULAR' | translate }}
-                            </fd-ui-checkbox>
-                            <fd-ui-checkbox
-                                class="cycle-tracking__form-control cycle-tracking__checkbox"
-                                [formField]="startCycleForm.showFertilityEstimates"
-                            >
-                                {{ 'CYCLE_TRACKING.SHOW_FERTILITY' | translate }}
-                            </fd-ui-checkbox>
-                            <fd-ui-checkbox
-                                class="cycle-tracking__form-control cycle-tracking__checkbox"
-                                [formField]="startCycleForm.discreetNotifications"
-                            >
-                                {{ 'CYCLE_TRACKING.DISCREET_NOTIFICATIONS' | translate }}
-                            </fd-ui-checkbox>
-                        </div>
-                        <div class="cycle-tracking__actions fd-ui-actions">
-                            <fd-ui-button type="submit" [loading]="isSavingCycle()">
-                                {{ 'CYCLE_TRACKING.SAVE_CYCLE' | translate }}
-                            </fd-ui-button>
-                        </div>
-                    </form>
-                </fd-ui-card>
-            }
-
-            <fd-cycle-current-card
-                data-tour-id="cycle-tracking-current"
-                [isLoading]="isLoading()"
-                [current]="currentCycleView()"
-                [prediction]="predictionView()"
-            />
-
-            @if (cycle()) {
-                <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.SETTINGS_TITLE' | translate">
-                    <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="settingsForm">
-                        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.SETTINGS_DESCRIPTION' | translate }}</p>
-                        <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
-                            <fd-ui-select
-                                class="cycle-tracking__form-control"
-                                [label]="'CYCLE_TRACKING.MODE' | translate"
-                                [options]="modeOptions()"
-                                [formField]="settingsForm.mode"
-                            />
-                            <fd-ui-input
-                                class="cycle-tracking__form-control"
-                                type="number"
-                                [label]="'CYCLE_TRACKING.AVG_LENGTH' | translate"
-                                [formField]="settingsForm.averageCycleLength"
-                            />
-                            <fd-ui-input
-                                class="cycle-tracking__form-control"
-                                type="number"
-                                [label]="'CYCLE_TRACKING.PERIOD_LENGTH' | translate"
-                                [formField]="settingsForm.averagePeriodLength"
-                            />
-                            <fd-ui-input
-                                class="cycle-tracking__form-control"
-                                type="number"
-                                [label]="'CYCLE_TRACKING.LUTEAL_LENGTH' | translate"
-                                [formField]="settingsForm.lutealLength"
-                            />
-                        </div>
-                        <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
-                            <fd-ui-checkbox
-                                class="cycle-tracking__form-control cycle-tracking__checkbox"
-                                [formField]="settingsForm.isRegular"
-                            >
-                                {{ 'CYCLE_TRACKING.IS_REGULAR' | translate }}
-                            </fd-ui-checkbox>
-                            <fd-ui-checkbox
-                                class="cycle-tracking__form-control cycle-tracking__checkbox"
-                                [formField]="settingsForm.showFertilityEstimates"
-                            >
-                                {{ 'CYCLE_TRACKING.SHOW_FERTILITY' | translate }}
-                            </fd-ui-checkbox>
-                            <fd-ui-checkbox
-                                class="cycle-tracking__form-control cycle-tracking__checkbox"
-                                [formField]="settingsForm.discreetNotifications"
-                            >
-                                {{ 'CYCLE_TRACKING.DISCREET_NOTIFICATIONS' | translate }}
-                            </fd-ui-checkbox>
-                        </div>
-                        <div class="cycle-tracking__actions fd-ui-actions">
-                            <fd-ui-button type="submit" [loading]="isSavingSettings()">
-                                {{ 'CYCLE_TRACKING.SAVE_SETTINGS' | translate }}
-                            </fd-ui-button>
-                            <fd-ui-button type="button" variant="danger" [loading]="isDeletingCycle()" (click)="deleteCycle()">
-                                {{ 'CYCLE_TRACKING.DELETE_CYCLE' | translate }}
-                            </fd-ui-button>
-                        </div>
-                    </form>
-                </fd-ui-card>
-            }
-        </div>
-
-        @if (cycle(); as currentCycle) {
-            <fd-cycle-calendar-card [cycle]="currentCycle" [locale]="appLocale()" (dateSelected)="editDay($event)" />
-        }
-
-        <div class="cycle-tracking__grid cycle-tracking__grid--log fd-grid fd-gap-card-content">
-            @if (isDayEditorOpen()) {
-                <fd-ui-card
-                    class="cycle-tracking__card"
-                    data-tour-id="cycle-tracking-day-log"
-                    [title]="'CYCLE_TRACKING.LOG_DAY_TITLE' | translate"
-                >
-                    @if (!cycle()) {
-                        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
-                    } @else {
-                        <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="dayForm">
-                            <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
-                                <fd-ui-date-input
-                                    class="cycle-tracking__form-control"
-                                    [label]="'CYCLE_TRACKING.DAY_DATE' | translate"
-                                    [formField]="dayForm.date"
-                                />
-                                <fd-ui-checkbox
-                                    class="cycle-tracking__form-control cycle-tracking__checkbox"
-                                    [formField]="dayForm.isBleeding"
-                                >
-                                    {{ 'CYCLE_TRACKING.IS_BLEEDING' | translate }}
-                                </fd-ui-checkbox>
-                            </div>
-
-                            @if (dayForm.isBleeding().value()) {
-                                <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
-                                    <fd-ui-select
-                                        class="cycle-tracking__form-control"
-                                        [label]="'CYCLE_TRACKING.BLEEDING_TYPE' | translate"
-                                        [options]="bleedingTypeOptions()"
-                                        [formField]="dayForm.bleedingType"
-                                    />
-                                    <fd-ui-select
-                                        class="cycle-tracking__form-control"
-                                        [label]="'CYCLE_TRACKING.FLOW' | translate"
-                                        [options]="flowOptions()"
-                                        [formField]="dayForm.flow"
-                                    />
-                                </div>
-                            }
-
-                            <div class="cycle-tracking__symptom-grid fd-grid fd-gap-card-header">
-                                @for (field of symptomFields; track field.key) {
-                                    <fd-ui-input
-                                        class="cycle-tracking__form-control"
-                                        type="number"
-                                        [step]="1"
-                                        [label]="field.labelKey | translate"
-                                        [formField]="symptomField(field.key)"
-                                    />
-                                }
-                            </div>
-
-                            <div class="cycle-tracking__advanced-action fd-ui-actions">
-                                <fd-ui-button type="button" variant="secondary" fill="text" (click)="toggleAdvancedDayFields()">
-                                    {{
-                                        (areAdvancedDayFieldsOpen() ? 'CYCLE_TRACKING.HIDE_ADVANCED' : 'CYCLE_TRACKING.SHOW_ADVANCED')
-                                            | translate
-                                    }}
-                                </fd-ui-button>
-                            </div>
-
-                            @if (areAdvancedDayFieldsOpen()) {
-                                <div class="cycle-tracking__section fd-stack fd-gap-card-header">
-                                    <h3 class="cycle-tracking__section-title fd-ui-title-sm">
-                                        {{ 'CYCLE_TRACKING.FERTILITY_TITLE' | translate }}
-                                    </h3>
-                                    <div
-                                        class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center"
-                                    >
-                                        <fd-ui-input
-                                            class="cycle-tracking__form-control"
-                                            type="number"
-                                            [step]="0.01"
-                                            [label]="'CYCLE_TRACKING.BBT' | translate"
-                                            [formField]="dayForm.basalBodyTemperatureCelsius"
-                                        />
-                                        <fd-ui-select
-                                            class="cycle-tracking__form-control"
-                                            [label]="'CYCLE_TRACKING.OVULATION_TEST' | translate"
-                                            [options]="ovulationTestOptions()"
-                                            [formField]="dayForm.ovulationTestResult"
-                                        />
-                                        <fd-ui-input
-                                            class="cycle-tracking__form-control"
-                                            [label]="'CYCLE_TRACKING.CERVICAL_FLUID' | translate"
-                                            [formField]="dayForm.cervicalFluid"
-                                        />
-                                        <fd-ui-checkbox
-                                            class="cycle-tracking__form-control cycle-tracking__checkbox"
-                                            [formField]="dayForm.hadSex"
-                                        >
-                                            {{ 'CYCLE_TRACKING.HAD_SEX' | translate }}
-                                        </fd-ui-checkbox>
-                                    </div>
-                                </div>
-                            }
-
-                            <fd-ui-textarea
-                                class="cycle-tracking__form-control"
-                                [label]="'CYCLE_TRACKING.NOTES' | translate"
-                                [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
-                                [formField]="dayForm.notes"
-                            />
-
-                            <div class="cycle-tracking__actions fd-ui-actions">
-                                <fd-ui-button type="submit" [loading]="isSavingDay()">
-                                    {{ (editingDayDate() ? 'CYCLE_TRACKING.UPDATE_DAY' : 'CYCLE_TRACKING.SAVE_DAY') | translate }}
-                                </fd-ui-button>
-                                <fd-ui-button type="button" variant="secondary" fill="text" (click)="closeDayEditor()">
-                                    {{ 'COMMON.CANCEL' | translate }}
-                                </fd-ui-button>
-                            </div>
-                        </form>
-                    }
-                </fd-ui-card>
-            }
-
+        @if (!cycle()) {
             <fd-ui-card
-                class="cycle-tracking__card"
-                data-tour-id="cycle-tracking-factors"
-                [title]="'CYCLE_TRACKING.FACTORS_TITLE' | translate"
+                class="cycle-tracking__setup-card"
+                data-tour-id="cycle-tracking-setup"
+                [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate"
             >
-                @if (!cycle()) {
-                    <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
-                } @else {
-                    <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="factorForm">
+                <p class="cycle-tracking__setup-copy fd-ui-body">{{ 'CYCLE_TRACKING.CREATE_CYCLE_DESCRIPTION' | translate }}</p>
+                <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="startCycleForm">
+                    <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
+                        <fd-ui-date-input
+                            class="cycle-tracking__form-control"
+                            [label]="'CYCLE_TRACKING.TRACKING_START_DATE' | translate"
+                            [formField]="startCycleForm.trackingStartDate"
+                        />
                         <fd-ui-select
                             class="cycle-tracking__form-control"
-                            [label]="'CYCLE_TRACKING.FACTOR_TYPE' | translate"
-                            [options]="factorTypeOptions()"
-                            [formField]="factorForm.type"
+                            [label]="'CYCLE_TRACKING.MODE' | translate"
+                            [options]="modeOptions()"
+                            [formField]="startCycleForm.mode"
                         />
-
-                        <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
-                            <fd-ui-date-input
-                                class="cycle-tracking__form-control"
-                                [label]="'CYCLE_TRACKING.FACTOR_START_DATE' | translate"
-                                [formField]="factorForm.startDate"
-                            />
-                            <fd-ui-date-input
-                                class="cycle-tracking__form-control"
-                                [label]="'CYCLE_TRACKING.FACTOR_END_DATE' | translate"
-                                [formField]="factorForm.endDate"
-                            />
-                        </div>
-
-                        <fd-ui-textarea
+                        <fd-ui-input
                             class="cycle-tracking__form-control"
-                            [label]="'CYCLE_TRACKING.NOTES' | translate"
-                            [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
-                            [formField]="factorForm.notes"
+                            type="number"
+                            [label]="'CYCLE_TRACKING.AVG_LENGTH' | translate"
+                            [formField]="startCycleForm.averageCycleLength"
                         />
-
-                        <div class="cycle-tracking__actions fd-ui-actions">
-                            <fd-ui-button type="submit" [loading]="isSavingFactor()">
-                                {{ (editingFactorId() ? 'CYCLE_TRACKING.UPDATE_FACTOR' : 'CYCLE_TRACKING.SAVE_FACTOR') | translate }}
-                            </fd-ui-button>
-                            <fd-ui-button
-                                type="button"
-                                variant="secondary"
-                                fill="text"
-                                [hidden]="!editingFactorId()"
-                                (click)="cancelFactorEdit()"
-                            >
-                                {{ 'CYCLE_TRACKING.CANCEL_EDIT' | translate }}
-                            </fd-ui-button>
-                        </div>
-                    </form>
-
-                    <fd-cycle-factor-list
-                        [items]="factorItems()"
-                        [isSaving]="isSavingFactor()"
-                        (editFactor)="editFactor($event)"
-                        (endFactor)="endFactorToday($event)"
-                    />
-                }
+                        <fd-ui-input
+                            class="cycle-tracking__form-control"
+                            type="number"
+                            [label]="'CYCLE_TRACKING.PERIOD_LENGTH' | translate"
+                            [formField]="startCycleForm.averagePeriodLength"
+                        />
+                        <fd-ui-input
+                            class="cycle-tracking__form-control"
+                            type="number"
+                            [label]="'CYCLE_TRACKING.LUTEAL_LENGTH' | translate"
+                            [formField]="startCycleForm.lutealLength"
+                        />
+                    </div>
+                    <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
+                        <fd-ui-checkbox class="cycle-tracking__form-control" [formField]="startCycleForm.isRegular">
+                            {{ 'CYCLE_TRACKING.IS_REGULAR' | translate }}
+                        </fd-ui-checkbox>
+                        <fd-ui-checkbox class="cycle-tracking__form-control" [formField]="startCycleForm.showFertilityEstimates">
+                            {{ 'CYCLE_TRACKING.SHOW_FERTILITY' | translate }}
+                        </fd-ui-checkbox>
+                        <fd-ui-checkbox class="cycle-tracking__form-control" [formField]="startCycleForm.discreetNotifications">
+                            {{ 'CYCLE_TRACKING.DISCREET_NOTIFICATIONS' | translate }}
+                        </fd-ui-checkbox>
+                    </div>
+                    <div class="cycle-tracking__actions fd-ui-actions">
+                        <fd-ui-button type="submit" appearance="brand-action" [loading]="isSavingCycle()">
+                            {{ 'CYCLE_TRACKING.SAVE_CYCLE' | translate }}
+                        </fd-ui-button>
+                    </div>
+                </form>
             </fd-ui-card>
+        } @else {
+            @if (overviewView(); as overview) {
+                <fd-cycle-overview-card [overview]="overview" (dateSelected)="editDay($event)" (logToday)="openDayEditor()" />
+            }
 
-            <fd-ui-card
-                class="cycle-tracking__card"
-                data-tour-id="cycle-tracking-episode-history"
-                [title]="'CYCLE_TRACKING.EPISODE_HISTORY_TITLE' | translate"
-            >
-                @if (menstrualEpisodes().length === 0) {
-                    <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.EPISODE_HISTORY_EMPTY' | translate }}</p>
-                } @else {
-                    <div class="fd-stack fd-gap-card-header">
-                        @for (episode of menstrualEpisodes(); track episode.id) {
-                            <div class="cycle-tracking__section fd-stack fd-gap-card-header">
-                                @if (editingEpisodeId() === episode.id) {
-                                    <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="episodeForm">
-                                        <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
-                                            <fd-ui-date-input
-                                                class="cycle-tracking__form-control"
-                                                [label]="'CYCLE_TRACKING.EPISODE_START_DATE' | translate"
-                                                [formField]="episodeForm.startDate"
-                                            />
-                                            <fd-ui-date-input
-                                                class="cycle-tracking__form-control"
-                                                [label]="'CYCLE_TRACKING.EPISODE_END_DATE' | translate"
-                                                [formField]="episodeForm.endDate"
-                                            />
-                                        </div>
-                                        <div class="cycle-tracking__actions fd-ui-actions">
-                                            <fd-ui-button type="submit" [loading]="isSavingEpisode()">
-                                                {{ 'CYCLE_TRACKING.SAVE_EPISODE' | translate }}
-                                            </fd-ui-button>
-                                            <fd-ui-button
-                                                type="button"
-                                                variant="secondary"
-                                                fill="text"
-                                                (click)="cancelMenstrualEpisodeEdit()"
-                                            >
-                                                {{ 'COMMON.CANCEL' | translate }}
-                                            </fd-ui-button>
-                                        </div>
-                                    </form>
-                                } @else {
-                                    <div class="fd-ui-actions fd-align-center">
-                                        <span class="fd-ui-body-sm">
-                                            {{ formatEpisodeDate(episode.startDate) }} —
-                                            {{
-                                                episode.endDate
-                                                    ? formatEpisodeDate(episode.endDate)
-                                                    : ('CYCLE_TRACKING.EPISODE_OPEN_END' | translate)
-                                            }}
-                                        </span>
+            <div class="cycle-tracking__primary-grid">
+                <div class="cycle-tracking__main-column fd-stack fd-gap-card-content">
+                    <fd-ui-card [title]="'CYCLE_TRACKING.PREDICTION_CARD_TITLE' | translate">
+                        @if (predictionView(); as prediction) {
+                            @if (prediction.hasPredictionRanges) {
+                                <div class="cycle-tracking__prediction-primary">
+                                    <fd-ui-icon class="cycle-tracking__prediction-icon" name="calendar_month" aria-hidden="true" />
+                                    <div class="fd-stack fd-gap-2xs">
+                                        <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.EXPECTED' | translate }}</span>
+                                        <strong class="cycle-tracking__prediction-date fd-ui-title-lg">{{
+                                            prediction.nextPeriodRangeLabel
+                                        }}</strong>
                                         <span class="fd-ui-body-sm">
                                             {{
-                                                episode.status === 1
-                                                    ? ('CYCLE_TRACKING.EPISODE_CONFIRMED' | translate)
-                                                    : ('CYCLE_TRACKING.EPISODE_INFERRED' | translate)
+                                                'CYCLE_TRACKING.PREDICTION_CONFIDENCE'
+                                                    | translate: { confidence: prediction.confidenceLabel }
                                             }}
                                         </span>
-                                        @if (episode.excludedFromPredictions) {
-                                            <span class="fd-ui-body-sm">
-                                                {{ 'CYCLE_TRACKING.EPISODE_EXCLUDED' | translate }}
-                                            </span>
-                                        }
-                                        @if (episode.status === 1) {
-                                            <fd-ui-button
-                                                type="button"
-                                                variant="secondary"
-                                                fill="text"
-                                                (click)="editMenstrualEpisode(episode.id)"
-                                            >
-                                                {{ 'CYCLE_TRACKING.EDIT_EPISODE' | translate }}
-                                            </fd-ui-button>
-                                            <fd-ui-button
-                                                type="button"
-                                                variant="secondary"
-                                                fill="text"
-                                                [loading]="excludingEpisodeId() === episode.id"
-                                                (click)="toggleMenstrualEpisodePrediction(episode.id)"
-                                            >
-                                                {{
-                                                    (episode.excludedFromPredictions
-                                                        ? 'CYCLE_TRACKING.INCLUDE_EPISODE'
-                                                        : 'CYCLE_TRACKING.EXCLUDE_EPISODE'
-                                                    ) | translate
-                                                }}
-                                            </fd-ui-button>
-                                            <fd-ui-button
-                                                type="button"
-                                                variant="danger"
-                                                fill="text"
-                                                [loading]="deletingEpisodeId() === episode.id"
-                                                (click)="deleteMenstrualEpisode(episode.id)"
-                                            >
-                                                {{ 'CYCLE_TRACKING.DELETE_EPISODE' | translate }}
-                                            </fd-ui-button>
-                                        }
                                     </div>
-                                }
+                                </div>
+                                <div class="cycle-tracking__prediction-secondary">
+                                    @if (prediction.ovulationRangeLabel) {
+                                        <span class="fd-ui-body-sm">
+                                            <strong>{{ 'CYCLE_TRACKING.PRED_OVULATION' | translate }}:</strong>
+                                            {{ prediction.ovulationRangeLabel }}
+                                        </span>
+                                    }
+                                    @if (prediction.pmsRangeLabel) {
+                                        <span class="fd-ui-body-sm">
+                                            <strong>{{ 'CYCLE_TRACKING.PRED_PMS' | translate }}:</strong> {{ prediction.pmsRangeLabel }}
+                                        </span>
+                                    }
+                                </div>
+                                <p class="cycle-tracking__disclaimer fd-ui-caption">
+                                    {{ 'CYCLE_TRACKING.PREDICTION_DISCLAIMER' | translate }}
+                                </p>
+                            } @else {
+                                <div class="cycle-tracking__empty-state fd-stack fd-gap-sm">
+                                    <fd-ui-icon class="cycle-tracking__empty-icon" name="progress_activity" aria-hidden="true" />
+                                    <strong class="fd-ui-title-sm">{{ prediction.limitedReasonKey ?? '' | translate }}</strong>
+                                    <p class="fd-ui-body-sm">
+                                        {{
+                                            (prediction.limitedReasonKey === 'CYCLE_TRACKING.PREDICTIONS_LEARNING'
+                                                ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY'
+                                                : 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY'
+                                            ) | translate: { confidence: prediction.confidenceLabel }
+                                        }}
+                                    </p>
+                                </div>
+                            }
+                        } @else {
+                            <div class="cycle-tracking__empty-state fd-stack fd-gap-sm">
+                                <fd-ui-icon class="cycle-tracking__empty-icon" name="progress_activity" aria-hidden="true" />
+                                <strong class="fd-ui-title-sm">{{ 'CYCLE_TRACKING.PREDICTIONS_LEARNING' | translate }}</strong>
+                                <p class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY' | translate }}</p>
                             </div>
                         }
+                    </fd-ui-card>
+
+                    <fd-cycle-days-card
+                        data-tour-id="cycle-tracking-history"
+                        [titleKey]="'CYCLE_TRACKING.RECENT_HISTORY'"
+                        [isLoading]="isLoading()"
+                        [items]="recentDayItems()"
+                        [clearingDate]="clearingDayDate()"
+                        (editDay)="editDay($event)"
+                        (clearDay)="clearDay($event)"
+                        (confirmPeriodStart)="confirmPeriodStart($event)"
+                    />
+                </div>
+
+                <aside class="cycle-tracking__side-column fd-stack fd-gap-card-content">
+                    <fd-ui-card [title]="'CYCLE_TRACKING.OBSERVATIONS_TITLE' | translate">
+                        @if (dayItems().length < 3) {
+                            <div class="cycle-tracking__empty-state fd-stack fd-gap-sm">
+                                <fd-ui-icon class="cycle-tracking__empty-icon" name="monitoring" aria-hidden="true" />
+                                <strong class="fd-ui-title-sm">{{ 'CYCLE_TRACKING.OBSERVATIONS_EMPTY_TITLE' | translate }}</strong>
+                                <p class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.OBSERVATIONS_EMPTY_BODY' | translate }}</p>
+                            </div>
+                        } @else {
+                            <div class="cycle-tracking__observation-stats fd-grid fd-gap-sm">
+                                <div>
+                                    <strong class="fd-ui-stat-value">{{ dayItems().length }}</strong>
+                                    <span class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.TRACKED_DAYS_COUNT' | translate }}</span>
+                                </div>
+                                <div>
+                                    <strong class="fd-ui-stat-value">{{ symptoms().length }}</strong>
+                                    <span class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.SYMPTOM_RECORDS_COUNT' | translate }}</span>
+                                </div>
+                            </div>
+                            <p class="cycle-tracking__disclaimer fd-ui-body-sm">
+                                {{ 'CYCLE_TRACKING.OBSERVATIONS_READY_BODY' | translate }}
+                            </p>
+                        }
+                    </fd-ui-card>
+
+                    <fd-ui-card [title]="'CYCLE_TRACKING.TRACKABLE_TITLE' | translate">
+                        <ul class="cycle-tracking__trackable-list fd-stack fd-gap-sm fd-ui-body-sm">
+                            <li>{{ 'CYCLE_TRACKING.TRACKABLE_BLEEDING' | translate }}</li>
+                            <li>{{ 'CYCLE_TRACKING.TRACKABLE_WELLBEING' | translate }}</li>
+                            <li>{{ 'CYCLE_TRACKING.TRACKABLE_MOOD' | translate }}</li>
+                            <li>{{ 'CYCLE_TRACKING.TRACKABLE_LIFESTYLE' | translate }}</li>
+                        </ul>
+                    </fd-ui-card>
+                </aside>
+            </div>
+
+            <details class="cycle-tracking__details">
+                <summary class="cycle-tracking__details-summary fd-ui-action-text">
+                    <span>{{ 'CYCLE_TRACKING.ALL_DATA_AND_TOOLS' | translate }}</span>
+                    <span class="cycle-tracking__details-hint fd-ui-body-sm">{{ 'CYCLE_TRACKING.ALL_DATA_HINT' | translate }}</span>
+                </summary>
+                <div class="cycle-tracking__details-content fd-stack fd-gap-card-content">
+                    @if (cycle(); as currentCycle) {
+                        <fd-cycle-calendar-card [cycle]="currentCycle" [locale]="appLocale()" (dateSelected)="editDay($event)" />
+                    }
+
+                    <div class="cycle-tracking__details-grid">
+                        <fd-ui-card
+                            class="cycle-tracking__card"
+                            data-tour-id="cycle-tracking-factors"
+                            [title]="'CYCLE_TRACKING.FACTORS_TITLE' | translate"
+                        >
+                            <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="factorForm">
+                                <fd-ui-select
+                                    [label]="'CYCLE_TRACKING.FACTOR_TYPE' | translate"
+                                    [options]="factorTypeOptions()"
+                                    [formField]="factorForm.type"
+                                />
+                                <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
+                                    <fd-ui-date-input
+                                        [label]="'CYCLE_TRACKING.FACTOR_START_DATE' | translate"
+                                        [formField]="factorForm.startDate"
+                                    />
+                                    <fd-ui-date-input
+                                        [label]="'CYCLE_TRACKING.FACTOR_END_DATE' | translate"
+                                        [formField]="factorForm.endDate"
+                                    />
+                                </div>
+                                <fd-ui-textarea
+                                    [label]="'CYCLE_TRACKING.NOTES' | translate"
+                                    [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
+                                    [formField]="factorForm.notes"
+                                />
+                                <div class="cycle-tracking__actions fd-ui-actions">
+                                    <fd-ui-button type="submit" [loading]="isSavingFactor()">
+                                        {{
+                                            (editingFactorId() ? 'CYCLE_TRACKING.UPDATE_FACTOR' : 'CYCLE_TRACKING.SAVE_FACTOR') | translate
+                                        }}
+                                    </fd-ui-button>
+                                    <fd-ui-button
+                                        type="button"
+                                        variant="secondary"
+                                        fill="text"
+                                        [hidden]="!editingFactorId()"
+                                        (click)="cancelFactorEdit()"
+                                    >
+                                        {{ 'CYCLE_TRACKING.CANCEL_EDIT' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                            </form>
+                            <fd-cycle-factor-list
+                                [items]="factorItems()"
+                                [isSaving]="isSavingFactor()"
+                                (editFactor)="editFactor($event)"
+                                (endFactor)="endFactorToday($event)"
+                            />
+                        </fd-ui-card>
+
+                        <fd-ui-card
+                            class="cycle-tracking__card"
+                            data-tour-id="cycle-tracking-episode-history"
+                            [title]="'CYCLE_TRACKING.EPISODE_HISTORY_TITLE' | translate"
+                        >
+                            @if (menstrualEpisodes().length === 0) {
+                                <p class="cycle-tracking__empty fd-ui-body-sm">
+                                    {{ 'CYCLE_TRACKING.EPISODE_HISTORY_EMPTY' | translate }}
+                                </p>
+                            } @else {
+                                <div class="fd-stack fd-gap-card-header">
+                                    @for (episode of menstrualEpisodes(); track episode.id) {
+                                        <div class="cycle-tracking__section fd-stack fd-gap-card-header">
+                                            @if (editingEpisodeId() === episode.id) {
+                                                <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="episodeForm">
+                                                    <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
+                                                        <fd-ui-date-input
+                                                            [label]="'CYCLE_TRACKING.EPISODE_START_DATE' | translate"
+                                                            [formField]="episodeForm.startDate"
+                                                        />
+                                                        <fd-ui-date-input
+                                                            [label]="'CYCLE_TRACKING.EPISODE_END_DATE' | translate"
+                                                            [formField]="episodeForm.endDate"
+                                                        />
+                                                    </div>
+                                                    <div class="cycle-tracking__actions fd-ui-actions">
+                                                        <fd-ui-button type="submit" [loading]="isSavingEpisode()">
+                                                            {{ 'CYCLE_TRACKING.SAVE_EPISODE' | translate }}
+                                                        </fd-ui-button>
+                                                        <fd-ui-button
+                                                            type="button"
+                                                            variant="secondary"
+                                                            fill="text"
+                                                            (click)="cancelMenstrualEpisodeEdit()"
+                                                        >
+                                                            {{ 'COMMON.CANCEL' | translate }}
+                                                        </fd-ui-button>
+                                                    </div>
+                                                </form>
+                                            } @else {
+                                                <div class="cycle-tracking__episode fd-stack fd-gap-xs">
+                                                    <div class="fd-row fd-justify-between fd-gap-sm fd-align-center">
+                                                        <strong class="fd-ui-action-text">
+                                                            {{ formatEpisodeDate(episode.startDate) }} —
+                                                            {{
+                                                                episode.endDate
+                                                                    ? formatEpisodeDate(episode.endDate)
+                                                                    : ('CYCLE_TRACKING.EPISODE_OPEN_END' | translate)
+                                                            }}
+                                                        </strong>
+                                                        <span class="fd-ui-pill fd-ui-pill--compact fd-ui-pill--secondary fd-ui-meta-text">
+                                                            {{
+                                                                (episode.status === 1
+                                                                    ? 'CYCLE_TRACKING.EPISODE_CONFIRMED'
+                                                                    : 'CYCLE_TRACKING.EPISODE_INFERRED'
+                                                                ) | translate
+                                                            }}
+                                                        </span>
+                                                    </div>
+                                                    @if (episode.excludedFromPredictions) {
+                                                        <span class="fd-ui-body-sm">{{
+                                                            'CYCLE_TRACKING.EPISODE_EXCLUDED' | translate
+                                                        }}</span>
+                                                    }
+                                                    @if (episode.status === 1) {
+                                                        <div class="fd-ui-actions">
+                                                            <fd-ui-button
+                                                                type="button"
+                                                                size="sm"
+                                                                variant="secondary"
+                                                                fill="text"
+                                                                (click)="editMenstrualEpisode(episode.id)"
+                                                            >
+                                                                {{ 'CYCLE_TRACKING.EDIT_EPISODE' | translate }}
+                                                            </fd-ui-button>
+                                                            <fd-ui-button
+                                                                type="button"
+                                                                size="sm"
+                                                                variant="secondary"
+                                                                fill="text"
+                                                                [loading]="excludingEpisodeId() === episode.id"
+                                                                (click)="toggleMenstrualEpisodePrediction(episode.id)"
+                                                            >
+                                                                {{
+                                                                    (episode.excludedFromPredictions
+                                                                        ? 'CYCLE_TRACKING.INCLUDE_EPISODE'
+                                                                        : 'CYCLE_TRACKING.EXCLUDE_EPISODE'
+                                                                    ) | translate
+                                                                }}
+                                                            </fd-ui-button>
+                                                            <fd-ui-button
+                                                                type="button"
+                                                                size="sm"
+                                                                variant="danger"
+                                                                fill="text"
+                                                                [loading]="deletingEpisodeId() === episode.id"
+                                                                (click)="deleteMenstrualEpisode(episode.id)"
+                                                            >
+                                                                {{ 'CYCLE_TRACKING.DELETE_EPISODE' | translate }}
+                                                            </fd-ui-button>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </fd-ui-card>
                     </div>
-                }
-            </fd-ui-card>
 
-            <fd-cycle-days-card
-                data-tour-id="cycle-tracking-history"
-                [isLoading]="isLoading()"
-                [items]="dayItems()"
-                [clearingDate]="clearingDayDate()"
-                (editDay)="editDay($event)"
-                (clearDay)="clearDay($event)"
-                (confirmPeriodStart)="confirmPeriodStart($event)"
-            />
+                    <fd-cycle-nutrition-summary-card [isLoading]="isLoadingNutritionSummary()" [summary]="nutritionSummaryView()" />
+                </div>
+            </details>
 
-            <fd-cycle-nutrition-summary-card [isLoading]="isLoadingNutritionSummary()" [summary]="nutritionSummaryView()" />
-        </div>
+            <p class="cycle-tracking__private-note fd-ui-caption">{{ 'CYCLE_TRACKING.PRIVATE_DATA_NOTE' | translate }}</p>
+        }
     </fd-page-body>
 </div>
+
+@if (isDayEditorOpen()) {
+    <fd-cycle-day-editor-drawer
+        data-tour-id="cycle-tracking-day-log"
+        [dayForm]="dayForm"
+        [isSaving]="isSavingDay()"
+        [editingDate]="editingDayDate()"
+        [ovulationTestOptions]="ovulationTestOptions()"
+        (closed)="closeDayEditor()"
+    />
+}
+
+@if (isSettingsOpen()) {
+    <fd-cycle-settings-drawer
+        [settingsForm]="settingsForm"
+        [modeOptions]="modeOptions()"
+        [isSaving]="isSavingSettings()"
+        [isDeleting]="isDeletingCycle()"
+        (closed)="closeSettings()"
+        (deleteRequested)="deleteCycle()"
+    />
+}

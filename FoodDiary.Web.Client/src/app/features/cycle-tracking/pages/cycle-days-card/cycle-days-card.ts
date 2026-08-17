@@ -13,6 +13,7 @@ import { CycleDayItemComponent } from './cycle-day-item';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CycleDaysCardComponent {
+    public readonly titleKey = input('CYCLE_TRACKING.DAYS_TITLE');
     public readonly isLoading = input.required<boolean>();
     public readonly items = input.required<CycleDayViewModel[]>();
     public readonly clearingDate = input<string | null>(null);

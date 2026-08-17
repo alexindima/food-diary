@@ -10,8 +10,8 @@
     "moduleHotspotReviewCandidates": 0,
     "ambiguousBackendContracts": 3,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 149,
-    "componentsWithoutDirectSpecs": 128,
+    "selectorUnreferencedComponents": 150,
+    "componentsWithoutDirectSpecs": 129,
     "criticalSymbolsWithoutTestReferences": 22,
     "explicitDebtMarkers": 3
   },
@@ -510,6 +510,14 @@
       "path": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/auth/pages/required-password-change/required-password-change.html",
       "specPath": null
+    },
+    {
+      "class": "CycleCurrentCardComponent",
+      "selector": "fd-cycle-current-card",
+      "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.html",
+      "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-current-card/cycle-current-card.spec.ts"
     },
     {
       "class": "CycleTrackingPageComponent",
@@ -1995,6 +2003,46 @@
         }
       ],
       "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "CycleSettingsDrawerComponent",
+      "selector": "fd-cycle-settings-drawer",
+      "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.html",
+      "inputs": [
+        {
+          "name": "settingsForm",
+          "type": "FieldTree<CycleSettingsFormModel>",
+          "required": true
+        },
+        {
+          "name": "modeOptions",
+          "type": "Array<FdUiSelectOption<CycleTrackingMode>>",
+          "required": true
+        },
+        {
+          "name": "isSaving",
+          "type": "boolean",
+          "required": true
+        },
+        {
+          "name": "isDeleting",
+          "type": "boolean",
+          "required": true
+        }
+      ],
+      "outputs": [
+        {
+          "name": "closed",
+          "type": ""
+        },
+        {
+          "name": "deleteRequested",
+          "type": ""
+        }
+      ],
       "specPath": null
     },
     {

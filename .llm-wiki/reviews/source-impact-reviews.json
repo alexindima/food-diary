@@ -177,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "8f46a994071b475f99a3f9e172589432e86d3bb09ea1601c965b517e202cb9e4"
+          "sha256": "2d53b9861ce35b700769b77abf518e5098d078a1e319e81045a03640ede5f6aa"
         }
       ],
-      "reason": "The cycle API change is additive: it adds an authenticated DELETE operation for confirmed menstrual episodes and a nullable prediction-exclusion field while preserving existing routes, defaults, and response shapes; api-compat reports zero breaking changes and the full OpenAPI snapshot is updated.",
+      "reason": "Cycle UX V2 adds three scoped Angular presentation components, responsive drawer behavior, localized labels, and focused tests; generated indexes now reflect the verified current frontend contracts without changing architecture ownership.",
       "baseRef": "HEAD",
-      "gitHead": "dcc813facf7c723c23cfbb09556d2e9c7fc1e23a",
-      "reviewedAtUtc": "2026-08-16T14:17:01.0680395Z"
+      "gitHead": "b4a8338709047117f9091e9342a4731970400b0d",
+      "reviewedAtUtc": "2026-08-17T00:34:34.2409292Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "b12bd5c3730d9d278f125e86292a81dea54763d3836b722c9d4cd77737bc2f91"
+          "sha256": "65b3497dd5afede702b6c5dfaf46a41795955e12e9a0ee0d77435441383a5ab0"
         }
       ],
-      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
+      "reason": "Cycle UX V2 adds three scoped Angular presentation components, responsive drawer behavior, localized labels, and focused tests; generated indexes now reflect the verified current frontend contracts without changing architecture ownership.",
       "baseRef": "HEAD",
-      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
-      "reviewedAtUtc": "2026-08-16T23:41:26.7824790Z"
+      "gitHead": "b4a8338709047117f9091e9342a4731970400b0d",
+      "reviewedAtUtc": "2026-08-17T00:34:35.2344654Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -989,17 +989,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "a279e40142985c020d46c07615b82231f174c02a1c65a86ba5ed83dc18c0f90a"
+          "sha256": "c1c74b1bb259b854fe7bdaca2f8f4e55df484bd653d6b2b73bf7165c68e0de18"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "a70e6312a77c32a1c078fa2bf96df475142d26891b5128a91ddddafcebd433b7"
+          "sha256": "379c6a070a737e8ae8ba05405eac2a9bb35d21aadaa6b50b64ecf3320c30cb9f"
         }
       ],
-      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
+      "reason": "Cycle UX V2 adds three scoped Angular presentation components, responsive drawer behavior, localized labels, and focused tests; generated indexes now reflect the verified current frontend contracts without changing architecture ownership.",
       "baseRef": "HEAD",
-      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
-      "reviewedAtUtc": "2026-08-16T23:41:27.7813221Z"
+      "gitHead": "b4a8338709047117f9091e9342a4731970400b0d",
+      "reviewedAtUtc": "2026-08-17T00:34:35.8658830Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1091,13 +1091,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "a279e40142985c020d46c07615b82231f174c02a1c65a86ba5ed83dc18c0f90a"
+          "sha256": "c1c74b1bb259b854fe7bdaca2f8f4e55df484bd653d6b2b73bf7165c68e0de18"
         }
       ],
-      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
+      "reason": "Cycle UX V2 adds three scoped Angular presentation components, responsive drawer behavior, localized labels, and focused tests; generated indexes now reflect the verified current frontend contracts without changing architecture ownership.",
       "baseRef": "HEAD",
-      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
-      "reviewedAtUtc": "2026-08-16T23:41:25.6760497Z"
+      "gitHead": "b4a8338709047117f9091e9342a4731970400b0d",
+      "reviewedAtUtc": "2026-08-17T00:34:34.7023850Z"
     },
     {
       "pageId": "workflow.query-context",

@@ -15,6 +15,7 @@ import {
     buildCycleDayItems,
     buildCycleFactorItems,
     buildCycleNutritionSummaryView,
+    buildCycleOverviewView,
     buildCyclePredictionView,
 } from './cycle-tracking-page.mapper';
 
@@ -60,6 +61,12 @@ const APRIL_MONTH_INDEX = 3;
 const LAST_PROLONGED_BLEEDING_INDEX = PROLONGED_BLEEDING_DAYS - 1;
 const SEVERE_PAIN_VALUE = 8;
 const NUTRITION_LOGGED_CYCLE_DAYS = 4;
+const OVERVIEW_YEAR = 2026;
+const OVERVIEW_MONTH_INDEX = 3;
+const OVERVIEW_DAY = 16;
+const EPISODE_START_DAY = 10;
+const EXPECTED_CYCLE_DAY = 7;
+const OVERVIEW_DAY_COUNT = 11;
 const NUTRITION_SUMMARY: CycleNutritionSummary = {
     dateFrom: '2026-04-01T00:00:00.000Z',
     dateTo: '2026-04-30T23:59:59.999Z',
@@ -134,6 +141,59 @@ describe('cycle tracking page mapper', () => {
 
     it('returns null when there is no current cycle', () => {
         expect(buildCycleCurrentView(null, 'en-US')).toBeNull();
+    });
+
+    it('builds a today-first overview around the current date', () => {
+        const view = buildCycleOverviewView(
+            {
+                ...CYCLE,
+                bleedingEntries: [{ ...BLEEDING_ENTRY, date: '2026-04-16T00:00:00.000Z' }],
+                menstrualEpisodes: [
+                    {
+                        id: 'episode-1',
+                        cycleProfileId: CYCLE.id,
+                        startDate: '2026-04-10T00:00:00.000Z',
+                        endDate: '2026-04-14T00:00:00.000Z',
+                        status: 1,
+                        excludedFromPredictions: false,
+                    },
+                ],
+                predictions: {
+                    confidence: 'Low',
+                    rationale: '',
+                    nextPeriodStartFrom: '2026-04-19T00:00:00.000Z',
+                    nextPeriodStartTo: '2026-04-20T00:00:00.000Z',
+                },
+            },
+            'en-US',
+            new Date(OVERVIEW_YEAR, OVERVIEW_MONTH_INDEX, OVERVIEW_DAY),
+        );
+
+        expect(view?.todayDateKey).toBe('2026-04-16');
+        expect(view?.cycleDayNumber).toBe(EXPECTED_CYCLE_DAY);
+        expect(view?.hasTodayEntry).toBe(true);
+        expect(view?.days).toHaveLength(OVERVIEW_DAY_COUNT);
+        expect(view?.days.find(day => day.isToday)).toEqual(expect.objectContaining({ dateKey: '2026-04-16', isBleeding: true }));
+        expect(view?.days.find(day => day.dateKey === '2026-04-19')?.isPredictedPeriod).toBe(true);
+
+        const viewFromEpisodeStart = buildCycleOverviewView(
+            {
+                ...CYCLE,
+                menstrualEpisodes: [
+                    {
+                        id: 'episode-1',
+                        cycleProfileId: CYCLE.id,
+                        startDate: '2026-04-10T00:00:00.000Z',
+                        endDate: '2026-04-14T00:00:00.000Z',
+                        status: 1,
+                        excludedFromPredictions: false,
+                    },
+                ],
+            },
+            'en-US',
+            new Date(OVERVIEW_YEAR, OVERVIEW_MONTH_INDEX, EPISODE_START_DAY),
+        );
+        expect(viewFromEpisodeStart?.days.find(day => day.dateKey === '2026-04-09')?.cycleDayNumber).toBe(CYCLE.averageCycleLength);
     });
 });
 

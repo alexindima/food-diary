@@ -1,0 +1,58 @@
+<fd-ui-card class="cycle-overview" data-tour-id="cycle-tracking-current">
+    <div class="cycle-overview__content">
+        <div class="cycle-overview__today fd-stack fd-gap-sm">
+            <div>
+                <p class="cycle-overview__eyebrow fd-ui-meta-text">{{ 'CYCLE_TRACKING.TODAY' | translate }}</p>
+                <h2 class="cycle-overview__date fd-ui-title-lg">{{ overview().todayDateLabel }}</h2>
+            </div>
+            <div class="cycle-overview__cycle-day fd-row fd-gap-xs fd-align-center">
+                @if (overview().cycleDayNumber; as cycleDayNumber) {
+                    <strong class="fd-ui-title-md">{{ 'CYCLE_TRACKING.CYCLE_DAY' | translate: { value: cycleDayNumber } }}</strong>
+                } @else {
+                    <strong class="fd-ui-title-md">{{ 'CYCLE_TRACKING.CYCLE_DAY_UNKNOWN' | translate }}</strong>
+                }
+                @if (overview().hasTodayEntry) {
+                    <span class="cycle-overview__status fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text">
+                        {{ 'CYCLE_TRACKING.TODAY_RECORDED' | translate }}
+                    </span>
+                }
+            </div>
+            <p class="cycle-overview__copy fd-ui-body-sm">{{ 'CYCLE_TRACKING.CYCLE_DAY_EXPLANATION' | translate }}</p>
+        </div>
+
+        <div class="cycle-overview__timeline fd-stack fd-gap-sm">
+            <div class="cycle-overview__month fd-ui-title-sm">{{ overview().monthLabel }}</div>
+            <div class="cycle-overview__days" [attr.aria-label]="'CYCLE_TRACKING.COMPACT_CALENDAR' | translate">
+                @for (day of overview().days; track day.dateKey) {
+                    <button
+                        class="cycle-overview__day"
+                        type="button"
+                        [class.cycle-overview__day--today]="day.isToday"
+                        [class.cycle-overview__day--bleeding]="day.isBleeding"
+                        [class.cycle-overview__day--predicted]="day.isPredictedPeriod"
+                        [class.cycle-overview__day--tracked]="day.isTracked"
+                        [disabled]="day.isFuture"
+                        [attr.aria-current]="day.isToday ? 'date' : null"
+                        [attr.aria-label]="
+                            'CYCLE_TRACKING.COMPACT_DAY_LABEL'
+                                | translate
+                                    : {
+                                          weekday: day.weekdayLabel,
+                                          day: day.dayLabel,
+                                          cycleDay: day.cycleDayNumber ?? '—',
+                                      }
+                        "
+                        (click)="dateSelected.emit(day.dateKey)"
+                    >
+                        <span class="cycle-overview__weekday fd-ui-meta-text">{{ day.weekdayLabel }}</span>
+                        <span class="cycle-overview__number fd-ui-action-text">{{ day.dayLabel }}</span>
+                        <span class="cycle-overview__cycle-number fd-ui-meta-text">{{ day.cycleDayNumber ?? '—' }}</span>
+                    </button>
+                }
+            </div>
+            <fd-ui-button appearance="brand-action" icon="add_circle_outline" [fullWidth]="true" (click)="logToday.emit()">
+                {{ (overview().hasTodayEntry ? 'CYCLE_TRACKING.EDIT_TODAY' : 'CYCLE_TRACKING.LOG_TODAY') | translate }}
+            </fd-ui-button>
+        </div>
+    </div>
+</fd-ui-card>

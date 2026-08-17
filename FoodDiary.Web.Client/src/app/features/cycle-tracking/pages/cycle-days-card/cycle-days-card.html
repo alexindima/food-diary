@@ -1,4 +1,4 @@
-<fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.DAYS_TITLE' | translate">
+<fd-ui-card class="cycle-tracking__card" [title]="titleKey() | translate">
     @if (isLoading()) {
         <div class="cycle-tracking__loader fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</div>
     } @else if (items().length === 0) {

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
+import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
-import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
@@ -20,12 +20,8 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
-import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from '../lib/cycle-tracking.config';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
 import {
-    BLEEDING_TYPE_BLEEDING,
-    BLEEDING_TYPE_SPOTTING,
-    type BleedingType,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FACTOR_TYPE_LACTATION,
     CYCLE_FACTOR_TYPE_NO_PERIOD,
@@ -33,9 +29,6 @@ import {
     CYCLE_FACTOR_TYPE_PERIMENOPAUSE,
     CYCLE_FACTOR_TYPE_POSTPARTUM,
     CYCLE_FACTOR_TYPE_PREGNANCY,
-    CYCLE_FLOW_HEAVY,
-    CYCLE_FLOW_LIGHT,
-    CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_NO_PERIOD,
     CYCLE_TRACKING_MODE_PERIMENOPAUSE,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
@@ -43,7 +36,6 @@ import {
     CYCLE_TRACKING_MODE_PREGNANCY,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     type CycleFactorType,
-    type CycleFlowLevel,
     type CycleTrackingMode,
     OVULATION_TEST_RESULT_NEGATIVE,
     OVULATION_TEST_RESULT_POSITIVE,
@@ -51,18 +43,22 @@ import {
     type OvulationTestResult,
 } from '../models/cycle.data';
 import { CycleCalendarCardComponent } from './cycle-calendar-card/cycle-calendar-card';
-import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card';
+import { CycleDayEditorDrawerComponent } from './cycle-day-editor-drawer/cycle-day-editor-drawer';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
 import { CycleFactorListComponent } from './cycle-factor-list/cycle-factor-list';
 import { CycleNutritionSummaryCardComponent } from './cycle-nutrition-summary-card/cycle-nutrition-summary-card';
+import { CycleOverviewCardComponent } from './cycle-overview-card/cycle-overview-card';
+import { CycleSettingsDrawerComponent } from './cycle-settings-drawer/cycle-settings-drawer';
 import {
-    buildCycleCurrentView,
     buildCycleDayItems,
     buildCycleFactorItems,
     buildCycleNutritionSummaryView,
+    buildCycleOverviewView,
     buildCyclePredictionView,
 } from './cycle-tracking-page-lib/cycle-tracking-page.mapper';
 import { CYCLE_TRACKING_TOUR } from './cycle-tracking-page-lib/cycle-tracking-tour';
+
+const RECENT_DAY_LIMIT = 5;
 
 @Component({
     selector: 'fd-cycle-tracking-page',
@@ -74,6 +70,7 @@ import { CYCLE_TRACKING_TOUR } from './cycle-tracking-page-lib/cycle-tracking-to
         FormField,
         FormRoot,
         FdUiHintDirective,
+        FdUiIconComponent,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiInputComponent,
@@ -81,9 +78,11 @@ import { CYCLE_TRACKING_TOUR } from './cycle-tracking-page-lib/cycle-tracking-to
         FdUiTextareaComponent,
         FdUiDateInputComponent,
         FdUiCheckboxComponent,
-        CycleCurrentCardComponent,
+        CycleOverviewCardComponent,
         CycleCalendarCardComponent,
         CycleDaysCardComponent,
+        CycleDayEditorDrawerComponent,
+        CycleSettingsDrawerComponent,
         CycleFactorListComponent,
         CycleNutritionSummaryCardComponent,
     ],
@@ -101,7 +100,7 @@ export class CycleTrackingPageComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly languageVersion = signal(0);
     protected readonly isDayEditorOpen = signal(false);
-    protected readonly areAdvancedDayFieldsOpen = signal(false);
+    protected readonly isSettingsOpen = signal(false);
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSavingCycle = this.facade.isSavingCycle;
@@ -125,7 +124,6 @@ export class CycleTrackingPageComponent {
     protected readonly dayForm = this.facade.dayForm;
     protected readonly factorForm = this.facade.factorForm;
     protected readonly episodeForm = this.facade.episodeForm;
-    protected readonly symptomFields = CYCLE_SYMPTOM_FIELDS;
 
     protected readonly predictions = this.facade.predictions;
     protected readonly bleedingEntries = this.facade.bleedingEntries;
@@ -133,7 +131,7 @@ export class CycleTrackingPageComponent {
     protected readonly factors = this.facade.factors;
     protected readonly fertilitySignals = this.facade.fertilitySignals;
     protected readonly menstrualEpisodes = this.facade.menstrualEpisodes;
-    protected readonly currentCycleView = computed(() => buildCycleCurrentView(this.cycle(), this.appLocale()));
+    protected readonly overviewView = computed(() => buildCycleOverviewView(this.cycle(), this.appLocale()));
     protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
     protected readonly nutritionSummaryView = computed(() => buildCycleNutritionSummaryView(this.nutritionSummary(), this.appLocale()));
     protected readonly dayItems = computed(() =>
@@ -143,6 +141,7 @@ export class CycleTrackingPageComponent {
         }),
     );
     protected readonly factorItems = computed(() => buildCycleFactorItems(this.factors(), this.appLocale()));
+    protected readonly recentDayItems = computed(() => this.dayItems().slice(0, RECENT_DAY_LIMIT));
     protected readonly modeOptions = computed<Array<FdUiSelectOption<CycleTrackingMode>>>(() => {
         this.languageVersion();
         return [
@@ -152,21 +151,6 @@ export class CycleTrackingPageComponent {
             this.option(CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION, 'CYCLE_TRACKING.MODE_POSTPARTUM_LACTATION'),
             this.option(CYCLE_TRACKING_MODE_PERIMENOPAUSE, 'CYCLE_TRACKING.MODE_PERIMENOPAUSE'),
             this.option(CYCLE_TRACKING_MODE_NO_PERIOD, 'CYCLE_TRACKING.MODE_NO_PERIOD'),
-        ];
-    });
-    protected readonly bleedingTypeOptions = computed<Array<FdUiSelectOption<BleedingType>>>(() => {
-        this.languageVersion();
-        return [
-            this.option(BLEEDING_TYPE_BLEEDING, 'CYCLE_TRACKING.BLEEDING_TYPE_BLEEDING'),
-            this.option(BLEEDING_TYPE_SPOTTING, 'CYCLE_TRACKING.BLEEDING_TYPE_SPOTTING'),
-        ];
-    });
-    protected readonly flowOptions = computed<Array<FdUiSelectOption<CycleFlowLevel>>>(() => {
-        this.languageVersion();
-        return [
-            this.option(CYCLE_FLOW_LIGHT, 'CYCLE_TRACKING.FLOW_LIGHT'),
-            this.option(CYCLE_FLOW_MEDIUM, 'CYCLE_TRACKING.FLOW_MEDIUM'),
-            this.option(CYCLE_FLOW_HEAVY, 'CYCLE_TRACKING.FLOW_HEAVY'),
         ];
     });
     protected readonly ovulationTestOptions = computed<Array<FdUiSelectOption<OvulationTestResult>>>(() => {
@@ -211,17 +195,18 @@ export class CycleTrackingPageComponent {
 
     protected editDay(date: string): void {
         this.facade.editDay(date);
+        this.isSettingsOpen.set(false);
         this.isDayEditorOpen.set(true);
     }
 
     protected cancelDayEdit(): void {
         this.facade.cancelDayEdit();
         this.isDayEditorOpen.set(false);
-        this.areAdvancedDayFieldsOpen.set(false);
     }
 
     protected openDayEditor(): void {
         this.facade.cancelDayEdit();
+        this.isSettingsOpen.set(false);
         this.isDayEditorOpen.set(true);
     }
 
@@ -229,8 +214,13 @@ export class CycleTrackingPageComponent {
         this.cancelDayEdit();
     }
 
-    protected toggleAdvancedDayFields(): void {
-        this.areAdvancedDayFieldsOpen.update(value => !value);
+    protected openSettings(): void {
+        this.isDayEditorOpen.set(false);
+        this.isSettingsOpen.set(true);
+    }
+
+    protected closeSettings(): void {
+        this.isSettingsOpen.set(false);
     }
 
     protected clearDay(date: string): void {
@@ -313,10 +303,6 @@ export class CycleTrackingPageComponent {
 
     protected startCycleTrackingTour(force = true): void {
         this.tourService.start(this.localizedTour.build(CYCLE_TRACKING_TOUR), { force });
-    }
-
-    protected symptomField(key: CycleSymptomField['key']): FieldTree<number> {
-        return this.dayForm[key];
     }
 
     protected formatEpisodeDate(value: string): string {

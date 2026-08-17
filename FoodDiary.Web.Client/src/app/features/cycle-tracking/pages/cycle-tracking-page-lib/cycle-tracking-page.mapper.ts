@@ -37,6 +37,8 @@ import type {
     CycleDayViewModel,
     CycleFactorListItemViewModel,
     CycleNutritionSummaryViewModel,
+    CycleOverviewDayViewModel,
+    CycleOverviewViewModel,
     CyclePredictionViewModel,
     CycleSummaryItemViewModel,
     CycleViewModel,
@@ -47,6 +49,7 @@ const SHORT_DATE_OPTIONS: Intl.DateTimeFormatOptions = { day: 'numeric', month: 
 const UTC_TIME_ZONE: Intl.DateTimeFormatOptions['timeZone'] = 'UTC';
 const ISO_DATE_KEY_LENGTH = 10;
 const MS_PER_DAY = 86_400_000;
+const OVERVIEW_DAY_RADIUS = 5;
 const PROLONGED_BLEEDING_DAYS = 8;
 const SEVERE_PAIN_THRESHOLD = 8;
 const SUMMARY_ACCENTS = [
@@ -68,6 +71,49 @@ export function buildCycleCurrentView(cycle: CycleResponse | null, locale: strin
         trackingStartDateLabel: formatCycleDate(cycle.trackingStartDate, locale, FULL_DATE_OPTIONS),
         summaryItems: buildCycleSummaryItems(cycle, locale),
         activeFactorItems: buildActiveFactorItems(cycle.factors, locale),
+    };
+}
+
+export function buildCycleOverviewView(cycle: CycleResponse | null, locale: string, today = new Date()): CycleOverviewViewModel | null {
+    if (cycle === null) {
+        return null;
+    }
+
+    const normalizedToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const todayDateKey = toLocalDateKey(normalizedToday);
+    const cycleStartDateKey = resolveCycleStartDateKey(cycle, todayDateKey);
+    const trackedDateKeys = new Set([
+        ...cycle.bleedingEntries.map(entry => toDateKey(entry.date)),
+        ...cycle.symptoms.map(entry => toDateKey(entry.date)),
+        ...cycle.fertilitySignals.map(entry => toDateKey(entry.date)),
+    ]);
+    const bleedingDateKeys = new Set(cycle.bleedingEntries.map(entry => toDateKey(entry.date)));
+    const days: CycleOverviewDayViewModel[] = [];
+
+    for (let offset = -OVERVIEW_DAY_RADIUS; offset <= OVERVIEW_DAY_RADIUS; offset += 1) {
+        const date = new Date(normalizedToday);
+        date.setDate(date.getDate() + offset);
+        const dateKey = toLocalDateKey(date);
+        days.push({
+            dateKey,
+            weekdayLabel: new Intl.DateTimeFormat(locale, { weekday: 'short' }).format(date),
+            dayLabel: new Intl.DateTimeFormat(locale, { day: 'numeric' }).format(date),
+            cycleDayNumber: calculateCycleDayNumber(cycleStartDateKey, dateKey, cycle.averageCycleLength),
+            isToday: offset === 0,
+            isFuture: offset > 0,
+            isBleeding: bleedingDateKeys.has(dateKey),
+            isPredictedPeriod: isDateInRange(dateKey, cycle.predictions?.nextPeriodStartFrom, cycle.predictions?.nextPeriodStartTo),
+            isTracked: trackedDateKeys.has(dateKey),
+        });
+    }
+
+    return {
+        todayDateKey,
+        todayDateLabel: new Intl.DateTimeFormat(locale, { weekday: 'long', day: 'numeric', month: 'long' }).format(normalizedToday),
+        monthLabel: new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(normalizedToday),
+        cycleDayNumber: calculateCycleDayNumber(cycleStartDateKey, todayDateKey, cycle.averageCycleLength),
+        hasTodayEntry: trackedDateKeys.has(todayDateKey),
+        days,
     };
 }
 
@@ -398,6 +444,45 @@ function toDateKey(value: string): string {
     }
 
     return date.toISOString().slice(0, ISO_DATE_KEY_LENGTH);
+}
+
+function toLocalDateKey(value: Date): string {
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${value.getFullYear()}-${month}-${day}`;
+}
+
+function resolveCycleStartDateKey(cycle: CycleResponse, todayDateKey: string): string {
+    const latestEpisode = [...(cycle.menstrualEpisodes ?? [])]
+        .map(episode => toDateKey(episode.startDate))
+        .filter(dateKey => dateKey.length > 0 && dateKey <= todayDateKey)
+        .sort((left, right) => right.localeCompare(left))
+        .at(0);
+
+    return latestEpisode ?? toDateKey(cycle.trackingStartDate);
+}
+
+function calculateCycleDayNumber(startDateKey: string, dateKey: string, averageCycleLength: number): number | null {
+    const startTime = Date.parse(`${startDateKey}T00:00:00.000Z`);
+    const dateTime = Date.parse(`${dateKey}T00:00:00.000Z`);
+    if (Number.isNaN(startTime) || Number.isNaN(dateTime)) {
+        return null;
+    }
+
+    const elapsedDays = Math.floor((dateTime - startTime) / MS_PER_DAY);
+    const normalizedLength = Math.max(1, averageCycleLength);
+    const normalizedOffset = ((elapsedDays % normalizedLength) + normalizedLength) % normalizedLength;
+    return normalizedOffset + 1;
+}
+
+function isDateInRange(dateKey: string, from: string | null | undefined, to: string | null | undefined): boolean {
+    if (from === null || from === undefined) {
+        return false;
+    }
+
+    const fromKey = toDateKey(from);
+    const toKey = to === null || to === undefined ? fromKey : toDateKey(to);
+    return dateKey >= fromKey && dateKey <= toKey;
 }
 
 function formatRange(from: string | null | undefined, to: string | null | undefined, locale: string): string {

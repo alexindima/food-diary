@@ -1,0 +1,84 @@
+<div class="cycle-drawer" role="presentation" (keydown.escape)="closed.emit()">
+    <button
+        class="cycle-drawer__backdrop"
+        type="button"
+        tabindex="-1"
+        [attr.aria-label]="'COMMON.CLOSE' | translate"
+        (click)="closed.emit()"
+    ></button>
+    <aside
+        class="cycle-drawer__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cycle-settings-title"
+        cdkTrapFocus
+        [cdkTrapFocusAutoCapture]="true"
+    >
+        <header class="cycle-drawer__header fd-row fd-justify-between fd-gap-sm fd-align-center">
+            <div>
+                <p class="cycle-drawer__eyebrow fd-ui-meta-text">{{ 'CYCLE_TRACKING.PREFERENCES' | translate }}</p>
+                <h2 class="cycle-drawer__title fd-ui-title-lg" id="cycle-settings-title">
+                    {{ 'CYCLE_TRACKING.SETTINGS_TITLE' | translate }}
+                </h2>
+            </div>
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                fill="text"
+                icon="close"
+                [ariaLabel]="'COMMON.CLOSE' | translate"
+                (click)="closed.emit()"
+            />
+        </header>
+
+        <form class="cycle-drawer__form" [formRoot]="settingsForm()">
+            <div class="cycle-drawer__body fd-stack fd-gap-card-content">
+                <p class="cycle-drawer__privacy fd-ui-body-sm">{{ 'CYCLE_TRACKING.SETTINGS_DESCRIPTION' | translate }}</p>
+                <fd-ui-select [label]="'CYCLE_TRACKING.MODE' | translate" [options]="modeOptions()" [formField]="settingsForm().mode" />
+                <div class="cycle-drawer__advanced-fields fd-grid fd-gap-sm">
+                    <fd-ui-input
+                        type="number"
+                        [label]="'CYCLE_TRACKING.AVG_LENGTH' | translate"
+                        [formField]="settingsForm().averageCycleLength"
+                    />
+                    <fd-ui-input
+                        type="number"
+                        [label]="'CYCLE_TRACKING.PERIOD_LENGTH' | translate"
+                        [formField]="settingsForm().averagePeriodLength"
+                    />
+                    <fd-ui-input
+                        type="number"
+                        [label]="'CYCLE_TRACKING.LUTEAL_LENGTH' | translate"
+                        [formField]="settingsForm().lutealLength"
+                    />
+                </div>
+                <div class="fd-stack fd-gap-sm">
+                    <fd-ui-checkbox [formField]="settingsForm().isRegular">
+                        {{ 'CYCLE_TRACKING.IS_REGULAR' | translate }}
+                    </fd-ui-checkbox>
+                    <fd-ui-checkbox [formField]="settingsForm().showFertilityEstimates">
+                        {{ 'CYCLE_TRACKING.SHOW_FERTILITY' | translate }}
+                    </fd-ui-checkbox>
+                    <fd-ui-checkbox [formField]="settingsForm().discreetNotifications">
+                        {{ 'CYCLE_TRACKING.DISCREET_NOTIFICATIONS' | translate }}
+                    </fd-ui-checkbox>
+                </div>
+                <div class="cycle-drawer__advanced fd-stack fd-gap-sm">
+                    <strong class="fd-ui-action-text">{{ 'CYCLE_TRACKING.DANGER_ZONE' | translate }}</strong>
+                    <p class="cycle-drawer__privacy fd-ui-body-sm">{{ 'CYCLE_TRACKING.DELETE_CYCLE_SHORT' | translate }}</p>
+                    <fd-ui-button type="button" variant="danger" fill="outline" [loading]="isDeleting()" (click)="deleteRequested.emit()">
+                        {{ 'CYCLE_TRACKING.DELETE_CYCLE' | translate }}
+                    </fd-ui-button>
+                </div>
+            </div>
+            <footer class="cycle-drawer__footer fd-grid fd-gap-sm">
+                <fd-ui-button type="button" variant="secondary" fill="outline" (click)="closed.emit()">
+                    {{ 'COMMON.CANCEL' | translate }}
+                </fd-ui-button>
+                <fd-ui-button type="submit" appearance="brand-action" [loading]="isSaving()">
+                    {{ 'CYCLE_TRACKING.SAVE_SETTINGS' | translate }}
+                </fd-ui-button>
+            </footer>
+        </form>
+    </aside>
+</div>
