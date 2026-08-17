@@ -10,9 +10,9 @@
     "moduleHotspotReviewCandidates": 0,
     "ambiguousBackendContracts": 3,
     "unconsumedBackendContracts": 0,
-    "selectorUnreferencedComponents": 150,
-    "componentsWithoutDirectSpecs": 129,
-    "criticalSymbolsWithoutTestReferences": 22,
+    "selectorUnreferencedComponents": 151,
+    "componentsWithoutDirectSpecs": 130,
+    "criticalSymbolsWithoutTestReferences": 24,
     "explicitDebtMarkers": 3
   },
   "projectDependencyViolations": [],
@@ -525,6 +525,14 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
+      "specPath": null
+    },
+    {
+      "class": "SensitiveCycleExportDialogComponent",
+      "selector": "fd-sensitive-cycle-export-dialog",
+      "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
       "specPath": null
     },
     {
@@ -2023,6 +2031,16 @@
           "required": true
         },
         {
+          "name": "goalOptions",
+          "type": "Array<FdUiSelectOption<CycleTrackingGoal>>",
+          "required": true
+        },
+        {
+          "name": "reproductiveStateOptions",
+          "type": "Array<FdUiSelectOption<CycleReproductiveState>>",
+          "required": true
+        },
+        {
           "name": "isSaving",
           "type": "boolean",
           "required": true
@@ -2051,6 +2069,16 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "SensitiveCycleExportDialogComponent",
+      "selector": "fd-sensitive-cycle-export-dialog",
+      "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -5281,6 +5309,14 @@
       "testReferences": []
     },
     {
+      "name": "UpdateCycleConsentCommandHandler",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
+      "line": 15,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
       "name": "MenstrualEpisodesController",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.cs",
@@ -5429,6 +5465,14 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Recipes/Recipes/Common/Validators/RecipeStepInputValidator.cs",
       "line": 4,
+      "testReferenceCount": 0,
+      "testReferences": []
+    },
+    {
+      "name": "UpdateCycleConsentCommandValidator",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandValidator.cs",
+      "line": 5,
       "testReferenceCount": 0,
       "testReferences": []
     },

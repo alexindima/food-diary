@@ -334,7 +334,7 @@ public sealed class DomainCoverageCompletionTests {
     public void CycleProfile_ConfidenceAndClearDay_CoverRemainingPaths() {
         var profile = CycleProfile.Create(
             UserId.New(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             mode: CycleTrackingMode.TryingToConceive,
             averageCycleLength: null,
             averagePeriodLength: null,
@@ -354,26 +354,27 @@ public sealed class DomainCoverageCompletionTests {
             ClearNotes: false));
         for (int day = 0; day < 9; day++) {
             profile.UpsertBleedingEntry(
-                DateTime.UtcNow.Date.AddDays(-day),
+                DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-day),
                 BleedingType.Bleeding,
                 CycleFlowLevel.Medium,
                 painImpact: null,
                 notes: null);
         }
         profile.UpsertSymptomEntry(
-            DateTime.UtcNow.Date,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             CycleSymptomCategory.Mood,
             intensity: 5,
             tags: ["calm"],
             note: null);
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
         profile.UpsertFertilitySignal(
-            DateTime.UtcNow.Date,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             basalBodyTemperatureCelsius: null,
             ovulationTestResult: null,
             cervicalFluid: null,
             hadSex: null,
             notes: null);
-        bool cleared = profile.ClearDay(DateTime.UtcNow.Date);
+        bool cleared = profile.ClearDay(DateOnly.FromDateTime(DateTime.UtcNow));
         ReadPublicProperties(profile);
 
         Assert.Multiple(

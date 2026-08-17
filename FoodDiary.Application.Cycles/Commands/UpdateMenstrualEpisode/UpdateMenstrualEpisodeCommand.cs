@@ -8,7 +8,7 @@ public sealed record UpdateMenstrualEpisodeCommand(
     Guid? UserId,
     Guid CycleProfileId,
     Guid MenstrualEpisodeId,
-    DateTime StartDate,
-    DateTime? EndDate,
+    DateOnly StartDate,
+    DateOnly? EndDate,
     bool? ExcludedFromPredictions = null)
     : ICommand<Result<CycleModel>>;

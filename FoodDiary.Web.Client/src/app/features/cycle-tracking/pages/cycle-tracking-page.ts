@@ -10,7 +10,6 @@ import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { filter } from 'rxjs';
@@ -20,6 +19,7 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
+import { SensitiveCycleExportDialogComponent } from '../dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
@@ -29,6 +29,15 @@ import {
     CYCLE_FACTOR_TYPE_PERIMENOPAUSE,
     CYCLE_FACTOR_TYPE_POSTPARTUM,
     CYCLE_FACTOR_TYPE_PREGNANCY,
+    CYCLE_REPRODUCTIVE_STATE_CYCLING,
+    CYCLE_REPRODUCTIVE_STATE_LACTATION,
+    CYCLE_REPRODUCTIVE_STATE_NO_PERIOD,
+    CYCLE_REPRODUCTIVE_STATE_PERIMENOPAUSE,
+    CYCLE_REPRODUCTIVE_STATE_POSTPARTUM,
+    CYCLE_REPRODUCTIVE_STATE_PREGNANCY,
+    CYCLE_TRACKING_GOAL_PERIOD_AWARENESS,
+    CYCLE_TRACKING_GOAL_SYMPTOM_AWARENESS,
+    CYCLE_TRACKING_GOAL_TRYING_TO_CONCEIVE,
     CYCLE_TRACKING_MODE_NO_PERIOD,
     CYCLE_TRACKING_MODE_PERIMENOPAUSE,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
@@ -36,6 +45,8 @@ import {
     CYCLE_TRACKING_MODE_PREGNANCY,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     type CycleFactorType,
+    type CycleReproductiveState,
+    type CycleTrackingGoal,
     type CycleTrackingMode,
     OVULATION_TEST_RESULT_NEGATIVE,
     OVULATION_TEST_RESULT_POSITIVE,
@@ -74,7 +85,6 @@ const RECENT_DAY_LIMIT = 5;
         FdUiIconComponent,
         FdUiCardComponent,
         FdUiButtonComponent,
-        FdUiInputComponent,
         FdUiSelectComponent,
         FdUiTextareaComponent,
         FdUiDateInputComponent,
@@ -133,6 +143,7 @@ export class CycleTrackingPageComponent {
     protected readonly factors = this.facade.factors;
     protected readonly fertilitySignals = this.facade.fertilitySignals;
     protected readonly menstrualEpisodes = this.facade.menstrualEpisodes;
+    protected readonly fertilityConsentGranted = this.facade.fertilityConsentGranted;
     protected readonly overviewView = computed(() => buildCycleOverviewView(this.cycle(), this.appLocale()));
     protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
     protected readonly nutritionSummaryView = computed(() => buildCycleNutritionSummaryView(this.nutritionSummary(), this.appLocale()));
@@ -157,6 +168,25 @@ export class CycleTrackingPageComponent {
             this.option(CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION, 'CYCLE_TRACKING.MODE_POSTPARTUM_LACTATION'),
             this.option(CYCLE_TRACKING_MODE_PERIMENOPAUSE, 'CYCLE_TRACKING.MODE_PERIMENOPAUSE'),
             this.option(CYCLE_TRACKING_MODE_NO_PERIOD, 'CYCLE_TRACKING.MODE_NO_PERIOD'),
+        ];
+    });
+    protected readonly goalOptions = computed<Array<FdUiSelectOption<CycleTrackingGoal>>>(() => {
+        this.languageVersion();
+        return [
+            this.option(CYCLE_TRACKING_GOAL_PERIOD_AWARENESS, 'CYCLE_TRACKING.GOAL_PERIOD_AWARENESS'),
+            this.option(CYCLE_TRACKING_GOAL_SYMPTOM_AWARENESS, 'CYCLE_TRACKING.GOAL_SYMPTOM_AWARENESS'),
+            this.option(CYCLE_TRACKING_GOAL_TRYING_TO_CONCEIVE, 'CYCLE_TRACKING.GOAL_TRYING_TO_CONCEIVE'),
+        ];
+    });
+    protected readonly reproductiveStateOptions = computed<Array<FdUiSelectOption<CycleReproductiveState>>>(() => {
+        this.languageVersion();
+        return [
+            this.option(CYCLE_REPRODUCTIVE_STATE_CYCLING, 'CYCLE_TRACKING.STATE_CYCLING'),
+            this.option(CYCLE_REPRODUCTIVE_STATE_PREGNANCY, 'CYCLE_TRACKING.STATE_PREGNANCY'),
+            this.option(CYCLE_REPRODUCTIVE_STATE_POSTPARTUM, 'CYCLE_TRACKING.STATE_POSTPARTUM'),
+            this.option(CYCLE_REPRODUCTIVE_STATE_LACTATION, 'CYCLE_TRACKING.STATE_LACTATION'),
+            this.option(CYCLE_REPRODUCTIVE_STATE_PERIMENOPAUSE, 'CYCLE_TRACKING.STATE_PERIMENOPAUSE'),
+            this.option(CYCLE_REPRODUCTIVE_STATE_NO_PERIOD, 'CYCLE_TRACKING.STATE_NO_PERIOD'),
         ];
     });
     protected readonly ovulationTestOptions = computed<Array<FdUiSelectOption<OvulationTestResult>>>(() => {
@@ -319,6 +349,16 @@ export class CycleTrackingPageComponent {
 
     protected exportCycle(): void {
         this.facade.exportCycle();
+    }
+
+    protected exportSensitiveCycle(): void {
+        this.dialogService
+            .open(SensitiveCycleExportDialogComponent, { preset: 'form' })
+            .afterClosed()
+            .pipe(filter((password): password is string => typeof password === 'string' && password.length > 0))
+            .subscribe(password => {
+                this.facade.exportSensitiveCycle(password);
+            });
     }
 
     protected startCycleTrackingTour(force = true): void {

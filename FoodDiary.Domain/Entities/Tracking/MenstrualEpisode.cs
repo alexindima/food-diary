@@ -6,8 +6,8 @@ namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class MenstrualEpisode : Entity<MenstrualEpisodeId> {
     public CycleProfileId CycleProfileId { get; private set; }
-    public DateTime StartDate { get; private set; }
-    public DateTime? EndDate { get; private set; }
+    public DateOnly StartDate { get; private set; }
+    public DateOnly? EndDate { get; private set; }
     public MenstrualEpisodeStatus Status { get; private set; }
     public bool ExcludedFromPredictions { get; private set; }
 
@@ -21,8 +21,8 @@ public sealed class MenstrualEpisode : Entity<MenstrualEpisodeId> {
 
     internal static MenstrualEpisode Create(
         CycleProfileId cycleProfileId,
-        DateTime startDate,
-        DateTime? endDate,
+        DateOnly startDate,
+        DateOnly? endDate,
         MenstrualEpisodeStatus status,
         bool excludedFromPredictions = false) {
         if (cycleProfileId == CycleProfileId.Empty) {
@@ -33,16 +33,14 @@ public sealed class MenstrualEpisode : Entity<MenstrualEpisodeId> {
             throw new ArgumentOutOfRangeException(nameof(status), "Status must be one of the supported values.");
         }
 
-        DateTime normalizedStart = CycleProfile.NormalizeDate(startDate);
-        DateTime? normalizedEnd = endDate.HasValue ? CycleProfile.NormalizeDate(endDate.Value) : null;
-        if (normalizedEnd < normalizedStart) {
+        if (endDate < startDate) {
             throw new ArgumentOutOfRangeException(nameof(endDate), "Episode end date cannot precede its start date.");
         }
 
         var episode = new MenstrualEpisode(MenstrualEpisodeId.New()) {
             CycleProfileId = cycleProfileId,
-            StartDate = normalizedStart,
-            EndDate = normalizedEnd,
+            StartDate = startDate,
+            EndDate = endDate,
             Status = status,
             ExcludedFromPredictions = excludedFromPredictions,
         };
@@ -50,33 +48,30 @@ public sealed class MenstrualEpisode : Entity<MenstrualEpisodeId> {
         return episode;
     }
 
-    internal void UpdateInferredRange(DateTime endDate) {
+    internal void UpdateInferredRange(DateOnly endDate) {
         if (Status != MenstrualEpisodeStatus.Inferred) {
             return;
         }
 
-        DateTime normalizedEnd = CycleProfile.NormalizeDate(endDate);
-        if (normalizedEnd < StartDate) {
+        if (endDate < StartDate) {
             throw new ArgumentOutOfRangeException(nameof(endDate), "Episode end date cannot precede its start date.");
         }
 
-        EndDate = normalizedEnd;
+        EndDate = endDate;
         SetModified();
     }
 
-    internal void UpdateConfirmedRange(DateTime startDate, DateTime? endDate) {
+    internal void UpdateConfirmedRange(DateOnly startDate, DateOnly? endDate) {
         if (Status != MenstrualEpisodeStatus.Confirmed) {
             throw new InvalidOperationException("Only confirmed menstrual episodes can be edited.");
         }
 
-        DateTime normalizedStart = CycleProfile.NormalizeDate(startDate);
-        DateTime? normalizedEnd = endDate.HasValue ? CycleProfile.NormalizeDate(endDate.Value) : null;
-        if (normalizedEnd < normalizedStart) {
+        if (endDate < startDate) {
             throw new ArgumentOutOfRangeException(nameof(endDate), "Episode end date cannot precede its start date.");
         }
 
-        StartDate = normalizedStart;
-        EndDate = normalizedEnd;
+        StartDate = startDate;
+        EndDate = endDate;
         SetModified();
     }
 

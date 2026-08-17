@@ -23,7 +23,7 @@ public partial class CyclesFeatureTests {
     private static CreateCycleCommand CreateCommand(Guid userId) =>
         new(
             userId,
-            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateOnly(2026, 4, 1),
             (int)CycleTrackingMode.PeriodTracking,
             AverageCycleLength: 28,
             AveragePeriodLength: 5,
@@ -32,10 +32,14 @@ public partial class CyclesFeatureTests {
             IsOnboardingComplete: false,
             ShowFertilityEstimates: false,
             DiscreetNotifications: true,
-            Notes: null);
+            Notes: null,
+            CycleTrackingConsentGranted: true);
 
     private static DashboardStatisticsBucketReadModel CreateNutritionBucket(DateTime date, double calories, double fiber) =>
         new(date, date, calories, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: fiber, TotalFiber: fiber);
+
+    private static DashboardStatisticsBucketReadModel CreateNutritionBucket(DateOnly date, double calories, double fiber) =>
+        CreateNutritionBucket(date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), calories, fiber);
 
     private static GetCurrentCycleQueryHandler CreateCurrentCycleHandler(
         ICycleReadModelRepository cycleRepository,
@@ -147,7 +151,26 @@ public partial class CyclesFeatureTests {
                     signal.OvulationTestResult,
                     signal.CervicalFluid,
                     signal.HadSex,
-                    signal.Notes))]);
+                    signal.Notes))],
+                MenstrualEpisodes: [.. profile.MenstrualEpisodes.Select(static episode => new MenstrualEpisodeReadModel(
+                    episode.Id.Value,
+                    episode.CycleProfileId.Value,
+                    episode.StartDate,
+                    episode.EndDate,
+                    episode.Status,
+                    episode.ExcludedFromPredictions))],
+                Goal: profile.Goal,
+                ReproductiveState: profile.ReproductiveState,
+                HideFromDashboard: profile.HideFromDashboard,
+                Consents: ToConsentReadModels(profile));
+
+        private static IReadOnlyCollection<CycleConsentReadModel> ToConsentReadModels(CycleProfile profile) =>
+            [.. profile.Consents.Select(static consent => new CycleConsentReadModel(
+                consent.Id.Value,
+                consent.CycleProfileId.Value,
+                consent.Purpose,
+                consent.GrantedAtUtc,
+                consent.RevokedAtUtc))];
     }
 
     private static IDashboardStatisticsReadService CreateStatisticsReadService(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) {

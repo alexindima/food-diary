@@ -606,7 +606,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        DateTime today = DateTime.UtcNow.Date;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var repository = new CycleRepository(context);
         var profile = CycleProfile.Create(
             user.Id,
@@ -657,11 +657,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     public async Task CycleRepository_Delete_RemovesOnlyCycleAggregate() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"cycle-delete-{Guid.NewGuid():N}@example.com", "hash");
-        DateTime today = DateTime.UtcNow.Date;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var profile = CycleProfile.Create(user.Id, today.AddDays(-28));
         AddCycleDetails(profile, today);
         profile.ConfirmPeriodStart(today.AddDays(-3));
-        var meal = Meal.Create(user.Id, today, MealType.Dinner);
+        var meal = Meal.Create(user.Id, today.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc), MealType.Dinner);
         context.Users.Add(user);
         context.Meals.Add(meal);
         var repository = new CycleRepository(context);
@@ -703,7 +703,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.Database.MigrateAsync();
 
         var user = User.Create($"cycle-read-model-{Guid.NewGuid():N}@example.com", "hash");
-        DateTime today = DateTime.UtcNow.Date;
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
         var profile = CycleProfile.Create(
             user.Id,
             today.AddDays(-28),
@@ -1224,11 +1224,12 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Empty(await repository.GetActiveByUserIdAsync(userId));
     }
 
-    private static void AddCycleDetails(CycleProfile profile, DateTime today) {
+    private static void AddCycleDetails(CycleProfile profile, DateOnly today) {
         profile.UpsertBleedingEntry(today.AddDays(-3), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 4, notes: "start");
         profile.UpsertBleedingEntry(today.AddDays(-2), BleedingType.Spotting, CycleFlowLevel.Light, painImpact: 1, notes: "spotting");
         profile.UpsertSymptomEntry(today, CycleSymptomCategory.Pain, 3, ["lower"], "minor");
         profile.UpsertFactor(CycleFactorType.NonHormonalContraception, today.AddDays(-5), today.AddDays(-1), "tracking");
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
         profile.UpsertFertilitySignal(today, 36.7, OvulationTestResult.Negative, "sticky", hadSex: false, notes: "signal");
     }
 

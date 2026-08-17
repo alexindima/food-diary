@@ -11,18 +11,25 @@ import {
     type BleedingEntry,
     type BleedingType,
     type CreateCyclePayload,
+    CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS,
+    CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FLOW_LIGHT,
     CYCLE_FLOW_MEDIUM,
+    CYCLE_REPRODUCTIVE_STATE_CYCLING,
+    CYCLE_TRACKING_GOAL_PERIOD_AWARENESS,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+    type CycleConsentPurpose,
     type CycleFactor,
     type CycleFactorType,
     type CycleFlowLevel,
     type CycleLogDay,
     type CycleNutritionSummary,
     type CyclePredictions,
+    type CycleReproductiveState,
     type CycleResponse,
     type CycleSymptomEntry,
+    type CycleTrackingGoal,
     type CycleTrackingMode,
     type FertilitySignal,
     type FertilitySignalPayload,
@@ -46,16 +53,7 @@ import {
     MIN_LUTEAL_LENGTH,
     MIN_SYMPTOM_VALUE,
 } from './cycle-tracking.config';
-import {
-    clampCycleSymptom,
-    cycleDateInputEndIso,
-    cycleDateInputStartIso,
-    normalizeCycleEndOfDay,
-    normalizeCycleStartOfDay,
-    toCycleDateKey,
-    toNullableCycleNumber,
-    toOptionalCycleText,
-} from './cycle-tracking.mapper';
+import { clampCycleSymptom, toCycleDateKey, toNullableCycleNumber, toOptionalCycleText } from './cycle-tracking.mapper';
 
 type StartCycleFormModel = {
     trackingStartDate: string | null;
@@ -66,6 +64,12 @@ type StartCycleFormModel = {
     isRegular: boolean;
     showFertilityEstimates: boolean;
     discreetNotifications: boolean;
+    goal: CycleTrackingGoal | null;
+    reproductiveState: CycleReproductiveState | null;
+    hideFromDashboard: boolean;
+    cycleTrackingConsentGranted: boolean;
+    nutritionInsightsConsentGranted: boolean;
+    fertilitySignalsConsentGranted: boolean;
 };
 
 export type CycleSettingsFormModel = Omit<StartCycleFormModel, 'trackingStartDate'>;
@@ -167,6 +171,12 @@ export class CycleTrackingFacade {
         isRegular: false,
         showFertilityEstimates: false,
         discreetNotifications: true,
+        goal: CYCLE_TRACKING_GOAL_PERIOD_AWARENESS,
+        reproductiveState: CYCLE_REPRODUCTIVE_STATE_CYCLING,
+        hideFromDashboard: false,
+        cycleTrackingConsentGranted: false,
+        nutritionInsightsConsentGranted: false,
+        fertilitySignalsConsentGranted: false,
     });
     private readonly submitStartCycleFormAsync = async (): Promise<void> => {
         await this.startCycleAsync();
@@ -176,6 +186,9 @@ export class CycleTrackingFacade {
         path => {
             required(path.trackingStartDate);
             required(path.mode);
+            required(path.goal);
+            required(path.reproductiveState);
+            required(path.cycleTrackingConsentGranted);
             min(path.averageCycleLength, MIN_AVERAGE_CYCLE_LENGTH);
             max(path.averageCycleLength, MAX_AVERAGE_CYCLE_LENGTH);
             min(path.averagePeriodLength, MIN_AVERAGE_PERIOD_LENGTH);
@@ -198,6 +211,12 @@ export class CycleTrackingFacade {
         isRegular: false,
         showFertilityEstimates: false,
         discreetNotifications: true,
+        goal: CYCLE_TRACKING_GOAL_PERIOD_AWARENESS,
+        reproductiveState: CYCLE_REPRODUCTIVE_STATE_CYCLING,
+        hideFromDashboard: false,
+        cycleTrackingConsentGranted: true,
+        nutritionInsightsConsentGranted: false,
+        fertilitySignalsConsentGranted: false,
     });
     private readonly submitSettingsFormAsync = async (): Promise<void> => {
         await this.saveSettingsAsync();
@@ -206,6 +225,8 @@ export class CycleTrackingFacade {
         this.settingsModel,
         path => {
             required(path.mode);
+            required(path.goal);
+            required(path.reproductiveState);
             min(path.averageCycleLength, MIN_AVERAGE_CYCLE_LENGTH);
             max(path.averageCycleLength, MAX_AVERAGE_CYCLE_LENGTH);
             min(path.averagePeriodLength, MIN_AVERAGE_PERIOD_LENGTH);
@@ -281,6 +302,7 @@ export class CycleTrackingFacade {
     public readonly menstrualEpisodes = computed<MenstrualEpisode[]>(() =>
         [...(this.cycle()?.menstrualEpisodes ?? [])].sort((left, right) => right.startDate.localeCompare(left.startDate)),
     );
+    public readonly fertilityConsentGranted = computed(() => this.hasActiveConsent(this.cycle(), CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS));
 
     public initialize(): void {
         this.loadCycle();
@@ -301,9 +323,8 @@ export class CycleTrackingFacade {
             return;
         }
 
-        const startDate = new Date(formValue.trackingStartDate);
         const payload: CreateCyclePayload = {
-            trackingStartDate: startDate.toISOString(),
+            trackingStartDate: toCycleDateKey(formValue.trackingStartDate),
             mode: formValue.mode ?? CYCLE_TRACKING_MODE_PERIOD_TRACKING,
             averageCycleLength: formValue.averageCycleLength ?? undefined,
             averagePeriodLength: formValue.averagePeriodLength ?? undefined,
@@ -312,6 +333,12 @@ export class CycleTrackingFacade {
             isOnboardingComplete: true,
             showFertilityEstimates: formValue.showFertilityEstimates,
             discreetNotifications: formValue.discreetNotifications,
+            goal: formValue.goal ?? CYCLE_TRACKING_GOAL_PERIOD_AWARENESS,
+            reproductiveState: formValue.reproductiveState ?? CYCLE_REPRODUCTIVE_STATE_CYCLING,
+            hideFromDashboard: formValue.hideFromDashboard,
+            cycleTrackingConsentGranted: formValue.cycleTrackingConsentGranted,
+            nutritionInsightsConsentGranted: formValue.nutritionInsightsConsentGranted,
+            fertilitySignalsConsentGranted: formValue.fertilitySignalsConsentGranted,
         };
 
         this.isSavingCycle.set(true);
@@ -351,11 +378,27 @@ export class CycleTrackingFacade {
             isRegular: formValue.isRegular,
             showFertilityEstimates: formValue.showFertilityEstimates,
             discreetNotifications: formValue.discreetNotifications,
+            goal: formValue.goal ?? undefined,
+            reproductiveState: formValue.reproductiveState ?? undefined,
+            hideFromDashboard: formValue.hideFromDashboard,
         };
 
         this.isSavingSettings.set(true);
         try {
-            this.cycle.set(await firstValueFrom(this.cyclesService.updateSettings(currentCycle.id, payload)));
+            let updatedCycle = await firstValueFrom(this.cyclesService.updateSettings(currentCycle.id, payload));
+            updatedCycle = await this.updateConsentIfChangedAsync(
+                updatedCycle,
+                CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS,
+                formValue.nutritionInsightsConsentGranted,
+            );
+            updatedCycle = await this.updateConsentIfChangedAsync(
+                updatedCycle,
+                CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS,
+                formValue.fertilitySignalsConsentGranted,
+            );
+
+            this.cycle.set(updatedCycle);
+            this.loadNutritionSummary(updatedCycle);
             this.settingsSaveRevision.update(revision => revision + 1);
         } finally {
             this.isSavingSettings.set(false);
@@ -389,10 +432,7 @@ export class CycleTrackingFacade {
 
         this.isLoadingNutritionSummary.set(true);
         this.cyclesService
-            .getNutritionSummary(
-                normalizeCycleStartOfDay(new Date(cycle.trackingStartDate)).toISOString(),
-                normalizeCycleEndOfDay(new Date()).toISOString(),
-            )
+            .getNutritionSummary(toCycleDateKey(cycle.trackingStartDate), formatDateInputValue(new Date()))
             .pipe(
                 finalize(() => {
                     this.isLoadingNutritionSummary.set(false);
@@ -425,7 +465,6 @@ export class CycleTrackingFacade {
             return;
         }
 
-        const entryDate = new Date(date);
         const symptoms = this.buildSymptomPayload(formValue);
         const clearSymptomCategories = this.buildSymptomClearCategories(formValue);
         const fertilitySignal = this.buildFertilitySignalPayload(formValue);
@@ -435,7 +474,7 @@ export class CycleTrackingFacade {
         const day = await firstValueFrom(
             this.cyclesService
                 .upsertDay(currentCycle.id, {
-                    date: entryDate.toISOString(),
+                    date: toCycleDateKey(date),
                     bleeding: formValue.isBleeding
                         ? {
                               type: formValue.bleedingType ?? BLEEDING_TYPE_BLEEDING,
@@ -576,8 +615,8 @@ export class CycleTrackingFacade {
 
         const payload: UpsertCycleFactorPayload = {
             type: formValue.type,
-            startDate: new Date(formValue.startDate).toISOString(),
-            endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : new Date(formValue.endDate).toISOString(),
+            startDate: toCycleDateKey(formValue.startDate),
+            endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : toCycleDateKey(formValue.endDate),
             notes: toOptionalCycleText(formValue.notes),
             clearNotes: false,
         };
@@ -603,8 +642,8 @@ export class CycleTrackingFacade {
 
         this.factorModel.set({
             type: factor.type,
-            startDate: formatDateInputValue(new Date(factor.startDate)),
-            endDate: factor.endDate === null || factor.endDate === undefined ? null : formatDateInputValue(new Date(factor.endDate)),
+            startDate: toCycleDateKey(factor.startDate),
+            endDate: factor.endDate === null || factor.endDate === undefined ? null : toCycleDateKey(factor.endDate),
             notes: factor.notes ?? null,
         });
         this.editingFactorId.set(factorId);
@@ -625,8 +664,8 @@ export class CycleTrackingFacade {
         this.cyclesService
             .upsertFactor(currentCycle.id, {
                 type: factor.type,
-                startDate: factor.startDate,
-                endDate: normalizeCycleEndOfDay(new Date()).toISOString(),
+                startDate: toCycleDateKey(factor.startDate),
+                endDate: formatDateInputValue(new Date()),
                 notes: factor.notes ?? undefined,
                 clearNotes: false,
             })
@@ -655,7 +694,7 @@ export class CycleTrackingFacade {
 
         this.clearingDayDate.set(date);
         this.cyclesService
-            .clearDay(currentCycle.id, new Date(date).toISOString())
+            .clearDay(currentCycle.id, toCycleDateKey(date))
             .pipe(
                 finalize(() => {
                     this.clearingDayDate.set(null);
@@ -686,7 +725,7 @@ export class CycleTrackingFacade {
         }
 
         this.cyclesService
-            .confirmPeriodStart(currentCycle.id, new Date(date).toISOString())
+            .confirmPeriodStart(currentCycle.id, toCycleDateKey(date))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(cycle => {
                 this.cycle.set(cycle);
@@ -700,8 +739,8 @@ export class CycleTrackingFacade {
         }
 
         this.episodeModel.set({
-            startDate: formatDateInputValue(new Date(episode.startDate)),
-            endDate: episode.endDate === undefined || episode.endDate === null ? null : formatDateInputValue(new Date(episode.endDate)),
+            startDate: toCycleDateKey(episode.startDate),
+            endDate: episode.endDate === undefined || episode.endDate === null ? null : toCycleDateKey(episode.endDate),
         });
         this.editingEpisodeId.set(episodeId);
     }
@@ -731,8 +770,8 @@ export class CycleTrackingFacade {
         try {
             const cycle = await firstValueFrom(
                 this.cyclesService.updateMenstrualEpisode(currentCycle.id, episodeId, {
-                    startDate: cycleDateInputStartIso(formValue.startDate),
-                    endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : cycleDateInputEndIso(formValue.endDate),
+                    startDate: toCycleDateKey(formValue.startDate),
+                    endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : toCycleDateKey(formValue.endDate),
                 }),
             );
             this.cycle.set(cycle);
@@ -753,8 +792,8 @@ export class CycleTrackingFacade {
         try {
             const cycle = await firstValueFrom(
                 this.cyclesService.updateMenstrualEpisode(currentCycle.id, episodeId, {
-                    startDate: episode.startDate,
-                    endDate: episode.endDate ?? null,
+                    startDate: toCycleDateKey(episode.startDate),
+                    endDate: episode.endDate === undefined || episode.endDate === null ? null : toCycleDateKey(episode.endDate),
                     excludedFromPredictions: !episode.excludedFromPredictions,
                 }),
             );
@@ -795,9 +834,32 @@ export class CycleTrackingFacade {
         this.isExportingCycle.set(true);
         this.exportService
             .exportCycle({
-                dateFrom: normalizeCycleStartOfDay(new Date(currentCycle.trackingStartDate)).toISOString(),
-                dateTo: normalizeCycleEndOfDay(new Date()).toISOString(),
+                dateFrom: toCycleDateKey(currentCycle.trackingStartDate),
+                dateTo: formatDateInputValue(new Date()),
                 timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
+            })
+            .pipe(
+                finalize(() => {
+                    this.isExportingCycle.set(false);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
+    }
+
+    public exportSensitiveCycle(currentPassword: string): void {
+        const currentCycle = this.cycle();
+        if (currentCycle === null || this.isExportingCycle() || currentPassword.length === 0) {
+            return;
+        }
+
+        this.isExportingCycle.set(true);
+        this.exportService
+            .exportSensitiveCycle({
+                dateFrom: toCycleDateKey(currentCycle.trackingStartDate),
+                dateTo: formatDateInputValue(new Date()),
+                timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
+                currentPassword,
             })
             .pipe(
                 finalize(() => {
@@ -880,10 +942,32 @@ export class CycleTrackingFacade {
                         isRegular: cycle.isRegular,
                         showFertilityEstimates: cycle.showFertilityEstimates,
                         discreetNotifications: cycle.discreetNotifications,
+                        goal: cycle.goal,
+                        reproductiveState: cycle.reproductiveState,
+                        hideFromDashboard: cycle.hideFromDashboard,
+                        cycleTrackingConsentGranted: true,
+                        nutritionInsightsConsentGranted: this.hasActiveConsent(cycle, CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS),
+                        fertilitySignalsConsentGranted: this.hasActiveConsent(cycle, CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS),
                     });
                 }
                 this.loadNutritionSummary(cycle);
             });
+    }
+
+    private async updateConsentIfChangedAsync(
+        cycle: CycleResponse,
+        purpose: CycleConsentPurpose,
+        granted: boolean,
+    ): Promise<CycleResponse> {
+        if (this.hasActiveConsent(cycle, purpose) === granted) {
+            return cycle;
+        }
+
+        return firstValueFrom(this.cyclesService.updateConsent(cycle.id, purpose, { granted }));
+    }
+
+    private hasActiveConsent(cycle: CycleResponse | null, purpose: CycleConsentPurpose): boolean {
+        return cycle?.consents?.some(consent => consent.purpose === purpose && consent.isActive) ?? false;
     }
 
     private buildDayEditModel(
@@ -893,7 +977,7 @@ export class CycleTrackingFacade {
         fertilitySignal: FertilitySignal | undefined,
     ): CycleDayFormModel {
         return {
-            date: formatDateInputValue(new Date(date)),
+            date: toCycleDateKey(date),
             ...this.buildBleedingEditFields(symptoms, bleeding),
             ...this.buildSymptomEditFields(symptoms),
             ...this.buildFertilityEditFields(fertilitySignal),

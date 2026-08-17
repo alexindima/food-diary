@@ -15,7 +15,7 @@ public partial class CyclesFeatureTests {
         var validator = new CreateCycleCommandValidator();
         var command = new CreateCycleCommand(
             Guid.NewGuid(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             (int)CycleTrackingMode.PeriodTracking,
             AverageCycleLength: 10,
             AveragePeriodLength: 20,
@@ -60,7 +60,7 @@ public partial class CyclesFeatureTests {
         var user = User.Create("cycle-create-existing@example.com", "hash");
         var profile = CycleProfile.Create(
             user.Id,
-            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateOnly(2026, 4, 1),
             notes: "old");
         var repository = new InMemoryCycleRepository(profile);
         var handler = new CreateCycleCommandHandler(repository, CreateCurrentUserAccessService(user));
@@ -68,7 +68,7 @@ public partial class CyclesFeatureTests {
         Result<CycleModel> result = await handler.Handle(
             new CreateCycleCommand(
                 user.Id.Value,
-                new DateTime(2026, 4, 10, 0, 0, 0, DateTimeKind.Utc),
+                new DateOnly(2026, 4, 10),
                 (int)CycleTrackingMode.TryingToConceive,
                 AverageCycleLength: 30,
                 AveragePeriodLength: 4,
@@ -77,7 +77,8 @@ public partial class CyclesFeatureTests {
                 IsOnboardingComplete: true,
                 ShowFertilityEstimates: true,
                 DiscreetNotifications: false,
-                Notes: " updated "),
+                Notes: " updated ",
+                CycleTrackingConsentGranted: true),
             CancellationToken.None);
 
         ResultAssert.Success(result);

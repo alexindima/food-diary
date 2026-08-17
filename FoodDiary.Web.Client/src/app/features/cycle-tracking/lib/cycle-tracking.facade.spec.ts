@@ -31,9 +31,13 @@ let cyclesService: {
     upsertDay: ReturnType<typeof vi.fn<CyclesService['upsertDay']>>;
     upsertFactor: ReturnType<typeof vi.fn<CyclesService['upsertFactor']>>;
     updateSettings: ReturnType<typeof vi.fn<CyclesService['updateSettings']>>;
+    updateConsent: ReturnType<typeof vi.fn<CyclesService['updateConsent']>>;
     updateMenstrualEpisode: ReturnType<typeof vi.fn<CyclesService['updateMenstrualEpisode']>>;
 };
-let exportService: { exportCycle: ReturnType<typeof vi.fn<ExportService['exportCycle']>> };
+let exportService: {
+    exportCycle: ReturnType<typeof vi.fn<ExportService['exportCycle']>>;
+    exportSensitiveCycle: ReturnType<typeof vi.fn<ExportService['exportSensitiveCycle']>>;
+};
 
 beforeEach(() => {
     cyclesService = {
@@ -57,6 +61,7 @@ beforeEach(() => {
             .mockReturnValue(of({ ...createCycleResponse(), menstrualEpisodes: [] })),
         upsertDay: vi.fn<CyclesService['upsertDay']>().mockReturnValue(of(createCycleLogDay())),
         updateSettings: vi.fn<CyclesService['updateSettings']>().mockReturnValue(of(createCycleResponse())),
+        updateConsent: vi.fn<CyclesService['updateConsent']>().mockReturnValue(of(createCycleResponse())),
         upsertFactor: vi.fn<CyclesService['upsertFactor']>().mockReturnValue(
             of({
                 ...createCycleResponse(),
@@ -90,6 +95,7 @@ beforeEach(() => {
     };
     exportService = {
         exportCycle: vi.fn<ExportService['exportCycle']>().mockReturnValue(of(void 0)),
+        exportSensitiveCycle: vi.fn<ExportService['exportSensitiveCycle']>().mockReturnValue(of(void 0)),
     };
 
     TestBed.configureTestingModule({
@@ -139,26 +145,35 @@ describe('CycleTrackingFacade current cycle', () => {
         facade.startCycleModel.set({
             trackingStartDate: '2026-04-03',
             mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
-            averageCycleLength: 30,
-            averagePeriodLength: 6,
-            lutealLength: 15,
+            averageCycleLength: null,
+            averagePeriodLength: null,
+            lutealLength: null,
             isRegular: true,
-            showFertilityEstimates: true,
+            showFertilityEstimates: false,
             discreetNotifications: false,
+            goal: 0,
+            reproductiveState: 0,
+            hideFromDashboard: false,
+            cycleTrackingConsentGranted: true,
+            nutritionInsightsConsentGranted: true,
+            fertilitySignalsConsentGranted: false,
         });
 
         facade.startCycle();
 
         expect(cyclesService.create).toHaveBeenCalledWith({
-            trackingStartDate: '2026-04-03T00:00:00.000Z',
+            trackingStartDate: '2026-04-03',
             mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
-            averageCycleLength: 30,
-            averagePeriodLength: 6,
-            lutealLength: 15,
             isRegular: true,
             isOnboardingComplete: true,
-            showFertilityEstimates: true,
+            showFertilityEstimates: false,
             discreetNotifications: false,
+            goal: 0,
+            reproductiveState: 0,
+            hideFromDashboard: false,
+            cycleTrackingConsentGranted: true,
+            nutritionInsightsConsentGranted: true,
+            fertilitySignalsConsentGranted: false,
         });
         await vi.waitFor(() => {
             expect(facade.cycle()?.id).toBe('cycle-2');
@@ -169,6 +184,7 @@ describe('CycleTrackingFacade current cycle', () => {
         facade.startCycleModel.update(value => ({
             ...value,
             trackingStartDate: '2026-04-03',
+            cycleTrackingConsentGranted: true,
         }));
 
         const success = await submit(facade.startCycleForm);
@@ -196,7 +212,7 @@ describe('CycleTrackingFacade day saving', () => {
 
         const payload = cyclesService.upsertDay.mock.calls[0][1];
         expect(cyclesService.upsertDay).toHaveBeenCalledWith('cycle-1', expect.any(Object));
-        expect(payload.date).toBe('2026-04-02T00:00:00.000Z');
+        expect(payload.date).toBe('2026-04-02');
         expect(payload.bleeding).toEqual({
             type: BLEEDING_TYPE_BLEEDING,
             flow: CYCLE_FLOW_MEDIUM,
@@ -297,7 +313,7 @@ describe('CycleTrackingFacade day editing', () => {
 
         facade.clearDay('2026-04-02T00:00:00.000Z');
 
-        expect(cyclesService.clearDay).toHaveBeenCalledWith('cycle-1', '2026-04-02T00:00:00.000Z');
+        expect(cyclesService.clearDay).toHaveBeenCalledWith('cycle-1', '2026-04-02');
         expect(facade.bleedingEntries()).toEqual([]);
         expect(facade.symptoms()).toEqual([]);
         expect(facade.fertilitySignals()).toEqual([]);
@@ -553,7 +569,7 @@ describe('CycleTrackingFacade factors', () => {
 
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', {
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-04-01T00:00:00.000Z',
+            startDate: '2026-04-01',
             endDate: null,
             notes: 'pill',
             clearNotes: false,
@@ -604,7 +620,7 @@ describe('CycleTrackingFacade factors', () => {
         expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', payload);
         expect(payload).toMatchObject({
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
-            startDate: '2026-04-01T00:00:00.000Z',
+            startDate: '2026-04-01',
             notes: 'pill',
             clearNotes: false,
         });
@@ -619,8 +635,8 @@ describe('CycleTrackingFacade menstrual episodes', () => {
         await facade.toggleMenstrualEpisodePredictionAsync('episode-1');
 
         expect(cyclesService.updateMenstrualEpisode).toHaveBeenCalledWith('cycle-1', 'episode-1', {
-            startDate: '2026-04-01T00:00:00.000Z',
-            endDate: '2026-04-05T00:00:00.000Z',
+            startDate: '2026-04-01',
+            endDate: '2026-04-05',
             excludedFromPredictions: true,
         });
         expect(facade.menstrualEpisodes()[0]?.excludedFromPredictions).toBe(true);
@@ -643,7 +659,7 @@ describe('CycleTrackingFacade export', () => {
         facade.exportCycle();
 
         const request = exportService.exportCycle.mock.calls[0][0];
-        expect(request.dateFrom).toBe(toLocalStartOfDayIso('2026-04-01T00:00:00Z'));
+        expect(request.dateFrom).toBe('2026-04-01');
         expect(typeof request.timeZoneOffsetMinutes).toBe('number');
         expect(facade.isExportingCycle()).toBe(false);
     });
@@ -684,6 +700,9 @@ function createCycleResponse(): CycleResponse {
         id: 'cycle-1',
         userId: 'user-1',
         mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+        goal: 0,
+        reproductiveState: 0,
+        hideFromDashboard: false,
         confidence: 1,
         trackingStartDate: '2026-04-01T00:00:00Z',
         averageCycleLength: 28,
@@ -801,10 +820,4 @@ function setValidDayForm(): void {
         hadSex: true,
         notes: 'note',
     });
-}
-
-function toLocalStartOfDayIso(value: string): string {
-    const date = new Date(value);
-    date.setHours(0, 0, 0, 0);
-    return date.toISOString();
 }

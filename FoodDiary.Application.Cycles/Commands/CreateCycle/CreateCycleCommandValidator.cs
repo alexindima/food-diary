@@ -19,6 +19,21 @@ public sealed class CreateCycleCommandValidator : AbstractValidator<CreateCycleC
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Mode is invalid.");
 
+        RuleFor(x => x.Goal)
+            .Must(static goal => goal is null || Enum.IsDefined((CycleTrackingGoal)goal.Value))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Goal is invalid.");
+
+        RuleFor(x => x.ReproductiveState)
+            .Must(static state => state is null || Enum.IsDefined((CycleReproductiveState)state.Value))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("ReproductiveState is invalid.");
+
+        RuleFor(x => x.CycleTrackingConsentGranted)
+            .Must(static granted => granted == true)
+            .WithErrorCode("Validation.Required")
+            .WithMessage("Explicit consent is required to enable cycle tracking.");
+
         RuleFor(x => x.AverageCycleLength)
             .InclusiveBetween(18, 60)
             .When(x => x.AverageCycleLength.HasValue)

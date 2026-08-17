@@ -34,7 +34,30 @@ public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleReposito
                 signal.OvulationTestResult, signal.CervicalFluid, signal.HadSex, signal.Notes)).ToList(),
             profile.MenstrualEpisodes.Select(episode => new MenstrualEpisodeReadModel(
                 episode.Id.Value, episode.CycleProfileId.Value, episode.StartDate, episode.EndDate,
-                episode.Status, episode.ExcludedFromPredictions)).ToList());
+                episode.Status, episode.ExcludedFromPredictions)).ToList(),
+            profile.Goal,
+            profile.ReproductiveState,
+            profile.HideFromDashboard,
+            profile.Consents.Select(consent => new CycleConsentReadModel(
+                consent.Id.Value, consent.CycleProfileId.Value, consent.Purpose,
+                consent.GrantedAtUtc, consent.RevokedAtUtc)).ToList(),
+            profile.PredictionRevisions
+                .OrderByDescending(revision => revision.GeneratedAtUtc)
+                .Take(12)
+                .Select(revision => new CyclePredictionRevisionReadModel(
+                    revision.Id.Value,
+                    revision.GeneratedAtUtc,
+                    revision.NextPeriodStartFrom,
+                    revision.NextPeriodStartTo,
+                    revision.Confidence,
+                    revision.DataSufficiency,
+                    revision.PatternConsistency,
+                    revision.CompletedCycleCount,
+                    revision.CalibrationSampleCount,
+                    revision.HistoricalCoveragePercent,
+                    revision.MeanAbsoluteErrorDays,
+                    revision.ReasonCodes,
+                    revision.AlgorithmVersion)).ToList());
 
     public async Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
         await context.CycleProfiles.AddAsync(profile, cancellationToken).ConfigureAwait(false);
@@ -109,6 +132,8 @@ public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleReposito
                 .Include(profile => profile.SymptomEntries)
                 .Include(profile => profile.FertilitySignals);
             query = query.Include(profile => profile.MenstrualEpisodes);
+            query = query.Include(profile => profile.Consents);
+            query = query.Include(profile => profile.PredictionRevisions);
         }
 
         return query;

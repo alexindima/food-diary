@@ -128,9 +128,16 @@ internal sealed class DashboardSectionDataLoader(
         DashboardSnapshotRequest request,
         DashboardBuildContext context,
         CancellationToken cancellationToken) {
-        return context.Sections.IncludeCycle
-            ? await sender.Send(new GetCurrentCycleQuery(request.UserId), cancellationToken).ConfigureAwait(false)
-            : null;
+        if (!context.Sections.IncludeCycle) {
+            return null;
+        }
+
+        Result<CycleModel?> result = await sender
+            .Send(new GetCurrentCycleQuery(request.UserId), cancellationToken)
+            .ConfigureAwait(false);
+        return result.IsSuccess && result.Value?.HideFromDashboard == true
+            ? Result.Success<CycleModel?>(value: null)
+            : result;
     }
 
 }

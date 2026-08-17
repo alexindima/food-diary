@@ -45,6 +45,13 @@ export abstract class ApiService {
         });
     }
 
+    protected postBlob(endpoint: string, body: RequestBody): Observable<HttpResponse<Blob>> {
+        return this.http.post(`${this.baseUrl}/${endpoint}`, body, {
+            responseType: 'blob',
+            observe: 'response',
+        });
+    }
+
     private buildHttpParams(params?: HttpRequestParams): HttpParams | undefined {
         if (params === undefined) {
             return undefined;

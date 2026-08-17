@@ -15,4 +15,7 @@ public sealed record CyclePredictionsHttpResponse(
     int UsedEpisodeCount,
     int ExcludedEpisodeCount,
     IReadOnlyCollection<string> ReasonCodes,
-    string AlgorithmVersion);
+    string AlgorithmVersion,
+    int CalibrationSampleCount = 0,
+    double? HistoricalCoveragePercent = null,
+    double? MeanAbsoluteErrorDays = null);

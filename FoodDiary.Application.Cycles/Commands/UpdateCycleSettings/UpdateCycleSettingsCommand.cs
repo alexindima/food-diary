@@ -13,4 +13,7 @@ public sealed record UpdateCycleSettingsCommand(
     int LutealLength,
     bool IsRegular,
     bool ShowFertilityEstimates,
-    bool DiscreetNotifications) : ICommand<Result<CycleModel>>, IUserRequest;
+    bool DiscreetNotifications,
+    int? Goal = null,
+    int? ReproductiveState = null,
+    bool? HideFromDashboard = null) : ICommand<Result<CycleModel>>, IUserRequest;

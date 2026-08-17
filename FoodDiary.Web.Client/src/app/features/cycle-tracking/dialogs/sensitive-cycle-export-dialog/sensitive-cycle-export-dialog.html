@@ -1,0 +1,18 @@
+<fd-ui-dialog size="sm" [title]="'CYCLE_TRACKING.SENSITIVE_EXPORT_TITLE' | translate" [dismissible]="false">
+    <form class="fd-stack fd-gap-md" [formRoot]="exportForm">
+        <p class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.SENSITIVE_EXPORT_WARNING' | translate }}</p>
+        <fd-ui-input
+            type="password"
+            [label]="'CYCLE_TRACKING.SENSITIVE_EXPORT_PASSWORD' | translate"
+            [formField]="exportForm.currentPassword"
+        />
+        <div fdUiDialogFooter class="fd-row fd-justify-end fd-gap-sm">
+            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="cancel()">
+                {{ 'COMMON.CANCEL' | translate }}
+            </fd-ui-button>
+            <fd-ui-button type="submit" appearance="brand-action" (click)="submit()">
+                {{ 'CYCLE_TRACKING.SENSITIVE_EXPORT_CONFIRM' | translate }}
+            </fd-ui-button>
+        </div>
+    </form>
+</fd-ui-dialog>

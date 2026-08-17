@@ -36,7 +36,7 @@ public sealed class CycleHttpMappingsTests {
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(userId, currentQuery.UserId);
-        Assert.Equal(trackingStartDate, command.TrackingStartDate);
+        Assert.Equal(DateOnly.FromDateTime(trackingStartDate), command.TrackingStartDate);
         Assert.Equal((int)CycleTrackingMode.TryingToConceive, command.Mode);
         Assert.Equal(30, command.AverageCycleLength);
         Assert.Equal(6, command.AveragePeriodLength);
@@ -65,7 +65,7 @@ public sealed class CycleHttpMappingsTests {
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
-        Assert.Equal(request.Date, command.Date);
+        Assert.Equal(DateOnly.FromDateTime(request.Date), command.Date);
         BleedingLogHttpModel bleeding = request.Bleeding!;
         Assert.Equal(bleeding.Type, command.Bleeding!.Type);
         Assert.Equal(bleeding.ClearNotes, command.Bleeding.ClearNotes);
@@ -98,7 +98,7 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
         Assert.Equal(request.Type, command.Type);
-        Assert.Equal(request.StartDate, command.StartDate);
+        Assert.Equal(DateOnly.FromDateTime(request.StartDate), command.StartDate);
         Assert.True(command.ClearNotes);
     }
 
@@ -112,7 +112,7 @@ public sealed class CycleHttpMappingsTests {
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
-        Assert.Equal(date, command.Date);
+        Assert.Equal(DateOnly.FromDateTime(date), command.Date);
     }
 
     [Fact]
@@ -135,8 +135,8 @@ public sealed class CycleHttpMappingsTests {
         GetCycleNutritionSummaryQuery query = userId.ToNutritionSummaryQuery(dateFrom, dateTo);
 
         Assert.Equal(userId, query.UserId);
-        Assert.Equal(dateFrom, query.DateFrom);
-        Assert.Equal(dateTo, query.DateTo);
+        Assert.Equal(DateOnly.FromDateTime(dateFrom), query.DateFrom);
+        Assert.Equal(DateOnly.FromDateTime(dateTo), query.DateTo);
     }
 
     [Fact]
@@ -144,7 +144,7 @@ public sealed class CycleHttpMappingsTests {
         var cycleId = Guid.NewGuid();
         var userId = Guid.NewGuid();
         var bleedingId = Guid.NewGuid();
-        var startDate = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var startDate = new DateOnly(2026, 4, 1);
         var model = new CycleModel(
             cycleId,
             userId,
@@ -193,7 +193,7 @@ public sealed class CycleHttpMappingsTests {
 
         Assert.Equal(cycleId, response.Id);
         Assert.Equal(userId, response.UserId);
-        Assert.Equal(startDate, response.TrackingStartDate);
+        Assert.Equal(ToUtcDateTime(startDate), response.TrackingStartDate);
         Assert.Equal(29, response.AverageCycleLength);
         Assert.Equal(13, response.LutealLength);
         Assert.Equal("cycle notes", response.Notes);
@@ -201,8 +201,8 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(bleedingId, day.Id);
         Assert.Equal((int)CycleFlowLevel.Medium, day.Flow);
         Assert.Equal("day notes", day.Notes);
-        Assert.Equal(startDate.AddDays(28), response.Predictions!.NextPeriodStartFrom);
-        Assert.Equal(startDate.AddDays(16), response.Predictions.OvulationTo);
+        Assert.Equal(ToUtcDateTime(startDate.AddDays(28)), response.Predictions!.NextPeriodStartFrom);
+        Assert.Equal(ToUtcDateTime(startDate.AddDays(16)), response.Predictions.OvulationTo);
         Assert.Equal("Medium", response.Predictions.Confidence);
         Assert.Equal(4, response.Predictions.UsedEpisodeCount);
         Assert.Equal(1, response.Predictions.ExcludedEpisodeCount);
@@ -215,7 +215,7 @@ public sealed class CycleHttpMappingsTests {
             Guid.NewGuid(),
             CycleTrackingMode.PeriodTracking,
             CycleConfidence.Learning,
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             AverageCycleLength: 28,
             AveragePeriodLength: 5,
             LutealLength: 14,
@@ -238,7 +238,7 @@ public sealed class CycleHttpMappingsTests {
 
     [Fact]
     public void CycleNutritionSummary_ToHttpResponse_MapsAllFields() {
-        DateTime dateFrom = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly dateFrom = new(2026, 4, 1);
         var model = new CycleNutritionSummaryModel(
             dateFrom,
             dateFrom.AddDays(7),
@@ -269,7 +269,7 @@ public sealed class CycleHttpMappingsTests {
         var bleedingId = Guid.NewGuid();
         var symptomId = Guid.NewGuid();
         var signalId = Guid.NewGuid();
-        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly date = new(2026, 4, 3);
         var model = new CycleLogDayModel(
             cycleProfileId,
             date,
@@ -306,12 +306,12 @@ public sealed class CycleHttpMappingsTests {
         CycleLogDayHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(cycleProfileId, response.CycleProfileId);
-        Assert.Equal(date, response.Date);
+        Assert.Equal(ToUtcDateTime(date), response.Date);
         Assert.Equal(bleedingId, Assert.Single(response.BleedingEntries).Id);
         CycleSymptomEntryHttpResponse symptom = Assert.Single(response.Symptoms);
         Assert.Equal(symptomId, symptom.Id);
         Assert.Equal(cycleProfileId, symptom.CycleProfileId);
-        Assert.Equal(date, symptom.Date);
+        Assert.Equal(ToUtcDateTime(date), symptom.Date);
         Assert.Equal((int)CycleSymptomCategory.Headache, symptom.Category);
         Assert.Equal(3, symptom.Intensity);
         Assert.Equal("migraine", Assert.Single(symptom.Tags));
@@ -324,7 +324,7 @@ public sealed class CycleHttpMappingsTests {
     public void CycleFactorModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
         var cycleProfileId = Guid.NewGuid();
-        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly startDate = new(2026, 4, 1);
         var model = new CycleFactorModel(id, cycleProfileId, CycleFactorType.Perimenopause, startDate, startDate.AddDays(10), "notes");
 
         CycleFactorHttpResponse response = model.ToHttpResponse();
@@ -332,8 +332,8 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(id, response.Id);
         Assert.Equal(cycleProfileId, response.CycleProfileId);
         Assert.Equal((int)CycleFactorType.Perimenopause, response.Type);
-        Assert.Equal(startDate, response.StartDate);
-        Assert.Equal(startDate.AddDays(10), response.EndDate);
+        Assert.Equal(ToUtcDateTime(startDate), response.StartDate);
+        Assert.Equal(ToUtcDateTime(startDate.AddDays(10)), response.EndDate);
         Assert.Equal("notes", response.Notes);
     }
 
@@ -341,18 +341,35 @@ public sealed class CycleHttpMappingsTests {
     public void FertilitySignalModel_ToHttpResponse_MapsNullOvulationTestResult() {
         var id = Guid.NewGuid();
         var cycleProfileId = Guid.NewGuid();
-        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly date = new(2026, 4, 2);
         var model = new FertilitySignalModel(id, cycleProfileId, date, 36.5, OvulationTestResult: null, "sticky", HadSex: false, Notes: null);
 
         FertilitySignalHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal(cycleProfileId, response.CycleProfileId);
-        Assert.Equal(date, response.Date);
+        Assert.Equal(ToUtcDateTime(date), response.Date);
         Assert.Equal(36.5, response.BasalBodyTemperatureCelsius);
         Assert.Null(response.OvulationTestResult);
         Assert.Equal("sticky", response.CervicalFluid);
         Assert.False(response.HadSex);
         Assert.Null(response.Notes);
     }
+
+    [Fact]
+    public void CycleDateMappings_WithOffsetDateTime_PreserveWrittenCalendarDate() {
+        var requestDate = new DateTime(2026, 4, 1, 23, 30, 0, DateTimeKind.Local);
+        var request = new UpsertCycleDayHttpRequest(
+            Date: requestDate,
+            Bleeding: null,
+            Symptoms: [],
+            FertilitySignal: null);
+
+        UpsertCycleDayCommand command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
+
+        Assert.Equal(new DateOnly(2026, 4, 1), command.Date);
+    }
+
+    private static DateTime ToUtcDateTime(DateOnly date) =>
+        date.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 }

@@ -1,10 +1,11 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import type { HttpResponse } from '@angular/common/http';
 import { inject, PLATFORM_ID, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { ApiService } from '../../services/api.service';
-import type { ExportCycleRequest, ExportDiaryRequest } from '../models/export.models';
+import type { ExportCycleRequest, ExportDiaryRequest, ExportSensitiveCycleRequest } from '../models/export.models';
 import { BrowserWindowService } from '../platform/browser-window.service';
 
 @Service()
@@ -28,12 +29,20 @@ export class ExportService extends ApiService {
         return this.downloadBlob('cycle', { dateFrom, dateTo, timeZoneOffsetMinutes }, 'cycle-tracking.csv');
     }
 
+    public exportSensitiveCycle(request: ExportSensitiveCycleRequest): Observable<void> {
+        return this.saveBlobResponse(this.postBlob('cycle/sensitive', request), 'cycle-tracking-sensitive.csv');
+    }
+
     private downloadBlob(
         endpoint: string,
         params: Record<string, string | number | boolean | null | undefined>,
         fallbackFileName: string,
     ): Observable<void> {
-        return this.getBlob(endpoint, params).pipe(
+        return this.saveBlobResponse(this.getBlob(endpoint, params), fallbackFileName);
+    }
+
+    private saveBlobResponse(response$: Observable<HttpResponse<Blob>>, fallbackFileName: string): Observable<void> {
+        return response$.pipe(
             map(response => {
                 const blob = response.body;
                 if (blob === null) {

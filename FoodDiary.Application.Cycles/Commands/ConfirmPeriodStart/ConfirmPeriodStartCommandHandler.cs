@@ -14,7 +14,8 @@ namespace FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
 
 public sealed class ConfirmPeriodStartCommandHandler(
     ICycleWriteRepository cycleRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    TimeProvider? timeProvider = null)
     : ICommandHandler<ConfirmPeriodStartCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(ConfirmPeriodStartCommand command, CancellationToken cancellationToken) {
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
@@ -45,7 +46,9 @@ public sealed class ConfirmPeriodStartCommandHandler(
         }
 
         profile.ConfirmPeriodStart(command.Date);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
-        return Result.Success(profile.ToModel(CyclePredictionService.CalculatePredictions(profile)));
+        return Result.Success(profile.ToModel(predictions));
     }
 }

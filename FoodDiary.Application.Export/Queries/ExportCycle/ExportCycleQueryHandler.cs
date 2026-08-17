@@ -3,18 +3,21 @@ using System.Globalization;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Export.Internal;
 using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Services;
+using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Export.Queries.ExportCycle;
 
 public sealed class ExportCycleQueryHandler(
     ICycleReadService cycleReadService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    IUserLookupRepository? userLookupRepository = null,
+    IPasswordHasher? passwordHasher = null)
     : IQueryHandler<ExportCycleQuery, Result<FileExportResult>> {
     private const int MaxExportRangeDays = 366;
 
@@ -30,14 +33,12 @@ public sealed class ExportCycleQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateFrom);
-        DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateTo);
-        if (normalizedFrom > normalizedTo) {
+        if (query.DateFrom > query.DateTo) {
             return Result.Failure<FileExportResult>(
                 Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be less than or equal to DateTo."));
         }
 
-        if ((normalizedTo - normalizedFrom).TotalDays > MaxExportRangeDays) {
+        if (query.DateTo.DayNumber - query.DateFrom.DayNumber > MaxExportRangeDays) {
             return Result.Failure<FileExportResult>(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Export range must not exceed one year."));
         }
@@ -47,24 +48,33 @@ public sealed class ExportCycleQueryHandler(
             return Result.Failure<FileExportResult>(Errors.Cycle.NotFound(Guid.Empty));
         }
 
-        TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, query.TimeZoneOffsetMinutes);
-        string fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-        string toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        if (query.Scope == CycleExportScope.Sensitive) {
+            if (userLookupRepository is null || passwordHasher is null) {
+                return Result.Failure<FileExportResult>(
+                    Errors.Validation.Invalid(nameof(query.Scope), "Sensitive export is not configured."));
+            }
 
-        return Result.Success(new FileExportResult(
-            CycleCsvGenerator.Generate(cycle, normalizedFrom, normalizedTo),
-            "text/csv",
-            $"cycle-tracking-{fromStr}-to-{toStr}.csv"));
-    }
+            User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+            if (user is null) {
+                return Result.Failure<FileExportResult>(Errors.User.NotFound(userId.Value));
+            }
 
-    private static TimeSpan ResolveDisplayOffset(DateTime dateFrom, int? timeZoneOffsetMinutes) {
-        if (timeZoneOffsetMinutes is >= -840 and <= 840) {
-            return TimeSpan.FromMinutes(timeZoneOffsetMinutes.Value);
+            if (!user.HasPassword) {
+                return Result.Failure<FileExportResult>(Errors.User.PasswordNotSet);
+            }
+
+            if (!passwordHasher.Verify(query.CurrentPassword ?? string.Empty, user.Password)) {
+                return Result.Failure<FileExportResult>(Errors.User.InvalidPassword);
+            }
         }
 
-        TimeSpan timeOfDay = dateFrom.TimeOfDay;
-        return timeOfDay <= TimeSpan.FromHours(12)
-            ? -timeOfDay
-            : TimeSpan.FromDays(1) - timeOfDay;
+        string fromStr = query.DateFrom.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        string toStr = query.DateTo.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        string scopeSuffix = query.Scope == CycleExportScope.Sensitive ? "-sensitive" : string.Empty;
+
+        return Result.Success(new FileExportResult(
+            CycleCsvGenerator.Generate(cycle, query.DateFrom, query.DateTo, query.Scope),
+            "text/csv",
+            $"cycle-tracking-{fromStr}-to-{toStr}{scopeSuffix}.csv"));
     }
 }

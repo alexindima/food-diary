@@ -19,10 +19,10 @@
     "applicationModules": 0,
     "extractedApplicationModules": 33,
     "backendBusinessModules": 33,
-    "controllers": 86,
-    "endpoints": 276,
+    "controllers": 87,
+    "endpoints": 278,
     "agentGuides": 74,
-    "documentationPages": 46
+    "documentationPages": 47
   },
   "dotnet": {
     "projects": [
@@ -4056,6 +4056,28 @@
         ]
       },
       {
+        "name": "CycleLogsController",
+        "path": "FoodDiary.Presentation.Api/Features/Cycles/CycleLogsController.cs",
+        "routePrefix": "api/v{version:apiVersion}/cycles",
+        "endpoints": [
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
+            "line": 15
+          },
+          {
+            "verb": "DELETE",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
+            "line": 22
+          },
+          {
+            "verb": "PUT",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors",
+            "line": 29
+          }
+        ]
+      },
+      {
         "name": "CyclesController",
         "path": "FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs",
         "routePrefix": "api/v{version:apiVersion}/cycles",
@@ -4087,18 +4109,8 @@
           },
           {
             "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
+            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/consents/{purpose:int}",
             "line": 52
-          },
-          {
-            "verb": "DELETE",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days",
-            "line": 59
-          },
-          {
-            "verb": "PUT",
-            "route": "/api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors",
-            "line": 66
           }
         ]
       },
@@ -4409,12 +4421,17 @@
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/export/diary",
-            "line": 12
+            "line": 14
           },
           {
             "verb": "GET",
             "route": "/api/v{version:apiVersion}/export/cycle",
-            "line": 24
+            "line": 26
+          },
+          {
+            "verb": "POST",
+            "route": "/api/v{version:apiVersion}/export/cycle/sensitive",
+            "line": 35
           }
         ]
       },
@@ -5645,6 +5662,7 @@
       "docs/adr/0009-executable-application-module-dependency-graph.md",
       "docs/adr/0010-meals-terminology-and-application-boundary.md",
       "docs/adr/0011-application-runtime-boundary.md",
+      "docs/adr/0012-cycle-health-data-and-calendar-date-boundary.md",
       "docs/adr/README.md",
       "docs/adr/template.md",
       "docs/ai/CODE_REVIEW.md",

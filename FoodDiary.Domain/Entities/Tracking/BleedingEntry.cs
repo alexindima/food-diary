@@ -6,7 +6,7 @@ namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class BleedingEntry : Entity<BleedingEntryId> {
     public CycleProfileId CycleProfileId { get; private set; }
-    public DateTime Date { get; private set; }
+    public DateOnly Date { get; private set; }
     public BleedingType Type { get; private set; }
     public CycleFlowLevel Flow { get; private set; }
     public int? PainImpact { get; private set; }
@@ -20,14 +20,14 @@ public sealed class BleedingEntry : Entity<BleedingEntryId> {
     private BleedingEntry(BleedingEntryId id) : base(id) {
     }
 
-    public static BleedingEntry Create(CycleProfileId cycleProfileId, DateTime date, BleedingType type, CycleFlowLevel flow, int? painImpact, string? notes) {
+    public static BleedingEntry Create(CycleProfileId cycleProfileId, DateOnly date, BleedingType type, CycleFlowLevel flow, int? painImpact, string? notes) {
         EnsureCycleProfileId(cycleProfileId);
         EnsureDefined(type, nameof(type));
         EnsureDefined(flow, nameof(flow));
 
         var entry = new BleedingEntry(BleedingEntryId.New()) {
             CycleProfileId = cycleProfileId,
-            Date = CycleProfile.NormalizeDate(date),
+            Date = date,
             Type = type,
             Flow = flow,
             PainImpact = painImpact.HasValue ? CycleProfile.NormalizeIntensity(painImpact.Value, nameof(painImpact)) : null,

@@ -6,7 +6,7 @@ namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
 public record CreateCycleCommand(
     Guid? UserId,
-    DateTime TrackingStartDate,
+    DateOnly TrackingStartDate,
     int Mode,
     int? AverageCycleLength,
     int? AveragePeriodLength,
@@ -15,5 +15,11 @@ public record CreateCycleCommand(
     bool IsOnboardingComplete,
     bool ShowFertilityEstimates,
     bool DiscreetNotifications,
-    string? Notes
+    string? Notes,
+    int? Goal = null,
+    int? ReproductiveState = null,
+    bool HideFromDashboard = false,
+    bool? CycleTrackingConsentGranted = null,
+    bool NutritionInsightsConsentGranted = false,
+    bool FertilitySignalsConsentGranted = false
 ) : ICommand<Result<CycleModel>>, IUserRequest;

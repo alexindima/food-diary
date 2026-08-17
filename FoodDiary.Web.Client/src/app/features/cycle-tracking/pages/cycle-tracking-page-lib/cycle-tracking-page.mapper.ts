@@ -151,13 +151,22 @@ export function buildCyclePredictionView(prediction: CyclePredictions | null, lo
         excludedEpisodeCount: prediction.excludedEpisodeCount ?? 0,
         explanationKey: 'CYCLE_TRACKING.PREDICTION_EXPLANATION',
         hasPredictionRanges,
-        limitedReasonKey: hasPredictionRanges
-            ? null
-            : prediction.reasonCodes?.some(code => code === 'insufficient_completed_cycles' || code === 'ambiguous_episode_history') ===
-                true
-              ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING'
-              : 'CYCLE_TRACKING.PREDICTIONS_LIMITED',
+        limitedReasonKey: getLimitedReasonKey(prediction, hasPredictionRanges),
+        calibrationSampleCount: prediction.calibrationSampleCount ?? 0,
+        historicalCoveragePercent: prediction.historicalCoveragePercent ?? null,
+        meanAbsoluteErrorDays: prediction.meanAbsoluteErrorDays ?? null,
     };
+}
+
+function getLimitedReasonKey(prediction: CyclePredictions, hasPredictionRanges: boolean): string | null {
+    if (hasPredictionRanges) {
+        return null;
+    }
+
+    const isLearning = prediction.reasonCodes?.some(
+        code => code === 'insufficient_completed_cycles' || code === 'ambiguous_episode_history',
+    );
+    return isLearning === true ? 'CYCLE_TRACKING.PREDICTIONS_LEARNING' : 'CYCLE_TRACKING.PREDICTIONS_LIMITED';
 }
 
 function getDataSufficiencyKey(value: string | undefined): string {
@@ -195,6 +204,9 @@ export function buildCycleNutritionSummaryView(
     return {
         summary,
         hasEnoughData: summary.hasEnoughNutritionData,
+        consentRequired: summary.consentRequired ?? false,
+        completedCyclesAnalyzed: summary.completedCyclesAnalyzed ?? 0,
+        comparableCycles: summary.comparableCycles ?? 0,
         bleedingCaloriesLabel: formatComparison(summary.averageCaloriesOnBleedingDays),
         nonBleedingCaloriesLabel: formatComparison(summary.averageCaloriesOnNonBleedingCycleDays),
         bleedingFiberLabel: formatComparison(summary.averageFiberOnBleedingDays),
@@ -571,12 +583,17 @@ function getFactorLabelKey(type: CycleFactorType): string {
 }
 
 function toDateKey(value: string): string {
+    const calendarDateMatch = /^(\d{4}-\d{2}-\d{2})/.exec(value);
+    if (calendarDateMatch !== null) {
+        return calendarDateMatch[1];
+    }
+
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) {
         return value;
     }
 
-    return date.toISOString().slice(0, ISO_DATE_KEY_LENGTH);
+    return toLocalDateKey(date).slice(0, ISO_DATE_KEY_LENGTH);
 }
 
 function toLocalDateKey(value: Date): string {

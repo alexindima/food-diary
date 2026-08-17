@@ -7,6 +7,7 @@ using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
 using FoodDiary.Application.Cycles.Commands.UpdateCycleSettings;
+using FoodDiary.Application.Cycles.Commands.UpdateCycleConsent;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
@@ -18,14 +19,14 @@ public static class CycleHttpMappings {
         public GetCurrentCycleQuery ToCurrentQuery() => new(userId);
 
         public GetCycleNutritionSummaryQuery ToNutritionSummaryQuery(DateTime dateFrom, DateTime dateTo) =>
-                new(userId, dateFrom, dateTo);
+                new(userId, DateOnly.FromDateTime(dateFrom), DateOnly.FromDateTime(dateTo));
     }
 
     extension(CreateCycleHttpRequest request) {
         public CreateCycleCommand ToCommand(Guid userId) =>
                 new(
                     userId,
-                    request.TrackingStartDate,
+                    DateOnly.FromDateTime(request.TrackingStartDate),
                     request.Mode,
                     request.AverageCycleLength,
                     request.AveragePeriodLength,
@@ -34,7 +35,13 @@ public static class CycleHttpMappings {
                     request.IsOnboardingComplete,
                     request.ShowFertilityEstimates,
                     request.DiscreetNotifications,
-                    request.Notes);
+                    request.Notes,
+                    request.Goal,
+                    request.ReproductiveState,
+                    request.HideFromDashboard,
+                    request.CycleTrackingConsentGranted,
+                    request.NutritionInsightsConsentGranted,
+                    request.FertilitySignalsConsentGranted);
     }
 
     extension(UpdateCycleSettingsHttpRequest request) {
@@ -48,7 +55,16 @@ public static class CycleHttpMappings {
                 request.LutealLength,
                 request.IsRegular,
                 request.ShowFertilityEstimates,
-                request.DiscreetNotifications);
+                request.DiscreetNotifications,
+                request.Goal,
+                request.ReproductiveState,
+                request.HideFromDashboard);
+
+    }
+
+    extension(UpdateCycleConsentHttpRequest request) {
+        public UpdateCycleConsentCommand ToCommand(Guid userId, Guid cycleProfileId, int purpose) =>
+            new(userId, cycleProfileId, purpose, request.Granted);
     }
 
     extension(UpsertCycleDayHttpRequest request) {
@@ -56,7 +72,7 @@ public static class CycleHttpMappings {
                 new(
                     userId,
                     cycleProfileId,
-                    request.Date,
+                    DateOnly.FromDateTime(request.Date),
                     request.Bleeding?.ToCommandModel(),
                     request.Symptoms.Select(static symptom => symptom.ToCommandModel()).ToList(),
                     request.FertilitySignal?.ToCommandModel(),
@@ -69,7 +85,7 @@ public static class CycleHttpMappings {
         public DeleteCycleProfileCommand ToDeleteCommand(Guid userId) => new(userId, cycleProfileId);
 
         public ClearCycleDayCommand ToClearDayCommand(Guid userId, DateTime date) =>
-                new(userId, cycleProfileId, date);
+                new(userId, cycleProfileId, DateOnly.FromDateTime(date));
 
         public DeleteMenstrualEpisodeCommand ToDeleteMenstrualEpisodeCommand(Guid userId, Guid menstrualEpisodeId) =>
             new(userId, cycleProfileId, menstrualEpisodeId);
@@ -81,15 +97,15 @@ public static class CycleHttpMappings {
                     userId,
                     cycleProfileId,
                     request.Type,
-                    request.StartDate,
-                    request.EndDate,
+                    DateOnly.FromDateTime(request.StartDate),
+                    request.EndDate.HasValue ? DateOnly.FromDateTime(request.EndDate.Value) : null,
                     request.Notes,
                     request.ClearNotes);
     }
 
     extension(ConfirmPeriodStartHttpRequest request) {
         public ConfirmPeriodStartCommand ToCommand(Guid userId, Guid cycleProfileId) =>
-            new(userId, cycleProfileId, request.Date);
+            new(userId, cycleProfileId, DateOnly.FromDateTime(request.Date));
     }
 
     extension(UpdateMenstrualEpisodeHttpRequest request) {
@@ -98,8 +114,8 @@ public static class CycleHttpMappings {
                 userId,
                 cycleProfileId,
                 menstrualEpisodeId,
-                request.StartDate,
-                request.EndDate,
+                DateOnly.FromDateTime(request.StartDate),
+                request.EndDate.HasValue ? DateOnly.FromDateTime(request.EndDate.Value) : null,
                 request.ExcludedFromPredictions);
     }
 

@@ -1,12 +1,12 @@
 namespace FoodDiary.Application.Cycles.Models;
 
 public sealed record CyclePredictionsModel(
-    DateTime? NextPeriodStartFrom,
-    DateTime? NextPeriodStartTo,
-    DateTime? OvulationFrom,
-    DateTime? OvulationTo,
-    DateTime? PmsWindowStart,
-    DateTime? PmsWindowEnd,
+    DateOnly? NextPeriodStartFrom,
+    DateOnly? NextPeriodStartTo,
+    DateOnly? OvulationFrom,
+    DateOnly? OvulationTo,
+    DateOnly? PmsWindowStart,
+    DateOnly? PmsWindowEnd,
     string Confidence,
     string Rationale,
     string DataSufficiency,
@@ -15,4 +15,7 @@ public sealed record CyclePredictionsModel(
     int UsedEpisodeCount,
     int ExcludedEpisodeCount,
     IReadOnlyCollection<string> ReasonCodes,
-    string AlgorithmVersion);
+    string AlgorithmVersion,
+    int CalibrationSampleCount = 0,
+    double? HistoricalCoveragePercent = null,
+    double? MeanAbsoluteErrorDays = null);

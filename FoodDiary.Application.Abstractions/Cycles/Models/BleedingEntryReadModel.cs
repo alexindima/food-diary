@@ -5,7 +5,7 @@ namespace FoodDiary.Application.Abstractions.Cycles.Models;
 public sealed record BleedingEntryReadModel(
     Guid Id,
     Guid CycleProfileId,
-    DateTime Date,
+    DateOnly Date,
     BleedingType Type,
     CycleFlowLevel Flow,
     int? PainImpact,

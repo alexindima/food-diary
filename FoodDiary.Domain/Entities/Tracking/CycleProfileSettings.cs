@@ -12,4 +12,7 @@ public sealed record CycleProfileSettings(
     bool? ShowFertilityEstimates,
     bool? DiscreetNotifications,
     string? Notes,
-    bool ClearNotes = false);
+    bool ClearNotes = false,
+    CycleTrackingGoal? Goal = null,
+    CycleReproductiveState? ReproductiveState = null,
+    bool? HideFromDashboard = null);

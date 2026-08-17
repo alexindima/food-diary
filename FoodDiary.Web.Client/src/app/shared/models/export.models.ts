@@ -13,3 +13,7 @@ export type ExportCycleRequest = {
     dateTo: string;
     timeZoneOffsetMinutes?: number;
 };
+
+export type ExportSensitiveCycleRequest = ExportCycleRequest & {
+    currentPassword: string;
+};

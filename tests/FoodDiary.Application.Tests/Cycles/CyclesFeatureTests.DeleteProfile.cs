@@ -11,7 +11,7 @@ public partial class CyclesFeatureTests {
         var user = User.Create("cycle-delete@example.com", "hash");
         var profile = CycleProfile.Create(
             user.Id,
-            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+            new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new DeleteCycleProfileCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -29,7 +29,7 @@ public partial class CyclesFeatureTests {
         var currentUser = User.Create("cycle-delete-current@example.com", "hash");
         var profile = CycleProfile.Create(
             owner.Id,
-            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+            new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new DeleteCycleProfileCommandHandler(repository, CreateCurrentUserAccessService(currentUser));
 

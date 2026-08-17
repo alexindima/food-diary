@@ -7,4 +7,7 @@ public sealed record UpdateCycleSettingsHttpRequest(
     int LutealLength,
     bool IsRegular,
     bool ShowFertilityEstimates,
-    bool DiscreetNotifications);
+    bool DiscreetNotifications,
+    int? Goal = null,
+    int? ReproductiveState = null,
+    bool? HideFromDashboard = null);

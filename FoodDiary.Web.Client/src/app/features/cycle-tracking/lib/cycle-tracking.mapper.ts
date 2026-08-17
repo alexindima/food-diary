@@ -5,14 +5,7 @@ const DAY_END_MINUTES = 59;
 const DAY_END_SECONDS = 59;
 const DAY_END_MILLISECONDS = 999;
 const ISO_DATE_KEY_LENGTH = 10;
-
-export function cycleDateInputStartIso(value: string): string {
-    return `${value}T00:00:00.000Z`;
-}
-
-export function cycleDateInputEndIso(value: string): string {
-    return `${value}T23:59:59.999Z`;
-}
+const ISO_YEAR_LENGTH = 4;
 
 export function clampCycleSymptom(value: number | null | undefined): number {
     if (value === null || value === undefined || Number.isNaN(value)) {
@@ -49,6 +42,18 @@ export function normalizeCycleEndOfDay(value: Date): Date {
 }
 
 export function toCycleDateKey(value: string): string {
+    const calendarDateMatch = /^(\d{4}-\d{2}-\d{2})/.exec(value);
+    if (calendarDateMatch !== null) {
+        return calendarDateMatch[1];
+    }
+
     const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? '' : date.toISOString().slice(0, ISO_DATE_KEY_LENGTH);
+    if (Number.isNaN(date.getTime())) {
+        return '';
+    }
+
+    const year = date.getFullYear().toString().padStart(ISO_YEAR_LENGTH, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`.slice(0, ISO_DATE_KEY_LENGTH);
 }

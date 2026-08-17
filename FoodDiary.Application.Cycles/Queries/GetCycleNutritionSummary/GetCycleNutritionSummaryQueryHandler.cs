@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
-using FoodDiary.Application.Cycles.Internal;
 using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -26,22 +25,20 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
             return CurrentUserAccessResolver.ToFailure<CycleNutritionSummaryModel?>(userIdResult);
         }
 
-        DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateFrom);
-        DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateTo);
-        if (normalizedFrom > normalizedTo) {
+        if (query.DateFrom > query.DateTo) {
             return Result.Failure<CycleNutritionSummaryModel?>(
                 Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be less than or equal to DateTo."));
         }
 
-        if ((normalizedTo - normalizedFrom).TotalDays > MaxSummaryRangeDays) {
+        if (query.DateTo.DayNumber - query.DateFrom.DayNumber > MaxSummaryRangeDays) {
             return Result.Failure<CycleNutritionSummaryModel?>(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Summary range must not exceed one year."));
         }
 
         return await cycleReadService.GetNutritionSummaryAsync(
             userIdResult.Value,
-            normalizedFrom,
-            normalizedTo,
+            query.DateFrom,
+            query.DateTo,
             cancellationToken).ConfigureAwait(false);
     }
 }

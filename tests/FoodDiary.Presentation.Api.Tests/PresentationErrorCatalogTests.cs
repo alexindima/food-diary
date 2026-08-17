@@ -106,6 +106,10 @@ public sealed class PresentationErrorCatalogTests {
             return DateTime.UnixEpoch;
         }
 
+        if (parameterType == typeof(DateOnly)) {
+            return DateOnly.FromDateTime(DateTime.UnixEpoch);
+        }
+
         if (parameterType == typeof(string)) {
             return parameter.Name switch {
                 "field" => "field",

@@ -6,5 +6,5 @@ namespace FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 public record ClearCycleDayCommand(
     Guid? UserId,
     Guid CycleProfileId,
-    DateTime Date
+    DateOnly Date
 ) : ICommand<Result>, IUserRequest;

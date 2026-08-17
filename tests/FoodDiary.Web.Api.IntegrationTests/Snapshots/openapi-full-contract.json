@@ -1697,6 +1697,31 @@
       ]
     },
     {
+      "Path": "/api/v{version}/cycles/{cycleprofileid}/consents/{purpose}",
+      "Operations": [
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ],
+          "QueryParameters": [
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/cycles/{cycleprofileid}/days",
       "Operations": [
         {
@@ -2857,6 +2882,30 @@
               "Type": "integer",
               "Format": "int32"
             },
+            {
+              "Name": "userId",
+              "Location": "query",
+              "Required": false,
+              "Type": "string",
+              "Format": "uuid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/export/cycle/sensitive",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ],
+          "QueryParameters": [
             {
               "Name": "userId",
               "Location": "query",
@@ -10708,7 +10757,32 @@
           "Nullable": true
         },
         {
+          "Name": "cycleTrackingConsentGranted",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": true
+        },
+        {
           "Name": "discreetNotifications",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "fertilitySignalsConsentGranted",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "goal",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "hideFromDashboard",
           "Required": false,
           "Type": "boolean",
           "Nullable": false
@@ -10743,6 +10817,19 @@
           "Name": "notes",
           "Required": false,
           "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "nutritionInsightsConsentGranted",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "reproductiveState",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
           "Nullable": true
         },
         {
@@ -11278,6 +11365,45 @@
       ]
     },
     {
+      "Name": "CycleConsentHttpResponse",
+      "Properties": [
+        {
+          "Name": "grantedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "isActive",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "purpose",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "revokedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        }
+      ]
+    },
+    {
       "Name": "CycleFactorHttpResponse",
       "Properties": [
         {
@@ -11355,6 +11481,13 @@
           "Nullable": false
         },
         {
+          "Name": "consents",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/CycleConsentHttpResponse"
+        },
+        {
           "Name": "discreetNotifications",
           "Required": false,
           "Type": "boolean",
@@ -11373,6 +11506,19 @@
           "Type": "array",
           "Nullable": true,
           "ItemReference": "#/components/schemas/FertilitySignalHttpResponse"
+        },
+        {
+          "Name": "goal",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "hideFromDashboard",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
         },
         {
           "Name": "id",
@@ -11421,9 +11567,23 @@
           "Nullable": true
         },
         {
+          "Name": "predictionRevisions",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemReference": "#/components/schemas/CyclePredictionRevisionHttpResponse"
+        },
+        {
           "Name": "predictions",
           "Required": false,
           "Reference": "#/components/schemas/CyclePredictionsHttpResponse",
+          "Nullable": false
+        },
+        {
+          "Name": "reproductiveState",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
           "Nullable": false
         },
         {
@@ -11498,6 +11658,12 @@
       "Name": "CycleNutritionSummaryHttpResponse",
       "Properties": [
         {
+          "Name": "algorithmVersion",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "averageCaloriesOnBleedingDays",
           "Required": false,
           "Type": "number",
@@ -11540,6 +11706,32 @@
           "Nullable": false
         },
         {
+          "Name": "comparableCycles",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "completedCyclesAnalyzed",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "consentRequired",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        },
+        {
+          "Name": "dataSufficiency",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
           "Name": "dateFrom",
           "Required": false,
           "Type": "string",
@@ -11572,6 +11764,105 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        },
+        {
+          "Name": "reasonCodes",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
+        }
+      ]
+    },
+    {
+      "Name": "CyclePredictionRevisionHttpResponse",
+      "Properties": [
+        {
+          "Name": "algorithmVersion",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "calibrationSampleCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "completedCycleCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
+        },
+        {
+          "Name": "confidence",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "dataSufficiency",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "generatedAtUtc",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "historicalCoveragePercent",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "id",
+          "Required": false,
+          "Type": "string",
+          "Format": "uuid",
+          "Nullable": false
+        },
+        {
+          "Name": "meanAbsoluteErrorDays",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "nextPeriodStartFrom",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "nextPeriodStartTo",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": true
+        },
+        {
+          "Name": "patternConsistency",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "reasonCodes",
+          "Required": false,
+          "Type": "array",
+          "Nullable": true,
+          "ItemType": "string"
         }
       ]
     },
@@ -11583,6 +11874,13 @@
           "Required": false,
           "Type": "string",
           "Nullable": true
+        },
+        {
+          "Name": "calibrationSampleCount",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": false
         },
         {
           "Name": "completedCycleCount",
@@ -11609,6 +11907,20 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        },
+        {
+          "Name": "historicalCoveragePercent",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
+        },
+        {
+          "Name": "meanAbsoluteErrorDays",
+          "Required": false,
+          "Type": "number",
+          "Format": "double",
+          "Nullable": true
         },
         {
           "Name": "nextPeriodStartFrom",
@@ -17302,6 +17614,38 @@
       ]
     },
     {
+      "Name": "SensitiveCycleExportHttpRequest",
+      "Properties": [
+        {
+          "Name": "currentPassword",
+          "Required": false,
+          "Type": "string",
+          "Nullable": true
+        },
+        {
+          "Name": "dateFrom",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "dateTo",
+          "Required": false,
+          "Type": "string",
+          "Format": "date-time",
+          "Nullable": false
+        },
+        {
+          "Name": "timeZoneOffsetMinutes",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        }
+      ]
+    },
+    {
       "Name": "SetAttentionSignalStateHttpRequest",
       "Properties": [
         {
@@ -17985,6 +18329,17 @@
       ]
     },
     {
+      "Name": "UpdateCycleConsentHttpRequest",
+      "Properties": [
+        {
+          "Name": "granted",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": false
+        }
+      ]
+    },
+    {
       "Name": "UpdateCycleSettingsHttpRequest",
       "Properties": [
         {
@@ -18008,6 +18363,19 @@
           "Nullable": false
         },
         {
+          "Name": "goal",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
+        },
+        {
+          "Name": "hideFromDashboard",
+          "Required": false,
+          "Type": "boolean",
+          "Nullable": true
+        },
+        {
           "Name": "isRegular",
           "Required": false,
           "Type": "boolean",
@@ -18026,6 +18394,13 @@
           "Type": "integer",
           "Format": "int32",
           "Nullable": false
+        },
+        {
+          "Name": "reproductiveState",
+          "Required": false,
+          "Type": "integer",
+          "Format": "int32",
+          "Nullable": true
         },
         {
           "Name": "showFertilityEstimates",

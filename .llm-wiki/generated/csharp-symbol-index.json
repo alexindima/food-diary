@@ -8,23 +8,23 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3257,
-    "symbols": 3266,
+    "sourceFiles": 3280,
+    "symbols": 3289,
     "interfaceImplementationLinks": 231,
     "dependencyInjectionRegistrations": 232,
     "kinds": {
-      "class": 1670,
-      "enum": 50,
+      "class": 1678,
+      "enum": 54,
       "interface": 411,
-      "record": 1021,
-      "record struct": 114
+      "record": 1030,
+      "record struct": 116
     },
     "roles": {
-      "Command": 158,
-      "CommandHandler": 154,
-      "Configuration": 84,
-      "Controller": 89,
-      "Entity": 82,
+      "Command": 159,
+      "CommandHandler": 155,
+      "Configuration": 86,
+      "Controller": 90,
+      "Entity": 84,
       "Event": 19,
       "Factory": 8,
       "Handler": 6,
@@ -32,17 +32,17 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 59,
-      "Other": 1204,
+      "Other": 1212,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
       "ReadRepository": 47,
       "Repository": 102,
-      "Request": 128,
-      "Response": 172,
-      "Service": 269,
-      "Validator": 187,
-      "ValueObject": 124,
+      "Request": 130,
+      "Response": 174,
+      "Service": 270,
+      "Validator": 188,
+      "ValueObject": 126,
       "WriteRepository": 46
     }
   },
@@ -1595,11 +1595,25 @@
       "line": 4
     },
     {
+      "name": "CycleConsentReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CycleConsentReadModel.cs",
+      "line": 4
+    },
+    {
       "name": "CycleFactorReadModel",
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Abstractions/Cycles/Models/CycleFactorReadModel.cs",
       "line": 4
+    },
+    {
+      "name": "CyclePredictionRevisionReadModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CyclePredictionRevisionReadModel.cs",
+      "line": 2
     },
     {
       "name": "CycleProfileReadModel",
@@ -6149,7 +6163,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Cycles/Commands/ClearCycleDay/ClearCycleDayCommandHandler.cs",
-      "line": 12
+      "line": 14
     },
     {
       "name": "ClearCycleDayCommandValidator",
@@ -6191,7 +6205,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Cycles/Commands/CreateCycle/CreateCycleCommandHandler.cs",
-      "line": 13
+      "line": 14
     },
     {
       "name": "CreateCycleCommandValidator",
@@ -6241,6 +6255,27 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Commands/DeleteMenstrualEpisode/DeleteMenstrualEpisodeCommandValidator.cs",
       "line": 4
+    },
+    {
+      "name": "UpdateCycleConsentCommand",
+      "kind": "record",
+      "role": "Command",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommand.cs",
+      "line": 6
+    },
+    {
+      "name": "UpdateCycleConsentCommandHandler",
+      "kind": "class",
+      "role": "CommandHandler",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandHandler.cs",
+      "line": 15
+    },
+    {
+      "name": "UpdateCycleConsentCommandValidator",
+      "kind": "class",
+      "role": "Validator",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommandValidator.cs",
+      "line": 5
     },
     {
       "name": "UpdateCycleSettingsCommand",
@@ -6317,7 +6352,7 @@
       "kind": "class",
       "role": "CommandHandler",
       "path": "FoodDiary.Application.Cycles/Commands/UpsertCycleDay/UpsertCycleDayCommandHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "UpsertCycleDayCommandValidator",
@@ -6390,6 +6425,13 @@
       "line": 4
     },
     {
+      "name": "CycleConsentModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Cycles/Models/CycleConsentModel.cs",
+      "line": 4
+    },
+    {
       "name": "CycleFactorModel",
       "kind": "record",
       "role": "Other",
@@ -6415,6 +6457,13 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Application.Cycles/Models/CycleNutritionSummaryModel.cs",
+      "line": 2
+    },
+    {
+      "name": "CyclePredictionRevisionModel",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Application.Cycles/Models/CyclePredictionRevisionModel.cs",
       "line": 2
     },
     {
@@ -6471,7 +6520,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryHandler.cs",
-      "line": 11
+      "line": 10
     },
     {
       "name": "GetCycleNutritionSummaryQueryValidator",
@@ -6479,6 +6528,13 @@
       "role": "Validator",
       "path": "FoodDiary.Application.Cycles/Queries/GetCycleNutritionSummary/GetCycleNutritionSummaryQueryValidator.cs",
       "line": 4
+    },
+    {
+      "name": "CyclePredictionRevisionService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Application.Cycles/Services/CyclePredictionRevisionService.cs",
+      "line": 5
     },
     {
       "name": "CyclePredictionService",
@@ -7741,6 +7797,13 @@
       "line": 2
     },
     {
+      "name": "CycleExportScope",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Application.Export/Models/CycleExportScope.cs",
+      "line": 2
+    },
+    {
       "name": "ExportFormat",
       "kind": "enum",
       "role": "Other",
@@ -7766,14 +7829,14 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "line": 14
+      "line": 15
     },
     {
       "name": "ExportCycleQueryValidator",
       "kind": "class",
       "role": "Validator",
       "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
-      "line": 4
+      "line": 5
     },
     {
       "name": "ExportDiaryQuery",
@@ -7801,7 +7864,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Application.Export/Services/CycleCsvGenerator.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "DiaryCsvGenerator",
@@ -13390,11 +13453,25 @@
       "line": 6
     },
     {
+      "name": "CycleConsent",
+      "kind": "class",
+      "role": "Entity",
+      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
+      "line": 6
+    },
+    {
       "name": "CycleFactor",
       "kind": "class",
       "role": "Entity",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleFactor.cs",
       "line": 6
+    },
+    {
+      "name": "CyclePredictionRevision",
+      "kind": "class",
+      "role": "Entity",
+      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 5
     },
     {
       "name": "CycleProfile",
@@ -13698,6 +13775,13 @@
       "line": 2
     },
     {
+      "name": "CycleConsentPurpose",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Domain/Enums/CycleConsentPurpose.cs",
+      "line": 2
+    },
+    {
       "name": "CycleFactorType",
       "kind": "enum",
       "role": "Other",
@@ -13712,10 +13796,24 @@
       "line": 2
     },
     {
+      "name": "CycleReproductiveState",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Domain/Enums/CycleReproductiveState.cs",
+      "line": 2
+    },
+    {
       "name": "CycleSymptomCategory",
       "kind": "enum",
       "role": "Other",
       "path": "FoodDiary.Domain/Enums/CycleSymptomCategory.cs",
+      "line": 2
+    },
+    {
+      "name": "CycleTrackingGoal",
+      "kind": "enum",
+      "role": "Other",
+      "path": "FoodDiary.Domain/Enums/CycleTrackingGoal.cs",
       "line": 2
     },
     {
@@ -14132,6 +14230,13 @@
       "line": 4
     },
     {
+      "name": "CycleConsentId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "FoodDiary.Domain/ValueObjects/Ids/CycleConsentId.cs",
+      "line": 4
+    },
+    {
       "name": "CycleFactorId",
       "kind": "record struct",
       "role": "ValueObject",
@@ -14143,6 +14248,13 @@
       "kind": "record struct",
       "role": "ValueObject",
       "path": "FoodDiary.Domain/ValueObjects/Ids/CycleId.cs",
+      "line": 4
+    },
+    {
+      "name": "CyclePredictionRevisionId",
+      "kind": "record struct",
+      "role": "ValueObject",
+      "path": "FoodDiary.Domain/ValueObjects/Ids/CyclePredictionRevisionId.cs",
       "line": 4
     },
     {
@@ -15343,10 +15455,24 @@
       "line": 7
     },
     {
+      "name": "CycleConsentConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleConsentConfiguration.cs",
+      "line": 7
+    },
+    {
       "name": "CycleFactorConfiguration",
       "kind": "class",
       "role": "Configuration",
       "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CycleFactorConfiguration.cs",
+      "line": 7
+    },
+    {
+      "name": "CyclePredictionRevisionConfiguration",
+      "kind": "class",
+      "role": "Configuration",
+      "path": "FoodDiary.Infrastructure/Persistence/Configurations/Cycles/CyclePredictionRevisionConfiguration.cs",
       "line": 7
     },
     {
@@ -18381,6 +18507,13 @@
       "line": 2
     },
     {
+      "name": "CycleLogsController",
+      "kind": "class",
+      "role": "Controller",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/CycleLogsController.cs",
+      "line": 14
+    },
+    {
       "name": "CyclesController",
       "kind": "class",
       "role": "Controller",
@@ -18392,7 +18525,7 @@
       "kind": "class",
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Mappings/CycleHttpMappings.cs",
-      "line": 15
+      "line": 16
     },
     {
       "name": "CycleHttpResponseMappings",
@@ -18444,6 +18577,13 @@
       "line": 2
     },
     {
+      "name": "UpdateCycleConsentHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Requests/UpdateCycleConsentHttpRequest.cs",
+      "line": 2
+    },
+    {
       "name": "UpdateCycleSettingsHttpRequest",
       "kind": "record",
       "role": "Request",
@@ -18479,6 +18619,13 @@
       "line": 2
     },
     {
+      "name": "CycleConsentHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleConsentHttpResponse.cs",
+      "line": 2
+    },
+    {
       "name": "CycleFactorHttpResponse",
       "kind": "record",
       "role": "Response",
@@ -18504,6 +18651,13 @@
       "kind": "record",
       "role": "Response",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
+      "line": 2
+    },
+    {
+      "name": "CyclePredictionRevisionHttpResponse",
+      "kind": "record",
+      "role": "Response",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
       "line": 2
     },
     {
@@ -18945,7 +19099,7 @@
       "kind": "class",
       "role": "Controller",
       "path": "FoodDiary.Presentation.Api/Features/Export/ExportController.cs",
-      "line": 11
+      "line": 13
     },
     {
       "name": "ExportHttpMappings",
@@ -18953,6 +19107,13 @@
       "role": "Other",
       "path": "FoodDiary.Presentation.Api/Features/Export/Mappings/ExportHttpMappings.cs",
       "line": 6
+    },
+    {
+      "name": "SensitiveCycleExportHttpRequest",
+      "kind": "record",
+      "role": "Request",
+      "path": "FoodDiary.Presentation.Api/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
+      "line": 2
     },
     {
       "name": "FastingController",

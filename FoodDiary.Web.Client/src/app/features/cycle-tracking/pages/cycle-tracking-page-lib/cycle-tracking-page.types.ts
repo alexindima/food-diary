@@ -69,11 +69,17 @@ export type CyclePredictionViewModel = {
     explanationKey: string;
     hasPredictionRanges: boolean;
     limitedReasonKey: string | null;
+    calibrationSampleCount: number;
+    historicalCoveragePercent: number | null;
+    meanAbsoluteErrorDays: number | null;
 };
 
 export type CycleNutritionSummaryViewModel = {
     summary: CycleNutritionSummary;
     hasEnoughData: boolean;
+    consentRequired: boolean;
+    completedCyclesAnalyzed: number;
+    comparableCycles: number;
     bleedingCaloriesLabel: string;
     nonBleedingCaloriesLabel: string;
     bleedingFiberLabel: string;

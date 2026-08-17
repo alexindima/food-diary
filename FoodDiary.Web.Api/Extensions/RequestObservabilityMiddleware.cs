@@ -175,6 +175,14 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
                 return new RequestSensitivity("/hubs/email-verification", "signalr-auth", IncludeUserIdInTelemetry: false);
             }
 
+            if (path.StartsWithSegments("/api/v1/cycles", StringComparison.OrdinalIgnoreCase)) {
+                return new RequestSensitivity("/api/v1/cycles/*", "health-cycle", IncludeUserIdInTelemetry: false);
+            }
+
+            if (path.StartsWithSegments("/api/v1/export/cycle", StringComparison.OrdinalIgnoreCase)) {
+                return new RequestSensitivity("/api/v1/export/cycle/*", "health-cycle-export", IncludeUserIdInTelemetry: false);
+            }
+
             return new RequestSensitivity(path.Value ?? "/", "standard", IncludeUserIdInTelemetry: true);
         }
     }

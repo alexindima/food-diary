@@ -25,6 +25,8 @@ Architecture Decision Records (ADRs) capture significant decisions that constrai
 | [0008](0008-product-recipe-read-model-query-paths.md) | Product and recipe read-model query paths | Accepted | 2026-07-05 |
 | [0009](0009-executable-application-module-dependency-graph.md) | Executable Application module dependency graph | Accepted | 2026-07-13 |
 | [0010](0010-meals-terminology-and-application-boundary.md) | Meals terminology and application boundary | Accepted | 2026-08-13 |
+| [0011](0011-application-runtime-boundary.md) | Separate the Application Runtime boundary | Accepted | 2026-08-14 |
+| [0012](0012-cycle-health-data-and-calendar-date-boundary.md) | Cycle health-data and calendar-date boundary | Proposed | 2026-08-17 |
 
 ## Creating A Record
 

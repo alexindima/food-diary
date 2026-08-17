@@ -9,6 +9,7 @@ import type {
     CycleLogDay,
     CycleNutritionSummary,
     CycleResponse,
+    UpdateCycleConsentPayload,
     UpdateCycleSettingsPayload,
     UpdateMenstrualEpisodePayload,
     UpsertCycleDayPayload,
@@ -38,6 +39,12 @@ export class CyclesService extends ApiService {
     public updateSettings(cycleProfileId: string, payload: UpdateCycleSettingsPayload): Observable<CycleResponse> {
         return this.put<CycleResponse>(`${cycleProfileId}/settings`, payload).pipe(
             catchError((error: unknown) => rethrowApiError('Cycle settings update error', error)),
+        );
+    }
+
+    public updateConsent(cycleProfileId: string, purpose: number, payload: UpdateCycleConsentPayload): Observable<CycleResponse> {
+        return this.put<CycleResponse>(`${cycleProfileId}/consents/${purpose}`, payload).pipe(
+            catchError((error: unknown) => rethrowApiError('Cycle consent update error', error)),
         );
     }
 

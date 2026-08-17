@@ -205,7 +205,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 IsOnboardingComplete: true,
                 ShowFertilityEstimates: true,
                 DiscreetNotifications: true,
-                "Integration cycle"));
+                Notes: "Integration cycle",
+                Goal: (int)CycleTrackingGoal.PeriodAwareness,
+                ReproductiveState: (int)CycleReproductiveState.Cycling,
+                HideFromDashboard: false,
+                CycleTrackingConsentGranted: true,
+                NutritionInsightsConsentGranted: true,
+                FertilitySignalsConsentGranted: true));
         createResponse.EnsureSuccessStatusCode();
 
         HttpResponseMessage currentResponse = await client.GetAsync("/api/v1/cycles/current");

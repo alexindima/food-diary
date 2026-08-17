@@ -7,7 +7,7 @@ namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class CycleSymptomEntry : Entity<CycleSymptomEntryId> {
     public CycleProfileId CycleProfileId { get; private set; }
-    public DateTime Date { get; private set; }
+    public DateOnly Date { get; private set; }
     public CycleSymptomCategory Category { get; private set; }
     public int Intensity { get; private set; }
     public string TagsJson { get; private set; } = "[]";
@@ -25,7 +25,7 @@ public sealed class CycleSymptomEntry : Entity<CycleSymptomEntryId> {
 
     public static CycleSymptomEntry Create(
         CycleProfileId cycleProfileId,
-        DateTime date,
+        DateOnly date,
         CycleSymptomCategory category,
         int intensity,
         IReadOnlyCollection<string> tags,
@@ -35,7 +35,7 @@ public sealed class CycleSymptomEntry : Entity<CycleSymptomEntryId> {
 
         var entry = new CycleSymptomEntry(CycleSymptomEntryId.New()) {
             CycleProfileId = cycleProfileId,
-            Date = CycleProfile.NormalizeDate(date),
+            Date = date,
             Category = category,
             Intensity = CycleProfile.NormalizeIntensity(intensity, nameof(intensity)),
             TagsJson = NormalizeTags(tags),

@@ -49,24 +49,15 @@ public sealed class CyclesController(ISender mediator) : AuthorizedController(me
         [FromBody] UpdateCycleSettingsHttpRequest request) =>
         HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
 
-    [HttpPut("{cycleProfileId:guid}/days")]
-    [ProducesResponseType<CycleLogDayHttpResponse>(StatusCodes.Status200OK)]
-    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> UpsertDay(Guid cycleProfileId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleDayHttpRequest request) =>
-        HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
-
-    [HttpDelete("{cycleProfileId:guid}/days")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
-    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> ClearDay(Guid cycleProfileId, [FromCurrentUser] Guid userId, [FromQuery] DateTime date) =>
-        HandleNoContent(cycleProfileId.ToClearDayCommand(userId, date));
-
-    [HttpPut("{cycleProfileId:guid}/factors")]
+    [HttpPut("{cycleProfileId:guid}/consents/{purpose:int}")]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> UpsertFactor(Guid cycleProfileId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleFactorHttpRequest request) =>
-        HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
+    public Task<IActionResult> UpdateConsent(
+        Guid cycleProfileId,
+        int purpose,
+        [FromCurrentUser] Guid userId,
+        [FromBody] UpdateCycleConsentHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, cycleProfileId, purpose), static value => value.ToHttpResponse());
+
 }

@@ -5,7 +5,7 @@ namespace FoodDiary.Application.Cycles.Models;
 public sealed record CycleSymptomEntryModel(
     Guid Id,
     Guid CycleProfileId,
-    DateTime Date,
+    DateOnly Date,
     CycleSymptomCategory Category,
     int Intensity,
     IReadOnlyCollection<string> Tags,

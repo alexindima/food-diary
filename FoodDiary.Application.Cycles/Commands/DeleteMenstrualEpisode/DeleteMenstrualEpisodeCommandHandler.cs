@@ -14,7 +14,8 @@ namespace FoodDiary.Application.Cycles.Commands.DeleteMenstrualEpisode;
 
 public sealed class DeleteMenstrualEpisodeCommandHandler(
     ICycleWriteRepository cycleRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    TimeProvider? timeProvider = null)
     : ICommandHandler<DeleteMenstrualEpisodeCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(DeleteMenstrualEpisodeCommand command, CancellationToken cancellationToken) {
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
@@ -66,6 +67,8 @@ public sealed class DeleteMenstrualEpisodeCommandHandler(
         }
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
-        return Result.Success(profile.ToModel(CyclePredictionService.CalculatePredictions(profile)));
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
+        return Result.Success(profile.ToModel(predictions));
     }
 }

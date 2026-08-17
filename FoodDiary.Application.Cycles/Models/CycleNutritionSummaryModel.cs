@@ -1,8 +1,8 @@
 namespace FoodDiary.Application.Cycles.Models;
 
 public sealed record CycleNutritionSummaryModel(
-    DateTime DateFrom,
-    DateTime DateTo,
+    DateOnly DateFrom,
+    DateOnly DateTo,
     int LoggedCycleDays,
     int DaysWithMeals,
     int BleedingDays,
@@ -11,4 +11,10 @@ public sealed record CycleNutritionSummaryModel(
     double AverageFiberOnBleedingDays,
     double AverageFiberOnNonBleedingCycleDays,
     double AveragePainImpactOnDaysWithMeals,
-    bool HasEnoughNutritionData);
+    bool HasEnoughNutritionData,
+    bool ConsentRequired = false,
+    int CompletedCyclesAnalyzed = 0,
+    int ComparableCycles = 0,
+    string DataSufficiency = "Insufficient",
+    IReadOnlyCollection<string>? ReasonCodes = null,
+    string AlgorithmVersion = "nutrition-v2.0");

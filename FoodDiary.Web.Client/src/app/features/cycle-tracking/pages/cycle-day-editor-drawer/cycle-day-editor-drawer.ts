@@ -52,6 +52,7 @@ export class CycleDayEditorDrawerComponent {
     public readonly isSaving = input.required<boolean>();
     public readonly editingDate = input<string | null>(null);
     public readonly ovulationTestOptions = input.required<Array<FdUiSelectOption<OvulationTestResult>>>();
+    public readonly fertilityEnabled = input(false);
     public readonly closed = output();
 
     protected readonly symptomFields = CYCLE_SYMPTOM_FIELDS.filter(field => field.key !== 'pain');

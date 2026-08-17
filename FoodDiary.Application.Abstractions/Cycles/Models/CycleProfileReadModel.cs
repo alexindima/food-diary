@@ -7,7 +7,7 @@ public sealed record CycleProfileReadModel(
     Guid UserId,
     CycleTrackingMode Mode,
     CycleConfidence Confidence,
-    DateTime TrackingStartDate,
+    DateOnly TrackingStartDate,
     int AverageCycleLength,
     int AveragePeriodLength,
     int LutealLength,
@@ -20,4 +20,12 @@ public sealed record CycleProfileReadModel(
     IReadOnlyCollection<CycleSymptomEntryReadModel> SymptomEntries,
     IReadOnlyCollection<CycleFactorReadModel> Factors,
     IReadOnlyCollection<FertilitySignalReadModel> FertilitySignals,
-    IReadOnlyCollection<MenstrualEpisodeReadModel>? MenstrualEpisodes = null);
+    IReadOnlyCollection<MenstrualEpisodeReadModel>? MenstrualEpisodes = null,
+    CycleTrackingGoal Goal = CycleTrackingGoal.PeriodAwareness,
+    CycleReproductiveState ReproductiveState = CycleReproductiveState.Cycling,
+    bool HideFromDashboard = false,
+    IReadOnlyCollection<CycleConsentReadModel>? Consents = null,
+    IReadOnlyCollection<CyclePredictionRevisionReadModel>? PredictionRevisions = null) {
+    public bool HasActiveConsent(CycleConsentPurpose purpose) =>
+        (Consents ?? []).Any(consent => consent.Purpose == purpose && consent.IsActive);
+}

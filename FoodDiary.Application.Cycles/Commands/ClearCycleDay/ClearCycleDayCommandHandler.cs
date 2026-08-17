@@ -7,12 +7,15 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Application.Cycles.Services;
 
 namespace FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 
 public sealed class ClearCycleDayCommandHandler(
     ICycleWriteRepository cycleRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    TimeProvider? timeProvider = null)
     : ICommandHandler<ClearCycleDayCommand, Result> {
     public async Task<Result> Handle(ClearCycleDayCommand command, CancellationToken cancellationToken) {
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
@@ -46,6 +49,8 @@ public sealed class ClearCycleDayCommandHandler(
         }
 
         if (profile.ClearDay(command.Date)) {
+            CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+            CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
             await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
         }
 

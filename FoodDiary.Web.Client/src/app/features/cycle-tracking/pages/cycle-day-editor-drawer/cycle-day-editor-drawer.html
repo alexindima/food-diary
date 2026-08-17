@@ -166,31 +166,33 @@
                     [formField]="dayForm().notes"
                 />
 
-                <div class="cycle-drawer__advanced fd-stack fd-gap-sm">
-                    <fd-ui-button type="button" variant="secondary" fill="text" (click)="advancedOpen.set(!advancedOpen())">
-                        {{ (advancedOpen() ? 'CYCLE_TRACKING.HIDE_ADVANCED' : 'CYCLE_TRACKING.SHOW_ADVANCED') | translate }}
-                    </fd-ui-button>
-                    @if (advancedOpen()) {
-                        <div class="cycle-drawer__advanced-fields fd-grid fd-gap-sm">
-                            <fd-ui-input
-                                type="number"
-                                [step]="0.01"
-                                [label]="'CYCLE_TRACKING.BBT' | translate"
-                                [formField]="dayForm().basalBodyTemperatureCelsius"
-                            />
-                            <fd-ui-select
-                                [label]="'CYCLE_TRACKING.OVULATION_TEST' | translate"
-                                [options]="ovulationTestOptions()"
-                                [formField]="dayForm().ovulationTestResult"
-                            />
-                            <fd-ui-input [label]="'CYCLE_TRACKING.CERVICAL_FLUID' | translate" [formField]="dayForm().cervicalFluid" />
-                            <div class="cycle-drawer__native-check fd-row fd-gap-xs fd-align-center">
-                                <input id="cycle-day-had-sex" type="checkbox" [formField]="dayForm().hadSex" />
-                                <label for="cycle-day-had-sex" class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.HAD_SEX' | translate }}</label>
+                @if (fertilityEnabled()) {
+                    <div class="cycle-drawer__advanced fd-stack fd-gap-sm">
+                        <fd-ui-button type="button" variant="secondary" fill="text" (click)="advancedOpen.set(!advancedOpen())">
+                            {{ (advancedOpen() ? 'CYCLE_TRACKING.HIDE_ADVANCED' : 'CYCLE_TRACKING.SHOW_ADVANCED') | translate }}
+                        </fd-ui-button>
+                        @if (advancedOpen()) {
+                            <div class="cycle-drawer__advanced-fields fd-grid fd-gap-sm">
+                                <fd-ui-input
+                                    type="number"
+                                    [step]="0.01"
+                                    [label]="'CYCLE_TRACKING.BBT' | translate"
+                                    [formField]="dayForm().basalBodyTemperatureCelsius"
+                                />
+                                <fd-ui-select
+                                    [label]="'CYCLE_TRACKING.OVULATION_TEST' | translate"
+                                    [options]="ovulationTestOptions()"
+                                    [formField]="dayForm().ovulationTestResult"
+                                />
+                                <fd-ui-input [label]="'CYCLE_TRACKING.CERVICAL_FLUID' | translate" [formField]="dayForm().cervicalFluid" />
+                                <div class="cycle-drawer__native-check fd-row fd-gap-xs fd-align-center">
+                                    <input id="cycle-day-had-sex" type="checkbox" [formField]="dayForm().hadSex" />
+                                    <label for="cycle-day-had-sex" class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.HAD_SEX' | translate }}</label>
+                                </div>
                             </div>
-                        </div>
-                    }
-                </div>
+                        }
+                    </div>
+                }
             </div>
 
             <footer class="cycle-drawer__footer fd-grid fd-gap-sm">

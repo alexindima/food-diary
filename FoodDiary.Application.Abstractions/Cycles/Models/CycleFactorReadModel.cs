@@ -6,6 +6,6 @@ public sealed record CycleFactorReadModel(
     Guid Id,
     Guid CycleProfileId,
     CycleFactorType Type,
-    DateTime StartDate,
-    DateTime? EndDate,
+    DateOnly StartDate,
+    DateOnly? EndDate,
     string? Notes);

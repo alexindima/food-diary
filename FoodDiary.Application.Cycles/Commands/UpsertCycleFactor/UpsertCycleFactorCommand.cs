@@ -8,8 +8,8 @@ public record UpsertCycleFactorCommand(
     Guid? UserId,
     Guid CycleProfileId,
     int Type,
-    DateTime StartDate,
-    DateTime? EndDate,
+    DateOnly StartDate,
+    DateOnly? EndDate,
     string? Notes,
     bool ClearNotes
 ) : ICommand<Result<CycleModel>>, IUserRequest;

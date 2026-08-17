@@ -14,7 +14,8 @@ namespace FoodDiary.Application.Cycles.Commands.UpdateMenstrualEpisode;
 
 public sealed class UpdateMenstrualEpisodeCommandHandler(
     ICycleWriteRepository cycleRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    TimeProvider? timeProvider = null)
     : ICommandHandler<UpdateMenstrualEpisodeCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(UpdateMenstrualEpisodeCommand command, CancellationToken cancellationToken) {
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
@@ -72,6 +73,8 @@ public sealed class UpdateMenstrualEpisodeCommandHandler(
         }
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
-        return Result.Success(profile.ToModel(CyclePredictionService.CalculatePredictions(profile)));
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
+        return Result.Success(profile.ToModel(predictions));
     }
 }

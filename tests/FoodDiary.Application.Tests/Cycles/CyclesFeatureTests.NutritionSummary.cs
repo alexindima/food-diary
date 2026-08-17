@@ -13,10 +13,12 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WithCycleLogsAndMeals_ReturnsBleedingComparison() {
         var user = User.Create("cycle-nutrition@example.com", "hash");
-        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly startDate = new(2026, 4, 1);
         var profile = CycleProfile.Create(user.Id, startDate);
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, DateTime.UtcNow);
         profile.UpsertBleedingEntry(startDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: null);
         profile.UpsertSymptomEntry(startDate.AddDays(1), CycleSymptomCategory.Craving, 6, ["sweet"], note: null);
+        profile.UpsertBleedingEntry(startDate.AddDays(28), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
         GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new InMemoryCycleRepository(profile),
             CreateStatisticsReadService([
@@ -26,7 +28,7 @@ public partial class CyclesFeatureTests {
             CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
-            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
+            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(29)),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -45,29 +47,34 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WithEnoughGroupData_MarksSummaryReliable() {
         var user = User.Create("cycle-nutrition-enough@example.com", "hash");
-        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly startDate = new(2026, 4, 1);
         var profile = CycleProfile.Create(user.Id, startDate);
-        profile.UpsertBleedingEntry(startDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: null);
-        profile.UpsertBleedingEntry(startDate.AddDays(1), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 6, notes: null);
-        profile.UpsertSymptomEntry(startDate.AddDays(2), CycleSymptomCategory.Craving, 4, [], note: null);
-        profile.UpsertSymptomEntry(startDate.AddDays(3), CycleSymptomCategory.Energy, 5, [], note: null);
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, DateTime.UtcNow);
+        foreach (int offset in (int[])[0, 28, 56, 84]) {
+            profile.UpsertBleedingEntry(startDate.AddDays(offset), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 6, notes: null);
+        }
+
         GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new InMemoryCycleRepository(profile),
             CreateStatisticsReadService([
                 CreateNutritionBucket(startDate, calories: 2100, fiber: 18),
-                CreateNutritionBucket(startDate.AddDays(1), calories: 2000, fiber: 20),
-                CreateNutritionBucket(startDate.AddDays(2), calories: 1800, fiber: 28),
-                CreateNutritionBucket(startDate.AddDays(3), calories: 1900, fiber: 26),
+                CreateNutritionBucket(startDate.AddDays(1), calories: 1800, fiber: 28),
+                CreateNutritionBucket(startDate.AddDays(28), calories: 2050, fiber: 20),
+                CreateNutritionBucket(startDate.AddDays(29), calories: 1850, fiber: 26),
+                CreateNutritionBucket(startDate.AddDays(56), calories: 2000, fiber: 22),
+                CreateNutritionBucket(startDate.AddDays(57), calories: 1900, fiber: 24),
             ]),
             CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
-            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(4)),
+            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(84)),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
         Assert.True(summary.HasEnoughNutritionData);
+        Assert.Equal(3, summary.CompletedCyclesAnalyzed);
+        Assert.Equal(3, summary.ComparableCycles);
     }
 
     [Fact]
@@ -79,7 +86,7 @@ public partial class CyclesFeatureTests {
             CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
-            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7), DateOnly.FromDateTime(DateTime.UtcNow)),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -89,14 +96,15 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WhenStatisticsFails_ReturnsFailure() {
         var user = User.Create("cycle-statistics-failure@example.com", "hash");
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, DateTime.UtcNow);
         GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new InMemoryCycleRepository(profile),
             CreateFailingStatisticsReadService(Errors.Validation.Invalid("statistics", "Statistics unavailable.")),
             CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
-            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7), DateOnly.FromDateTime(DateTime.UtcNow)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -111,7 +119,7 @@ public partial class CyclesFeatureTests {
             CreateCurrentUserAccessService(User.Create("cycle-nutrition-empty-user@example.com", "hash")));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
-            new GetCycleNutritionSummaryQuery(Guid.Empty, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            new GetCycleNutritionSummaryQuery(Guid.Empty, DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7), DateOnly.FromDateTime(DateTime.UtcNow)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -127,7 +135,7 @@ public partial class CyclesFeatureTests {
             CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
-            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1)),
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -138,7 +146,7 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WithTooLargeRange_ReturnsValidationFailure() {
         var user = User.Create("cycle-nutrition-long-range@example.com", "hash");
-        DateTime from = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly from = new(2025, 1, 1);
         GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new NoopCycleRepository(),
             CreateStatisticsReadService([]),
@@ -163,7 +171,7 @@ public partial class CyclesFeatureTests {
             CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
-            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7), DateOnly.FromDateTime(DateTime.UtcNow)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -173,23 +181,28 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WithFertilitySignalOnly_IncludesLoggedDay() {
         var user = User.Create("cycle-nutrition-fertility@example.com", "hash");
-        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly startDate = new(2026, 4, 1);
         var profile = CycleProfile.Create(user.Id, startDate);
+        profile.GrantConsent(CycleConsentPurpose.NutritionInsights, DateTime.UtcNow);
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
+        profile.UpsertBleedingEntry(startDate, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
         profile.UpsertFertilitySignal(startDate.AddDays(1), 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: null);
+        profile.UpsertBleedingEntry(startDate.AddDays(28), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
         GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new InMemoryCycleRepository(profile),
             CreateStatisticsReadService([CreateNutritionBucket(startDate.AddDays(1), calories: 1900, fiber: 22)]),
             CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
-            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
+            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(29)),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
         Assert.Equal(1, summary.LoggedCycleDays);
         Assert.Equal(1, summary.DaysWithMeals);
-        Assert.Equal(0, summary.BleedingDays);
-        Assert.Equal(1900, summary.AverageCaloriesOnNonBleedingCycleDays);
+        Assert.Equal(1, summary.BleedingDays);
+        Assert.Equal(0, summary.AverageCaloriesOnNonBleedingCycleDays);
+        Assert.Contains("at_least_three_comparable_cycles_required", summary.ReasonCodes!, StringComparer.Ordinal);
     }
 }

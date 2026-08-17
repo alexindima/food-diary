@@ -1,5 +1,7 @@
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Export.Mappings;
+using FoodDiary.Presentation.Api.Features.Export.Requests;
+using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,4 +31,17 @@ public sealed class ExportController(ISender mediator) : AuthorizedController(me
         [FromQuery] DateTime dateTo,
         [FromQuery] int? timeZoneOffsetMinutes = null) =>
         HandleFile(ExportHttpMappings.ToCycleQuery(userId, dateFrom, dateTo, timeZoneOffsetMinutes));
+
+    [HttpPost("cycle/sensitive")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> ExportSensitiveCycle(
+        [FromCurrentUser] Guid userId,
+        [FromBody] SensitiveCycleExportHttpRequest request) =>
+        HandleFile(ExportHttpMappings.ToSensitiveCycleQuery(
+            userId,
+            request.DateFrom,
+            request.DateTo,
+            request.CurrentPassword,
+            request.TimeZoneOffsetMinutes));
 }

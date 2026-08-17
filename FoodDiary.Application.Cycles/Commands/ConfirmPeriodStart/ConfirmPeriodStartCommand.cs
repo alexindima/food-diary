@@ -4,5 +4,5 @@ using FoodDiary.Results;
 
 namespace FoodDiary.Application.Cycles.Commands.ConfirmPeriodStart;
 
-public sealed record ConfirmPeriodStartCommand(Guid? UserId, Guid CycleProfileId, DateTime Date)
+public sealed record ConfirmPeriodStartCommand(Guid? UserId, Guid CycleProfileId, DateOnly Date)
     : ICommand<Result<CycleModel>>, IUserRequest;

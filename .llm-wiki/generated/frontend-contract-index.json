@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "summary": {
-    "components": 426,
-    "componentsWithoutDirectSpecs": 129,
-    "inputs": 1333,
+    "components": 427,
+    "componentsWithoutDirectSpecs": 130,
+    "inputs": 1336,
     "outputs": 418,
-    "apiCalls": 226,
-    "templatesWithTranslations": 267,
-    "translationKeys": 1497,
-    "consumerEdges": 978,
+    "apiCalls": 228,
+    "templatesWithTranslations": 268,
+    "translationKeys": 1510,
+    "consumerEdges": 980,
     "consumedComponents": 275,
-    "unconsumedComponents": 150
+    "unconsumedComponents": 151
   },
   "components": [
     {
@@ -945,6 +945,11 @@
           "name": "ovulationTestOptions",
           "type": "Array<FdUiSelectOption<OvulationTestResult>>",
           "required": true
+        },
+        {
+          "name": "fertilityEnabled",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -1187,6 +1192,16 @@
           "required": true
         },
         {
+          "name": "goalOptions",
+          "type": "Array<FdUiSelectOption<CycleTrackingGoal>>",
+          "required": true
+        },
+        {
+          "name": "reproductiveStateOptions",
+          "type": "Array<FdUiSelectOption<CycleReproductiveState>>",
+          "required": true
+        },
+        {
           "name": "isSaving",
           "type": "boolean",
           "required": true
@@ -1215,6 +1230,16 @@
       "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
       "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
+      "inputs": [],
+      "outputs": [],
+      "specPath": null
+    },
+    {
+      "class": "SensitiveCycleExportDialogComponent",
+      "selector": "fd-sensitive-cycle-export-dialog",
+      "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
+      "templatePath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
       "inputs": [],
       "outputs": [],
       "specPath": null
@@ -13442,7 +13467,7 @@
       "responseType": "CycleResponse | null",
       "urlExpression": "'current'",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 23,
+      "line": 24,
       "publicMethod": "getCurrent",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13454,7 +13479,7 @@
       "responseType": "CycleNutritionSummary | null",
       "urlExpression": "'current/nutrition-summary'",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 29,
+      "line": 30,
       "publicMethod": "getNutritionSummary",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13466,7 +13491,7 @@
       "responseType": "CycleResponse",
       "urlExpression": "''",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 35,
+      "line": 36,
       "publicMethod": "create",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13478,7 +13503,7 @@
       "responseType": "CycleResponse",
       "urlExpression": "`${cycleProfileId}/settings`",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 39,
+      "line": 40,
       "publicMethod": "updateSettings",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13486,11 +13511,23 @@
     },
     {
       "feature": "cycle-tracking",
+      "method": "PUT",
+      "responseType": "CycleResponse",
+      "urlExpression": "`${cycleProfileId}/consents/${purpose}`",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
+      "line": 46,
+      "publicMethod": "updateConsent",
+      "transport": "InheritedApiService",
+      "baseUrlExpression": "environment.apiUrls.cycles",
+      "resolvedUrlExpression": "environment.apiUrls.cycles/`${cycleProfileId}/consents/${purpose}`"
+    },
+    {
+      "feature": "cycle-tracking",
       "method": "DELETE",
       "responseType": "void",
       "urlExpression": "cycleProfileId",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 45,
+      "line": 52,
       "publicMethod": "deleteCycle",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13502,7 +13539,7 @@
       "responseType": "CycleLogDay",
       "urlExpression": "`${cycleProfileId}/days`",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 49,
+      "line": 56,
       "publicMethod": "upsertDay",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13514,7 +13551,7 @@
       "responseType": "void",
       "urlExpression": "`${cycleProfileId}/days`",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 56,
+      "line": 63,
       "publicMethod": "clearDay",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13526,7 +13563,7 @@
       "responseType": "CycleResponse",
       "urlExpression": "`${cycleProfileId}/period-start`",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 62,
+      "line": 69,
       "publicMethod": "confirmPeriodStart",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13538,7 +13575,7 @@
       "responseType": "CycleResponse",
       "urlExpression": "`${cycleProfileId}/menstrual-episodes/${menstrualEpisodeId}`",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 72,
+      "line": 79,
       "publicMethod": "updateMenstrualEpisode",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13550,7 +13587,7 @@
       "responseType": "CycleResponse",
       "urlExpression": "`${cycleProfileId}/menstrual-episodes/${menstrualEpisodeId}`",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 78,
+      "line": 85,
       "publicMethod": "deleteMenstrualEpisode",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -13562,7 +13599,7 @@
       "responseType": "CycleResponse",
       "urlExpression": "`${cycleProfileId}/factors`",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 84,
+      "line": 91,
       "publicMethod": "upsertFactor",
       "transport": "InheritedApiService",
       "baseUrlExpression": "environment.apiUrls.cycles",
@@ -14752,6 +14789,18 @@
       "path": "FoodDiary.Web.Client/src/app/services/api.service.ts",
       "line": 41,
       "publicMethod": "getBlob",
+      "transport": "HttpClient",
+      "baseUrlExpression": null,
+      "resolvedUrlExpression": "`${this.baseUrl}/${endpoint}`"
+    },
+    {
+      "feature": "shell",
+      "method": "POST",
+      "responseType": "",
+      "urlExpression": "`${this.baseUrl}/${endpoint}`",
+      "path": "FoodDiary.Web.Client/src/app/services/api.service.ts",
+      "line": 49,
+      "publicMethod": "postBlob",
       "transport": "HttpClient",
       "baseUrlExpression": null,
       "resolvedUrlExpression": "`${this.baseUrl}/${endpoint}`"
@@ -15977,6 +16026,17 @@
     },
     {
       "feature": "cycle-tracking",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
+      "keys": [
+        "COMMON.CANCEL",
+        "CYCLE_TRACKING.SENSITIVE_EXPORT_CONFIRM",
+        "CYCLE_TRACKING.SENSITIVE_EXPORT_PASSWORD",
+        "CYCLE_TRACKING.SENSITIVE_EXPORT_TITLE",
+        "CYCLE_TRACKING.SENSITIVE_EXPORT_WARNING"
+      ]
+    },
+    {
+      "feature": "cycle-tracking",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-calendar-card/cycle-calendar-card.html",
       "keys": [
         "CYCLE_TRACKING.CALENDAR_CONFIRMED_PERIOD",
@@ -16070,10 +16130,13 @@
         "CYCLE_TRACKING.NUTRITION_BLEEDING_CALORIES",
         "CYCLE_TRACKING.NUTRITION_BLEEDING_DAYS",
         "CYCLE_TRACKING.NUTRITION_BLEEDING_FIBER",
+        "CYCLE_TRACKING.NUTRITION_CONSENT_REQUIRED",
+        "CYCLE_TRACKING.NUTRITION_CYCLE_COVERAGE",
         "CYCLE_TRACKING.NUTRITION_DAYS_WITH_MEALS",
         "CYCLE_TRACKING.NUTRITION_LOGGED_DAYS",
         "CYCLE_TRACKING.NUTRITION_NON_BLEEDING_CALORIES",
         "CYCLE_TRACKING.NUTRITION_NON_BLEEDING_FIBER",
+        "CYCLE_TRACKING.NUTRITION_NON_CAUSALITY",
         "CYCLE_TRACKING.NUTRITION_PAIN_WITH_MEALS",
         "CYCLE_TRACKING.NUTRITION_SUMMARY_EMPTY",
         "CYCLE_TRACKING.NUTRITION_SUMMARY_LIMITED",
@@ -16111,19 +16174,22 @@
         "COMMON.CANCEL",
         "COMMON.CLOSE",
         "CYCLE_TRACKING.AVG_LENGTH",
+        "CYCLE_TRACKING.CONSENT_FERTILITY",
+        "CYCLE_TRACKING.CONSENT_NUTRITION",
         "CYCLE_TRACKING.DANGER_ZONE",
         "CYCLE_TRACKING.DELETE_CYCLE",
         "CYCLE_TRACKING.DELETE_CYCLE_SHORT",
         "CYCLE_TRACKING.DISCREET_NOTIFICATIONS",
+        "CYCLE_TRACKING.GOAL",
+        "CYCLE_TRACKING.HIDE_FROM_DASHBOARD",
         "CYCLE_TRACKING.IS_REGULAR",
         "CYCLE_TRACKING.LUTEAL_LENGTH",
-        "CYCLE_TRACKING.MODE",
         "CYCLE_TRACKING.PERIOD_LENGTH",
         "CYCLE_TRACKING.PREFERENCES",
+        "CYCLE_TRACKING.REPRODUCTIVE_STATE",
         "CYCLE_TRACKING.SAVE_SETTINGS",
         "CYCLE_TRACKING.SETTINGS_DESCRIPTION",
-        "CYCLE_TRACKING.SETTINGS_TITLE",
-        "CYCLE_TRACKING.SHOW_FERTILITY"
+        "CYCLE_TRACKING.SETTINGS_TITLE"
       ]
     },
     {
@@ -16133,9 +16199,11 @@
         "COMMON.CANCEL",
         "CYCLE_TRACKING.ALL_DATA_AND_TOOLS",
         "CYCLE_TRACKING.ALL_DATA_HINT",
-        "CYCLE_TRACKING.AVG_LENGTH",
         "CYCLE_TRACKING.BLEEDING_DAYS_COUNT",
         "CYCLE_TRACKING.CANCEL_EDIT",
+        "CYCLE_TRACKING.CONSENT_CYCLE_TRACKING",
+        "CYCLE_TRACKING.CONSENT_FERTILITY",
+        "CYCLE_TRACKING.CONSENT_NUTRITION",
         "CYCLE_TRACKING.CREATE_CYCLE_DESCRIPTION",
         "CYCLE_TRACKING.CREATE_CYCLE_TITLE",
         "CYCLE_TRACKING.DELETE_EPISODE",
@@ -16153,9 +16221,7 @@
         "CYCLE_TRACKING.FACTOR_END_DATE",
         "CYCLE_TRACKING.FACTOR_START_DATE",
         "CYCLE_TRACKING.FACTOR_TYPE",
-        "CYCLE_TRACKING.IS_REGULAR",
-        "CYCLE_TRACKING.LUTEAL_LENGTH",
-        "CYCLE_TRACKING.MODE",
+        "CYCLE_TRACKING.GOAL",
         "CYCLE_TRACKING.MOST_LOGGED_SYMPTOM",
         "CYCLE_TRACKING.NOTES",
         "CYCLE_TRACKING.NOTES_PLACEHOLDER",
@@ -16164,19 +16230,21 @@
         "CYCLE_TRACKING.OBSERVATIONS_EMPTY_TITLE",
         "CYCLE_TRACKING.OBSERVATIONS_READY_BODY",
         "CYCLE_TRACKING.OBSERVATIONS_TITLE",
-        "CYCLE_TRACKING.PERIOD_LENGTH",
         "CYCLE_TRACKING.PREDICTIONS_LEARNING",
         "CYCLE_TRACKING.PREDICTIONS_LEARNING_BODY",
+        "CYCLE_TRACKING.PREDICTION_CALIBRATION",
         "CYCLE_TRACKING.PREDICTION_CARD_TITLE",
         "CYCLE_TRACKING.PREDICTION_CONFIDENCE",
         "CYCLE_TRACKING.PREDICTION_DISCLAIMER",
+        "CYCLE_TRACKING.PREDICTION_REVISION_COUNT",
         "CYCLE_TRACKING.PRED_OVULATION",
         "CYCLE_TRACKING.PRED_PMS",
         "CYCLE_TRACKING.PRIVATE_DATA_NOTE",
+        "CYCLE_TRACKING.REPRODUCTIVE_STATE",
         "CYCLE_TRACKING.SAVE_CYCLE",
         "CYCLE_TRACKING.SAVE_EPISODE",
+        "CYCLE_TRACKING.SENSITIVE_EXPORT_TITLE",
         "CYCLE_TRACKING.SETTINGS_TITLE",
-        "CYCLE_TRACKING.SHOW_FERTILITY",
         "CYCLE_TRACKING.SUBTITLE_V2",
         "CYCLE_TRACKING.SYMPTOM_OBSERVATION_SUMMARY",
         "CYCLE_TRACKING.TITLE",
@@ -19809,6 +19877,7 @@
       "inputsUsed": [
         "dayForm",
         "editingDate",
+        "fertilityEnabled",
         "isSaving",
         "ovulationTestOptions"
       ],
@@ -19935,9 +20004,11 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 1,
       "inputsUsed": [
+        "goalOptions",
         "isDeleting",
         "isSaving",
         "modeOptions",
+        "reproductiveStateOptions",
         "settingsForm"
       ],
       "outputsHandled": [
@@ -22048,6 +22119,21 @@
       "selector": "fd-ui-button",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
+      "occurrences": 2,
+      "inputsUsed": [
+        "appearance",
+        "fill",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
       "occurrences": 5,
       "inputsUsed": [
@@ -22154,7 +22240,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "occurrences": 11,
+      "occurrences": 12,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
@@ -25020,7 +25106,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.html",
-      "occurrences": 3,
+      "occurrences": 5,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -25030,7 +25116,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/checkbox/fd-ui-checkbox.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "occurrences": 3,
+      "occurrences": 4,
       "inputsUsed": [],
       "outputsHandled": []
     },
@@ -25464,6 +25550,20 @@
       "consumerPath": "FoodDiary.Web.Client/src/app/components/shared/premium-required-dialog/premium-required-dialog.html",
       "occurrences": 1,
       "inputsUsed": [
+        "title"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiDialogComponent",
+      "selector": "fd-ui-dialog",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/dialog/fd-ui-dialog.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "dismissible",
+        "size",
         "title"
       ],
       "outputsHandled": []
@@ -27583,6 +27683,19 @@
       "selector": "fd-ui-input",
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "label",
+        "type"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiInputComponent",
+      "selector": "fd-ui-input",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
+      "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
       "occurrences": 2,
       "inputsUsed": [
@@ -27598,19 +27711,6 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.html",
-      "occurrences": 3,
-      "inputsUsed": [
-        "label",
-        "type"
-      ],
-      "outputsHandled": []
-    },
-    {
-      "component": "FdUiInputComponent",
-      "selector": "fd-ui-input",
-      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
-      "consumerFeature": "cycle-tracking",
-      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
       "occurrences": 3,
       "inputsUsed": [
         "label",
@@ -29286,7 +29386,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-settings-drawer/cycle-settings-drawer.html",
-      "occurrences": 1,
+      "occurrences": 2,
       "inputsUsed": [
         "label",
         "options"
@@ -29299,7 +29399,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/select/fd-ui-select.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.html",
-      "occurrences": 2,
+      "occurrences": 3,
       "inputsUsed": [
         "label",
         "options"

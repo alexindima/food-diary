@@ -10,4 +10,10 @@ public sealed record CreateCycleHttpRequest(
     bool IsOnboardingComplete,
     bool ShowFertilityEstimates,
     bool DiscreetNotifications,
-    string? Notes);
+    string? Notes,
+    int? Goal = null,
+    int? ReproductiveState = null,
+    bool HideFromDashboard = false,
+    bool? CycleTrackingConsentGranted = null,
+    bool NutritionInsightsConsentGranted = false,
+    bool FertilitySignalsConsentGranted = false);

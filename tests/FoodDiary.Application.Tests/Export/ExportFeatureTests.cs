@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Cycles.Models;
@@ -25,6 +26,7 @@ namespace FoodDiary.Application.Tests.Export;
 [ExcludeFromCodeCoverage]
 public class ExportFeatureTests {
     private static readonly DateTime TestDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly DateOnly CycleTestDate = new(2026, 4, 1);
 
     private static Meal CreateMeal(
         UserId? userId = null,
@@ -266,15 +268,16 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithCurrentProfile_ReturnsCycleCsv() {
         var userId = UserId.New();
-        var profile = CycleProfile.Create(userId, TestDate);
-        profile.UpsertBleedingEntry(TestDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: "heavy, painful");
-        profile.UpsertSymptomEntry(TestDate, CycleSymptomCategory.Mood, 6, ["irritable"], "low mood");
-        profile.UpsertFertilitySignal(TestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
-        profile.UpsertFactor(CycleFactorType.HormonalContraception, TestDate.AddDays(-1), endDate: null, notes: "pill");
+        var profile = CycleProfile.Create(userId, CycleTestDate);
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
+        profile.UpsertBleedingEntry(CycleTestDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: "heavy, painful");
+        profile.UpsertSymptomEntry(CycleTestDate, CycleSymptomCategory.Mood, 6, ["irritable"], "low mood");
+        profile.UpsertFertilitySignal(CycleTestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
+        profile.UpsertFactor(CycleFactorType.HormonalContraception, CycleTestDate.AddDays(-1), endDate: null, notes: "pill");
         ExportCycleQueryHandler handler = CreateExportCycleHandler(profile, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
-            new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
+            new ExportCycleQuery(userId.Value, CycleTestDate, CycleTestDate.AddDays(1)),
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -283,16 +286,51 @@ public class ExportFeatureTests {
         string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("RecordType,Date,EndDate,Category", content, StringComparison.Ordinal);
         Assert.Contains("Bleeding,2026-04-01,,Bleeding,,Heavy,8", content, StringComparison.Ordinal);
-        Assert.Contains("\"heavy, painful\"", content, StringComparison.Ordinal);
         Assert.Contains("Symptom,2026-04-01,,Mood,irritable,,6", content, StringComparison.Ordinal);
-        Assert.Contains("FertilitySignal,2026-04-01,,,,,,36.62,Positive,egg white,True,signal note", content, StringComparison.Ordinal);
         Assert.Contains("Factor,2026-03-31,,HormonalContraception", content, StringComparison.Ordinal);
+        Assert.DoesNotContain("heavy, painful", content, StringComparison.Ordinal);
+        Assert.DoesNotContain("low mood", content, StringComparison.Ordinal);
+        Assert.DoesNotContain("FertilitySignal", content, StringComparison.Ordinal);
+        Assert.DoesNotContain("signal note", content, StringComparison.Ordinal);
     }
 
     [Fact]
-    public async Task ExportCycle_WithValidTimeZoneOffset_UsesOffsetForFileName() {
+    public async Task ExportCycle_SensitiveScope_RequiresCurrentPasswordAndIncludesPrivateFields() {
+        var user = User.Create("cycle-sensitive-export@example.com", "stored-hash");
+        var profile = CycleProfile.Create(user.Id, CycleTestDate);
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
+        profile.UpsertBleedingEntry(CycleTestDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: "private note");
+        profile.UpsertFertilitySignal(CycleTestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
+        IUserLookupRepository users = Substitute.For<IUserLookupRepository>();
+        users.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
+        IPasswordHasher passwordHasher = Substitute.For<IPasswordHasher>();
+        passwordHasher.Verify(password: "correct-password", hashedPassword: Arg.Any<string>()).Returns(returnThis: true);
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(
+            profile,
+            CreateCurrentUserAccessService(user),
+            users,
+            passwordHasher);
+
+        Result<FileExportResult> invalid = await handler.Handle(
+            new ExportCycleQuery(user.Id.Value, CycleTestDate, CycleTestDate, Scope: CycleExportScope.Sensitive, CurrentPassword: "wrong"),
+            CancellationToken.None);
+        Result<FileExportResult> valid = await handler.Handle(
+            new ExportCycleQuery(user.Id.Value, CycleTestDate, CycleTestDate, Scope: CycleExportScope.Sensitive, CurrentPassword: "correct-password"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(invalid);
+        Assert.Equal("User.InvalidPassword", invalid.Error.Code);
+        ResultAssert.Success(valid);
+        string content = System.Text.Encoding.UTF8.GetString(valid.Value.Content);
+        Assert.Contains("private note", content, StringComparison.Ordinal);
+        Assert.Contains("FertilitySignal", content, StringComparison.Ordinal);
+        Assert.Contains("signal note", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ExportCycle_WithLegacyDateTimes_PreservesCalendarDatesForFileName() {
         var userId = UserId.New();
-        var profile = CycleProfile.Create(userId, TestDate);
+        var profile = CycleProfile.Create(userId, CycleTestDate);
         ExportCycleQueryHandler handler = CreateExportCycleHandler(profile, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
@@ -300,11 +338,11 @@ public class ExportFeatureTests {
                 userId.Value,
                 new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc),
                 new DateTime(2026, 5, 4, 20, 0, 0, DateTimeKind.Utc),
-                TimeZoneOffsetMinutes: 240),
+                timeZoneOffsetMinutes: 240),
             CancellationToken.None);
 
         ResultAssert.Success(result);
-        Assert.Contains("cycle-tracking-2026-05-04-to-2026-05-05.csv", result.Value.FileName, StringComparison.Ordinal);
+        Assert.Contains("cycle-tracking-2026-05-03-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -313,7 +351,7 @@ public class ExportFeatureTests {
         ExportCycleQueryHandler handler = CreateExportCycleHandler(profile: null, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
-            new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
+            new ExportCycleQuery(userId.Value, CycleTestDate, CycleTestDate.AddDays(1)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -325,7 +363,7 @@ public class ExportFeatureTests {
         ExportCycleQueryHandler handler = CreateExportCycleHandler(profile: null, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
-            new ExportCycleQuery(UserId: null, TestDate, TestDate.AddDays(1)),
+            new ExportCycleQuery(UserId: null, CycleTestDate, CycleTestDate.AddDays(1)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -341,7 +379,7 @@ public class ExportFeatureTests {
             CreateCurrentUserAccessService(user));
 
         Result<FileExportResult> result = await handler.Handle(
-            new ExportCycleQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
+            new ExportCycleQuery(user.Id.Value, CycleTestDate, CycleTestDate.AddDays(1)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -599,14 +637,24 @@ public class ExportFeatureTests {
                 signal.OvulationTestResult,
                 signal.CervicalFluid,
                 signal.HadSex,
-                signal.Notes))]);
+                signal.Notes))],
+            Consents: [.. profile.Consents.Select(static consent => new CycleConsentReadModel(
+                consent.Id.Value,
+                consent.CycleProfileId.Value,
+                consent.Purpose,
+                consent.GrantedAtUtc,
+                consent.RevokedAtUtc))]);
 
     private static ExportCycleQueryHandler CreateExportCycleHandler(
         CycleProfile? profile,
-        ICurrentUserAccessService currentUserAccessService) =>
+        ICurrentUserAccessService currentUserAccessService,
+        IUserLookupRepository? userLookupRepository = null,
+        IPasswordHasher? passwordHasher = null) =>
         new(
             new CycleReadService(CreateCycleRepository(profile), Substitute.For<IDashboardStatisticsReadService>()),
-            currentUserAccessService);
+            currentUserAccessService,
+            userLookupRepository,
+            passwordHasher);
 
     private static IDiaryPdfGenerator CreatePdfGenerator(
         out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getLastCall) {

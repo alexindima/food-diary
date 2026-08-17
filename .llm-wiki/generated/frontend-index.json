@@ -8,14 +8,14 @@
     "localization": "English/Russian locale file presence and recursive JSON property counts"
   },
   "summary": {
-    "typescriptFiles": 1573,
-    "symbols": 613,
+    "typescriptFiles": 1574,
+    "symbols": 614,
     "routes": 86,
     "features": 37,
     "specs": 559,
     "localeFiles": 5,
     "roles": {
-      "Component": 421,
+      "Component": 422,
       "Directive": 12,
       "Facade": 53,
       "Other": 17,
@@ -314,7 +314,8 @@
         "CycleSettingsDrawerComponent",
         "CycleTrackingFacade",
         "CycleTrackingPageComponent",
-        "CyclesService"
+        "CyclesService",
+        "SensitiveCycleExportDialogComponent"
       ],
       "routes": [
         ""
@@ -2647,14 +2648,21 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/api/cycles.service.ts",
-      "line": 19
+      "line": 20
+    },
+    {
+      "name": "SensitiveCycleExportDialogComponent",
+      "role": "Component",
+      "selector": "fd-sensitive-cycle-export-dialog",
+      "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/dialogs/sensitive-cycle-export-dialog/sensitive-cycle-export-dialog.ts",
+      "line": 18
     },
     {
       "name": "CycleTrackingFacade",
       "role": "Facade",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/lib/cycle-tracking.facade.ts",
-      "line": 136
+      "line": 140
     },
     {
       "name": "CycleCalendarCardComponent",
@@ -2745,7 +2753,7 @@
       "role": "Component",
       "selector": "fd-cycle-tracking-page",
       "path": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-tracking-page.ts",
-      "line": 95
+      "line": 105
     },
     {
       "name": "DashboardService",
@@ -5160,7 +5168,7 @@
       "role": "Service",
       "selector": null,
       "path": "FoodDiary.Web.Client/src/app/shared/api/export.service.ts",
-      "line": 11
+      "line": 12
     },
     {
       "name": "ImageUploadService",
@@ -5971,8 +5979,8 @@
       "name": "app.json",
       "englishExists": true,
       "russianExists": true,
-      "englishProperties": 3384,
-      "russianProperties": 3384,
+      "englishProperties": 3408,
+      "russianProperties": 3408,
       "countsMatch": true
     },
     {

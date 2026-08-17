@@ -12,7 +12,7 @@ public static class CycleHttpResponseMappings {
                 model.UserId,
                 (int)model.Mode,
                 (int)model.Confidence,
-                model.TrackingStartDate,
+                ToHttpDate(model.TrackingStartDate),
                 model.AverageCycleLength,
                 model.AveragePeriodLength,
                 model.LutealLength,
@@ -26,24 +26,12 @@ public static class CycleHttpResponseMappings {
                 model.Factors.ToHttpResponseList(ToHttpResponse),
                 model.FertilitySignals.ToHttpResponseList(ToHttpResponse),
                 (model.MenstrualEpisodes ?? []).ToHttpResponseList(ToHttpResponse),
-                model.Predictions is null
-                    ? null
-                    : new CyclePredictionsHttpResponse(
-                        model.Predictions.NextPeriodStartFrom,
-                        model.Predictions.NextPeriodStartTo,
-                        model.Predictions.OvulationFrom,
-                        model.Predictions.OvulationTo,
-                        model.Predictions.PmsWindowStart,
-                        model.Predictions.PmsWindowEnd,
-                        model.Predictions.Confidence,
-                        model.Predictions.Rationale,
-                        model.Predictions.DataSufficiency,
-                        model.Predictions.PatternConsistency,
-                        model.Predictions.CompletedCycleCount,
-                        model.Predictions.UsedEpisodeCount,
-                        model.Predictions.ExcludedEpisodeCount,
-                        model.Predictions.ReasonCodes,
-                        model.Predictions.AlgorithmVersion)
+                ToHttpResponse(model.Predictions),
+                (int)model.Goal,
+                (int)model.ReproductiveState,
+                model.HideFromDashboard,
+                ToHttpResponse(model.Consents),
+                ToHttpResponse(model.PredictionRevisions)
             );
         }
     }
@@ -52,7 +40,7 @@ public static class CycleHttpResponseMappings {
         public CycleLogDayHttpResponse ToHttpResponse() =>
                 new(
                     model.CycleProfileId,
-                    model.Date,
+                    ToHttpDate(model.Date),
                     model.BleedingEntries.ToHttpResponseList(ToHttpResponse),
                     model.Symptoms.ToHttpResponseList(ToHttpResponse),
                     model.FertilitySignal?.ToHttpResponse());
@@ -61,8 +49,8 @@ public static class CycleHttpResponseMappings {
     extension(CycleNutritionSummaryModel model) {
         public CycleNutritionSummaryHttpResponse ToHttpResponse() =>
                 new(
-                    model.DateFrom,
-                    model.DateTo,
+                    ToHttpDate(model.DateFrom),
+                    ToHttpDate(model.DateTo),
                     model.LoggedCycleDays,
                     model.DaysWithMeals,
                     model.BleedingDays,
@@ -71,7 +59,13 @@ public static class CycleHttpResponseMappings {
                     model.AverageFiberOnBleedingDays,
                     model.AverageFiberOnNonBleedingCycleDays,
                     model.AveragePainImpactOnDaysWithMeals,
-                    model.HasEnoughNutritionData);
+                    model.HasEnoughNutritionData,
+                    model.ConsentRequired,
+                    model.CompletedCyclesAnalyzed,
+                    model.ComparableCycles,
+                    model.DataSufficiency,
+                    model.ReasonCodes,
+                    model.AlgorithmVersion);
     }
 
     extension(BleedingEntryModel model) {
@@ -79,7 +73,7 @@ public static class CycleHttpResponseMappings {
                 new(
                     model.Id,
                     model.CycleProfileId,
-                    model.Date,
+                    ToHttpDate(model.Date),
                     (int)model.Type,
                     (int)model.Flow,
                     model.PainImpact,
@@ -91,7 +85,7 @@ public static class CycleHttpResponseMappings {
                 new(
                     model.Id,
                     model.CycleProfileId,
-                    model.Date,
+                    ToHttpDate(model.Date),
                     (int)model.Category,
                     model.Intensity,
                     model.Tags,
@@ -104,8 +98,8 @@ public static class CycleHttpResponseMappings {
                     model.Id,
                     model.CycleProfileId,
                     (int)model.Type,
-                    model.StartDate,
-                    model.EndDate,
+                    ToHttpDate(model.StartDate),
+                    ToHttpDate(model.EndDate),
                     model.Notes);
     }
 
@@ -114,7 +108,7 @@ public static class CycleHttpResponseMappings {
                 new(
                     model.Id,
                     model.CycleProfileId,
-                    model.Date,
+                    ToHttpDate(model.Date),
                     model.BasalBodyTemperatureCelsius,
                     model.OvulationTestResult.HasValue ? (int)model.OvulationTestResult.Value : null,
                     model.CervicalFluid,
@@ -127,9 +121,63 @@ public static class CycleHttpResponseMappings {
             new(
                 model.Id,
                 model.CycleProfileId,
-                model.StartDate,
-                model.EndDate,
+                ToHttpDate(model.StartDate),
+                ToHttpDate(model.EndDate),
                 (int)model.Status,
                 model.ExcludedFromPredictions);
     }
+
+    private static DateTime ToHttpDate(DateOnly date) =>
+        DateTime.SpecifyKind(date.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+
+    private static DateTime? ToHttpDate(DateOnly? date) => date.HasValue ? ToHttpDate(date.Value) : null;
+
+    private static CyclePredictionsHttpResponse? ToHttpResponse(CyclePredictionsModel? predictions) =>
+        predictions is null
+            ? null
+            : new CyclePredictionsHttpResponse(
+                ToHttpDate(predictions.NextPeriodStartFrom),
+                ToHttpDate(predictions.NextPeriodStartTo),
+                ToHttpDate(predictions.OvulationFrom),
+                ToHttpDate(predictions.OvulationTo),
+                ToHttpDate(predictions.PmsWindowStart),
+                ToHttpDate(predictions.PmsWindowEnd),
+                predictions.Confidence,
+                predictions.Rationale,
+                predictions.DataSufficiency,
+                predictions.PatternConsistency,
+                predictions.CompletedCycleCount,
+                predictions.UsedEpisodeCount,
+                predictions.ExcludedEpisodeCount,
+                predictions.ReasonCodes,
+                predictions.AlgorithmVersion,
+                predictions.CalibrationSampleCount,
+                predictions.HistoricalCoveragePercent,
+                predictions.MeanAbsoluteErrorDays);
+
+    private static IReadOnlyCollection<CycleConsentHttpResponse> ToHttpResponse(
+        IReadOnlyCollection<CycleConsentModel>? consents) =>
+        [.. (consents ?? []).Select(consent => new CycleConsentHttpResponse(
+            consent.Id,
+            (int)consent.Purpose,
+            consent.GrantedAtUtc,
+            consent.RevokedAtUtc,
+            consent.IsActive))];
+
+    private static IReadOnlyCollection<CyclePredictionRevisionHttpResponse> ToHttpResponse(
+        IReadOnlyCollection<CyclePredictionRevisionModel>? revisions) =>
+        [.. (revisions ?? []).Select(revision => new CyclePredictionRevisionHttpResponse(
+            revision.Id,
+            revision.GeneratedAtUtc,
+            ToHttpDate(revision.NextPeriodStartFrom),
+            ToHttpDate(revision.NextPeriodStartTo),
+            revision.Confidence,
+            revision.DataSufficiency,
+            revision.PatternConsistency,
+            revision.CompletedCycleCount,
+            revision.CalibrationSampleCount,
+            revision.HistoricalCoveragePercent,
+            revision.MeanAbsoluteErrorDays,
+            revision.ReasonCodes,
+            revision.AlgorithmVersion))];
 }

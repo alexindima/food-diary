@@ -9,12 +9,14 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Application.Cycles.Services;
 
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
 public sealed class UpsertCycleDayCommandHandler(
     ICycleWriteRepository cycleRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    TimeProvider? timeProvider = null)
     : ICommandHandler<UpsertCycleDayCommand, Result<CycleLogDayModel>> {
     public async Task<Result<CycleLogDayModel>> Handle(
         UpsertCycleDayCommand command,
@@ -50,7 +52,17 @@ public sealed class UpsertCycleDayCommandHandler(
             return Result.Failure<CycleLogDayModel>(Errors.Cycle.NotFound(command.CycleProfileId));
         }
 
+        if (command.FertilitySignal is not null &&
+            !profile.HasActiveConsent(CycleConsentPurpose.FertilitySignals)) {
+            return Result.Failure<CycleLogDayModel>(Errors.Validation.Invalid(
+                nameof(command.FertilitySignal),
+                "Active fertility consent is required."));
+        }
+
         ApplyLog(profile, command);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
         return Result.Success(profile.ToDayModel(command.Date));

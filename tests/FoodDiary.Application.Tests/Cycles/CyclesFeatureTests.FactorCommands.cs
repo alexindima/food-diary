@@ -12,7 +12,7 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleFactorCommandHandler_WithInvalidType_ReturnsValidationFailure() {
         var user = User.Create("cycle-factor-invalid@example.com", "hash");
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         var handler = new UpsertCycleFactorCommandHandler(new InMemoryCycleRepository(profile), CreateCurrentUserAccessService(user));
 
         Result<CycleModel> result = await handler.Handle(
@@ -20,7 +20,7 @@ public partial class CyclesFeatureTests {
                 user.Id.Value,
                 profile.Id.Value,
                 Type: 999,
-                StartDate: DateTime.UtcNow,
+                StartDate: DateOnly.FromDateTime(DateTime.UtcNow),
                 EndDate: null,
                 Notes: null,
                 ClearNotes: false),
@@ -41,7 +41,7 @@ public partial class CyclesFeatureTests {
                 Guid.Empty,
                 Guid.NewGuid(),
                 (int)CycleFactorType.HormonalContraception,
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 EndDate: null,
                 Notes: null,
                 ClearNotes: false),
@@ -61,7 +61,7 @@ public partial class CyclesFeatureTests {
                 user.Id.Value,
                 Guid.Empty,
                 (int)CycleFactorType.HormonalContraception,
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 EndDate: null,
                 Notes: null,
                 ClearNotes: false),
@@ -75,7 +75,7 @@ public partial class CyclesFeatureTests {
     public async Task UpsertCycleFactorCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-factor-deleted-user@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpsertCycleFactorCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -84,7 +84,7 @@ public partial class CyclesFeatureTests {
                 user.Id.Value,
                 profile.Id.Value,
                 (int)CycleFactorType.HormonalContraception,
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 EndDate: null,
                 Notes: null,
                 ClearNotes: false),
@@ -105,7 +105,7 @@ public partial class CyclesFeatureTests {
                 user.Id.Value,
                 Guid.NewGuid(),
                 (int)CycleFactorType.HormonalContraception,
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 EndDate: null,
                 Notes: null,
                 ClearNotes: false),
@@ -118,7 +118,7 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleFactorCommandHandler_WithValidCommand_UpdatesProfileAndReturnsCycle() {
         var user = User.Create("cycle-factor-success@example.com", "hash");
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpsertCycleFactorCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -127,7 +127,7 @@ public partial class CyclesFeatureTests {
                 user.Id.Value,
                 profile.Id.Value,
                 (int)CycleFactorType.HormonalContraception,
-                new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc),
+                new DateOnly(2026, 4, 2),
                 EndDate: null,
                 Notes: "pill",
                 ClearNotes: false),

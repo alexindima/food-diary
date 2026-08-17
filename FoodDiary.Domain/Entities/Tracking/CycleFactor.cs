@@ -7,8 +7,8 @@ namespace FoodDiary.Domain.Entities.Tracking;
 public sealed class CycleFactor : Entity<CycleFactorId> {
     public CycleProfileId CycleProfileId { get; private set; }
     public CycleFactorType Type { get; private set; }
-    public DateTime StartDate { get; private set; }
-    public DateTime? EndDate { get; private set; }
+    public DateOnly StartDate { get; private set; }
+    public DateOnly? EndDate { get; private set; }
     public string? Notes { get; private set; }
 
     public CycleProfile CycleProfile { get; private set; } = null!;
@@ -19,18 +19,16 @@ public sealed class CycleFactor : Entity<CycleFactorId> {
     private CycleFactor(CycleFactorId id) : base(id) {
     }
 
-    public static CycleFactor Create(CycleProfileId cycleProfileId, CycleFactorType type, DateTime startDate, DateTime? endDate, string? notes) {
+    public static CycleFactor Create(CycleProfileId cycleProfileId, CycleFactorType type, DateOnly startDate, DateOnly? endDate, string? notes) {
         EnsureCycleProfileId(cycleProfileId);
         EnsureDefined(type, nameof(type));
-        DateTime normalizedStart = CycleProfile.NormalizeDate(startDate);
-        DateTime? normalizedEnd = endDate.HasValue ? CycleProfile.NormalizeDate(endDate.Value) : null;
-        EnsureRange(normalizedStart, normalizedEnd);
+        EnsureRange(startDate, endDate);
 
         var factor = new CycleFactor(CycleFactorId.New()) {
             CycleProfileId = cycleProfileId,
             Type = type,
-            StartDate = normalizedStart,
-            EndDate = normalizedEnd,
+            StartDate = startDate,
+            EndDate = endDate,
             Notes = CycleProfile.NormalizeNotes(notes),
         };
 
@@ -38,10 +36,9 @@ public sealed class CycleFactor : Entity<CycleFactorId> {
         return factor;
     }
 
-    public void Update(DateTime? endDate, string? notes, bool clearNotes) {
-        DateTime? normalizedEnd = endDate.HasValue ? CycleProfile.NormalizeDate(endDate.Value) : null;
-        EnsureRange(StartDate, normalizedEnd);
-        EndDate = normalizedEnd;
+    public void Update(DateOnly? endDate, string? notes, bool clearNotes) {
+        EnsureRange(StartDate, endDate);
+        EndDate = endDate;
         if (clearNotes) {
             Notes = null;
         } else if (notes is not null) {
@@ -50,7 +47,7 @@ public sealed class CycleFactor : Entity<CycleFactorId> {
         SetModified();
     }
 
-    private static void EnsureRange(DateTime startDate, DateTime? endDate) {
+    private static void EnsureRange(DateOnly startDate, DateOnly? endDate) {
         if (endDate is not null && endDate.Value < startDate) {
             throw new ArgumentOutOfRangeException(nameof(endDate), "End date must be later than or equal to start date.");
         }

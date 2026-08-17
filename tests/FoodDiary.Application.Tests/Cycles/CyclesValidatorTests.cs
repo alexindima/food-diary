@@ -175,7 +175,7 @@ public class CyclesValidatorTests {
 
     [Fact]
     public async Task UpsertCycleFactor_WithEndBeforeStart_HasError() {
-        DateTime startDate = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly startDate = new(2026, 4, 2);
 
         TestValidationResult<UpsertCycleFactorCommand> result = await new UpsertCycleFactorCommandValidator().TestValidateAsync(
             CreateFactorCommand(startDate: startDate, endDate: startDate.AddDays(-1)));
@@ -232,7 +232,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task GetCycleNutritionSummary_WithNullUserId_HasError() {
         TestValidationResult<GetCycleNutritionSummaryQuery> result = await new GetCycleNutritionSummaryQueryValidator().TestValidateAsync(
-            new GetCycleNutritionSummaryQuery(UserId: null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow));
+            new GetCycleNutritionSummaryQuery(UserId: null, DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7), DateOnly.FromDateTime(DateTime.UtcNow)));
 
         result.ShouldHaveValidationErrorFor(query => query.UserId);
     }
@@ -240,14 +240,14 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task GetCycleNutritionSummary_WithInvertedDates_HasError() {
         TestValidationResult<GetCycleNutritionSummaryQuery> result = await new GetCycleNutritionSummaryQueryValidator().TestValidateAsync(
-            new GetCycleNutritionSummaryQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1)));
+            new GetCycleNutritionSummaryQuery(Guid.NewGuid(), DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-1)));
 
         result.ShouldHaveValidationErrorFor(query => query.DateFrom);
     }
 
     [Fact]
     public async Task GetCycleNutritionSummary_WithTooLargeRange_HasError() {
-        DateTime from = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly from = new(2025, 1, 1);
 
         TestValidationResult<GetCycleNutritionSummaryQuery> result = await new GetCycleNutritionSummaryQueryValidator().TestValidateAsync(
             new GetCycleNutritionSummaryQuery(Guid.NewGuid(), from, from.AddDays(367)));
@@ -258,7 +258,7 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task GetCycleNutritionSummary_WithValidData_Passes() {
         TestValidationResult<GetCycleNutritionSummaryQuery> result = await new GetCycleNutritionSummaryQueryValidator().TestValidateAsync(
-            new GetCycleNutritionSummaryQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow));
+            new GetCycleNutritionSummaryQuery(Guid.NewGuid(), DateOnly.FromDateTime(DateTime.UtcNow).AddDays(-7), DateOnly.FromDateTime(DateTime.UtcNow)));
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -268,7 +268,7 @@ public class CyclesValidatorTests {
         int? averageCycleLength = 28) =>
         new(
             useNullUserId ? null : Guid.NewGuid(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             (int)CycleTrackingMode.PeriodTracking,
             averageCycleLength,
             AveragePeriodLength: 5,
@@ -277,7 +277,8 @@ public class CyclesValidatorTests {
             IsOnboardingComplete: false,
             ShowFertilityEstimates: false,
             DiscreetNotifications: true,
-            Notes: null);
+            Notes: null,
+            CycleTrackingConsentGranted: true);
 
     private static UpsertCycleDayCommand CreateDayCommand(
         bool useNullUserId = false,
@@ -291,22 +292,22 @@ public class CyclesValidatorTests {
         new(
             useNullUserId ? null : userId ?? Guid.NewGuid(),
             cycleProfileId ?? Guid.NewGuid(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             bleeding ?? new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: null, ClearNotes: false),
             useNullSymptoms ? null! : symptoms ?? [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], Note: null, ClearNote: false)],
             fertilitySignal,
             ClearSymptomCategories: clearSymptomCategories);
 
     private static UpsertCycleFactorCommand CreateFactorCommand(
-        DateTime? startDate = null,
-        DateTime? endDate = null,
+        DateOnly? startDate = null,
+        DateOnly? endDate = null,
         string? notes = null,
         bool clearNotes = false) =>
         new(
             Guid.NewGuid(),
             Guid.NewGuid(),
             (int)CycleFactorType.HormonalContraception,
-            startDate ?? DateTime.UtcNow,
+            startDate ?? DateOnly.FromDateTime(DateTime.UtcNow),
             endDate,
             notes,
             clearNotes);
@@ -318,5 +319,5 @@ public class CyclesValidatorTests {
         new(
             useNullUserId ? null : userId ?? Guid.NewGuid(),
             cycleProfileId ?? Guid.NewGuid(),
-            DateTime.UtcNow);
+            DateOnly.FromDateTime(DateTime.UtcNow));
 }

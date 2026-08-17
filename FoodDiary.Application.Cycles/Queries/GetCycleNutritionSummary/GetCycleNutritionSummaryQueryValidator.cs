@@ -15,7 +15,7 @@ public sealed class GetCycleNutritionSummaryQueryValidator : AbstractValidator<G
             .WithMessage("DateFrom must be less than or equal to DateTo.");
 
         RuleFor(x => x)
-            .Must(x => (x.DateTo - x.DateFrom).TotalDays <= 366)
+            .Must(x => x.DateTo.DayNumber - x.DateFrom.DayNumber <= 366)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Summary range must not exceed one year.");
     }

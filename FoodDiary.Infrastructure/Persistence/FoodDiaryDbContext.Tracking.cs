@@ -18,6 +18,8 @@ public sealed partial class FoodDiaryDbContext {
     public DbSet<CycleFactor> CycleFactors => Set<CycleFactor>();
     public DbSet<FertilitySignal> FertilitySignals => Set<FertilitySignal>();
     public DbSet<MenstrualEpisode> CycleMenstrualEpisodes => Set<MenstrualEpisode>();
+    public DbSet<CycleConsent> CycleConsents => Set<CycleConsent>();
+    public DbSet<CyclePredictionRevision> CyclePredictionRevisions => Set<CyclePredictionRevision>();
     public DbSet<HydrationEntry> HydrationEntries => Set<HydrationEntry>();
     public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();
     public DbSet<FastingPlan> FastingPlans => Set<FastingPlan>();

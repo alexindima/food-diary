@@ -30,7 +30,7 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpdateCycleSettingsCommandHandler_WithValidCommand_UpdatesOwnedProfile() {
         var user = User.Create("cycle-settings@example.com", "hash");
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpdateCycleSettingsCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -62,7 +62,7 @@ public partial class CyclesFeatureTests {
     public async Task UpdateCycleSettingsCommandHandler_WhenProfileIsNotOwned_ReturnsNotFound() {
         var owner = User.Create("cycle-owner@example.com", "hash");
         var requester = User.Create("cycle-requester@example.com", "hash");
-        var profile = CycleProfile.Create(owner.Id, DateTime.UtcNow);
+        var profile = CycleProfile.Create(owner.Id, DateOnly.FromDateTime(DateTime.UtcNow));
         var handler = new UpdateCycleSettingsCommandHandler(
             new InMemoryCycleRepository(profile),
             CreateCurrentUserAccessService(requester));

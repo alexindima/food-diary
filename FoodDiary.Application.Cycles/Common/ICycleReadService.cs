@@ -11,7 +11,7 @@ public interface ICycleReadService {
 
     Task<Result<CycleNutritionSummaryModel?>> GetNutritionSummaryAsync(
         UserId userId,
-        DateTime dateFrom,
-        DateTime dateTo,
+        DateOnly dateFrom,
+        DateOnly dateTo,
         CancellationToken cancellationToken);
 }

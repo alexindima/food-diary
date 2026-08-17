@@ -16,7 +16,7 @@ public partial class CyclesFeatureTests {
         var command = new UpsertCycleDayCommand(
             Guid.NewGuid(),
             Guid.NewGuid(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             Bleeding: null,
             Symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 11, [], Note: null, ClearNote: false)],
             FertilitySignal: null);
@@ -36,7 +36,7 @@ public partial class CyclesFeatureTests {
             new UpsertCycleDayCommand(
                 Guid.NewGuid(),
                 Guid.Empty,
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 Bleeding: null,
                 Symptoms: [],
                 FertilitySignal: null),
@@ -56,7 +56,7 @@ public partial class CyclesFeatureTests {
             new UpsertCycleDayCommand(
                 Guid.Empty,
                 Guid.NewGuid(),
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 Bleeding: null,
                 Symptoms: [],
                 FertilitySignal: null),
@@ -70,7 +70,7 @@ public partial class CyclesFeatureTests {
     public async Task UpsertCycleDayCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-day-deleted-user@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpsertCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -78,7 +78,7 @@ public partial class CyclesFeatureTests {
             new UpsertCycleDayCommand(
                 user.Id.Value,
                 profile.Id.Value,
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 Bleeding: null,
                 Symptoms: [],
                 FertilitySignal: null),
@@ -98,7 +98,7 @@ public partial class CyclesFeatureTests {
             new UpsertCycleDayCommand(
                 user.Id.Value,
                 Guid.NewGuid(),
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Medium, PainImpact: 2, Notes: null, ClearNotes: false),
                 Symptoms: [],
                 FertilitySignal: null),
@@ -111,10 +111,10 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleDayCommandHandler_WithValidCommand_UpdatesProfileAndReturnsDay() {
         var user = User.Create("cycle-day-success@example.com", "hash");
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpsertCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
-        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly date = new(2026, 4, 2);
 
         Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
@@ -136,8 +136,9 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleDayCommandHandler_WithNoBleedingAndFertilitySignal_UpdatesProfileAndReturnsDay() {
         var user = User.Create("cycle-day-fertility@example.com", "hash");
-        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        DateOnly date = new(2026, 4, 3);
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpsertCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -171,8 +172,8 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleDayCommandHandler_WithClearBleeding_RemovesOnlyBleedingEntries() {
         var user = User.Create("cycle-day-clear-bleeding@example.com", "hash");
-        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        DateOnly date = new(2026, 4, 3);
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
         var repository = new InMemoryCycleRepository(profile);
@@ -198,8 +199,8 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleDayCommandHandler_WithClearSymptomCategories_RemovesOnlySelectedSymptoms() {
         var user = User.Create("cycle-day-clear-symptom@example.com", "hash");
-        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        DateOnly date = new(2026, 4, 3);
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Mood, 6, tags: [], note: null);
@@ -227,8 +228,9 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleDayCommandHandler_WithClearFertilitySignal_RemovesOnlyFertilityData() {
         var user = User.Create("cycle-day-clear-fertility@example.com", "hash");
-        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        DateOnly date = new(2026, 4, 3);
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
         profile.UpsertFertilitySignal(date, 36.6, OvulationTestResult.Negative, cervicalFluid: null, hadSex: null, notes: null);
@@ -256,8 +258,9 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task ClearCycleDayCommandHandler_WithExistingDay_RemovesAllDayLogs() {
         var user = User.Create("cycle-day-clear@example.com", "hash");
-        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        DateOnly date = new(2026, 4, 2);
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
+        profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: "note");
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Craving, 7, ["sweet"], note: null);
         profile.UpsertFertilitySignal(date, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: null);
@@ -282,7 +285,7 @@ public partial class CyclesFeatureTests {
             CreateCurrentUserAccessService(User.Create("cycle-clear-empty-user@example.com", "hash")));
 
         Result result = await handler.Handle(
-            new ClearCycleDayCommand(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow),
+            new ClearCycleDayCommand(Guid.Empty, Guid.NewGuid(), DateOnly.FromDateTime(DateTime.UtcNow)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -295,7 +298,7 @@ public partial class CyclesFeatureTests {
         var handler = new ClearCycleDayCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
-            new ClearCycleDayCommand(user.Id.Value, Guid.Empty, DateTime.UtcNow),
+            new ClearCycleDayCommand(user.Id.Value, Guid.Empty, DateOnly.FromDateTime(DateTime.UtcNow)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -306,12 +309,12 @@ public partial class CyclesFeatureTests {
     public async Task ClearCycleDayCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-clear-deleted-user@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new ClearCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
-            new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, DateTime.UtcNow),
+            new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, DateOnly.FromDateTime(DateTime.UtcNow)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -325,7 +328,7 @@ public partial class CyclesFeatureTests {
         var handler = new ClearCycleDayCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
-            new ClearCycleDayCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow),
+            new ClearCycleDayCommand(user.Id.Value, Guid.NewGuid(), DateOnly.FromDateTime(DateTime.UtcNow)),
             CancellationToken.None);
 
         ResultAssert.Failure(result);

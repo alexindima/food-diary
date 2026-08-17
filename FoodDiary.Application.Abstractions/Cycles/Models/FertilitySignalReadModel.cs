@@ -5,7 +5,7 @@ namespace FoodDiary.Application.Abstractions.Cycles.Models;
 public sealed record FertilitySignalReadModel(
     Guid Id,
     Guid CycleProfileId,
-    DateTime Date,
+    DateOnly Date,
     double? BasalBodyTemperatureCelsius,
     OvulationTestResult? OvulationTestResult,
     string? CervicalFluid,

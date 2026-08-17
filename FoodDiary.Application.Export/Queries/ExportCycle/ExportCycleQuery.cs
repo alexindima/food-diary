@@ -6,6 +6,20 @@ namespace FoodDiary.Application.Export.Queries.ExportCycle;
 
 public record ExportCycleQuery(
     Guid? UserId,
-    DateTime DateFrom,
-    DateTime DateTo,
-    int? TimeZoneOffsetMinutes = null) : IQuery<Result<FileExportResult>>, IUserRequest;
+    DateOnly DateFrom,
+    DateOnly DateTo,
+    int? TimeZoneOffsetMinutes = null,
+    CycleExportScope Scope = CycleExportScope.Standard,
+    string? CurrentPassword = null) : IQuery<Result<FileExportResult>>, IUserRequest {
+    public ExportCycleQuery(
+        Guid? userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        int? timeZoneOffsetMinutes = null)
+        : this(
+            userId,
+            DateOnly.FromDateTime(dateFrom),
+            DateOnly.FromDateTime(dateTo),
+            timeZoneOffsetMinutes) {
+    }
+}

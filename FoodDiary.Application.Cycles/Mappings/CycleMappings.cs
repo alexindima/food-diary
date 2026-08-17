@@ -23,9 +23,20 @@ public static class CycleMappings {
             profile.BleedingEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Type).Select(entry => entry.ToModel()).ToList(),
             profile.SymptomEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Category).Select(entry => entry.ToModel()).ToList(),
             profile.Factors.OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type).Select(factor => factor.ToModel()).ToList(),
-            profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList(),
+            profile.HasActiveConsent(global::FoodDiary.Domain.Enums.CycleConsentPurpose.FertilitySignals)
+                ? profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList()
+                : [],
             predictions,
-            BuildEpisodeModels(profile));
+            BuildEpisodeModels(profile),
+            profile.Goal,
+            profile.ReproductiveState,
+            profile.HideFromDashboard,
+            (profile.Consents ?? []).Select(consent => new CycleConsentModel(
+                consent.Id,
+                consent.Purpose,
+                consent.GrantedAtUtc,
+                consent.RevokedAtUtc)).ToList(),
+            (profile.PredictionRevisions ?? []).Select(ToModel).ToList());
 
     public static CycleModel ToModel(this CycleProfile profile, CyclePredictionsModel? predictions = null) =>
         new(
@@ -45,23 +56,66 @@ public static class CycleMappings {
             profile.BleedingEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Type).Select(entry => entry.ToModel()).ToList(),
             profile.SymptomEntries.OrderBy(entry => entry.Date).ThenBy(entry => entry.Category).Select(entry => entry.ToModel()).ToList(),
             profile.Factors.OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type).Select(factor => factor.ToModel()).ToList(),
-            profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList(),
+            profile.HasActiveConsent(global::FoodDiary.Domain.Enums.CycleConsentPurpose.FertilitySignals)
+                ? profile.FertilitySignals.OrderBy(signal => signal.Date).Select(signal => signal.ToModel()).ToList()
+                : [],
             predictions,
-            profile.MenstrualEpisodes.OrderBy(episode => episode.StartDate).Select(episode => episode.ToModel()).ToList());
+            profile.MenstrualEpisodes.OrderBy(episode => episode.StartDate).Select(episode => episode.ToModel()).ToList(),
+            profile.Goal,
+            profile.ReproductiveState,
+            profile.HideFromDashboard,
+            profile.Consents.Select(consent => new CycleConsentModel(
+                consent.Id.Value,
+                consent.Purpose,
+                consent.GrantedAtUtc,
+                consent.RevokedAtUtc)).ToList(),
+            profile.PredictionRevisions
+                .OrderByDescending(revision => revision.GeneratedAtUtc)
+                .Take(12)
+                .Select(revision => new CyclePredictionRevisionModel(
+                    revision.Id.Value,
+                    revision.GeneratedAtUtc,
+                    revision.NextPeriodStartFrom,
+                    revision.NextPeriodStartTo,
+                    revision.Confidence,
+                    revision.DataSufficiency,
+                    revision.PatternConsistency,
+                    revision.CompletedCycleCount,
+                    revision.CalibrationSampleCount,
+                    revision.HistoricalCoveragePercent,
+                    revision.MeanAbsoluteErrorDays,
+                    revision.ReasonCodes.Split('|', StringSplitOptions.RemoveEmptyEntries),
+                    revision.AlgorithmVersion)).ToList());
+
+    private static CyclePredictionRevisionModel ToModel(CyclePredictionRevisionReadModel revision) =>
+        new(
+            revision.Id,
+            revision.GeneratedAtUtc,
+            revision.NextPeriodStartFrom,
+            revision.NextPeriodStartTo,
+            revision.Confidence,
+            revision.DataSufficiency,
+            revision.PatternConsistency,
+            revision.CompletedCycleCount,
+            revision.CalibrationSampleCount,
+            revision.HistoricalCoveragePercent,
+            revision.MeanAbsoluteErrorDays,
+            revision.ReasonCodes.Split('|', StringSplitOptions.RemoveEmptyEntries),
+            revision.AlgorithmVersion);
 
     private static IReadOnlyCollection<MenstrualEpisodeModel> BuildEpisodeModels(CycleProfileReadModel profile) {
         var persisted = new List<MenstrualEpisodeModel>(
             (profile.MenstrualEpisodes ?? []).Select(episode => episode.ToModel()));
-        DateTime[] bleedingDates = [.. profile.BleedingEntries
+        DateOnly[] bleedingDates = [.. profile.BleedingEntries
             .Where(entry => entry.Type == global::FoodDiary.Domain.Enums.BleedingType.Bleeding)
-            .Select(entry => CycleProfile.NormalizeDate(entry.Date))
+            .Select(entry => entry.Date)
             .Distinct()
             .Order()];
 
         for (int index = 0; index < bleedingDates.Length;) {
-            DateTime start = bleedingDates[index];
-            DateTime end = start;
-            while (++index < bleedingDates.Length && (bleedingDates[index] - end).Days <= 2) {
+            DateOnly start = bleedingDates[index];
+            DateOnly end = start;
+            while (++index < bleedingDates.Length && bleedingDates[index].DayNumber - end.DayNumber <= 2) {
                 end = bleedingDates[index];
             }
 
@@ -166,24 +220,25 @@ public static class CycleMappings {
             signal.HadSex,
             signal.Notes);
 
-    public static CycleLogDayModel ToDayModel(this CycleProfile profile, DateTime date) {
-        DateTime normalizedDate = CycleProfile.NormalizeDate(date);
+    public static CycleLogDayModel ToDayModel(this CycleProfile profile, DateOnly date) {
         return new CycleLogDayModel(
             profile.Id.Value,
-            normalizedDate,
+            date,
             profile.BleedingEntries
-                .Where(entry => entry.Date == normalizedDate)
+                .Where(entry => entry.Date == date)
                 .OrderBy(entry => entry.Type)
                 .Select(entry => entry.ToModel())
                 .ToList(),
             profile.SymptomEntries
-                .Where(entry => entry.Date == normalizedDate)
+                .Where(entry => entry.Date == date)
                 .OrderBy(entry => entry.Category)
                 .Select(entry => entry.ToModel())
                 .ToList(),
-            profile.FertilitySignals
-                .Where(signal => signal.Date == normalizedDate)
-                .Select(signal => signal.ToModel())
-                .FirstOrDefault());
+            profile.HasActiveConsent(global::FoodDiary.Domain.Enums.CycleConsentPurpose.FertilitySignals)
+                ? profile.FertilitySignals
+                    .Where(signal => signal.Date == date)
+                    .Select(signal => signal.ToModel())
+                    .FirstOrDefault()
+                : null);
     }
 }

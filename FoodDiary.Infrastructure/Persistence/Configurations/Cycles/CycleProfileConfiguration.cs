@@ -18,6 +18,8 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
             value => new UserId(value));
 
         builder.Property(e => e.Mode).HasConversion<string>().HasMaxLength(64);
+        builder.Property(e => e.Goal).HasConversion<string>().HasMaxLength(64);
+        builder.Property(e => e.ReproductiveState).HasConversion<string>().HasMaxLength(64);
         builder.Property(e => e.Confidence).HasConversion<string>().HasMaxLength(32);
         builder.Property(e => e.TrackingStartDate).HasColumnType("date");
         builder.Property(e => e.AverageCycleLength).HasDefaultValue(28);
@@ -25,6 +27,13 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
         builder.Property(e => e.LutealLength).HasDefaultValue(14);
         builder.Property(e => e.Notes).HasMaxLength(1024);
 
+        ConfigureRelationships(builder);
+        ConfigureNavigations(builder);
+
+        builder.HasIndex(e => e.UserId).IsUnique();
+    }
+
+    private static void ConfigureRelationships(EntityTypeBuilder<CycleProfile> builder) {
         builder.HasOne<global::FoodDiary.Domain.Entities.Users.User>()
             .WithMany(u => u.Cycles)
             .HasForeignKey(e => e.UserId)
@@ -55,12 +64,26 @@ internal sealed class CycleProfileConfiguration : IEntityTypeConfiguration<Cycle
             .HasForeignKey(e => e.CycleProfileId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasMany(e => e.Consents)
+            .WithOne(e => e.CycleProfile)
+            .HasForeignKey(e => e.CycleProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(e => e.PredictionRevisions)
+            .WithOne(e => e.CycleProfile)
+            .HasForeignKey(e => e.CycleProfileId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+    }
+
+    private static void ConfigureNavigations(EntityTypeBuilder<CycleProfile> builder) {
         builder.Navigation(e => e.Factors).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.BleedingEntries).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.SymptomEntries).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.FertilitySignals).UsePropertyAccessMode(PropertyAccessMode.Field);
         builder.Navigation(e => e.MenstrualEpisodes).UsePropertyAccessMode(PropertyAccessMode.Field);
+        builder.Navigation(e => e.Consents).UsePropertyAccessMode(PropertyAccessMode.Field);
+        builder.Navigation(e => e.PredictionRevisions).UsePropertyAccessMode(PropertyAccessMode.Field);
 
-        builder.HasIndex(e => e.UserId).IsUnique();
     }
 }

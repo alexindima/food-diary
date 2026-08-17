@@ -15,7 +15,8 @@ namespace FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 
 public sealed class UpsertCycleFactorCommandHandler(
     ICycleWriteRepository cycleRepository,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    TimeProvider? timeProvider = null)
     : ICommandHandler<UpsertCycleFactorCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(UpsertCycleFactorCommand command, CancellationToken cancellationToken) {
         Result<CycleProfileId> profileIdResult = RequiredIdParser.Parse(
@@ -55,7 +56,8 @@ public sealed class UpsertCycleFactorCommandHandler(
         profile.UpsertFactor((CycleFactorType)command.Type, command.StartDate, command.EndDate, command.Notes, command.ClearNotes);
 
         await cycleRepository.UpdateAsync(profile, cancellationToken).ConfigureAwait(false);
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile, timeProvider: timeProvider);
+        CyclePredictionRevisionService.Record(profile, predictions, timeProvider);
         return Result.Success(profile.ToModel(predictions));
     }
 }

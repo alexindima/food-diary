@@ -53,7 +53,8 @@ public class ExportValidatorTests {
 
     [Fact]
     public async Task ValidateCycle_WithNullUserId_HasError() {
-        var query = new ExportCycleQuery(UserId: null, DateTime.UtcNow, DateTime.UtcNow.AddDays(7));
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var query = new ExportCycleQuery(UserId: null, today, today.AddDays(7));
 
         TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
 
@@ -62,7 +63,8 @@ public class ExportValidatorTests {
 
     [Fact]
     public async Task ValidateCycle_WithDateFromAfterDateTo_HasError() {
-        var query = new ExportCycleQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(7), DateTime.UtcNow);
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var query = new ExportCycleQuery(Guid.NewGuid(), today.AddDays(7), today);
 
         TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
 
@@ -73,8 +75,8 @@ public class ExportValidatorTests {
     public async Task ValidateCycle_WithRangeOverOneYear_HasError() {
         var query = new ExportCycleQuery(
             Guid.NewGuid(),
-            new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-            new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc));
+            new DateOnly(2025, 1, 1),
+            new DateOnly(2026, 2, 1));
 
         TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
 
@@ -85,8 +87,8 @@ public class ExportValidatorTests {
     public async Task ValidateCycle_WithValidQuery_NoErrors() {
         var query = new ExportCycleQuery(
             Guid.NewGuid(),
-            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
-            new DateTime(2026, 4, 7, 0, 0, 0, DateTimeKind.Utc));
+            new DateOnly(2026, 4, 1),
+            new DateOnly(2026, 4, 7));
 
         TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
 

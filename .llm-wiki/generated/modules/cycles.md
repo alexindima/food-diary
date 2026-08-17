@@ -31,6 +31,14 @@ sources:
 
 ## HTTP Surface
 
+### CycleLogsController
+
+Source: `FoodDiary.Presentation.Api/Features/Cycles/CycleLogsController.cs`
+
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
+- `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors`
+
 ### CyclesController
 
 Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
@@ -40,9 +48,7 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/CyclesController.cs`
 - `POST /api/v{version:apiVersion}/cycles`
 - `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}`
 - `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/settings`
-- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
-- `DELETE /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/days`
-- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/factors`
+- `PUT /api/v{version:apiVersion}/cycles/{cycleProfileId:guid}/consents/{purpose:int}`
 
 ### MenstrualEpisodesController
 
@@ -58,15 +64,15 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.
 - Physical isolation: project
 - Architecture guardrails: project-reference-matrix
 - Declared owned entities: not yet enumerated
-- Public contract files: 12
+- Public contract files: 14
 - Observed external consumer groups: 6
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 12
+- Public contract types: 14
 - Interfaces: 4
-- DTO/read-model/projection types: 6
+- DTO/read-model/projection types: 8
 - Enums: 0
 - Exported repository-shaped contracts: 4
 - Contracts referencing domain entities: 2
@@ -77,7 +83,9 @@ Source: `FoodDiary.Presentation.Api/Features/Cycles/MenstrualEpisodesController.
 - `interface ICycleRepository`
 - `interface ICycleWriteRepository`
 - `record BleedingEntryReadModel`
+- `record CycleConsentReadModel`
 - `record CycleFactorReadModel`
+- `record CyclePredictionRevisionReadModel`
 - `record CycleProfileReadModel`
 - `record CycleSymptomEntryReadModel`
 - `record FertilitySignalReadModel`

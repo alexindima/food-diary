@@ -6,7 +6,7 @@ namespace FoodDiary.Domain.Entities.Tracking;
 
 public sealed class FertilitySignal : Entity<FertilitySignalId> {
     public CycleProfileId CycleProfileId { get; private set; }
-    public DateTime Date { get; private set; }
+    public DateOnly Date { get; private set; }
     public double? BasalBodyTemperatureCelsius { get; private set; }
     public OvulationTestResult? OvulationTestResult { get; private set; }
     public string? CervicalFluid { get; private set; }
@@ -23,7 +23,7 @@ public sealed class FertilitySignal : Entity<FertilitySignalId> {
 
     public static FertilitySignal Create(
         CycleProfileId cycleProfileId,
-        DateTime date,
+        DateOnly date,
         double? basalBodyTemperatureCelsius,
         OvulationTestResult? ovulationTestResult,
         string? cervicalFluid,
@@ -35,7 +35,7 @@ public sealed class FertilitySignal : Entity<FertilitySignalId> {
 
         var signal = new FertilitySignal(FertilitySignalId.New()) {
             CycleProfileId = cycleProfileId,
-            Date = CycleProfile.NormalizeDate(date),
+            Date = date,
             BasalBodyTemperatureCelsius = basalBodyTemperatureCelsius,
             OvulationTestResult = ovulationTestResult,
             CervicalFluid = CycleProfile.NormalizeNotes(cervicalFluid),

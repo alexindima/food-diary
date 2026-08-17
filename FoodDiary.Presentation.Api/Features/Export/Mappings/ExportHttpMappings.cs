@@ -20,7 +20,25 @@ public static class ExportHttpMappings {
         DateTime dateFrom,
         DateTime dateTo,
         int? timeZoneOffsetMinutes) =>
-        new(userId, dateFrom, dateTo, timeZoneOffsetMinutes);
+        new(
+            userId,
+            DateOnly.FromDateTime(dateFrom),
+            DateOnly.FromDateTime(dateTo),
+            timeZoneOffsetMinutes);
+
+    public static ExportCycleQuery ToSensitiveCycleQuery(
+        Guid userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        string currentPassword,
+        int? timeZoneOffsetMinutes) =>
+        new(
+            userId,
+            DateOnly.FromDateTime(dateFrom),
+            DateOnly.FromDateTime(dateTo),
+            timeZoneOffsetMinutes,
+            CycleExportScope.Sensitive,
+            currentPassword);
 
     private static ExportFormat ParseFormat(string format) =>
         string.Equals(format, "pdf", StringComparison.OrdinalIgnoreCase)

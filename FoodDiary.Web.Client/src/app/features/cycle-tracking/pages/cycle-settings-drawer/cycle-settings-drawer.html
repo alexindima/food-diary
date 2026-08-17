@@ -34,7 +34,12 @@
         <form class="cycle-drawer__form" [formRoot]="settingsForm()">
             <div class="cycle-drawer__body fd-stack fd-gap-card-content">
                 <p class="cycle-drawer__privacy fd-ui-body-sm">{{ 'CYCLE_TRACKING.SETTINGS_DESCRIPTION' | translate }}</p>
-                <fd-ui-select [label]="'CYCLE_TRACKING.MODE' | translate" [options]="modeOptions()" [formField]="settingsForm().mode" />
+                <fd-ui-select [label]="'CYCLE_TRACKING.GOAL' | translate" [options]="goalOptions()" [formField]="settingsForm().goal" />
+                <fd-ui-select
+                    [label]="'CYCLE_TRACKING.REPRODUCTIVE_STATE' | translate"
+                    [options]="reproductiveStateOptions()"
+                    [formField]="settingsForm().reproductiveState"
+                />
                 <div class="cycle-drawer__advanced-fields fd-grid fd-gap-sm">
                     <fd-ui-input
                         type="number"
@@ -56,11 +61,17 @@
                     <fd-ui-checkbox [formField]="settingsForm().isRegular">
                         {{ 'CYCLE_TRACKING.IS_REGULAR' | translate }}
                     </fd-ui-checkbox>
-                    <fd-ui-checkbox [formField]="settingsForm().showFertilityEstimates">
-                        {{ 'CYCLE_TRACKING.SHOW_FERTILITY' | translate }}
+                    <fd-ui-checkbox [formField]="settingsForm().hideFromDashboard">
+                        {{ 'CYCLE_TRACKING.HIDE_FROM_DASHBOARD' | translate }}
                     </fd-ui-checkbox>
                     <fd-ui-checkbox [formField]="settingsForm().discreetNotifications">
                         {{ 'CYCLE_TRACKING.DISCREET_NOTIFICATIONS' | translate }}
+                    </fd-ui-checkbox>
+                    <fd-ui-checkbox [formField]="settingsForm().nutritionInsightsConsentGranted">
+                        {{ 'CYCLE_TRACKING.CONSENT_NUTRITION' | translate }}
+                    </fd-ui-checkbox>
+                    <fd-ui-checkbox [formField]="settingsForm().fertilitySignalsConsentGranted">
+                        {{ 'CYCLE_TRACKING.CONSENT_FERTILITY' | translate }}
                     </fd-ui-checkbox>
                 </div>
                 <div class="cycle-drawer__advanced fd-stack fd-gap-sm">

@@ -66,8 +66,8 @@ public sealed class ExportControllerTests {
         Assert.Equal("cycle.pdf", file.FileDownloadName);
         ExportCycleQuery query = Assert.IsType<ExportCycleQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
-        Assert.Equal(dateFrom, query.DateFrom);
-        Assert.Equal(dateTo, query.DateTo);
+        Assert.Equal(DateOnly.FromDateTime(dateFrom), query.DateFrom);
+        Assert.Equal(DateOnly.FromDateTime(dateTo), query.DateTo);
         Assert.Equal(180, query.TimeZoneOffsetMinutes);
     }
 

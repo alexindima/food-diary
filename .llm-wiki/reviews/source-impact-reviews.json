@@ -101,14 +101,14 @@
       "pageSha256": "a5522a169ea9a6cd82c26287ad45e6fdac6e8ec15feb99693aa807ce0e95c147",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
+          "path": "docs/adr/README.md",
+          "sha256": "7c1d57181e4da4c3657cffa4a7bdd6486273d9871c30402db19b94ef10f85c8c"
         }
       ],
-      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
       "baseRef": "HEAD",
-      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-      "reviewedAtUtc": "2026-08-13T22:17:59.1312515Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:01:37.7060835Z"
     },
     {
       "pageId": "system.repository-catalog",
@@ -162,13 +162,13 @@
       "sources": [
         {
           "path": "tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/openapi-full-contract.json",
-          "sha256": "095621737b72abb2a59aaaae5ae5e58f2330985f376e5a51002f9e48e4f74b69"
+          "sha256": "8df44f3cbfa17f0acb41c45d8ba3a5265c7cbc9c8e1aa052fe663246bbf6e353"
         }
       ],
-      "reason": "Reviewed the additive clearFertilitySignal HTTP contract, regenerated OpenAPI schema, date-scoped aggregate deletion, preservation of bleeding and symptoms, optional-default compatibility, focused and full regression evidence, and generated contract/domain indexes.",
+      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
       "baseRef": "HEAD",
-      "gitHead": "247db76dfc46fd39ae6b6b24bff3e7397ea7ce78",
-      "reviewedAtUtc": "2026-08-16T21:17:20.0560487Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:01:37.9534137Z"
     },
     {
       "pageId": "workflow-architecture-health-review",
@@ -177,13 +177,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/architecture-health-index.json",
-          "sha256": "2d53b9861ce35b700769b77abf518e5098d078a1e319e81045a03640ede5f6aa"
+          "sha256": "040eb49a64ea9714e9ccdb5b34e66dd453c84e2735e5f439b9be58eb0c7966d9"
         }
       ],
-      "reason": "Cycle UX V2 adds three scoped Angular presentation components, responsive drawer behavior, localized labels, and focused tests; generated indexes now reflect the verified current frontend contracts without changing architecture ownership.",
+      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
       "baseRef": "HEAD",
-      "gitHead": "b4a8338709047117f9091e9342a4731970400b0d",
-      "reviewedAtUtc": "2026-08-17T00:34:34.2409292Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:01:38.2506155Z"
     },
     {
       "pageId": "workflow-backend-contract-review",
@@ -192,13 +192,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "847b7f72792ef7a3db735b78a0b5a83d87fcb30a7da3ab98d45092740520396e"
+          "sha256": "2677acfea4e85481c03a4c1e73a5b559d40748cb7088dd03b5a1878b913244cc"
         }
       ],
-      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
+      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
       "baseRef": "HEAD",
-      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
-      "reviewedAtUtc": "2026-08-16T23:41:25.1212191Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:01:38.6975498Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -396,14 +396,14 @@
       "pageSha256": "8b4cb2d28a12dabbacea071dc05d656bf06ccbaec42ac12f5b35408b708a161a",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDecisionContext.ps1",
-          "sha256": "c7a531a0c64cd75e50a9c237faf735b0687a6867f57fc04e6c04efec9d3445b5"
+          "path": "docs/adr/README.md",
+          "sha256": "7c1d57181e4da4c3657cffa4a7bdd6486273d9871c30402db19b94ef10f85c8c"
         }
       ],
-      "reason": "Reviewed decision-context strict-mode handling: missing rule/module fields now produce an empty evidence set without changing ADR trigger semantics.",
+      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
       "baseRef": "HEAD",
-      "gitHead": "86e537f5b7c5046494b26e1054fffcb94a9a3196",
-      "reviewedAtUtc": "2026-08-12T01:16:09.1330805Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:01:38.9806847Z"
     },
     {
       "pageId": "workflow-dependency-rollout",
@@ -442,13 +442,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/domain-data-index.json",
-          "sha256": "b8b024a611fb4f9e8c7592fff15dc5b9f9c6b0a56bf4f9cf2b6254d652cb4d55"
+          "sha256": "705d778cf9255ff633a99fc0b4c9615375e384a73f6ad9f7cb4ad6201b32c83b"
         }
       ],
-      "reason": "Reviewed the additive clearFertilitySignal HTTP contract, regenerated OpenAPI schema, date-scoped aggregate deletion, preservation of bleeding and symptoms, optional-default compatibility, focused and full regression evidence, and generated contract/domain indexes.",
+      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
       "baseRef": "HEAD",
-      "gitHead": "247db76dfc46fd39ae6b6b24bff3e7397ea7ce78",
-      "reviewedAtUtc": "2026-08-16T21:17:21.1871392Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:01:39.2949896Z"
     },
     {
       "pageId": "workflow-durable-memory",
@@ -725,13 +725,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/sensitive-data-index.json",
-          "sha256": "528ea5e17bbfb515840708e1575c4567a4d43c43f69e66e986cf4abe209f57cf"
+          "sha256": "28c6a8c40708b2258bd106b8c4be988411a4b826b3c6a29513cdd67bdc2978c4"
         }
       ],
-      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
+      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
       "baseRef": "HEAD",
-      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
-      "reviewedAtUtc": "2026-08-16T23:41:26.1438650Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:01:40.0286384Z"
     },
     {
       "pageId": "workflow-product-journey-impact",
@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "595cad65beb613668dc8d94ca566347c331d1e0cff1259b9a575530dadea5694"
+          "sha256": "ea885d1bea4267040752f27e0ea92ff17e4083906465f9c727edb2ed142a366a"
         }
       ],
-      "reason": "Cycle tracking history, observations, drawer symptom UX, and calendar duplicate-marker resilience",
+      "reason": "Reviewed the regenerated frontend contract, frontend navigation, and quality indexes after the Prettier-only source normalization; selectors, routes, contracts, and quality conclusions remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "6db41bfaf9a0829453d5be49c67538052c233a23",
-      "reviewedAtUtc": "2026-08-17T01:48:45.4923249Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:08:31.6437571Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -989,17 +989,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "f56524026f12bf72d09633d0144abd287857dee95813a0bed4363390f1185144"
+          "sha256": "d217de9308008f0e7164cc50496d60769fc5f2a3ca29c7260e295404d6915c2d"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "dbfc8b060b340ad1a7532c64d9f2f6b7fa2d2b21fb10ee842586602bffa60937"
+          "sha256": "c5b7c7b8172c5dd71a8e1580dfc018fe966d38d936a21f7f0a38dc409d6bb73e"
         }
       ],
-      "reason": "Cycle tracking history and observations UX completion with semantic summaries and full-history access",
+      "reason": "Reviewed the regenerated frontend contract, frontend navigation, and quality indexes after the Prettier-only source normalization; selectors, routes, contracts, and quality conclusions remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "6db41bfaf9a0829453d5be49c67538052c233a23",
-      "reviewedAtUtc": "2026-08-17T01:28:39.3151097Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:08:32.0198082Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1091,13 +1091,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "f56524026f12bf72d09633d0144abd287857dee95813a0bed4363390f1185144"
+          "sha256": "d217de9308008f0e7164cc50496d60769fc5f2a3ca29c7260e295404d6915c2d"
         }
       ],
-      "reason": "Cycle tracking UI now exposes semantic day history, zero-value filtering, descriptive observations, and full-history access; reviewed localization and test impact.",
+      "reason": "Reviewed the regenerated frontend contract, frontend navigation, and quality indexes after the Prettier-only source normalization; selectors, routes, contracts, and quality conclusions remain unchanged.",
       "baseRef": "HEAD",
-      "gitHead": "6db41bfaf9a0829453d5be49c67538052c233a23",
-      "reviewedAtUtc": "2026-08-17T01:17:09.2299865Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:08:31.2904896Z"
     },
     {
       "pageId": "workflow.query-context",
@@ -1106,13 +1106,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/repository-catalog.json",
-          "sha256": "750564b384bbea2d6d7bbd2f6493df93db41988430413d74478fb7614c97454b"
+          "sha256": "bed10260581240c9e8944fb1051ba7b402331d18a4d2ddd318929189f0aa6ad3"
         }
       ],
-      "reason": "Reviewed generated Wiki impact for user-scoped cycle profile deletion across application, persistence, API, frontend, contracts, localization, and focused tests.",
+      "reason": "Reviewed the cycle health-data ADR index change and additive OpenAPI snapshot changes; knowledge-model and decision-context guidance remain current, and api-compatibility workflow remains accurate with 0 breaking and 60 additive changes.",
       "baseRef": "HEAD",
-      "gitHead": "ce42af34d1bc9a8ca0bf161f49af95b6bb1ae6a7",
-      "reviewedAtUtc": "2026-08-16T23:41:27.1946884Z"
+      "gitHead": "4d1aec55f8b2b1ce42fe3ffde8a0928329938cca",
+      "reviewedAtUtc": "2026-08-17T04:01:40.8365210Z"
     },
     {
       "pageId": "workflow.review-diff",

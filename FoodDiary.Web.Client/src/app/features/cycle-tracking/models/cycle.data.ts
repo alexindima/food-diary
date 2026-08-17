@@ -39,6 +39,18 @@ export const CYCLE_FACTOR_TYPE_PERIMENOPAUSE = 5;
 export const CYCLE_FACTOR_TYPE_NO_PERIOD = 6;
 export const MENSTRUAL_EPISODE_STATUS_INFERRED = 0;
 export const MENSTRUAL_EPISODE_STATUS_CONFIRMED = 1;
+export const CYCLE_TRACKING_GOAL_PERIOD_AWARENESS = 0;
+export const CYCLE_TRACKING_GOAL_SYMPTOM_AWARENESS = 1;
+export const CYCLE_TRACKING_GOAL_TRYING_TO_CONCEIVE = 2;
+export const CYCLE_REPRODUCTIVE_STATE_CYCLING = 0;
+export const CYCLE_REPRODUCTIVE_STATE_PREGNANCY = 1;
+export const CYCLE_REPRODUCTIVE_STATE_POSTPARTUM = 2;
+export const CYCLE_REPRODUCTIVE_STATE_LACTATION = 3;
+export const CYCLE_REPRODUCTIVE_STATE_PERIMENOPAUSE = 4;
+export const CYCLE_REPRODUCTIVE_STATE_NO_PERIOD = 5;
+export const CYCLE_CONSENT_PURPOSE_CYCLE_TRACKING = 0;
+export const CYCLE_CONSENT_PURPOSE_FERTILITY_SIGNALS = 1;
+export const CYCLE_CONSENT_PURPOSE_NUTRITION_INSIGHTS = 2;
 
 export type CycleTrackingMode =
     | typeof CYCLE_TRACKING_MODE_PERIOD_TRACKING
@@ -47,6 +59,18 @@ export type CycleTrackingMode =
     | typeof CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION
     | typeof CYCLE_TRACKING_MODE_PERIMENOPAUSE
     | typeof CYCLE_TRACKING_MODE_NO_PERIOD;
+export type CycleTrackingGoal =
+    | typeof CYCLE_TRACKING_GOAL_PERIOD_AWARENESS
+    | typeof CYCLE_TRACKING_GOAL_SYMPTOM_AWARENESS
+    | typeof CYCLE_TRACKING_GOAL_TRYING_TO_CONCEIVE;
+export type CycleReproductiveState =
+    | typeof CYCLE_REPRODUCTIVE_STATE_CYCLING
+    | typeof CYCLE_REPRODUCTIVE_STATE_PREGNANCY
+    | typeof CYCLE_REPRODUCTIVE_STATE_POSTPARTUM
+    | typeof CYCLE_REPRODUCTIVE_STATE_LACTATION
+    | typeof CYCLE_REPRODUCTIVE_STATE_PERIMENOPAUSE
+    | typeof CYCLE_REPRODUCTIVE_STATE_NO_PERIOD;
+export type CycleConsentPurpose = 0 | 1 | 2;
 export type CycleConfidence =
     typeof CYCLE_CONFIDENCE_LEARNING | typeof CYCLE_CONFIDENCE_LOW | typeof CYCLE_CONFIDENCE_MEDIUM | typeof CYCLE_CONFIDENCE_HIGH;
 export type BleedingType = typeof BLEEDING_TYPE_BLEEDING | typeof BLEEDING_TYPE_SPOTTING;
@@ -141,6 +165,33 @@ export type CyclePredictions = {
     excludedEpisodeCount?: number;
     reasonCodes?: string[];
     algorithmVersion?: string;
+    calibrationSampleCount?: number;
+    historicalCoveragePercent?: number | null;
+    meanAbsoluteErrorDays?: number | null;
+};
+
+export type CycleConsent = {
+    id: string;
+    purpose: CycleConsentPurpose;
+    grantedAtUtc: string;
+    revokedAtUtc?: string | null;
+    isActive: boolean;
+};
+
+export type CyclePredictionRevision = {
+    id: string;
+    generatedAtUtc: string;
+    nextPeriodStartFrom?: string | null;
+    nextPeriodStartTo?: string | null;
+    confidence: string;
+    dataSufficiency: string;
+    patternConsistency: string;
+    completedCycleCount: number;
+    calibrationSampleCount: number;
+    historicalCoveragePercent?: number | null;
+    meanAbsoluteErrorDays?: number | null;
+    reasonCodes: string[];
+    algorithmVersion: string;
 };
 
 export type CycleNutritionSummary = {
@@ -155,6 +206,12 @@ export type CycleNutritionSummary = {
     averageFiberOnNonBleedingCycleDays: number;
     averagePainImpactOnDaysWithMeals: number;
     hasEnoughNutritionData: boolean;
+    consentRequired?: boolean;
+    completedCyclesAnalyzed?: number;
+    comparableCycles?: number;
+    dataSufficiency?: string;
+    reasonCodes?: string[];
+    algorithmVersion?: string;
 };
 
 export type CycleResponse = {
@@ -177,6 +234,11 @@ export type CycleResponse = {
     fertilitySignals: FertilitySignal[];
     menstrualEpisodes?: MenstrualEpisode[];
     predictions?: CyclePredictions | null;
+    goal: CycleTrackingGoal;
+    reproductiveState: CycleReproductiveState;
+    hideFromDashboard: boolean;
+    consents?: CycleConsent[];
+    predictionRevisions?: CyclePredictionRevision[];
 };
 
 export type CreateCyclePayload = {
@@ -190,6 +252,12 @@ export type CreateCyclePayload = {
     showFertilityEstimates: boolean;
     discreetNotifications: boolean;
     notes?: string | null;
+    goal?: CycleTrackingGoal;
+    reproductiveState?: CycleReproductiveState;
+    hideFromDashboard?: boolean;
+    cycleTrackingConsentGranted?: boolean;
+    nutritionInsightsConsentGranted?: boolean;
+    fertilitySignalsConsentGranted?: boolean;
 };
 
 export type UpdateCycleSettingsPayload = {
@@ -200,7 +268,12 @@ export type UpdateCycleSettingsPayload = {
     isRegular: boolean;
     showFertilityEstimates: boolean;
     discreetNotifications: boolean;
+    goal?: CycleTrackingGoal;
+    reproductiveState?: CycleReproductiveState;
+    hideFromDashboard?: boolean;
 };
+
+export type UpdateCycleConsentPayload = { granted: boolean };
 
 export type BleedingLogPayload = {
     type: BleedingType;

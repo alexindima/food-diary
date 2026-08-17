@@ -11,7 +11,7 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpdateMenstrualEpisodeCommandHandler_WithConfirmedEpisode_UpdatesProfile() {
         var user = User.Create("cycle-episode-update@example.com", "hash");
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(user.Id, start);
         MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
         var repository = new InMemoryCycleRepository(profile);
@@ -37,7 +37,7 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpdateMenstrualEpisodeCommandHandler_WhenEpisodeDoesNotBelongToProfile_ReturnsValidationFailure() {
         var user = User.Create("cycle-episode-missing@example.com", "hash");
-        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var profile = CycleProfile.Create(user.Id, new DateOnly(2026, 4, 1));
         var repository = new InMemoryCycleRepository(profile);
         var handler = new UpdateMenstrualEpisodeCommandHandler(repository, CreateCurrentUserAccessService(user));
 
@@ -46,7 +46,7 @@ public partial class CyclesFeatureTests {
                 user.Id.Value,
                 profile.Id.Value,
                 Guid.NewGuid(),
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 EndDate: null),
             CancellationToken.None);
 
@@ -57,7 +57,7 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task UpdateMenstrualEpisodeCommandHandler_WithPredictionExclusion_UpdatesPredictionEligibility() {
         var user = User.Create("cycle-episode-exclusion@example.com", "hash");
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(user.Id, start);
         MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
         var repository = new InMemoryCycleRepository(profile);
@@ -80,7 +80,7 @@ public partial class CyclesFeatureTests {
     [Fact]
     public async Task DeleteMenstrualEpisodeCommandHandler_WithConfirmedEpisode_PreservesDailyFacts() {
         var user = User.Create("cycle-episode-delete@example.com", "hash");
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(user.Id, start);
         profile.UpsertBleedingEntry(start, FoodDiary.Domain.Enums.BleedingType.Bleeding, FoodDiary.Domain.Enums.CycleFlowLevel.Light, 1, "kept");
         MenstrualEpisode episode = profile.ConfirmPeriodStart(start);

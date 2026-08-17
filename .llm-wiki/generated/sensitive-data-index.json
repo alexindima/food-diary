@@ -6,13 +6,13 @@
     "externalTransfers": "An external HTTP destination and sensitive parameters in the same integration client. This is a provider-sharing review lead, not proof of every runtime payload."
   },
   "summary": {
-    "candidateFields": 1449,
-    "credential": 152,
+    "candidateFields": 1465,
+    "credential": 153,
     "identity": 153,
-    "health": 648,
+    "health": 663,
     "financial": 199,
     "privateContent": 297,
-    "boundaryFiles": 184,
+    "boundaryFiles": 186,
     "potentialLoggingLeads": 1,
     "externalTransferLeads": 1
   },
@@ -870,6 +870,13 @@
       "type": "string",
       "path": "FoodDiary.Presentation.Api/Features/Dietologist/Requests/DeclineInvitationHttpRequest.cs",
       "line": 3
+    },
+    {
+      "category": "credential",
+      "name": "CurrentPassword",
+      "type": "string",
+      "path": "FoodDiary.Presentation.Api/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
+      "line": 6
     },
     {
       "category": "credential",
@@ -2499,8 +2506,22 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
+      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CycleConsentReadModel.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
       "path": "FoodDiary.Application.Abstractions/Cycles/Models/CycleFactorReadModel.cs",
       "line": 7
+    },
+    {
+      "category": "health",
+      "name": "CompletedCycleCount",
+      "type": "int",
+      "path": "FoodDiary.Application.Abstractions/Cycles/Models/CyclePredictionRevisionReadModel.cs",
+      "line": 11
     },
     {
       "category": "health",
@@ -3689,6 +3710,13 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "Guid",
+      "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleConsent/UpdateCycleConsentCommand.cs",
+      "line": 9
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "Guid",
       "path": "FoodDiary.Application.Cycles/Commands/UpdateCycleSettings/UpdateCycleSettingsCommand.cs",
       "line": 9
     },
@@ -3787,6 +3815,13 @@
       "category": "health",
       "name": "CompletedCycleCount",
       "type": "int",
+      "path": "FoodDiary.Application.Cycles/Models/CyclePredictionRevisionModel.cs",
+      "line": 11
+    },
+    {
+      "category": "health",
+      "name": "CompletedCycleCount",
+      "type": "int",
       "path": "FoodDiary.Application.Cycles/Models/CyclePredictionsModel.cs",
       "line": 14
     },
@@ -3816,7 +3851,42 @@
       "name": "Calories",
       "type": "double",
       "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
-      "line": 136
+      "line": 247
+    },
+    {
+      "category": "health",
+      "name": "NutritionDays",
+      "type": "IReadOnlyList<CycleNutritionDay>",
+      "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+      "line": 252
+    },
+    {
+      "category": "health",
+      "name": "BleedingNutritionDays",
+      "type": "IReadOnlyList<CycleNutritionDay>",
+      "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+      "line": 253
+    },
+    {
+      "category": "health",
+      "name": "NonBleedingNutritionDays",
+      "type": "IReadOnlyList<CycleNutritionDay>",
+      "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+      "line": 254
+    },
+    {
+      "category": "health",
+      "name": "AverageBleedingCalories",
+      "type": "double",
+      "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+      "line": 255
+    },
+    {
+      "category": "health",
+      "name": "AverageNonBleedingCalories",
+      "type": "double",
+      "path": "FoodDiary.Application.Cycles/Services/CycleReadService.cs",
+      "line": 256
     },
     {
       "category": "health",
@@ -4970,6 +5040,20 @@
       "category": "health",
       "name": "CycleProfileId",
       "type": "CycleProfileId",
+      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
+      "line": 8
+    },
+    {
+      "category": "health",
+      "name": "CycleProfile",
+      "type": "CycleProfile",
+      "path": "FoodDiary.Domain/Entities/Tracking/CycleConsent.cs",
+      "line": 13
+    },
+    {
+      "category": "health",
+      "name": "CycleProfileId",
+      "type": "CycleProfileId",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleFactor.cs",
       "line": 8
     },
@@ -4982,10 +5066,31 @@
     },
     {
       "category": "health",
+      "name": "CycleProfileId",
+      "type": "CycleProfileId",
+      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 7
+    },
+    {
+      "category": "health",
+      "name": "CompletedCycleCount",
+      "type": "int",
+      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 14
+    },
+    {
+      "category": "health",
+      "name": "CycleProfile",
+      "type": "CycleProfile",
+      "path": "FoodDiary.Domain/Entities/Tracking/CyclePredictionRevision.cs",
+      "line": 21
+    },
+    {
+      "category": "health",
       "name": "AverageCycleLength",
       "type": "int",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 22
+      "line": 26
     },
     {
       "category": "health",
@@ -6085,6 +6190,13 @@
       "type": "bool",
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CycleNutritionSummaryHttpResponse.cs",
       "line": 14
+    },
+    {
+      "category": "health",
+      "name": "CompletedCycleCount",
+      "type": "int",
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "line": 11
     },
     {
       "category": "health",
@@ -9332,7 +9444,7 @@
       "name": "Notes",
       "type": "string?",
       "path": "FoodDiary.Domain/Entities/Tracking/CycleProfile.cs",
-      "line": 29
+      "line": 34
     },
     {
       "category": "privateContent",
@@ -10612,6 +10724,13 @@
       "fieldCount": 5
     },
     {
+      "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CyclePredictionRevisionHttpResponse.cs",
+      "categories": [
+        "health"
+      ],
+      "fieldCount": 1
+    },
+    {
       "path": "FoodDiary.Presentation.Api/Features/Cycles/Responses/CyclePredictionsHttpResponse.cs",
       "categories": [
         "health"
@@ -10783,6 +10902,13 @@
         "privateContent"
       ],
       "fieldCount": 3
+    },
+    {
+      "path": "FoodDiary.Presentation.Api/Features/Export/Requests/SensitiveCycleExportHttpRequest.cs",
+      "categories": [
+        "credential"
+      ],
+      "fieldCount": 1
     },
     {
       "path": "FoodDiary.Presentation.Api/Features/Fasting/Requests/UpdateFastingCheckInHttpRequest.cs",

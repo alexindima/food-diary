@@ -16,10 +16,10 @@ public static class CyclePredictionService {
     private const int LimitedConsistencySpreadDays = 9;
     private const int MinimumReliableCycleIntervalDays = 15;
 
-    public static CyclePredictionsModel CalculatePredictions(CycleProfileReadModel profile, DateTime? currentDate = null, TimeProvider? timeProvider = null) {
+    public static CyclePredictionsModel CalculatePredictions(CycleProfileReadModel profile, DateOnly? currentDate = null, TimeProvider? timeProvider = null) {
         ArgumentNullException.ThrowIfNull(profile);
 
-        if (HasLimitedPredictionMode(profile.Mode) || HasActivePredictionLimitingFactor(profile.Factors)) {
+        if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors)) {
             return Limited(profile.Confidence, "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
         }
 
@@ -27,13 +27,13 @@ public static class CyclePredictionService {
             profile.Confidence,
             profile.ShowFertilityEstimates,
             ResolvePredictionHistory(profile.BleedingEntries, profile.MenstrualEpisodes ?? []),
-            currentDate ?? (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
+            currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime));
     }
 
-    public static CyclePredictionsModel CalculatePredictions(CycleProfile profile, DateTime? currentDate = null, TimeProvider? timeProvider = null) {
+    public static CyclePredictionsModel CalculatePredictions(CycleProfile profile, DateOnly? currentDate = null, TimeProvider? timeProvider = null) {
         ArgumentNullException.ThrowIfNull(profile);
 
-        if (HasLimitedPredictionMode(profile.Mode) || HasActivePredictionLimitingFactor(profile.Factors)) {
+        if (HasLimitedPredictionState(profile.ReproductiveState) || HasActivePredictionLimitingFactor(profile.Factors)) {
             return Limited(profile.Confidence, "prediction_paused_by_state", "Predictions are paused by the active tracking state.");
         }
 
@@ -41,16 +41,16 @@ public static class CyclePredictionService {
             profile.Confidence,
             profile.ShowFertilityEstimates,
             ResolvePredictionHistory(profile),
-            currentDate ?? (timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime);
+            currentDate ?? DateOnly.FromDateTime((timeProvider ?? TimeProvider.System).GetUtcNow().UtcDateTime));
     }
 
     private static CyclePredictionsModel CalculatePredictions(
         CycleConfidence legacyConfidence,
         bool showFertilityEstimates,
         PredictionHistory history,
-        DateTime currentDate) {
-        DateTime[] starts = history.UsedEpisodeStarts;
-        int[] cycleLengths = [.. starts.Zip(starts.Skip(1), static (from, to) => (to - from).Days)];
+        DateOnly currentDate) {
+        DateOnly[] starts = history.UsedEpisodeStarts;
+        int[] cycleLengths = [.. starts.Zip(starts.Skip(1), static (from, to) => to.DayNumber - from.DayNumber)];
         if (cycleLengths.Any(static length => length < MinimumReliableCycleIntervalDays)) {
             return Limited(
                 legacyConfidence,
@@ -81,14 +81,14 @@ public static class CyclePredictionService {
         lowerDays = Math.Min(lowerDays, centerDays - SparseHistoryBufferDays);
         upperDays = Math.Max(upperDays, centerDays + SparseHistoryBufferDays);
 
-        DateTime anchor = starts[^1];
-        DateTime nextFrom = NormalizeDate(anchor.AddDays(lowerDays));
-        DateTime nextTo = NormalizeDate(anchor.AddDays(upperDays));
-        DateTime today = NormalizeDate(currentDate);
+        DateOnly anchor = starts[^1];
+        DateOnly nextFrom = anchor.AddDays(lowerDays);
+        DateOnly nextTo = anchor.AddDays(upperDays);
+        DateOnly today = currentDate;
         while (nextTo < today) {
-            anchor = NormalizeDate(anchor.AddDays(centerDays));
-            nextFrom = NormalizeDate(anchor.AddDays(lowerDays));
-            nextTo = NormalizeDate(anchor.AddDays(upperDays));
+            anchor = anchor.AddDays(centerDays);
+            nextFrom = anchor.AddDays(lowerDays);
+            nextTo = anchor.AddDays(upperDays);
         }
 
         int spread = variabilityHistory[^1] - variabilityHistory[0];
@@ -97,13 +97,14 @@ public static class CyclePredictionService {
         IReadOnlyCollection<string> reasonCodes = showFertilityEstimates
             ? ["estimated_from_completed_cycles", "fertility_estimate_not_available_in_v2"]
             : ["estimated_from_completed_cycles"];
+        CalibrationMetrics calibration = CalculateCalibration(cycleLengths);
 
         return new CyclePredictionsModel(
             nextFrom,
             nextTo,
             OvulationFrom: null,
             OvulationTo: null,
-            NormalizeDate(anchor.AddDays(centerDays - DefaultPmsWindow)),
+            anchor.AddDays(centerDays - DefaultPmsWindow),
             nextTo,
             legacyConfidence.ToString(),
             "Estimated range based on recent completed cycle intervals.",
@@ -113,18 +114,21 @@ public static class CyclePredictionService {
             history.UsedEpisodeStarts.Length,
             history.ExcludedEpisodeCount,
             reasonCodes,
-            AlgorithmVersion);
+            AlgorithmVersion,
+            calibration.SampleCount,
+            calibration.CoveragePercent,
+            calibration.MeanAbsoluteErrorDays);
     }
 
-    private static DateTime[] BuildInferredEpisodeStarts(IEnumerable<DateTime> bleedingDates) {
-        DateTime[] dates = [.. bleedingDates.Select(NormalizeDate).Distinct().Order()];
+    private static DateOnly[] BuildInferredEpisodeStarts(IEnumerable<DateOnly> bleedingDates) {
+        DateOnly[] dates = [.. bleedingDates.Distinct().Order()];
         if (dates.Length == 0) {
             return [];
         }
 
-        var starts = new List<DateTime> { dates[0] };
+        var starts = new List<DateOnly> { dates[0] };
         for (int index = 1; index < dates.Length; index++) {
-            if ((dates[index] - dates[index - 1]).Days > 2) {
+            if (dates[index].DayNumber - dates[index - 1].DayNumber > 2) {
                 starts.Add(dates[index]);
             }
         }
@@ -136,45 +140,45 @@ public static class CyclePredictionService {
         IEnumerable<BleedingEntryReadModel> bleedingEntries,
         IEnumerable<MenstrualEpisodeReadModel> persistedEpisodes) {
         MenstrualEpisodeReadModel[] episodes = [.. persistedEpisodes];
-        DateTime[] confirmed = [.. episodes
+        DateOnly[] confirmed = [.. episodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && !episode.ExcludedFromPredictions)
             .Select(static episode => episode.StartDate)];
-        DateTime[] excluded = [.. episodes
+        DateOnly[] excluded = [.. episodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && episode.ExcludedFromPredictions)
             .Select(static episode => episode.StartDate)];
-        DateTime[] inferred = BuildInferredEpisodeStarts(
+        DateOnly[] inferred = BuildInferredEpisodeStarts(
             bleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date));
         return CreatePredictionHistory(confirmed, excluded, inferred);
     }
 
     private static PredictionHistory ResolvePredictionHistory(CycleProfile profile) {
-        DateTime[] confirmed = [.. profile.MenstrualEpisodes
+        DateOnly[] confirmed = [.. profile.MenstrualEpisodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && !episode.ExcludedFromPredictions)
             .Select(static episode => episode.StartDate)];
-        DateTime[] excluded = [.. profile.MenstrualEpisodes
+        DateOnly[] excluded = [.. profile.MenstrualEpisodes
             .Where(static episode => episode.Status == MenstrualEpisodeStatus.Confirmed && episode.ExcludedFromPredictions)
             .Select(static episode => episode.StartDate)];
-        DateTime[] inferred = BuildInferredEpisodeStarts(
+        DateOnly[] inferred = BuildInferredEpisodeStarts(
             profile.BleedingEntries.Where(static entry => entry.Type == BleedingType.Bleeding).Select(static entry => entry.Date));
         return CreatePredictionHistory(confirmed, excluded, inferred);
     }
 
     private static PredictionHistory CreatePredictionHistory(
-        IEnumerable<DateTime> confirmedStarts,
-        IEnumerable<DateTime> excludedStarts,
-        IEnumerable<DateTime> inferredStarts) {
-        DateTime[] excluded = [.. excludedStarts.Select(NormalizeDate).Distinct()];
-        DateTime[] eligibleInferred = [.. inferredStarts.Where(inferred =>
-            !excluded.Any(excludedStart => Math.Abs((excludedStart - NormalizeDate(inferred)).Days) <= 2))];
+        IEnumerable<DateOnly> confirmedStarts,
+        IEnumerable<DateOnly> excludedStarts,
+        IEnumerable<DateOnly> inferredStarts) {
+        DateOnly[] excluded = [.. excludedStarts.Distinct()];
+        DateOnly[] eligibleInferred = [.. inferredStarts.Where(inferred =>
+            !excluded.Any(excludedStart => Math.Abs(excludedStart.DayNumber - inferred.DayNumber) <= 2))];
         return new PredictionHistory(
             MergeEpisodeStarts(confirmedStarts, eligibleInferred),
             excluded.Length);
     }
 
-    private static DateTime[] MergeEpisodeStarts(IEnumerable<DateTime> confirmedStarts, IEnumerable<DateTime> inferredStarts) {
-        DateTime[] confirmed = [.. confirmedStarts.Select(NormalizeDate).Distinct()];
+    private static DateOnly[] MergeEpisodeStarts(IEnumerable<DateOnly> confirmedStarts, IEnumerable<DateOnly> inferredStarts) {
+        DateOnly[] confirmed = [.. confirmedStarts.Distinct()];
         return [.. confirmed
-            .Concat(inferredStarts.Select(NormalizeDate).Where(inferred => !confirmed.Any(confirmedStart => Math.Abs((confirmedStart - inferred).Days) <= 2)))
+            .Concat(inferredStarts.Where(inferred => !confirmed.Any(confirmedStart => Math.Abs(confirmedStart.DayNumber - inferred.DayNumber) <= 2)))
             .Distinct()
             .Order()];
     }
@@ -192,6 +196,32 @@ public static class CyclePredictionService {
         int upperIndex = (int)Math.Ceiling(index);
         double value = sortedValues[lowerIndex] + ((index - lowerIndex) * (sortedValues[upperIndex] - sortedValues[lowerIndex]));
         return roundUp ? (int)Math.Ceiling(value) : (int)Math.Floor(value);
+    }
+
+    private static CalibrationMetrics CalculateCalibration(IReadOnlyList<int> cycleLengths) {
+        if (cycleLengths.Count <= MinimumCompletedCycles) {
+            return new CalibrationMetrics(
+                SampleCount: 0,
+                CoveragePercent: null,
+                MeanAbsoluteErrorDays: null);
+        }
+
+        var errors = new List<int>();
+        int covered = 0;
+        for (int targetIndex = MinimumCompletedCycles; targetIndex < cycleLengths.Count; targetIndex++) {
+            int[] prior = [.. cycleLengths.Take(targetIndex).TakeLast(VariabilityHistoryLimit).Order()];
+            int predicted = Median(prior);
+            int actual = cycleLengths[targetIndex];
+            errors.Add(Math.Abs(actual - predicted));
+            if (actual >= prior[0] - SparseHistoryBufferDays && actual <= prior[^1] + SparseHistoryBufferDays) {
+                covered++;
+            }
+        }
+
+        return new CalibrationMetrics(
+            errors.Count,
+            Math.Round(covered * 100d / errors.Count, 1, MidpointRounding.AwayFromZero),
+            Math.Round(errors.Average(), 1, MidpointRounding.AwayFromZero));
     }
 
     private static CyclePredictionsModel Limited(
@@ -219,18 +249,19 @@ public static class CyclePredictionService {
             [reasonCode],
             AlgorithmVersion);
 
-    private sealed record PredictionHistory(DateTime[] UsedEpisodeStarts, int ExcludedEpisodeCount);
+    private sealed record PredictionHistory(DateOnly[] UsedEpisodeStarts, int ExcludedEpisodeCount);
 
-    private static DateTime NormalizeDate(DateTime date) =>
-        DateTime.SpecifyKind(
-            (date.Kind == DateTimeKind.Utc ? date : date.ToUniversalTime()).Date,
-            DateTimeKind.Utc);
+    private sealed record CalibrationMetrics(
+        int SampleCount,
+        double? CoveragePercent,
+        double? MeanAbsoluteErrorDays);
 
-    private static bool HasLimitedPredictionMode(CycleTrackingMode mode) =>
-        mode is CycleTrackingMode.Pregnancy
-            or CycleTrackingMode.PostpartumLactation
-            or CycleTrackingMode.Perimenopause
-            or CycleTrackingMode.NoPeriod;
+    private static bool HasLimitedPredictionState(CycleReproductiveState state) =>
+        state is CycleReproductiveState.Pregnancy
+            or CycleReproductiveState.Postpartum
+            or CycleReproductiveState.Lactation
+            or CycleReproductiveState.Perimenopause
+            or CycleReproductiveState.NoPeriod;
 
     private static bool HasActivePredictionLimitingFactor(IEnumerable<CycleFactor> factors) =>
         factors.Any(factor =>

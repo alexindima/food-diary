@@ -9,14 +9,14 @@ namespace FoodDiary.Domain.Tests.Domain;
 public class CycleProfileInvariantTests {
     [Fact]
     public void Create_WithEmptyUserId_Throws() {
-        Assert.Throws<ArgumentException>(() => CycleProfile.Create(UserId.Empty, DateTime.UtcNow));
+        Assert.Throws<ArgumentException>(() => CycleProfile.Create(UserId.Empty, DateOnly.FromDateTime(DateTime.UtcNow)));
     }
 
     [Fact]
-    public void Create_WithUnspecifiedDate_TreatsItAsUtcDateOnly() {
-        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified));
+    public void Create_WithCalendarDate_PreservesDate() {
+        var profile = CycleProfile.Create(UserId.New(), new DateOnly(2026, 3, 27));
 
-        Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), profile.TrackingStartDate);
+        Assert.Equal(new DateOnly(2026, 3, 27), profile.TrackingStartDate);
     }
 
     [Theory]
@@ -30,7 +30,7 @@ public class CycleProfileInvariantTests {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             CycleProfile.Create(
                 UserId.New(),
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 averageCycleLength: averageCycleLength,
                 averagePeriodLength: averagePeriodLength,
                 lutealLength: lutealLength));
@@ -38,7 +38,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpdateSettings_WithClearNotes_ClearsNotes() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow, notes: "notes");
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow), notes: "notes");
 
         profile.UpdateSettings(new CycleProfileSettings(
             CycleTrackingMode.PeriodTracking,
@@ -58,7 +58,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpdateSettings_WithClearNotesAndValue_Throws() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow, notes: "notes");
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow), notes: "notes");
 
         Assert.Throws<ArgumentException>(() =>
             profile.UpdateSettings(new CycleProfileSettings(
@@ -76,7 +76,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpdateSettings_WithNotes_UpdatesNotes() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow, notes: "old");
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow), notes: "old");
 
         profile.UpdateSettings(new CycleProfileSettings(
             CycleTrackingMode.TryingToConceive,
@@ -96,7 +96,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpdateSettings_WithUnknownMode_Throws() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             profile.UpdateSettings(new CycleProfileSettings(
@@ -114,8 +114,8 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpsertBleedingEntry_WithRepeatedDateAndType_ReplacesExistingEntry() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
-        DateTime date = new(2026, 4, 2, 18, 30, 0, DateTimeKind.Unspecified);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
+        DateOnly date = new(2026, 4, 2);
 
         BleedingEntry first = profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: 2, notes: " note ");
         BleedingEntry second = profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 4, notes: "updated");
@@ -126,13 +126,13 @@ public class CycleProfileInvariantTests {
             () => Assert.Equal(CycleFlowLevel.Heavy, second.Flow),
             () => Assert.Equal(4, second.PainImpact),
             () => Assert.Equal("updated", second.Notes),
-            () => Assert.Equal(new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc), second.Date));
+            () => Assert.Equal(new DateOnly(2026, 4, 2), second.Date));
     }
 
     [Fact]
     public void UpsertBleedingEntry_WithExistingEntry_RecalculatesConfidenceAndSetsModified() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
-        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
+        DateOnly date = new(2026, 4, 2);
         BleedingEntry first = profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null);
 
         BleedingEntry updated = profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: "updated");
@@ -158,7 +158,7 @@ public class CycleProfileInvariantTests {
     [Fact]
     public void BleedingEntry_Create_WithEmptyCycleProfileId_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            BleedingEntry.Create(CycleProfileId.Empty, DateTime.UtcNow, BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null));
+            BleedingEntry.Create(CycleProfileId.Empty, DateOnly.FromDateTime(DateTime.UtcNow), BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null));
     }
 
     [Theory]
@@ -166,14 +166,14 @@ public class CycleProfileInvariantTests {
     [InlineData(1, 999)]
     public void BleedingEntry_Create_WithUnknownEnumValue_Throws(int type, int flow) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            BleedingEntry.Create(CycleProfileId.New(), DateTime.UtcNow, (BleedingType)type, (CycleFlowLevel)flow, painImpact: null, notes: null));
+            BleedingEntry.Create(CycleProfileId.New(), DateOnly.FromDateTime(DateTime.UtcNow), (BleedingType)type, (CycleFlowLevel)flow, painImpact: null, notes: null));
     }
 
     [Fact]
     public void BleedingEntry_Update_WithClearNotes_ClearsNotes() {
         var entry = BleedingEntry.Create(
             CycleProfileId.New(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             BleedingType.Bleeding,
             CycleFlowLevel.Light,
             painImpact: null,
@@ -192,7 +192,7 @@ public class CycleProfileInvariantTests {
     public void BleedingEntry_Update_WithUnknownFlow_Throws() {
         var entry = BleedingEntry.Create(
             CycleProfileId.New(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             BleedingType.Bleeding,
             CycleFlowLevel.Light,
             painImpact: null,
@@ -204,8 +204,8 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpsertBleedingEntry_WithEnoughRegularHistory_RaisesConfidence() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow, isRegular: true);
-        DateTime start = new(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow), isRegular: true);
+        DateOnly start = new(2026, 1, 1);
 
         for (int i = 0; i < 9; i++) {
             profile.UpsertBleedingEntry(start.AddDays(i * 28), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
@@ -216,46 +216,46 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void GetLastBleedingStart_WhenBleedingAndSpottingExist_ReturnsLatestBleedingDate() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
-        DateTime firstBleeding = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
-        DateTime spotting = new(2026, 4, 5, 0, 0, 0, DateTimeKind.Utc);
-        DateTime secondBleeding = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
+        DateOnly firstBleeding = new(2026, 4, 1);
+        DateOnly spotting = new(2026, 4, 5);
+        DateOnly secondBleeding = new(2026, 4, 3);
         profile.UpsertBleedingEntry(firstBleeding, BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null);
         profile.UpsertBleedingEntry(spotting, BleedingType.Spotting, CycleFlowLevel.Light, painImpact: null, notes: null);
         profile.UpsertBleedingEntry(secondBleeding, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
 
-        DateTime? lastBleedingStart = profile.GetLastBleedingStart();
+        DateOnly? lastBleedingStart = profile.GetLastBleedingStart();
 
         Assert.Equal(secondBleeding, lastBleedingStart);
     }
 
     [Fact]
     public void GetLastBleedingStart_WhenOnlySpottingExists_ReturnsNull() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
         profile.UpsertBleedingEntry(
-            new DateTime(2026, 4, 5, 0, 0, 0, DateTimeKind.Utc),
+            new DateOnly(2026, 4, 5),
             BleedingType.Spotting,
             CycleFlowLevel.Light,
             painImpact: null,
             notes: null);
 
-        DateTime? lastBleedingStart = profile.GetLastBleedingStart();
+        DateOnly? lastBleedingStart = profile.GetLastBleedingStart();
 
         Assert.Null(lastBleedingStart);
     }
 
     [Fact]
     public void UpsertSymptomEntry_NormalizesTagsAndReplacesSameCategory() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
 
         CycleSymptomEntry entry = profile.UpsertSymptomEntry(
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             CycleSymptomCategory.Bloating,
             6,
             ["  bloating ", "BLOATING", "cramp"],
             " note ");
         CycleSymptomEntry updated = profile.UpsertSymptomEntry(
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             CycleSymptomCategory.Bloating,
             intensity: 4,
             tags: ["mild"],
@@ -285,20 +285,20 @@ public class CycleProfileInvariantTests {
     [Fact]
     public void CycleSymptomEntry_Create_WithEmptyCycleProfileId_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            CycleSymptomEntry.Create(CycleProfileId.Empty, DateTime.UtcNow, CycleSymptomCategory.Bloating, 5, [], note: null));
+            CycleSymptomEntry.Create(CycleProfileId.Empty, DateOnly.FromDateTime(DateTime.UtcNow), CycleSymptomCategory.Bloating, 5, [], note: null));
     }
 
     [Fact]
     public void CycleSymptomEntry_Create_WithUnknownCategory_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            CycleSymptomEntry.Create(CycleProfileId.New(), DateTime.UtcNow, (CycleSymptomCategory)999, 5, [], note: null));
+            CycleSymptomEntry.Create(CycleProfileId.New(), DateOnly.FromDateTime(DateTime.UtcNow), (CycleSymptomCategory)999, 5, [], note: null));
     }
 
     [Fact]
     public void CycleSymptomEntry_Update_WithNote_UpdatesNote() {
         var entry = CycleSymptomEntry.Create(
             CycleProfileId.New(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             CycleSymptomCategory.Bloating,
             5,
             [],
@@ -312,17 +312,17 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpsertFactor_WithActiveHormonalContraception_LowersConfidence() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow, isRegular: true);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow), isRegular: true);
 
-        profile.UpsertFactor(CycleFactorType.HormonalContraception, DateTime.UtcNow, endDate: null, notes: null);
+        profile.UpsertFactor(CycleFactorType.HormonalContraception, DateOnly.FromDateTime(DateTime.UtcNow), endDate: null, notes: null);
 
         Assert.Equal(CycleConfidence.Low, profile.Confidence);
     }
 
     [Fact]
     public void UpsertFactor_WithExistingFactor_UpdatesAndReturnsExisting() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow, isRegular: true);
-        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow), isRegular: true);
+        DateOnly startDate = new(2026, 4, 1);
         CycleFactor first = profile.UpsertFactor(CycleFactorType.NonHormonalContraception, startDate, endDate: null, notes: "old");
 
         CycleFactor updated = profile.UpsertFactor(CycleFactorType.NonHormonalContraception, startDate, endDate: startDate.AddDays(2), notes: "updated");
@@ -349,7 +349,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void CycleFactor_Create_WithEndDateBeforeStartDate_Throws() {
-        DateTime startDate = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly startDate = new(2026, 4, 2);
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             CycleFactor.Create(CycleProfileId.New(), CycleFactorType.NonHormonalContraception, startDate, startDate.AddDays(-1), notes: null));
@@ -358,13 +358,13 @@ public class CycleProfileInvariantTests {
     [Fact]
     public void CycleFactor_Create_WithEmptyCycleProfileId_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            CycleFactor.Create(CycleProfileId.Empty, CycleFactorType.NonHormonalContraception, DateTime.UtcNow, endDate: null, notes: null));
+            CycleFactor.Create(CycleProfileId.Empty, CycleFactorType.NonHormonalContraception, DateOnly.FromDateTime(DateTime.UtcNow), endDate: null, notes: null));
     }
 
     [Fact]
     public void CycleFactor_Create_WithUnknownType_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            CycleFactor.Create(CycleProfileId.New(), (CycleFactorType)999, DateTime.UtcNow, endDate: null, notes: null));
+            CycleFactor.Create(CycleProfileId.New(), (CycleFactorType)999, DateOnly.FromDateTime(DateTime.UtcNow), endDate: null, notes: null));
     }
 
     [Fact]
@@ -372,7 +372,7 @@ public class CycleProfileInvariantTests {
         var factor = CycleFactor.Create(
             CycleProfileId.New(),
             CycleFactorType.NonHormonalContraception,
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             endDate: null,
             notes: "notes");
 
@@ -384,7 +384,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void CycleFactor_Update_WithEndDateBeforeStartDate_Throws() {
-        DateTime startDate = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly startDate = new(2026, 4, 2);
         var factor = CycleFactor.Create(
             CycleProfileId.New(),
             CycleFactorType.NonHormonalContraception,
@@ -398,11 +398,11 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpsertFertilitySignal_ValidatesTemperature() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             profile.UpsertFertilitySignal(
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 basalBodyTemperatureCelsius: 50,
                 ovulationTestResult: OvulationTestResult.Positive,
                 cervicalFluid: null,
@@ -412,8 +412,8 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpsertFertilitySignal_WithExistingSignal_UpdatesAndReturnsExisting() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
-        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
+        DateOnly date = new(2026, 4, 3);
         FertilitySignal first = profile.UpsertFertilitySignal(
             date,
             basalBodyTemperatureCelsius: 36.4,
@@ -457,7 +457,7 @@ public class CycleProfileInvariantTests {
     public void FertilitySignal_Create_WithNullTemperature_AllowsMissingTemperature() {
         var signal = FertilitySignal.Create(
             CycleProfileId.New(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             basalBodyTemperatureCelsius: null,
             ovulationTestResult: null,
             cervicalFluid: null,
@@ -472,7 +472,7 @@ public class CycleProfileInvariantTests {
         Assert.Throws<ArgumentException>(() =>
             FertilitySignal.Create(
                 CycleProfileId.Empty,
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 basalBodyTemperatureCelsius: null,
                 ovulationTestResult: null,
                 cervicalFluid: null,
@@ -485,7 +485,7 @@ public class CycleProfileInvariantTests {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             FertilitySignal.Create(
                 CycleProfileId.New(),
-                DateTime.UtcNow,
+                DateOnly.FromDateTime(DateTime.UtcNow),
                 basalBodyTemperatureCelsius: null,
                 ovulationTestResult: (OvulationTestResult)999,
                 cervicalFluid: null,
@@ -497,7 +497,7 @@ public class CycleProfileInvariantTests {
     public void FertilitySignal_Update_WithClearNotes_ClearsNotes() {
         var signal = FertilitySignal.Create(
             CycleProfileId.New(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             basalBodyTemperatureCelsius: null,
             ovulationTestResult: null,
             cervicalFluid: null,
@@ -520,7 +520,7 @@ public class CycleProfileInvariantTests {
     public void FertilitySignal_Update_WithUnknownOvulationTestResult_Throws() {
         var signal = FertilitySignal.Create(
             CycleProfileId.New(),
-            DateTime.UtcNow,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             basalBodyTemperatureCelsius: null,
             ovulationTestResult: null,
             cervicalFluid: null,
@@ -539,9 +539,9 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void ClearDay_WhenNoEntriesExist_ReturnsFalseAndDoesNotSetModified() {
-        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
+        var profile = CycleProfile.Create(UserId.New(), DateOnly.FromDateTime(DateTime.UtcNow));
 
-        bool removed = profile.ClearDay(DateTime.UtcNow);
+        bool removed = profile.ClearDay(DateOnly.FromDateTime(DateTime.UtcNow));
 
         Assert.False(removed);
         Assert.Null(profile.ModifiedOnUtc);
@@ -549,7 +549,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void ClearBleedingEntries_RemovesOnlyBleedingDataForDate() {
-        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly date = new(2026, 4, 2);
         var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
@@ -571,7 +571,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void ClearSymptomEntries_RemovesOnlySelectedCategoriesForDate() {
-        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly date = new(2026, 4, 2);
         var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
@@ -587,7 +587,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void ClearFertilitySignal_RemovesOnlyFertilityDataForDate() {
-        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly date = new(2026, 4, 2);
         var profile = CycleProfile.Create(UserId.New(), date.AddDays(-1));
         profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: null);
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Pain, 4, tags: [], note: null);
@@ -603,7 +603,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpsertBleedingEntry_GroupsOneUnknownDayIntoOneInferredEpisode() {
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(UserId.New(), start);
 
         profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
@@ -617,7 +617,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void ConfirmPeriodStart_ReplacesOverlappingInferenceAndIsIdempotent() {
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(UserId.New(), start);
         profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: null);
         profile.UpsertBleedingEntry(start.AddDays(1), BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null);
@@ -632,7 +632,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpdateMenstrualEpisode_ChangesConfirmedRangeAndPreservesDailyObservations() {
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(UserId.New(), start);
         profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: null, notes: "kept");
         MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
@@ -648,7 +648,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpdateMenstrualEpisode_WhenConfirmedRangesOverlap_Throws() {
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(UserId.New(), start);
         MenstrualEpisode first = profile.ConfirmPeriodStart(start);
         profile.UpdateMenstrualEpisode(first.Id, start, start.AddDays(4));
@@ -660,7 +660,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void UpdateMenstrualEpisode_CanExcludeAndRestoreConfirmedEpisodeFromPredictions() {
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(UserId.New(), start);
         MenstrualEpisode episode = profile.ConfirmPeriodStart(start);
 
@@ -673,7 +673,7 @@ public class CycleProfileInvariantTests {
 
     [Fact]
     public void RemoveMenstrualEpisode_PreservesDailyFactsAndRebuildsInferredEpisode() {
-        DateTime start = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateOnly start = new(2026, 4, 1);
         var profile = CycleProfile.Create(UserId.New(), start);
         profile.UpsertBleedingEntry(start, BleedingType.Bleeding, CycleFlowLevel.Medium, 2, "kept");
         MenstrualEpisode confirmed = profile.ConfirmPeriodStart(start);

@@ -7,7 +7,7 @@ public sealed record CycleModel(
     Guid UserId,
     CycleTrackingMode Mode,
     CycleConfidence Confidence,
-    DateTime TrackingStartDate,
+    DateOnly TrackingStartDate,
     int AverageCycleLength,
     int AveragePeriodLength,
     int LutealLength,
@@ -21,4 +21,9 @@ public sealed record CycleModel(
     IReadOnlyCollection<CycleFactorModel> Factors,
     IReadOnlyCollection<FertilitySignalModel> FertilitySignals,
     CyclePredictionsModel? Predictions,
-    IReadOnlyCollection<MenstrualEpisodeModel>? MenstrualEpisodes = null);
+    IReadOnlyCollection<MenstrualEpisodeModel>? MenstrualEpisodes = null,
+    CycleTrackingGoal Goal = CycleTrackingGoal.PeriodAwareness,
+    CycleReproductiveState ReproductiveState = CycleReproductiveState.Cycling,
+    bool HideFromDashboard = false,
+    IReadOnlyCollection<CycleConsentModel>? Consents = null,
+    IReadOnlyCollection<CyclePredictionRevisionModel>? PredictionRevisions = null);

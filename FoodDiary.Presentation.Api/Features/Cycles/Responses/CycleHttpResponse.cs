@@ -19,4 +19,9 @@ public sealed record CycleHttpResponse(
     IReadOnlyCollection<CycleFactorHttpResponse> Factors,
     IReadOnlyCollection<FertilitySignalHttpResponse> FertilitySignals,
     IReadOnlyCollection<MenstrualEpisodeHttpResponse> MenstrualEpisodes,
-    CyclePredictionsHttpResponse? Predictions);
+    CyclePredictionsHttpResponse? Predictions,
+    int Goal = 0,
+    int ReproductiveState = 0,
+    bool HideFromDashboard = false,
+    IReadOnlyCollection<CycleConsentHttpResponse>? Consents = null,
+    IReadOnlyCollection<CyclePredictionRevisionHttpResponse>? PredictionRevisions = null);

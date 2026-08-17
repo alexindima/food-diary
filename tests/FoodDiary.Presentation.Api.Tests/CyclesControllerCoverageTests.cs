@@ -58,8 +58,8 @@ public sealed class CyclesControllerCoverageTests {
         Assert.IsType<CycleNutritionSummaryHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         GetCycleNutritionSummaryQuery query = Assert.IsType<GetCycleNutritionSummaryQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
-        Assert.Equal(dateFrom, query.DateFrom);
-        Assert.Equal(dateTo, query.DateTo);
+        Assert.Equal(DateOnly.FromDateTime(dateFrom), query.DateFrom);
+        Assert.Equal(DateOnly.FromDateTime(dateTo), query.DateTo);
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public sealed class CyclesControllerCoverageTests {
         Assert.IsType<CycleHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         CreateCycleCommand command = Assert.IsType<CreateCycleCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
-        Assert.Equal(trackingStartDate, command.TrackingStartDate);
+        Assert.Equal(DateOnly.FromDateTime(trackingStartDate), command.TrackingStartDate);
         Assert.Equal((int)CycleTrackingMode.TryingToConceive, command.Mode);
         Assert.Equal("notes", command.Notes);
     }
@@ -111,7 +111,7 @@ public sealed class CyclesControllerCoverageTests {
         DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
         IRequest<Result<CycleLogDayModel>>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success(CreateLogDay(cycleProfileId, date)), request => sentRequest = request);
-        CyclesController controller = CreateController(new CyclesController(sender));
+        CycleLogsController controller = CreateController(new CycleLogsController(sender));
 
         IActionResult result = await controller.UpsertDay(cycleProfileId, userId, CreateUpsertDayRequest(date));
 
@@ -119,7 +119,7 @@ public sealed class CyclesControllerCoverageTests {
         UpsertCycleDayCommand command = Assert.IsType<UpsertCycleDayCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
-        Assert.Equal(date, command.Date);
+        Assert.Equal(DateOnly.FromDateTime(date), command.Date);
         Assert.NotNull(command.Bleeding);
         Assert.Single(command.Symptoms);
         Assert.NotNull(command.FertilitySignal);
@@ -132,7 +132,7 @@ public sealed class CyclesControllerCoverageTests {
         DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
         IRequest<Result>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
-        CyclesController controller = CreateController(new CyclesController(sender));
+        CycleLogsController controller = CreateController(new CycleLogsController(sender));
 
         IActionResult result = await controller.ClearDay(cycleProfileId, userId, date);
 
@@ -140,7 +140,7 @@ public sealed class CyclesControllerCoverageTests {
         ClearCycleDayCommand command = Assert.IsType<ClearCycleDayCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
-        Assert.Equal(date, command.Date);
+        Assert.Equal(DateOnly.FromDateTime(date), command.Date);
     }
 
     [Fact]
@@ -166,7 +166,7 @@ public sealed class CyclesControllerCoverageTests {
         DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         IRequest<Result<CycleModel>>? sentRequest = null;
         ISender sender = SubstituteSender.Create(Result.Success(CreateCycle(cycleProfileId, userId)), request => sentRequest = request);
-        CyclesController controller = CreateController(new CyclesController(sender));
+        CycleLogsController controller = CreateController(new CycleLogsController(sender));
         var request = new UpsertCycleFactorHttpRequest(
             (int)CycleFactorType.HormonalContraception,
             startDate,
@@ -181,7 +181,7 @@ public sealed class CyclesControllerCoverageTests {
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
         Assert.Equal((int)CycleFactorType.HormonalContraception, command.Type);
-        Assert.Equal(startDate, command.StartDate);
+        Assert.Equal(DateOnly.FromDateTime(startDate), command.StartDate);
         Assert.Equal("notes", command.Notes);
     }
 
@@ -195,8 +195,8 @@ public sealed class CyclesControllerCoverageTests {
 
     private static CycleNutritionSummaryModel CreateNutritionSummary(DateTime dateFrom, DateTime dateTo) =>
         new(
-            dateFrom,
-            dateTo,
+            DateOnly.FromDateTime(dateFrom),
+            DateOnly.FromDateTime(dateTo),
             LoggedCycleDays: 4,
             DaysWithMeals: 3,
             BleedingDays: 2,
@@ -217,12 +217,12 @@ public sealed class CyclesControllerCoverageTests {
     private static CycleLogDayModel CreateLogDay(Guid cycleProfileId, DateTime date) =>
         new(
             cycleProfileId,
-            date,
+            DateOnly.FromDateTime(date),
             [
                 new BleedingEntryModel(
                     Guid.NewGuid(),
                     cycleProfileId,
-                    date,
+                    DateOnly.FromDateTime(date),
                     BleedingType.Bleeding,
                     CycleFlowLevel.Medium,
                     PainImpact: 2,
@@ -232,7 +232,7 @@ public sealed class CyclesControllerCoverageTests {
                 new CycleSymptomEntryModel(
                     Guid.NewGuid(),
                     cycleProfileId,
-                    date,
+                    DateOnly.FromDateTime(date),
                     CycleSymptomCategory.Pain,
                     Intensity: 4,
                     Tags: ["cramp"],
@@ -241,7 +241,7 @@ public sealed class CyclesControllerCoverageTests {
             new FertilitySignalModel(
                 Guid.NewGuid(),
                 cycleProfileId,
-                date,
+                DateOnly.FromDateTime(date),
                 BasalBodyTemperatureCelsius: 36.7,
                 OvulationTestResult: OvulationTestResult.Positive,
                 CervicalFluid: "egg-white",
@@ -254,7 +254,7 @@ public sealed class CyclesControllerCoverageTests {
             userId,
             CycleTrackingMode.PeriodTracking,
             CycleConfidence.Learning,
-            DateTime.UtcNow.Date,
+            DateOnly.FromDateTime(DateTime.UtcNow),
             AverageCycleLength: 28,
             AveragePeriodLength: 5,
             LutealLength: 14,

@@ -2,9 +2,18 @@
     @if (isLoading()) {
         <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</p>
     } @else if (summary(); as item) {
-        @if (!item.hasEnoughData) {
+        @if (item.consentRequired) {
+            <p class="cycle-tracking__nutrition-note fd-ui-body-sm">{{ 'CYCLE_TRACKING.NUTRITION_CONSENT_REQUIRED' | translate }}</p>
+        } @else if (!item.hasEnoughData) {
             <p class="cycle-tracking__nutrition-note fd-ui-body-sm">{{ 'CYCLE_TRACKING.NUTRITION_SUMMARY_LIMITED' | translate }}</p>
         }
+
+        <p class="cycle-tracking__nutrition-note fd-ui-body-sm">
+            {{
+                'CYCLE_TRACKING.NUTRITION_CYCLE_COVERAGE'
+                    | translate: { completed: item.completedCyclesAnalyzed, comparable: item.comparableCycles }
+            }}
+        </p>
 
         <div class="cycle-tracking__nutrition-summary fd-grid fd-gap-card-header">
             <div class="cycle-tracking__nutrition-metric">
@@ -40,6 +49,7 @@
                 <strong class="fd-ui-title-sm">{{ item.painImpactLabel }}</strong>
             </div>
         </div>
+        <p class="cycle-tracking__nutrition-note fd-ui-caption">{{ 'CYCLE_TRACKING.NUTRITION_NON_CAUSALITY' | translate }}</p>
     } @else {
         <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NUTRITION_SUMMARY_EMPTY' | translate }}</p>
     }

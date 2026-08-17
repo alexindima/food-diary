@@ -14,11 +14,15 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     private readonly List<CycleSymptomEntry> _symptomEntries = [];
     private readonly List<FertilitySignal> _fertilitySignals = [];
     private readonly List<MenstrualEpisode> _menstrualEpisodes = [];
+    private readonly List<CycleConsent> _consents = [];
+    private readonly List<CyclePredictionRevision> _predictionRevisions = [];
 
     public UserId UserId { get; private set; }
     public CycleTrackingMode Mode { get; private set; }
+    public CycleTrackingGoal Goal { get; private set; }
+    public CycleReproductiveState ReproductiveState { get; private set; }
     public CycleConfidence Confidence { get; private set; }
-    public DateTime TrackingStartDate { get; private set; }
+    public DateOnly TrackingStartDate { get; private set; }
     public int AverageCycleLength { get; private set; }
     public int AveragePeriodLength { get; private set; }
     public int LutealLength { get; private set; }
@@ -26,6 +30,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     public bool IsOnboardingComplete { get; private set; }
     public bool ShowFertilityEstimates { get; private set; }
     public bool DiscreetNotifications { get; private set; }
+    public bool HideFromDashboard { get; private set; }
     public string? Notes { get; private set; }
 
     public IReadOnlyCollection<CycleFactor> Factors => _factors.AsReadOnly();
@@ -33,6 +38,8 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     public IReadOnlyCollection<CycleSymptomEntry> SymptomEntries => _symptomEntries.AsReadOnly();
     public IReadOnlyCollection<FertilitySignal> FertilitySignals => _fertilitySignals.AsReadOnly();
     public IReadOnlyCollection<MenstrualEpisode> MenstrualEpisodes => _menstrualEpisodes.AsReadOnly();
+    public IReadOnlyCollection<CycleConsent> Consents => _consents.AsReadOnly();
+    public IReadOnlyCollection<CyclePredictionRevision> PredictionRevisions => _predictionRevisions.AsReadOnly();
 
     private CycleProfile() {
     }
@@ -42,7 +49,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
 
     public static CycleProfile Create(
         UserId userId,
-        DateTime trackingStartDate,
+        DateOnly trackingStartDate,
         CycleTrackingMode mode = CycleTrackingMode.PeriodTracking,
         int? averageCycleLength = null,
         int? averagePeriodLength = null,
@@ -51,14 +58,22 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         bool isOnboardingComplete = false,
         bool showFertilityEstimates = false,
         bool discreetNotifications = true,
-        string? notes = null) {
+        string? notes = null,
+        CycleTrackingGoal? goal = null,
+        CycleReproductiveState? reproductiveState = null,
+        bool hideFromDashboard = false,
+        DateTime? consentGrantedAtUtc = null) {
         EnsureUserId(userId);
         EnsureDefined(mode, nameof(mode));
 
         var profile = new CycleProfile(CycleProfileId.New()) {
             UserId = userId,
-            TrackingStartDate = NormalizeDate(trackingStartDate),
-            Mode = mode,
+            TrackingStartDate = trackingStartDate,
+            Mode = goal.HasValue || reproductiveState.HasValue
+                ? ModeFromGoalAndState(goal ?? GoalFromLegacyMode(mode), reproductiveState ?? StateFromLegacyMode(mode))
+                : mode,
+            Goal = goal ?? GoalFromLegacyMode(mode),
+            ReproductiveState = reproductiveState ?? StateFromLegacyMode(mode),
             Confidence = CycleConfidence.Learning,
             AverageCycleLength = NormalizeCycleLength(averageCycleLength),
             AveragePeriodLength = NormalizePeriodLength(averagePeriodLength),
@@ -67,8 +82,14 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
             IsOnboardingComplete = isOnboardingComplete,
             ShowFertilityEstimates = showFertilityEstimates,
             DiscreetNotifications = discreetNotifications,
+            HideFromDashboard = hideFromDashboard,
             Notes = NormalizeNotes(notes),
         };
+
+        profile._consents.Add(CycleConsent.Create(
+            profile.Id,
+            CycleConsentPurpose.CycleTracking,
+            consentGrantedAtUtc ?? DomainTime.UtcNow));
 
         profile.SetCreated();
         return profile;
@@ -77,9 +98,19 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     public void UpdateSettings(CycleProfileSettings settings) {
         ArgumentNullException.ThrowIfNull(settings);
         EnsureDefined(settings.Mode, nameof(settings.Mode));
+        if (settings.Goal.HasValue) {
+            EnsureDefined(settings.Goal.Value, nameof(settings.Goal));
+        }
+        if (settings.ReproductiveState.HasValue) {
+            EnsureDefined(settings.ReproductiveState.Value, nameof(settings.ReproductiveState));
+        }
         EnsureClearConflict(settings.ClearNotes, NormalizeNotes(settings.Notes), nameof(settings.ClearNotes), nameof(settings.Notes));
 
-        Mode = settings.Mode;
+        Goal = settings.Goal ?? Goal;
+        ReproductiveState = settings.ReproductiveState ?? ReproductiveState;
+        Mode = settings.Goal.HasValue || settings.ReproductiveState.HasValue
+            ? ModeFromGoalAndState(Goal, ReproductiveState)
+            : settings.Mode;
         AverageCycleLength = NormalizeCycleLength(settings.AverageCycleLength ?? AverageCycleLength);
         AveragePeriodLength = NormalizePeriodLength(settings.AveragePeriodLength ?? AveragePeriodLength);
         LutealLength = NormalizeLutealLength(settings.LutealLength ?? LutealLength);
@@ -87,6 +118,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         IsOnboardingComplete = settings.IsOnboardingComplete ?? IsOnboardingComplete;
         ShowFertilityEstimates = settings.ShowFertilityEstimates ?? ShowFertilityEstimates;
         DiscreetNotifications = settings.DiscreetNotifications ?? DiscreetNotifications;
+        HideFromDashboard = settings.HideFromDashboard ?? HideFromDashboard;
         if (settings.ClearNotes) {
             Notes = null;
         } else if (settings.Notes is not null) {
@@ -97,15 +129,75 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         SetModified();
     }
 
+    public bool HasActiveConsent(CycleConsentPurpose purpose) =>
+        _consents.Any(consent => consent.Purpose == purpose && consent.IsActive);
+
+    public void GrantConsent(CycleConsentPurpose purpose, DateTime grantedAtUtc) {
+        EnsureDefined(purpose, nameof(purpose));
+        CycleConsent? consent = _consents.FirstOrDefault(item => item.Purpose == purpose);
+        if (consent is null) {
+            _consents.Add(CycleConsent.Create(Id, purpose, grantedAtUtc));
+        } else {
+            consent.Grant(grantedAtUtc);
+        }
+
+        SetModified();
+    }
+
+    public void RevokeConsent(CycleConsentPurpose purpose, DateTime revokedAtUtc) {
+        EnsureDefined(purpose, nameof(purpose));
+        CycleConsent? consent = _consents.FirstOrDefault(item => item.Purpose == purpose && item.IsActive);
+        if (consent is null) {
+            return;
+        }
+
+        consent.Revoke(revokedAtUtc);
+        if (purpose == CycleConsentPurpose.FertilitySignals) {
+            _fertilitySignals.Clear();
+            ShowFertilityEstimates = false;
+        }
+
+        SetModified();
+    }
+
+    public void RecordPredictionRevision(
+        DateTime generatedAtUtc,
+        DateOnly? nextPeriodStartFrom,
+        DateOnly? nextPeriodStartTo,
+        string confidence,
+        string dataSufficiency,
+        string patternConsistency,
+        int completedCycleCount,
+        int calibrationSampleCount,
+        double? historicalCoveragePercent,
+        double? meanAbsoluteErrorDays,
+        IReadOnlyCollection<string> reasonCodes,
+        string algorithmVersion) {
+        _predictionRevisions.Add(CyclePredictionRevision.Create(
+            Id,
+            generatedAtUtc,
+            nextPeriodStartFrom,
+            nextPeriodStartTo,
+            confidence,
+            dataSufficiency,
+            patternConsistency,
+            completedCycleCount,
+            calibrationSampleCount,
+            historicalCoveragePercent,
+            meanAbsoluteErrorDays,
+            reasonCodes,
+            algorithmVersion));
+        SetModified();
+    }
+
     public BleedingEntry UpsertBleedingEntry(
-        DateTime date,
+        DateOnly date,
         BleedingType type,
         CycleFlowLevel flow,
         int? painImpact,
         string? notes,
         bool clearNotes = false) {
-        DateTime normalizedDate = NormalizeDate(date);
-        BleedingEntry? existing = _bleedingEntries.FirstOrDefault(entry => entry.Date == normalizedDate && entry.Type == type);
+        BleedingEntry? existing = _bleedingEntries.FirstOrDefault(entry => entry.Date == date && entry.Type == type);
         if (existing is not null) {
             existing.Update(flow, painImpact, notes, clearNotes);
             Confidence = CalculateConfidence();
@@ -113,7 +205,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
             return existing;
         }
 
-        var entry = BleedingEntry.Create(Id, normalizedDate, type, flow, painImpact, notes);
+        var entry = BleedingEntry.Create(Id, date, type, flow, painImpact, notes);
         _bleedingEntries.Add(entry);
         ReconcileMenstrualEpisodes();
         Confidence = CalculateConfidence();
@@ -122,29 +214,27 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     }
 
     public CycleSymptomEntry UpsertSymptomEntry(
-        DateTime date,
+        DateOnly date,
         CycleSymptomCategory category,
         int intensity,
         IReadOnlyCollection<string> tags,
         string? note,
         bool clearNote = false) {
-        DateTime normalizedDate = NormalizeDate(date);
-        CycleSymptomEntry? existing = _symptomEntries.FirstOrDefault(entry => entry.Date == normalizedDate && entry.Category == category);
+        CycleSymptomEntry? existing = _symptomEntries.FirstOrDefault(entry => entry.Date == date && entry.Category == category);
         if (existing is not null) {
             existing.Update(intensity, tags, note, clearNote);
             SetModified();
             return existing;
         }
 
-        var entry = CycleSymptomEntry.Create(Id, normalizedDate, category, intensity, tags, note);
+        var entry = CycleSymptomEntry.Create(Id, date, category, intensity, tags, note);
         _symptomEntries.Add(entry);
         SetModified();
         return entry;
     }
 
-    public CycleFactor UpsertFactor(CycleFactorType type, DateTime startDate, DateTime? endDate, string? notes, bool clearNotes = false) {
-        DateTime normalizedStart = NormalizeDate(startDate);
-        CycleFactor? existing = _factors.FirstOrDefault(factor => factor.Type == type && factor.StartDate == normalizedStart);
+    public CycleFactor UpsertFactor(CycleFactorType type, DateOnly startDate, DateOnly? endDate, string? notes, bool clearNotes = false) {
+        CycleFactor? existing = _factors.FirstOrDefault(factor => factor.Type == type && factor.StartDate == startDate);
         if (existing is not null) {
             existing.Update(endDate, notes, clearNotes);
             Confidence = CalculateConfidence();
@@ -152,7 +242,7 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
             return existing;
         }
 
-        var factor = CycleFactor.Create(Id, type, normalizedStart, endDate, notes);
+        var factor = CycleFactor.Create(Id, type, startDate, endDate, notes);
         _factors.Add(factor);
         Confidence = CalculateConfidence();
         SetModified();
@@ -160,15 +250,18 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     }
 
     public FertilitySignal UpsertFertilitySignal(
-        DateTime date,
+        DateOnly date,
         double? basalBodyTemperatureCelsius,
         OvulationTestResult? ovulationTestResult,
         string? cervicalFluid,
         bool? hadSex,
         string? notes,
         bool clearNotes = false) {
-        DateTime normalizedDate = NormalizeDate(date);
-        FertilitySignal? existing = _fertilitySignals.FirstOrDefault(signal => signal.Date == normalizedDate);
+        if (!HasActiveConsent(CycleConsentPurpose.FertilitySignals)) {
+            throw new InvalidOperationException("Active fertility consent is required.");
+        }
+
+        FertilitySignal? existing = _fertilitySignals.FirstOrDefault(signal => signal.Date == date);
         if (existing is not null) {
             existing.Update(basalBodyTemperatureCelsius, ovulationTestResult, cervicalFluid, hadSex, notes, clearNotes);
             Confidence = CalculateConfidence();
@@ -176,16 +269,15 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
             return existing;
         }
 
-        var signal = FertilitySignal.Create(Id, normalizedDate, basalBodyTemperatureCelsius, ovulationTestResult, cervicalFluid, hadSex, notes);
+        var signal = FertilitySignal.Create(Id, date, basalBodyTemperatureCelsius, ovulationTestResult, cervicalFluid, hadSex, notes);
         _fertilitySignals.Add(signal);
         Confidence = CalculateConfidence();
         SetModified();
         return signal;
     }
 
-    public bool ClearBleedingEntries(DateTime date) {
-        DateTime normalizedDate = NormalizeDate(date);
-        int removedCount = _bleedingEntries.RemoveAll(entry => entry.Date == normalizedDate);
+    public bool ClearBleedingEntries(DateOnly date) {
+        int removedCount = _bleedingEntries.RemoveAll(entry => entry.Date == date);
         if (removedCount == 0) {
             return false;
         }
@@ -196,10 +288,9 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return true;
     }
 
-    public bool ClearSymptomEntries(DateTime date, IReadOnlyCollection<CycleSymptomCategory> categories) {
-        DateTime normalizedDate = NormalizeDate(date);
+    public bool ClearSymptomEntries(DateOnly date, IReadOnlyCollection<CycleSymptomCategory> categories) {
         HashSet<CycleSymptomCategory> categorySet = [.. categories];
-        int removedCount = _symptomEntries.RemoveAll(entry => entry.Date == normalizedDate && categorySet.Contains(entry.Category));
+        int removedCount = _symptomEntries.RemoveAll(entry => entry.Date == date && categorySet.Contains(entry.Category));
         if (removedCount == 0) {
             return false;
         }
@@ -208,9 +299,8 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return true;
     }
 
-    public bool ClearFertilitySignal(DateTime date) {
-        DateTime normalizedDate = NormalizeDate(date);
-        int removedCount = _fertilitySignals.RemoveAll(signal => signal.Date == normalizedDate);
+    public bool ClearFertilitySignal(DateOnly date) {
+        int removedCount = _fertilitySignals.RemoveAll(signal => signal.Date == date);
         if (removedCount == 0) {
             return false;
         }
@@ -219,12 +309,11 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return true;
     }
 
-    public bool ClearDay(DateTime date) {
-        DateTime normalizedDate = NormalizeDate(date);
+    public bool ClearDay(DateOnly date) {
         int removedCount =
-            _bleedingEntries.RemoveAll(entry => entry.Date == normalizedDate) +
-            _symptomEntries.RemoveAll(entry => entry.Date == normalizedDate) +
-            _fertilitySignals.RemoveAll(signal => signal.Date == normalizedDate);
+            _bleedingEntries.RemoveAll(entry => entry.Date == date) +
+            _symptomEntries.RemoveAll(entry => entry.Date == date) +
+            _fertilitySignals.RemoveAll(signal => signal.Date == date);
 
         if (removedCount == 0) {
             return false;
@@ -236,18 +325,17 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return true;
     }
 
-    public MenstrualEpisode ConfirmPeriodStart(DateTime date) {
-        DateTime normalizedDate = NormalizeDate(date);
+    public MenstrualEpisode ConfirmPeriodStart(DateOnly date) {
         MenstrualEpisode? existing = _menstrualEpisodes.FirstOrDefault(episode =>
-            episode.StartDate == normalizedDate && episode.Status == MenstrualEpisodeStatus.Confirmed);
+            episode.StartDate == date && episode.Status == MenstrualEpisodeStatus.Confirmed);
         if (existing is not null) {
             return existing;
         }
 
         var episode = MenstrualEpisode.Create(
             Id,
-            normalizedDate,
-            FindInferredEpisodeEnd(normalizedDate),
+            date,
+            FindInferredEpisodeEnd(date),
             MenstrualEpisodeStatus.Confirmed);
         _menstrualEpisodes.Add(episode);
         ReconcileMenstrualEpisodes();
@@ -257,8 +345,8 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
 
     public MenstrualEpisode UpdateMenstrualEpisode(
         MenstrualEpisodeId episodeId,
-        DateTime startDate,
-        DateTime? endDate,
+        DateOnly startDate,
+        DateOnly? endDate,
         bool? excludedFromPredictions = null) {
         if (episodeId == MenstrualEpisodeId.Empty) {
             throw new ArgumentException("Menstrual episode id is required.", nameof(episodeId));
@@ -266,19 +354,17 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
 
         MenstrualEpisode episode = _menstrualEpisodes.FirstOrDefault(item => item.Id == episodeId)
             ?? throw new KeyNotFoundException($"Menstrual episode {episodeId.Value} was not found.");
-        DateTime normalizedStart = NormalizeDate(startDate);
-        DateTime? normalizedEnd = endDate.HasValue ? NormalizeDate(endDate.Value) : null;
-        DateTime effectiveEnd = normalizedEnd ?? normalizedStart;
+        DateOnly effectiveEnd = endDate ?? startDate;
         bool overlapsAnotherConfirmedEpisode = _menstrualEpisodes.Any(item =>
             item.Id != episodeId &&
             item.Status == MenstrualEpisodeStatus.Confirmed &&
-            normalizedStart <= (item.EndDate ?? item.StartDate) &&
+            startDate <= (item.EndDate ?? item.StartDate) &&
             effectiveEnd >= item.StartDate);
         if (overlapsAnotherConfirmedEpisode) {
             throw new ArgumentException("Confirmed menstrual episodes cannot overlap.", nameof(startDate));
         }
 
-        episode.UpdateConfirmedRange(normalizedStart, normalizedEnd);
+        episode.UpdateConfirmedRange(startDate, endDate);
         if (excludedFromPredictions.HasValue) {
             episode.SetPredictionExclusion(excludedFromPredictions.Value);
         }
@@ -305,16 +391,16 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
 
     public void ReconcileMenstrualEpisodes() {
         _menstrualEpisodes.RemoveAll(episode => episode.Status == MenstrualEpisodeStatus.Inferred);
-        DateTime[] bleedingDates = [.. _bleedingEntries
+        DateOnly[] bleedingDates = [.. _bleedingEntries
             .Where(entry => entry.Type == BleedingType.Bleeding)
             .Select(entry => entry.Date)
             .Distinct()
             .Order()];
 
         for (int index = 0; index < bleedingDates.Length;) {
-            DateTime start = bleedingDates[index];
-            DateTime end = start;
-            while (++index < bleedingDates.Length && (bleedingDates[index] - end).Days <= 2) {
+            DateOnly start = bleedingDates[index];
+            DateOnly end = start;
+            while (++index < bleedingDates.Length && bleedingDates[index].DayNumber - end.DayNumber <= 2) {
                 end = bleedingDates[index];
             }
 
@@ -328,17 +414,17 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         }
     }
 
-    private DateTime? FindInferredEpisodeEnd(DateTime startDate) =>
+    private DateOnly? FindInferredEpisodeEnd(DateOnly startDate) =>
         _menstrualEpisodes
             .Where(episode => episode.Status == MenstrualEpisodeStatus.Inferred && startDate >= episode.StartDate && startDate <= episode.EndDate)
             .Select(episode => episode.EndDate)
             .FirstOrDefault();
 
-    public DateTime? GetLastBleedingStart() =>
+    public DateOnly? GetLastBleedingStart() =>
         _bleedingEntries
             .Where(entry => entry.Type == BleedingType.Bleeding)
             .OrderByDescending(entry => entry.Date)
-            .Select(entry => (DateTime?)entry.Date)
+            .Select(entry => (DateOnly?)entry.Date)
             .FirstOrDefault();
 
     private CycleConfidence CalculateConfidence() {
@@ -358,9 +444,31 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
     private bool HasActiveHormonalFactor() =>
         _factors.Exists(factor => factor is { Type: CycleFactorType.HormonalContraception, EndDate: null });
 
-    public static DateTime NormalizeDate(DateTime value) {
-        return DateTime.SpecifyKind(value.Kind == DateTimeKind.Unspecified ? value.Date : value.ToUniversalTime().Date, DateTimeKind.Utc);
-    }
+    private static CycleTrackingGoal GoalFromLegacyMode(CycleTrackingMode mode) =>
+        mode == CycleTrackingMode.TryingToConceive
+            ? CycleTrackingGoal.TryingToConceive
+            : CycleTrackingGoal.PeriodAwareness;
+
+    private static CycleReproductiveState StateFromLegacyMode(CycleTrackingMode mode) =>
+        mode switch {
+            CycleTrackingMode.Pregnancy => CycleReproductiveState.Pregnancy,
+            CycleTrackingMode.PostpartumLactation => CycleReproductiveState.Postpartum,
+            CycleTrackingMode.Perimenopause => CycleReproductiveState.Perimenopause,
+            CycleTrackingMode.NoPeriod => CycleReproductiveState.NoPeriod,
+            _ => CycleReproductiveState.Cycling,
+        };
+
+    private static CycleTrackingMode ModeFromGoalAndState(
+        CycleTrackingGoal goal,
+        CycleReproductiveState reproductiveState) =>
+        reproductiveState switch {
+            CycleReproductiveState.Pregnancy => CycleTrackingMode.Pregnancy,
+            CycleReproductiveState.Postpartum or CycleReproductiveState.Lactation => CycleTrackingMode.PostpartumLactation,
+            CycleReproductiveState.Perimenopause => CycleTrackingMode.Perimenopause,
+            CycleReproductiveState.NoPeriod => CycleTrackingMode.NoPeriod,
+            _ when goal == CycleTrackingGoal.TryingToConceive => CycleTrackingMode.TryingToConceive,
+            _ => CycleTrackingMode.PeriodTracking,
+        };
 
     internal static string? NormalizeNotes(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();

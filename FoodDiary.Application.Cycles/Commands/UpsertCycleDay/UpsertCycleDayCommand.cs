@@ -7,7 +7,7 @@ namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 public record UpsertCycleDayCommand(
     Guid? UserId,
     Guid CycleProfileId,
-    DateTime Date,
+    DateOnly Date,
     BleedingLogCommandModel? Bleeding,
     IReadOnlyCollection<SymptomLogCommandModel> Symptoms,
     FertilitySignalCommandModel? FertilitySignal,

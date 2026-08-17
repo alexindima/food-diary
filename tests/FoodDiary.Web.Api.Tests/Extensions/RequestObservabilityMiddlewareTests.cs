@@ -121,6 +121,8 @@ string.Equals(instrument.Name, "fooddiary.api.request.duration", StringCompariso
     [InlineData("/api/v1/auth/admin-sso/token", "/api/v1/auth/admin-sso/*", "auth-admin-sso")]
     [InlineData("/api/v1/auth/telegram/login", "/api/v1/auth/telegram/*", "auth-telegram")]
     [InlineData("/hubs/email-verification", "/hubs/email-verification", "signalr-auth")]
+    [InlineData("/api/v1/cycles/00000000-0000-0000-0000-000000000001/days", "/api/v1/cycles/*", "health-cycle")]
+    [InlineData("/api/v1/export/cycle/sensitive", "/api/v1/export/cycle/*", "health-cycle-export")]
     public async Task Middleware_RedactsUserTelemetry_ForSensitiveNonDefaultRoutes(
         string requestPath,
         string expectedPathLabel,

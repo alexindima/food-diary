@@ -154,7 +154,9 @@ public sealed class CycleDaySymptomIntegrationTests(ApiWebApplicationFactory fac
                 IsOnboardingComplete: true,
                 ShowFertilityEstimates: false,
                 DiscreetNotifications: true,
-                Notes: null));
+                Notes: null,
+                CycleTrackingConsentGranted: true,
+                FertilitySignalsConsentGranted: true));
         response.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         return json.RootElement.GetProperty("id").GetGuid();
