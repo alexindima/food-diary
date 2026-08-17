@@ -39,6 +39,27 @@ const ITEMS: CycleDayViewModel[] = [
                 note: null,
             },
         ],
+        bleedingSummaryItems: [
+            {
+                id: 'bleeding-1',
+                typeLabelKey: 'CYCLE_TRACKING.BLEEDING_TYPE_BLEEDING',
+                flowLabelKey: 'CYCLE_TRACKING.FLOW_MEDIUM',
+                painSeverityKey: 'CYCLE_TRACKING.SEVERITY_MODERATE',
+            },
+        ],
+        symptomSummaryItems: [
+            {
+                id: 'symptom-2',
+                labelKey: 'CYCLE_TRACKING.SYMPTOM_SLEEP',
+                severityKey: 'CYCLE_TRACKING.SEVERITY_MODERATE',
+            },
+            {
+                id: 'symptom-1',
+                labelKey: 'CYCLE_TRACKING.SYMPTOM_PAIN',
+                severityKey: 'CYCLE_TRACKING.SEVERITY_MODERATE',
+            },
+        ],
+        additionalSymptomCount: 0,
         fertilitySignal: {
             id: 'signal-1',
             cycleProfileId: 'cycle-1',
@@ -105,7 +126,10 @@ describe('CycleDaysCardComponent', () => {
         fixture.detectChanges();
 
         expect(getText()).toContain('Apr 2, 2026');
-        expect(getText()).toContain('CYCLE_TRACKING.SYMPTOM_VALUE');
+        expect(getText()).toContain('CYCLE_TRACKING.BLEEDING_TYPE_BLEEDING');
+        expect(getText()).toContain('CYCLE_TRACKING.SYMPTOM_SLEEP');
+        expect(getText()).toContain('CYCLE_TRACKING.SEVERITY_MODERATE');
+        expect(getText()).not.toContain('CYCLE_TRACKING.SYMPTOM_VALUE');
         expect(getText()).toContain('CYCLE_TRACKING.BBT_SUMMARY');
         expect(getText()).toContain('CYCLE_TRACKING.CARE_HEAVY_FLOW');
         expect(getText()).toContain('felt tired');
@@ -134,6 +158,20 @@ describe('CycleDaysCardComponent', () => {
 
         expect(editDay).toHaveBeenCalledWith('2026-04-02T00:00:00.000Z');
     });
+
+    it('offers access to the full history when more days are available', () => {
+        const historyToggled = vi.fn();
+        fixture.componentInstance.historyToggled.subscribe(historyToggled);
+        fixture.componentRef.setInput('isLoading', false);
+        fixture.componentRef.setInput('items', ITEMS);
+        fixture.componentRef.setInput('hasMore', true);
+        fixture.detectChanges();
+
+        expect(getText()).toContain('CYCLE_TRACKING.SHOW_ALL_HISTORY');
+        getButtonByText('CYCLE_TRACKING.SHOW_ALL_HISTORY').click();
+
+        expect(historyToggled).toHaveBeenCalledOnce();
+    });
 });
 
 function getText(): string {
@@ -153,6 +191,17 @@ function getEditButton(): HTMLButtonElement {
     const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="CYCLE_TRACKING.EDIT_DAY"]');
     if (button === null) {
         throw new Error('Expected edit day button to be rendered.');
+    }
+
+    return button;
+}
+
+function getButtonByText(text: string): HTMLButtonElement {
+    const button = [...(fixture.nativeElement as HTMLElement).querySelectorAll<HTMLButtonElement>('button')].find(item =>
+        item.textContent.includes(text),
+    );
+    if (button === undefined) {
+        throw new Error(`Expected button containing "${text}" to be rendered.`);
     }
 
     return button;

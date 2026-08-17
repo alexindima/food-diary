@@ -8,6 +8,10 @@ import type { CycleDayFormModel } from '../../lib/cycle-tracking.facade';
 import { BLEEDING_TYPE_BLEEDING, BLEEDING_TYPE_SPOTTING, CYCLE_FLOW_LIGHT } from '../../models/cycle.data';
 import { CycleDayEditorDrawerComponent } from './cycle-day-editor-drawer';
 
+const MILD_SYMPTOM_INTENSITY = 3;
+const MODERATE_SYMPTOM_INTENSITY = 5;
+const SEVERE_SYMPTOM_INTENSITY = 9;
+
 const INITIAL_DAY: CycleDayFormModel = {
     date: '2026-08-17',
     isBleeding: false,
@@ -17,8 +21,13 @@ const INITIAL_DAY: CycleDayFormModel = {
     mood: 0,
     energy: 0,
     sleepQuality: 0,
+    appetite: 0,
+    craving: 0,
     bloating: 0,
     headache: 0,
+    skin: 0,
+    stool: 0,
+    nausea: 0,
     libido: 0,
     basalBodyTemperatureCelsius: null,
     ovulationTestResult: null,
@@ -61,5 +70,26 @@ describe('CycleDayEditorDrawerComponent', () => {
         fixture.componentInstance['close']();
 
         expect(closed).toHaveBeenCalledOnce();
+    });
+
+    it('toggles symptoms with a mild default and allows changing severity', () => {
+        fixture.componentInstance['toggleSymptom']('nausea');
+
+        expect(fixture.componentInstance.dayForm().nausea().value()).toBe(MILD_SYMPTOM_INTENSITY);
+        expect(fixture.componentInstance['isSymptomSelected']('nausea')).toBe(true);
+
+        fixture.componentInstance['setSymptomSeverity']('nausea', '9');
+        expect(fixture.componentInstance.dayForm().nausea().value()).toBe(SEVERE_SYMPTOM_INTENSITY);
+        expect(fixture.componentInstance['symptomSeverity']('nausea')).toBe('9');
+
+        fixture.componentInstance['toggleSymptom']('nausea');
+        expect(fixture.componentInstance.dayForm().nausea().value()).toBe(0);
+    });
+
+    it('maps an existing exact intensity to the matching severity band without mutating it', () => {
+        fixture.componentInstance.dayForm().headache().value.set(MODERATE_SYMPTOM_INTENSITY);
+
+        expect(fixture.componentInstance['symptomSeverity']('headache')).toBe('6');
+        expect(fixture.componentInstance.dayForm().headache().value()).toBe(MODERATE_SYMPTOM_INTENSITY);
     });
 });

@@ -86,6 +86,9 @@ export type CycleDayViewModel = {
     dateLabel: string;
     bleedingEntries: BleedingEntry[];
     symptoms: CycleSymptomEntry[];
+    bleedingSummaryItems: CycleDayBleedingSummaryViewModel[];
+    symptomSummaryItems: CycleDaySymptomSummaryViewModel[];
+    additionalSymptomCount: number;
     fertilitySignal: FertilitySignal | null;
     fertilitySignalItems: CycleDaySignalItemViewModel[];
     carePromptItems: CycleDayCarePromptViewModel[];
@@ -94,6 +97,33 @@ export type CycleDayViewModel = {
     badgeLabelKey: string;
     isPeriodStart?: boolean;
     isPeriodStartConfirmed?: boolean;
+};
+
+export type CycleDayBleedingSummaryViewModel = {
+    id: string;
+    typeLabelKey: string;
+    flowLabelKey: string | null;
+    painSeverityKey: string | null;
+};
+
+export type CycleDaySymptomSummaryViewModel = {
+    id: string;
+    labelKey: string;
+    severityKey: string;
+};
+
+export type CycleObservationsViewModel = {
+    hasEnoughData: boolean;
+    trackedDayCount: number;
+    bleedingDayCount: number;
+    activeSymptomRecordCount: number;
+    topSymptom: CycleTopSymptomViewModel | null;
+};
+
+export type CycleTopSymptomViewModel = {
+    labelKey: string;
+    loggedDayCount: number;
+    severityKey: string;
 };
 
 export type CycleDaySignalItemViewModel = {

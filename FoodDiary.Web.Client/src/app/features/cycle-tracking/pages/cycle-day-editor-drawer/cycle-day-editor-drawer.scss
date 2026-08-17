@@ -39,12 +39,14 @@
 
     &__eyebrow,
     &__title,
-    &__privacy {
+    &__privacy,
+    &__helper {
         margin: 0;
     }
 
     &__eyebrow,
-    &__privacy {
+    &__privacy,
+    &__helper {
         color: var(--fd-color-text-muted);
     }
 
@@ -94,12 +96,15 @@
         }
 
         button {
+            min-width: 0;
             min-height: var(--fd-size-control-md);
             padding: var(--fd-space-xs);
             border: 0;
             color: var(--fd-color-text-muted);
             background: var(--fd-bg-surface);
             cursor: pointer;
+            white-space: normal;
+            overflow-wrap: anywhere;
 
             &:where(:hover) {
                 background: var(--fd-bg-surface-raised-blend);
@@ -120,9 +125,19 @@
         }
     }
 
-    &__symptoms,
     &__advanced-fields {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &__symptom-picker {
+        flex-wrap: wrap;
+    }
+
+    &__symptom-level {
+        grid-template-columns: minmax(0, 0.55fr) minmax(0, 1fr);
+        align-items: center;
+        padding: var(--fd-space-xs) 0;
+        border-bottom: var(--fd-border-muted);
     }
 
     &__advanced {
@@ -154,8 +169,11 @@
             width: 100%;
         }
 
-        &__symptoms,
         &__advanced-fields {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        &__symptom-level {
             grid-template-columns: minmax(0, 1fr);
         }
 

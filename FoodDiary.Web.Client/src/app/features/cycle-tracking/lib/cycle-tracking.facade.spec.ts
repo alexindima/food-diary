@@ -18,6 +18,7 @@ import {
 import { CycleTrackingFacade } from './cycle-tracking.facade';
 
 const LOGGED_CYCLE_DAYS = 4;
+const SEVERE_SYMPTOM_INTENSITY = 9;
 
 let facade: CycleTrackingFacade;
 let cyclesService: {
@@ -29,6 +30,7 @@ let cyclesService: {
     getNutritionSummary: ReturnType<typeof vi.fn<CyclesService['getNutritionSummary']>>;
     upsertDay: ReturnType<typeof vi.fn<CyclesService['upsertDay']>>;
     upsertFactor: ReturnType<typeof vi.fn<CyclesService['upsertFactor']>>;
+    updateSettings: ReturnType<typeof vi.fn<CyclesService['updateSettings']>>;
     updateMenstrualEpisode: ReturnType<typeof vi.fn<CyclesService['updateMenstrualEpisode']>>;
 };
 let exportService: { exportCycle: ReturnType<typeof vi.fn<ExportService['exportCycle']>> };
@@ -54,6 +56,7 @@ beforeEach(() => {
             .fn<CyclesService['deleteMenstrualEpisode']>()
             .mockReturnValue(of({ ...createCycleResponse(), menstrualEpisodes: [] })),
         upsertDay: vi.fn<CyclesService['upsertDay']>().mockReturnValue(of(createCycleLogDay())),
+        updateSettings: vi.fn<CyclesService['updateSettings']>().mockReturnValue(of(createCycleResponse())),
         upsertFactor: vi.fn<CyclesService['upsertFactor']>().mockReturnValue(
             of({
                 ...createCycleResponse(),
@@ -216,6 +219,7 @@ describe('CycleTrackingFacade day saving', () => {
             expect(facade.bleedingEntries()).toHaveLength(1);
         });
         expect(facade.bleedingEntries()[0].id).toBe('bleeding-1');
+        expect(facade.daySaveRevision()).toBe(1);
         expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(2);
     });
 
@@ -236,7 +240,29 @@ describe('CycleTrackingFacade day saving', () => {
     });
 });
 
+describe('CycleTrackingFacade settings saving', () => {
+    it('publishes a successful settings save for drawer orchestration', async () => {
+        facade.initialize();
+
+        const success = await submit(facade.settingsForm);
+
+        expect(success).toBe(true);
+        expect(cyclesService.updateSettings).toHaveBeenCalledOnce();
+        expect(facade.settingsSaveRevision()).toBe(1);
+    });
+});
+
 describe('CycleTrackingFacade day editing', () => {
+    it('discards unsaved day changes when editing is cancelled', () => {
+        facade.dayModel.update(value => ({ ...value, nausea: SEVERE_SYMPTOM_INTENSITY, notes: 'unsaved' }));
+
+        facade.cancelDayEdit();
+
+        expect(facade.dayModel().nausea).toBe(0);
+        expect(facade.dayModel().notes).toBeNull();
+        expect(facade.editingDayDate()).toBeNull();
+    });
+
     it('clears a day and removes its logs from current profile', () => {
         cyclesService.getCurrent.mockReturnValue(
             of({
@@ -476,8 +502,13 @@ describe('CycleTrackingFacade symptom values', () => {
             mood: 99,
             energy: Number.NaN,
             sleepQuality: 6,
+            appetite: 0,
+            craving: 0,
             bloating: 2,
             headache: 4,
+            skin: 0,
+            stool: 0,
+            nausea: 0,
             libido: 2,
             basalBodyTemperatureCelsius: null,
             ovulationTestResult: null,
@@ -493,6 +524,18 @@ describe('CycleTrackingFacade symptom values', () => {
         expect(payload.symptoms).toContainEqual({ category: 1, intensity: 10, tags: [], note: null, clearNote: false });
         expect(payload.symptoms).not.toContainEqual(expect.objectContaining({ category: 2 }));
         expect(payload.clearSymptomCategories).toEqual([]);
+    });
+
+    it('saves the additional symptom categories supported by the API', () => {
+        facade.initialize();
+        setValidDayForm();
+        facade.dayModel.update(value => ({ ...value, skin: 6, nausea: 9 }));
+
+        facade.saveDay();
+
+        const payload = cyclesService.upsertDay.mock.calls[0][1];
+        expect(payload.symptoms).toContainEqual({ category: 8, intensity: 6, tags: [], note: null, clearNote: false });
+        expect(payload.symptoms).toContainEqual({ category: 10, intensity: 9, tags: [], note: null, clearNote: false });
     });
 });
 
@@ -744,8 +787,13 @@ function setValidDayForm(): void {
         mood: 3,
         energy: 4,
         sleepQuality: 6,
+        appetite: 0,
+        craving: 0,
         bloating: 1,
         headache: 2,
+        skin: 0,
+        stool: 0,
+        nausea: 0,
         libido: 2,
         basalBodyTemperatureCelsius: 36.62,
         ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,

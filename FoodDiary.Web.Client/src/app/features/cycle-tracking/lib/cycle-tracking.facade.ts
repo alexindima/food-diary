@@ -79,8 +79,13 @@ export type CycleDayFormModel = {
     mood: number;
     energy: number;
     sleepQuality: number;
+    appetite: number;
+    craving: number;
     bloating: number;
     headache: number;
+    skin: number;
+    stool: number;
+    nausea: number;
     libido: number;
     basalBodyTemperatureCelsius: number | null;
     ovulationTestResult: OvulationTestResult | null;
@@ -88,6 +93,32 @@ export type CycleDayFormModel = {
     hadSex: boolean;
     notes: string | null;
 };
+
+function createDefaultCycleDayFormModel(): CycleDayFormModel {
+    return {
+        date: formatDateInputValue(new Date()),
+        isBleeding: false,
+        bleedingType: BLEEDING_TYPE_BLEEDING,
+        flow: CYCLE_FLOW_MEDIUM,
+        pain: 0,
+        mood: 0,
+        energy: 0,
+        sleepQuality: 0,
+        appetite: 0,
+        craving: 0,
+        bloating: 0,
+        headache: 0,
+        skin: 0,
+        stool: 0,
+        nausea: 0,
+        libido: 0,
+        basalBodyTemperatureCelsius: null,
+        ovulationTestResult: null,
+        cervicalFluid: null,
+        hadSex: false,
+        notes: null,
+    };
+}
 
 type CycleFactorFormModel = {
     type: CycleFactorType | null;
@@ -117,6 +148,8 @@ export class CycleTrackingFacade {
     public readonly excludingEpisodeId = signal<string | null>(null);
     public readonly deletingEpisodeId = signal<string | null>(null);
     public readonly isExportingCycle = signal(false);
+    public readonly daySaveRevision = signal(0);
+    public readonly settingsSaveRevision = signal(0);
     public readonly clearingDayDate = signal<string | null>(null);
     public readonly editingDayDate = signal<string | null>(null);
     public readonly editingFactorId = signal<string | null>(null);
@@ -183,24 +216,7 @@ export class CycleTrackingFacade {
         { submission: { action: this.submitSettingsFormAsync } },
     );
 
-    public readonly dayModel = signal<CycleDayFormModel>({
-        date: formatDateInputValue(new Date()),
-        isBleeding: false,
-        bleedingType: BLEEDING_TYPE_BLEEDING,
-        flow: CYCLE_FLOW_MEDIUM,
-        pain: 0,
-        mood: 0,
-        energy: 0,
-        sleepQuality: 0,
-        bloating: 0,
-        headache: 0,
-        libido: 0,
-        basalBodyTemperatureCelsius: null,
-        ovulationTestResult: null,
-        cervicalFluid: null,
-        hadSex: false,
-        notes: null,
-    });
+    public readonly dayModel = signal<CycleDayFormModel>(createDefaultCycleDayFormModel());
     private readonly submitDayFormAsync = async (): Promise<void> => {
         await this.saveDayAsync();
     };
@@ -340,6 +356,7 @@ export class CycleTrackingFacade {
         this.isSavingSettings.set(true);
         try {
             this.cycle.set(await firstValueFrom(this.cyclesService.updateSettings(currentCycle.id, payload)));
+            this.settingsSaveRevision.update(revision => revision + 1);
         } finally {
             this.isSavingSettings.set(false);
         }
@@ -442,6 +459,7 @@ export class CycleTrackingFacade {
         );
         this.applySavedDay(day, clearFertilitySignal);
         await this.refreshPredictionsAsync();
+        this.daySaveRevision.update(revision => revision + 1);
     }
 
     private async refreshPredictionsAsync(): Promise<void> {
@@ -533,6 +551,7 @@ export class CycleTrackingFacade {
 
     public cancelDayEdit(): void {
         this.editingDayDate.set(null);
+        this.dayModel.set(createDefaultCycleDayFormModel());
     }
 
     public saveFactor(): void {
@@ -896,13 +915,21 @@ export class CycleTrackingFacade {
 
     private buildSymptomEditFields(
         symptoms: CycleSymptomEntry[],
-    ): Pick<CycleDayFormModel, 'mood' | 'energy' | 'sleepQuality' | 'bloating' | 'headache' | 'libido'> {
+    ): Pick<
+        CycleDayFormModel,
+        'mood' | 'energy' | 'sleepQuality' | 'appetite' | 'craving' | 'bloating' | 'headache' | 'skin' | 'stool' | 'nausea' | 'libido'
+    > {
         return {
             mood: this.findSymptomIntensity(symptoms, 'mood'),
             energy: this.findSymptomIntensity(symptoms, 'energy'),
             sleepQuality: this.findSymptomIntensity(symptoms, 'sleepQuality'),
+            appetite: this.findSymptomIntensity(symptoms, 'appetite'),
+            craving: this.findSymptomIntensity(symptoms, 'craving'),
             bloating: this.findSymptomIntensity(symptoms, 'bloating'),
             headache: this.findSymptomIntensity(symptoms, 'headache'),
+            skin: this.findSymptomIntensity(symptoms, 'skin'),
+            stool: this.findSymptomIntensity(symptoms, 'stool'),
+            nausea: this.findSymptomIntensity(symptoms, 'nausea'),
             libido: this.findSymptomIntensity(symptoms, 'libido'),
         };
     }

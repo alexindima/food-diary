@@ -3,12 +3,12 @@
   "summary": {
     "components": 426,
     "componentsWithoutDirectSpecs": 129,
-    "inputs": 1331,
-    "outputs": 417,
+    "inputs": 1333,
+    "outputs": 418,
     "apiCalls": 226,
     "templatesWithTranslations": 267,
-    "translationKeys": 1490,
-    "consumerEdges": 976,
+    "translationKeys": 1497,
+    "consumerEdges": 978,
     "consumedComponents": 275,
     "unconsumedComponents": 150
   },
@@ -1015,6 +1015,16 @@
           "name": "clearingDate",
           "type": "string | null",
           "required": false
+        },
+        {
+          "name": "hasMore",
+          "type": "",
+          "required": false
+        },
+        {
+          "name": "isExpanded",
+          "type": "",
+          "required": false
         }
       ],
       "outputs": [
@@ -1029,6 +1039,10 @@
         {
           "name": "confirmPeriodStart",
           "type": "string"
+        },
+        {
+          "name": "historyToggled",
+          "type": ""
         }
       ],
       "specPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-days-card.spec.ts"
@@ -16007,6 +16021,9 @@
         "CYCLE_TRACKING.NOTES_PLACEHOLDER",
         "CYCLE_TRACKING.OVULATION_TEST",
         "CYCLE_TRACKING.PRIVATE_DATA_NOTE",
+        "CYCLE_TRACKING.SYMPTOMS_HINT",
+        "CYCLE_TRACKING.SYMPTOMS_TITLE",
+        "CYCLE_TRACKING.SYMPTOM_INTENSITY_LABEL",
         "CYCLE_TRACKING.SYMPTOM_PAIN"
       ]
     },
@@ -16017,7 +16034,8 @@
         "CYCLE_TRACKING.CLEAR_DAY",
         "CYCLE_TRACKING.CONFIRM_PERIOD_START",
         "CYCLE_TRACKING.EDIT_DAY",
-        "CYCLE_TRACKING.SYMPTOM_VALUE"
+        "CYCLE_TRACKING.MORE_SYMPTOMS",
+        "CYCLE_TRACKING.PAIN_HISTORY"
       ]
     },
     {
@@ -16116,6 +16134,7 @@
         "CYCLE_TRACKING.ALL_DATA_AND_TOOLS",
         "CYCLE_TRACKING.ALL_DATA_HINT",
         "CYCLE_TRACKING.AVG_LENGTH",
+        "CYCLE_TRACKING.BLEEDING_DAYS_COUNT",
         "CYCLE_TRACKING.CANCEL_EDIT",
         "CYCLE_TRACKING.CREATE_CYCLE_DESCRIPTION",
         "CYCLE_TRACKING.CREATE_CYCLE_TITLE",
@@ -16137,8 +16156,10 @@
         "CYCLE_TRACKING.IS_REGULAR",
         "CYCLE_TRACKING.LUTEAL_LENGTH",
         "CYCLE_TRACKING.MODE",
+        "CYCLE_TRACKING.MOST_LOGGED_SYMPTOM",
         "CYCLE_TRACKING.NOTES",
         "CYCLE_TRACKING.NOTES_PLACEHOLDER",
+        "CYCLE_TRACKING.NO_ACTIVE_SYMPTOMS_OBSERVED",
         "CYCLE_TRACKING.OBSERVATIONS_EMPTY_BODY",
         "CYCLE_TRACKING.OBSERVATIONS_EMPTY_TITLE",
         "CYCLE_TRACKING.OBSERVATIONS_READY_BODY",
@@ -16157,7 +16178,7 @@
         "CYCLE_TRACKING.SETTINGS_TITLE",
         "CYCLE_TRACKING.SHOW_FERTILITY",
         "CYCLE_TRACKING.SUBTITLE_V2",
-        "CYCLE_TRACKING.SYMPTOM_RECORDS_COUNT",
+        "CYCLE_TRACKING.SYMPTOM_OBSERVATION_SUMMARY",
         "CYCLE_TRACKING.TITLE",
         "CYCLE_TRACKING.TOUR.START_TOUR",
         "CYCLE_TRACKING.TRACKABLE_BLEEDING",
@@ -19821,6 +19842,8 @@
       "occurrences": 1,
       "inputsUsed": [
         "clearingDate",
+        "hasMore",
+        "isExpanded",
         "isLoading",
         "items",
         "titleKey"
@@ -19828,7 +19851,8 @@
       "outputsHandled": [
         "clearDay",
         "confirmPeriodStart",
-        "editDay"
+        "editDay",
+        "historyToggled"
       ]
     },
     {
@@ -22025,13 +22049,15 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
-      "occurrences": 4,
+      "occurrences": 5,
       "inputsUsed": [
         "appearance",
         "ariaLabel",
+        "ariaPressed",
         "fill",
         "icon",
         "loading",
+        "size",
         "type",
         "variant"
       ],
@@ -22050,6 +22076,22 @@
         "icon",
         "loading",
         "size",
+        "type",
+        "variant"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiButtonComponent",
+      "selector": "fd-ui-button",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/button/fd-ui-button.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-days-card/cycle-days-card.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "fill",
+        "fullWidth",
+        "icon",
         "type",
         "variant"
       ],
@@ -27542,7 +27584,7 @@
       "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/input/fd-ui-input.ts",
       "consumerFeature": "cycle-tracking",
       "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
-      "occurrences": 3,
+      "occurrences": 2,
       "inputsUsed": [
         "label",
         "step",
@@ -28932,6 +28974,23 @@
         "size",
         "stackOnNarrow",
         "wrapOnNarrow"
+      ],
+      "outputsHandled": []
+    },
+    {
+      "component": "FdUiSegmentedToggleComponent",
+      "selector": "fd-ui-segmented-toggle",
+      "componentPath": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/segmented-toggle/fd-ui-segmented-toggle.ts",
+      "consumerFeature": "cycle-tracking",
+      "consumerPath": "FoodDiary.Web.Client/src/app/features/cycle-tracking/pages/cycle-day-editor-drawer/cycle-day-editor-drawer.html",
+      "occurrences": 1,
+      "inputsUsed": [
+        "appearance",
+        "ariaLabel",
+        "fullWidth",
+        "options",
+        "size",
+        "stackOnNarrow"
       ],
       "outputsHandled": []
     },

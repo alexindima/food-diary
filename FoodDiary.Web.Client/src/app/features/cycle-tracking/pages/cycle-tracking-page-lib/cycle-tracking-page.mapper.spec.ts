@@ -15,6 +15,7 @@ import {
     buildCycleDayItems,
     buildCycleFactorItems,
     buildCycleNutritionSummaryView,
+    buildCycleObservationsView,
     buildCycleOverviewView,
     buildCyclePredictionView,
 } from './cycle-tracking-page.mapper';
@@ -365,6 +366,21 @@ describe('cycle tracking day item mapper', () => {
             badgeLabelKey: 'CYCLE_TRACKING.BADGE_TRACKED',
             notes: 'signal note',
         });
+        expect(bleedingItem?.bleedingSummaryItems).toEqual([
+            {
+                id: BLEEDING_ENTRY.id,
+                typeLabelKey: 'CYCLE_TRACKING.BLEEDING_TYPE_BLEEDING',
+                flowLabelKey: 'CYCLE_TRACKING.FLOW_MEDIUM',
+                painSeverityKey: 'CYCLE_TRACKING.SEVERITY_MODERATE',
+            },
+        ]);
+        expect(symptomItem?.symptomSummaryItems).toEqual([
+            {
+                id: SYMPTOM_ENTRY.id,
+                labelKey: 'CYCLE_TRACKING.SYMPTOM_PAIN',
+                severityKey: 'CYCLE_TRACKING.SEVERITY_MODERATE',
+            },
+        ]);
         expect(symptomItem?.fertilitySignalItems).toContainEqual({
             textKey: 'CYCLE_TRACKING.BBT_SUMMARY',
             params: { value: '36.62' },
@@ -374,6 +390,38 @@ describe('cycle tracking day item mapper', () => {
         });
     });
 
+    it('filters zero-intensity symptoms from day history', () => {
+        const items = buildCycleDayItems([], [{ ...SYMPTOM_ENTRY, intensity: 0 }], [], 'en-US');
+
+        expect(items).toEqual([]);
+    });
+});
+
+describe('cycle observations mapper', () => {
+    it('builds descriptive observations from active journal entries', () => {
+        const symptoms: CycleSymptomEntry[] = [
+            { ...SYMPTOM_ENTRY, id: 'pain-1', date: '2026-04-01T00:00:00.000Z', intensity: 4 },
+            { ...SYMPTOM_ENTRY, id: 'pain-2', date: '2026-04-02T00:00:00.000Z', intensity: 8 },
+            { ...SYMPTOM_ENTRY, id: 'sleep-1', date: '2026-04-03T00:00:00.000Z', category: 3, intensity: 5 },
+            { ...SYMPTOM_ENTRY, id: 'ignored-zero', date: '2026-04-03T00:00:00.000Z', category: 7, intensity: 0 },
+        ];
+        const items = buildCycleDayItems([BLEEDING_ENTRY], symptoms, [], 'en-US');
+
+        expect(buildCycleObservationsView(items)).toEqual({
+            hasEnoughData: true,
+            trackedDayCount: 3,
+            bleedingDayCount: 1,
+            activeSymptomRecordCount: 3,
+            topSymptom: {
+                labelKey: 'CYCLE_TRACKING.SYMPTOM_PAIN',
+                loggedDayCount: 2,
+                severityKey: 'CYCLE_TRACKING.SEVERITY_MODERATE',
+            },
+        });
+    });
+});
+
+describe('cycle period metadata mapper', () => {
     it('marks inferred and confirmed period starts', () => {
         const inferred = buildCycleDayItems([BLEEDING_ENTRY], [], [], {
             locale: 'en-US',

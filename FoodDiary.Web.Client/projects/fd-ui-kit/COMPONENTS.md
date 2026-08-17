@@ -250,7 +250,7 @@ Inline calendar primitive for custom date pickers and date popovers.
 - `min?: Date | null`
 - `max?: Date | null`
 - `weekStartsOn?: 0 | 1`
-- `markers?: readonly { date: string; tone: 'brand' | 'danger' | 'warning'; label: string }[]` (visual dots with labels included in each date's accessible name)
+- `markers?: readonly { date: string; tone: 'brand' | 'danger' | 'warning'; label: string }[]` (visual dots with labels included in each date's accessible name; identical markers on one date are coalesced)
 
 #### `fd-ui-date-input`
 

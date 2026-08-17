@@ -15,5 +15,19 @@
                 />
             }
         </div>
+        @if (hasMore()) {
+            <div class="cycle-tracking__history-toggle">
+                <fd-ui-button
+                    type="button"
+                    variant="secondary"
+                    fill="outline"
+                    [fullWidth]="true"
+                    [icon]="isExpanded() ? 'expand_less' : 'expand_more'"
+                    (click)="historyToggled.emit()"
+                >
+                    {{ (isExpanded() ? 'CYCLE_TRACKING.SHOW_LESS_HISTORY' : 'CYCLE_TRACKING.SHOW_ALL_HISTORY') | translate }}
+                </fd-ui-button>
+            </div>
+        }
     }
 </fd-ui-card>

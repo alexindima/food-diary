@@ -118,6 +118,7 @@ function registerRenderTests(): void {
         it('should render date markers and include their labels in the accessible date name', () => {
             fixture.componentRef.setInput('markers', [
                 { date: '2025-03-15', tone: 'danger', label: 'Logged bleeding' },
+                { date: '2025-03-15', tone: 'danger', label: 'Logged bleeding' },
                 { date: '2025-03-15', tone: 'warning', label: 'Predicted period' },
             ]);
             fixture.detectChanges();
@@ -126,6 +127,7 @@ function registerRenderTests(): void {
             expect(markedDate.querySelectorAll('.fd-ui-calendar__marker').length).toBe(2);
             expect(markedDate.getAttribute('aria-label')).toContain('Logged bleeding');
             expect(markedDate.getAttribute('aria-label')).toContain('Predicted period');
+            expect(markedDate.getAttribute('aria-label')?.match(/Logged bleeding/g)).toHaveLength(1);
         });
     });
 }

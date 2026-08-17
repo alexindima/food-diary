@@ -98,6 +98,20 @@
         }
     }
 
+    &__observation-highlight {
+        margin-top: var(--fd-space-sm);
+        padding: var(--fd-space-sm);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-brand-soft);
+        color: var(--fd-color-text);
+    }
+
+    &__observation-empty {
+        margin: var(--fd-space-sm) 0 0;
+        color: var(--fd-color-text-muted);
+    }
+
     &__trackable-list {
         margin: 0;
         padding: 0;
@@ -127,7 +141,6 @@
         border-radius: var(--fd-radius-panel);
         background: var(--fd-bg-surface-muted);
         overflow: clip;
-
     }
 
     &__details-summary {
@@ -328,11 +341,8 @@
 
     &__day {
         min-width: 0;
-        padding: var(--fd-space-surface-padding);
-        border-radius: var(--fd-radius-lg);
-        border: var(--fd-border-muted);
-        background: var(--fd-bg-surface-raised);
-        box-shadow: var(--fd-shadow-xs);
+        padding: var(--fd-space-sm) 0 var(--fd-space-card-header-gap);
+        border-bottom: var(--fd-border-muted);
     }
 
     &__day-header {
@@ -341,6 +351,13 @@
 
     &__day-date {
         color: var(--fd-color-text-strong);
+    }
+
+    &__day-status {
+        flex: 0 0 auto;
+        width: var(--fd-space-xs);
+        height: var(--fd-space-xs);
+        border-radius: var(--fd-radius-pill);
     }
 
     &__day-actions {
@@ -362,6 +379,20 @@
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
         color: var(--fd-color-text);
         margin-bottom: var(--fd-space-card-header-gap);
+    }
+
+    &__history-row {
+        grid-template-columns: minmax(0, 1fr);
+        color: var(--fd-color-text);
+        margin-bottom: var(--fd-space-card-header-gap);
+    }
+
+    &__history-toggle {
+        margin-top: var(--fd-space-card-header-gap);
+    }
+
+    &__more-symptoms {
+        color: var(--fd-color-text-muted);
     }
 
     &__signals-row {
@@ -433,6 +464,7 @@
         &__predictions,
         &__symptom-grid,
         &__symptoms-row,
+        &__history-row,
         &__signals-row {
             grid-template-columns: minmax(0, 1fr);
         }

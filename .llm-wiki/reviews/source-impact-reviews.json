@@ -770,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "65b3497dd5afede702b6c5dfaf46a41795955e12e9a0ee0d77435441383a5ab0"
+          "sha256": "595cad65beb613668dc8d94ca566347c331d1e0cff1259b9a575530dadea5694"
         }
       ],
-      "reason": "Cycle UX V2 adds three scoped Angular presentation components, responsive drawer behavior, localized labels, and focused tests; generated indexes now reflect the verified current frontend contracts without changing architecture ownership.",
+      "reason": "Cycle tracking history, observations, drawer symptom UX, and calendar duplicate-marker resilience",
       "baseRef": "HEAD",
-      "gitHead": "b4a8338709047117f9091e9342a4731970400b0d",
-      "reviewedAtUtc": "2026-08-17T00:34:35.2344654Z"
+      "gitHead": "6db41bfaf9a0829453d5be49c67538052c233a23",
+      "reviewedAtUtc": "2026-08-17T01:48:45.4923249Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -989,17 +989,17 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c1c74b1bb259b854fe7bdaca2f8f4e55df484bd653d6b2b73bf7165c68e0de18"
+          "sha256": "f56524026f12bf72d09633d0144abd287857dee95813a0bed4363390f1185144"
         },
         {
           "path": ".llm-wiki/generated/frontend-index.json",
-          "sha256": "379c6a070a737e8ae8ba05405eac2a9bb35d21aadaa6b50b64ecf3320c30cb9f"
+          "sha256": "dbfc8b060b340ad1a7532c64d9f2f6b7fa2d2b21fb10ee842586602bffa60937"
         }
       ],
-      "reason": "Cycle UX V2 adds three scoped Angular presentation components, responsive drawer behavior, localized labels, and focused tests; generated indexes now reflect the verified current frontend contracts without changing architecture ownership.",
+      "reason": "Cycle tracking history and observations UX completion with semantic summaries and full-history access",
       "baseRef": "HEAD",
-      "gitHead": "b4a8338709047117f9091e9342a4731970400b0d",
-      "reviewedAtUtc": "2026-08-17T00:34:35.8658830Z"
+      "gitHead": "6db41bfaf9a0829453d5be49c67538052c233a23",
+      "reviewedAtUtc": "2026-08-17T01:28:39.3151097Z"
     },
     {
       "pageId": "workflow-verification-planner",
@@ -1091,13 +1091,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/frontend-contract-index.json",
-          "sha256": "c1c74b1bb259b854fe7bdaca2f8f4e55df484bd653d6b2b73bf7165c68e0de18"
+          "sha256": "f56524026f12bf72d09633d0144abd287857dee95813a0bed4363390f1185144"
         }
       ],
-      "reason": "Cycle UX V2 adds three scoped Angular presentation components, responsive drawer behavior, localized labels, and focused tests; generated indexes now reflect the verified current frontend contracts without changing architecture ownership.",
+      "reason": "Cycle tracking UI now exposes semantic day history, zero-value filtering, descriptive observations, and full-history access; reviewed localization and test impact.",
       "baseRef": "HEAD",
-      "gitHead": "b4a8338709047117f9091e9342a4731970400b0d",
-      "reviewedAtUtc": "2026-08-17T00:34:34.7023850Z"
+      "gitHead": "6db41bfaf9a0829453d5be49c67538052c233a23",
+      "reviewedAtUtc": "2026-08-17T01:17:09.2299865Z"
     },
     {
       "pageId": "workflow.query-context",

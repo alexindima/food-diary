@@ -113,15 +113,49 @@
                     </div>
                 </fieldset>
 
-                <div class="cycle-drawer__symptoms fd-grid fd-gap-sm">
+                <fieldset class="cycle-drawer__fieldset fd-stack fd-gap-sm">
+                    <legend class="cycle-drawer__legend fd-ui-action-text">{{ 'CYCLE_TRACKING.SYMPTOMS_TITLE' | translate }}</legend>
+                    <p class="cycle-drawer__helper fd-ui-body-sm">{{ 'CYCLE_TRACKING.SYMPTOMS_HINT' | translate }}</p>
+                    <div
+                        class="cycle-drawer__symptom-picker fd-row fd-gap-xs"
+                        role="group"
+                        [attr.aria-label]="'CYCLE_TRACKING.SYMPTOMS_TITLE' | translate"
+                    >
+                        @for (field of symptomFields; track field.key) {
+                            <fd-ui-button
+                                type="button"
+                                appearance="chip"
+                                size="sm"
+                                [variant]="isSymptomSelected(field.key) ? 'primary' : 'secondary'"
+                                [fill]="isSymptomSelected(field.key) ? 'solid' : 'outline'"
+                                [icon]="isSymptomSelected(field.key) ? 'check' : undefined"
+                                [ariaPressed]="isSymptomSelected(field.key)"
+                                (click)="toggleSymptom(field.key)"
+                            >
+                                {{ field.labelKey | translate }}
+                            </fd-ui-button>
+                        }
+                    </div>
+                </fieldset>
+
+                <div class="cycle-drawer__symptom-levels fd-stack fd-gap-sm">
                     @for (field of symptomFields; track field.key) {
-                        @if (field.key !== 'pain') {
-                            <fd-ui-input
-                                type="number"
-                                [step]="1"
-                                [label]="field.labelKey | translate"
-                                [formField]="symptomField(field.key)"
-                            />
+                        @if (isSymptomSelected(field.key)) {
+                            <div class="cycle-drawer__symptom-level fd-grid fd-gap-xs">
+                                <span class="fd-ui-body-sm">{{ field.labelKey | translate }}</span>
+                                <fd-ui-segmented-toggle
+                                    size="sm"
+                                    appearance="soft"
+                                    [fullWidth]="true"
+                                    [stackOnNarrow]="false"
+                                    [options]="symptomSeverityOptions"
+                                    [selectedValue]="symptomSeverity(field.key)"
+                                    [ariaLabel]="
+                                        'CYCLE_TRACKING.SYMPTOM_INTENSITY_LABEL' | translate: { symptom: field.labelKey | translate }
+                                    "
+                                    (selectedValueChange)="setSymptomSeverity(field.key, $event)"
+                                />
+                            </div>
                         }
                     }
                 </div>

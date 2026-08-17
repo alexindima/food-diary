@@ -124,7 +124,7 @@ export class FdUiCalendarComponent {
             Array.from({ length: WEEK_DAYS_COUNT }, (_day, dayIndex) => {
                 const cellDate = this.addDays(gridStart, weekIndex * WEEK_DAYS_COUNT + dayIndex);
                 const iso = this.toIsoDate(cellDate);
-                const markers = this.markers().filter(marker => marker.date === iso);
+                const markers = this.uniqueMarkersForDate(iso);
                 const dateLabel = new Intl.DateTimeFormat(this.effectiveLocale(), {
                     day: 'numeric',
                     month: 'long',
@@ -239,6 +239,14 @@ export class FdUiCalendarComponent {
         const normalized = this.stripTime(date);
         const delta = (normalized.getDay() - this.weekStartsOn() + WEEK_DAYS_COUNT) % WEEK_DAYS_COUNT;
         return this.addDays(normalized, -delta);
+    }
+
+    private uniqueMarkersForDate(iso: string): readonly FdUiCalendarMarker[] {
+        const uniqueMarkers = new Map<string, FdUiCalendarMarker>();
+        for (const marker of this.markers().filter(item => item.date === iso)) {
+            uniqueMarkers.set(`${marker.tone}:${marker.label}`, marker);
+        }
+        return [...uniqueMarkers.values()];
     }
 
     private isSameWeek(date: Date, weekStart: Date): boolean {

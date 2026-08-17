@@ -163,15 +163,18 @@
                         [isLoading]="isLoading()"
                         [items]="recentDayItems()"
                         [clearingDate]="clearingDayDate()"
+                        [hasMore]="hasMoreHistory()"
+                        [isExpanded]="isHistoryExpanded()"
                         (editDay)="editDay($event)"
                         (clearDay)="clearDay($event)"
                         (confirmPeriodStart)="confirmPeriodStart($event)"
+                        (historyToggled)="toggleHistory()"
                     />
                 </div>
 
                 <aside class="cycle-tracking__side-column fd-stack fd-gap-card-content">
                     <fd-ui-card [title]="'CYCLE_TRACKING.OBSERVATIONS_TITLE' | translate">
-                        @if (dayItems().length < 3) {
+                        @if (!observationsView().hasEnoughData) {
                             <div class="cycle-tracking__empty-state fd-stack fd-gap-sm">
                                 <fd-ui-icon class="cycle-tracking__empty-icon" name="monitoring" aria-hidden="true" />
                                 <strong class="fd-ui-title-sm">{{ 'CYCLE_TRACKING.OBSERVATIONS_EMPTY_TITLE' | translate }}</strong>
@@ -180,14 +183,34 @@
                         } @else {
                             <div class="cycle-tracking__observation-stats fd-grid fd-gap-sm">
                                 <div>
-                                    <strong class="fd-ui-stat-value">{{ dayItems().length }}</strong>
+                                    <strong class="fd-ui-stat-value">{{ observationsView().trackedDayCount }}</strong>
                                     <span class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.TRACKED_DAYS_COUNT' | translate }}</span>
                                 </div>
                                 <div>
-                                    <strong class="fd-ui-stat-value">{{ symptoms().length }}</strong>
-                                    <span class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.SYMPTOM_RECORDS_COUNT' | translate }}</span>
+                                    <strong class="fd-ui-stat-value">{{ observationsView().bleedingDayCount }}</strong>
+                                    <span class="fd-ui-body-sm">{{ 'CYCLE_TRACKING.BLEEDING_DAYS_COUNT' | translate }}</span>
                                 </div>
                             </div>
+                            @if (observationsView().topSymptom; as topSymptom) {
+                                <div class="cycle-tracking__observation-highlight fd-stack fd-gap-2xs">
+                                    <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.MOST_LOGGED_SYMPTOM' | translate }}</span>
+                                    <strong class="fd-ui-title-sm">{{ topSymptom.labelKey | translate }}</strong>
+                                    <span class="fd-ui-body-sm">
+                                        {{
+                                            'CYCLE_TRACKING.SYMPTOM_OBSERVATION_SUMMARY'
+                                                | translate
+                                                    : {
+                                                          count: topSymptom.loggedDayCount,
+                                                          severity: topSymptom.severityKey | translate,
+                                                      }
+                                        }}
+                                    </span>
+                                </div>
+                            } @else {
+                                <p class="cycle-tracking__observation-empty fd-ui-body-sm">
+                                    {{ 'CYCLE_TRACKING.NO_ACTIVE_SYMPTOMS_OBSERVED' | translate }}
+                                </p>
+                            }
                             <p class="cycle-tracking__disclaimer fd-ui-body-sm">
                                 {{ 'CYCLE_TRACKING.OBSERVATIONS_READY_BODY' | translate }}
                             </p>

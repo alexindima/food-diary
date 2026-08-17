@@ -1,10 +1,13 @@
-<fd-ui-accent-surface class="cycle-tracking__day" accentSide="left" [accentColor]="item().accentColor" [tinted]="true">
+<article class="cycle-tracking__day" [attr.aria-label]="item().dateLabel">
     <div class="cycle-tracking__day-header fd-row fd-justify-between fd-gap-card-header">
-        <div class="cycle-tracking__day-date fd-ui-stat-value">{{ item().dateLabel }}</div>
+        <div class="cycle-tracking__day-identity fd-row fd-align-center fd-gap-sm">
+            <span class="cycle-tracking__day-status" aria-hidden="true" [style.background]="item().accentColor"></span>
+            <div class="cycle-tracking__day-date fd-ui-stat-value">{{ item().dateLabel }}</div>
+        </div>
         <div class="cycle-tracking__day-actions fd-row fd-gap-xs fd-align-center">
             <div
                 class="cycle-tracking__day-badge fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text"
-                [class.cycle-tracking__day-badge--period]="item().bleedingEntries.length > 0"
+                [class.cycle-tracking__day-badge--period]="item().badgeLabelKey === 'CYCLE_TRACKING.BADGE_PERIOD'"
             >
                 {{ item().badgeLabelKey | translate }}
             </div>
@@ -48,11 +51,36 @@
             />
         </div>
     </div>
-    <div class="cycle-tracking__symptoms-row fd-ui-body-sm fd-grid fd-gap-card-header">
-        @for (symptom of item().symptoms.slice(0, 4); track symptom.id) {
-            <span>{{ 'CYCLE_TRACKING.SYMPTOM_VALUE' | translate: { value: symptom.intensity } }}</span>
-        }
-    </div>
+    @if (item().bleedingSummaryItems.length > 0) {
+        <div class="cycle-tracking__history-row fd-ui-body-sm fd-grid fd-gap-card-header">
+            @for (bleeding of item().bleedingSummaryItems; track bleeding.id) {
+                <span>
+                    <strong>{{ bleeding.typeLabelKey | translate }}</strong>
+                    @if (bleeding.flowLabelKey) {
+                        <span aria-hidden="true"> · </span>{{ bleeding.flowLabelKey | translate }}
+                    }
+                    @if (bleeding.painSeverityKey) {
+                        <span aria-hidden="true"> · </span>{{ 'CYCLE_TRACKING.PAIN_HISTORY' | translate }}:
+                        {{ bleeding.painSeverityKey | translate }}
+                    }
+                </span>
+            }
+        </div>
+    }
+    @if (item().symptomSummaryItems.length > 0) {
+        <div class="cycle-tracking__symptoms-row fd-ui-body-sm fd-grid fd-gap-card-header">
+            @for (symptom of item().symptomSummaryItems; track symptom.id) {
+                <span
+                    ><strong>{{ symptom.labelKey | translate }}</strong> · {{ symptom.severityKey | translate }}</span
+                >
+            }
+            @if (item().additionalSymptomCount > 0) {
+                <span class="cycle-tracking__more-symptoms">
+                    {{ 'CYCLE_TRACKING.MORE_SYMPTOMS' | translate: { count: item().additionalSymptomCount } }}
+                </span>
+            }
+        </div>
+    }
     @if (item().fertilitySignalItems.length > 0) {
         <div class="cycle-tracking__signals-row fd-ui-body-sm fd-grid fd-gap-card-header">
             @for (signal of item().fertilitySignalItems; track signal.textKey) {
@@ -66,4 +94,4 @@
     @if (item().notes) {
         <p class="cycle-tracking__day-notes fd-ui-caption">{{ item().notes }}</p>
     }
-</fd-ui-accent-surface>
+</article>

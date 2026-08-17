@@ -1,6 +1,8 @@
 import { formatDateValue } from '../../../../shared/lib/local-date.utils';
+import { CYCLE_SYMPTOM_FIELDS } from '../../lib/cycle-tracking.config';
 import {
     BLEEDING_TYPE_BLEEDING,
+    BLEEDING_TYPE_SPOTTING,
     type BleedingEntry,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FACTOR_TYPE_LACTATION,
@@ -10,6 +12,9 @@ import {
     CYCLE_FACTOR_TYPE_POSTPARTUM,
     CYCLE_FACTOR_TYPE_PREGNANCY,
     CYCLE_FLOW_HEAVY,
+    CYCLE_FLOW_LIGHT,
+    CYCLE_FLOW_MEDIUM,
+    CYCLE_FLOW_NONE,
     CYCLE_TRACKING_MODE_NO_PERIOD,
     CYCLE_TRACKING_MODE_PERIMENOPAUSE,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
@@ -32,11 +37,14 @@ import {
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import type {
     CycleActiveFactorViewModel,
+    CycleDayBleedingSummaryViewModel,
     CycleDayCarePromptViewModel,
     CycleDaySignalItemViewModel,
+    CycleDaySymptomSummaryViewModel,
     CycleDayViewModel,
     CycleFactorListItemViewModel,
     CycleNutritionSummaryViewModel,
+    CycleObservationsViewModel,
     CycleOverviewDayViewModel,
     CycleOverviewViewModel,
     CyclePredictionViewModel,
@@ -52,6 +60,10 @@ const MS_PER_DAY = 86_400_000;
 const OVERVIEW_DAY_RADIUS = 5;
 const PROLONGED_BLEEDING_DAYS = 8;
 const SEVERE_PAIN_THRESHOLD = 8;
+const OBSERVATION_MINIMUM_TRACKED_DAYS = 3;
+const HISTORY_SYMPTOM_LIMIT = 4;
+const MILD_MAX_INTENSITY = 3;
+const MODERATE_MAX_INTENSITY = 6;
 const SUMMARY_ACCENTS = [
     'var(--fd-color-purple-500)',
     'var(--fd-color-sky-500)',
@@ -199,9 +211,10 @@ export function buildCycleDayItems(
 ): CycleDayViewModel[] {
     const locale = typeof localeOrOptions === 'string' ? localeOrOptions : localeOrOptions.locale;
     const menstrualEpisodes = typeof localeOrOptions === 'string' ? [] : localeOrOptions.menstrualEpisodes;
+    const activeSymptoms = symptoms.filter(symptom => symptom.intensity > 0);
     const dates = new Set([
         ...bleedingEntries.map(entry => entry.date),
-        ...symptoms.map(symptom => symptom.date),
+        ...activeSymptoms.map(symptom => symptom.date),
         ...fertilitySignals.map(signal => signal.date),
     ]);
     const bleedingStreakByDate = buildBleedingStreakByDate(bleedingEntries);
@@ -212,23 +225,143 @@ export function buildCycleDayItems(
             const dateKey = toDateKey(date);
             const fertilitySignal = fertilitySignals.find(signal => signal.date === date) ?? null;
             const hasBleeding = dayBleeding.some(entry => entry.type === BLEEDING_TYPE_BLEEDING);
+            const daySymptoms = activeSymptoms.filter(symptom => symptom.date === date);
+            const symptomSummaryItems = buildSymptomSummaryItems(daySymptoms);
             const startEpisode = menstrualEpisodes.find(episode => toDateKey(episode.startDate) === dateKey);
             return {
                 date,
                 dateLabel: formatCycleDate(date, locale, FULL_DATE_OPTIONS),
                 bleedingEntries: dayBleeding,
-                symptoms: symptoms.filter(symptom => symptom.date === date),
+                symptoms: daySymptoms,
+                bleedingSummaryItems: buildBleedingSummaryItems(dayBleeding),
+                symptomSummaryItems: symptomSummaryItems.slice(0, HISTORY_SYMPTOM_LIMIT),
+                additionalSymptomCount: Math.max(0, symptomSummaryItems.length - HISTORY_SYMPTOM_LIMIT),
                 fertilitySignal,
                 fertilitySignalItems: buildFertilitySignalItems(fertilitySignal),
                 carePromptItems: buildCarePromptItems(dayBleeding, bleedingStreakByDate.get(dateKey) ?? 0),
                 notes:
                     dayBleeding.find(entry => entry.notes !== null && entry.notes !== undefined)?.notes ?? fertilitySignal?.notes ?? null,
                 accentColor: hasBleeding ? PERIOD_DAY_ACCENT_COLOR : DEFAULT_DAY_ACCENT_COLOR,
-                badgeLabelKey: hasBleeding ? 'CYCLE_TRACKING.BADGE_PERIOD' : 'CYCLE_TRACKING.BADGE_TRACKED',
+                badgeLabelKey: getDayBadgeLabelKey(dayBleeding),
                 isPeriodStart: startEpisode !== undefined,
                 isPeriodStartConfirmed: startEpisode?.status === MENSTRUAL_EPISODE_STATUS_CONFIRMED,
             };
         });
+}
+
+export function buildCycleObservationsView(dayItems: CycleDayViewModel[]): CycleObservationsViewModel {
+    const activeSymptoms = dayItems.flatMap(day => day.symptoms).filter(symptom => symptom.intensity > 0);
+    const groupedSymptoms = new Map<number, { labelKey: string; loggedDayCount: number; totalIntensity: number }>();
+
+    for (const symptom of activeSymptoms) {
+        const labelKey = getSymptomLabelKey(symptom.category);
+        const current = groupedSymptoms.get(symptom.category) ?? { labelKey, loggedDayCount: 0, totalIntensity: 0 };
+        groupedSymptoms.set(symptom.category, {
+            labelKey,
+            loggedDayCount: current.loggedDayCount + 1,
+            totalIntensity: current.totalIntensity + symptom.intensity,
+        });
+    }
+
+    const topSymptomEntry = [...groupedSymptoms.entries()]
+        .sort(([leftCategory, left], [rightCategory, right]) => {
+            const countDifference = right.loggedDayCount - left.loggedDayCount;
+            if (countDifference !== 0) {
+                return countDifference;
+            }
+
+            const leftAverage = left.totalIntensity / left.loggedDayCount;
+            const rightAverage = right.totalIntensity / right.loggedDayCount;
+            const averageDifference = rightAverage - leftAverage;
+            return averageDifference !== 0 ? averageDifference : leftCategory - rightCategory;
+        })
+        .at(0)?.[1];
+
+    return {
+        hasEnoughData: dayItems.length >= OBSERVATION_MINIMUM_TRACKED_DAYS,
+        trackedDayCount: dayItems.length,
+        bleedingDayCount: dayItems.filter(day => day.bleedingEntries.length > 0).length,
+        activeSymptomRecordCount: activeSymptoms.length,
+        topSymptom:
+            topSymptomEntry === undefined
+                ? null
+                : {
+                      labelKey: topSymptomEntry.labelKey,
+                      loggedDayCount: topSymptomEntry.loggedDayCount,
+                      severityKey: getIntensitySeverityKey(topSymptomEntry.totalIntensity / topSymptomEntry.loggedDayCount),
+                  },
+    };
+}
+
+function buildBleedingSummaryItems(entries: BleedingEntry[]): CycleDayBleedingSummaryViewModel[] {
+    return entries.map(entry => ({
+        id: entry.id,
+        typeLabelKey:
+            entry.type === BLEEDING_TYPE_SPOTTING ? 'CYCLE_TRACKING.BLEEDING_TYPE_SPOTTING' : 'CYCLE_TRACKING.BLEEDING_TYPE_BLEEDING',
+        flowLabelKey: getFlowLabelKey(entry.flow),
+        painSeverityKey:
+            entry.painImpact !== null && entry.painImpact !== undefined && entry.painImpact > 0
+                ? getIntensitySeverityKey(entry.painImpact)
+                : null,
+    }));
+}
+
+function buildSymptomSummaryItems(symptoms: CycleSymptomEntry[]): CycleDaySymptomSummaryViewModel[] {
+    return [...symptoms]
+        .sort((left, right) => {
+            const intensityDifference = right.intensity - left.intensity;
+            return intensityDifference !== 0 ? intensityDifference : left.category - right.category;
+        })
+        .map(symptom => ({
+            id: symptom.id,
+            labelKey: getSymptomLabelKey(symptom.category),
+            severityKey: getIntensitySeverityKey(symptom.intensity),
+        }));
+}
+
+function getDayBadgeLabelKey(entries: BleedingEntry[]): string {
+    if (entries.some(entry => entry.type === BLEEDING_TYPE_BLEEDING)) {
+        return 'CYCLE_TRACKING.BADGE_PERIOD';
+    }
+
+    if (entries.some(entry => entry.type === BLEEDING_TYPE_SPOTTING)) {
+        return 'CYCLE_TRACKING.BADGE_SPOTTING';
+    }
+
+    return 'CYCLE_TRACKING.BADGE_TRACKED';
+}
+
+function getSymptomLabelKey(category: CycleSymptomEntry['category']): string {
+    return CYCLE_SYMPTOM_FIELDS.find(field => field.category === category)?.labelKey ?? 'CYCLE_TRACKING.SYMPTOM_OTHER';
+}
+
+function getFlowLabelKey(flow: BleedingEntry['flow']): string | null {
+    switch (flow) {
+        case CYCLE_FLOW_LIGHT: {
+            return 'CYCLE_TRACKING.FLOW_LIGHT';
+        }
+        case CYCLE_FLOW_MEDIUM: {
+            return 'CYCLE_TRACKING.FLOW_MEDIUM';
+        }
+        case CYCLE_FLOW_HEAVY: {
+            return 'CYCLE_TRACKING.FLOW_HEAVY';
+        }
+        case CYCLE_FLOW_NONE: {
+            return null;
+        }
+    }
+}
+
+function getIntensitySeverityKey(value: number): string {
+    if (value <= MILD_MAX_INTENSITY) {
+        return 'CYCLE_TRACKING.SEVERITY_MILD';
+    }
+
+    if (value <= MODERATE_MAX_INTENSITY) {
+        return 'CYCLE_TRACKING.SEVERITY_MODERATE';
+    }
+
+    return 'CYCLE_TRACKING.SEVERITY_STRONG';
 }
 
 function buildCarePromptItems(bleedingEntries: BleedingEntry[], bleedingStreakDays: number): CycleDayCarePromptViewModel[] {

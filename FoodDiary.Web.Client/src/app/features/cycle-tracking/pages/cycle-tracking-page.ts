@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -53,6 +53,7 @@ import {
     buildCycleDayItems,
     buildCycleFactorItems,
     buildCycleNutritionSummaryView,
+    buildCycleObservationsView,
     buildCycleOverviewView,
     buildCyclePredictionView,
 } from './cycle-tracking-page-lib/cycle-tracking-page.mapper';
@@ -101,6 +102,7 @@ export class CycleTrackingPageComponent {
     private readonly languageVersion = signal(0);
     protected readonly isDayEditorOpen = signal(false);
     protected readonly isSettingsOpen = signal(false);
+    protected readonly isHistoryExpanded = signal(false);
 
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSavingCycle = this.facade.isSavingCycle;
@@ -141,7 +143,11 @@ export class CycleTrackingPageComponent {
         }),
     );
     protected readonly factorItems = computed(() => buildCycleFactorItems(this.factors(), this.appLocale()));
-    protected readonly recentDayItems = computed(() => this.dayItems().slice(0, RECENT_DAY_LIMIT));
+    protected readonly observationsView = computed(() => buildCycleObservationsView(this.dayItems()));
+    protected readonly hasMoreHistory = computed(() => this.dayItems().length > RECENT_DAY_LIMIT);
+    protected readonly recentDayItems = computed(() =>
+        this.isHistoryExpanded() ? this.dayItems() : this.dayItems().slice(0, RECENT_DAY_LIMIT),
+    );
     protected readonly modeOptions = computed<Array<FdUiSelectOption<CycleTrackingMode>>>(() => {
         this.languageVersion();
         return [
@@ -177,6 +183,16 @@ export class CycleTrackingPageComponent {
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
+        });
+        effect(() => {
+            if (this.facade.daySaveRevision() > 0) {
+                this.cancelDayEdit();
+            }
+        });
+        effect(() => {
+            if (this.facade.settingsSaveRevision() > 0) {
+                this.closeSettings();
+            }
         });
         this.facade.initialize();
     }
@@ -229,6 +245,10 @@ export class CycleTrackingPageComponent {
 
     protected confirmPeriodStart(date: string): void {
         this.facade.confirmPeriodStart(date);
+    }
+
+    protected toggleHistory(): void {
+        this.isHistoryExpanded.update(isExpanded => !isExpanded);
     }
 
     protected editMenstrualEpisode(episodeId: string): void {

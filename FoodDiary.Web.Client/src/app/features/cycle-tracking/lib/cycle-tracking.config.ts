@@ -1,7 +1,19 @@
 import type { CycleSymptomCategory } from '../models/cycle.data';
 
 export type CycleSymptomField = {
-    key: 'pain' | 'mood' | 'energy' | 'sleepQuality' | 'bloating' | 'headache' | 'libido';
+    key:
+        | 'pain'
+        | 'mood'
+        | 'energy'
+        | 'sleepQuality'
+        | 'appetite'
+        | 'craving'
+        | 'bloating'
+        | 'headache'
+        | 'skin'
+        | 'stool'
+        | 'nausea'
+        | 'libido';
     category: CycleSymptomCategory;
     labelKey: string;
 };
@@ -11,8 +23,13 @@ export const CYCLE_SYMPTOM_FIELDS: readonly CycleSymptomField[] = [
     { key: 'mood', category: 1, labelKey: 'CYCLE_TRACKING.SYMPTOM_MOOD' },
     { key: 'energy', category: 2, labelKey: 'CYCLE_TRACKING.SYMPTOM_ENERGY' },
     { key: 'sleepQuality', category: 3, labelKey: 'CYCLE_TRACKING.SYMPTOM_SLEEP' },
+    { key: 'appetite', category: 4, labelKey: 'CYCLE_TRACKING.SYMPTOM_APPETITE' },
+    { key: 'craving', category: 5, labelKey: 'CYCLE_TRACKING.SYMPTOM_CRAVING' },
     { key: 'bloating', category: 6, labelKey: 'CYCLE_TRACKING.SYMPTOM_BLOATING' },
     { key: 'headache', category: 7, labelKey: 'CYCLE_TRACKING.SYMPTOM_HEADACHE' },
+    { key: 'skin', category: 8, labelKey: 'CYCLE_TRACKING.SYMPTOM_SKIN' },
+    { key: 'stool', category: 9, labelKey: 'CYCLE_TRACKING.SYMPTOM_STOOL' },
+    { key: 'nausea', category: 10, labelKey: 'CYCLE_TRACKING.SYMPTOM_NAUSEA' },
     { key: 'libido', category: 11, labelKey: 'CYCLE_TRACKING.SYMPTOM_LIBIDO' },
 ];
 
