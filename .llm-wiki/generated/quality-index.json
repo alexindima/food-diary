@@ -19888,11 +19888,11 @@
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserRepository.cs",
-      "nonBlankLines": 218,
+      "nonBlankLines": 225,
       "decisionPoints": 24,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 40.36
+      "structuralRiskScore": 40.5
     },
     {
       "path": "FoodDiary.Infrastructure/Persistence/Users/UserRoleCatalogService.cs",

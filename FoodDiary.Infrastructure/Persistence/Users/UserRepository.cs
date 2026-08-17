@@ -13,10 +13,13 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
     private IQueryable<User> UsersWithRoles() =>
         context.Users
             .AsSplitQuery()
-            .Include(u => u.WeightGoals)
-            .Include(u => u.WaistGoals)
             .Include(u => u.UserRoles)
             .ThenInclude(ur => ur.Role);
+
+    private IQueryable<User> UsersWithRolesAndGoals() =>
+        UsersWithRoles()
+            .Include(u => u.WeightGoals)
+            .Include(u => u.WaistGoals);
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
         await UsersWithRoles().FirstOrDefaultAsync(u =>
@@ -30,7 +33,7 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
             u.GoogleIssuer == issuer && u.GoogleSubject == subject, cancellationToken).ConfigureAwait(false);
 
     public async Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-        await UsersWithRoles().FirstOrDefaultAsync(u =>
+        await UsersWithRolesAndGoals().FirstOrDefaultAsync(u =>
             u.Id == id && u.IsActive && u.DeletedAt == null, cancellationToken).ConfigureAwait(false);
 
     public async Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
@@ -39,7 +42,10 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
     public async Task<UserAdminReadModel?> GetByIdIncludingDeletedReadModelAsync(
         UserId id,
         CancellationToken cancellationToken = default) {
-        User? user = await GetByIdIncludingDeletedAsync(id, cancellationToken).ConfigureAwait(false);
+        User? user = await UsersWithRoles()
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken)
+            .ConfigureAwait(false);
         return user is null ? null : ToAdminReadModel(user);
     }
 
@@ -68,7 +74,7 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
         CancellationToken cancellationToken = default) {
         int pageNumber = Math.Max(page, 1);
         int pageSize = Math.Max(limit, 1);
-        IQueryable<User> filteredQuery = context.Users.AsQueryable();
+        IQueryable<User> filteredQuery = context.Users.AsNoTracking();
 
         filteredQuery = status switch {
             UserAccountStatusFilter.Active => filteredQuery.Where(u => u.IsActive && u.DeletedAt == null),
@@ -99,6 +105,7 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
         }
 
         Dictionary<UserId, User> usersById = await UsersWithRoles()
+            .AsNoTracking()
             .Where(u => pageIds.Contains(u.Id))
             .ToDictionaryAsync(u => u.Id, cancellationToken).ConfigureAwait(false);
 
@@ -141,6 +148,7 @@ public sealed class UserRepository(FoodDiaryDbContext context) : IUserRepository
             .CountAsync(cancellationToken).ConfigureAwait(false);
 
         List<User> recentUsers = await UsersWithRoles()
+            .AsNoTracking()
             .Where(u => u.DeletedAt == null)
             .OrderByDescending(u => u.CreatedOnUtc)
             .Take(recentLimit)

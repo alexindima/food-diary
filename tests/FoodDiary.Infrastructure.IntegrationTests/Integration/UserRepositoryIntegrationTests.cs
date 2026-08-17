@@ -54,6 +54,46 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     }
 
     [RequiresDockerFact]
+    public async Task GetByEmailAsync_DoesNotLoadGoalHistoryNeededOnlyByAggregateWorkflows() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"identity-query-{Guid.NewGuid():N}@example.com", "hash");
+        DateTime startedAtUtc = DateTime.UtcNow;
+        user.StartWeightGoal(70, 80, startedAtUtc);
+        user.StartWaistGoal(80, 90, startedAtUtc);
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new UserRepository(context);
+
+        User? loaded = await repository.GetByEmailAsync(user.Email);
+
+        Assert.NotNull(loaded);
+        Assert.Multiple(
+            () => Assert.Empty(loaded.WeightGoals),
+            () => Assert.Empty(loaded.WaistGoals));
+    }
+
+    [RequiresDockerFact]
+    public async Task GetByIdAsync_LoadsGoalHistoryRequiredByAggregateWorkflows() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"aggregate-query-{Guid.NewGuid():N}@example.com", "hash");
+        DateTime startedAtUtc = DateTime.UtcNow;
+        user.StartWeightGoal(70, 80, startedAtUtc);
+        user.StartWaistGoal(80, 90, startedAtUtc);
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
+        var repository = new UserRepository(context);
+
+        User? loaded = await repository.GetByIdAsync(user.Id);
+
+        Assert.NotNull(loaded);
+        Assert.Multiple(
+            () => Assert.Single(loaded.WeightGoals),
+            () => Assert.Single(loaded.WaistGoals));
+    }
+
+    [RequiresDockerFact]
     public async Task GetPagedAsync_NormalizesPagingAndEscapesLikePattern() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var matchingUser = User.Create("100%real@example.com", "hash");
@@ -86,6 +126,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         context.UserRoles.Add(new UserRole(user.Id, premiumRole.Id));
         await context.SaveChangesAsync();
+        context.ChangeTracker.Clear();
 
         var repository = new UserRepository(context);
 
@@ -99,6 +140,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         Assert.Equal(1, totalItems);
         Assert.Single(item.UserRoles);
         Assert.Equal(RoleNames.Premium, item.UserRoles.Single().Role.Name);
+        Assert.Equal(EntityState.Detached, context.Entry(item).State);
     }
 
     [RequiresDockerFact]

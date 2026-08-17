@@ -1,7 +1,7 @@
 # Backend Definition Of Done
 
 Date: 2026-03-28
-Scope: backend changes in `FoodDiary.Domain`, `FoodDiary.Application`, `FoodDiary.Infrastructure`, `FoodDiary.Presentation.Api`, `FoodDiary.Web.Api`, related backend tests
+Scope: backend changes in `FoodDiary.Domain`, `FoodDiary.Application.Abstractions`, `FoodDiary.Application.Runtime`, `FoodDiary.Application.*` feature modules, `FoodDiary.Infrastructure`, `FoodDiary.Presentation.Api`, `FoodDiary.Web.Api`, and related backend tests
 
 ## Purpose
 

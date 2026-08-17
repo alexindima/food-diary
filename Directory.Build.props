@@ -25,4 +25,33 @@
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <FoodDiarySkiaTargetIsLinux>false</FoodDiarySkiaTargetIsLinux>
+    <FoodDiarySkiaTargetIsMacOS>false</FoodDiarySkiaTargetIsMacOS>
+    <FoodDiarySkiaTargetIsWindows>false</FoodDiarySkiaTargetIsWindows>
+    <FoodDiarySkiaTargetIsLinux Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('linux-'))">true</FoodDiarySkiaTargetIsLinux>
+    <FoodDiarySkiaTargetIsMacOS Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('osx-'))">true</FoodDiarySkiaTargetIsMacOS>
+    <FoodDiarySkiaTargetIsWindows Condition="$([System.String]::Copy('$(RuntimeIdentifier)').StartsWith('win-'))">true</FoodDiarySkiaTargetIsWindows>
+    <FoodDiarySkiaTargetIsLinux Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('Linux'))">true</FoodDiarySkiaTargetIsLinux>
+    <FoodDiarySkiaTargetIsMacOS Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('OSX'))">true</FoodDiarySkiaTargetIsMacOS>
+    <FoodDiarySkiaTargetIsWindows Condition="'$(RuntimeIdentifier)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">true</FoodDiarySkiaTargetIsWindows>
+  </PropertyGroup>
+
+  <Target Name="PruneNonTargetSkiaSharpNativeAssets" AfterTargets="ResolveLockFileCopyLocalFiles">
+    <ItemGroup>
+      <RuntimeCopyLocalItems Remove="@(RuntimeCopyLocalItems)"
+                             Condition="'%(RuntimeCopyLocalItems.NuGetPackageId)' == 'SkiaSharp.NativeAssets.Linux.NoDependencies' and '$(FoodDiarySkiaTargetIsLinux)' != 'true'" />
+      <RuntimeCopyLocalItems Remove="@(RuntimeCopyLocalItems)"
+                             Condition="'%(RuntimeCopyLocalItems.NuGetPackageId)' == 'SkiaSharp.NativeAssets.macOS' and '$(FoodDiarySkiaTargetIsMacOS)' != 'true'" />
+      <RuntimeCopyLocalItems Remove="@(RuntimeCopyLocalItems)"
+                             Condition="'%(RuntimeCopyLocalItems.NuGetPackageId)' == 'SkiaSharp.NativeAssets.Win32' and ('$(FoodDiarySkiaTargetIsWindows)' != 'true' or '%(RuntimeCopyLocalItems.Extension)' == '.pdb')" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"
+                               Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' == 'SkiaSharp.NativeAssets.Linux.NoDependencies' and '$(FoodDiarySkiaTargetIsLinux)' != 'true'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"
+                               Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' == 'SkiaSharp.NativeAssets.macOS' and '$(FoodDiarySkiaTargetIsMacOS)' != 'true'" />
+      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalPaths)"
+                               Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' == 'SkiaSharp.NativeAssets.Win32' and ('$(FoodDiarySkiaTargetIsWindows)' != 'true' or '%(ReferenceCopyLocalPaths.Extension)' == '.pdb')" />
+    </ItemGroup>
+  </Target>
 </Project>

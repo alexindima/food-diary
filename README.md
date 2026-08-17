@@ -6,7 +6,8 @@ FoodDiary is a food tracking platform with a .NET backend, Angular frontend, Tel
 
 - `FoodDiary.Domain` - domain model, aggregates, value objects, domain events
 - `FoodDiary.Application.Abstractions` - application-facing ports and shared models
-- `FoodDiary.Application` - use cases, application services, ports, validation
+- `FoodDiary.Application.Runtime` - mediator pipeline, transactions, and post-commit runtime behavior
+- `FoodDiary.Application.<Feature>` - independently compiled feature use cases, services, and validation
 - `FoodDiary.Infrastructure` - EF Core, PostgreSQL, auth, external providers, persistence adapters
 - `FoodDiary.Integrations` - external provider adapters and supporting service clients
 - `FoodDiary.Presentation.Api` - HTTP transport layer, controllers, request/response mappings
@@ -25,10 +26,11 @@ FoodDiary is a food tracking platform with a .NET backend, Angular frontend, Tel
 The backend follows a layered architecture with explicit dependency direction:
 
 1. `Domain` knows nothing about outer layers.
-2. `Application` depends on `Domain`.
-3. `Infrastructure` depends on `Application`.
-4. `Presentation.Api` depends on `Application`.
-5. `Web.Api` is the host that wires `Presentation.Api` and `Infrastructure` together.
+2. Feature application modules depend on `Application.Abstractions`, `Domain`, and the shared mediator as needed.
+3. `Application.Runtime` owns cross-cutting mediator execution without aggregating feature modules.
+4. `Infrastructure` implements application-facing abstractions.
+5. `Presentation.Api` maps transport contracts to feature commands and queries.
+6. `Web.Api` is the host that explicitly composes presentation, runtime, feature modules, infrastructure, and integrations.
 
 These constraints are enforced by architecture tests in `tests/FoodDiary.ArchitectureTests`.
 
@@ -42,7 +44,7 @@ More detail:
 
 - Web client calls the ASP.NET API.
 - `Presentation.Api` maps HTTP requests to application commands and queries.
-- `Application` executes use cases against domain model and abstractions.
+- The owning `Application.<Feature>` module executes each use case against domain models and abstractions.
 - `Infrastructure` provides persistence and external integrations.
 - `JobManager` runs scheduled maintenance workflows.
 - `Telegram.Bot` handles Telegram-specific interaction as a separate adapter.
@@ -54,6 +56,8 @@ Backend:
 ```bash
 dotnet build FoodDiary.slnx
 ```
+
+Shared MSBuild settings keep only the SkiaSharp native assets required by the target runtime and omit native PDB files from build output. Cross-platform publishes must therefore specify the deployment RID (for example, `linux-x64`).
 
 Frontend:
 
@@ -68,7 +72,7 @@ npm run build
 Backend tests:
 
 ```bash
-dotnet test FoodDiary.slnx
+dotnet test FoodDiary.slnx --maxcpucount:1
 ```
 
 Architecture guardrails:
@@ -83,7 +87,7 @@ Backend verification:
 dotnet restore FoodDiary.slnx
 dotnet format FoodDiary.slnx --verify-no-changes --no-restore
 dotnet build FoodDiary.slnx --configuration Release --no-restore
-dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --configuration Release --no-restore
+dotnet test FoodDiary.slnx --configuration Release --no-restore --no-build --maxcpucount:1
 ```
 
 Frontend checks:

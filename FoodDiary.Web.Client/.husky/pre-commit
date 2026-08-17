@@ -150,3 +150,7 @@ fi
 
 echo "=== Skipping API contract integration tests in pre-commit (full suite runs in CI) ==="
 hook_progress_done
+
+if ! "$WIKI_POWERSHELL" -NoLogo -NoProfile -File scripts/Clean-NestedDotnetArtifacts.ps1 -IncludeRoot; then
+  echo "Warning: successful pre-commit checks could not remove generated .NET artifacts."
+fi

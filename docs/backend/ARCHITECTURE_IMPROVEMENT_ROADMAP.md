@@ -7,7 +7,8 @@ This roadmap captures the current backend architecture direction. It is intentio
 The primary backend is a modular monolith with strict project boundaries:
 
 - `FoodDiary.Domain` owns domain model and invariants.
-- `FoodDiary.Application` owns use cases and business workflows.
+- independently compiled `FoodDiary.Application.<Feature>` modules own use cases and business workflows.
+- `FoodDiary.Application.Runtime` owns mediator, transaction, and post-commit pipeline behavior.
 - `FoodDiary.Infrastructure` owns EF Core persistence and technical implementations.
 - `FoodDiary.Integrations` owns external provider adapters and service-client bridges.
 - `FoodDiary.Presentation.Api` owns HTTP and SignalR transport.
@@ -29,7 +30,8 @@ The backend now has first-pass guardrails for the reliability split:
 The backend also has structural guardrails for the main ownership boundaries:
 
 - `FoodDiary.Application.Abstractions` keeps feature contracts in feature folders and does not place contracts in the project root.
-- `FoodDiary.Application` keeps feature source files in use-case purpose folders and keeps only composition files in the project root.
+- Each `FoodDiary.Application.<Feature>` project keeps source in use-case purpose folders and owns only its feature registration.
+- `FoodDiary.Application.Runtime` stays limited to cross-cutting mediator execution and does not aggregate feature modules.
 - `FoodDiary.Infrastructure` and `FoodDiary.Integrations` keep root folders limited to technical implementation and provider-adapter areas.
 - `FoodDiary.Presentation.Api` keeps HTTP controllers thin by limiting feature purpose folders and controller constructor dependencies.
 - `FoodDiary.Web.Api` and `FoodDiary.JobManager` keep executable-host code out of project roots except `Program.cs`.
@@ -88,7 +90,7 @@ Avoid adding one-off processor behavior unless the provider truly requires it.
 
 ## Priority 4: Keep JobManager Thin
 
-`FoodDiary.JobManager` is a worker host and scheduler. It should register jobs and call application/infrastructure services, but business decisions should stay in `FoodDiary.Application`.
+`FoodDiary.JobManager` is a worker host and scheduler. It should register jobs and call owning application-module or infrastructure services, but business decisions should stay in `FoodDiary.Application.<Feature>` modules.
 
 Jobs should be idempotent where possible. Re-running a job after a crash or timeout should not create duplicate user-visible state.
 
@@ -96,11 +98,11 @@ Keep job classes under `FoodDiary.JobManager/Services`. The project root should 
 
 ## Priority 5: Continue Feature-First Migration
 
-Keep reducing global shared areas. `Application/Common` should stay limited to cross-cutting pipeline, result, validation, and mediator infrastructure. Feature-specific models, services, mappings, and helper policies should live under their feature folders.
+Keep reducing global shared areas. `FoodDiary.Application.Runtime/Common` stays limited to cross-cutting pipeline and post-commit runtime behavior. Feature-specific models, services, mappings, and helper policies live in their owning application module.
 
 Do not add new legacy flat folders. New backend work should follow the feature-first layout immediately.
 
-For `FoodDiary.Application`, use the established feature purpose folders: `Commands`, `Queries`, `Services`, `Mappings`, `Models`, `Validators`, `EventHandlers`, `SearchSuggestions`, and feature-local `Common`.
+Within `FoodDiary.Application.<Feature>`, use the established purpose folders: `Commands`, `Queries`, `Services`, `Mappings`, `Models`, `Validators`, `EventHandlers`, `SearchSuggestions`, and feature-local `Common`.
 
 ## Guardrail Direction
 

@@ -37,6 +37,37 @@ function Get-BuildIdentity {
     if (-not (Test-Path -LiteralPath $buildIdentityPath -PathType Leaf)) { return $null }
     try { return (Get-Content -LiteralPath $buildIdentityPath -Raw | ConvertFrom-Json) } catch { return $null }
 }
+function Remove-StaleSessionDirectories {
+    param([string]$SessionRoot)
+
+    if (-not (Test-Path -LiteralPath $SessionRoot -PathType Container)) { return }
+
+    $staleCutoff = [DateTime]::UtcNow.AddMinutes(-10)
+    foreach ($directory in @(Get-ChildItem -LiteralPath $SessionRoot -Directory -Force)) {
+        if ($directory.Name -notmatch '^[0-9a-fA-F]{32}$' -or $directory.LastWriteTimeUtc -ge $staleCutoff) {
+            continue
+        }
+
+        $sessionLockPath = Join-Path $directory.FullName '.session.lock'
+        $staleSessionLock = $null
+        try {
+            $staleSessionLock = [IO.File]::Open(
+                $sessionLockPath,
+                [IO.FileMode]::OpenOrCreate,
+                [IO.FileAccess]::ReadWrite,
+                [IO.FileShare]::None)
+            $staleSessionLock.Dispose()
+            $staleSessionLock = $null
+            [IO.Directory]::Delete($directory.FullName, $true)
+        } catch [IO.IOException] {
+            continue
+        } catch [UnauthorizedAccessException] {
+            continue
+        } finally {
+            if ($null -ne $staleSessionLock) { $staleSessionLock.Dispose() }
+        }
+    }
+}
 
 $currentFingerprint = Get-SourceFingerprint
 $buildIdentity = Get-BuildIdentity
@@ -93,9 +124,22 @@ if ($shouldBuild) {
     $buildIdentity = [pscustomobject]@{ gitHead = $null; sourceFingerprint = $null }
 }
 
-$sessionRoot = Join-Path ([IO.Path]::GetTempPath()) 'fooddiary-development-mcp'
+$systemTemp = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd([IO.Path]::DirectorySeparatorChar)
+$sessionRoot = [IO.Path]::GetFullPath((Join-Path $systemTemp 'fooddiary-development-mcp'))
+if ([IO.Path]::GetDirectoryName($sessionRoot) -ne $systemTemp -or
+    [IO.Path]::GetFileName($sessionRoot) -ne 'fooddiary-development-mcp') {
+    throw "Unsafe Development MCP session root: $sessionRoot"
+}
+$null = New-Item -ItemType Directory -Path $sessionRoot -Force
+Remove-StaleSessionDirectories -SessionRoot $sessionRoot
+
 $sessionDirectory = Join-Path $sessionRoot ([guid]::NewGuid().ToString('N'))
 $null = New-Item -ItemType Directory -Path $sessionDirectory -Force
+$sessionLock = [IO.File]::Open(
+    (Join-Path $sessionDirectory '.session.lock'),
+    [IO.FileMode]::CreateNew,
+    [IO.FileAccess]::ReadWrite,
+    [IO.FileShare]::None)
 try {
     Copy-Item -Path (Join-Path $sourceDirectory '*') -Destination $sessionDirectory -Recurse -Force
     $env:FOODDIARY_REPOSITORY_ROOT = $resolvedRoot
@@ -104,5 +148,6 @@ try {
     & dotnet (Join-Path $sessionDirectory 'FoodDiary.Development.Mcp.dll')
     exit $LASTEXITCODE
 } finally {
+    $sessionLock.Dispose()
     Remove-Item -LiteralPath $sessionDirectory -Recurse -Force -ErrorAction SilentlyContinue
 }

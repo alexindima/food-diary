@@ -154,41 +154,23 @@ jobs:
             exit "$status"
           fi
 
-      - name: Run all test projects
+      - name: Run all backend tests
         shell: bash
         run: |
           set -euo pipefail
-          shopt -s nullglob
-          all_projects=(tests/*/*.csproj)
-          projects=()
-          for project in "${all_projects[@]}"; do
-            if [ "$(basename "$project")" = "FoodDiary.Testing.csproj" ]; then
-              continue
-            fi
-            projects+=("$project")
-          done
-          if [ ${#projects[@]} -eq 0 ]; then
-            echo "No test projects found in tests/*/*.csproj"
-            exit 1
+          log_file="${RUNNER_TEMP}/ci-test-logs/solution-tests.log"
+          set +e
+          dotnet test FoodDiary.slnx --configuration Release --no-restore --no-build --maxcpucount:1 2>&1 | tee "$log_file"
+          status=${PIPESTATUS[0]}
+          set -e
+          if [ "$status" -ne 0 ]; then
+            {
+              echo "FAILED_AREA=dotnet"
+              echo "FAILED_TARGET=Backend solution tests"
+              echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
+            } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
+            exit "$status"
           fi
-          for project in "${projects[@]}"; do
-            echo "Running tests: $project"
-            safe_name="${project//\//_}"
-            safe_name="${safe_name//\\/_}"
-            log_file="${RUNNER_TEMP}/ci-test-logs/${safe_name}.log"
-            set +e
-            dotnet test "$project" --configuration Release --no-restore --no-build 2>&1 | tee "$log_file"
-            status=${PIPESTATUS[0]}
-            set -e
-            if [ "$status" -ne 0 ]; then
-              {
-                echo "FAILED_AREA=dotnet"
-                echo "FAILED_TARGET=$project"
-                echo "FAILED_LOG_FILE_NAME=$(basename "$log_file")"
-              } > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
-              exit "$status"
-            fi
-          done
 
       - name: Append backend .NET summary
         if: always()
@@ -224,13 +206,21 @@ jobs:
               return
             fi
 
-            local summary
-            summary=$(grep -E 'Passed!|Failed!' "$log_file" | tail -n 1 | xargs || true)
-            if [ -n "$summary" ]; then
-              printf '%s' "$summary"
-            else
+            local summaries
+            summaries=$(grep -E 'Passed!|Failed!' "$log_file" || true)
+            if [ -z "$summaries" ]; then
               printf 'dotnet test'
+              return
             fi
+
+            local projects failed passed skipped total
+            projects=$(printf '%s\n' "$summaries" | wc -l | xargs)
+            failed=$(printf '%s\n' "$summaries" | sed -E 's/.*Failed:[[:space:]]*([0-9]+).*/\1/' | awk '{ sum += $1 } END { print sum + 0 }')
+            passed=$(printf '%s\n' "$summaries" | sed -E 's/.*Passed:[[:space:]]*([0-9]+).*/\1/' | awk '{ sum += $1 } END { print sum + 0 }')
+            skipped=$(printf '%s\n' "$summaries" | sed -E 's/.*Skipped:[[:space:]]*([0-9]+).*/\1/' | awk '{ sum += $1 } END { print sum + 0 }')
+            total=$(printf '%s\n' "$summaries" | sed -E 's/.*Total:[[:space:]]*([0-9]+).*/\1/' | awk '{ sum += $1 } END { print sum + 0 }')
+            printf '%s projects; Failed: %s, Passed: %s, Skipped: %s, Total: %s' \
+              "$projects" "$failed" "$passed" "$skipped" "$total"
           }
 
           {
@@ -242,22 +232,8 @@ jobs:
             echo "| Quality | Formatting | $(status_for_log "${logs_dir}/dotnet-format.log") | dotnet format --verify-no-changes |"
             echo "| Build | Solution build | $(status_for_log "${logs_dir}/build.log") | dotnet build Release |"
 
-            shopt -s nullglob
-            all_projects=(tests/*/*.csproj)
-            projects=()
-            for project in "${all_projects[@]}"; do
-              if [ "$(basename "$project")" = "FoodDiary.Testing.csproj" ]; then
-                continue
-              fi
-              projects+=("$project")
-            done
-            for project in "${projects[@]}"; do
-              safe_name="${project//\//_}"
-              safe_name="${safe_name//\\/_}"
-              log_file="${logs_dir}/${safe_name}.log"
-              project_name=$(basename "$project" .csproj)
-              echo "| Tests | ${project_name} | $(status_for_log "$log_file") | $(test_details_for_log "$log_file") |"
-            done
+            log_file="${logs_dir}/solution-tests.log"
+            echo "| Tests | Backend solution | $(status_for_log "$log_file") | $(test_details_for_log "$log_file") |"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload CI failure logs

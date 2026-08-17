@@ -256,6 +256,29 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void SharedBuildSettings_PruneNonTargetSkiaSharpNativeAssets() {
+        string propsPath = ArchitectureTestPaths.FromRoot("Directory.Build.props");
+        var document = XDocument.Load(propsPath);
+        XElement target = Assert.Single(document.Descendants("Target"), element =>
+            string.Equals(
+                element.Attribute("Name")?.Value,
+                "PruneNonTargetSkiaSharpNativeAssets",
+                StringComparison.Ordinal));
+
+        Assert.Equal("ResolveLockFileCopyLocalFiles", target.Attribute("AfterTargets")?.Value);
+        string[] conditions = [.. target.Descendants()
+            .Select(element => element.Attribute("Condition")?.Value)
+            .Where(static condition => !string.IsNullOrWhiteSpace(condition))
+            .Select(static condition => condition!)];
+
+        Assert.Multiple(
+            () => Assert.Contains(conditions, condition => condition.Contains("SkiaSharp.NativeAssets.Linux.NoDependencies", StringComparison.Ordinal)),
+            () => Assert.Contains(conditions, condition => condition.Contains("SkiaSharp.NativeAssets.macOS", StringComparison.Ordinal)),
+            () => Assert.Contains(conditions, condition => condition.Contains("SkiaSharp.NativeAssets.Win32", StringComparison.Ordinal)),
+            () => Assert.Contains(conditions, condition => condition.Contains(".pdb", StringComparison.Ordinal)));
+    }
+
+    [Fact]
     public void InfrastructureRootFolders_StayLimitedToTechnicalImplementationAreas() {
         string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
         string[] allowedDirectories = [

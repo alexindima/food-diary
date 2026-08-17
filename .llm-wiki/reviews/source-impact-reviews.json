@@ -7,18 +7,14 @@
       "pageSha256": "c4bb6a75a90ab7c79f6a01e1fda3fe34b619a09e6123e4040fe43a566260875a",
       "sources": [
         {
-          "path": "AGENTS.md",
-          "sha256": "b41b46f122e0c987679043da16ef2a072d307cf0915ef8983e1bfad4e159f828"
-        },
-        {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "69225674a5df973e539a590f3bc883891881a98688291a49edd510521a701e98"
         }
       ],
-      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-      "reviewedAtUtc": "2026-08-13T22:17:58.4844021Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:42.3199922Z"
     },
     {
       "pageId": "module.mail-services",
@@ -26,29 +22,29 @@
       "pageSha256": "a346d4359eeb7b0d28d318173c6e625728a1bc12802e510c61648936579c2584",
       "sources": [
         {
-          "path": "docs/BACKEND_MODULE_MAP.md",
-          "sha256": "6f700a12551b1451759d8f0b469f05d7762500df19d6773b15ba32ac449d5eff"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "69225674a5df973e539a590f3bc883891881a98688291a49edd510521a701e98"
         }
       ],
-      "reason": "Reviewed after replacing the legacy application aggregator with the dependency-light Application.Runtime boundary, updating business-module manifests, architecture guards, Docker composition, and ADR 0011; generated indexes were refreshed from current sources.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "20a81ae97afd195dcb37e0fe7537c07b2762cd98",
-      "reviewedAtUtc": "2026-08-13T22:17:58.6892974Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:42.4610672Z"
     },
     {
       "pageId": "module.primary-backend",
       "pagePath": ".llm-wiki/modules/primary-backend.md",
-      "pageSha256": "8513486fc92e9236d116ce0c4eeaf7ba511ab53761f517bcc26e58464a249fa1",
+      "pageSha256": "ebc1bbcb6c7df9755cfe613efcf8d31e9904b961c9081fb9aa2b808c32d2f944",
       "sources": [
         {
-          "path": "docs/architecture/backend-modules.json",
-          "sha256": "cb3976973839cb95f1b58dab490255fe3b97a9cf6d9d98d5d6d4fe1ad33f99f9"
+          "path": "docs/backend/BACKEND_MODULE_OWNERSHIP.md",
+          "sha256": "417ca8512655bb4c77d45a835d81c56ae035bdcd3403d49d52bb8b2580865b78"
         }
       ],
-      "reason": "Reviewed physical Products extraction under ADR-0006 and ADR-0009: source ownership moved from the legacy Application folder to FoodDiary.Application.Products; HTTP routes, payloads, handlers, persistence queries, domain behavior, package versions, and configuration are unchanged. Composition roots and Docker restore graphs now include AddProductsModule/project. Deployment remains atomic with existing API, JobManager, and Initializer images; smoke-check Products endpoints and USDA linking, rollback by redeploying the previous images. Solution build, focused tests, architecture tests, NuGet vulnerability audit, and architecture-health pass.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "4b1ef43e330684d8150bb561c155aeb110605ba9",
-      "reviewedAtUtc": "2026-08-13T20:02:15.9627020Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:42.6114404Z"
     },
     {
       "pageId": "system.architecture",
@@ -56,14 +52,14 @@
       "pageSha256": "dc2054323e5791e2947267f2e563a43a9b5b6dbc68f71627544fb6309561ae5a",
       "sources": [
         {
-          "path": "tests/FoodDiary.ArchitectureTests/ProjectDependencyMatrixTests.cs",
-          "sha256": "cf6613d771cfee8b00bfae1f18755b19a75e0c82445114cc06f70f8fd117cd6a"
+          "path": "docs/ARCHITECTURE.md",
+          "sha256": "69225674a5df973e539a590f3bc883891881a98688291a49edd510521a701e98"
         }
       ],
-      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
-      "reviewedAtUtc": "2026-08-14T13:13:41.8268014Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:42.7588319Z"
     },
     {
       "pageId": "system.csharp-symbol-index",
@@ -71,14 +67,14 @@
       "pageSha256": "15c3aae30eea5af15e394eb2f30ec80f4df604a9c718089e987afaf25f2d1dac",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1",
-          "sha256": "f5b397d509236c1eccc088775964422bbed4b48f9e77e3886b4abde74f33f18b"
+          "path": "Directory.Build.props",
+          "sha256": "3bdf89ef9e4529d4860c320b02fbbe646d131f339950569be665a374c21da904"
         }
       ],
-      "reason": "Reviewed Wiki orchestration changes: cycle routing and journeys align with backend/domain intent; refresh consumes explicit changed paths; canonical symbol JSON is byte-stable; freshness runs before expensive hooks.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "029180247fd48b23348378d7e7ea08d43a38e755",
-      "reviewedAtUtc": "2026-08-16T12:00:27.1108442Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:42.9180971Z"
     },
     {
       "pageId": "system.frontend-index",
@@ -116,14 +112,14 @@
       "pageSha256": "33c51571757b7022e33f2b3767e959f88ea9e5367948bc5bf1ed44d191187847",
       "sources": [
         {
-          "path": "Directory.Packages.props",
-          "sha256": "541b0647dc8c77d925299cdf6e0c1ed9eb557078d9d85ed1e3ce932f50dbbeba"
+          "path": "Directory.Build.props",
+          "sha256": "3bdf89ef9e4529d4860c320b02fbbe646d131f339950569be665a374c21da904"
         }
       ],
-      "reason": "Development MCP adds an isolated read-only tooling host with no product-layer references; the dependency matrix records that boundary. Generated catalog, symbol, contract, quality, module, and architecture-health outputs were refreshed. The read-only wrapper now compares the captured byte hash directly, preserving its existing restoration contract without changing documented workflows.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "44314b7647e5bb4faea26bd23c2e3a5371444396",
-      "reviewedAtUtc": "2026-08-14T13:13:42.0097958Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:43.0779143Z"
     },
     {
       "pageId": "workflow-acceptance-evidence-matrix",
@@ -573,26 +569,14 @@
       "pageSha256": "2ccdf34b5e311ea48f4cefab1e6d09c0286d06e830a152d7ae6d41a928db5d75",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTestPlan.ps1",
-          "sha256": "75fe1da3d8d02e5b6605520cd75f3dc6b9ed3b53f64f80e8976cc6b30c6942d9"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
-          "sha256": "c389f7ed2b2f479c7570d877915769083ddc2a8ad18b80664f0b06748dd65498"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
-          "sha256": "0f9655fe6fe1ef868e2b5e7afc1a358b8d1efae392c12bcd619d7981e3775bfb"
-        },
-        {
-          "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f17a6dcca75a3cdfe742cd490f82f85c8f6ebbc502df7bc09cde7738b39a8668"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "efabb27824d12794249b14d15be122fbcbecdb8dda7533fba180ffda4842b12c"
         }
       ],
-      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
-      "reviewedAtUtc": "2026-08-17T11:17:51.3960958Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:43.2992151Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -774,13 +758,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "87375a07f8aa1047c7a8b87ab73d0a1dce6719d4aa68a3643efffaa16cf7eb98"
+          "sha256": "99815edad973953538e245508dd8877d3e028a267cf9eec9a9a2f836b4938a9d"
         }
       ],
-      "reason": "CI remediation keeps extraction readiness aligned with current JobManager module registration policy and records the narrow Users credential verification boundary without changing Wiki workflow semantics.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
-      "reviewedAtUtc": "2026-08-17T12:15:02.1165183Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:43.6600237Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -818,14 +802,14 @@
       "pageSha256": "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
+          "path": ".github/workflows/ci-tests.yml",
+          "sha256": "efabb27824d12794249b14d15be122fbcbecdb8dda7533fba180ffda4842b12c"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:53.3332916Z"
+      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
+      "reviewedAtUtc": "2026-08-17T15:56:43.9408122Z"
     },
     {
       "pageId": "workflow-risk-calibration",

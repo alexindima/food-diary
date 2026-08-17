@@ -6,12 +6,8 @@ FoodDiary is a modular monolith with separately deployed supporting services.
 The primary product backend is a modular monolith:
 - `FoodDiary.Domain`
 - `FoodDiary.Application.Abstractions`
-- `FoodDiary.Application`
-- `FoodDiary.Application.Billing`
-- `FoodDiary.Application.Dietologist`
-- `FoodDiary.Application.Marketing`
-- `FoodDiary.Application.Notifications`
-- `FoodDiary.Application.Users`
+- `FoodDiary.Application.Runtime`
+- independently compiled `FoodDiary.Application.<Feature>` modules
 - `FoodDiary.Infrastructure`
 - `FoodDiary.Integrations`
 - `FoodDiary.Presentation.Api`
@@ -46,16 +42,15 @@ Dependency direction is intentionally inward.
 ```mermaid
 flowchart LR
     WebApi["FoodDiary.Web.Api\nhost/composition root"] --> Presentation["FoodDiary.Presentation.Api\nHTTP + SignalR transport"]
-    WebApi --> Application["FoodDiary.Application\nuse cases"]
-    WebApi --> Billing["FoodDiary.Application.Billing\nbilling use cases"]
-    WebApi --> Marketing["FoodDiary.Application.Marketing\nmarketing use cases"]
+    WebApi --> Runtime["FoodDiary.Application.Runtime\nmediator + transactions"]
+    WebApi --> Modules["FoodDiary.Application.Feature\nfeature use cases"]
     WebApi --> Infrastructure["FoodDiary.Infrastructure\npersistence + implementations"]
     WebApi --> Integrations["FoodDiary.Integrations\nexternal adapters"]
     WebApi --> Resources["FoodDiary.Resources\nresource-backed text"]
-    Presentation --> Application
-    Presentation --> Billing
-    Application --> Abstractions["FoodDiary.Application.Abstractions\nports + models"]
-    Application --> Domain["FoodDiary.Domain\ndomain model"]
+    Presentation --> Modules
+    Runtime --> Abstractions["FoodDiary.Application.Abstractions\nports + models"]
+    Modules --> Abstractions
+    Modules --> Domain["FoodDiary.Domain\ndomain model"]
     Infrastructure --> Abstractions
     Infrastructure --> Domain
     Integrations --> Abstractions
@@ -65,7 +60,8 @@ flowchart LR
 
 Core rules:
 - `Domain` has no application, infrastructure, presentation, or host dependencies.
-- `Application` owns use cases and depends on abstractions, domain, and mediator only.
+- Each `Application.<Feature>` module owns its use cases and depends only on approved abstractions, domain types, and mediator contracts.
+- `Application.Runtime` owns mediator behaviors, transaction boundaries, and post-commit execution; it does not aggregate feature modules.
 - `Application.Abstractions` owns ports/models, not infrastructure or transport.
 - `Infrastructure` implements abstractions and owns EF Core/persistence; its composition root delegates to explicit technical modules.
 - `Integrations` owns external provider adapters and typed client bridges to supporting services; provider options and registrations stay in provider-specific modules.
@@ -74,13 +70,14 @@ Core rules:
 - `JobManager` owns recurring/background execution such as cleanup tasks, due notification scheduling, and outbox processors; it must stay free of HTTP presentation concerns.
 - `Initializer` is a thin operational console host for database setup and seed/backfill operations.
 - `Resources` provides resource-backed text without depending on concrete application/domain/persistence; Russian resources must keep matching neutral resources and valid encoding.
+- Shared MSBuild settings prune non-target SkiaSharp native assets and native PDB files from build output; deployment publishes must use the destination runtime identifier.
 
 ## Application Read Boundaries
 Business-module ownership inside the primary backend is defined in `docs/backend/BACKEND_MODULE_OWNERSHIP.md`. Layer sharing and a shared `DbContext` do not imply shared write ownership: cross-module mutations go through the owning module, while composed reads use explicit projection/read-service contracts. Fasting introduced the executable vertical-boundary pattern; it is now applied across the governed modules, hosts/adapters and the explicit cross-module projection allowlist.
 
-Application service composition follows the same ownership model. Root `FoodDiary.Application/DependencyInjection.cs` contains mediator/validation/cross-cutting bootstrap and delegates registrations for the features that remain in the core assembly to module-area partials (`Administration`, `Identity`, `Food`, `Tracking`, and `Notifications`). Executable composition roots register extracted modules explicitly. Architecture tests prevent feature registrations from regrowing in the root aggregator.
+Application service composition follows the same ownership model. `FoodDiary.Application.Runtime` registers mediator, validation, transaction, and post-commit behaviors. Each `FoodDiary.Application.<Feature>` project owns its feature registration, and executable composition roots register the required modules explicitly. Architecture tests prevent a feature-project aggregator from regrowing.
 
-`FoodDiary.Application.Billing`, `FoodDiary.Application.Dietologist`, `FoodDiary.Application.Marketing`, `FoodDiary.Application.Notifications`, and `FoodDiary.Application.Users` are physically extracted modules. They reference application-facing abstractions, domain where required, and the shared mediator, never the core `FoodDiary.Application` assembly. Shared command/query contracts and the `ITransactionalCommand` marker live in `FoodDiary.Application.Abstractions`, so the core mediator pipeline remains applicable without reversing project dependencies.
+Business use cases are physically extracted across the `FoodDiary.Application.<Feature>` projects listed in `docs/BACKEND_MODULE_MAP.md`. They reference application-facing abstractions, domain where required, and the shared mediator, never another application implementation as a shortcut. Shared command/query contracts and the `ITransactionalCommand` marker live in `FoodDiary.Application.Abstractions`, so the runtime mediator pipeline remains applicable without reversing project dependencies.
 
 Application read paths should use the narrowest contract that matches the behavior:
 - `*ReadModelRepository` for projection reads, counters, summaries, and API/UI read models.

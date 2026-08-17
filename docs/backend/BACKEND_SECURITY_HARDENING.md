@@ -39,7 +39,7 @@ This document captures the current backend security baseline.
 - Backend CI now runs `dotnet list package --vulnerable --include-transitive` for:
   - `FoodDiary.Web.Api`
   - `FoodDiary.Infrastructure`
-  - `FoodDiary.Application`
+  - `FoodDiary.Application.*`
 - Local verification on the current baseline reports no known vulnerable NuGet packages from the configured sources.
 
 ## Upload Flow Expectations
@@ -260,7 +260,7 @@ Mark each item as `ok`, `risk accepted`, or `follow-up`.
 - `dotnet list package --vulnerable --include-transitive` remains green for:
   - `FoodDiary.Web.Api`
   - `FoodDiary.Infrastructure`
-  - `FoodDiary.Application`
+  - `FoodDiary.Application.*`
 - new security-relevant packages are reviewed before adoption
 - any major-version auth/storage package change gets a focused regression review
 

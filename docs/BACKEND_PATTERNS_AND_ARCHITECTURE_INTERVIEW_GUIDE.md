@@ -78,13 +78,13 @@ Evidence: `docs/adr/`.
 
 Commands, queries, handlers, validators, models and services are grouped by business feature rather than only by technical type. A change is therefore localized around a use case, while common folders are restricted to genuinely cross-feature concepts.
 
-Evidence: `FoodDiary.Application/`, `FoodDiary.Application.Abstractions/`, `tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`.
+Evidence: `FoodDiary.Application.<Feature>/`, `FoodDiary.Application.Runtime/`, `FoodDiary.Application.Abstractions/`, `tests/FoodDiary.ArchitectureTests/FeatureStructureTests.cs`.
 
 ### 13. CQRS
 
 Writes are expressed as commands and reads as queries. Command paths load and mutate aggregates; read paths prefer projections and dedicated read-model services. This is pragmatic CQRS inside one application and database, not two independently deployed systems.
 
-Evidence: `FoodDiary.Application/Common/Abstractions/Messaging/`, command/query handlers, ADR `0008-product-recipe-read-model-query-paths.md`.
+Evidence: `FoodDiary.Application.Abstractions/Common/Abstractions/Messaging/`, feature command/query handlers, ADR `0008-product-recipe-read-model-query-paths.md`.
 
 ### 14. Mediator pattern
 
@@ -96,7 +96,7 @@ Evidence: `Shared/FoodDiary.Mediator/DefaultMediator.cs`, request handlers throu
 
 Validation, structured logging and command transaction behavior wrap handlers as an ordered pipeline. Cross-cutting logic is implemented once without contaminating every use case.
 
-Evidence: `FoodDiary.Application/Common/Behaviors/ValidationBehavior.cs`, `LoggingBehavior.cs`, `CommandTransactionBehavior.cs`.
+Evidence: `FoodDiary.Application.Runtime/Common/Behaviors/ValidationBehavior.cs`, `LoggingBehavior.cs`, `CommandTransactionBehavior.cs`.
 
 ### 16. Result pattern and railway-oriented error flow
 
@@ -234,7 +234,7 @@ Evidence: `FoodDiary.MailRelay.Client`, `FoodDiary.MailInbox.Client`.
 
 External food searches cache successful data and may serve stale data during provider degradation. Cache-aside keeps the source of truth external, while stale fallback trades freshness for availability and is exposed in telemetry.
 
-Evidence: `FoodDiary.Application/OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs`, observability baseline.
+Evidence: `FoodDiary.Application.OpenFoodFacts/Services/OpenFoodFactsCachedProductSearch.cs`, observability baseline.
 
 ### 38. Provider fallback / graceful degradation
 
@@ -344,13 +344,13 @@ Evidence: `FoodDiary.Infrastructure/Authentication/JwtTokenGenerator.cs`, `UserR
 
 Every successful refresh rotates the stored token hash. The immediately previous hash remains valid for a short grace period, accommodating concurrent browser requests without permanently accepting an old token. The senior-level trade-off is security versus distributed-client race tolerance: no grace window can produce false logout; a long window increases replay exposure.
 
-Evidence: `FoodDiary.Application/Authentication/Services/AuthenticationTokenService.cs`, `RefreshTokenCommandHandler.cs`, `UserRefreshTokenSession.Rotate`.
+Evidence: `FoodDiary.Application.Identity/Authentication/Services/AuthenticationTokenService.cs`, `RefreshTokenCommandHandler.cs`, `UserRefreshTokenSession.Rotate`.
 
 ### 55. Secret hashing at rest
 
 Refresh tokens are stored as one-way hashes rather than plaintext bearer credentials. A database leak therefore does not directly yield reusable refresh tokens. Verification uses the same canonical hashing scheme and constant-time equality.
 
-Evidence: `FoodDiary.Application/Authentication/Common/SecurityTokenGenerator.cs`, authentication token service.
+Evidence: `FoodDiary.Application.Abstractions/Authentication/Common/SecurityTokenGenerator.cs`, authentication token service.
 
 ### 56. Constant-time secret comparison
 

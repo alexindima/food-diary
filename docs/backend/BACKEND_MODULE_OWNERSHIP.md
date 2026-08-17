@@ -100,7 +100,7 @@ It must not acquire repositories or application services from other features wit
 
 ### Current compromise
 
-`IFastingReadService` and some application models currently live in `FoodDiary.Application`, not `FoodDiary.Application.Abstractions`. This is acceptable for the in-process Dashboard composition today, but it is a visible module API. If more consumers appear, move only the stable public projection contract to Application.Abstractions instead of exposing further internal services.
+`IFastingReadService` and its stable projection contract live in `FoodDiary.Application.Abstractions`, allowing Dashboard to consume the Fasting-owned read capability without referencing the Fasting implementation project. Keep future cross-module reads on similarly narrow abstraction-level contracts.
 
 ## Evolution checklist
 
@@ -295,9 +295,9 @@ Body Metrics configurations live in `Configurations/BodyMetrics`, while Hydratio
 
 MealPlanning is the shared physical application boundary for the separate MealPlans and ShoppingLists logical owners. Meal Plans reads its own aggregate and submits a `ShoppingListCreationRequest` through `IShoppingListCreationService`; Shopping Lists alone constructs and persists the `ShoppingList` aggregate. Grouping the related planning workflow in one assembly does not transfer write ownership between its aggregates. Their EF configurations remain separated in `Configurations/ShoppingLists` and `Configurations/MealPlans`.
 
-Wearables owns provider connections and synchronization history and is physically isolated in `FoodDiary.Application.Wearables`. The assembly registers its handlers and internal read service through `AddWearablesModule`; executable composition roots reference it explicitly, while core `FoodDiary.Application` has no reverse project reference. Provider APIs remain infrastructure/integration adapters. Connection and sync repositories are private to the Wearables application module, and their configurations live in `Configurations/Wearables`.
+Wearables owns provider connections and synchronization history and is physically isolated in `FoodDiary.Application.Wearables`. The assembly registers its handlers and internal read service through `AddWearablesModule`; executable composition roots reference it explicitly, while `FoodDiary.Application.Runtime` does not aggregate it. Provider APIs remain infrastructure/integration adapters. Connection and sync repositories are private to the Wearables application module, and their configurations live in `Configurations/Wearables`.
 
-Marketing owns attribution events and conversion state and is physically isolated in `FoodDiary.Application.Marketing`. The assembly registers its handlers and services through `AddMarketingModule`; executable composition roots reference it explicitly, while core `FoodDiary.Application` has no reverse project reference. Authentication records attribution through its command API, Billing emits premium conversion through a consumer-owned port, and reporting uses the attribution summary read service. The persistence configuration remains in `Configurations/Marketing`.
+Marketing owns attribution events and conversion state and is physically isolated in `FoodDiary.Application.Marketing`. The assembly registers its handlers and services through `AddMarketingModule`; executable composition roots reference it explicitly, while `FoodDiary.Application.Runtime` does not aggregate it. Authentication records attribution through its command API, Billing emits premium conversion through a consumer-owned port, and reporting uses the attribution summary read service. The persistence configuration remains in `Configurations/Marketing`.
 
 Operational cleanup remains owned by the corresponding application module. JobManager invokes `IMarketingAttributionCleanupService` and `IAuthenticationLoginEventCleanupService`; batching and repository access stay inside Marketing and Authentication. A JobManager architecture guardrail prohibits jobs from acquiring any `I*Repository` contract.
 

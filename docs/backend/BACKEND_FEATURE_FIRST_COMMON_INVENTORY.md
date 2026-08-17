@@ -2,20 +2,15 @@
 
 This inventory tracks backend `Common` areas that should stay cross-cutting versus areas that should keep moving toward feature-first ownership.
 
-## Application
+## Application Runtime and Feature Modules
 
-`FoodDiary.Application/Common` should stay limited to technical application primitives:
+The legacy root `FoodDiary.Application/Common` area has been removed. Cross-cutting execution code is limited to `FoodDiary.Application.Runtime/Common`:
 
-- `Abstractions/Messaging`: CQRS request and handler marker contracts.
-- `Behaviors`: MediatR pipeline behaviors.
-- `Models/PagedResponse.cs`: shared paging result model used across application and presentation mappings.
-- `Services/PostCommitActionQueue.cs`: cross-cutting post-commit execution queue.
-- `Time/UtcDateNormalizer.cs`: shared request date normalization.
-- `Validation`: shared low-level enum, user id, and optional entity id parsers.
+- `Behaviors`: mediator validation, logging, and command transaction behaviors.
+- `Services/PostCommitActionQueue.cs`: bounded post-commit execution.
+- `Services/ApplicationRuntimeTelemetry.cs`: runtime pipeline telemetry.
 
-Feature or domain-purpose helpers should not live under root `Common`. `ManualNutritionLimits` was moved to `FoodDiary.Application/Nutrition/Common` because it is a nutrition-domain policy shared by meal and recipe features, not a generic application primitive.
-`ImageAssetIdParser` was moved to `FoodDiary.Application/Images/Common` because it is an image-domain helper shared by product, recipe, meal, and user flows.
-User preference code parsing lives in `FoodDiary.Application/Users/Common/UserPreferenceCodeParser.cs`; admin-required locale parsing lives in `FoodDiary.Application.Admin/Common/AdminLocaleParser.cs`.
+CQRS contracts, persistence markers, shared result shapes, and other adapter-facing contracts live in `FoodDiary.Application.Abstractions`. Feature-purpose helpers live in the owning `FoodDiary.Application.<Feature>` project. For example, image parsing lives in `FoodDiary.Application.Images/Common`, and user preference parsing lives in `FoodDiary.Application.Users/Common`.
 
 ## Application Abstractions
 
@@ -33,12 +28,9 @@ Feature-specific error factories should move incrementally to feature folders wh
 
 ## Guardrails
 
-- `ApplicationRootCommon_DoesNotRegrowFeatureSpecificNutritionHelpers` prevents `FoodDiary.Application/Common/Nutrition` from returning.
-- `ApplicationRootCommon_StaysLimitedToTechnicalApplicationPrimitives` keeps the root `FoodDiary.Application/Common` folder on the approved technical-directory allow-list.
-- `ApplicationCommonValidation_StaysLimitedToSharedLowLevelParsers` prevents image and other feature-purpose helpers from returning to root validation.
+- `ApplicationRootCommon_DoesNotRegrowFeatureSpecificNutritionHelpers` prevents the removed root application common area from returning.
+- Runtime-project guardrails keep `FoodDiary.Application.Runtime/Common` limited to technical execution behavior.
+- Feature-structure tests keep feature-purpose helpers inside their owning application module.
 - `ApplicationAbstractionsErrorsRoot_ContainsOnlyCommonTaxonomyOrMigratedFacades` prevents new root error catalogs from appearing without an explicit common-taxonomy or migrated-facade decision.
 - `MigratedErrorsFacades_DelegateToFeatureOwnedErrorFactories` requires migrated `Errors.<Feature>` facades to delegate to feature-owned error factories instead of owning inline error codes.
-- `ApplicationCommonModels_StayLimitedToSharedApplicationResponsePrimitives` keeps root models limited to `PagedResponse<T>`.
-- `ApplicationCommonTime_StaysLimitedToSharedRequestTimeNormalization` keeps root time helpers limited to request UTC normalization.
 - `ApplicationAbstractionsCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts` prevents root persistence contracts from regrowing.
-- `ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions` prevents root service contracts from regrowing.
