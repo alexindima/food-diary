@@ -10,7 +10,7 @@ namespace FoodDiary.Development.Mcp.ChangeSets;
 
 public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDisposable {
     private static readonly TimeSpan GitTimeout = TimeSpan.FromSeconds(15);
-    private readonly string _repositoryRoot = RepositoryRootResolver.Resolve();
+    private readonly string _repositoryRoot;
     private readonly TimeProvider _timeProvider;
     private readonly SemaphoreSlim _gate = new(1, 1);
     private readonly FileSystemWatcher _watcher;
@@ -18,8 +18,9 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
     private long _cachedGeneration = -1;
     private ChangeSetSnapshot? _cached;
 
-    public ChangeSetSnapshotService(TimeProvider timeProvider) {
+    internal ChangeSetSnapshotService(TimeProvider timeProvider, string repositoryRoot) {
         _timeProvider = timeProvider;
+        _repositoryRoot = repositoryRoot;
         _watcher = new FileSystemWatcher(_repositoryRoot) {
             IncludeSubdirectories = true,
             NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName |
@@ -30,6 +31,11 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         _watcher.Created += OnChanged;
         _watcher.Deleted += OnChanged;
         _watcher.Renamed += OnChanged;
+        _watcher.Error += OnWatcherError;
+    }
+
+    public ChangeSetSnapshotService(TimeProvider timeProvider)
+        : this(timeProvider, RepositoryRootResolver.Resolve()) {
     }
 
     public ChangeSetSnapshotService() : this(TimeProvider.System) {
@@ -38,14 +44,16 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
     public async Task<ChangeSetSnapshot> GetAsync(CancellationToken cancellationToken) {
         long generation = Interlocked.Read(ref _generation);
         ChangeSetSnapshot? cached = _cached;
-        if (cached is not null && generation == Interlocked.Read(ref _cachedGeneration)) {
+        if (cached is not null && generation == Interlocked.Read(ref _cachedGeneration) &&
+            await MatchesCurrentHeadAsync(cached, cancellationToken).ConfigureAwait(false)) {
             return cached;
         }
 
         await _gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         try {
             generation = Interlocked.Read(ref _generation);
-            if (_cached is not null && generation == Interlocked.Read(ref _cachedGeneration)) {
+            if (_cached is not null && generation == Interlocked.Read(ref _cachedGeneration) &&
+                await MatchesCurrentHeadAsync(_cached, cancellationToken).ConfigureAwait(false)) {
                 return _cached;
             }
 
@@ -85,10 +93,7 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
         string[] changedPaths = ParseChangedPaths(status);
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
         Append(hash, head);
-        string indexPath = Path.Combine(_repositoryRoot, ".git", "index");
-        if (File.Exists(indexPath)) {
-            hash.AppendData(await File.ReadAllBytesAsync(indexPath, cancellationToken).ConfigureAwait(false));
-        }
+        Append(hash, status);
 
         foreach (string path in changedPaths) {
             Append(hash, path);
@@ -142,11 +147,14 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
             CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
         try {
             await process.WaitForExitAsync(linkedCancellation.Token).ConfigureAwait(false);
-        } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
-            process.Kill(entireProcessTree: true);
-            throw new DevelopmentMcpException(
-                DevelopmentMcpErrorCodes.Timeout,
-                $"Git change-set snapshot exceeded {GitTimeout}.");
+        } catch (OperationCanceledException) {
+            TryKill(process);
+            if (timeout.IsCancellationRequested) {
+                throw new DevelopmentMcpException(
+                    DevelopmentMcpErrorCodes.Timeout,
+                    $"Git change-set snapshot exceeded {GitTimeout}.");
+            }
+            throw;
         }
 
         string output = await standardOutput.ConfigureAwait(false);
@@ -184,6 +192,14 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
     private static void Append(IncrementalHash hash, string value) =>
         hash.AppendData(Encoding.UTF8.GetBytes(value));
 
+    private async Task<bool> MatchesCurrentHeadAsync(
+        ChangeSetSnapshot snapshot,
+        CancellationToken cancellationToken) =>
+        string.Equals(
+            snapshot.GitHead,
+            await ServerStatusService.ReadGitHeadAsync(_repositoryRoot, cancellationToken).ConfigureAwait(false),
+            StringComparison.Ordinal);
+
     internal static bool IsSourcePath(string path) =>
         !path.StartsWith(".llm-wiki/generated/", StringComparison.OrdinalIgnoreCase) &&
         !path.StartsWith(".llm-wiki/reviews/", StringComparison.OrdinalIgnoreCase) &&
@@ -194,15 +210,37 @@ public sealed class ChangeSetSnapshotService : IChangeSetSnapshotService, IDispo
     private void OnChanged(object sender, FileSystemEventArgs args) {
         string relativePath = Path.GetRelativePath(_repositoryRoot, args.FullPath)
             .Replace('\\', '/');
-        if ((relativePath.StartsWith(".git/", StringComparison.OrdinalIgnoreCase) &&
-             !relativePath.Equals(".git/HEAD", StringComparison.OrdinalIgnoreCase) &&
-             !relativePath.Equals(".git/index", StringComparison.OrdinalIgnoreCase)) ||
-            relativePath.StartsWith(".artifacts/", StringComparison.OrdinalIgnoreCase) ||
-            relativePath.Contains("/bin/", StringComparison.OrdinalIgnoreCase) ||
-            relativePath.Contains("/obj/", StringComparison.OrdinalIgnoreCase)) {
+        if (IsIgnoredWatcherPath(relativePath)) {
             return;
         }
 
         Interlocked.Increment(ref _generation);
+    }
+
+    private void OnWatcherError(object sender, ErrorEventArgs args) =>
+        Interlocked.Increment(ref _generation);
+
+    internal static bool IsIgnoredWatcherPath(string path) {
+        string normalized = $"/{path.Replace('\\', '/').Trim('/')}/";
+        if (normalized.StartsWith("/.git/", StringComparison.OrdinalIgnoreCase)) {
+            return !normalized.Equals("/.git/HEAD/", StringComparison.OrdinalIgnoreCase) &&
+                !normalized.Equals("/.git/index/", StringComparison.OrdinalIgnoreCase);
+        }
+
+        string[] ignoredSegments = [
+            ".artifacts", "bin", "obj", "node_modules", "dist", ".angular",
+            "coverage", "TestResults",
+        ];
+        return ignoredSegments.Any(segment =>
+            normalized.Contains($"/{segment}/", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static void TryKill(Process process) {
+        try {
+            if (!process.HasExited) {
+                process.Kill(entireProcessTree: true);
+            }
+        } catch (InvalidOperationException) {
+        }
     }
 }

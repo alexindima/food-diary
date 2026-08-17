@@ -35,12 +35,31 @@ function Restore-OrphanedIndexTransaction([string]$TransactionStateRoot, [string
     foreach ($orphan in @(Get-ChildItem -LiteralPath $TransactionStateRoot -Directory -ErrorAction SilentlyContinue)) {
         $statePath = Join-Path $orphan.FullName 'state.json'
         $backupPath = Join-Path $orphan.FullName 'generated'
-        if (-not (Test-Path -LiteralPath $statePath -PathType Leaf) -or -not (Test-Path -LiteralPath $backupPath -PathType Container)) { continue }
-        try { $state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json } catch { continue }
-        if ([string]$state.status -ne 'in-progress') { continue }
+        $isStale = [DateTime]::UtcNow - $orphan.LastWriteTimeUtc -gt [TimeSpan]::FromMinutes(10)
+        if (-not (Test-Path -LiteralPath $statePath -PathType Leaf)) {
+            if ($isStale -and $orphan.Name -match '^[0-9a-fA-F]{32}$') {
+                Write-Warning "Removing incomplete markerless LLM Wiki index transaction $($orphan.Name)."
+                Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+            }
+            continue
+        }
+        try { $state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json }
+        catch {
+            if ($isStale) { Remove-Item -LiteralPath $orphan.FullName -Recurse -Force }
+            continue
+        }
         $ownerAlive = $false
         try { $ownerAlive = $null -ne (Get-Process -Id ([int]$state.ownerPid) -ErrorAction Stop) } catch { $ownerAlive = $false }
         if ($ownerAlive) { continue }
+        if ([string]$state.status -eq 'initializing' -or -not (Test-Path -LiteralPath $backupPath -PathType Container)) {
+            Write-Warning "Removing incomplete LLM Wiki index transaction $($orphan.Name) before its rollback snapshot was ready."
+            Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+            continue
+        }
+        if ([string]$state.status -ne 'in-progress') {
+            Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+            continue
+        }
         $checkpointPath = Join-Path $orphan.FullName 'checkpoint'
         $recoveryPath = if (Test-Path -LiteralPath $checkpointPath -PathType Container) { $checkpointPath } else { $backupPath }
         $recoveryKind = if ($recoveryPath -eq $checkpointPath) { "last completed stage '$([string]$state.completedStage)'" } else { 'rollback snapshot' }
@@ -48,6 +67,20 @@ function Restore-OrphanedIndexTransaction([string]$TransactionStateRoot, [string
         foreach ($item in @(Get-ChildItem -LiteralPath $GeneratedRoot -Force)) { Remove-Item -LiteralPath $item.FullName -Recurse -Force }
         foreach ($item in @(Get-ChildItem -LiteralPath $recoveryPath -Force)) { Copy-Item -LiteralPath $item.FullName -Destination $GeneratedRoot -Recurse -Force }
         Remove-Item -LiteralPath $orphan.FullName -Recurse -Force
+    }
+}
+
+function Write-IndexTransactionState([string]$TransactionRoot, [Collections.IDictionary]$State) {
+    $statePath = Join-Path $TransactionRoot 'state.json'
+    $temporaryPath = "$statePath.$([guid]::NewGuid().ToString('N')).tmp"
+    try {
+        [IO.File]::WriteAllText(
+            $temporaryPath,
+            (($State | ConvertTo-Json) + [Environment]::NewLine),
+            [Text.UTF8Encoding]::new($false))
+        Move-Item -LiteralPath $temporaryPath -Destination $statePath -Force
+    } finally {
+        Remove-Item -LiteralPath $temporaryPath -Force -ErrorAction SilentlyContinue
     }
 }
 
@@ -164,13 +197,21 @@ if ($AffectedOnly) {
             }
         }
 
+        if (@($normalizedChangedPaths | Where-Object {
+            $_ -match '^\.llm-wiki/tools/(?:Invoke-LlmWikiContractReferenceExtractor\.ps1|contract-reference-extractor/)'
+        }).Count -gt 0) {
+            Add-IndexToolWithDependents 'Build-LlmWikiBackendContractIndex.ps1'
+        }
+
         $frontendPaths = @($normalizedChangedPaths | Where-Object { $_ -match '^FoodDiary\.Web\.Client/' })
-        $csharpPaths = @($normalizedChangedPaths | Where-Object { $_ -match '\.cs$' })
+        $csharpPaths = @($normalizedChangedPaths | Where-Object { $_ -match '\.cs$' -and $_ -notmatch '^\.llm-wiki/tools/' })
         $csharpTestPaths = @($csharpPaths | Where-Object {
             $_ -match '(?i)(^|/)(tests?|__tests__)/' -or $_ -match '(?i)\.Tests?/' -or $_ -match '(?i)(?:^|/)[^/]*(?:Tests?|Specs?)\.cs$'
         })
         $productionCSharpPaths = @($csharpPaths | Where-Object { $_ -notin $csharpTestPaths })
-        $hasCSharpProjectChange = @($normalizedChangedPaths | Where-Object { $_ -match '\.csproj$' }).Count -gt 0
+        $hasCSharpProjectChange = @($normalizedChangedPaths | Where-Object {
+            $_ -match '\.csproj$' -and $_ -notmatch '^\.llm-wiki/tools/'
+        }).Count -gt 0
         $frontendTests = @($frontendPaths | Where-Object { $_ -match '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' })
         $frontendSources = @($frontendPaths | Where-Object { $_ -match '\.ts$' -and $_ -notmatch '(?:^|/)\w[^/]*\.(?:spec|test)\.ts$' })
         $frontendTemplates = @($frontendPaths | Where-Object { $_ -match '\.html$' })
@@ -406,23 +447,26 @@ try {
         if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve Git directory for the index transaction.' }
         $transactionStateRoot = Join-Path $gitDirectory 'llm-wiki/index-transactions'
         $null = New-Item -ItemType Directory -Path $transactionStateRoot -Force
-        Restore-OrphanedIndexTransaction -TransactionStateRoot $transactionStateRoot -GeneratedRoot $generatedRoot
         $lockPath = Join-Path $transactionStateRoot 'update.lock'
         try {
             $updateLock = [IO.File]::Open($lockPath, [IO.FileMode]::OpenOrCreate, [IO.FileAccess]::ReadWrite, [IO.FileShare]::None)
         } catch {
             throw 'Another LLM Wiki index update is already running. Wait for it to finish instead of producing overlapping generated files.'
         }
+        Restore-OrphanedIndexTransaction -TransactionStateRoot $transactionStateRoot -GeneratedRoot $generatedRoot
         $transactionRoot = Join-Path $transactionStateRoot ([guid]::NewGuid().ToString('N'))
+        $null = New-Item -ItemType Directory -Path $transactionRoot -Force
+        Write-IndexTransactionState -TransactionRoot $transactionRoot -State ([ordered]@{
+            schemaVersion = 2; status = 'initializing'; ownerPid = $PID; startedAtUtc = [DateTime]::UtcNow.ToString('o')
+        })
         $backupRoot = Join-Path $transactionRoot 'generated'
         $null = New-Item -ItemType Directory -Path $backupRoot -Force
         foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
             Copy-Item -LiteralPath $item.FullName -Destination $backupRoot -Recurse -Force
         }
-        [IO.File]::WriteAllText(
-            (Join-Path $transactionRoot 'state.json'),
-            (([ordered]@{ schemaVersion = 1; status = 'in-progress'; ownerPid = $PID; startedAtUtc = [DateTime]::UtcNow.ToString('o') } | ConvertTo-Json) + [Environment]::NewLine),
-            [Text.UTF8Encoding]::new($false))
+        Write-IndexTransactionState -TransactionRoot $transactionRoot -State ([ordered]@{
+            schemaVersion = 2; status = 'in-progress'; ownerPid = $PID; startedAtUtc = [DateTime]::UtcNow.ToString('o')
+        })
         Write-Host "LLM Wiki index transaction started: rollback snapshot captured."
     }
 
@@ -441,10 +485,9 @@ try {
             foreach ($item in @(Get-ChildItem -LiteralPath $generatedRoot -Force)) {
                 Copy-Item -LiteralPath $item.FullName -Destination $checkpointRoot -Recurse -Force
             }
-            [IO.File]::WriteAllText(
-                (Join-Path $transactionRoot 'state.json'),
-                (([ordered]@{ schemaVersion = 2; status = 'in-progress'; ownerPid = $PID; completedStage = $stage.name; checkpointedAtUtc = [DateTime]::UtcNow.ToString('o') } | ConvertTo-Json) + [Environment]::NewLine),
-                [Text.UTF8Encoding]::new($false))
+            Write-IndexTransactionState -TransactionRoot $transactionRoot -State ([ordered]@{
+                schemaVersion = 2; status = 'in-progress'; ownerPid = $PID; completedStage = $stage.name; checkpointedAtUtc = [DateTime]::UtcNow.ToString('o')
+            })
             Write-Host "LLM Wiki index checkpoint saved after stage '$($stage.name)'."
         }
     }
@@ -453,10 +496,9 @@ try {
             -GeneratedRoot $generatedRoot `
             -BackupRoot (Join-Path $transactionRoot 'generated'))
         if ($semanticNoOps.Count -gt 0) { Write-Host "LLM Wiki semantic no-op suppression restored $($semanticNoOps.Count) unchanged generated artifact(s)." }
-        [IO.File]::WriteAllText(
-            (Join-Path $transactionRoot 'state.json'),
-            (([ordered]@{ schemaVersion = 1; status = 'committed'; ownerPid = $PID; completedAtUtc = [DateTime]::UtcNow.ToString('o') } | ConvertTo-Json) + [Environment]::NewLine),
-            [Text.UTF8Encoding]::new($false))
+        Write-IndexTransactionState -TransactionRoot $transactionRoot -State ([ordered]@{
+            schemaVersion = 2; status = 'committed'; ownerPid = $PID; completedAtUtc = [DateTime]::UtcNow.ToString('o')
+        })
     }
 } catch {
     if ($transactionRoot) {

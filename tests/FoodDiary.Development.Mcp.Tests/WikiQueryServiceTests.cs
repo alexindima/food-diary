@@ -162,6 +162,12 @@ public sealed class WikiQueryServiceTests {
                 "FoodDiary.Application.Users",
             })),
             CancellationToken.None);
+        await _executor.Received(1).ExecuteAsync(
+            "brief",
+            Arg.Is<IReadOnlyList<string>>(arguments => arguments.Contains(
+                "-SkipTestPlan",
+                StringComparer.Ordinal)),
+            CancellationToken.None);
     }
 
     [Fact]
@@ -382,6 +388,52 @@ public sealed class WikiQueryServiceTests {
         Assert.Contains("FoodDiary.Application.Users/Commands/UpdateUser.cs", result.ExpandedScopePaths, StringComparer.Ordinal);
         Assert.DoesNotContain("tests/FoodDiary.ArchitectureTests/TransitiveContext.cs", result.ExpandedScopePaths, StringComparer.Ordinal);
         Assert.False(result.BaselineAvailable);
+    }
+
+    [Fact]
+    public async Task GetChangeContextAsync_ReusesSuccessfulResultForUnchangedSnapshot() {
+        WikiRuntimeTelemetry telemetry = new();
+        WikiQueryCache cache = new(TimeProvider.System, telemetry);
+        WikiQueryService service = new(_executor, _snapshots, cache);
+        _executor.ExecuteAsync("brief", Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
+            .Returns(CreateResult("brief", []));
+
+        WikiCommandResult first = await service.GetChangeContextAsync(
+            "Improve MCP cache",
+            "FoodDiary.Development.Mcp",
+            compact: true,
+            CancellationToken.None);
+        WikiCommandResult second = await service.GetChangeContextAsync(
+            "Improve MCP cache",
+            "FoodDiary.Development.Mcp",
+            compact: true,
+            CancellationToken.None);
+
+        Assert.Same(first, second);
+        await _executor.Received(1).ExecuteAsync(
+            "brief",
+            Arg.Any<IReadOnlyList<string>>(),
+            Arg.Any<CancellationToken>());
+        WikiRuntimeMetrics metrics = cache.CaptureMetrics();
+        Assert.Equal(1, metrics.QueryCache.Hits);
+        Assert.Equal(1, metrics.QueryCache.Misses);
+        Assert.Equal(0.5, metrics.QueryCache.HitRate);
+    }
+
+    [Fact]
+    public async Task GetChangeContextAsync_InvalidatesCacheWhenSnapshotFingerprintChanges() {
+        ChangeSetSnapshot initial = new("abc123", "first", ["one.cs"], DateTimeOffset.UtcNow);
+        ChangeSetSnapshot changed = new("abc123", "second", ["one.cs"], DateTimeOffset.UtcNow);
+        _snapshots.GetAsync(Arg.Any<CancellationToken>()).Returns(initial, changed);
+        WikiQueryService service = new(_executor, _snapshots);
+
+        await service.GetChangeContextAsync("Improve MCP", plannedPath: null, compact: true, CancellationToken.None);
+        await service.GetChangeContextAsync("Improve MCP", plannedPath: null, compact: true, CancellationToken.None);
+
+        await _executor.Received(2).ExecuteAsync(
+            "brief",
+            Arg.Any<IReadOnlyList<string>>(),
+            Arg.Any<CancellationToken>());
     }
 
     private static WikiCommandResult CreateResult(

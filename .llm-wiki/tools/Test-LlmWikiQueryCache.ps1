@@ -17,6 +17,10 @@ try {
     Write-LlmWikiQueryCache -Entry $first -Content '{"value":1}'
     Write-LlmWikiQueryCache -Entry $first -Content '{"value":1}'
     if ((Read-LlmWikiQueryCache -Entry $first) -cne '{"value":1}') { throw 'Recorded query cache content was not reused.' }
+    [IO.File]::WriteAllText($first.path, '{broken', [Text.UTF8Encoding]::new($false))
+    if (Read-LlmWikiQueryCache -Entry $first) { throw 'A corrupt query-cache entry was returned.' }
+    if (Test-Path -LiteralPath $first.path) { throw 'A corrupt query-cache entry was not removed.' }
+    Write-LlmWikiQueryCache -Entry $first -Content '{"value":1}'
 
     [IO.File]::WriteAllText((Join-Path $tempRoot 'source.txt'), 'two', [Text.UTF8Encoding]::new($false))
     $changed = Get-LlmWikiQueryCacheEntry -RepositoryRoot $tempRoot -Namespace test -Arguments $arguments

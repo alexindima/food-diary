@@ -55,11 +55,6 @@ if ($ReuseUnchangedCheck -and
     }
 }
 
-function ConvertTo-RepositoryPath {
-    param([string]$Path)
-    return [System.IO.Path]::GetFullPath($Path).Substring($repositoryRoot.Length + 1).Replace('\', '/')
-}
-
 $symbols = (Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json).symbols
 $criticalRoles = @('CommandHandler', 'QueryHandler', 'Handler', 'Controller', 'Validator')
 $criticalSymbols = @($symbols | Where-Object { $_.role -in $criticalRoles -and $_.kind -ne 'interface' })
@@ -67,32 +62,55 @@ $criticalSymbols = @($symbols | Where-Object { $_.role -in $criticalRoles -and $
 $repositoryFiles = @(
     $cacheInputs |
         Where-Object { $_ -match '\.(?:cs|ts)$' } |
-        ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -ErrorAction SilentlyContinue }
-) | Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName } -Unique
+        Sort-Object { Get-LlmWikiOrdinalSortKey $_ } -Unique |
+        ForEach-Object {
+            $relativePath = ([string]$_).TrimStart([char]0xFEFF).Replace('\', '/')
+            $fullPath = [IO.Path]::Combine($repositoryRoot, $relativePath)
+            if ([IO.File]::Exists($fullPath)) {
+                [pscustomobject]@{
+                    path = $relativePath
+                    fullPath = $fullPath
+                    name = [IO.Path]::GetFileName($relativePath)
+                    extension = [IO.Path]::GetExtension($relativePath)
+                }
+            }
+        }
+)
 
 $testFiles = @(
     $repositoryFiles |
         Where-Object {
-            $_.FullName -notmatch '[\\/](node_modules|obj|bin|dist|coverage|\.angular|\.artifacts|TestResults)[\\/]' -and
-            ($_.FullName -match '[\\/]tests[\\/]' -or $_.Name -match '\.(spec|test)\.ts$') -and
-            $_.Extension -in @('.cs', '.ts')
+            $_.path -notmatch '(^|/)(node_modules|obj|bin|dist|coverage|\.angular|\.artifacts|TestResults)/' -and
+            ($_.path -match '(^|/)tests/' -or $_.name -match '\.(spec|test)\.ts$') -and
+            $_.extension -in @('.cs', '.ts')
         } |
-        Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName } |
         ForEach-Object {
             [pscustomobject]@{
-                path = ConvertTo-RepositoryPath $_.FullName
-                content = [System.IO.File]::ReadAllText($_.FullName)
+                path = $_.path
+                content = [System.IO.File]::ReadAllText($_.fullPath)
             }
         }
 )
 
 $symbolCoverage = [System.Collections.Generic.List[object]]::new()
+$testReferencesBySymbolName = [System.Collections.Generic.Dictionary[string, System.Collections.Generic.List[string]]]::new(
+    [System.StringComparer]::Ordinal)
+foreach ($symbolName in @($criticalSymbols.name | Sort-Object -Unique)) {
+    $testReferencesBySymbolName[$symbolName] = [System.Collections.Generic.List[string]]::new()
+}
+
+# Keep the intentionally conservative substring semantics while avoiding a
+# PowerShell pipeline over every test file for every critical symbol.
+foreach ($testFile in $testFiles) {
+    foreach ($symbolName in $testReferencesBySymbolName.Keys) {
+        if ($testFile.content.IndexOf($symbolName, [System.StringComparison]::Ordinal) -ge 0) {
+            $testReferencesBySymbolName[$symbolName].Add($testFile.path)
+        }
+    }
+}
+
 foreach ($symbol in $criticalSymbols) {
-    $references = @(
-        $testFiles |
-            Where-Object { $_.content.IndexOf($symbol.name, [System.StringComparison]::Ordinal) -ge 0 } |
-            Select-Object -ExpandProperty path
-    )
+    $references = @($testReferencesBySymbolName[$symbol.name])
     $symbolCoverage.Add([pscustomobject]@{
         name = $symbol.name
         role = $symbol.role
@@ -103,27 +121,36 @@ foreach ($symbol in $criticalSymbols) {
     })
 }
 
+$symbolCoverageByPath = [System.Collections.Generic.Dictionary[string, System.Collections.Generic.List[object]]]::new(
+    [System.StringComparer]::Ordinal)
+foreach ($coverage in $symbolCoverage) {
+    if (-not $symbolCoverageByPath.ContainsKey($coverage.path)) {
+        $symbolCoverageByPath[$coverage.path] = [System.Collections.Generic.List[object]]::new()
+    }
+    $symbolCoverageByPath[$coverage.path].Add($coverage)
+}
+
 $productionFiles = @(
     $repositoryFiles |
         Where-Object {
-            $_.FullName -notmatch '[\\/](tests|node_modules|obj|bin|dist|coverage|\.angular|\.artifacts|TestResults|Migrations)[\\/]' -and
-            ($_.Extension -eq '.cs' -or
-             ($_.Extension -eq '.ts' -and $_.FullName -match '[\\/]FoodDiary\.(Web\.Client|Mobile)[\\/]')) -and
-            $_.Name -notmatch '\.(Designer|g|spec|test)\.(cs|ts)$'
-        } |
-        Sort-Object { Get-LlmWikiOrdinalSortKey $_.FullName }
+            $_.path -notmatch '^\.llm-wiki/tools/' -and
+            $_.path -notmatch '(^|/)(tests|node_modules|obj|bin|dist|coverage|\.angular|\.artifacts|TestResults|Migrations)/' -and
+            ($_.extension -eq '.cs' -or
+             ($_.extension -eq '.ts' -and $_.path -match '(^|/)FoodDiary\.(Web\.Client|Mobile)/')) -and
+            $_.name -notmatch '\.(Designer|g|spec|test)\.(cs|ts)$'
+        }
 )
 
 $fileMetrics = [System.Collections.Generic.List[object]]::new()
 $debtMarkers = [System.Collections.Generic.List[object]]::new()
 foreach ($file in $productionFiles) {
-    $content = [System.IO.File]::ReadAllText($file.FullName)
-    $path = ConvertTo-RepositoryPath $file.FullName
+    $content = [System.IO.File]::ReadAllText($file.fullPath)
+    $path = $file.path
     $lineCount = @($content -split '\r?\n' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }).Count
     $decisionCount = [regex]::Matches(
         $content,
         '\b(if|else\s+if|for|foreach|while|switch|case|catch)\b|&&|\|\||\?\?').Count
-    $fileCritical = @($symbolCoverage | Where-Object path -eq $path)
+    $fileCritical = @(if ($symbolCoverageByPath.ContainsKey($path)) { $symbolCoverageByPath[$path] })
     $unreferenced = @($fileCritical | Where-Object testReferenceCount -eq 0).Count
     $score = [Math]::Round(($lineCount / 50.0) + ($decisionCount * 1.5) + ($fileCritical.Count * 2) + ($unreferenced * 5), 2)
     $serializedScore = if ($score -eq [Math]::Truncate($score)) {

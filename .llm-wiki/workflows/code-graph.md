@@ -38,6 +38,10 @@ formats. Later builds use file size and modification time before
 hashing and parsing only candidates whose metadata changed. A no-op refresh
 does not start Roslyn. Updates run in one SQLite
 transaction and deleted files cascade to their symbols and token edges.
+Concurrent refreshes use a PID- and token-owned directory lock. A build never
+steals the lock from a live owner merely because it is old; an unreadable or
+dead-owner lock must also exceed the stale threshold, and cleanup verifies the
+ownership token before removing it.
 
 Semantic enrichment is automatic for ordinary incremental updates. SQLite
 selects declaration files referenced by the changed C# identifiers, and Roslyn

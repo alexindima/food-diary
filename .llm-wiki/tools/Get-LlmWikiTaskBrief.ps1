@@ -14,6 +14,7 @@ param(
     [ValidateSet('Text', 'Json')]
     [string]$Format = 'Text',
     [switch]$Compact,
+    [switch]$SkipTestPlan,
     [ValidateRange(1, 20)]
     [int]$Limit = 8
 )
@@ -36,6 +37,7 @@ if ($cacheEligible) {
         ProposedPath = @($ProposedPath)
         Intent = $Intent
         Compact = [bool]$Compact
+        SkipTestPlan = [bool]$SkipTestPlan
         Limit = $Limit
     }
     $queryCacheEntry = Get-LlmWikiQueryCacheEntry -RepositoryRoot $repositoryRoot -Namespace 'task-brief' -Arguments $cacheArguments
@@ -207,7 +209,9 @@ $ownership = if ($null -ne $OwnershipInput) { $OwnershipInput } else {
 }
 $testPlanArguments = @{} + $common
 $testPlanArguments.Limit = $Limit
-$testPlan = if ($null -ne $TestPlanInput) { $TestPlanInput } else {
+$testPlan = if ($null -ne $TestPlanInput) { $TestPlanInput } elseif ($SkipTestPlan) {
+    [pscustomobject]@{ focusedTestFiles = @(); scenarios = @() }
+} else {
     & (Join-Path $toolsRoot 'Get-LlmWikiTestPlan.ps1') @testPlanArguments -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
 }
 $rollout = if ($null -ne $RolloutInput) { $RolloutInput } else {
@@ -216,21 +220,31 @@ $rollout = if ($null -ne $RolloutInput) { $RolloutInput } else {
 $decision = if ($null -ne $DecisionInput) { $DecisionInput } else {
     & (Join-Path $toolsRoot 'Get-LlmWikiDecisionContext.ps1') @common -DiffInput $diff -PolicyInput $policy | ConvertFrom-Json
 }
-$qualityIndexPath = Join-Path $wikiRoot 'generated/quality-index.json'
-$qualityIndex = Get-Content -LiteralPath $qualityIndexPath -Raw | ConvertFrom-Json
-$runtimeTopologyPath = Join-Path $wikiRoot 'generated/runtime-topology.json'
-$runtimeTopology = Get-Content -LiteralPath $runtimeTopologyPath -Raw | ConvertFrom-Json
-$sensitiveDataPath = Join-Path $wikiRoot 'generated/sensitive-data-index.json'
-$sensitiveData = Get-Content -LiteralPath $sensitiveDataPath -Raw | ConvertFrom-Json
-$frontendContractPath = Join-Path $wikiRoot 'generated/frontend-contract-index.json'
-$frontendContract = Get-Content -LiteralPath $frontendContractPath -Raw | ConvertFrom-Json
-$domainDataPath = Join-Path $wikiRoot 'generated/domain-data-index.json'
-$domainData = Get-Content -LiteralPath $domainDataPath -Raw | ConvertFrom-Json
-$backendContractPath = Join-Path $wikiRoot 'generated/backend-contract-index.json'
-$backendContract = Get-Content -LiteralPath $backendContractPath -Raw | ConvertFrom-Json
+$changedPathsForQuality = @($diff.changedPaths)
+function Read-ImpactIndex([string]$RelativePath) {
+    $path = Join-Path $wikiRoot $RelativePath
+    $raw = [System.IO.File]::ReadAllText($path)
+    foreach ($changedPath in $changedPathsForQuality) {
+        if ($raw.IndexOf($changedPath, [System.StringComparison]::Ordinal) -ge 0) {
+            return $raw | ConvertFrom-Json
+        }
+    }
+    return $null
+}
+$qualityIndex = Read-ImpactIndex 'generated/quality-index.json'
+$runtimeTopology = Read-ImpactIndex 'generated/runtime-topology.json'
+$sensitiveData = Read-ImpactIndex 'generated/sensitive-data-index.json'
+$frontendContract = Read-ImpactIndex 'generated/frontend-contract-index.json'
+$domainData = Read-ImpactIndex 'generated/domain-data-index.json'
+$backendContract = Read-ImpactIndex 'generated/backend-contract-index.json'
+if ($null -eq $qualityIndex) { $qualityIndex = [pscustomobject]@{ files = @(); criticalSymbols = @() } }
+if ($null -eq $runtimeTopology) { $runtimeTopology = [pscustomobject]@{ hostedServices = @(); httpClients = @(); webhooks = @(); recurringJobRegistrations = @(); composeServices = @() } }
+if ($null -eq $sensitiveData) { $sensitiveData = [pscustomobject]@{ fields = @(); boundaryFiles = @(); potentialLogging = @(); externalTransfers = @() } }
+if ($null -eq $frontendContract) { $frontendContract = [pscustomobject]@{ components = @(); apiCalls = @(); translationUsage = @(); consumerEdges = @() } }
+if ($null -eq $domainData) { $domainData = [pscustomobject]@{ domainTypes = @(); invariants = @(); persistenceMappings = @() } }
+if ($null -eq $backendContract) { $backendContract = [pscustomobject]@{ contracts = @(); consumerEdges = @() } }
 $architectureHealthPath = Join-Path $wikiRoot 'generated/architecture-health-index.json'
 $architectureHealth = Get-Content -LiteralPath $architectureHealthPath -Raw | ConvertFrom-Json
-$changedPathsForQuality = @($diff.changedPaths)
 $changedQualityFiles = @($qualityIndex.files | Where-Object { $changedPathsForQuality -contains $_.path })
 $changedTestGaps = @(
     $qualityIndex.criticalSymbols |

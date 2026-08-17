@@ -9,8 +9,31 @@ namespace FoodDiary.Development.Mcp.Wiki;
 
 public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
     private static readonly TimeSpan CommandTimeout = TimeSpan.FromMinutes(3);
+    private const int DefaultMaxOutputCharacters = 8 * 1024 * 1024;
     private static readonly JsonSerializerOptions RequestJsonOptions =
         new(JsonSerializerDefaults.Web);
+    private readonly SemaphoreSlim _commandGate;
+    private readonly int _maxOutputCharacters;
+    private readonly WikiRuntimeTelemetry _telemetry;
+
+    public PowerShellWikiCommandExecutor()
+        : this(new WikiRuntimeTelemetry()) {
+    }
+
+    public PowerShellWikiCommandExecutor(WikiRuntimeTelemetry telemetry)
+        : this(maxConcurrentCommands: 3, DefaultMaxOutputCharacters, telemetry) {
+    }
+
+    internal PowerShellWikiCommandExecutor(
+        int maxConcurrentCommands,
+        int maxOutputCharacters,
+        WikiRuntimeTelemetry? telemetry = null) {
+        ArgumentOutOfRangeException.ThrowIfLessThan(maxConcurrentCommands, 1);
+        ArgumentOutOfRangeException.ThrowIfLessThan(maxOutputCharacters, 1);
+        _commandGate = new SemaphoreSlim(maxConcurrentCommands, maxConcurrentCommands);
+        _maxOutputCharacters = maxOutputCharacters;
+        _telemetry = telemetry ?? new WikiRuntimeTelemetry();
+    }
 
     public async Task<WikiCommandResult> ExecuteAsync(
         string command,
@@ -28,18 +51,49 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         string requestPath = await WriteRequestAsync(arguments, cancellationToken).ConfigureAwait(false);
 
         try {
-            return await ExecuteProcessAsync(
-                command,
-                requestPath,
-                repositoryRoot,
-                wikiPath,
-                cancellationToken).ConfigureAwait(false);
+            _telemetry.CommandQueued();
+            try {
+                await _commandGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            } catch (OperationCanceledException) {
+                _telemetry.CommandQueueCancelled();
+                throw;
+            }
+
+            _telemetry.CommandStarted();
+            var stopwatch = Stopwatch.StartNew();
+            try {
+                WikiCommandResult result = await ExecuteProcessAsync(
+                    command,
+                    requestPath,
+                    repositoryRoot,
+                    wikiPath,
+                    cancellationToken).ConfigureAwait(false);
+                stopwatch.Stop();
+                _telemetry.CommandCompleted(command, stopwatch.Elapsed);
+                return result;
+            } catch (DevelopmentMcpException exception) {
+                _telemetry.CommandFailed(
+                    cancelled: false,
+                    timedOut: string.Equals(
+                        exception.ErrorCode,
+                        DevelopmentMcpErrorCodes.Timeout,
+                        StringComparison.Ordinal));
+                throw;
+            } catch (OperationCanceledException) {
+                _telemetry.CommandFailed(cancelled: true, timedOut: false);
+                throw;
+            } catch {
+                _telemetry.CommandFailed(cancelled: false, timedOut: false);
+                throw;
+            } finally {
+                _commandGate.Release();
+            }
         } finally {
-            File.Delete(requestPath);
+            TryDelete(requestPath);
         }
     }
 
-    private static async Task<WikiCommandResult> ExecuteProcessAsync(
+    private async Task<WikiCommandResult> ExecuteProcessAsync(
         string command,
         string requestPath,
         string repositoryRoot,
@@ -82,15 +136,22 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         }
         process.StandardInput.Close();
 
-        Task<string> standardOutput = Task.Run(process.StandardOutput.ReadToEnd, cancellationToken);
-        Task<string> standardError = Task.Run(process.StandardError.ReadToEnd, cancellationToken);
-        var processExit = Task.Run(process.WaitForExit, CancellationToken.None);
+        Task<string> standardOutput = ReadBoundedAsync(
+            process.StandardOutput,
+            "standard output",
+            cancellationToken);
+        Task<string> standardError = ReadBoundedAsync(
+            process.StandardError,
+            "standard error",
+            cancellationToken);
+        Task processExit = process.WaitForExitAsync(CancellationToken.None);
         using CancellationTokenSource timeout = new(CommandTimeout);
         using var linkedCancellation =
             CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
 
         try {
-            await processExit.WaitAsync(linkedCancellation.Token).ConfigureAwait(false);
+            await Task.WhenAll(processExit, standardOutput, standardError)
+                .WaitAsync(linkedCancellation.Token).ConfigureAwait(false);
         } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
             TryKill(process);
             throw new DevelopmentMcpException(
@@ -147,9 +208,42 @@ public sealed class PowerShellWikiCommandExecutor : IWikiCommandExecutor {
         return requestPath;
     }
 
+    private async Task<string> ReadBoundedAsync(
+        TextReader reader,
+        string streamName,
+        CancellationToken cancellationToken) {
+        char[] buffer = new char[8192];
+        StringBuilder output = new();
+        while (true) {
+            int read = await reader.ReadAsync(buffer, cancellationToken).ConfigureAwait(false);
+            if (read == 0) {
+                return output.ToString();
+            }
+            if (output.Length + read > _maxOutputCharacters) {
+                throw new DevelopmentMcpException(
+                    DevelopmentMcpErrorCodes.WikiCommandFailed,
+                    $"Wiki command {streamName} exceeded " +
+                    $"{_maxOutputCharacters.ToString(System.Globalization.CultureInfo.InvariantCulture)} characters.");
+            }
+            output.Append(buffer, 0, read);
+        }
+    }
+
+    private static void TryDelete(string path) {
+        try {
+            File.Delete(path);
+        } catch (IOException) {
+        } catch (UnauthorizedAccessException) {
+        }
+    }
+
     private static void TryKill(Process process) {
-        if (!process.HasExited) {
-            process.Kill(entireProcessTree: true);
+        try {
+            if (!process.HasExited) {
+                process.Kill(entireProcessTree: true);
+            }
+        } catch (InvalidOperationException) {
+        } catch (System.ComponentModel.Win32Exception) {
         }
     }
 }

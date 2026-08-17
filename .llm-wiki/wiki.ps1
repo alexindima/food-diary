@@ -99,6 +99,7 @@ param(
     [switch]$Compact,
     [switch]$NoBaseline,
     [switch]$SkipHistory,
+    [switch]$SkipTestPlan,
     [switch]$FailOnUnreviewed,
     [switch]$Check,
     [string]$EvidencePath = '.artifacts/llm-wiki/evidence.json',
@@ -497,6 +498,21 @@ function Invoke-ObservedWikiStage {
     Write-VerifyProgress 'passed' ([int][Math]::Round($stopwatch.Elapsed.TotalSeconds))
 }
 
+$indexCommandTools = @{
+    'catalog' = 'Build-LlmWikiCatalog.ps1'
+    'symbols' = 'Build-LlmWikiSymbolIndex.ps1'
+    'frontend' = 'Build-LlmWikiFrontendIndex.ps1'
+    'frontend-contract' = 'Build-LlmWikiFrontendContractIndex.ps1'
+    'backend-contract' = 'Build-LlmWikiBackendContractIndex.ps1'
+    'architecture-health' = 'Build-LlmWikiArchitectureHealthIndex.ps1'
+    'domain-data' = 'Build-LlmWikiDomainDataIndex.ps1'
+    'configuration' = 'Build-LlmWikiConfigurationIndex.ps1'
+    'quality' = 'Build-LlmWikiQualityIndex.ps1'
+    'runtime' = 'Build-LlmWikiRuntimeTopology.ps1'
+    'sensitive-data' = 'Build-LlmWikiSensitiveDataIndex.ps1'
+    'modules' = 'Build-LlmWikiModulePages.ps1'
+}
+
 switch ($Command) {
     'verify-status' {
         $repositoryRoot = (Resolve-Path (Join-Path $toolsRoot '../..')).Path
@@ -847,18 +863,26 @@ switch ($Command) {
                     $graphSymbols = [object[]]@($graphProbe.symbols)
                     $graphConsumers = [object[]]@($graphProbe.consumers)
                     if ($graphSymbols.Length -gt 0 -or $graphConsumers.Length -gt 0) {
-                        Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
-                            Action = 'trace'; Query = [string]$topCandidate.name; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
-                            SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+                        if ($Format -eq 'Json') {
+                            Write-Output ($graphProbe | ConvertTo-Json -Depth 12)
+                        } else {
+                            Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
+                                Action = 'trace'; Query = [string]$topCandidate.name; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
+                                SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+                            }
                         }
                         break
                     }
                 }
             }
             if ($graphSymbols.Length -gt 0 -or $graphConsumers.Length -gt 0 -or $graphNamespaceFilters.Length -gt 0 -or $graphCandidates.Length -gt 0) {
-                Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
-                    Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
-                    SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+                if ($Format -eq 'Json') {
+                    Write-Output ($graphProbe | ConvertTo-Json -Depth 12)
+                } else {
+                    Invoke-WikiTool 'Manage-LlmWikiCodeGraph.ps1' @{
+                        Action = 'trace'; Query = $Query; Limit = [Math]::Min($Limit, 30); Format = $Format; SkipRefresh = $true
+                        SymbolKind = $SymbolKind; PathPrefix = $PathPrefix; Module = $Module
+                    }
                 }
                 break
             }
@@ -914,6 +938,7 @@ switch ($Command) {
         if ($PSBoundParameters.ContainsKey('ProposedPath')) { $briefArguments.ProposedPath = $ProposedPath }
         if ($PSBoundParameters.ContainsKey('Objective')) { $briefArguments.Intent = $Objective }
         if ($Compact) { $briefArguments.Compact = $true }
+        if ($SkipTestPlan) { $briefArguments.SkipTestPlan = $true }
         Invoke-WikiTool 'Get-LlmWikiTaskBrief.ps1' $briefArguments
     }
     'develop' {
@@ -2545,41 +2570,8 @@ switch ($Command) {
             Format = $Format
         }
     }
-    'catalog' {
-        Invoke-WikiTool 'Build-LlmWikiCatalog.ps1' @{ Check = $Check }
-    }
-    'symbols' {
-        Invoke-WikiTool 'Build-LlmWikiSymbolIndex.ps1' @{ Check = $Check }
-    }
-    'frontend' {
-        Invoke-WikiTool 'Build-LlmWikiFrontendIndex.ps1' @{ Check = $Check }
-    }
-    'frontend-contract' {
-        Invoke-WikiTool 'Build-LlmWikiFrontendContractIndex.ps1' @{ Check = $Check }
-    }
-    'backend-contract' {
-        Invoke-WikiTool 'Build-LlmWikiBackendContractIndex.ps1' @{ Check = $Check }
-    }
-    'architecture-health' {
-        Invoke-WikiTool 'Build-LlmWikiArchitectureHealthIndex.ps1' @{ Check = $Check }
-    }
-    'domain-data' {
-        Invoke-WikiTool 'Build-LlmWikiDomainDataIndex.ps1' @{ Check = $Check }
-    }
-    'configuration' {
-        Invoke-WikiTool 'Build-LlmWikiConfigurationIndex.ps1' @{ Check = $Check }
-    }
-    'quality' {
-        Invoke-WikiTool 'Build-LlmWikiQualityIndex.ps1' @{ Check = $Check }
-    }
-    'runtime' {
-        Invoke-WikiTool 'Build-LlmWikiRuntimeTopology.ps1' @{ Check = $Check }
-    }
-    'sensitive-data' {
-        Invoke-WikiTool 'Build-LlmWikiSensitiveDataIndex.ps1' @{ Check = $Check }
-    }
-    'modules' {
-        Invoke-WikiTool 'Build-LlmWikiModulePages.ps1' @{ Check = $Check }
+    { $_ -in @('catalog', 'symbols', 'frontend', 'frontend-contract', 'backend-contract', 'architecture-health', 'domain-data', 'configuration', 'quality', 'runtime', 'sensitive-data', 'modules') } {
+        Invoke-WikiTool $indexCommandTools[$Command] @{ Check = $Check }
     }
     default {
         Write-Host 'FoodDiary LLM Wiki'

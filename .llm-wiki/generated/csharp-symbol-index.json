@@ -8,15 +8,15 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3319,
-    "symbols": 3328,
+    "sourceFiles": 3325,
+    "symbols": 3334,
     "interfaceImplementationLinks": 233,
     "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1705,
+      "class": 1708,
       "enum": 56,
       "interface": 413,
-      "record": 1038,
+      "record": 1041,
       "record struct": 116
     },
     "roles": {
@@ -32,7 +32,7 @@
       "Mapper": 8,
       "Mapping": 4,
       "Options": 61,
-      "Other": 1239,
+      "Other": 1245,
       "Query": 161,
       "QueryHandler": 123,
       "ReadModelRepository": 29,
@@ -13065,21 +13065,28 @@
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerRuntimeIdentity.cs",
-      "line": 6
+      "line": 7
     },
     {
       "name": "ServerStatus",
       "kind": "record",
       "role": "Other",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatus.cs",
-      "line": 2
+      "line": 4
     },
     {
       "name": "ServerStatusService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/Diagnostics/ServerStatusService.cs",
-      "line": 7
+      "line": 8
+    },
+    {
+      "name": "WikiIndexManifest",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Diagnostics/WikiIndexManifest.cs",
+      "line": 5
     },
     {
       "name": "WikiIndexStatus",
@@ -13194,6 +13201,13 @@
       "line": 4
     },
     {
+      "name": "WikiCommandTiming",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiCommandTiming.cs",
+      "line": 2
+    },
+    {
       "name": "WikiOutputParser",
       "kind": "class",
       "role": "Other",
@@ -13201,11 +13215,39 @@
       "line": 5
     },
     {
+      "name": "WikiQueryCache",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCache.cs",
+      "line": 6
+    },
+    {
+      "name": "WikiQueryCacheMetrics",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryCacheMetrics.cs",
+      "line": 2
+    },
+    {
       "name": "WikiQueryService",
       "kind": "class",
       "role": "Service",
       "path": "FoodDiary.Development.Mcp/Wiki/WikiQueryService.cs",
       "line": 5
+    },
+    {
+      "name": "WikiRuntimeMetrics",
+      "kind": "record",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeMetrics.cs",
+      "line": 2
+    },
+    {
+      "name": "WikiRuntimeTelemetry",
+      "kind": "class",
+      "role": "Other",
+      "path": "FoodDiary.Development.Mcp/Wiki/WikiRuntimeTelemetry.cs",
+      "line": 4
     },
     {
       "name": "DomainConstants",
@@ -25753,21 +25795,21 @@
       "implementation": "ServerStatusService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 18
+      "line": 24
     },
     {
       "service": "IChangeSetSnapshotService",
       "implementation": "ChangeSetSnapshotService",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 19
+      "line": 25
     },
     {
       "service": "IWikiCommandExecutor",
       "implementation": "PowerShellWikiCommandExecutor",
       "lifetime": "Singleton",
       "path": "FoodDiary.Development.Mcp/Program.cs",
-      "line": 20
+      "line": 26
     },
     {
       "service": "IAchievementDefinitionStore",

@@ -66,9 +66,9 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('dependency-analysis')
     } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiReadOnlyTool|Test-LlmWikiReadOnlyGuard)\.ps1$') {
         $null = $smokeGroups.Add('read-only-guard')
-    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiParallelSmoke|Invoke-LlmWikiObservedStage|Start-LlmWikiVerifyWorker|Invoke-LlmWikiAdaptiveVerification|Test-LlmWikiAffectedSmokePlanning|Test-LlmWikiObservedStageReceipt|Test-LlmWikiStrictAffected|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
+    } elseif ($path -match '^\.llm-wiki/(tools/(Invoke-LlmWikiAffectedSmoke|Invoke-LlmWikiParallelSmoke|Invoke-LlmWikiObservedStage|Start-LlmWikiVerifyWorker|Invoke-LlmWikiAdaptiveVerification|Test-LlmWikiAffectedSmokePlanning|Test-LlmWikiObservedStageReceipt|Test-LlmWikiStrictAffected|Test-LlmWikiFacadeCommandCatalog|Test-LlmWikiFormattingReady)|wiki\.ps1|workflows/(adaptive-development|index-pipeline)\.md)') {
         $null = $smokeGroups.Add('facade-contract')
-    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|LlmWikiIndexCache|LlmWikiIndexTiming|Test-LlmWikiIndexTiming|Test-LlmWikiIndexCheckpoint|LlmWikiGeneratedArtifacts|Build-LlmWikiCatalog|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth|ModulePages)Index|Build-LlmWikiModulePages|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection|Test-LlmWikiBackendModuleModel)\.ps1$' -or $path -eq 'docs/architecture/backend-modules.json') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Invoke-LlmWikiIndexPipeline|Invoke-LlmWikiContractReferenceExtractor|LlmWikiIndexCache|LlmWikiIndexTiming|Test-LlmWikiIndexTiming|Test-LlmWikiIndexFingerprint|Test-LlmWikiContractReferenceExtractor|Test-LlmWikiIndexCheckpoint|LlmWikiGeneratedArtifacts|Build-LlmWikiCatalog|Build-LlmWiki(?:Frontend|FrontendContract|BackendContract|Quality|ArchitectureHealth|ModulePages)Index|Build-LlmWikiModulePages|Test-LlmWikiGeneratedArtifacts|Test-LlmWikiIndexSelection|Test-LlmWikiBackendModuleModel)\.ps1$' -or $path -like '.llm-wiki/tools/contract-reference-extractor/*' -or $path -eq 'docs/architecture/backend-modules.json') {
         $null = $smokeGroups.Add('index-selection')
     } elseif ($path -match '^\.llm-wiki/tools/(Find-LlmWikiFrontendTrace|Find-LlmWikiTrace|Test-LlmWikiTraceOutput|Find-LlmWikiQualityRisk|Test-LlmWikiQualityRisk)\.ps1$') {
         $null = $smokeGroups.Add('trace-output')
@@ -90,7 +90,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('reporting')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Test-LlmWikiVerificationReceipts)\.ps1$') {
         $null = $smokeGroups.Add('verification-receipts')
-    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification|Write-LlmWikiIndexVerificationReceipt)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Test-LlmWikiIndexManifest|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification|Write-LlmWikiIndexVerificationReceipt)\.ps1$' -or $path -eq '.llm-wiki/policies/query-indexes.json') {
         $null = $smokeGroups.Add('verification-cache')
     } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiQueryCache|Test-LlmWikiQueryCache|Get-LlmWikiTaskBrief|Get-LlmWikiResearchPacket|Get-LlmWikiTestPlan)\.ps1$') {
         $null = $smokeGroups.Add('query-cache')
@@ -202,6 +202,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             Write-Host "Dependency analysis smoke passed: $($rootResult.changeCount) current change(s), cwd-independent."
         }
         'facade-contract' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiFacadeCommandCatalog.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiStrictAffected.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiAffectedSmokePlanning.ps1')
@@ -242,6 +244,10 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'index-selection' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiIndexFingerprint.ps1')
+            if (-not $?) { exit 1 }
+            & (Join-Path $toolsRoot 'Test-LlmWikiContractReferenceExtractor.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiIndexCheckpoint.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiIndexSelection.ps1')
@@ -278,6 +284,8 @@ foreach ($group in @($smokeGroups | Sort-Object)) {
             if (-not $?) { exit 1 }
         }
         'verification-cache' {
+            & (Join-Path $toolsRoot 'Test-LlmWikiIndexManifest.ps1')
+            if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiVerificationCache.ps1')
             if (-not $?) { exit 1 }
             & (Join-Path $toolsRoot 'Test-LlmWikiOperationalTelemetry.ps1')

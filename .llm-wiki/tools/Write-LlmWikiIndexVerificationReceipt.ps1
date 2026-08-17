@@ -3,13 +3,17 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$indexPaths = @(
-    '.llm-wiki/generated/repository-catalog.json',
-    '.llm-wiki/generated/csharp-symbol-index.json',
-    '.llm-wiki/generated/backend-contract-index.json',
-    '.llm-wiki/generated/quality-index.json',
-    '.llm-wiki/generated/architecture-health-index.json'
-)
+$manifestPath = Join-Path $repositoryRoot '.llm-wiki/policies/query-indexes.json'
+if (-not (Test-Path -LiteralPath $manifestPath -PathType Leaf)) {
+    throw "Wiki query-index manifest is missing: $manifestPath"
+}
+try { $indexManifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json }
+catch { throw "Wiki query-index manifest is invalid: $($_.Exception.Message)" }
+$indexPaths = @($indexManifest.paths | ForEach-Object { ([string]$_).Replace('\', '/') } | Where-Object { $_ } | Sort-Object -Unique)
+if ([int]$indexManifest.schemaVersion -ne 1 -or $indexPaths.Count -eq 0 -or
+    @($indexPaths | Where-Object { [IO.Path]::IsPathRooted($_) -or $_ -match '(^|/)\.\.(/|$)' }).Count -gt 0) {
+    throw 'Wiki query-index manifest must use schemaVersion 1 and contain only repository-relative paths.'
+}
 
 function Add-Text([Security.Cryptography.IncrementalHash]$Hash, [string]$Value) {
     $Hash.AppendData([Text.Encoding]::UTF8.GetBytes($Value))

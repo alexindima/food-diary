@@ -59,7 +59,14 @@ function Read-LlmWikiQueryCache {
     [CmdletBinding()]
     param([Parameter(Mandatory)][object]$Entry)
     if (-not (Test-Path -LiteralPath $Entry.path -PathType Leaf)) { return $null }
-    return [IO.File]::ReadAllText($Entry.path, [Text.Encoding]::UTF8)
+    try {
+        $content = [IO.File]::ReadAllText($Entry.path, [Text.Encoding]::UTF8)
+        $null = $content | ConvertFrom-Json -ErrorAction Stop
+        return $content
+    } catch {
+        Remove-Item -LiteralPath $Entry.path -Force -ErrorAction SilentlyContinue
+        return $null
+    }
 }
 
 function Write-LlmWikiQueryCache {

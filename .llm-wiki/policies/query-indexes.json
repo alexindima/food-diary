@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "paths": [
+    ".llm-wiki/generated/architecture-health-index.json",
+    ".llm-wiki/generated/backend-contract-index.json",
+    ".llm-wiki/generated/configuration-index.json",
+    ".llm-wiki/generated/csharp-symbol-index.json",
+    ".llm-wiki/generated/domain-data-index.json",
+    ".llm-wiki/generated/frontend-contract-index.json",
+    ".llm-wiki/generated/frontend-index.json",
+    ".llm-wiki/generated/quality-index.json",
+    ".llm-wiki/generated/repository-catalog.json",
+    ".llm-wiki/generated/runtime-topology.json",
+    ".llm-wiki/generated/sensitive-data-index.json"
+  ]
+}

@@ -76,33 +76,48 @@ internal static class RepositorySourceFingerprint {
             process.StartInfo.ArgumentList.Add(argument);
         }
         process.Start();
-        Task<string> outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
-        Task<string> errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
-        if (inputLines is not null) {
-            foreach (string line in inputLines) {
-                await process.StandardInput.WriteLineAsync(line.AsMemory(), cancellationToken).ConfigureAwait(false);
-            }
-        }
-        process.StandardInput.Close();
         using CancellationTokenSource timeout = new(GitTimeout);
         using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
             cancellationToken,
             timeout.Token);
         try {
+            Task<string> outputTask = process.StandardOutput.ReadToEndAsync(cancellationToken);
+            Task<string> errorTask = process.StandardError.ReadToEndAsync(cancellationToken);
+            if (inputLines is not null) {
+                foreach (string line in inputLines) {
+                    await process.StandardInput.WriteLineAsync(line.AsMemory(), cancellationToken).ConfigureAwait(false);
+                }
+            }
+            process.StandardInput.Close();
             await process.WaitForExitAsync(linkedCancellation.Token).ConfigureAwait(false);
-        } catch (OperationCanceledException) when (timeout.IsCancellationRequested) {
-            process.Kill(entireProcessTree: true);
-            throw new DevelopmentMcpException(
-                DevelopmentMcpErrorCodes.Timeout,
-                $"Repository source fingerprint exceeded {GitTimeout}.");
+            string output = await outputTask.ConfigureAwait(false);
+            string error = await errorTask.ConfigureAwait(false);
+            if (process.ExitCode != 0) {
+                throw new DevelopmentMcpException(
+                    DevelopmentMcpErrorCodes.RepositoryNotFound,
+                    $"Repository source fingerprint failed: {error.Trim()}");
+            }
+            return output;
+        } catch (OperationCanceledException) {
+            TryKill(process);
+            if (timeout.IsCancellationRequested) {
+                throw new DevelopmentMcpException(
+                    DevelopmentMcpErrorCodes.Timeout,
+                    $"Repository source fingerprint exceeded {GitTimeout}.");
+            }
+            throw;
+        } catch {
+            TryKill(process);
+            throw;
         }
-        string output = await outputTask.ConfigureAwait(false);
-        string error = await errorTask.ConfigureAwait(false);
-        if (process.ExitCode != 0) {
-            throw new DevelopmentMcpException(
-                DevelopmentMcpErrorCodes.RepositoryNotFound,
-                $"Repository source fingerprint failed: {error.Trim()}");
+    }
+
+    private static void TryKill(Process process) {
+        try {
+            if (!process.HasExited) {
+                process.Kill(entireProcessTree: true);
+            }
+        } catch (InvalidOperationException) {
         }
-        return output;
     }
 }

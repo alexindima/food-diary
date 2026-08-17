@@ -1,4 +1,4 @@
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, extname, resolve } from 'node:path';
@@ -14,17 +14,25 @@ const typescriptExtractor = resolve(repositoryRoot, '.llm-wiki/tools/typescript-
 
 function withBuildLock(callback) {
   const lockPath = resolve(repositoryRoot, '.artifacts/llm-wiki/code-graph/build.lock');
+  const ownerPath = resolve(lockPath, 'owner.json');
+  const ownerToken = randomUUID();
   mkdirSync(dirname(lockPath), { recursive: true });
-  const deadline = Date.now() + 300_000;
+  const timeoutMs = Number(process.env.LLM_WIKI_GRAPH_LOCK_TIMEOUT_MS ?? 300_000);
+  const staleMs = Number(process.env.LLM_WIKI_GRAPH_LOCK_STALE_MS ?? 300_000);
+  const deadline = Date.now() + timeoutMs;
   while (true) {
     try {
       mkdirSync(lockPath);
-      writeFileSync(resolve(lockPath, 'owner.json'), JSON.stringify({ pid: process.pid, createdAtUtc: new Date().toISOString() }));
+      writeFileSync(ownerPath, JSON.stringify({ pid: process.pid, token: ownerToken, createdAtUtc: new Date().toISOString() }));
       break;
     } catch (error) {
       if (error.code !== 'EEXIST') throw error;
       try {
-        if (Date.now() - statSync(lockPath).mtimeMs > 300_000) {
+        let owner;
+        try { owner = JSON.parse(readFileSync(ownerPath, 'utf8')); } catch { owner = undefined; }
+        const ownerAlive = Number.isInteger(owner?.pid) && isProcessAlive(owner.pid);
+        const staleWithoutLiveOwner = !ownerAlive && Date.now() - statSync(lockPath).mtimeMs > staleMs;
+        if (staleWithoutLiveOwner) {
           rmSync(lockPath, { recursive: true, force: true });
           continue;
         }
@@ -39,7 +47,21 @@ function withBuildLock(callback) {
   try {
     return callback();
   } finally {
-    rmSync(lockPath, { recursive: true, force: true });
+    try {
+      const owner = JSON.parse(readFileSync(ownerPath, 'utf8'));
+      if (owner.token === ownerToken && owner.pid === process.pid) rmSync(lockPath, { recursive: true, force: true });
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+  }
+}
+
+function isProcessAlive(pid) {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return error.code === 'EPERM';
   }
 }
 

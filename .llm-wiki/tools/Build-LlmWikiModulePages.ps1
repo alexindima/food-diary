@@ -95,20 +95,21 @@ if ($missingBoundaryModules.Count -gt 0) {
     throw "Backend module boundary metadata is missing for: $($missingBoundaryModules -join ', ')."
 }
 $repositoryFilePaths = @(Get-RepositoryFilePaths)
-$directoryPaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::Ordinal)
-foreach ($filePath in $repositoryFilePaths) {
-    $segments = @($filePath.Replace('\', '/').Split('/'))
-    for ($length = 1; $length -lt $segments.Count; $length++) {
-        [void]$directoryPaths.Add(($segments[0..($length - 1)] -join '/'))
-    }
-}
-$allDirectories = @(
-    $directoryPaths |
+$sourceFiles = @(
+    $repositoryFilePaths |
         Where-Object {
-            "/$_/" -notmatch '/(\.git|\.github|\.llm-wiki|docs|node_modules|obj|bin|dist[^/]*|coverage|\.artifacts|TestResults)/'
+            $_ -match '\.cs$' -and
+            $_ -match '^(?:FoodDiary\.Application(?:\.|/)|FoodDiary\.Presentation\.Api/|FoodDiary\.JobManager/|FoodDiary\.Initializer/|FoodDiary\.Web\.Api/|FoodDiary\.Integrations/)' -and
+            "/$_/" -notmatch '/(node_modules|obj|bin|dist[^/]*|coverage|\.artifacts|TestResults)/'
         } |
         Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) } |
-        ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -Force }
+        ForEach-Object {
+            $repositoryPath = $_.Replace('\', '/')
+            [pscustomobject]@{
+                path = $repositoryPath
+                content = [IO.File]::ReadAllText((Join-Path $repositoryRoot $repositoryPath))
+            }
+        }
 )
 $allTestFiles = @(
     $repositoryFilePaths |
@@ -118,8 +119,39 @@ $allTestFiles = @(
             "/$_/" -notmatch '/(obj|bin|\.artifacts|TestResults)/'
         } |
         Where-Object { Test-Path -LiteralPath (Join-Path $repositoryRoot $_) } |
-        ForEach-Object { Get-Item -LiteralPath (Join-Path $repositoryRoot $_) -Force }
+        ForEach-Object { $_.Replace('\', '/') }
 )
+$sourceFilesByArea = @{}
+
+function Get-SourceFilesUnder {
+    param([string]$Area)
+
+    $normalizedArea = $Area.TrimEnd('/', '\').Replace('\', '/')
+    if ($sourceFilesByArea.ContainsKey($normalizedArea)) {
+        return @($sourceFilesByArea[$normalizedArea])
+    }
+
+    $prefix = $normalizedArea + '/'
+    $matches = [Collections.Generic.List[object]]::new()
+    foreach ($sourceFile in $sourceFiles) {
+        if ($sourceFile.path.StartsWith($prefix, [StringComparison]::OrdinalIgnoreCase)) {
+            $matches.Add($sourceFile)
+        }
+    }
+    $sourceFilesByArea[$normalizedArea] = $matches
+    return @($matches)
+}
+
+$hostSourceAreas = @{}
+foreach ($hostArea in @('FoodDiary.Presentation.Api', 'FoodDiary.JobManager', 'FoodDiary.Initializer', 'FoodDiary.Web.Api', 'FoodDiary.Integrations')) {
+    $referencedAreas = [Collections.Generic.HashSet[string]]::new([StringComparer]::OrdinalIgnoreCase)
+    foreach ($file in @(Get-SourceFilesUnder $hostArea)) {
+        foreach ($match in [regex]::Matches($file.content, 'FoodDiary\.Application(?:\.Abstractions)?\.(?<area>[A-Za-z0-9_]+)(?:\.|;)', [Text.RegularExpressions.RegexOptions]::IgnoreCase)) {
+            [void]$referencedAreas.Add($match.Groups['area'].Value)
+        }
+    }
+    $hostSourceAreas[$hostArea] = $referencedAreas
+}
 
 function Get-BoundaryMappingValues {
     param([object]$Boundary, [string]$Name, [string[]]$Default)
@@ -163,11 +195,8 @@ function Get-ReferencedContractAreas {
 
     $areas = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
     foreach ($sourceArea in $SourceAreas) {
-        $absoluteArea = Join-Path $repositoryRoot $sourceArea
-        if (-not (Test-Path -LiteralPath $absoluteArea -PathType Container)) { continue }
-        foreach ($file in @(Get-ChildItem -LiteralPath $absoluteArea -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue)) {
-            $content = Get-Content -LiteralPath $file.FullName -Raw
-            foreach ($match in [regex]::Matches($content, 'FoodDiary\.Application\.Abstractions\.(?<area>[A-Za-z0-9_]+)')) {
+        foreach ($file in @(Get-SourceFilesUnder $sourceArea)) {
+            foreach ($match in [regex]::Matches($file.content, 'FoodDiary\.Application\.Abstractions\.(?<area>[A-Za-z0-9_]+)')) {
                 $area = $match.Groups['area'].Value
                 if ($area -notin @('Common', $OwningModule)) { [void]$areas.Add($area) }
             }
@@ -189,17 +218,9 @@ function Get-HostConsumers {
     }
     $searchAreas = @($ModuleName) + @($ContractAreas)
     foreach ($hostArea in @('FoodDiary.Presentation.Api', 'FoodDiary.JobManager', 'FoodDiary.Initializer', 'FoodDiary.Web.Api', 'FoodDiary.Integrations')) {
-        $hostRoot = Join-Path $repositoryRoot $hostArea
-        if (-not (Test-Path -LiteralPath $hostRoot)) { continue }
-        $matched = $false
-        foreach ($file in @(Get-ChildItem -LiteralPath $hostRoot -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue)) {
-            $content = Get-Content -LiteralPath $file.FullName -Raw
-            if (@($searchAreas | Where-Object { $content -match "FoodDiary\.Application(?:\.Abstractions)?\.$([regex]::Escape($_))(?:\.|;)" }).Count -gt 0) {
-                $matched = $true
-                break
-            }
+        if (@($searchAreas | Where-Object { $hostSourceAreas[$hostArea].Contains([string]$_) }).Count -gt 0) {
+            [void]$consumers.Add($hostArea)
         }
-        if ($matched) { [void]$consumers.Add($hostArea) }
     }
     return @($consumers | Sort-Object { Get-LlmWikiOrdinalSortKey $_ })
 }
@@ -250,16 +271,15 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
     $hostConsumers = @(Get-HostConsumers $moduleName $contractAreas ([string]$module.project))
     $publicContractFiles = @(
         foreach ($area in $contractAreas) {
-            $root = Join-Path $repositoryRoot "FoodDiary.Application.Abstractions/$area"
-            if (Test-Path -LiteralPath $root) {
-                Get-ChildItem -LiteralPath $root -Recurse -File -Filter '*.cs' -ErrorAction SilentlyContinue |
-                    Where-Object { (Get-Content -LiteralPath $_.FullName -Raw) -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b' }
+            $contractArea = "FoodDiary.Application.Abstractions/$area"
+            Get-SourceFilesUnder $contractArea | Where-Object {
+                $_.content -match '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?:interface|record|class|struct|enum)\b'
             }
         }
     )
     $publicContractTypes = @(
         foreach ($contractFile in $publicContractFiles) {
-            $content = Get-Content -LiteralPath $contractFile.FullName -Raw
+            $content = $contractFile.content
             foreach ($match in [regex]::Matches($content, '\bpublic\s+(?:(?:sealed|abstract|partial|readonly|static)\s+)*(?<kind>interface|record(?:\s+(?:class|struct))?|class|struct|enum)\s+(?<name>[A-Za-z_][A-Za-z0-9_]*)')) {
                 [pscustomobject]@{
                     kind = $match.Groups['kind'].Value
@@ -274,9 +294,8 @@ foreach ($module in @($allModules | Sort-Object { Get-LlmWikiOrdinalSortKey $_.n
     $tests = @(
         $allTestFiles |
             Where-Object {
-                (ConvertTo-RepositoryPath $_.FullName) -match "/$([regex]::Escape($moduleName))(/|[^/]*Tests?\.cs$)"
+                $_ -match "/$([regex]::Escape($moduleName))(/|[^/]*Tests?\.cs$)"
             } |
-            ForEach-Object { ConvertTo-RepositoryPath $_.FullName } |
             Sort-Object { Get-LlmWikiOrdinalSortKey $_ } |
             Select-Object -First 30
     )

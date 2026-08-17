@@ -20,6 +20,11 @@ public sealed class PowerShellWikiCommandExecutorTests {
         Assert.Equal("startup-head", result.RuntimeIdentity.RepositoryHeadAtStartup);
         Assert.False(result.RunningCodeMatchesRepositoryHead);
         Assert.NotEmpty(result.WorktreeFingerprint);
+        Assert.Contains(result.Indexes, index => index.Path.EndsWith("runtime-topology.json", StringComparison.Ordinal));
+        Assert.Contains(result.Indexes, index => index.Path.EndsWith("sensitive-data-index.json", StringComparison.Ordinal));
+        Assert.Contains(result.Indexes, index => index.Path.EndsWith("frontend-index.json", StringComparison.Ordinal));
+        Assert.Equal(0, result.RuntimeMetrics.QueryCache.Entries);
+        Assert.Equal(0, result.RuntimeMetrics.ActiveCommands);
     }
 
     [Fact]

@@ -110,16 +110,18 @@ if ($changedPaths.Count -eq 0) {
 }
 
 $catalog = Get-Content -LiteralPath $catalogPath -Raw | ConvertFrom-Json
-$symbolIndex = if (Test-Path -LiteralPath $symbolIndexPath) {
-    Get-Content -LiteralPath $symbolIndexPath -Raw | ConvertFrom-Json
-} else {
-    $null
+function Read-IndexWhenPathIsPresent([string]$Path, [string[]]$CandidatePath) {
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $null }
+    $raw = [System.IO.File]::ReadAllText($Path)
+    foreach ($candidate in $CandidatePath) {
+        if ($raw.IndexOf($candidate, [System.StringComparison]::Ordinal) -ge 0) {
+            return $raw | ConvertFrom-Json
+        }
+    }
+    return $null
 }
-$frontendIndex = if (Test-Path -LiteralPath $frontendIndexPath) {
-    Get-Content -LiteralPath $frontendIndexPath -Raw | ConvertFrom-Json
-} else {
-    $null
-}
+$symbolIndex = Read-IndexWhenPathIsPresent $symbolIndexPath $changedPaths
+$frontendIndex = Read-IndexWhenPathIsPresent $frontendIndexPath $changedPaths
 $scopes = [ordered]@{
     Backend = @($changedPaths | Where-Object {
         $_ -match '\.cs$|\.csproj$|Directory\.(Build|Packages)\.props$' -or
@@ -316,22 +318,18 @@ foreach ($module in $matchedModules) {
 }
 
 $focusedTests = [System.Collections.Generic.List[string]]::new()
+$repositoryTestSources = @(
+    Invoke-LlmWikiGitPathList `
+        -RepositoryRoot $repositoryRoot `
+        -Arguments @('ls-files', '--cached', '--others', '--exclude-standard', '--', 'tests/**/*.cs') `
+        -FailureMessage 'Unable to enumerate focused test candidates.' |
+        Sort-Object -Unique
+)
 foreach ($module in $matchedModules) {
     $escapedName = [regex]::Escape($module.name)
     $candidateTests = @(
-        Get-ChildItem -LiteralPath $repositoryRoot -Recurse -File -Filter '*.cs' |
-            Where-Object {
-                $_.FullName -match '[\\/]tests[\\/]' -and
-                $_.FullName -notmatch '[\\/](obj|bin|\.artifacts|TestResults)[\\/]'
-            } |
-            ForEach-Object {
-                $absolutePath = $_.FullName
-                $repositoryUri = [System.Uri]::new(($repositoryRoot.TrimEnd('\', '/') + [System.IO.Path]::DirectorySeparatorChar))
-                $fileUri = [System.Uri]::new($absolutePath)
-                [System.Uri]::UnescapeDataString($repositoryUri.MakeRelativeUri($fileUri).ToString())
-            } |
+        $repositoryTestSources |
             Where-Object { $_ -match "/$escapedName(/|[^/]*Tests?\.cs$)" } |
-            Sort-Object |
             Select-Object -First 8
     )
     foreach ($candidateTest in $candidateTests) {

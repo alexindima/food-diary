@@ -52,5 +52,10 @@ foreach ($property in @($manifest.modules.PSObject.Properties)) {
 foreach ($contract in @('Business-module dependencies:', 'Abstraction-contract dependencies:', 'Host/adapter consumers:', '## Boundary Health', '## Public Surface', 'Exported repository-shaped contracts:', 'none observed', 'discovery evidence, not proof')) {
     if (-not $generatorText.Contains($contract)) { throw "Generated module pages omit '$contract'." }
 }
+if ($generatorText -match 'Get-ChildItem[^\r\n]+-Recurse' -or
+    -not $generatorText.Contains('[IO.File]::ReadAllText') -or
+    -not $generatorText.Contains('$sourceFilesByArea')) {
+    throw 'Module-page generation must index relevant C# sources once instead of recursively rereading each module and host tree.'
+}
 
-Write-Host 'LLM Wiki backend module model regression passed: unified inventory, ownership, mappings, evidence types, and limitations are explicit.'
+Write-Host 'LLM Wiki backend module model regression passed: unified inventory, ownership, mappings, single-pass source indexing, evidence types, and limitations are explicit.'

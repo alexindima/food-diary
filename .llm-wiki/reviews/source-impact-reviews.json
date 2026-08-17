@@ -142,18 +142,30 @@
       "pageSha256": "623b527d5eca7164ab6562bb12a0c728d6a710315430d7fc64e56dfd603f464f",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
-          "sha256": "32b1eeade1c292acadc5c00b97d4fdaccdb0728bd306ad73d330aaf5544a8e9d"
+          "path": ".llm-wiki/tools/Get-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "5813c67eead1c5b6f53ee097147b63ce8f17f99e67481df0eaf3c120da7d7415"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
-          "sha256": "a629e77c19fecea5afe1e2b97a487460c1ac121aa3fcc8884e270f2d50d69624"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
+        },
+        {
+          "path": ".llm-wiki/tools/LlmWikiQueryCache.ps1",
+          "sha256": "a5b40892417dab0c445f20c0103b7b0677abe63af828b872222c2ba92611d7a2"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
+          "sha256": "a4523d43ec4e76a312a4a09843d808003ebf36c23dfd3e2059b7a82f16ea62b6"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiQueryCache.ps1",
+          "sha256": "d0f69ef34e8ba1420758a842278283c91f6b4818ea19a4978969f1244db203ab"
         }
       ],
-      "reason": "CI remediation keeps extraction readiness aligned with current JobManager module registration policy and records the narrow Users credential verification boundary without changing Wiki workflow semantics.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
-      "reviewedAtUtc": "2026-08-17T12:15:01.1980267Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:40.9359850Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -206,14 +218,14 @@
       "pageSha256": "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:46.9653090Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:41.1189730Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -221,14 +233,14 @@
       "pageSha256": "49eab42e51f76e49c1ba23bb8ab93f7358270e92bed0b0e4547ba7b713fa4642",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:47.4165552Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:41.3266134Z"
     },
     {
       "pageId": "workflow-code-graph",
@@ -524,14 +536,14 @@
       "pageSha256": "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:51.1794640Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:41.7862312Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -539,14 +551,14 @@
       "pageSha256": "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiImplementationPlan.ps1",
-          "sha256": "2ee96e2ec26a5285c8f0d9a305327a10b739fef4682eee18184b8fb321b17713"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
         }
       ],
-      "reason": "Reviewed additive API compatibility result aliases, legacy release-readiness normalization used by atomic delivery replan, and correct tool-contract path recovery for forced parallel smoke groups.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "2d8942f8c7686a3afe357471b30bc0c6167b8b08",
-      "reviewedAtUtc": "2026-08-13T12:40:33.1865677Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:42.0196792Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -599,14 +611,14 @@
       "pageSha256": "a952661d5073668178342e7b7131b00a3ea21d502dae2ea219a05a41d7094cdb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiResearchPacket.ps1",
-          "sha256": "7235befbbe347e05a990cab52812b800ba8b793463e08d3f6f95fe3b3cd6abe5"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
         }
       ],
-      "reason": "Test-only research, policy, staged-delta indexing, and review orchestration were intentionally made proportional without changing product architecture.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "d2b100e1e4cfc5b201f23151dcf823b4cea2c53d",
-      "reviewedAtUtc": "2026-08-14T12:05:49.5321577Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:42.3334836Z"
     },
     {
       "pageId": "workflow-learned-regression-evals",
@@ -758,13 +770,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "99815edad973953538e245508dd8877d3e028a267cf9eec9a9a2f836b4938a9d"
+          "sha256": "b6c8d2443d80976ad32425419f0f937309af80bdce6487a41a2fcbbb2d9eb8c3"
         }
       ],
-      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
+      "reason": "Compiled backend-contract extraction preserves the exact compatibility-regex counts and canonical 1045-contract/7218-edge output, retains an exercised PowerShell fallback, and keeps internal Wiki helper projects outside production quality and architecture evidence.",
       "baseRef": "HEAD",
-      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
-      "reviewedAtUtc": "2026-08-17T15:56:43.6600237Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:35:27.1866371Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -863,17 +875,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "cf167f32457f6c569f388e0e89f01784d61b856baeaece02a77d058ef4dd5a4d"
+          "sha256": "365fb076601d46c3e9e3d7050ed858e354db8ceaae5ff5bbf756280aae95d69d"
         },
         {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "8e1506bb3d8b69676876cd74e6047611d495972724b6790a6623a995f2ac925c"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
+          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
         }
       ],
-      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:28:10.1496043Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:43.3660545Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -897,13 +909,13 @@
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f17a6dcca75a3cdfe742cd490f82f85c8f6ebbc502df7bc09cde7738b39a8668"
+          "sha256": "c9c4c30f8c3170dc02b6c8809445f0a348c1b60b076f9832902e70f5040cd9a2"
         }
       ],
-      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
+      "reason": "Reviewed MCP snapshot-keyed cache, bounded runtime telemetry, command-catalog guard, and related tests; regenerated navigation reflects the implemented source without changing authoritative product behavior.",
       "baseRef": "HEAD",
-      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
-      "reviewedAtUtc": "2026-08-17T11:17:51.8924049Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T20:48:03.2704555Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -1033,17 +1045,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "cf167f32457f6c569f388e0e89f01784d61b856baeaece02a77d058ef4dd5a4d"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "8e1506bb3d8b69676876cd74e6047611d495972724b6790a6623a995f2ac925c"
+          "sha256": "365fb076601d46c3e9e3d7050ed858e354db8ceaae5ff5bbf756280aae95d69d"
         }
       ],
-      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:28:07.5374117Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:41.5576562Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1112,14 +1120,18 @@
       "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
+          "sha256": "365fb076601d46c3e9e3d7050ed858e354db8ceaae5ff5bbf756280aae95d69d"
+        },
+        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f17a6dcca75a3cdfe742cd490f82f85c8f6ebbc502df7bc09cde7738b39a8668"
+          "sha256": "c9c4c30f8c3170dc02b6c8809445f0a348c1b60b076f9832902e70f5040cd9a2"
         }
       ],
-      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
+      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
       "baseRef": "HEAD",
-      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
-      "reviewedAtUtc": "2026-08-17T11:17:51.5754087Z"
+      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
+      "reviewedAtUtc": "2026-08-17T21:19:43.0704277Z"
     }
   ]
 }

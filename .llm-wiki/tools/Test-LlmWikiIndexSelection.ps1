@@ -80,6 +80,18 @@ $contractPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiFrontendContractInde
 Assert-Plan ($contractPlan -match 'Build-LlmWikiFrontendContractIndex.ps1' -and $contractPlan -match 'Build-LlmWikiArchitectureHealthIndex.ps1' -and
     $contractPlan -notmatch 'Build-LlmWikiQualityIndex.ps1') 'Frontend contract builder dependency closure is incorrect.'
 
+foreach ($extractorPath in @(
+    '.llm-wiki/tools/Invoke-LlmWikiContractReferenceExtractor.ps1',
+    '.llm-wiki/tools/contract-reference-extractor/Program.cs',
+    '.llm-wiki/tools/contract-reference-extractor/LlmWiki.ContractReferenceExtractor.csproj'
+)) {
+    $extractorPlan = Get-IndexPlan $extractorPath
+    Assert-Plan ($extractorPlan -match 'Build-LlmWikiBackendContractIndex.ps1' -and
+        $extractorPlan -match 'Build-LlmWikiArchitectureHealthIndex.ps1' -and
+        $extractorPlan -notmatch 'Build-LlmWikiCatalog.ps1|Build-LlmWikiSymbolIndex.ps1|Build-LlmWikiSensitiveDataIndex.ps1') `
+        "Contract-reference extractor selected an incorrect index closure: $extractorPath"
+}
+
 $symbolPlan = Get-IndexPlan '.llm-wiki/tools/Build-LlmWikiSymbolIndex.ps1'
 foreach ($expectedTool in @(
     'Build-LlmWikiSymbolIndex.ps1',

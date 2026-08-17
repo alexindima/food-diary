@@ -79,6 +79,10 @@ public sealed class McpServerTests {
     public async Task ConfiguredServer_SupportsConcurrentClientsAndStatusCalls() {
         string repositoryRoot = FindRepositoryRoot();
         var configuration = CodexMcpTestConfiguration.Load(repositoryRoot);
+        string sessionRoot = Path.Combine(Path.GetTempPath(), "fooddiary-development-mcp");
+        string[] sessionsBefore = Directory.Exists(sessionRoot)
+            ? [.. Directory.GetDirectories(sessionRoot).Select(Path.GetFileName).OfType<string>()]
+            : [];
 
         CallToolResult[] results = await Task.WhenAll(
             CallStatusAsync(configuration, "FoodDiary MCP concurrent client 1"),
@@ -92,6 +96,16 @@ public sealed class McpServerTests {
                 result.StructuredContent.Value.ToString(),
                 StringComparison.OrdinalIgnoreCase);
         });
+        string[] newSessions = Directory.Exists(sessionRoot)
+            ? [.. Directory.GetDirectories(sessionRoot)
+                .Select(Path.GetFileName)
+                .OfType<string>()
+                .Except(sessionsBefore, StringComparer.OrdinalIgnoreCase)]
+            : [];
+        Assert.DoesNotContain(newSessions, name => name.Length == 32);
+        Assert.True(
+            newSessions.Count(name => name.Length == 64) <= 1,
+            $"Concurrent clients created multiple content-addressed runtimes: {string.Join(", ", newSessions)}");
     }
 
     [Fact]
@@ -144,21 +158,44 @@ public sealed class McpServerTests {
             transport,
             cancellationToken: timeout.Token);
 
+        var arguments = new Dictionary<string, object?>(StringComparer.Ordinal) {
+            ["intent"] = "Summarize the current FoodDiary measurement display changes",
+            ["plannedPath"] = "FoodDiary.Web.Client/src/app",
+        };
         CallToolResult result = await client.CallToolAsync(
             "get_change_context",
-            new Dictionary<string, object?>(StringComparer.Ordinal) {
-                ["intent"] = "Summarize the current FoodDiary measurement display changes",
-                ["plannedPath"] = "FoodDiary.Web.Client/src/app",
-            },
+            arguments,
             cancellationToken: timeout.Token);
+        var cachedStopwatch = Stopwatch.StartNew();
+        CallToolResult cachedResult = await client.CallToolAsync(
+            "get_change_context",
+            arguments,
+            cancellationToken: timeout.Token);
+        cachedStopwatch.Stop();
 
         Assert.NotEqual(true, result.IsError);
+        Assert.NotEqual(true, cachedResult.IsError);
+        Assert.True(
+            cachedStopwatch.Elapsed < TimeSpan.FromSeconds(2),
+            $"Cached change context took {cachedStopwatch.Elapsed}.");
         JsonElement structuredContent = result.StructuredContent!.Value;
         JsonElement data = structuredContent.GetProperty("data");
         JsonElement summary = data.GetProperty("structuredOutput");
         Assert.True(summary.GetProperty("compact").GetBoolean());
         Assert.False(summary.TryGetProperty("rolloutPlan", out _));
         Assert.True(structuredContent.GetRawText().Length < 30_000);
+
+        CallToolResult statusResult = await client.CallToolAsync(
+            "get_server_status",
+            cancellationToken: timeout.Token);
+        JsonElement runtimeMetrics = statusResult.StructuredContent!.Value
+            .GetProperty("data")
+            .GetProperty("runtimeMetrics");
+        Assert.True(runtimeMetrics.GetProperty("queryCache").GetProperty("hits").GetInt64() >= 1);
+        Assert.True(runtimeMetrics.GetProperty("queryCache").GetProperty("entries").GetInt32() >= 1);
+        Assert.True(runtimeMetrics.GetProperty("completedCommands").GetInt64() >= 1);
+        Assert.Contains(runtimeMetrics.GetProperty("commandTimings").EnumerateArray(), timing =>
+            string.Equals(timing.GetProperty("command").GetString(), "brief", StringComparison.Ordinal));
     }
 
     private static async Task<CallToolResult> CallStatusAsync(

@@ -20,6 +20,9 @@ $briefArguments = @{
     Intent = $Objective
     Format = 'Json'
     Limit = [Math]::Min($Limit, 20)
+    # Routing consumes risk, scope, ownership, rollout, privacy, and decision
+    # evidence from the brief, but never its focused tests or scenarios.
+    SkipTestPlan = $true
 }
 if ($PSBoundParameters.ContainsKey('HeadRef')) { $briefArguments.HeadRef = $HeadRef }
 if ($PSBoundParameters.ContainsKey('ChangedPath')) { $briefArguments.ChangedPath = $ChangedPath }

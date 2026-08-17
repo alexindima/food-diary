@@ -81,6 +81,11 @@ dependency-aware index pipeline:
 2. Backend contracts and quality wait for the symbol index; module pages wait for the catalog.
 3. Architecture health waits for catalog, backend contracts, frontend contracts, and quality.
 
+The module-page generator takes one in-memory snapshot of the relevant C# source
+files, caches area-prefix lookups, and derives host namespace references from
+that snapshot. Do not reintroduce recursive source-tree reads inside the
+per-module loop; the backend-module regression explicitly guards this contract.
+
 The default concurrency is four processes and can be changed for constrained environments:
 
 ```powershell
@@ -199,6 +204,14 @@ or deleted non-style file, scope change, mode change, or runtime change invalida
 that incremental reuse. Strict `verify`, `verify-full`, publication hooks, and CI
 never consume it.
 
+The deep-freshness receipt hashes every query dependency declared in
+`.llm-wiki/policies/query-indexes.json`; the Development MCP reads that same
+manifest for status. Index updates acquire the exclusive update lock before
+recovering interrupted transactions. They persist an atomic `initializing`
+marker before copying the rollback tree, prefer the last completed-stage
+checkpoint for recoverable interruptions, and prune stale markerless or partial
+transactions that cannot be restored safely.
+
 The pre-commit hook runs the affected compiled-index freshness check when staged
 source or Wiki generator inputs change. This catches a final TS/test edit made
 after index generation before the stale artifacts can reach CI. CSS/SCSS-only
@@ -219,6 +232,30 @@ helper, plus the current generated output. The pipeline prints an explicit
 cache-hit message. Any source, generator, dependency-index, or output change
 invalidates its receipt and runs the normal freshness computation. Receipts
 live under ignored `.artifacts/llm-wiki/index-cache`; they are never committed.
+Input fingerprints are calculated by one `git hash-object --stdin-paths`
+process with explicit BOM-free UTF-8 and then folded into a SHA-256 manifest,
+instead of opening every input separately through PowerShell. The fingerprint
+regression covers Unicode paths, stable ordering, duplicate and missing inputs,
+and same-length content changes with a restored timestamp.
+
+On a cache miss, the quality generator keeps one normalized Git path snapshot,
+uses dictionaries for test references and per-file critical symbols, and avoids
+repeated `FileInfo` materialization. The backend-contract generator consumes the
+same Git-declared input list instead of recursively traversing the repository;
+both retain semantic `-Check` comparison against the committed canonical JSON.
+Backend contract references are found by a content-addressed .NET helper under
+ignored `.artifacts/llm-wiki/contract-reference-extractor`. Its Aho-Corasick
+automaton scans each source once, applies the same ASCII identifier boundaries
+as the compatibility regex, constructs and formats the complete canonical index
+in-process, and reports compact metrics separately from JSON. Build publication
+is serialized by an exclusive lock, incomplete runtimes have no ready marker,
+and the generator falls back to the exact PowerShell regex when the compiled
+helper cannot build or execute. The focused regression compares comments,
+strings, overlapping names, Unicode, definition exclusion, and the full current
+repository output; `-RequireCompiledScanner` turns fallback into a test failure.
+Compiled Wiki helper projects remain tooling inputs only: catalog, symbol,
+backend-contract, quality, and architecture-health regressions reject
+`.llm-wiki/tools` entries as production evidence.
 CI deliberately bypasses verification-stage resume and retains a complete
 deterministic check. `-ContractIndexesOnly` defers quality, module-page, and
 architecture-health analytics during feature iteration; the ordinary affected

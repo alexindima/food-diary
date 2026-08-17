@@ -1,6 +1,7 @@
 using FoodDiary.Development.Mcp.Infrastructure;
 using FoodDiary.Development.Mcp.Protocol;
 using FoodDiary.Development.Mcp.ChangeSets;
+using FoodDiary.Development.Mcp.Wiki;
 using System.Security.Cryptography;
 
 namespace FoodDiary.Development.Mcp.Diagnostics;
@@ -8,15 +9,8 @@ namespace FoodDiary.Development.Mcp.Diagnostics;
 public sealed class ServerStatusService(
     TimeProvider timeProvider,
     ServerRuntimeIdentity runtimeIdentity,
-    IChangeSetSnapshotService snapshots) : IServerStatusService {
-    private static readonly string[] IndexPaths = [
-        ".llm-wiki/generated/repository-catalog.json",
-        ".llm-wiki/generated/csharp-symbol-index.json",
-        ".llm-wiki/generated/backend-contract-index.json",
-        ".llm-wiki/generated/quality-index.json",
-        ".llm-wiki/generated/architecture-health-index.json",
-    ];
-
+    IChangeSetSnapshotService snapshots,
+    WikiQueryCache? queryCache = null) : IServerStatusService {
     public async Task<ServerStatus> GetStatusAsync(CancellationToken cancellationToken) {
         string repositoryRoot = RepositoryRootResolver.Resolve();
         string wikiPath = Path.Combine(repositoryRoot, ".llm-wiki", "wiki.ps1");
@@ -32,7 +26,9 @@ public sealed class ServerStatusService(
         string[] reviewMetadataPaths = [.. snapshot.ChangedPaths.Where(IsReviewMetadataPath)];
         string[] sourceChangedPaths = [.. snapshot.ChangedPaths.Except(derivedWikiPaths, StringComparer.OrdinalIgnoreCase)
             .Except(reviewMetadataPaths, StringComparer.OrdinalIgnoreCase)];
-        WikiIndexStatus[] indexes = [.. IndexPaths.Select(path => {
+        string[] indexPaths = await WikiIndexManifest.ReadPathsAsync(repositoryRoot, cancellationToken)
+            .ConfigureAwait(false);
+        WikiIndexStatus[] indexes = [.. indexPaths.Select(path => {
             string absolutePath = Path.Combine(repositoryRoot, path.Replace('/', Path.DirectorySeparatorChar));
             FileInfo file = new(absolutePath);
             return new WikiIndexStatus(
@@ -42,7 +38,7 @@ public sealed class ServerStatusService(
         })];
         bool indexFilesPresent = indexes.All(index => index.Exists);
         string? indexFingerprint = indexFilesPresent
-            ? await ComputeIndexFingerprintAsync(repositoryRoot, cancellationToken).ConfigureAwait(false)
+            ? await ComputeIndexFingerprintAsync(repositoryRoot, indexPaths, cancellationToken).ConfigureAwait(false)
             : null;
         string sourceFingerprint = await RepositorySourceFingerprint
             .ComputeAsync(repositoryRoot, cancellationToken)
@@ -104,6 +100,7 @@ public sealed class ServerStatusService(
             indexesMatchWorktree ? "verified" : DevelopmentMcpErrorCodes.IndexStale,
             indexCheckSummary,
             indexes,
+            queryCache?.CaptureMetrics() ?? new WikiRuntimeTelemetry().Capture(cacheEntries: 0),
             timeProvider.GetUtcNow());
     }
 
@@ -118,9 +115,10 @@ public sealed class ServerStatusService(
 
     private static async Task<string> ComputeIndexFingerprintAsync(
         string repositoryRoot,
+        IReadOnlyList<string> indexPaths,
         CancellationToken cancellationToken) {
         using var hash = IncrementalHash.CreateHash(HashAlgorithmName.SHA256);
-        foreach (string path in IndexPaths.Order(StringComparer.Ordinal)) {
+        foreach (string path in indexPaths.Order(StringComparer.Ordinal)) {
             hash.AppendData(System.Text.Encoding.UTF8.GetBytes(path));
             FileStream stream = File.OpenRead(Path.Combine(
                 repositoryRoot,

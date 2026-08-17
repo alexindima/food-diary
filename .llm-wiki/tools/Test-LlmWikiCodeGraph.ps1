@@ -4,6 +4,10 @@ param()
 $ErrorActionPreference = 'Stop'
 $manager = Join-Path $PSScriptRoot 'Manage-LlmWikiCodeGraph.ps1'
 $repositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
+$graphToolText = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'code-graph.mjs') -Raw
+foreach ($lockSafetyFragment in @('isProcessAlive(owner.pid)', 'process.kill(pid, 0)', 'owner.token === ownerToken')) {
+    if (-not $graphToolText.Contains($lockSafetyFragment)) { throw "Code graph live-owner lock safety is missing: $lockSafetyFragment" }
+}
 $recipesBoundary = if (Test-Path -LiteralPath (Join-Path $repositoryRoot 'FoodDiary.Application.Recipes') -PathType Container) { 'FoodDiary.Application.Recipes' } else { 'FoodDiary.Application/Recipes' }
 $recipesSourcePrefix = if ($recipesBoundary -eq 'FoodDiary.Application.Recipes') { 'FoodDiary.Application.Recipes/Recipes' } else { $recipesBoundary }
 $build = & $manager build -Format Json | ConvertFrom-Json

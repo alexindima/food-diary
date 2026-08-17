@@ -1,3 +1,5 @@
+using FoodDiary.Development.Mcp.Wiki;
+
 namespace FoodDiary.Development.Mcp.Diagnostics;
 
 public sealed record ServerStatus(
@@ -23,5 +25,6 @@ public sealed record ServerStatus(
     string IndexStatusCode,
     string IndexCheckSummary,
     IReadOnlyList<WikiIndexStatus> Indexes,
+    WikiRuntimeMetrics RuntimeMetrics,
     DateTimeOffset CheckedAtUtc,
     bool ReadOnly = true);

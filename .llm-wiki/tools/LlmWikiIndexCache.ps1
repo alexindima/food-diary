@@ -8,14 +8,54 @@ function Get-LlmWikiFileSha256([string]$Path) {
 }
 
 function Get-LlmWikiIndexInputFingerprint([string]$RepositoryRoot, [string[]]$InputPath) {
-    $existingPaths = @($InputPath | ForEach-Object { ([string]$_).TrimStart([char]0xFEFF).Replace('\', '/') } | Sort-Object -Unique | Where-Object {
-        Test-Path -LiteralPath (Join-Path $RepositoryRoot $_) -PathType Leaf
-    })
-    # Managed hashing is encoding-independent and keeps Unicode/BOM path bytes
-    # away from PowerShell 5 native stdin, which otherwise prepends a UTF-8 BOM.
-    $entries = foreach ($relativePath in $existingPaths) {
-        $absolutePath = Join-Path $RepositoryRoot $relativePath
-        "$relativePath`:$(Get-LlmWikiFileSha256 $absolutePath)"
+    $pathSet = [Collections.Generic.HashSet[string]]::new([StringComparer]::Ordinal)
+    foreach ($input in $InputPath) {
+        $relativePath = ([string]$input).TrimStart([char]0xFEFF).Replace('\', '/')
+        if ([IO.File]::Exists([IO.Path]::Combine($RepositoryRoot, $relativePath))) {
+            $null = $pathSet.Add($relativePath)
+        }
+    }
+    [string[]]$existingPaths = @($pathSet)
+    [Array]::Sort($existingPaths, [StringComparer]::Ordinal)
+
+    # One Git process hashes the complete set substantially faster than opening
+    # thousands of files through PowerShell. Explicit UTF-8 without BOM keeps
+    # Unicode paths stable and avoids the native-pipeline encoding ambiguity.
+    $startInfo = [Diagnostics.ProcessStartInfo]::new()
+    $startInfo.FileName = 'git'
+    $startInfo.WorkingDirectory = $RepositoryRoot
+    $startInfo.Arguments = 'hash-object --stdin-paths'
+    $startInfo.UseShellExecute = $false
+    $startInfo.RedirectStandardInput = $true
+    $startInfo.RedirectStandardOutput = $true
+    $startInfo.RedirectStandardError = $true
+    $startInfo.StandardInputEncoding = [Text.UTF8Encoding]::new($false)
+    $startInfo.StandardOutputEncoding = [Text.UTF8Encoding]::new($false)
+    $startInfo.StandardErrorEncoding = [Text.UTF8Encoding]::new($false)
+    $process = [Diagnostics.Process]::new()
+    $process.StartInfo = $startInfo
+    try {
+        if (-not $process.Start()) { throw 'Unable to start git hash-object.' }
+        $outputTask = $process.StandardOutput.ReadToEndAsync()
+        $errorTask = $process.StandardError.ReadToEndAsync()
+        foreach ($relativePath in $existingPaths) { $process.StandardInput.WriteLine($relativePath) }
+        $process.StandardInput.Close()
+        $process.WaitForExit()
+        $output = $outputTask.GetAwaiter().GetResult()
+        $errorText = $errorTask.GetAwaiter().GetResult().Trim()
+        if ($process.ExitCode -ne 0) {
+            throw "git hash-object failed with exit code $($process.ExitCode).$(if ($errorText) { " $errorText" })"
+        }
+    } finally {
+        $process.Dispose()
+    }
+
+    $contentHashes = @($output -split '\r?\n' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    if ($contentHashes.Count -ne $existingPaths.Count -or @($contentHashes | Where-Object { $_ -notmatch '^[a-f0-9]{40,64}$' }).Count -gt 0) {
+        throw "git hash-object returned $($contentHashes.Count) valid hashes for $($existingPaths.Count) index inputs."
+    }
+    $entries = for ($index = 0; $index -lt $existingPaths.Count; $index++) {
+        "$($existingPaths[$index]):$($contentHashes[$index])"
     }
     $sha = [Security.Cryptography.SHA256]::Create()
     try { return ([BitConverter]::ToString($sha.ComputeHash([Text.Encoding]::UTF8.GetBytes($entries -join "`n"))) -replace '-', '').ToLowerInvariant() }

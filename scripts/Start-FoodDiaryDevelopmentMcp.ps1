@@ -3,10 +3,32 @@ param(
     [Parameter(Position = 0)]
     [string]$BuildMode = '--build-if-stale',
     [Parameter(Position = 1)]
-    [string]$RepositoryRoot
+    [string]$RepositoryRoot,
+    [switch]$PrepareOnly,
+    [switch]$CleanupSession,
+    [string]$SessionDirectory
 )
 
 $ErrorActionPreference = 'Stop'
+$systemTemp = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd([IO.Path]::DirectorySeparatorChar)
+$sessionRoot = [IO.Path]::GetFullPath((Join-Path $systemTemp 'fooddiary-development-mcp'))
+if ($CleanupSession) {
+    $cleanupTarget = [IO.Path]::GetFullPath($SessionDirectory).TrimEnd([IO.Path]::DirectorySeparatorChar)
+    if ([IO.Path]::GetDirectoryName($cleanupTarget) -ne $sessionRoot -or
+        [IO.Path]::GetFileName($cleanupTarget) -notmatch '^(?:[0-9a-fA-F]{32}|[0-9a-f]{64})$') {
+        throw "Unsafe Development MCP cleanup target: $cleanupTarget"
+    }
+    if (Test-Path -LiteralPath $cleanupTarget -PathType Container) {
+        $cleanupLock = [IO.File]::Open(
+            (Join-Path $cleanupTarget '.session.lock'),
+            [IO.FileMode]::OpenOrCreate,
+            [IO.FileAccess]::ReadWrite,
+            [IO.FileShare]::None)
+        $cleanupLock.Dispose()
+        Remove-Item -LiteralPath $cleanupTarget -Recurse -Force
+    }
+    exit 0
+}
 if ([string]::IsNullOrWhiteSpace($BuildMode)) { $BuildMode = '--build-if-stale' }
 if ($BuildMode -notin @('--no-build', '--build-if-missing', '--build-if-stale')) {
     [Console]::Error.WriteLine("Unsupported build mode '$BuildMode'.")
@@ -44,7 +66,9 @@ function Remove-StaleSessionDirectories {
 
     $staleCutoff = [DateTime]::UtcNow.AddMinutes(-10)
     foreach ($directory in @(Get-ChildItem -LiteralPath $SessionRoot -Directory -Force)) {
-        if ($directory.Name -notmatch '^[0-9a-fA-F]{32}$' -or $directory.LastWriteTimeUtc -ge $staleCutoff) {
+        $knownSessionName = $directory.Name -match '^(?:[0-9a-fA-F]{32}|[0-9a-f]{64})$' -or
+            $directory.Name -match '^\d+-\d+-\d+$'
+        if (-not $knownSessionName -or $directory.LastWriteTimeUtc -ge $staleCutoff) {
             continue
         }
 
@@ -69,6 +93,9 @@ function Remove-StaleSessionDirectories {
     }
 }
 
+$rootSha = [Security.Cryptography.SHA256]::Create()
+try { $mutexSuffix = ([BitConverter]::ToString($rootSha.ComputeHash([Text.Encoding]::UTF8.GetBytes($resolvedRoot))) -replace '-', '').Substring(0, 16) }
+finally { $rootSha.Dispose() }
 $currentFingerprint = Get-SourceFingerprint
 $buildIdentity = Get-BuildIdentity
 $outputMissing = -not (Test-Path -LiteralPath $sourceAssembly -PathType Leaf)
@@ -82,15 +109,13 @@ if ($BuildMode -eq '--no-build' -and $outputMissing) {
     exit 3
 }
 if ($shouldBuild) {
-    $rootSha = [Security.Cryptography.SHA256]::Create()
-    try { $mutexSuffix = ([BitConverter]::ToString($rootSha.ComputeHash([Text.Encoding]::UTF8.GetBytes($resolvedRoot))) -replace '-', '').Substring(0, 16) }
-    finally { $rootSha.Dispose() }
     $buildMutex = [Threading.Mutex]::new($false, "Local\FoodDiaryDevelopmentMcpBuild-$mutexSuffix")
     $mutexAcquired = $false
     try {
         try { $mutexAcquired = $buildMutex.WaitOne([TimeSpan]::FromMinutes(2)) }
         catch [Threading.AbandonedMutexException] { $mutexAcquired = $true }
         if (-not $mutexAcquired) { throw 'Timed out waiting for another Development MCP build to finish.' }
+        $currentFingerprint = Get-SourceFingerprint
         $buildIdentity = Get-BuildIdentity
         $outputMissing = -not (Test-Path -LiteralPath $sourceAssembly -PathType Leaf)
         $outputStale = $outputMissing -or $null -eq $buildIdentity -or
@@ -103,6 +128,10 @@ if ($shouldBuild) {
             $buildExitCode = $LASTEXITCODE
             foreach ($line in $buildOutput) { [Console]::Error.WriteLine([string]$line) }
             if ($buildExitCode -ne 0 -or -not (Test-Path -LiteralPath $sourceAssembly -PathType Leaf)) { exit 3 }
+            $postBuildFingerprint = Get-SourceFingerprint
+            if ($postBuildFingerprint -cne $currentFingerprint) {
+                throw 'Development MCP sources changed during the build. Restart the server so it can build a coherent snapshot.'
+            }
             $head = (& git -C $resolvedRoot rev-parse HEAD).Trim()
             if ($LASTEXITCODE -ne 0) { throw 'Unable to resolve the Development MCP build revision.' }
             $buildIdentity = [ordered]@{
@@ -124,8 +153,6 @@ if ($shouldBuild) {
     $buildIdentity = [pscustomobject]@{ gitHead = $null; sourceFingerprint = $null }
 }
 
-$systemTemp = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd([IO.Path]::DirectorySeparatorChar)
-$sessionRoot = [IO.Path]::GetFullPath((Join-Path $systemTemp 'fooddiary-development-mcp'))
 if ([IO.Path]::GetDirectoryName($sessionRoot) -ne $systemTemp -or
     [IO.Path]::GetFileName($sessionRoot) -ne 'fooddiary-development-mcp') {
     throw "Unsafe Development MCP session root: $sessionRoot"
@@ -133,21 +160,41 @@ if ([IO.Path]::GetDirectoryName($sessionRoot) -ne $systemTemp -or
 $null = New-Item -ItemType Directory -Path $sessionRoot -Force
 Remove-StaleSessionDirectories -SessionRoot $sessionRoot
 
-$sessionDirectory = Join-Path $sessionRoot ([guid]::NewGuid().ToString('N'))
-$null = New-Item -ItemType Directory -Path $sessionDirectory -Force
-$sessionLock = [IO.File]::Open(
-    (Join-Path $sessionDirectory '.session.lock'),
-    [IO.FileMode]::CreateNew,
-    [IO.FileAccess]::ReadWrite,
-    [IO.FileShare]::None)
+$publicationMutex = [Threading.Mutex]::new($false, "Local\FoodDiaryDevelopmentMcpBuild-$mutexSuffix")
+$publicationMutexAcquired = $false
 try {
-    Copy-Item -Path (Join-Path $sourceDirectory '*') -Destination $sessionDirectory -Recurse -Force
-    $env:FOODDIARY_REPOSITORY_ROOT = $resolvedRoot
-    $env:FOODDIARY_MCP_BUILD_GIT_HEAD = [string]$buildIdentity.gitHead
-    $env:FOODDIARY_MCP_BUILD_SOURCE_FINGERPRINT = [string]$buildIdentity.sourceFingerprint
-    & dotnet (Join-Path $sessionDirectory 'FoodDiary.Development.Mcp.dll')
-    exit $LASTEXITCODE
+    try { $publicationMutexAcquired = $publicationMutex.WaitOne([TimeSpan]::FromMinutes(2)) }
+    catch [Threading.AbandonedMutexException] { $publicationMutexAcquired = $true }
+    if (-not $publicationMutexAcquired) { throw 'Timed out waiting to publish the Development MCP runtime.' }
+    $buildIdentity = Get-BuildIdentity
+    $runtimeFingerprint = if ($null -ne $buildIdentity -and [string]$buildIdentity.sourceFingerprint -match '^[0-9a-f]{64}$') {
+        [string]$buildIdentity.sourceFingerprint
+    } else {
+        (Get-FileHash -LiteralPath $sourceAssembly -Algorithm SHA256).Hash.ToLowerInvariant()
+    }
+    $sessionDirectory = Join-Path $sessionRoot $runtimeFingerprint
+    if (-not (Test-Path -LiteralPath (Join-Path $sessionDirectory 'FoodDiary.Development.Mcp.dll') -PathType Leaf)) {
+        $stagingDirectory = Join-Path $sessionRoot ([guid]::NewGuid().ToString('N'))
+        try {
+            $null = New-Item -ItemType Directory -Path $stagingDirectory -Force
+            Copy-Item -Path (Join-Path $sourceDirectory '*') -Destination $stagingDirectory -Recurse -Force
+            Move-Item -LiteralPath $stagingDirectory -Destination $sessionDirectory
+        } finally {
+            Remove-Item -LiteralPath $stagingDirectory -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+    [IO.Directory]::SetLastWriteTimeUtc($sessionDirectory, [DateTime]::UtcNow)
 } finally {
-    $sessionLock.Dispose()
-    Remove-Item -LiteralPath $sessionDirectory -Recurse -Force -ErrorAction SilentlyContinue
+    if ($publicationMutexAcquired) { $publicationMutex.ReleaseMutex() }
+    $publicationMutex.Dispose()
 }
+if ($PrepareOnly) {
+    Write-Output (Join-Path $sessionDirectory 'FoodDiary.Development.Mcp.dll')
+    exit 0
+}
+$env:FOODDIARY_REPOSITORY_ROOT = $resolvedRoot
+$env:FOODDIARY_MCP_BUILD_GIT_HEAD = [string]$buildIdentity.gitHead
+$env:FOODDIARY_MCP_BUILD_SOURCE_FINGERPRINT = [string]$buildIdentity.sourceFingerprint
+$env:FOODDIARY_MCP_SESSION_LOCK = Join-Path $sessionDirectory '.session.lock'
+& dotnet (Join-Path $sessionDirectory 'FoodDiary.Development.Mcp.dll')
+exit $LASTEXITCODE

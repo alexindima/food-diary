@@ -82,6 +82,33 @@ remain unchanged.
 Writes use unique temporary files and atomic replacement. Cleanup is
 idempotent, so concurrent sessions may prune the same stale entry without
 turning an already-successful query into a failure.
+Reads parse the cached payload as JSON before reuse. A truncated or otherwise
+invalid entry is deleted and treated as a miss, preventing derived-command
+success with missing structured data after a crash or interrupted write.
+
+Adaptive routing asks the task brief to omit focused test-plan construction,
+because route selection consumes scope, risk, ownership, rollout, privacy, and
+decision evidence but never test scenarios. Diff context enumerates focused C#
+test candidates from Git once instead of recursively scanning the working tree
+for every matched module. Impact indexes are parsed only when their raw payload
+contains one of the normalized changed paths; an absent path is equivalent to
+the existing empty filtered result and avoids repeatedly materializing unrelated
+multi-megabyte JSON during routing regressions and MCP queries.
+
+The Development MCP keeps an additional bounded in-memory cache for successful
+read-only Wiki results. Its key includes the current Git/worktree fingerprint,
+command, and ordered arguments, so source or generated-index edits invalidate
+it with the repository snapshot. Entries expire after two minutes; oversized results,
+failures, and cancellations are not retained. `get_server_status` exposes cache
+hit/miss counts, queue depth, active commands, failure categories, and bounded
+per-command p50/p95 timings for operational diagnosis.
+
+Facade command routing is guarded structurally: the command-catalog regression
+parses `wiki.ps1`, requires every `ValidateSet` command to have exactly one
+router clause, rejects undeclared or duplicate routes, and validates every
+table-driven index command against an existing builder script. Index builder
+commands share one dispatch map instead of maintaining twelve repeated switch
+handlers.
 
 The `ui-discovery` budget prevents intent-only UI wording from selecting a
 governed route. It allows only runtime-owner research and grounded

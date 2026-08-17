@@ -20,6 +20,8 @@ $visualPaths = @(
     'FoodDiary.Web.Client/src/app/components/shared/ai-input-bar/ai-photo-result/ai-photo-result.scss'
 )
 if ($Group -in @('All', 'Routing')) {
+$adaptiveWorkflowSource = [IO.File]::ReadAllText((Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1'))
+Assert-Adaptive ($adaptiveWorkflowSource -match 'SkipTestPlan\s*=\s*\$true') 'Adaptive routing rebuilt focused test plans that its classification does not consume.'
 $tiny = & (Join-Path $PSScriptRoot 'Get-LlmWikiAdaptiveWorkflow.ps1') `
     -Objective 'Improve photo annotation visibility with clearer SVG connectors and point styling.' `
     -ProposedPath $visualPaths `

@@ -77,8 +77,10 @@ foreach ($builderText in $cachedBuilderTexts) {
         throw 'A cacheable index check does not refresh its receipt after proving the output current.'
     }
 }
-if ($indexCacheText -notmatch 'TrimStart\(\[char\]0xFEFF\)' -or $indexCacheText -match 'hash-object --stdin-paths') {
-    throw 'Index input fingerprints must normalize BOM-prefixed paths without PowerShell 5 native stdin encoding.'
+if ($indexCacheText -notmatch 'TrimStart\(\[char\]0xFEFF\)' -or
+    $indexCacheText -notmatch 'hash-object --stdin-paths' -or
+    $indexCacheText -notmatch 'StandardInputEncoding\s*=\s*\[Text\.UTF8Encoding\]::new\(\$false\)') {
+    throw 'Index input fingerprints must normalize BOM-prefixed paths and use explicit BOM-free UTF-8 for native hashing.'
 }
 if ($pipelineText -notmatch 'analytical indexes:' -or $pipelineText -notmatch 'API snapshot review:' -or $pipelineText -notmatch 'migration review:') {
     throw 'Affected index pipeline omitted the compact delivery summary.'

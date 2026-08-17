@@ -5,7 +5,11 @@ namespace FoodDiary.Development.Mcp.Wiki;
 
 public sealed class WikiQueryService(
     IWikiCommandExecutor executor,
-    IChangeSetSnapshotService snapshots) {
+    IChangeSetSnapshotService snapshots,
+    WikiQueryCache? queryCache = null) {
+    private readonly WikiQueryCache _queryCache = queryCache ??
+        new WikiQueryCache(TimeProvider.System, new WikiRuntimeTelemetry());
+
     public Task<WikiCommandResult> GetTestPlanAsync(
         string? intent,
         IReadOnlyList<string>? plannedPaths,
@@ -50,19 +54,22 @@ public sealed class WikiQueryService(
             arguments.Add(plannedPath);
         }
 
-        AddChangeSet(arguments, await snapshots.GetAsync(cancellationToken).ConfigureAwait(false));
+        ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
+        AddChangeSet(arguments, snapshot);
 
-        return await executor.ExecuteAsync("brief", arguments, cancellationToken).ConfigureAwait(false);
+        return await ExecuteCachedAsync("brief", arguments, snapshot, cancellationToken).ConfigureAwait(false);
     }
 
-    public Task<WikiCommandResult> TraceBackendFlowAsync(
+    public async Task<WikiCommandResult> TraceBackendFlowAsync(
         string query,
         CancellationToken cancellationToken) {
         ArgumentException.ThrowIfNullOrWhiteSpace(query);
-        return executor.ExecuteAsync(
+        ChangeSetSnapshot snapshot = await snapshots.GetAsync(cancellationToken).ConfigureAwait(false);
+        return await ExecuteCachedAsync(
             "trace",
             ["-Format", "Json", "-Fast", "-Query", query],
-            cancellationToken);
+            snapshot,
+            cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<WikiCommandResult> GetTestPlanAsync(
@@ -91,7 +98,8 @@ public sealed class WikiQueryService(
                 "Provide plannedPaths or changedPaths when the Git worktree is clean.");
         }
 
-        return await executor.ExecuteAsync("test-plan", arguments, cancellationToken).ConfigureAwait(false);
+        return await ExecuteCachedAsync("test-plan", arguments, snapshot, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public async Task<DevelopmentContext> GetDevelopmentContextAsync(
@@ -109,6 +117,7 @@ public sealed class WikiQueryService(
         WikiCommandResult? trace = await ExecuteComponentAsync(
             "trace",
             ["-Format", "Json", "-Fast", "-Query", query],
+            snapshot,
             errors,
             cancellationToken).ConfigureAwait(false);
         await EnsureSnapshotUnchangedAsync(snapshot, cancellationToken).ConfigureAwait(false);
@@ -118,7 +127,9 @@ public sealed class WikiQueryService(
             .Concat(trace?.GetScopePaths() ?? [])
             .Distinct(StringComparer.OrdinalIgnoreCase)];
 
-        List<string> briefArguments = ["-Format", "Json", "-Compact", "-Objective", intent];
+        List<string> briefArguments = [
+            "-Format", "Json", "-Compact", "-SkipTestPlan", "-Objective", intent,
+        ];
         AddRevisionRange(briefArguments, snapshot, baseRevision, headRevision);
         AddPaths(briefArguments, "-ProposedPath", expandedScopePaths);
         AddChangeSet(briefArguments, snapshot);
@@ -129,9 +140,9 @@ public sealed class WikiQueryService(
         AddPaths(testArguments, "-ProposedPath", expandedScopePaths);
 
         Task<WikiCommandResult?> briefTask = ExecuteComponentAsync(
-            "brief", briefArguments, errors, cancellationToken);
+            "brief", briefArguments, snapshot, errors, cancellationToken);
         Task<WikiCommandResult?> testPlanTask = HasScope(testArguments)
-            ? ExecuteComponentAsync("test-plan", testArguments, errors, cancellationToken)
+            ? ExecuteComponentAsync("test-plan", testArguments, snapshot, errors, cancellationToken)
             : Task.FromResult<WikiCommandResult?>(null);
         if (!HasScope(testArguments)) {
             errors.Add(new DevelopmentContextComponentError(
@@ -174,16 +185,36 @@ public sealed class WikiQueryService(
     private async Task<WikiCommandResult?> ExecuteComponentAsync(
         string command,
         IReadOnlyList<string> arguments,
+        ChangeSetSnapshot snapshot,
         List<DevelopmentContextComponentError> errors,
         CancellationToken cancellationToken) {
         try {
-            return await executor.ExecuteAsync(command, arguments, cancellationToken).ConfigureAwait(false);
+            return await ExecuteCachedAsync(command, arguments, snapshot, cancellationToken)
+                .ConfigureAwait(false);
         } catch (DevelopmentMcpException exception) {
             lock (errors) {
                 errors.Add(new DevelopmentContextComponentError(command, exception.ErrorCode, exception.Message));
             }
             return null;
         }
+    }
+
+    private async Task<WikiCommandResult> ExecuteCachedAsync(
+        string command,
+        IReadOnlyList<string> arguments,
+        ChangeSetSnapshot snapshot,
+        CancellationToken cancellationToken) {
+        cancellationToken.ThrowIfCancellationRequested();
+        if (_queryCache.TryGet(snapshot.Fingerprint, command, arguments, out WikiCommandResult? cached)) {
+            return cached!;
+        }
+
+        WikiCommandResult? result = await executor.ExecuteAsync(command, arguments, cancellationToken)
+            .ConfigureAwait(false);
+        if (result is not null) {
+            _queryCache.Set(snapshot.Fingerprint, command, arguments, result);
+        }
+        return result!;
     }
 
     private static bool AddChangeSet(List<string> arguments, ChangeSetSnapshot snapshot) {
