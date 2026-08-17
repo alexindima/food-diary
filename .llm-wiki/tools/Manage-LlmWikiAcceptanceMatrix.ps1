@@ -109,7 +109,11 @@ switch ($Action) {
         $automaticChangedPaths = if ($testOnlyPacket) {
             @($packet.diff.changedPaths | Where-Object { $_ -notmatch '^\.llm-wiki/(?:generated|reviews)/' })
         } else { @() }
-        $automaticCheckIds = if ($testOnlyPacket) { @($packet.policy.requiredChecks.id) } else { @() }
+        $automaticCheckIds = if ($testOnlyPacket) {
+            @($packet.policy.requiredChecks | ForEach-Object {
+                if ($null -ne $_ -and $_.PSObject.Properties['id']) { [string]$_.id }
+            } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+        } else { @() }
         $automaticTestPaths = if ($testOnlyPacket) { @($packet.testPlan.focusedTestFiles) } else { @() }
         for ($index = 0; $index -lt $criteriaText.Count; $index++) {
             $criterionTokens = @([regex]::Matches($criteriaText[$index].ToLowerInvariant(), '[\p{L}\p{Nd}]+') | ForEach-Object Value | Where-Object { $_.Length -ge 4 } | Sort-Object -Unique)

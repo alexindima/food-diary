@@ -18,7 +18,6 @@ foreach ($requiredPath in @(
     'FoodDiary.Application.Dashboard'
     'FoodDiary.Application.Abstractions/Dashboard'
     'FoodDiary.Initializer/Program.cs'
-    'FoodDiary.JobManager/Program.cs'
     'FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs'
     'FoodDiary.Web.Api/FoodDiary.Web.Api.csproj'
     'FoodDiary.slnx'

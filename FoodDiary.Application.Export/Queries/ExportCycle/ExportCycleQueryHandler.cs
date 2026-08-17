@@ -7,8 +7,6 @@ using FoodDiary.Application.Cycles.Common;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Services;
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Export.Queries.ExportCycle;
@@ -16,8 +14,7 @@ namespace FoodDiary.Application.Export.Queries.ExportCycle;
 public sealed class ExportCycleQueryHandler(
     ICycleReadService cycleReadService,
     ICurrentUserAccessService currentUserAccessService,
-    IUserLookupRepository? userLookupRepository = null,
-    IPasswordHasher? passwordHasher = null)
+    IUserCredentialVerificationService? credentialVerificationService = null)
     : IQueryHandler<ExportCycleQuery, Result<FileExportResult>> {
     private const int MaxExportRangeDays = 366;
 
@@ -49,22 +46,16 @@ public sealed class ExportCycleQueryHandler(
         }
 
         if (query.Scope == CycleExportScope.Sensitive) {
-            if (userLookupRepository is null || passwordHasher is null) {
+            if (credentialVerificationService is null) {
                 return Result.Failure<FileExportResult>(
                     Errors.Validation.Invalid(nameof(query.Scope), "Sensitive export is not configured."));
             }
 
-            User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-            if (user is null) {
-                return Result.Failure<FileExportResult>(Errors.User.NotFound(userId.Value));
-            }
-
-            if (!user.HasPassword) {
-                return Result.Failure<FileExportResult>(Errors.User.PasswordNotSet);
-            }
-
-            if (!passwordHasher.Verify(query.CurrentPassword ?? string.Empty, user.Password)) {
-                return Result.Failure<FileExportResult>(Errors.User.InvalidPassword);
+            Result passwordVerification = await credentialVerificationService
+                .VerifyPasswordAsync(userId, query.CurrentPassword ?? string.Empty, cancellationToken)
+                .ConfigureAwait(false);
+            if (passwordVerification.IsFailure) {
+                return Result.Failure<FileExportResult>(passwordVerification.Error);
             }
         }
 

@@ -31,7 +31,14 @@ public sealed class McpServerTests {
             configuration.EnabledTools.Order(StringComparer.Ordinal),
             StringComparer.Ordinal));
         Assert.True(configuration.Required);
-        Assert.Equal(["--build-if-stale"], configuration.Arguments);
+        Assert.Equal(["--build-if-stale"], configuration.ConfiguredArguments);
+        if (configuration.UsesConfiguredLauncher) {
+            Assert.Equal(configuration.ConfiguredArguments, configuration.Arguments);
+        } else {
+            Assert.Equal("dotnet", configuration.Command);
+            string assemblyArgument = Assert.Single(configuration.Arguments);
+            Assert.EndsWith("FoodDiary.Development.Mcp.dll", assemblyArgument, StringComparison.Ordinal);
+        }
         Assert.All(tools, tool => Assert.True(tool.ProtocolTool.Annotations?.ReadOnlyHint));
         Assert.Contains(
             "includeDetailedContext",
@@ -59,7 +66,9 @@ public sealed class McpServerTests {
             result.StructuredContent.Value.ToString(),
             StringComparison.OrdinalIgnoreCase);
         JsonElement status = result.StructuredContent.Value.GetProperty("data");
-        Assert.True(status.GetProperty("runningCodeIncludesWorktreeChanges").GetBoolean());
+        Assert.Equal(
+            configuration.UsesConfiguredLauncher,
+            status.GetProperty("runningCodeIncludesWorktreeChanges").GetBoolean());
         Assert.Equal(
             Path.GetFullPath(repositoryRoot),
             Path.GetFullPath(status.GetProperty("repositoryRoot").GetString()!),

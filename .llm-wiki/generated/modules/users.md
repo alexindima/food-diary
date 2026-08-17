@@ -83,14 +83,14 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - Physical isolation: assembly
 - Architecture guardrails: explicit-boundary-tests
 - Declared owned entities: User, Role, UserRole, UserRoleAuditEvent
-- Public contract files: 65
+- Public contract files: 66
 - Observed external consumer groups: 4
 - Foreign repositories acquired: guarded where enforcement is explicit; otherwise not inferred from this page
 
 ## Public Surface
 
-- Public contract types: 65
-- Interfaces: 28
+- Public contract types: 66
+- Interfaces: 29
 - DTO/read-model/projection types: 33
 - Enums: 2
 - Exported repository-shaped contracts: 6
@@ -111,6 +111,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `interface IUserAuthenticationRegistrationService`
 - `interface IUserBillingService`
 - `interface IUserCleanupService`
+- `interface IUserCredentialVerificationService`
 - `interface IUserCurrentWaistProvider`
 - `interface IUserCurrentWeightProvider`
 - `interface IUserDashboardProfileReadService`
@@ -124,8 +125,7 @@ Source: `FoodDiary.Presentation.Api/Features/Users/WeightGoalsController.cs`
 - `interface IUserRepository`
 - `interface IUserRoleCatalogService`
 - `interface IUserRoleMembershipService`
-- `interface IUserTdeeProfileReadService`
-- ... 35 more type(s)
+- ... 36 more type(s)
 
 ## Extraction Readiness
 
@@ -152,6 +152,7 @@ Test paths below are discovery evidence, not proof that a boundary assertion exe
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UpdateUserCommandHandlerTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserApplicationServiceDelegationTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserBillingServiceTests.cs`
+- [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserCredentialVerificationServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UserNotificationProfileServiceTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersDependencyInjectionTests.cs`
 - [behavioral-or-text-match] `tests/FoodDiary.Application.Tests/Users/UsersFeatureTests.cs`

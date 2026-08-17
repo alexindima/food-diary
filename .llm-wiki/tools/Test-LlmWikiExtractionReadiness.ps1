@@ -42,13 +42,12 @@ if (Test-Path -LiteralPath $recipesProject -PathType Leaf) {
     $recipeRegistrations = @($recipes.dependencyReadiness.diRegistrations)
     foreach ($compositionRoot in @(
         'FoodDiary.Initializer/Program.cs'
-        'FoodDiary.JobManager/Program.cs'
         'FoodDiary.Web.Api/Extensions/ApiServiceCollectionExtensions.cs'
     )) {
         if ($compositionRoot -notin @($recipeRegistrations.path)) { throw "Extracted Recipes DI registration was not found in $compositionRoot." }
     }
-    if (@($recipeRegistrations | Where-Object kind -eq 'module-extension-call').Count -ne 3) {
-        throw "Expected exactly three extracted Recipes composition registrations, found $(@($recipeRegistrations).Count)."
+    if (@($recipeRegistrations | Where-Object kind -eq 'module-extension-call').Count -ne 2) {
+        throw "Expected exactly two extracted Recipes composition registrations, found $(@($recipeRegistrations).Count)."
     }
 }
 

@@ -18,6 +18,7 @@ public static class DependencyInjection {
         services.AddScoped<IUserIdentityMutationService, UserIdentityMutationService>();
         services.AddScoped<IUserAuthenticationIdentityService, UserAuthenticationIdentityService>();
         services.AddScoped<IUserAuthenticationRegistrationService, UserAuthenticationRegistrationService>();
+        services.AddScoped<IUserCredentialVerificationService, UserCredentialVerificationService>();
         services.AddScoped<IUserBillingService, UserBillingService>();
         services.AddScoped<IUserNotificationProfileService, UserNotificationProfileService>();
         services.AddScoped<UserContextService>();

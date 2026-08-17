@@ -131,18 +131,14 @@
       "pageSha256": "f4691a43e74d56c26c124777bce5410057a2b88ff04d9449eab0ce93e58e8acf",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:46.1009416Z"
+      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
+      "reviewedAtUtc": "2026-08-17T12:23:48.9686609Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -152,12 +148,16 @@
         {
           "path": ".llm-wiki/tools/Test-LlmWikiAdaptiveWorkflow.ps1",
           "sha256": "32b1eeade1c292acadc5c00b97d4fdaccdb0728bd306ad73d330aaf5544a8e9d"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiExtractionReadiness.ps1",
+          "sha256": "a629e77c19fecea5afe1e2b97a487460c1ac121aa3fcc8884e270f2d50d69624"
         }
       ],
-      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
+      "reason": "CI remediation keeps extraction readiness aligned with current JobManager module registration policy and records the narrow Users credential verification boundary without changing Wiki workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
-      "reviewedAtUtc": "2026-08-17T11:17:50.9725868Z"
+      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
+      "reviewedAtUtc": "2026-08-17T12:15:01.1980267Z"
     },
     {
       "pageId": "workflow-api-compatibility",
@@ -196,13 +196,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/backend-contract-index.json",
-          "sha256": "7d70ee66eb85a31c17c4d658e7dd112f9a316291a93e6e7c3f5a4497d68dbd38"
+          "sha256": "1da46b249f09b44d79bb05210c8aa7906c873903ace00a6ce967a9f0fc22081d"
         }
       ],
-      "reason": "Reviewed the regenerated integrated indexes after rebasing backend hardening onto the current master cycle-health changes. The merged source preserves bounded cycle and cycle-export telemetry labels, unmatched-route cardinality protection, backend contract ownership, sensitive-data controls, persistence mappings, and the focused architecture and contract tests for both change sets.",
+      "reason": "CI remediation keeps extraction readiness aligned with current JobManager module registration policy and records the narrow Users credential verification boundary without changing Wiki workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "3dbd99082630f4ad534842934b350c783a929004",
-      "reviewedAtUtc": "2026-08-17T09:59:54.2315085Z"
+      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
+      "reviewedAtUtc": "2026-08-17T12:15:01.7137706Z"
     },
     {
       "pageId": "workflow-change-manifest",
@@ -758,14 +758,14 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:30.6745169Z"
+      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
+      "reviewedAtUtc": "2026-08-17T12:23:49.2503906Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -774,13 +774,13 @@
       "sources": [
         {
           "path": ".llm-wiki/generated/quality-index.json",
-          "sha256": "0a3e4aa1f6d569d6fc5cb49296f4d99ccd57a20e311c862636364cebcbb54ae0"
+          "sha256": "87375a07f8aa1047c7a8b87ab73d0a1dce6719d4aa68a3643efffaa16cf7eb98"
         }
       ],
-      "reason": "Reviewed final cleanup of the snapshot contract; content-based freshness remains covered by the completed MCP and Wiki regression suites.",
+      "reason": "CI remediation keeps extraction readiness aligned with current JobManager module registration policy and records the narrow Users credential verification boundary without changing Wiki workflow semantics.",
       "baseRef": "HEAD",
-      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
-      "reviewedAtUtc": "2026-08-17T11:27:02.5139947Z"
+      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
+      "reviewedAtUtc": "2026-08-17T12:15:02.1165183Z"
     },
     {
       "pageId": "workflow-release-readiness",
@@ -788,18 +788,14 @@
       "pageSha256": "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:52.4964317Z"
+      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
+      "reviewedAtUtc": "2026-08-17T12:23:49.5137007Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -807,14 +803,14 @@
       "pageSha256": "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:31.8301026Z"
+      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
+      "reviewedAtUtc": "2026-08-17T12:23:49.8296618Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -950,38 +946,14 @@
       "pageSha256": "f87df1e5212521c9e920fd7bcea428c7ea79b68a5fd08213641a6862777077d6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiChangePacket.ps1",
-          "sha256": "f83f06c2b716564506687ad97764f5a92452d3e90df886a9117ad74a38fbaf04"
-        },
-        {
-          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "64b18b8d4a02d29efd31eaa011d32174257de0fbc017186b37ca0ced3daa1737"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
-          "sha256": "5faebdb192cb38471a8c2318a65eea5c22a9e44989f2f39dc9833ce49bbfd648"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1",
-          "sha256": "4dc07f2d9cbd2f6bca55059706089901e991a66357497453c93ee6372dfe6ac5"
-        },
-        {
-          "path": ".llm-wiki/tools/Test-LlmWikiGovernedDeliveryRegression.ps1",
-          "sha256": "2f1807c980ca76006f55bba45f4f11f9a62e4deeb36857c899b014219d5aa97e"
-        },
-        {
-          "path": ".llm-wiki/tools/Update-LlmWikiTaskEvidence.ps1",
-          "sha256": "31031ba28352dd32ea5e75c59b511dd99c30f30fed6137365e89f2da12af94f4"
+          "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
+          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:55.4025984Z"
+      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
+      "reviewedAtUtc": "2026-08-17T12:23:50.1953566Z"
     },
     {
       "pageId": "workflow-test-plan",

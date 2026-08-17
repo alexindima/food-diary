@@ -8,14 +8,14 @@
     "registrations": "Literal AddScoped/AddTransient/AddSingleton service-to-implementation registrations"
   },
   "summary": {
-    "sourceFiles": 3317,
-    "symbols": 3326,
-    "interfaceImplementationLinks": 232,
-    "dependencyInjectionRegistrations": 233,
+    "sourceFiles": 3319,
+    "symbols": 3328,
+    "interfaceImplementationLinks": 233,
+    "dependencyInjectionRegistrations": 234,
     "kinds": {
-      "class": 1704,
+      "class": 1705,
       "enum": 56,
-      "interface": 412,
+      "interface": 413,
       "record": 1038,
       "record struct": 116
     },
@@ -40,7 +40,7 @@
       "Repository": 104,
       "Request": 132,
       "Response": 174,
-      "Service": 271,
+      "Service": 273,
       "Validator": 188,
       "ValueObject": 126,
       "WriteRepository": 46
@@ -3833,6 +3833,13 @@
       "role": "Service",
       "path": "FoodDiary.Application.Abstractions/Users/Common/IUserCleanupService.cs",
       "line": 2
+    },
+    {
+      "name": "IUserCredentialVerificationService",
+      "kind": "interface",
+      "role": "Service",
+      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserCredentialVerificationService.cs",
+      "line": 5
     },
     {
       "name": "IUserCurrentWaistProvider",
@@ -7864,7 +7871,7 @@
       "kind": "class",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "line": 15
+      "line": 13
     },
     {
       "name": "ExportCycleQueryValidator",
@@ -12716,6 +12723,13 @@
       "role": "Service",
       "path": "FoodDiary.Application.Users/Services/UserBillingService.cs",
       "line": 10
+    },
+    {
+      "name": "UserCredentialVerificationService",
+      "kind": "class",
+      "role": "Service",
+      "path": "FoodDiary.Application.Users/Services/UserCredentialVerificationService.cs",
+      "line": 9
     },
     {
       "name": "UserIdentityMutationService",
@@ -24774,6 +24788,13 @@
       "confidence": "naming-convention"
     },
     {
+      "interface": "IUserCredentialVerificationService",
+      "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCredentialVerificationService.cs",
+      "implementation": "UserCredentialVerificationService",
+      "implementationPath": "FoodDiary.Application.Users/Services/UserCredentialVerificationService.cs",
+      "confidence": "naming-convention"
+    },
+    {
       "interface": "IUserCurrentWaistProvider",
       "interfacePath": "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWaistProvider.cs",
       "implementation": "UserCurrentWaistProvider",
@@ -25672,25 +25693,32 @@
       "line": 20
     },
     {
+      "service": "IUserCredentialVerificationService",
+      "implementation": "UserCredentialVerificationService",
+      "lifetime": "Scoped",
+      "path": "FoodDiary.Application.Users/DependencyInjection.cs",
+      "line": 21
+    },
+    {
       "service": "IUserBillingService",
       "implementation": "UserBillingService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 21
+      "line": 22
     },
     {
       "service": "IUserNotificationProfileService",
       "implementation": "UserNotificationProfileService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 22
+      "line": 23
     },
     {
       "service": "IProfileOverviewReadService",
       "implementation": "ProfileOverviewReadService",
       "lifetime": "Scoped",
       "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "line": 34
+      "line": 35
     },
     {
       "service": "IWearableReadService",

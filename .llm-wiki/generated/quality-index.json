@@ -5,7 +5,7 @@
     "structuralRiskScore": "nonBlankLines/50 + decisionPoints*1.5 + criticalSymbols*2 + unreferencedCriticalSymbols*5"
   },
   "summary": {
-    "productionFiles": 4334,
+    "productionFiles": 4336,
     "criticalSymbols": 554,
     "criticalSymbolsWithTestReferences": 530,
     "criticalSymbolsWithoutTestReferences": 24,
@@ -4919,6 +4919,14 @@
       "structuralRiskScore": 0.16
     },
     {
+      "path": "FoodDiary.Application.Abstractions/Users/Common/IUserCredentialVerificationService.cs",
+      "nonBlankLines": 9,
+      "decisionPoints": 0,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 0.18
+    },
+    {
       "path": "FoodDiary.Application.Abstractions/Users/Common/IUserCurrentWaistProvider.cs",
       "nonBlankLines": 5,
       "decisionPoints": 0,
@@ -9608,11 +9616,11 @@
     },
     {
       "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "nonBlankLines": 68,
-      "decisionPoints": 11,
+      "nonBlankLines": 61,
+      "decisionPoints": 8,
       "criticalSymbols": 1,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 19.86
+      "structuralRiskScore": 15.22
     },
     {
       "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryValidator.cs",
@@ -15096,11 +15104,11 @@
     },
     {
       "path": "FoodDiary.Application.Users/DependencyInjection.cs",
-      "nonBlankLines": 34,
+      "nonBlankLines": 35,
       "decisionPoints": 0,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 0.68
+      "structuralRiskScore": 0.7
     },
     {
       "path": "FoodDiary.Application.Users/Mappings/UserMappings.cs",
@@ -15309,6 +15317,14 @@
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
       "structuralRiskScore": 2.72
+    },
+    {
+      "path": "FoodDiary.Application.Users/Services/UserCredentialVerificationService.cs",
+      "nonBlankLines": 28,
+      "decisionPoints": 2,
+      "criticalSymbols": 0,
+      "unreferencedCriticalSymbols": 0,
+      "structuralRiskScore": 3.56
     },
     {
       "path": "FoodDiary.Application.Users/Services/UserIdentityMutationService.cs",
@@ -38129,7 +38145,7 @@
       "name": "ExportCycleQueryHandler",
       "role": "QueryHandler",
       "path": "FoodDiary.Application.Export/Queries/ExportCycle/ExportCycleQueryHandler.cs",
-      "line": 15,
+      "line": 13,
       "testReferenceCount": 1,
       "testReferences": [
         "tests/FoodDiary.Application.Tests/Export/ExportFeatureTests.cs"

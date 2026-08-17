@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Cycles.Models;
@@ -301,15 +300,17 @@ public class ExportFeatureTests {
         profile.GrantConsent(CycleConsentPurpose.FertilitySignals, DateTime.UtcNow);
         profile.UpsertBleedingEntry(CycleTestDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: "private note");
         profile.UpsertFertilitySignal(CycleTestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
-        IUserLookupRepository users = Substitute.For<IUserLookupRepository>();
-        users.GetByIdAsync(user.Id, Arg.Any<CancellationToken>()).Returns(Task.FromResult<User?>(user));
-        IPasswordHasher passwordHasher = Substitute.For<IPasswordHasher>();
-        passwordHasher.Verify(password: "correct-password", hashedPassword: Arg.Any<string>()).Returns(returnThis: true);
+        IUserCredentialVerificationService credentialVerificationService = Substitute.For<IUserCredentialVerificationService>();
+        credentialVerificationService
+            .VerifyPasswordAsync(user.Id, "wrong", Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure(Errors.User.InvalidPassword)));
+        credentialVerificationService
+            .VerifyPasswordAsync(user.Id, "correct-password", Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success()));
         ExportCycleQueryHandler handler = CreateExportCycleHandler(
             profile,
             CreateCurrentUserAccessService(user),
-            users,
-            passwordHasher);
+            credentialVerificationService);
 
         Result<FileExportResult> invalid = await handler.Handle(
             new ExportCycleQuery(user.Id.Value, CycleTestDate, CycleTestDate, Scope: CycleExportScope.Sensitive, CurrentPassword: "wrong"),
@@ -648,13 +649,11 @@ public class ExportFeatureTests {
     private static ExportCycleQueryHandler CreateExportCycleHandler(
         CycleProfile? profile,
         ICurrentUserAccessService currentUserAccessService,
-        IUserLookupRepository? userLookupRepository = null,
-        IPasswordHasher? passwordHasher = null) =>
+        IUserCredentialVerificationService? credentialVerificationService = null) =>
         new(
             new CycleReadService(CreateCycleRepository(profile), Substitute.For<IDashboardStatisticsReadService>()),
             currentUserAccessService,
-            userLookupRepository,
-            passwordHasher);
+            credentialVerificationService);
 
     private static IDiaryPdfGenerator CreatePdfGenerator(
         out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getLastCall) {
