@@ -11649,7 +11649,7 @@
   "externalTransfers": [
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 196,
+      "line": 199,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",
@@ -11666,7 +11666,7 @@
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "line": 317,
+      "line": 320,
       "providerHost": "api.openai.com",
       "dataNames": [
         "description",

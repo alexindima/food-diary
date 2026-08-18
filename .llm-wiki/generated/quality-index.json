@@ -38,11 +38,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 676,
-      "decisionPoints": 78,
+      "nonBlankLines": 679,
+      "decisionPoints": 79,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 130.52
+      "structuralRiskScore": 132.08
     },
     {
       "path": "FoodDiary.Web.Client/projects/fd-ui-kit/src/lib/line-chart/fd-ui-line-chart.ts",
@@ -20552,11 +20552,11 @@
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenAi/OpenAiFoodClient.cs",
-      "nonBlankLines": 676,
-      "decisionPoints": 78,
+      "nonBlankLines": 679,
+      "decisionPoints": 79,
       "criticalSymbols": 0,
       "unreferencedCriticalSymbols": 0,
-      "structuralRiskScore": 130.52
+      "structuralRiskScore": 132.08
     },
     {
       "path": "FoodDiary.Integrations/Services/OpenFoodFactsService.cs",

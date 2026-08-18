@@ -46,7 +46,7 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     [Fact]
-    public async Task GetCalculateNutritionTokenBudgetAsync_UsesExactCountEndpointAndConfiguredOutputBound() {
+    public async Task GetCalculateNutritionTokenBudgetAsync_OmitsResponseOnlyOutputBoundAndReturnsConfiguredBudget() {
         using var httpClient = new HttpClient(new CapturingHttpMessageHandler(_ => CreateTokenCountResponse(123)));
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
             ApiKey = "test-key",
@@ -63,7 +63,9 @@ public sealed class OpenAiFoodServiceTests {
         Assert.Equal(new AiProviderTokenBudget(123, 2_048), result.Value);
         Assert.Equal("https://api.openai.com/v1/responses/input_tokens", CapturingHttpMessageHandler.LastRequestUri?.AbsoluteUri);
         Assert.Contains("\"model\":\"text-model\"", CapturingHttpMessageHandler.LastRequestBody, StringComparison.Ordinal);
-        Assert.Contains("\"max_output_tokens\":2048", CapturingHttpMessageHandler.LastRequestBody, StringComparison.Ordinal);
+        Assert.Contains("\"input\":", CapturingHttpMessageHandler.LastRequestBody, StringComparison.Ordinal);
+        Assert.Contains("\"text\":", CapturingHttpMessageHandler.LastRequestBody, StringComparison.Ordinal);
+        Assert.DoesNotContain("\"max_output_tokens\"", CapturingHttpMessageHandler.LastRequestBody, StringComparison.Ordinal);
     }
 
     [Fact]
