@@ -197,6 +197,38 @@ try {
     if (@($deliveryValidation.assessment.automaticCheckLinks).Count -eq 0 -or @($validatedAcceptance.criteria | Where-Object { 'wiki-verify' -notin @($_.mapping.checkIds) }).Count -gt 0) {
         throw 'Delivery validation did not automatically link the completed required check to anchored acceptance criteria.'
     }
+    & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-proof-seal `
+        -WorkspacePath $workspacePath `
+        -Format Json | Out-Null
+    $proofVerificationText = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-proof-verify `
+        -WorkspacePath $workspacePath 6>&1 | Out-String
+    if ($proofVerificationText -notmatch 'valid=True' -or $proofVerificationText -match "property 'issues'") {
+        throw "Proof verification did not preserve its stable result schema: $proofVerificationText"
+    }
+    $contextSecurity = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-context-security-create `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    if (-not $contextSecurity.valid -or $contextSecurity.assessment.summary.sourceCount -eq 0) {
+        throw 'Context security did not discover manifest/change-packet paths when ChangedPath was omitted.'
+    }
+
+    $evidencePath = Join-Path $workspaceAbsolute 'evidence.json'
+    $evidenceRaw = Get-Content -LiteralPath $evidencePath -Raw
+    $staleEvidence = $evidenceRaw | ConvertFrom-Json
+    $staleEvidence.checks[0].lineage.subject.definition = 'stale definition injected by regression test'
+    Write-Json $evidencePath $staleEvidence
+    $staleDelivery = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') delivery-status `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    $staleTaskStatus = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-status `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    $staleEvidenceGate = $staleDelivery.assessment.gates | Where-Object id -eq 'evidence' | Select-Object -First 1
+    if ($staleEvidenceGate.passed -or $staleTaskStatus.verdict -ne 'blocked' -or $staleTaskStatus.evidenceLineage.valid) {
+        throw 'Evidence lineage drift was not evaluated consistently by delivery-status and task-status.'
+    }
+    [IO.File]::WriteAllText($evidencePath, $evidenceRaw, [Text.UTF8Encoding]::new($false))
+
     $deliveryCritique = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') delivery-critique `
         -WorkspacePath $workspacePath `
         -FailOnInvalid `
@@ -208,6 +240,18 @@ try {
         -Format Json | ConvertFrom-Json
     if ($deliveryStatus.assessment.PSObject.Properties['refreshRequired'] -and $deliveryStatus.assessment.refreshRequired) {
         throw 'Refreshed governed workspace still reports packet drift.'
+    }
+    $readyTaskStatus = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-status `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    if (@($readyTaskStatus.pendingCriteria).Count -eq 0 -and @($readyTaskStatus.nextActions | Where-Object { $_ -match 'task-requirements-expand' }).Count -gt 0) {
+        throw 'Ready atomic acceptance criteria retained a stale task-requirements-expand recommendation.'
+    }
+    $finalization = & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') delivery-finalize `
+        -WorkspacePath $workspacePath `
+        -Format Json | ConvertFrom-Json
+    if (-not $finalization.valid -or @($finalization.stages).Count -ne 5 -or @($finalization.stages | Where-Object status -ne 'passed').Count -gt 0) {
+        throw "Delivery finalization did not complete all stages: $($finalization | ConvertTo-Json -Depth 5 -Compress)"
     }
 
     & (Join-Path $repositoryRoot '.llm-wiki/wiki.ps1') task-refresh `

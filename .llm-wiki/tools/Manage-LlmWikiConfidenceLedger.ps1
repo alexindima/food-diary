@@ -92,7 +92,7 @@ function New-Ledger {
     Add-Dimension $dimensions 'proofOfChange' $proofStatus `
         $(if (-not $proof.applicable) { 'No proof-bearing criteria are applicable.' } elseif ($proof.valid) { 'Proof-bearing criteria have valid evidence.' } else { 'Proof-of-change findings remain.' }) `
         @(Get-Ids @($proof.proof.findings))
-    $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable'))
+    $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable'))
     $unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable'))
     $unresolvedCriteria = @($acceptance.criteria | Where-Object status -notin @('satisfied', 'not-applicable'))
     $evidenceResolved = $unresolvedChecks.Count -eq 0 -and $unresolvedReviews.Count -eq 0 -and $unresolvedCriteria.Count -eq 0

@@ -33,3 +33,6 @@ changes repository content.
 `context-security.json` binds the packet, policy, scanner implementation, source
 hashes, trust classification, findings, and summary into an integrity-protected
 assessment. `context-bundle.json` records that assessment hash and per-item trust.
+When `-ChangedPath` is omitted, assessment and creation derive their source set
+from `change-manifest.json` and then the current change packet. If neither artifact
+contains a usable source, the command returns an actionable missing-path error.

@@ -120,7 +120,7 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
         id = [string]$Entry.id
         status = [string]$Entry.status
         valid = $entryIssues.Count -eq 0
-        reusable = $entryIssues.Count -eq 0 -and [string]$Entry.status -in @('passed', 'not-applicable', 'completed')
+        reusable = $entryIssues.Count -eq 0 -and [string]$Entry.status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable', 'completed')
         cacheReusable = $entryIssues.Count -eq 0 -and [string]$Entry.status -eq 'passed' -and
             [string]$lineage.kind -eq 'executed-check' -and [int]$lineage.execution.exitCode -eq 0 -and $null -ne $lineage.artifact
         issues = @($entryIssues)
@@ -128,7 +128,7 @@ function Test-Lineage([string]$Kind, [object]$Entry, [object]$Requirement) {
     })
 }
 
-foreach ($entry in @($evidence.checks | Where-Object status -in @('passed', 'failed', 'not-applicable'))) {
+foreach ($entry in @($evidence.checks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures', 'failed', 'not-applicable'))) {
     $requirement = $policy.requiredChecks | Where-Object id -eq $entry.id | Select-Object -First 1
     if ($null -eq $requirement) { $issues.Add("check '$($entry.id)': requirement is no longer active.") } else { Test-Lineage 'check' $entry $requirement }
 }

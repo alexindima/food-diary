@@ -20,11 +20,21 @@ try {
         (($packet | ConvertTo-Json -Depth 5) + [Environment]::NewLine),
         [Text.UTF8Encoding]::new($false))
 
+    $missingPathError = ''
+    try {
+        & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextSecurity.ps1') create `
+            -WorkspacePath $workspacePath `
+            -Format Json | Out-Null
+    } catch { $missingPathError = $_.Exception.Message }
+    if ($missingPathError -notmatch 'No context-security paths were supplied or discovered' -or $missingPathError -notmatch 'ChangedPath') {
+        throw "Context security did not return an actionable missing-path diagnostic: $missingPathError"
+    }
     $assessment = & (Join-Path $PSScriptRoot 'Manage-LlmWikiContextSecurity.ps1') create `
         -WorkspacePath $workspacePath `
+        -Path '.llm-wiki/index.md' `
         -Format Json | ConvertFrom-Json
-    if (-not $assessment.valid -or @($assessment.assessment.sources).Count -ne 0) {
-        throw 'Context security did not normalize null path collections to an empty assessment.'
+    if (-not $assessment.valid -or @($assessment.assessment.sources).Count -ne 1) {
+        throw 'Context security did not recover after the actionable missing-path diagnostic.'
     }
     $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
     $receipt.sources = $null
@@ -43,7 +53,7 @@ try {
     foreach ($contract in @('plan = $plan; issues = @()', "PSObject.Properties['plan']", 'BLOCKED:', 'Repair:')) {
         if (-not $plannerText.Contains($contract)) { throw "Verification runner recovery contract is missing '$contract'." }
     }
-    Write-Host 'LLM Wiki workflow recovery regression passed: null context and resumable plan output are safe.'
+    Write-Host 'LLM Wiki workflow recovery regression passed: null context diagnostics and resumable plan output are safe.'
 } finally {
     if (Test-Path -LiteralPath $absoluteWorkspace) { Remove-Item -LiteralPath $absoluteWorkspace -Recurse -Force }
 }

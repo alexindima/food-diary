@@ -380,6 +380,11 @@ The adaptive route never replaces deterministic gates:
    an adverse review independent of the implementation narrative.
 7. Seal and verify governed workspaces before claiming completion.
 
+`delivery-finalize -FailOnInvalid` is the bounded completion facade for governed
+work. It stops at the first failed stage and reports it while running requirement
+and conformance seal, proof seal, context-security creation, delivery validation,
+and adverse critique in that order.
+
 The objective is proportional rigor: small local changes stay fast, while sensitive
 or structural changes receive explicit research, decisions, evidence, and independent
 review.

@@ -8,6 +8,7 @@ sources:
   - .llm-wiki/tools/Test-LlmWikiEvidenceLineage.ps1
   - .llm-wiki/tools/Get-LlmWikiContentFingerprint.ps1
   - .llm-wiki/tools/Manage-LlmWikiEvidenceCache.ps1
+  - .llm-wiki/tools/Import-LlmWikiEvidenceReceipts.ps1
   - .llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1
   - .llm-wiki/tools/Resolve-LlmWikiRecordedCheckResult.ps1
   - .llm-wiki/tools/Test-LlmWikiChangePolicy.ps1
@@ -42,13 +43,19 @@ are not committed.
   -Reason "Responsive interaction verified at the mobile breakpoint."
 
 ./.llm-wiki/wiki.ps1 evidence-validate
+./.llm-wiki/wiki.ps1 task-evidence-import `
+  -WorkspacePath .artifacts/llm-wiki/tasks/my-task
 ./.llm-wiki/wiki.ps1 task-lineage `
   -WorkspacePath .artifacts/llm-wiki/tasks/my-task `
   -FailOnInvalid
 ./.llm-wiki/wiki.ps1 handoff
 ```
 
-`not-applicable` always requires a reason. Validation succeeds only when all
+`not-applicable` always requires a reason. Use
+`passed-with-known-baseline-failures` only when the check ran and its reason names
+the failures plus the evidence that they predate the change. It is resolved
+evidence, but remains visibly distinct from a clean pass and is never eligible for
+executed-check cache reuse. Validation succeeds only when all
 policy-required checks and review obligations are resolved. The generated
 Markdown summary is suitable for task handoff or a pull-request description,
 but it remains supporting evidence rather than a substitute for CI logs.
@@ -80,6 +87,11 @@ requirement definition, dependency path set, and file-content fingerprint.
 Missing, edited, or context-incompatible lineage makes the evidence invalid.
 Compatible entries are reported as reusable; refresh archives their previous
 compatibility fingerprint whenever a source change invalidates them.
+
+`task-evidence-import` restores pending checks from content-addressed verification
+receipts that match the current repository fingerprint and canonical command. Use
+`-DryRun` to preview the import. Task refresh performs the same import
+automatically after evidence invalidation.
 
 Executed task checks bind lineage to the SHA-256 hash of their captured log.
 Cross-task reuse is deliberately narrower than general lineage compatibility:

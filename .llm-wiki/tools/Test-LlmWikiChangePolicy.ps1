@@ -168,17 +168,17 @@ if (-not [string]::IsNullOrWhiteSpace($EvidencePath)) {
 if ($null -ne $evidence) {
     foreach ($requiredCheck in $requiredChecksById.Values) {
         $entry = @($evidence.checks | Where-Object { $_.id -eq $requiredCheck.id } | Select-Object -First 1)
-        if ($entry.Count -eq 0 -or $entry[0].status -notin @('passed', 'not-applicable')) {
+        if ($entry.Count -eq 0 -or $entry[0].status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable')) {
             $violations.Add([pscustomobject][ordered]@{
                 rule = 'evidence'
                 path = $EvidencePath
-                message = "Required check has no passed/not-applicable evidence: $($requiredCheck.id)"
+                message = "Required check has no resolved evidence: $($requiredCheck.id)"
             })
-        } elseif ($entry[0].status -eq 'not-applicable' -and [string]::IsNullOrWhiteSpace([string]$entry[0].reason)) {
+        } elseif ($entry[0].status -in @('not-applicable', 'passed-with-known-baseline-failures') -and [string]::IsNullOrWhiteSpace([string]$entry[0].reason)) {
             $violations.Add([pscustomobject][ordered]@{
                 rule = 'evidence'
                 path = $EvidencePath
-                message = "Not-applicable evidence requires a reason: $($requiredCheck.id)"
+                message = "Evidence status '$($entry[0].status)' requires a reason: $($requiredCheck.id)"
             })
         }
     }

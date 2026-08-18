@@ -78,7 +78,7 @@ function Get-ChangeReason([object]$OldRequirement, [object]$NewRequirement, [str
     return $null
 }
 function Get-LineageChangeReason([object]$Entry, [object]$Requirement) {
-    if ($null -eq $Entry -or [string]$Entry.status -notin @('passed', 'failed', 'completed', 'not-applicable')) { return $null }
+    if ($null -eq $Entry -or [string]$Entry.status -notin @('passed', 'passed-with-known-baseline-failures', 'failed', 'completed', 'not-applicable')) { return $null }
     if (-not $Entry.PSObject.Properties['lineage'] -or $null -eq $Entry.lineage) { return 'lineage-missing' }
     $paths = Get-RulePaths $newPacket ([string]$Requirement.sourceRule)
     $content = & (Join-Path $PSScriptRoot 'Get-LlmWikiContentFingerprint.ps1') -Path $paths -Format Json | ConvertFrom-Json
@@ -340,7 +340,7 @@ if ($Apply) {
             $normalized = Normalize-LlmWikiVerificationCommand ([string]$check.command)
             $receipt = $validReceipts | Where-Object normalizedCommand -eq $normalized | Select-Object -First 1
             if ($null -eq $receipt) { continue }
-            & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvidence.ps1') check-record `
+            & (Join-Path $PSScriptRoot 'Manage-LlmWikiEvidence.ps1') check `
                 -Path "$normalizedWorkspacePath/evidence.json" `
                 -Id ([string]$check.id) `
                 -Status passed `

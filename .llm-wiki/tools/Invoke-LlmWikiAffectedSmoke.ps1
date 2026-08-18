@@ -88,7 +88,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('implementation-plan')
     } elseif ($path -match '^\.llm-wiki/tools/(Get-LlmWikiReviewReport|Test-LlmWikiReviewReport)\.ps1$') {
         $null = $smokeGroups.Add('reporting')
-    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Test-LlmWikiVerificationReceipts)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiVerificationReceipts|Manage-LlmWikiVerificationReceipts|Import-LlmWikiEvidenceReceipts|Test-LlmWikiVerificationReceipts)\.ps1$') {
         $null = $smokeGroups.Add('verification-receipts')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiVerificationCache|Test-LlmWikiVerificationCache|Test-LlmWikiIndexManifest|Get-LlmWikiVerificationStageFingerprint|Invoke-LlmWikiFullVerification|Write-LlmWikiIndexVerificationReceipt)\.ps1$' -or $path -eq '.llm-wiki/policies/query-indexes.json') {
         $null = $smokeGroups.Add('verification-cache')
@@ -111,7 +111,7 @@ if ($smokeGroups.Count -eq 0) {
         $null = $smokeGroups.Add('strict-shapes')
     } elseif ($path -match '^\.llm-wiki/tools/(Manage-LlmWikiChangeManifest|Manage-LlmWikiAcceptanceMatrix|Test-LlmWikiTestOnlyGovernance)\.ps1$') {
         $null = $smokeGroups.Add('test-only-governance')
-    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiChangePacket|Invoke-LlmWikiDeliveryWorkflow|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiAcceptanceMatrix|Manage-LlmWikiChangeCritique|Manage-LlmWikiConfidenceLedger|Manage-LlmWikiImpactSimulation|Manage-LlmWikiRiskCalibration|Manage-LlmWikiFailurePrediction|Manage-LlmWikiVerificationCost|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Add-LlmWikiSourceReview|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiEvidenceLineage|Test-LlmWikiChangePacketMetadata|Test-LlmWikiGovernedDeliveryRegression|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
+    } elseif ($path -match '^\.llm-wiki/tools/(LlmWikiChangePacket|Invoke-LlmWikiDeliveryWorkflow|Invoke-LlmWikiDeliveryFinalization|Complete-LlmWikiTaskWorkspace|Manage-LlmWikiPlanConformance|Manage-LlmWikiTaskWorkspace|Manage-LlmWikiTaskEvidence|Manage-LlmWikiEvidence|Manage-LlmWikiAcceptanceMatrix|Manage-LlmWikiProofOfChange|Manage-LlmWikiContextSecurity|Manage-LlmWikiChangeCritique|Manage-LlmWikiConfidenceLedger|Manage-LlmWikiImpactSimulation|Manage-LlmWikiRiskCalibration|Manage-LlmWikiFailurePrediction|Manage-LlmWikiVerificationCost|Manage-LlmWikiRequirementModel|New-LlmWikiEvidenceLineage|Test-LlmWikiEvidenceLineage|Update-LlmWikiTaskEvidence|Add-LlmWikiSourceReview|Get-LlmWikiReleaseReadiness|Get-LlmWikiReviewReport|Test-LlmWikiChangePacketMetadata|Test-LlmWikiGovernedDeliveryRegression|Test-LlmWikiGovernedAuthenticationStart)\.ps1$') {
         $null = $smokeGroups.Add('governed-delivery')
     } elseif ($path -match '^\.llm-wiki/tools/') {
         $hasUnknownToolChange = $true

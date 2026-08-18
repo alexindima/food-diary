@@ -125,7 +125,7 @@ function New-Critique([string]$CreatedAtUtc) {
     if ($proof.applicable -and -not $proof.valid) {
         Add-Finding $findings 'proof-insufficient' 'proof' 'major' 'Satisfied criteria are not backed by current change and verification evidence.' 'Link each satisfied criterion to current changed paths and verified evidence.' @(Get-Ids @($proof.proof.findings)) "./.llm-wiki/wiki.ps1 acceptance-map -AcceptancePath $workspace/acceptance-matrix.json -CriterionId <AC-ID> -ChangedPath <path>"
     }
-    $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable'))
+    $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable'))
     $unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable'))
     $unresolvedCriteria = @($acceptance.criteria | Where-Object status -notin @('satisfied', 'not-applicable'))
     if ($unresolvedChecks.Count + $unresolvedReviews.Count + $unresolvedCriteria.Count -gt 0) {

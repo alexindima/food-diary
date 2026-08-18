@@ -26,7 +26,7 @@ if (Test-Path -LiteralPath $root -PathType Container) {
             state = $(if (Test-Path -LiteralPath $completionPath -PathType Leaf) { 'sealed' } elseif (-not [string]::IsNullOrWhiteSpace([string]$workspace.state)) { [string]$workspace.state } else { 'in-progress' })
             hasManifest = Test-Path -LiteralPath $manifestPath
             hasAcceptance = Test-Path -LiteralPath $acceptancePath
-            resolvedChecks = @($evidence.checks | Where-Object status -in @('passed', 'not-applicable')).Count
+            resolvedChecks = @($evidence.checks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable')).Count
             failedChecks = @($evidence.checks | Where-Object status -eq 'failed').Count
             resolvedReviews = @($evidence.reviews | Where-Object status -in @('completed', 'not-applicable')).Count
         })

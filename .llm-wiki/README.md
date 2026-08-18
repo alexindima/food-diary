@@ -125,7 +125,9 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 task-list
 ./.llm-wiki/wiki.ps1 task-audit -StaleAfterDays 7 -EvidenceMaxAgeDays 3
 ./.llm-wiki/wiki.ps1 task-status -WorkspacePath .artifacts/llm-wiki/tasks/my-task
+./.llm-wiki/wiki.ps1 task-status -WorkspacePath .artifacts/llm-wiki/tasks/my-task -Detailed
 ./.llm-wiki/wiki.ps1 task-refresh -WorkspacePath .artifacts/llm-wiki/tasks/my-task
+./.llm-wiki/wiki.ps1 task-evidence-import -WorkspacePath .artifacts/llm-wiki/tasks/my-task
 ./.llm-wiki/wiki.ps1 task-run -WorkspacePath .artifacts/llm-wiki/tasks/my-task -DryRun
 ./.llm-wiki/wiki.ps1 task-handoff -WorkspacePath .artifacts/llm-wiki/tasks/my-task -OutputPath .artifacts/llm-wiki/tasks/my-task/handoff.md
 ./.llm-wiki/wiki.ps1 task-export -WorkspacePath .artifacts/llm-wiki/tasks/my-task
@@ -180,6 +182,7 @@ The unified developer entrypoint is:
 ./.llm-wiki/wiki.ps1 task-context-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name>
 ./.llm-wiki/wiki.ps1 task-context-security-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name>
 ./.llm-wiki/wiki.ps1 task-context-security-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> -FailOnInvalid
+./.llm-wiki/wiki.ps1 delivery-finalize -WorkspacePath .artifacts/llm-wiki/tasks/<name> -FailOnInvalid
 ./.llm-wiki/wiki.ps1 task-confidence-assess -WorkspacePath .artifacts/llm-wiki/tasks/<name>
 ./.llm-wiki/wiki.ps1 task-confidence-verify -WorkspacePath .artifacts/llm-wiki/tasks/<name> -FailOnInvalid
 ./.llm-wiki/wiki.ps1 task-context-compare -SourceWorkspacePath .artifacts/llm-wiki/tasks/<source> -WorkspacePath .artifacts/llm-wiki/tasks/<target>

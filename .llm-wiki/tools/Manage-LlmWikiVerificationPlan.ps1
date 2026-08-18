@@ -88,7 +88,7 @@ function Get-Selection([object]$Current, [bool]$RequestedIncludePassed) {
     $checks = @($Current.policy.requiredChecks | Sort-Object id -Unique)
     $eligible = @($checks | Where-Object {
         $entry = $Current.evidence.checks | Where-Object id -eq $_.id | Select-Object -First 1
-        $effectiveIncludePassed -or $null -eq $entry -or [string]$entry.status -notin @('passed', 'not-applicable')
+        $effectiveIncludePassed -or $null -eq $entry -or [string]$entry.status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable')
     })
     $primaryById = @{}
     foreach ($check in $eligible) { $primaryById[[string]$check.id] = [string]$check.id }
@@ -133,7 +133,7 @@ function Get-Selection([object]$Current, [bool]$RequestedIncludePassed) {
     } | Sort-Object priority, primaryCheckId)
     $coverage = @($checks | ForEach-Object {
         $entry = $Current.evidence.checks | Where-Object id -eq $_.id | Select-Object -First 1
-        $alreadyResolved = -not $effectiveIncludePassed -and $null -ne $entry -and [string]$entry.status -in @('passed', 'not-applicable')
+        $alreadyResolved = -not $effectiveIncludePassed -and $null -ne $entry -and [string]$entry.status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable')
         [pscustomobject][ordered]@{
             checkId = [string]$_.id
             mode = $(if ($alreadyResolved) { 'existing-evidence' } elseif ($primaryById[[string]$_.id] -eq [string]$_.id) { 'execute' } else { 'covered' })

@@ -2,11 +2,11 @@
 param(
     [Parameter(Position = 0)]
     [ValidateSet(
-        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'coverage-plan', 'decision',
+        'help', 'start', 'update', 'repair-verify', 'completion', 'lint', 'smoke', 'verify-fast', 'verify-strict-affected', 'verify', 'verify-status', 'verify-full', 'develop', 'continue-ui', 'ui-finalize', 'status', 'next', 'research', 'integration-scan', 'precedents', 'solutions', 'design', 'phase-status', 'phase-next', 'phase-complete', 'qa', 'visual-qa', 'workflow-metrics', 'pause', 'resume', 'journeys', 'ui-trace', 'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'delivery-finalize', 'context', 'trace', 'packet', 'brief', 'implementation-plan', 'plan', 'test-plan', 'coverage-plan', 'decision',
         'dependencies', 'rollout', 'readiness', 'report', 'topology', 'privacy', 'contract-consumers', 'extraction', 'ui', 'domain', 'contracts', 'health', 'hotspots', 'test-gaps', 'debt',
         'graph-build', 'graph-status', 'graph-symbol', 'graph-consumers', 'graph-trace', 'graph-impact', 'graph-relations', 'graph-coverage',
         'diff', 'impact', 'review', 'review-affected', 'ownership', 'api-compat', 'policy', 'verification-record', 'verification-list',
-        'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate',
+        'evidence-init', 'evidence-run', 'evidence-check', 'evidence-review', 'evidence-artifact', 'evidence-validate', 'task-evidence-import',
         'task-circuit-list', 'task-circuit-open', 'task-circuit-reset', 'task-circuit-verify', 'task-circuit-prune',
         'task-decompose-list', 'task-decompose-plan', 'task-decompose-verify', 'task-decompose-apply', 'task-decompose-prune',
         'task-verification-plan', 'task-verification-show', 'task-verification-verify', 'task-verification-run',
@@ -120,7 +120,7 @@ param(
     [string]$ManifestPath = '.artifacts/llm-wiki/change-manifest.json',
     [string]$AcceptancePath = '.artifacts/llm-wiki/acceptance-matrix.json',
     [string]$Id,
-    [ValidateSet('pending', 'passed', 'failed', 'completed', 'not-applicable')]
+    [ValidateSet('pending', 'passed', 'passed-with-known-baseline-failures', 'failed', 'completed', 'not-applicable')]
     [string]$Status,
     [string]$EvidenceCommand,
     [string[]]$CoverageScope,
@@ -290,7 +290,8 @@ Enable-LlmWikiStringDateJsonParsing
 $sessionWorkspaceCommands = @(
     'task-start', 'task-status', 'task-refresh', 'task-run', 'task-finish', 'task-verify',
     'status', 'next', 'phase-status', 'phase-next', 'phase-complete', 'pause', 'resume',
-    'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique'
+    'delivery-status', 'delivery-replan', 'delivery-validate', 'delivery-critique', 'delivery-finalize',
+    'task-evidence-import'
 )
 if (-not $PSBoundParameters.ContainsKey('WorkspacePath') -and $Command -in $sessionWorkspaceCommands) {
     $resolvedSession = & (Join-Path $toolsRoot 'Resolve-LlmWikiSession.ps1') `
@@ -1633,14 +1634,15 @@ switch ($Command) {
             'task-context-security-show' = 'show'
             'task-context-security-verify' = 'verify'
         }[$Command]
-        Invoke-WikiTool 'Manage-LlmWikiContextSecurity.ps1' @{
+        $contextSecurityArguments = @{
             Action = $contextSecurityAction
             WorkspacePath = $WorkspacePath
-            Path = $ChangedPath
             AsOfUtc = $AsOfUtc
             FailOnInvalid = $FailOnInvalid
             Format = $Format
         }
+        if ($PSBoundParameters.ContainsKey('ChangedPath')) { $contextSecurityArguments.Path = @($ChangedPath) }
+        Invoke-WikiTool 'Manage-LlmWikiContextSecurity.ps1' $contextSecurityArguments
     }
     { $_ -in @('task-risk-calibrate', 'task-risk-show', 'task-risk-verify') } {
         $riskAction = @{
@@ -2082,6 +2084,7 @@ switch ($Command) {
             WorkspacePath = $WorkspacePath
             FailOnBlocked = $FailOnBlocked
             DryRun = $DryRun
+            Detailed = $Detailed
             Format = $Format
         }
         if ($PSBoundParameters.ContainsKey('HeadRef')) { $taskWorkspaceArguments.HeadRef = $HeadRef }
@@ -2573,6 +2576,21 @@ switch ($Command) {
     { $_ -in @('catalog', 'symbols', 'frontend', 'frontend-contract', 'backend-contract', 'architecture-health', 'domain-data', 'configuration', 'quality', 'runtime', 'sensitive-data', 'modules') } {
         Invoke-WikiTool $indexCommandTools[$Command] @{ Check = $Check }
     }
+    'delivery-finalize' {
+        Invoke-WikiTool 'Invoke-LlmWikiDeliveryFinalization.ps1' @{
+            WorkspacePath = $WorkspacePath
+            AsOfUtc = $AsOfUtc
+            FailOnInvalid = $FailOnInvalid
+            Format = $Format
+        }
+    }
+    'task-evidence-import' {
+        Invoke-WikiTool 'Import-LlmWikiEvidenceReceipts.ps1' @{
+            WorkspacePath = $WorkspacePath
+            DryRun = $DryRun
+            Format = $Format
+        }
+    }
     default {
         Write-Host 'FoodDiary LLM Wiki'
         Write-Host ''
@@ -2604,6 +2622,8 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 task-start -Objective <text> -Criterion <text> -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
         Write-Host '  ./.llm-wiki/wiki.ps1 workspace-policy [-FailOnInvalid] [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-list [-Detailed] [-Format Json]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 task-status -WorkspacePath <path> [-Detailed] [-Format Json]'
+        Write-Host '  ./.llm-wiki/wiki.ps1 task-evidence-import -WorkspacePath <path> [-DryRun]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-graph [-IncludeSealed] [-FailOnBlocked] [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-schedule [-MaxConcurrency <n>] [-FailOnBlocked] [-Format Json]'
         Write-Host '  ./.llm-wiki/wiki.ps1 task-orchestrate [-MaxConcurrency <n>] [-Apply] [-FailOnAttention]'
@@ -2785,6 +2805,7 @@ switch ($Command) {
         Write-Host '  ./.llm-wiki/wiki.ps1 delivery-status -WorkspacePath .artifacts/llm-wiki/tasks/<name>'
         Write-Host '  ./.llm-wiki/wiki.ps1 delivery-replan -WorkspacePath <task> -Reason <evidence> [-DryRun]'
         Write-Host '  ./.llm-wiki/wiki.ps1 delivery-validate -WorkspacePath <task> -FailOnInvalid'
+        Write-Host '  ./.llm-wiki/wiki.ps1 delivery-finalize -WorkspacePath <task> -FailOnInvalid'
         Write-Host '  ./.llm-wiki/wiki.ps1 delivery-critique -WorkspacePath <task> -FailOnInvalid'
         Write-Host '  ./.llm-wiki/wiki.ps1 topology [-Query <text>]'
         Write-Host "  ./.llm-wiki/wiki.ps1 privacy -PrivacyCategory credential [-PlannedPath @('path/one','path/two')]"

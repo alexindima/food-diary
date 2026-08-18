@@ -202,7 +202,7 @@ if (Test-Path -LiteralPath $absoluteTasksPath -PathType Container) {
         $packetHead = [string]$packet.inputs.gitHead
         if ([string]::IsNullOrWhiteSpace($packetHead)) { $packetHead = [string]$evidence.git.head }
         $headChanged = -not [string]::IsNullOrWhiteSpace($packetHead) -and $packetHead -cne $currentHead
-        $resolvedEvidenceCount = @($evidence.checks | Where-Object status -eq 'passed').Count +
+        $resolvedEvidenceCount = @($evidence.checks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures')).Count +
             @($evidence.reviews | Where-Object status -eq 'completed').Count
         $evidenceExpired = $resolvedEvidenceCount -gt 0 -and $evidenceAgeDays -ge $effectiveEvidenceMaxAgeDays
         $verificationPlan = $null

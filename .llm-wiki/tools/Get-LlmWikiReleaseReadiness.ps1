@@ -161,15 +161,17 @@ if ($null -eq $evidence) {
     Add-Dimension 'verification-evidence' 10 $missingEvidenceStatus 'Verification evidence bundle is absent.'
     Add-Dimension 'review-evidence' 5 $missingEvidenceStatus 'Review evidence bundle is absent.'
 } else {
-    $unresolvedChecks = @($evidence.checks | Where-Object { $_.status -notin @('passed', 'not-applicable') })
+    $unresolvedChecks = @($evidence.checks | Where-Object { $_.status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable') })
     $unresolvedReviews = @($evidence.reviews | Where-Object { $_.status -notin @('completed', 'not-applicable') })
     $evidenceCheckIds = @(Get-Ids @($evidence.checks))
     $evidenceReviewIds = @(Get-Ids @($evidence.reviews))
     $missingChecks = @(Get-Ids @($packet.policy.requiredChecks) | Where-Object { $_ -notin $evidenceCheckIds })
     $missingReviews = @(Get-Ids @($packet.policy.reviewObligations) | Where-Object { $_ -notin $evidenceReviewIds })
+    $lineage = & (Join-Path $PSScriptRoot 'Test-LlmWikiEvidenceLineage.ps1') -EvidencePath $EvidencePath -Format Json | ConvertFrom-Json
     $verificationIssues = @(
         @($unresolvedChecks | ForEach-Object { "Check $($_.id): $($_.status)" }) +
-        @($missingChecks | ForEach-Object { "Missing check: $_" })
+        @($missingChecks | ForEach-Object { "Missing check: $_" }) +
+        @($lineage.issues | ForEach-Object { "Lineage: $_" })
     )
     $reviewIssues = @(
         @($unresolvedReviews | ForEach-Object { "Review $($_.id): $($_.status)" }) +

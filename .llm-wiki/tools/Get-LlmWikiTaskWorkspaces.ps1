@@ -123,7 +123,7 @@ if (Test-Path -LiteralPath $absoluteTasksPath -PathType Container) {
                 score = $score
                 changedPathCount = @($packet.diff.changedPaths).Count
                 pendingCriteria = @($acceptance.criteria | Where-Object status -eq 'pending').Count
-                unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable')).Count
+                unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable')).Count
                 unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable')).Count
                 openJournalBlockers = $journal.openBlockerCount
                 policyChangeCount = $(if ($null -ne $doctor.policyImpact) { $doctor.policyImpact.changeCount } else { $null })

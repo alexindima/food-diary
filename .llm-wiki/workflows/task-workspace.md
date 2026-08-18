@@ -113,10 +113,14 @@ Inspect actionable progress at any time:
   -WorkspacePath .artifacts/llm-wiki/tasks/fasting-command
 ```
 
-The status reports scope drift, fingerprint drift, unresolved acceptance
-criteria, checks, reviews, blocking readiness dimensions, and a concrete
-next-action list. Use `-Format Json` for automation and `-FailOnBlocked` as a
-gate.
+The default core status reports scope drift, fingerprint drift, evidence-lineage
+validity, unresolved acceptance criteria, checks, reviews, blocking readiness
+dimensions, and a concrete next-action list. It defers prediction, cost,
+telemetry, confidence, and critique diagnostics to `task-status -Detailed`,
+keeping the frequent status path bounded. Use `-Format Json` for automation and
+`-FailOnBlocked` as a gate.
+`task-finish` always reruns detailed status internally, so the compact interactive
+path cannot weaken completion gates.
 
 Refresh derived context after the implementation changes:
 
@@ -130,6 +134,10 @@ prediction, telemetry, and verification-cost fields are normalized; an obsolete
 cost forecast is regenerated in memory during a dry run and replaced
 transactionally by the real refresh. Product-journey mappings remain available
 across refreshes.
+
+After refresh or replan, run `task-evidence-import` to explicitly restore any
+still-current content-addressed test receipts; refresh already attempts the same
+safe import automatically.
 
 Refresh updates only the compiled packet, review report, and workspace
 metadata. It deliberately preserves the task contract, manifest, acceptance

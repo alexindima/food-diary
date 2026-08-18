@@ -128,13 +128,17 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
+          "sha256": "17f3fb3c9ff435af9715dcb28c21f5f169e17f5b41d66441ba4c7d05dd42c832"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "3fe3cc9e722f43fb132157c89a2ef14edefe9135ae7934af8cdb5c1e23ed635c"
         }
       ],
-      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
-      "reviewedAtUtc": "2026-08-17T12:23:48.9686609Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:29.2941862Z"
     },
     {
       "pageId": "workflow-adaptive-development",
@@ -226,14 +230,18 @@
       "pageSha256": "e2967f35c4924a0eef44b5f281529a2636278600f77e2fec29ca9b7dfb410823",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "63736caed0e5a9a47a99be097c93ab3f428702d95796f1c565a41d67317e9d1c"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "3fe3cc9e722f43fb132157c89a2ef14edefe9135ae7934af8cdb5c1e23ed635c"
         }
       ],
-      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T21:19:41.1189730Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:29.4720989Z"
     },
     {
       "pageId": "workflow-change-packet",
@@ -253,17 +261,17 @@
     {
       "pageId": "workflow-code-graph",
       "pagePath": ".llm-wiki/workflows/code-graph.md",
-      "pageSha256": "3dd38cd9b305a117775fcdf2e4036dfb5e974a910bb601b8237af593c7b55796",
+      "pageSha256": "4c34b64a9f6da77827e3ec2f7060afcf8ac7f38611e9a743026a45daa0c2f3cd",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "f17a6dcca75a3cdfe742cd490f82f85c8f6ebbc502df7bc09cde7738b39a8668"
+          "sha256": "13eb1f8ad944ce5566599b76b214b8a89d97454d8387db11d3114b15a0887590"
         }
       ],
-      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
-      "reviewedAtUtc": "2026-08-17T11:17:51.1037192Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:29.8929582Z"
     },
     {
       "pageId": "workflow-confidence-ledger",
@@ -271,14 +279,22 @@
       "pageSha256": "d59b6b99ff0c566de2b31579a916ee8e62adbeedea3d928970b2200fa0b63eb6",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiConfidenceLedger.ps1",
+          "sha256": "387cedb338cf68e56e3a60e0a0805dfa20df8bad148b5c8311064f5409fb3aba"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
+          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:26.3734860Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:06.9445431Z"
     },
     {
       "pageId": "workflow-context-budget-optimization",
@@ -298,29 +314,21 @@
     {
       "pageId": "workflow-context-bundles",
       "pagePath": ".llm-wiki/workflows/context-bundles.md",
-      "pageSha256": "c6ad719eb6441142cdea59a921180a1c64d63b5c3143b6d0ac37ccf2df185fda",
+      "pageSha256": "55f2618506e22233308bd9b84a8e2278f3ff3b9b6ea297bc6209efcf842a2478",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Find-LlmWikiContext.ps1",
-          "sha256": "150ea94964bd22930d85c6cfb61d9839446bebad9ce2bfe299818596eedc3083"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
-          "sha256": "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
+          "sha256": "7005b0ca6a00879a5d4b98dc653d16d349da5219f0f4aceb176f19e4b6aaa310"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-          "sha256": "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
+          "sha256": "7e85515b2fbe14b9ad9fdd1c01c9b133fc915c4ac145732675c27655b47e4497"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:14.1542166Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:30.3432348Z"
     },
     {
       "pageId": "workflow-context-security",
@@ -338,43 +346,38 @@
       "reviewedAtUtc": "2026-08-17T09:23:48.8289852Z"
     },
     {
+      "pageId": "workflow-context-strategy-outcome-learning",
+      "pagePath": ".llm-wiki/workflows/context-strategy-outcome-learning.md",
+      "pageSha256": "e4de9df2c7adeae34ec774eebca8f821c2a90f1b85fe27d16d59d8d581495c23",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        }
+      ],
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
+      "baseRef": "HEAD",
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:07.3079359Z"
+    },
+    {
       "pageId": "workflow-controlled-learning-promotion",
       "pagePath": ".llm-wiki/workflows/controlled-learning-promotion.md",
       "pageSha256": "00754da39296338560265042aa50850550f9b7f938d9e9de2e0007a277eefba6",
       "sources": [
         {
-          "path": ".llm-wiki/knowledge/learning-promotions.json",
-          "sha256": "7c4d449e9443dd07872fc64622b63c5ee236d2abe24e660ed4c228aa8a14df70"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
         },
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiLearningExperiment.ps1",
-          "sha256": "bcb5da42c93ff7837fbf33ec9c50b89145c6487fab6f82ea97d61d3bd08cc110"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiLearningHealth.ps1",
-          "sha256": "996a9c5fdbf6b674ed1ce15f03531ea956b91f91766bd8369d11c72419c6074d"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiLearningPromotion.ps1",
-          "sha256": "b373c3c4fb7e20a4529005a06e4643b6e2ffd44f0b185ecb6199072564abcd87"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
-          "sha256": "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-          "sha256": "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:14.4422672Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:07.5645504Z"
     },
     {
       "pageId": "workflow-controlled-repair-loop",
@@ -382,14 +385,22 @@
       "pageSha256": "1a4c6620169d6fbe556feae253e1e80b1f7a4f4d232962b8fe8b13635bfb608a",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
+          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:26.8732671Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:07.8315280Z"
     },
     {
       "pageId": "workflow-cost-aware-verification",
@@ -398,13 +409,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
+          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:49.2978299Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:31.1334363Z"
     },
     {
       "pageId": "workflow-decision-context",
@@ -439,17 +450,17 @@
     {
       "pageId": "workflow-developer-experience",
       "pagePath": ".llm-wiki/workflows/developer-experience.md",
-      "pageSha256": "e81fa2b3a04a1494e8f592d61f2407a135f90a5899cf6cf94a01515c984e07b3",
+      "pageSha256": "27d0024f72d1c76d049cd23b20354f5be8d3d29d460a6f71ba657cf6b3259b3d",
       "sources": [
         {
           "path": ".llm-wiki/tools/Get-LlmWikiWorkflowMetrics.ps1",
-          "sha256": "73b6eef258e0c0056a41adee4d629edc64b3a3079ac5f0c2533fab50c3b2962d"
+          "sha256": "565075ee7762ef40ffbdee6f07d3261bed1838411f6d9284b08b0d0eb4dedcca"
         }
       ],
-      "reason": "Reviewed Development MCP lifecycle, revision baseline, structured parsing, scope ranking, source-bound freshness, and local metrics against current implementation plus focused MCP and Wiki smoke tests.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "5ab731c87193b12d56168869162cdbd838f50407",
-      "reviewedAtUtc": "2026-08-17T11:17:51.2379498Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:31.3482626Z"
     },
     {
       "pageId": "workflow-domain-data-review",
@@ -472,22 +483,18 @@
       "pageSha256": "95480b241c0d18016bd62e851be9ae87207340be4b90243c591d7d6da7fb608e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiMemory.ps1",
-          "sha256": "468f40a00f44edef1c370f0890c2ea7ad3b9de88c02f8384369d7060ff84746d"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiTaskJournal.ps1",
-          "sha256": "e203a5aef1a161ba884d4f632842cd6831546fc18537212634186c6b9c3d7f61"
+          "sha256": "7e85515b2fbe14b9ad9fdd1c01c9b133fc915c4ac145732675c27655b47e4497"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:14.9736782Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:31.5566305Z"
     },
     {
       "pageId": "workflow-failure-knowledge",
@@ -510,18 +517,14 @@
       "pageSha256": "f329d54afe5274a4bfce5e5cc7e77455554286b51569c8b214ef3fd44fe8be83",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
-          "sha256": "27205d9206f9f87df89e34a7ae524dc1c7c0c0f6326221ee6304dd679b754765"
-        },
-        {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
+          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:50.7590132Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:32.0939882Z"
     },
     {
       "pageId": "workflow-frontend-visual-evidence",
@@ -544,14 +547,22 @@
       "pageSha256": "91d056607f6c26aa24df027139fb135c003cb65b3656afd59729c6f37eefed2e",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
         }
       ],
-      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T21:19:41.7862312Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:08.1752897Z"
     },
     {
       "pageId": "workflow-implementation-plan",
@@ -559,14 +570,14 @@
       "pageSha256": "2d14755cf1714049bfdbd8ce1c1ed6e3fb250c1e2f8a34d27863f86e278e86d7",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
+          "path": ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
+          "sha256": "2887a79408806f808f9605dd75c442385936f836888614d188e3aec79c9f4188"
         }
       ],
-      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T21:19:42.0196792Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:32.5929753Z"
     },
     {
       "pageId": "workflow-independent-change-critique",
@@ -574,29 +585,49 @@
       "pageSha256": "033f7616fa69222933f081cd5a872dadfb1266e95f95809f37fc2f619103b669",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeCritique.ps1",
+          "sha256": "5d6e0e21f764bce86a516137201c13a6f3edb7f8086b4e74d5ac9a133cca2d3f"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
+          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:29.5177006Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:08.4811388Z"
     },
     {
       "pageId": "workflow-index-pipeline",
       "pagePath": ".llm-wiki/workflows/index-pipeline.md",
-      "pageSha256": "2ccdf34b5e311ea48f4cefab1e6d09c0286d06e830a152d7ae6d41a928db5d75",
+      "pageSha256": "cabf2401a8ec1e8b2afd20c9669754dc8074aaa1222fcf7d842cfa86bd0a2c19",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "efabb27824d12794249b14d15be122fbcbecdb8dda7533fba180ffda4842b12c"
+          "path": ".llm-wiki/tools/Get-LlmWikiVerificationStageFingerprint.ps1",
+          "sha256": "6c0f1cd23c909e12937af1295298bac36f69f4c0951a8b1203128da650f1592d"
+        },
+        {
+          "path": ".llm-wiki/tools/Invoke-LlmWikiAffectedSmoke.ps1",
+          "sha256": "0575f817cefdaa0a18958b56fac7aee6162c40d5fef4ec07cd9307b081cfc25d"
+        },
+        {
+          "path": ".llm-wiki/wiki.ps1",
+          "sha256": "13eb1f8ad944ce5566599b76b214b8a89d97454d8387db11d3114b15a0887590"
         }
       ],
-      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
-      "reviewedAtUtc": "2026-08-17T15:56:43.2992151Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:08.8596529Z"
     },
     {
       "pageId": "workflow-instruction-effectiveness",
@@ -634,14 +665,18 @@
       "pageSha256": "66b17ed023ef493156eb7b969813f593705f2e69d764904dd73eb2cfcb3aa039",
       "sources": [
         {
-          "path": ".llm-wiki/evals/cases.json",
-          "sha256": "e68052dcd82119dd8f57dfff57db725017f9b00ee251d9aa65127e6f5d9b1074"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
         }
       ],
-      "reason": "CI repair updates stale module paths, cross-platform timing, and verification receipt fixtures after application module extraction.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "ede9aea006ed75c6b1daa0d3ecd19fb8545e5a7e",
-      "reviewedAtUtc": "2026-08-14T00:06:49.4088405Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:09.1877299Z"
     },
     {
       "pageId": "workflow-model-routing",
@@ -650,13 +685,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
+          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:52.0643097Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:33.7154857Z"
     },
     {
       "pageId": "workflow-ownership-impact",
@@ -694,18 +729,26 @@
       "pageSha256": "cc412c14328fb572376872cca0476a09251ab524bf64dd86398365cfae4a2bf6",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiPlanConformance.ps1",
-          "sha256": "a7c608b3e8ff4ea74b038daad24107461f39bd244f0148d517175c45bce3fea6"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "63736caed0e5a9a47a99be097c93ab3f428702d95796f1c565a41d67317e9d1c"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
-          "sha256": "dbf78fb9e41153ab3641a526292ce459a8676471c0f6641273572470faf2bfed"
+          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
         }
       ],
-      "reason": "Verified task refresh defers full status assessments, HEAD preserves the workspace overlay, replanning is transactional, and related workflow semantics remain current.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "7fd2cca9fd70866d89f197ed18a63c8826f54a42",
-      "reviewedAtUtc": "2026-08-16T22:10:30.1286609Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:09.5599322Z"
     },
     {
       "pageId": "workflow-post-task-retrospective",
@@ -713,14 +756,18 @@
       "pageSha256": "dbcac0a7ae8c9e8975807cd711fc7680b3c731e74459583b85917d9bb8e1827d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiRetrospective.ps1",
-          "sha256": "953d766acb87f9eb764b404524d92ef13d45ea5b86a96ba271524824563c140a"
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
         }
       ],
-      "reason": "Reviewed current and legacy impact-simulation receipt compatibility plus optional retrospective fields; workflow guidance remains accurate.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "8f6e68336eb71c2692fb7cc120d69bc421a14aff",
-      "reviewedAtUtc": "2026-08-12T10:39:46.2768485Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:09.8993084Z"
     },
     {
       "pageId": "workflow-privacy-review",
@@ -744,13 +791,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiDeliveryWorkflow.ps1",
-          "sha256": "a76d408fe971cbbad68a3294c84d1ca6540517de7bfcc81c7e94bb2f2392e29b"
+          "sha256": "caeebd3ece991397f90b59eadbe21ee3022f0de01f1b90c017725b068cba497f"
         }
       ],
-      "reason": "Reviewed governed orchestration changes: research-grounded paths remain bounded by planned-path affinity; task baselines are immutable SHAs; explicit replan widens only to observed product paths; requirements expansion only splits compound criteria; valid verification receipts are imported into task evidence.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "80f7436a097b31438e706d09405c6060a4521721",
-      "reviewedAtUtc": "2026-08-16T13:38:44.6710759Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:34.5555565Z"
     },
     {
       "pageId": "workflow-proof-of-change",
@@ -758,14 +805,30 @@
       "pageSha256": "7622935ab3aa92e0641117a4b5afc2b8faada090a2a8a83e9ea27a575f549281",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
+          "sha256": "17f3fb3c9ff435af9715dcb28c21f5f169e17f5b41d66441ba4c7d05dd42c832"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiProofOfChange.ps1",
+          "sha256": "a0ec5aac213c6708618783a1c4b38de83f74ec9cfefd20f51ed2b504b74c5fda"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
         }
       ],
-      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
-      "reviewedAtUtc": "2026-08-17T12:23:49.2503906Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:10.2147596Z"
     },
     {
       "pageId": "workflow-quality-risk",
@@ -788,14 +851,26 @@
       "pageSha256": "8d205fad5d3e0217b2cf58036b664e0a41bdc0aa8060576198e13be9c07bd919",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "92ddf5b26866baf3787917c1b525547448a64dc7d34a75aacf67c45014c48f84"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
+          "sha256": "17f3fb3c9ff435af9715dcb28c21f5f169e17f5b41d66441ba4c7d05dd42c832"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiChangeManifest.ps1",
+          "sha256": "63736caed0e5a9a47a99be097c93ab3f428702d95796f1c565a41d67317e9d1c"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiEvidence.ps1",
+          "sha256": "3fe3cc9e722f43fb132157c89a2ef14edefe9135ae7934af8cdb5c1e23ed635c"
         }
       ],
-      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
-      "reviewedAtUtc": "2026-08-17T12:23:49.5137007Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:35.1198498Z"
     },
     {
       "pageId": "workflow-requirement-intelligence",
@@ -803,14 +878,30 @@
       "pageSha256": "770c2a1ccbad09c306910e83b914ed80c90f8af632bf9e3996197bc629789791",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiAcceptanceMatrix.ps1",
-          "sha256": "7c0fdec7ec4d406b437cb1c45d1a0e3b5cea7835a2100780ae811f7e6e5c5b30"
+          "sha256": "17f3fb3c9ff435af9715dcb28c21f5f169e17f5b41d66441ba4c7d05dd42c832"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskWorkspace.ps1",
+          "sha256": "c4e02543040cc86c01a0c69a4723da3cf37840748f28aef59ae8cfbc68612fe2"
+        },
+        {
+          "path": ".llm-wiki/tools/Test-LlmWikiGovernedAuthenticationStart.ps1",
+          "sha256": "2887a79408806f808f9605dd75c442385936f836888614d188e3aec79c9f4188"
         }
       ],
-      "reason": "Acceptance-matrix initialization now treats missing or empty required-check collections as empty while preserving all mapping, validation, and proof-of-change rules.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "889f9bd7f28a230f2a4dbaaf0ee25b4035523e48",
-      "reviewedAtUtc": "2026-08-17T12:23:49.8296618Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:10.5524332Z"
     },
     {
       "pageId": "workflow-review-report",
@@ -818,14 +909,14 @@
       "pageSha256": "9b6d5d7319915e804b736c3a089e76f843fe5b97955da5c933faf69165102e18",
       "sources": [
         {
-          "path": ".github/workflows/ci-tests.yml",
-          "sha256": "efabb27824d12794249b14d15be122fbcbecdb8dda7533fba180ffda4842b12c"
+          "path": ".llm-wiki/tools/Get-LlmWikiReleaseReadiness.ps1",
+          "sha256": "92ddf5b26866baf3787917c1b525547448a64dc7d34a75aacf67c45014c48f84"
         }
       ],
-      "reason": "Verified the regenerated indexes and affected navigation pages against the CI solution-test command, shared SkiaSharp pruning target, current modular architecture docs, and the successful full backend/frontend validation.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "30cf3dc822bcf37d13d6a0a562555d29911b2a4a",
-      "reviewedAtUtc": "2026-08-17T15:56:43.9408122Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:35.8214969Z"
     },
     {
       "pageId": "workflow-risk-calibration",
@@ -833,14 +924,18 @@
       "pageSha256": "19ab27e4988b8393d632a38bade21f376fc170acef7dd22a5d10744eb4a972a8",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
+          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:53.7559503Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:36.0281969Z"
     },
     {
       "pageId": "workflow-runtime-impact",
@@ -863,14 +958,26 @@
       "pageSha256": "e509ad19504a285fe564b098e67541a1544beef28e664b4e8a9bfeec01dcdfff",
       "sources": [
         {
+          "path": ".llm-wiki/tools/Complete-LlmWikiTaskWorkspace.ps1",
+          "sha256": "519e05ff30e9bc12349e13ca802d2d8ecfe76324852e88549394d17e95046cc3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
+          "path": ".llm-wiki/tools/Manage-LlmWikiTaskSimilarity.ps1",
+          "sha256": "7bbe3eaf84f1e349a7052ab7be26b8f2dfcc69ecfc4110f508a1b783dc2c14af"
+        },
+        {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
+          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Re-reviewed completion safety: interactive task-status remains compact, while task-finish now forces the detailed blocking assessments before and after its final refresh; affected-smoke routing covers the completion tool.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:54.1786204Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:28:10.9040106Z"
     },
     {
       "pageId": "workflow-task-brief",
@@ -878,18 +985,14 @@
       "pageSha256": "5b0035be778c175914d29999e36b30dae6b04e0683647ace85fe88ffdb4509fb",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "365fb076601d46c3e9e3d7050ed858e354db8ceaae5ff5bbf756280aae95d69d"
-        },
-        {
-          "path": ".llm-wiki/tools/Get-LlmWikiTaskBrief.ps1",
-          "sha256": "fccd33248a1915fec7ccaff75af761984a6ecac683b0d942853a9503e630da8d"
+          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+          "sha256": "19d370c2e519b41051198b5d737ba1bb114d100b4acd64bce692ad344fc2f6c6"
         }
       ],
-      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T21:19:43.3660545Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:36.4855295Z"
     },
     {
       "pageId": "workflow-task-contract",
@@ -907,19 +1010,38 @@
       "reviewedAtUtc": "2026-08-16T13:38:45.7916534Z"
     },
     {
+      "pageId": "workflow-task-dependency-graph",
+      "pagePath": ".llm-wiki/workflows/task-dependency-graph.md",
+      "pageSha256": "7b3ea1842edd2b40e621b8bef887a96786f9bff979e494b7832a71c176439ff0",
+      "sources": [
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
+          "sha256": "9eeff500efb7c4f28ba18a1fc3927ffdacd1c17744611e52e9d3dd3d498e2d71"
+        }
+      ],
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
+      "baseRef": "HEAD",
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:36.6851273Z"
+    },
+    {
       "pageId": "workflow-task-dispatch-receipts",
       "pagePath": ".llm-wiki/workflows/task-dispatch-receipts.md",
       "pageSha256": "d0a2b7fd2b51f7c02d228efb6e23130eff42e68885eb5349dc126e22e6d4f98d",
       "sources": [
         {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "c9c4c30f8c3170dc02b6c8809445f0a348c1b60b076f9832902e70f5040cd9a2"
+          "sha256": "13eb1f8ad944ce5566599b76b214b8a89d97454d8387db11d3114b15a0887590"
         }
       ],
-      "reason": "Reviewed MCP snapshot-keyed cache, bounded runtime telemetry, command-catalog guard, and related tests; regenerated navigation reflects the implemented source without changing authoritative product behavior.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T20:48:03.2704555Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:36.9045005Z"
     },
     {
       "pageId": "workflow-task-scheduler",
@@ -927,18 +1049,22 @@
       "pageSha256": "b964048fb46e10eb6f3e28c3ddcfb451e3443691f1da29c8708d768c8ac1629c",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiContextBundle.ps1",
-          "sha256": "99d73492b2e5ed406b1c9e91c5e94a3961133a14ea3276c782332145f910fcf4"
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskAudit.ps1",
+          "sha256": "4e229761024ac668215598d3f1aab6f4bc76e10260da6632f7ced612d12796a3"
+        },
+        {
+          "path": ".llm-wiki/tools/Get-LlmWikiTaskWorkspaces.ps1",
+          "sha256": "9eeff500efb7c4f28ba18a1fc3927ffdacd1c17744611e52e9d3dd3d498e2d71"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiContextFeedback.ps1",
-          "sha256": "1a1a2534a643883ffcfd8cfb2becfe34abaf2d925c03b1c010621973793f611e"
+          "sha256": "7005b0ca6a00879a5d4b98dc653d16d349da5219f0f4aceb176f19e4b6aaa310"
         }
       ],
-      "reason": "Users was extracted into FoodDiary.Application.Users; references, composition roots, Docker build contexts, ownership manifests, generated indexes, and focused tests were updated with no HTTP contract change.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "b64dc9c941cdafb0223f4eeecdcd6e703b1ebb59",
-      "reviewedAtUtc": "2026-08-12T18:49:19.5792723Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:37.1183250Z"
     },
     {
       "pageId": "workflow-task-workspace",
@@ -996,36 +1122,32 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
-          "sha256": "64b18b8d4a02d29efd31eaa011d32174257de0fbc017186b37ca0ced3daa1737"
+          "sha256": "126b0f518b04d6681d571546a4e3afcbbbdddc9beb6b6f59e57be4f85bed0e7c"
         },
         {
           "path": ".llm-wiki/tools/Manage-LlmWikiVerificationPlan.ps1",
-          "sha256": "85063d3c50838eb92847d4ae304b7c21b9491118e9e0c4da777ff36e2ab9e21d"
+          "sha256": "a191c7810f5153158a879b409d0db880b5077b591f54596e8d2ea05b9c37ae3b"
         }
       ],
-      "reason": "Reviewed affected workflow contracts against immutable base SHA canonicalization, product/derived/operational scope separation, null-safe context security, resumable verification result shape, compact diagnostics, and Git-clean local telemetry. Existing workflow claims remain accurate; verification telemetry documentation was updated for the new local registry.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:23:55.8317660Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:37.3173837Z"
     },
     {
       "pageId": "workflow-verification-telemetry",
       "pagePath": ".llm-wiki/workflows/verification-telemetry.md",
-      "pageSha256": "b12a79df67989847845ec9725cad44610e5ee3779bf54ed16e8194f751f45e77",
+      "pageSha256": "9cc76f52e65dc93eb463ced774f1826e3433f33fb3ac620b0a5c280a106fd88d",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Manage-LlmWikiFailurePrediction.ps1",
-          "sha256": "a14617fb19b3deef55c3e0e4f46b3164169f939b60496c4eb1b6a393773454b9"
-        },
-        {
-          "path": ".llm-wiki/tools/Manage-LlmWikiVerificationCost.ps1",
-          "sha256": "886feab5e5cad2488f9b535222f87f029d30ca5a1ff7748ee1c85664a8e85cb9"
+          "path": ".llm-wiki/tools/Invoke-LlmWikiTaskChecks.ps1",
+          "sha256": "126b0f518b04d6681d571546a4e3afcbbbdddc9beb6b6f59e57be4f85bed0e7c"
         }
       ],
-      "reason": "Reviewed optional-field normalization, legacy workspace refresh compatibility, and governed lifecycle regression; the current workflow contract remains accurate.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "08563f100032179ce1b5a7d428a97a9f3784173e",
-      "reviewedAtUtc": "2026-08-12T04:43:55.6331155Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:37.5185624Z"
     },
     {
       "pageId": "workflow.change-policy",
@@ -1034,13 +1156,13 @@
       "sources": [
         {
           "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
-          "sha256": "8e1506bb3d8b69676876cd74e6047611d495972724b6790a6623a995f2ac925c"
+          "sha256": "19d370c2e519b41051198b5d737ba1bb114d100b4acd64bce692ad344fc2f6c6"
         }
       ],
-      "reason": "Reviewed the final compact policy diagnostics and focused recovery-test routing. Default output is now concise, -Detailed preserves the full report, and the affected workflow contracts remain accurate.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "7c12fb88ffe7135ef0250f16fe557f9e8e5a6fd8",
-      "reviewedAtUtc": "2026-08-17T09:28:06.5461479Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:29.6647403Z"
     },
     {
       "pageId": "workflow.evals",
@@ -1048,14 +1170,14 @@
       "pageSha256": "6ada105b75a86980fdb517297eb70f3dd62690bf8920afad9ff3d08740f2e241",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "365fb076601d46c3e9e3d7050ed858e354db8ceaae5ff5bbf756280aae95d69d"
+          "path": ".llm-wiki/tools/Test-LlmWikiChangePolicy.ps1",
+          "sha256": "19d370c2e519b41051198b5d737ba1bb114d100b4acd64bce692ad344fc2f6c6"
         }
       ],
-      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T21:19:41.5576562Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:31.8022183Z"
     },
     {
       "pageId": "workflow.evidence-bundle",
@@ -1124,18 +1246,14 @@
       "pageSha256": "71fbc957043c9b8b99edd47b2517f59b35fbf0c12c07635d8e23551967e5bf32",
       "sources": [
         {
-          "path": ".llm-wiki/tools/Get-LlmWikiDiffContext.ps1",
-          "sha256": "365fb076601d46c3e9e3d7050ed858e354db8ceaae5ff5bbf756280aae95d69d"
-        },
-        {
           "path": ".llm-wiki/wiki.ps1",
-          "sha256": "c9c4c30f8c3170dc02b6c8809445f0a348c1b60b076f9832902e70f5040cd9a2"
+          "sha256": "13eb1f8ad944ce5566599b76b214b8a89d97454d8387db11d3114b15a0887590"
         }
       ],
-      "reason": "Performance and reliability refactor preserves derived behavior: adaptive routing smoke passes, canonical index -Check results remain equivalent, and changes only remove repeated test planning, recursive traversal, redundant JSON materialization, and per-file native hashing.",
+      "reason": "Reviewed the affected Wiki contracts against the unified evidence-lineage evaluator, manifest-backed context security fallback, baseline-failure status semantics, receipt import, core/detailed task status split, pinned-head behavior, and staged delivery finalization regression coverage.",
       "baseRef": "HEAD",
-      "gitHead": "344a2a093788fc2c01501399aa33819158f445a9",
-      "reviewedAtUtc": "2026-08-17T21:19:43.0704277Z"
+      "gitHead": "5dd602119e639889bf60bcc427f22c194b7e33d0",
+      "reviewedAtUtc": "2026-08-18T00:21:35.5901932Z"
     }
   ]
 }

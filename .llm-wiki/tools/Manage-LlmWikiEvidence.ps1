@@ -9,7 +9,7 @@ param(
     [string]$HeadRef,
     [string[]]$ChangedPath,
     [string]$Id,
-    [ValidateSet('pending', 'passed', 'failed', 'completed', 'not-applicable')]
+    [ValidateSet('pending', 'passed', 'passed-with-known-baseline-failures', 'failed', 'completed', 'not-applicable')]
     [string]$Status,
     [string]$Command,
     [string]$Reason,
@@ -108,7 +108,7 @@ function Get-EvidenceMarkdown {
         }
     }
     $lines.Add('')
-    $unresolvedChecks = @($Evidence.checks | Where-Object { $_.status -notin @('passed', 'not-applicable') })
+    $unresolvedChecks = @($Evidence.checks | Where-Object { $_.status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable') })
     $unresolvedReviews = @($Evidence.reviews | Where-Object { $_.status -notin @('completed', 'not-applicable') })
     $lines.Add('## Handoff')
     $lines.Add('')
@@ -258,11 +258,11 @@ switch ($Action) {
         if ([string]::IsNullOrWhiteSpace($Id) -or [string]::IsNullOrWhiteSpace($Status)) {
             throw 'check requires -Id and -Status.'
         }
-        if ($Status -notin @('passed', 'failed', 'not-applicable')) {
-            throw 'Check status must be passed, failed, or not-applicable.'
+        if ($Status -notin @('passed', 'passed-with-known-baseline-failures', 'failed', 'not-applicable')) {
+            throw 'Check status must be passed, passed-with-known-baseline-failures, failed, or not-applicable.'
         }
-        if ($Status -eq 'not-applicable' -and [string]::IsNullOrWhiteSpace($Reason)) {
-            throw 'not-applicable requires -Reason.'
+        if ($Status -in @('not-applicable', 'passed-with-known-baseline-failures') -and [string]::IsNullOrWhiteSpace($Reason)) {
+            throw "$Status requires -Reason. For known baseline failures, identify the failing tests and the evidence that they predate this change."
         }
         $evidence = Read-EvidenceFile
         $entry = @($evidence.checks | Where-Object { $_.id -eq $Id } | Select-Object -First 1)

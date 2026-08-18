@@ -72,6 +72,11 @@ function Get-Assessment {
     $applicable = $pending.Count -eq 0
     $criterionProofs = [Collections.Generic.List[object]]::new()
     $findings = [Collections.Generic.List[object]]::new()
+    $lineageValidation = & (Join-Path $PSScriptRoot 'Test-LlmWikiEvidenceLineage.ps1') `
+        -EvidencePath "$normalizedWorkspace/evidence.json" `
+        -Format Json | ConvertFrom-Json
+    $validLineageCheckIds = @($lineageValidation.items | Where-Object { $_.kind -eq 'check' -and $_.valid } | ForEach-Object id)
+    $validLineageReviewIds = @($lineageValidation.items | Where-Object { $_.kind -eq 'review' -and $_.valid } | ForEach-Object id)
 
     foreach ($criterion in @($acceptance.criteria)) {
         $changedPaths = @(Get-MappedValues $criterion.mapping 'changedPaths')
@@ -87,11 +92,13 @@ function Get-Assessment {
         $missingTestPaths = @($testPaths | Where-Object { -not (Test-Path -LiteralPath (Join-Path $repositoryRoot $_) -PathType Leaf) })
         $verifiedChecks = @($checkIds | Where-Object {
             $id = $_
-            @($evidence.checks | Where-Object { $_.id -eq $id -and $_.status -eq 'passed' }).Count -gt 0
+            @($evidence.checks | Where-Object { $_.id -eq $id -and $_.status -in @('passed', 'passed-with-known-baseline-failures') }).Count -gt 0 -and
+                $id -in $validLineageCheckIds
         })
         $verifiedReviews = @($reviewIds | Where-Object {
             $id = $_
-            @($evidence.reviews | Where-Object { $_.id -eq $id -and $_.status -eq 'completed' }).Count -gt 0
+            @($evidence.reviews | Where-Object { $_.id -eq $id -and $_.status -eq 'completed' }).Count -gt 0 -and
+                $id -in $validLineageReviewIds
         })
         $hasEvidenceNote = -not [string]::IsNullOrWhiteSpace([string]$criterion.resolution.evidenceNote)
         $hasVerifiedEvidence = $verifiedChecks.Count -gt 0 -or $verifiedReviews.Count -gt 0 -or $hasEvidenceNote
@@ -206,7 +213,15 @@ if ($Action -in @('assess', 'create')) {
             if (Test-Path -LiteralPath $temporaryPath) { [IO.File]::Delete($temporaryPath) }
         }
     }
-    $result = [pscustomobject][ordered]@{ action = $Action; valid = $receipt.valid; applicable = $receipt.applicable; proof = $receipt; savedPath = $(if ($Action -eq 'create') { "$normalizedWorkspace/proof-of-change.json" } else { $null }) }
+    $result = [pscustomobject][ordered]@{
+        action = $Action
+        valid = $receipt.valid
+        applicable = $receipt.applicable
+        integrityValid = $true
+        issues = @()
+        proof = $receipt
+        savedPath = $(if ($Action -eq 'create') { "$normalizedWorkspace/proof-of-change.json" } else { $null })
+    }
 } else {
     if (-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)) { throw "Proof-of-change receipt is absent: $normalizedWorkspace/proof-of-change.json" }
     $receipt = Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json

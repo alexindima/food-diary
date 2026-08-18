@@ -23,6 +23,7 @@ if ([IO.Path]::IsPathRooted($WorkspacePath) -or $workspace -notmatch '^\.artifac
 }
 $absoluteWorkspace = Join-Path $repositoryRoot $workspace
 $packetPath = Join-Path $absoluteWorkspace 'change-packet.json'
+$manifestPath = Join-Path $absoluteWorkspace 'change-manifest.json'
 $receiptPath = Join-Path $absoluteWorkspace 'context-security.json'
 if (-not (Test-Path -LiteralPath $packetPath -PathType Leaf)) { throw "Change packet is absent: $workspace/change-packet.json" }
 
@@ -117,9 +118,27 @@ function Get-Summary([object[]]$Sources) {
 }
 function New-Assessment([string[]]$RequestedPaths) {
     $packet = Get-Content -LiteralPath $packetPath -Raw | ConvertFrom-Json
-    $paths = @($RequestedPaths | ForEach-Object { $_.Replace('\', '/').TrimStart('./') } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+    $paths = @($RequestedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } | ForEach-Object { ([string]$_).Replace('\', '/').TrimStart('./') } | Sort-Object -Unique)
     if ($paths.Count -eq 0) {
-        $paths = @(@($packet.brief.instructions) + @($packet.brief.contextPages) + @($packet.diff.changedPaths) | Sort-Object -Unique)
+        $manifestPaths = @()
+        if (Test-Path -LiteralPath $manifestPath -PathType Leaf) {
+            $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+            if ($null -ne $manifest.scope -and $manifest.scope.PSObject.Properties['plannedPaths']) {
+                $manifestPaths = @($manifest.scope.plannedPaths)
+            }
+        }
+        $paths = @(
+            @($manifestPaths) +
+            @($packet.brief.instructions) +
+            @($packet.brief.contextPages) +
+            @($packet.diff.changedPaths) |
+                Where-Object { -not [string]::IsNullOrWhiteSpace([string]$_) } |
+                ForEach-Object { ([string]$_).Replace('\', '/').TrimStart('./') } |
+                Sort-Object -Unique
+        )
+    }
+    if ($paths.Count -eq 0) {
+        throw "No context-security paths were supplied or discovered in $workspace/change-manifest.json and change-packet.json. Pass -ChangedPath explicitly."
     }
     $sources = @($paths | ForEach-Object { Get-ScanEntry $_ } | Where-Object { $null -ne $_ })
     $summary = Get-Summary $sources

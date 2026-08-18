@@ -175,7 +175,7 @@ switch ($Action) {
                 $evidence = Get-Content -LiteralPath $absoluteEvidencePath -Raw | ConvertFrom-Json
                 foreach ($check in @($manifest.plan.requiredChecks)) {
                     $entry = $evidence.checks | Where-Object id -eq $check.id | Select-Object -First 1
-                    if ($null -eq $entry -or $entry.status -notin @('passed', 'not-applicable')) {
+                    if ($null -eq $entry -or $entry.status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable')) {
                         $unresolvedEvidence.Add([pscustomobject]@{ kind = 'check'; id = $check.id; status = $entry.status })
                     }
                 }

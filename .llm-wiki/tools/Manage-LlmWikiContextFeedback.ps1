@@ -123,7 +123,7 @@ function Get-QualitySnapshot([object]$Dispatch, [string]$Outcome) {
     $checks = @($evidence.checks)
     $reviews = @($evidence.reviews)
     $criteria = @($acceptance.criteria)
-    $verificationScore = Get-Percent (@($checks | Where-Object status -in @('passed', 'not-applicable')).Count) $checks.Count
+    $verificationScore = Get-Percent (@($checks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable')).Count) $checks.Count
     $reviewScore = Get-Percent (@($reviews | Where-Object status -in @('completed', 'not-applicable')).Count) $reviews.Count
     $acceptanceScore = Get-Percent (@($criteria | Where-Object status -in @('satisfied', 'not-applicable')).Count) $criteria.Count
     $completionScore = if (Test-Path -LiteralPath (Join-Path $workspace 'completion.json') -PathType Leaf) { 100 } else { 0 }

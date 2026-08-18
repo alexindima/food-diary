@@ -7,6 +7,7 @@ param(
     [object]$PacketInput,
     [string[]]$ChangedPath,
     [string]$HeadRef,
+    [switch]$Detailed,
     [switch]$DryRun,
     [switch]$FailOnBlocked,
     [ValidateSet('Text', 'Json')]
@@ -17,6 +18,7 @@ $ErrorActionPreference = 'Stop'
 $wikiRoot = Split-Path -Parent $PSScriptRoot
 $repositoryRoot = (Resolve-Path (Join-Path $wikiRoot '..')).Path
 $refreshStopwatch = if ($Action -eq 'refresh') { [Diagnostics.Stopwatch]::StartNew() } else { $null }
+$statusStopwatch = if ($Action -eq 'status') { [Diagnostics.Stopwatch]::StartNew() } else { $null }
 
 function Write-RefreshProgress([int]$Step, [string]$Message) {
     if ($Action -eq 'refresh' -and $Format -eq 'Text') {
@@ -76,7 +78,7 @@ function Test-GovernanceGeneratedPath([string]$Value) {
 
 $storedHeadRef = if ($taskContract.git.PSObject.Properties['head']) { [string]$taskContract.git.head } else { '' }
 $requestedHeadRef = if ($PSBoundParameters.ContainsKey('HeadRef')) { $HeadRef } else { $storedHeadRef }
-$workspaceHead = [string]::IsNullOrWhiteSpace($requestedHeadRef) -or $requestedHeadRef -ieq 'HEAD'
+$workspaceHead = [string]::IsNullOrWhiteSpace($requestedHeadRef)
 $resolvedHeadRef = ''
 if (-not [string]::IsNullOrWhiteSpace($requestedHeadRef)) {
     $resolvedHeadOutput = @(& git -C $repositoryRoot rev-parse --verify "$requestedHeadRef^{commit}" 2>$null)
@@ -135,8 +137,17 @@ $outOfScope = @($productChangedPaths | Where-Object {
 })
 $pendingCriteria = @($acceptance.criteria | Where-Object status -eq 'pending')
 $rejectedCriteria = @($acceptance.criteria | Where-Object status -eq 'rejected')
-$unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable'))
-$unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable'))
+$lineageValidation = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; issues = @(); items = @() } } else {
+    & (Join-Path $PSScriptRoot 'Test-LlmWikiEvidenceLineage.ps1') -WorkspacePath $normalizedWorkspacePath -Format Json | ConvertFrom-Json
+}
+$invalidLineageCheckIds = @($lineageValidation.items | Where-Object { $_.kind -eq 'check' -and -not $_.valid } | ForEach-Object id)
+$invalidLineageReviewIds = @($lineageValidation.items | Where-Object { $_.kind -eq 'review' -and -not $_.valid } | ForEach-Object id)
+$unresolvedChecks = @($evidence.checks | Where-Object { $_.status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable') -or $_.id -in $invalidLineageCheckIds })
+$unresolvedReviews = @(
+    @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable')) +
+    @($evidence.reviews | Where-Object id -in $invalidLineageReviewIds) |
+        Sort-Object id -Unique
+)
 $initialFingerprint = if ($descriptor.PSObject.Properties['initialPacketFingerprint'] -and $null -ne $descriptor.initialPacketFingerprint) {
     [string]$descriptor.initialPacketFingerprint
 } else {
@@ -172,7 +183,7 @@ $requirementModel = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $tru
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
 }
-$impactSimulation = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; simulation = [pscustomobject]@{ findings = @() } } } else {
+$impactSimulation = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; simulation = [pscustomobject]@{ findings = @() } } } else {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiImpactSimulation.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
@@ -182,7 +193,7 @@ $repairLoop = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; def
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
 }
-$repairLearningCandidates = if ($Action -eq 'refresh') {
+$repairLearningCandidates = if ($Action -eq 'refresh' -or -not $Detailed) {
     [pscustomobject]@{ valid = $true; deferred = $true; eligibleCount = 0; candidates = @() }
 } elseif (Test-Path -LiteralPath (Join-Path $absoluteWorkspacePath 'repair-loop.json') -PathType Leaf) {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiRepairLearning.ps1') candidates `
@@ -191,21 +202,21 @@ $repairLearningCandidates = if ($Action -eq 'refresh') {
 } else {
     [pscustomobject]@{ valid = $true; eligibleCount = 0; candidates = @() }
 }
-$failurePrediction = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; calibration = [pscustomobject]@{ outcomes = @() } } } else {
+$failurePrediction = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; calibration = [pscustomobject]@{ outcomes = @() } } } else {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiFailurePrediction.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
 }
-$verificationCost = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true } } else {
+$verificationCost = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true } } else {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationCost.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
 }
-$verificationTelemetryValidation = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; registryHash = ''; issues = @() } } else {
+$verificationTelemetryValidation = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; registryHash = ''; issues = @() } } else {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') verify -Format Json | ConvertFrom-Json
 }
 $verificationTelemetry = if ($verificationTelemetryValidation.valid) {
-    if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; registryHash = ''; metrics = @() } }
+    if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; registryHash = ''; metrics = @() } }
     else { & (Join-Path $PSScriptRoot 'Manage-LlmWikiVerificationTelemetry.ps1') metrics -Format Json | ConvertFrom-Json }
 } else {
     [pscustomobject]@{ valid = $false; registryHash = $verificationTelemetryValidation.registryHash; metrics = @(); issues = @($verificationTelemetryValidation.issues) }
@@ -219,12 +230,12 @@ function Get-Ids([object[]]$Items) {
 }
 $evidenceCheckIds = @(Get-Ids @($evidence.checks))
 $relevantTelemetry = @($verificationTelemetry.metrics | Where-Object { $_.PSObject.Properties['checkId'] -and $_.checkId -in $evidenceCheckIds })
-$confidenceLedger = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true } } else {
+$confidenceLedger = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true } } else {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiConfidenceLedger.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
 }
-$changeCritique = if ($Action -eq 'refresh') { [pscustomobject]@{ valid = $true; deferred = $true; critique = [pscustomobject]@{ verdict = 'assessment-deferred'; findings = @() } } } else {
+$changeCritique = if ($Action -eq 'refresh' -or -not $Detailed) { [pscustomobject]@{ valid = $true; deferred = $true; critique = [pscustomobject]@{ verdict = 'assessment-deferred'; findings = @() } } } else {
     & (Join-Path $PSScriptRoot 'Manage-LlmWikiChangeCritique.ps1') assess `
     -WorkspacePath $normalizedWorkspacePath `
     -Format Json | ConvertFrom-Json
@@ -257,7 +268,7 @@ if ($proofOfChange.applicable -and -not $proofOfChange.valid) {
 foreach ($finding in @($requirementModel.model.findings)) {
     $nextActions.Add("Refine acceptance criterion $($finding.criterionId) to resolve '$($finding.id)'.")
 }
-if (@($requirementModel.model.recommendations).Count -gt 0) {
+if (@($requirementModel.model.recommendations).Count -gt 0 -and ($pendingCriteria.Count -gt 0 -or -not $requirementModel.valid)) {
     $nextActions.Add("./.llm-wiki/wiki.ps1 task-requirements-expand -WorkspacePath $normalizedWorkspacePath -Reason <rationale>")
 }
 foreach ($finding in @($impactSimulation.simulation.findings)) {
@@ -342,6 +353,7 @@ $result = [pscustomobject][ordered]@{
     }
     contextSecurity = $contextSecurity
     confidenceLedger = $confidenceLedger
+    evidenceLineage = $lineageValidation
     changeCritique = $changeCritique
     pendingCriteria = @(Get-Ids $pendingCriteria)
     rejectedCriteria = @(Get-Ids $rejectedCriteria)
@@ -367,7 +379,8 @@ $result = [pscustomobject][ordered]@{
     openJournalBlockers = $journalView.openBlockerCount
     nextActions = @($nextActions)
     invalidation = $null
-    assessmentsDeferred = $Action -eq 'refresh'
+    assessmentsDeferred = $Action -eq 'refresh' -or -not $Detailed
+    detailLevel = $(if ($Detailed) { 'detailed' } else { 'core' })
     refreshDurationSeconds = $null
 }
 
@@ -440,7 +453,7 @@ if ($Action -eq 'refresh') {
             $descriptor.lastRefreshedAtUtc = [DateTime]::UtcNow.ToString('o')
         }
         if (-not [string]::IsNullOrWhiteSpace($resolvedHeadRef)) {
-            $persistedHeadRef = if ($workspaceHead) { 'HEAD' } else { $resolvedHeadRef }
+            $persistedHeadRef = $resolvedHeadRef
             if ($descriptor.git.PSObject.Properties['head']) { $descriptor.git.head = $persistedHeadRef }
             else { $descriptor.git | Add-Member -NotePropertyName head -NotePropertyValue $persistedHeadRef }
             if ($taskContract.git.PSObject.Properties['head']) { $taskContract.git.head = $persistedHeadRef }
@@ -488,6 +501,65 @@ if ($Action -eq 'refresh') {
     } finally {
         if (Test-Path -LiteralPath $temporaryPacketAbsolute) { [System.IO.File]::Delete($temporaryPacketAbsolute) }
         if (Test-Path -LiteralPath $temporaryReportAbsolute) { [System.IO.File]::Delete($temporaryReportAbsolute) }
+    }
+}
+
+if ($Action -eq 'status' -and -not $Detailed) {
+    $statusStopwatch.Stop()
+    $result = [pscustomobject][ordered]@{
+        schemaVersion = $result.schemaVersion
+        workspace = $result.workspace
+        objective = $result.objective
+        verdict = $result.verdict
+        score = $result.score
+        risk = $result.risk
+        detailLevel = 'core'
+        statusDurationSeconds = [Math]::Round($statusStopwatch.Elapsed.TotalSeconds, 2)
+        initialPacketFingerprint = $result.initialPacketFingerprint
+        currentPacketFingerprint = $result.currentPacketFingerprint
+        fingerprintChanged = $result.fingerprintChanged
+        refreshRequired = $result.refreshRequired
+        lastCompiledPacketFingerprint = $result.lastCompiledPacketFingerprint
+        changedPathCount = $result.changedPathCount
+        productChangedPathCount = $result.productChangedPathCount
+        outOfScopePaths = @($result.outOfScopePaths)
+        planConformance = [pscustomobject]@{ valid = [bool]$result.planConformance.valid }
+        proofOfChange = [pscustomobject]@{
+            valid = [bool]$result.proofOfChange.valid
+            applicable = [bool]$result.proofOfChange.applicable
+            findingCount = @($result.proofOfChange.proof.findings).Count
+        }
+        requirementModel = [pscustomobject]@{
+            valid = [bool]$result.requirementModel.valid
+            findingCount = @($result.requirementModel.model.findings).Count
+            recommendationCount = @($result.requirementModel.model.recommendations).Count
+        }
+        evidenceLineage = [pscustomobject]@{
+            valid = [bool]$result.evidenceLineage.valid
+            invalidCount = [int]$result.evidenceLineage.invalidCount
+            issues = @($result.evidenceLineage.issues)
+        }
+        contextSecurity = $(if ($null -eq $result.contextSecurity) { $null } else {
+            [pscustomobject]@{
+                valid = [bool]$result.contextSecurity.valid
+                sourceCount = [int]$result.contextSecurity.assessment.summary.sourceCount
+                findingCount = [int]$result.contextSecurity.assessment.summary.findingCount
+                quarantineCount = [int]$result.contextSecurity.assessment.summary.quarantineCount
+            }
+        })
+        pendingCriteria = @($result.pendingCriteria)
+        rejectedCriteria = @($result.rejectedCriteria)
+        unresolvedChecks = @($result.unresolvedChecks)
+        unresolvedReviews = @($result.unresolvedReviews)
+        blockingDimensions = @($result.blockingDimensions)
+        unassessedDimensions = @($result.unassessedDimensions)
+        engineeringReadiness = $result.engineeringReadiness
+        governanceCompleteness = $result.governanceCompleteness
+        journalEntryCount = $result.journalEntryCount
+        openJournalEntries = $result.openJournalEntries
+        openJournalBlockers = $result.openJournalBlockers
+        nextActions = @($result.nextActions)
+        assessmentsDeferred = $true
     }
 }
 

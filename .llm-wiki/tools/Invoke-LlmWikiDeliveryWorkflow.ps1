@@ -56,7 +56,7 @@ function Sync-CompletedAcceptanceChecks {
     }
     $matrix = Get-Content -LiteralPath $acceptancePath -Raw | ConvertFrom-Json
     $evidence = Get-Content -LiteralPath $evidencePath -Raw | ConvertFrom-Json
-    $completedChecks = @($evidence.checks | Where-Object { $_.status -in @('passed', 'not-applicable') -and $_.PSObject.Properties['id'] })
+    $completedChecks = @($evidence.checks | Where-Object { $_.status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable') -and $_.PSObject.Properties['id'] })
     if ($completedChecks.Count -eq 0) { return @() }
     $criteria = @($matrix.criteria)
     $stopWords = @('acceptance', 'behavior', 'change', 'complete', 'correctly', 'implemented', 'observable', 'outcome', 'requested', 'remains', 'verified')
@@ -115,8 +115,15 @@ function Get-DeliveryAssessment {
     }
     $criteria = @((Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'acceptance-matrix.json') -Raw | ConvertFrom-Json).criteria)
     $evidence = Get-Content -LiteralPath (Join-Path $absoluteWorkspace 'evidence.json') -Raw | ConvertFrom-Json
-    $unresolvedChecks = @($evidence.checks | Where-Object status -notin @('passed', 'not-applicable'))
-    $unresolvedReviews = @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable'))
+    $lineage = Invoke-JsonTool 'Test-LlmWikiEvidenceLineage.ps1' @{ WorkspacePath = $workspace }
+    $invalidLineageCheckIds = @($lineage.items | Where-Object { $_.kind -eq 'check' -and -not $_.valid } | ForEach-Object id)
+    $invalidLineageReviewIds = @($lineage.items | Where-Object { $_.kind -eq 'review' -and -not $_.valid } | ForEach-Object id)
+    $unresolvedChecks = @($evidence.checks | Where-Object { $_.status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable') -or $_.id -in $invalidLineageCheckIds })
+    $unresolvedReviews = @(
+        @($evidence.reviews | Where-Object status -notin @('completed', 'not-applicable')) +
+        @($evidence.reviews | Where-Object id -in $invalidLineageReviewIds) |
+            Sort-Object id -Unique
+    )
     $coverage = foreach ($criterion in $criteria) {
         $mapping = $criterion.mapping
         $mappedEvidence = @($mapping.changedPaths) + @($mapping.scenarioIds) + @($mapping.checkIds) + @($mapping.reviewIds) + @($mapping.testPaths)
@@ -142,7 +149,7 @@ function Get-DeliveryAssessment {
     )
     $evidencePassed = $unresolvedChecks.Count + $unresolvedReviews.Count -eq 0
     $gates = @($coreGates) + @(
-        [pscustomobject][ordered]@{ id = 'evidence'; passed = $evidencePassed; summary = "$($unresolvedChecks.Count) unresolved check(s), $($unresolvedReviews.Count) unresolved review(s)" }
+        [pscustomobject][ordered]@{ id = 'evidence'; passed = $evidencePassed -and [bool]$lineage.valid; summary = "$($unresolvedChecks.Count) unresolved check(s), $($unresolvedReviews.Count) unresolved review(s), $(@($lineage.issues).Count) lineage issue(s)" }
     )
     $nextActions = [Collections.Generic.List[string]]::new()
     foreach ($gate in @($gates | Where-Object { -not $_.passed })) { $nextActions.Add("Resolve delivery gate '$($gate.id)': $($gate.summary)") }
@@ -165,6 +172,7 @@ function Get-DeliveryAssessment {
         gates = $gates
         requirementCoverage = @($coverage)
         automaticCheckLinks = @($automaticCheckLinks)
+        evidenceLineage = $lineage
         journeyImpact = @($journeys.journeys)
         nextActions = @($nextActions)
         provenance = [pscustomobject][ordered]@{

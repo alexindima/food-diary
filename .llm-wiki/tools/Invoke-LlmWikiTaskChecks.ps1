@@ -37,7 +37,7 @@ foreach ($canonicalCheck in @($policy.requiredChecks)) {
 
 $selectedChecks = @($evidence.checks | Where-Object {
     ($CheckId.Count -eq 0 -or $_.id -in $CheckId) -and
-    ($IncludePassed -or $_.status -notin @('passed', 'not-applicable'))
+    ($IncludePassed -or $_.status -notin @('passed', 'passed-with-known-baseline-failures', 'not-applicable'))
 })
 if ($CheckId.Count -gt 0) {
     $unknownIds = @($CheckId | Where-Object { $_ -notin @($evidence.checks.id) })

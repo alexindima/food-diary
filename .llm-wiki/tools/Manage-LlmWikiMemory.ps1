@@ -205,7 +205,7 @@ if ($Action -eq 'promote') {
     $journal = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskJournal.ps1') show -WorkspacePath $workspace -Format Json | ConvertFrom-Json
     $evidenceArtifact = Get-Content -LiteralPath (Join-Path $repositoryRoot "$workspace/evidence.json") -Raw | ConvertFrom-Json
     $availableEvidence = @(
-        @($evidenceArtifact.checks | Where-Object status -eq 'passed' | ForEach-Object { "check:$($_.id):passed" }) +
+        @($evidenceArtifact.checks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures') | ForEach-Object { "check:$($_.id):$($_.status)" }) +
         @($evidenceArtifact.reviews | Where-Object status -eq 'completed' | ForEach-Object { "review:$($_.id):completed" })
     )
     $view = Get-View $registry

@@ -241,7 +241,7 @@ if ($Action -eq 'profile') {
         }
         verification = [pscustomobject][ordered]@{
             targetPlanHash = ''
-            sourceResolvedChecks = @($sourceEvidence.checks | Where-Object status -in @('passed', 'not-applicable') | Select-Object id, status, durationSeconds, reason)
+            sourceResolvedChecks = @($sourceEvidence.checks | Where-Object status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable') | Select-Object id, status, durationSeconds, reason)
         }
         receiptHash = ''
     }

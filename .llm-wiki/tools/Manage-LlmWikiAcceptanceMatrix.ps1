@@ -267,7 +267,7 @@ switch ($Action) {
                 if ($null -ne $evidence) {
                     foreach ($id in @($item.mapping.checkIds)) {
                         $entry = $evidence.checks | Where-Object id -eq $id | Select-Object -First 1
-                        if ($null -ne $entry -and $entry.status -in @('passed', 'not-applicable')) { $verified = $true }
+                        if ($null -ne $entry -and $entry.status -in @('passed', 'passed-with-known-baseline-failures', 'not-applicable')) { $verified = $true }
                     }
                     foreach ($id in @($item.mapping.reviewIds)) {
                         $entry = $evidence.reviews | Where-Object id -eq $id | Select-Object -First 1

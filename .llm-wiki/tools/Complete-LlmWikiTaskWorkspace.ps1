@@ -136,6 +136,7 @@ foreach ($artifactName in $sealedArtifactNames) {
 
 $status = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') status `
     -WorkspacePath $normalizedWorkspacePath `
+    -Detailed `
     -Format Json | ConvertFrom-Json
 if ($status.verdict -ne 'ready') {
     $actionText = @($status.nextActions) -join ' | '
@@ -291,6 +292,7 @@ if (Test-Path -LiteralPath $planReusePath -PathType Leaf) {
 }
 $status = & (Join-Path $PSScriptRoot 'Manage-LlmWikiTaskWorkspace.ps1') status `
     -WorkspacePath $normalizedWorkspacePath `
+    -Detailed `
     -Format Json | ConvertFrom-Json
 if ($status.verdict -ne 'ready') {
     throw "Task readiness changed during final refresh: $($status.verdict)."
